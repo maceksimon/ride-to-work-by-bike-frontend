@@ -66,6 +66,14 @@ cs = "Czech"
 sk = "Slovak"
 en = "English"
 
+[listPartners]
+titlePartners = "Partners"
+titleLocal = "Local partners"
+titleGeneral = "General partners"
+titleNational = "National partners"
+titleMedia = "Media partners"
+titleOrganizers = "Challenge organized by"
+
 [prizes]
 textAvailablePrizes = "The teams that will receive the prize will be drawn from the teams that have achieved an overall regularity of more than 60%."
 textSpecialOffers = "Please note the validity period of the offers. Some are valid for a few days, others expire on the day the call ends, and others expire after the call."
