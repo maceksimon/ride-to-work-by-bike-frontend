@@ -13,69 +13,13 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// fixtures
+import listPartners from '../../../test/cypress/fixtures/listPartners.json';
+
 export default defineComponent({
   name: 'ListPartners',
   setup() {
-    const partners = {
-      local: [
-        {
-          title: 'Svorada',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-        {
-          title: 'Atlas copco',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-      ],
-
-      general: [
-        {
-          title: 'GLS',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-        {
-          title: 'KB',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-        {
-          title: 'Bikero',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-      ],
-
-      national: [
-        {
-          title: 'Kudrna',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-        {
-          title: 'Ortlieb',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-        {
-          title: 'NextBike',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-        {
-          title: 'MerchYou',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-      ],
-
-      media: [
-        {
-          title: 'Česká televize',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-      ],
-
-      organizers: [
-        {
-          title: 'AutoMat',
-          image: 'https://picsum.photos/id/70/200/100',
-        },
-      ],
-    };
+    const partners = listPartners;
 
     return {
       partners,
@@ -91,85 +35,95 @@ export default defineComponent({
     </h2>
     <!-- Local partners -->
     <div class="q-mt-lg">
-      <h3 class="text-body1 text-weight-bold q-my-lg">
-        {{ $t('listPartners.titleLocal') }}
-      </h3>
-      <div class="row q-col-gutter-lg" data-cy="partners-local">
-        <div
-          v-for="partner in partners.local"
-          :key="partner.title"
-          class="col-3 col-sm-2 col-md-1"
-          data-cy="partners-local-item"
-        >
-          <div class="flex items-center justify-center">
-            <q-img :src="partner.image" :alt="partner.title" />
+      <template v-if="partners.local">
+        <h3 class="text-body1 text-weight-bold q-my-lg">
+          {{ $t('listPartners.titleLocal') }}
+        </h3>
+        <div class="row q-col-gutter-lg" data-cy="partners-local">
+          <div
+            v-for="partner in partners.local"
+            :key="partner.title"
+            class="col-3 col-sm-2 col-md-1"
+            data-cy="partners-local-item"
+          >
+            <div class="flex items-center justify-center">
+              <q-img :src="partner.image" :alt="partner.title" />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
       <!-- General partners -->
-      <h3 class="text-body1 text-weight-bold q-my-lg">
-        {{ $t('listPartners.titleGeneral') }}
-      </h3>
-      <div class="row q-col-gutter-lg" data-cy="partners-general">
-        <div
-          v-for="partner in partners.general"
-          :key="partner.title"
-          class="col-6 col-sm-3 col-md-2"
-          data-cy="partners-general-item"
-        >
-          <div class="flex items-center justify-center">
-            <q-img :src="partner.image" :alt="partner.title" />
+      <template v-if="partners.general">
+        <h3 class="text-body1 text-weight-bold q-my-lg">
+          {{ $t('listPartners.titleGeneral') }}
+        </h3>
+        <div class="row q-col-gutter-lg" data-cy="partners-general">
+          <div
+            v-for="partner in partners.general"
+            :key="partner.title"
+            class="col-6 col-sm-3 col-md-2"
+            data-cy="partners-general-item"
+          >
+            <div class="flex items-center justify-center">
+              <q-img :src="partner.image" :alt="partner.title" />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
       <!-- National partners -->
-      <h3 class="text-body1 text-weight-bold q-my-lg">
-        {{ $t('listPartners.titleNational') }}
-      </h3>
-      <div class="row q-col-gutter-lg" data-cy="partners-national">
-        <div
-          v-for="partner in partners.national"
-          :key="partner.title"
-          class="col-6 col-sm-3 col-md-2"
-          data-cy="partners-national-item"
-        >
-          <div class="flex items-center justify-center">
-            <q-img :src="partner.image" :alt="partner.title" />
+      <template v-if="partners.national">
+        <h3 class="text-body1 text-weight-bold q-my-lg">
+          {{ $t('listPartners.titleNational') }}
+        </h3>
+        <div class="row q-col-gutter-lg" data-cy="partners-national">
+          <div
+            v-for="partner in partners.national"
+            :key="partner.title"
+            class="col-6 col-sm-3 col-md-2"
+            data-cy="partners-national-item"
+          >
+            <div class="flex items-center justify-center">
+              <q-img :src="partner.image" :alt="partner.title" />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
       <!-- Media partners -->
-      <h3 class="text-body1 text-weight-bold q-my-lg">
-        {{ $t('listPartners.titleMedia') }}
-      </h3>
-      <div class="row q-col-gutter-lg" data-cy="partners-media">
-        <div
-          v-for="partner in partners.media"
-          :key="partner.title"
-          class="col-3 col-sm-2 col-md-1"
-          data-cy="partners-media-item"
-        >
-          <div class="flex items-center justify-center">
-            <q-img :src="partner.image" :alt="partner.title" />
+      <template v-if="partners.media">
+        <h3 class="text-body1 text-weight-bold q-my-lg">
+          {{ $t('listPartners.titleMedia') }}
+        </h3>
+        <div class="row q-col-gutter-lg" data-cy="partners-media">
+          <div
+            v-for="partner in partners.media"
+            :key="partner.title"
+            class="col-3 col-sm-2 col-md-1"
+            data-cy="partners-media-item"
+          >
+            <div class="flex items-center justify-center">
+              <q-img :src="partner.image" :alt="partner.title" />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
       <!-- Organizers -->
-      <h3 class="text-body1 text-weight-bold q-my-lg">
-        {{ $t('listPartners.titleOrganizers') }}
-      </h3>
-      <div class="row q-col-gutter-lg" data-cy="partners-organizers">
-        <div
-          v-for="partner in partners.organizers"
-          :key="partner.title"
-          class="col-6 col-sm-3 col-md-2"
-          data-cy="partners-organizers-item"
-        >
-          <div class="flex items-center justify-center">
-            <q-img :src="partner.image" :alt="partner.title" />
+      <template v-if="partners.organizers">
+        <h3 class="text-body1 text-weight-bold q-my-lg">
+          {{ $t('listPartners.titleOrganizers') }}
+        </h3>
+        <div class="row q-col-gutter-lg" data-cy="partners-organizers">
+          <div
+            v-for="partner in partners.organizers"
+            :key="partner.title"
+            class="col-6 col-sm-3 col-md-2"
+            data-cy="partners-organizers-item"
+          >
+            <div class="flex items-center justify-center">
+              <q-img :src="partner.image" :alt="partner.title" />
+            </div>
           </div>
         </div>
-      </div>
+      </template>
     </div>
   </div>
 </template>

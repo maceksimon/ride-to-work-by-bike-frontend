@@ -1,0 +1,56 @@
+{
+  "local": [
+    {
+      "title": "Svorada",
+      "image": "https://picsum.photos/id/70/200/100"
+    },
+    {
+      "title": "Atlas copco",
+      "image": "https://picsum.photos/id/70/200/100"
+    }
+  ],
+  "general": [
+    {
+      "title": "GLS",
+      "image": "https://picsum.photos/id/70/200/100"
+    },
+    {
+      "title": "KB",
+      "image": "https://picsum.photos/id/70/200/100"
+    },
+    {
+      "title": "Bikero",
+      "image": "https://picsum.photos/id/70/200/100"
+    }
+  ],
+  "national": [
+    {
+      "title": "Kudrna",
+      "image": "https://picsum.photos/id/70/200/100"
+    },
+    {
+      "title": "Ortlieb",
+      "image": "https://picsum.photos/id/70/200/100"
+    },
+    {
+      "title": "NextBike",
+      "image": "https://picsum.photos/id/70/200/100"
+    },
+    {
+      "title": "MerchYou",
+      "image": "https://picsum.photos/id/70/200/100"
+    }
+  ],
+  "media": [
+    {
+      "title": "Česká televize",
+      "image": "https://picsum.photos/id/70/200/100"
+    }
+  ],
+  "organizers": [
+    {
+      "title": "AutoMat",
+      "image": "https://picsum.photos/id/70/200/100"
+    }
+  ]
+}
