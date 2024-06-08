@@ -3,7 +3,18 @@ import { i18n } from '../../boot/i18n';
 
 describe('<ListPartners>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      [
+        'titlePartners',
+        'titleLocal',
+        'titleGeneral',
+        'titleNational',
+        'titleMedia',
+        'titleOrganizers',
+      ],
+      'listPartners',
+      i18n,
+    );
   });
 
   context('desktop', () => {
