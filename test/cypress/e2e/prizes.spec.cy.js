@@ -111,4 +111,8 @@ function coreTests() {
         .and('have.length', 5);
     });
   });
+
+  it('renders a list of partners', () => {
+    cy.dataCy('list-partners').should('be.visible');
+  });
 }

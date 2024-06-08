@@ -6,6 +6,8 @@
  *
  * @components
  * - `CardOffer`: Card with offer information.
+ * - `ListPartners`: Component to render a list of partners.
+ * - `SectionColumns`: Component to render content in columns.
  *
  * @layout
  * - `MainLayout`: Default layout with sidebar on desktop.
@@ -18,6 +20,7 @@ import { defineComponent, ref } from 'vue';
 import CardOffer from '../components/homepage/CardOffer.vue';
 import CardPrize from 'src/components/global/CardPrize.vue';
 import FormFieldSelectCity from 'src/components/form/FormFieldSelectCity.vue';
+import ListPartners from '../components/global/ListPartners.vue';
 import SectionColumns from '../components/homepage/SectionColumns.vue';
 import SectionHeading from '../components/global/SectionHeading.vue';
 
@@ -34,6 +37,7 @@ export default defineComponent({
     CardOffer,
     CardPrize,
     FormFieldSelectCity,
+    ListPartners,
     SectionColumns,
     SectionHeading,
   },
@@ -120,7 +124,8 @@ export default defineComponent({
         </div>
       </section>
 
-      <!-- TODO: Section Partners -->
+      <!-- Section: Partners -->
+      <list-partners class="q-mt-xl" data-cy="list-partners" />
     </div>
   </q-page>
 </template>
