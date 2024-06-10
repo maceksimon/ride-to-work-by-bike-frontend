@@ -3,7 +3,12 @@ import { routesConf } from '../../../src/router/routes_conf';
 describe('Results page', () => {
   context('desktop', () => {
     beforeEach(() => {
-      cy.visit('#' + routesConf['results_detail']['path']);
+      cy.visit(
+        '#' +
+          routesConf['results']['path'] +
+          '/' +
+          routesConf['results_detail']['path'],
+      );
       cy.viewport('macbook-16');
 
       // load config an i18n objects as aliases
@@ -31,7 +36,12 @@ describe('Results page', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.visit('#' + routesConf['results_detail']['path']);
+      cy.visit(
+        '#' +
+          routesConf['results']['path'] +
+          '/' +
+          routesConf['results_detail']['path'],
+      );
       cy.viewport('iphone-6');
 
       // load config an i18n objects as aliases

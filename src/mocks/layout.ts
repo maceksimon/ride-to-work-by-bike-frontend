@@ -1,5 +1,6 @@
 import { Link, User } from 'src/components/types';
 import { i18n } from 'src/boot/i18n';
+import { routesConf } from 'src/router/routes_conf';
 
 export const user: User = {
   label: 'User 1',
@@ -12,27 +13,27 @@ export const user: User = {
 
 export const menuTop: Link[] = [
   {
-    url: '/',
+    url: routesConf['home']['path'],
     icon: 'home',
     name: 'home',
   },
   {
-    url: '/routes',
+    url: routesConf['routes']['path'],
     icon: 'route',
     name: 'routes',
   },
   {
-    url: '/results',
+    url: routesConf['results']['path'],
     icon: 'emoji_events',
     name: 'results',
   },
   {
-    url: '/community',
+    url: routesConf['community']['path'],
     icon: 'people',
     name: 'community',
   },
   {
-    url: '/prizes',
+    url: routesConf['prizes']['path'],
     icon: 'verified',
     name: 'discounts',
   },
