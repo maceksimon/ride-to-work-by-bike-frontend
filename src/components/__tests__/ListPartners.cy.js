@@ -19,10 +19,13 @@ describe('<ListPartners>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      cy.mount(ListPartners, {
-        props: {},
+      cy.fixture('listPartners').then((listPartners) => {
+        cy.wrap(listPartners).as('partners');
+        cy.mount(ListPartners, {
+          props: {},
+        });
+        cy.viewport('macbook-16');
       });
-      cy.viewport('macbook-16');
     });
 
     coreTests();
@@ -41,10 +44,13 @@ describe('<ListPartners>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.mount(ListPartners, {
-        props: {},
+      cy.fixture('listPartners').then((listPartners) => {
+        cy.wrap(listPartners).as('partners');
+        cy.mount(ListPartners, {
+          props: {},
+        });
+        cy.viewport('iphone-6');
       });
-      cy.viewport('iphone-6');
     });
 
     coreTests();
@@ -61,20 +67,62 @@ describe('<ListPartners>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.dataCy('list-partners').should('be.visible');
-    // title
-    cy.dataCy('list-partners-title')
-      .should('be.visible')
-      .and('contain', i18n.global.t('listPartners.titlePartners'));
-    // local partners
-    cy.dataCy('partners-local').should('be.visible');
-    // general partners
-    cy.dataCy('partners-general').should('be.visible');
-    // national partners
-    cy.dataCy('partners-national').should('be.visible');
-    // media partners
-    cy.dataCy('partners-media').should('be.visible');
-    // organizers
-    cy.dataCy('partners-organizers').should('be.visible');
+    cy.get('@partners').then((partners) => {
+      cy.dataCy('list-partners').should('be.visible');
+      // title
+      cy.dataCy('list-partners-title')
+        .should('be.visible')
+        .and('contain', i18n.global.t('listPartners.titlePartners'));
+      // local partners
+      cy.dataCy('partners-local').should('be.visible');
+      cy.dataCy('partners-local-item')
+        .should('be.visible')
+        .each(($el, index) => {
+          cy.wrap($el)
+            .find('a')
+            .should('have.attr', 'href', partners.local[index].url)
+            .and('have.attr', 'target', '_blank');
+        });
+      // general partners
+      cy.dataCy('partners-general').should('be.visible');
+      cy.dataCy('partners-general-item')
+        .should('be.visible')
+        .each(($el, index) => {
+          cy.wrap($el)
+            .find('a')
+            .should('have.attr', 'href', partners.general[index].url)
+            .and('have.attr', 'target', '_blank');
+        });
+      // national partners
+      cy.dataCy('partners-national').should('be.visible');
+      cy.dataCy('partners-national-item')
+        .should('be.visible')
+        .each(($el, index) => {
+          cy.wrap($el)
+            .find('a')
+            .should('have.attr', 'href', partners.national[index].url)
+            .and('have.attr', 'target', '_blank');
+        });
+      // media partners
+      cy.dataCy('partners-media').should('be.visible');
+      cy.dataCy('partners-media-item')
+        .should('be.visible')
+        .each(($el, index) => {
+          cy.wrap($el)
+            .find('a')
+            .should('have.attr', 'href', partners.media[index].url)
+            .and('have.attr', 'target', '_blank');
+        });
+      // organizers
+      cy.dataCy('partners-organizers').should('be.visible');
+      cy.dataCy('partners-organizers-item')
+        .should('be.visible')
+        .each(($el, index) => {
+          cy.wrap($el)
+            .find('a')
+            .should('have.attr', 'href', partners.organizers[index].url)
+            .and('have.attr', 'target', '_blank');
+        });
+    });
   });
 }

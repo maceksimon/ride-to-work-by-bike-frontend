@@ -46,9 +46,14 @@ export default defineComponent({
             class="col-3 col-sm-2 col-md-1"
             data-cy="partners-local-item"
           >
-            <div class="flex items-center justify-center">
+            <q-item
+              dense
+              :href="partner.url"
+              target="_blank"
+              class="flex items-center justify-center q-py-none q-px-none"
+            >
               <q-img :src="partner.image" :alt="partner.title" />
-            </div>
+            </q-item>
           </div>
         </div>
       </template>
@@ -64,9 +69,14 @@ export default defineComponent({
             class="col-6 col-sm-3 col-md-2"
             data-cy="partners-general-item"
           >
-            <div class="flex items-center justify-center">
+            <q-item
+              dense
+              :href="partner.url"
+              target="_blank"
+              class="flex items-center justify-center q-py-none q-px-none"
+            >
               <q-img :src="partner.image" :alt="partner.title" />
-            </div>
+            </q-item>
           </div>
         </div>
       </template>
@@ -82,9 +92,14 @@ export default defineComponent({
             class="col-6 col-sm-3 col-md-2"
             data-cy="partners-national-item"
           >
-            <div class="flex items-center justify-center">
+            <q-item
+              dense
+              :href="partner.url"
+              target="_blank"
+              class="flex items-center justify-center q-py-none q-px-none"
+            >
               <q-img :src="partner.image" :alt="partner.title" />
-            </div>
+            </q-item>
           </div>
         </div>
       </template>
@@ -100,9 +115,14 @@ export default defineComponent({
             class="col-3 col-sm-2 col-md-1"
             data-cy="partners-media-item"
           >
-            <div class="flex items-center justify-center">
+            <q-item
+              dense
+              :href="partner.url"
+              target="_blank"
+              class="flex items-center justify-center q-py-none q-px-none"
+            >
               <q-img :src="partner.image" :alt="partner.title" />
-            </div>
+            </q-item>
           </div>
         </div>
       </template>
@@ -118,9 +138,14 @@ export default defineComponent({
             class="col-6 col-sm-3 col-md-2"
             data-cy="partners-organizers-item"
           >
-            <div class="flex items-center justify-center">
+            <q-item
+              dense
+              :href="partner.url"
+              target="_blank"
+              class="flex items-center justify-center q-py-none q-px-none"
+            >
               <q-img :src="partner.image" :alt="partner.title" />
-            </div>
+            </q-item>
           </div>
         </div>
       </template>
