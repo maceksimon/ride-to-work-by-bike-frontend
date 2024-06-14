@@ -14,6 +14,17 @@ const routes: RouteRecordRaw[] = [
     ],
   },
   {
+    path: routesConf['company_coordinator_tasks']['path'],
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
+      {
+        path: '',
+        name: routesConf['company_coordinator_tasks']['children']['name'],
+        component: () => import('pages/CompanyCoordinatorTasksPage.vue'),
+      },
+    ],
+  },
+  {
     path: routesConf['prizes']['path'],
     component: () => import('layouts/MainLayout.vue'),
     children: [
