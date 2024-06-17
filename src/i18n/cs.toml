@@ -515,6 +515,12 @@ titleAutomaticLogging = "Automatický záznam"
 titleManualLogging = "Ruční záznam"
 
 [table]
+labelAmount = "Částka"
+labelDateRegistered = "Datum registrace"
+labelEmail = "E-mail"
+labelName = "Jméno"
+labelNickname = "Přezdívka"
+labelTeam = "Tým"
 textEmptyTable = "Žádné výsledky. Zkuste změnit nastavení filtrů."
 
 [routes.transport]
