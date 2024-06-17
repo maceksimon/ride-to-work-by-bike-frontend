@@ -556,6 +556,7 @@ titleAutomaticLogging = "Automatický záznam"
 titleManualLogging = "Ruční záznam"
 
 [table]
+buttonFeeApproval = "Schválit platby startovného"
 labelAmount = "Částka"
 labelDateRegistered = "Datum registrace"
 labelEmail = "E-mail"
@@ -563,6 +564,7 @@ labelName = "Jméno"
 labelNickname = "Přezdívka"
 labelTeam = "Tým"
 textEmptyTable = "Žádné výsledky. Zkuste změnit nastavení filtrů."
+titleFeeApproval = "Platby startovného ke schválení"
 
 [routes.transport]
 bike = "Na kole"
