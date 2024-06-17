@@ -553,6 +553,12 @@ titleAutomaticLogging = "Automatické zadávanie"
 titleManualLogging = "Manuálne zadávanie"
 
 [table]
+labelAmount = "Suma"
+labelDateRegistered = "Dátum registrácie"
+labelEmail = "E-mail"
+labelName = "Meno"
+labelNickname = "Priezvisko"
+labelTeam = "Tím"
 textEmptyTable = "Žiadne výsledky. Skúste zmeniť nastavenia filtra."
 
 [routes.transport]
