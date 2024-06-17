@@ -616,6 +616,12 @@ titleRoutes = "Routes"
 titleTabApp = "Automatic logging"
 
 [table]
+labelAmount = "Amount"
+labelDateRegistered = "Date registered"
+labelEmail = "Email"
+labelName = "Name"
+labelNickname = "Nickname"
+labelTeam = "Team"
 textEmptyTable = "No results. Try changing the filter settings."
 
 [routes.transport]
