@@ -2,6 +2,7 @@ import type { RouteRecordRaw } from 'vue-router';
 import { routesConf } from './routes_conf';
 
 const routes: RouteRecordRaw[] = [
+  // home
   {
     path: routesConf['home']['path'],
     component: () => import('layouts/MainLayout.vue'),
@@ -13,6 +14,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // community
   {
     path: routesConf['community']['path'],
     component: () => import('layouts/MainLayout.vue'),
@@ -24,6 +26,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // login
   {
     path: routesConf['login']['path'],
     component: () => import('layouts/LoginRegisterLayout.vue'),
@@ -32,9 +35,10 @@ const routes: RouteRecordRaw[] = [
         path: '',
         name: routesConf['login']['children']['name'],
         component: () => import('pages/LoginPage.vue'),
-      }
-    ]
+      },
+    ],
   },
+  // company coordinator
   {
     path: routesConf['company_coordinator']['path'],
     component: () => import('layouts/MainLayout.vue'),
@@ -46,6 +50,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // prizes
   {
     path: routesConf['prizes']['path'],
     component: () => import('layouts/MainLayout.vue'),
@@ -57,13 +62,11 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // routes
   {
     path: routesConf['routes']['path'],
     component: () => import('layouts/MainLayout.vue'),
-    redirect:
-      routesConf['routes']['path'] +
-      '/' +
-      routesConf['routes_calendar']['path'],
+    redirect: { name: routesConf['routes_calendar']['children']['name'] },
     children: [
       {
         path: routesConf['routes_calendar']['path'],
@@ -87,6 +90,7 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // register
   {
     path: routesConf['register']['path'],
     component: () => import('layouts/LoginRegisterLayout.vue'),
@@ -98,28 +102,31 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  // register coordinator
   {
-    path: routesConf['register-coordinator']['path'],
+    path: routesConf['register_coordinator']['path'],
     component: () => import('layouts/LoginRegisterLayout.vue'),
     children: [
       {
         path: '',
-        name: routesConf['register-coordinator']['children']['name'],
+        name: routesConf['register_coordinator']['children']['name'],
         component: () => import('pages/RegisterCoordinatorPage.vue'),
       },
     ],
   },
+  // register challenge
   {
-    path: routesConf['register-challenge']['path'],
+    path: routesConf['register_challenge']['path'],
     component: () => import('layouts/LoginRegisterLayout.vue'),
     children: [
       {
         path: '',
-        name: routesConf['register-challenge']['children']['name'],
+        name: routesConf['register_challenge']['children']['name'],
         component: () => import('pages/RegisterChallengePage.vue'),
       },
     ],
   },
+  // results
   {
     path: routesConf['results']['path'],
     component: () => import('layouts/MainLayout.vue'),
@@ -133,12 +140,7 @@ const routes: RouteRecordRaw[] = [
         path: routesConf['results_detail']['path'],
         name: routesConf['results_detail']['children']['name'],
         component: () => import('pages/ResultsDetailPage.vue'),
-        redirect:
-          routesConf['results']['path'] +
-          '/' +
-          routesConf['results_detail']['path'] +
-          '/' +
-          routesConf['results_report']['path'],
+        redirect: { name: routesConf['results_report']['children']['name'] },
         children: [
           {
             path: routesConf['results_report']['path'],
