@@ -1,6 +1,5 @@
 import { Link, User } from 'src/components/types';
 import { i18n } from 'src/boot/i18n';
-import { routesConf } from 'src/router/routes_conf';
 
 export const user: User = {
   label: 'User 1',
@@ -13,52 +12,61 @@ export const user: User = {
 
 export const menuTop: Link[] = [
   {
-    url: routesConf['home']['path'],
+    url: '',
     icon: 'home',
     name: 'home',
+    title: 'home',
   },
   {
-    url: routesConf['routes']['path'],
+    url: '',
     icon: 'route',
     name: 'routes',
+    title: 'routes',
   },
   {
-    url: routesConf['results']['path'],
+    url: '',
     icon: 'emoji_events',
     name: 'results',
+    title: 'results',
   },
   {
-    url: routesConf['community']['path'],
+    url: '',
     icon: 'people',
     name: 'community',
+    title: 'community',
   },
   {
-    url: routesConf['prizes']['path'],
+    url: '',
     icon: 'verified',
-    name: 'discounts',
+    name: 'prizes',
+    title: 'discounts',
   },
   {
-    url: '/company-coordinator',
+    url: '',
     icon: 'business',
-    name: 'coordinator',
+    name: 'company-coordinator',
+    title: 'coordinator',
   },
   {
-    url: '/profil',
+    url: '',
     icon: 'account_circle',
     name: 'profile',
+    title: 'profile',
   },
 ];
 
 export const menuBottom: Link[] = [
   {
-    url: '/invite',
+    url: '',
     icon: 'email',
-    name: 'inviteFriends',
+    name: 'invite',
+    title: 'inviteFriends',
   },
   {
-    url: '/routes',
+    url: '',
     icon: 'volunteer_activism',
     name: 'donate',
+    title: 'donate',
   },
 ];
 

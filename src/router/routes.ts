@@ -66,6 +66,7 @@ const routes: RouteRecordRaw[] = [
   {
     path: routesConf['routes']['path'],
     component: () => import('layouts/MainLayout.vue'),
+    name: routesConf['routes']['children']['name'],
     redirect: { name: routesConf['routes_calendar']['children']['name'] },
     children: [
       {
