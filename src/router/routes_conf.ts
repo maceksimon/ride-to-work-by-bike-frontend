@@ -44,13 +44,13 @@ const routesConf: RoutesConf = {
       name: 'register',
     },
   },
-  'register-coordinator': {
+  register_coordinator: {
     path: '/register-coordinator',
     children: {
       name: 'register-coordinator',
     },
   },
-  'register-challenge': {
+  register_challenge: {
     path: '/register-challenge',
     children: {
       name: 'register-challenge',
