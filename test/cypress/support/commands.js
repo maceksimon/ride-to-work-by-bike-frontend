@@ -112,6 +112,16 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
     .should('have.attr', 'alt', alt);
 });
 
+Cypress.Commands.add('testIcon', ({ element, name, size }) => {
+  cy.wrap(element[0]).should('be.visible');
+  cy.wrap(element[0]).invoke('width').should('eq', size);
+  cy.wrap(element[0]).invoke('height').should('eq', size);
+  cy.wrap(element[0]).matchImageSnapshot(name, {
+    failureThreshold: 0.1,
+    failureThresholdType: 'percent',
+  });
+});
+
 Cypress.Commands.add('testMessageLanguageSelect', (i18n) => {
   const locales = i18n.global.availableLocales;
   locales.forEach((locale) => {

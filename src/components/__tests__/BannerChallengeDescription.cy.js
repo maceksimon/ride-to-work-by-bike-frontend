@@ -53,9 +53,16 @@ function coreTests() {
           .and(
             'contain',
             i18n.global.t('bannerChallengeDescription.transportType'),
-          )
-          .and('contain', getRouteIcon('bike'))
-          .and('contain', getRouteIcon('walk'));
+          );
+        // loop over icons
+        bannerChallengeDescription.transportTypes.forEach((type) => {
+          cy.dataCy(`challenge-transport-icon-${getRouteIcon(type)}`).then(
+            ($el) => {
+              // test icon
+              cy.testIcon({ element: $el, name: getRouteIcon(type), size: 18 });
+            },
+          );
+        });
         cy.dataCy('challenge-description')
           .should('be.visible')
           // test v-html content
