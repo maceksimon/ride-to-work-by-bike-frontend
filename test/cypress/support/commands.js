@@ -116,9 +116,10 @@ Cypress.Commands.add('testIcon', ({ element, name, size }) => {
   cy.wrap(element[0]).should('be.visible');
   cy.wrap(element[0]).invoke('width').should('eq', size);
   cy.wrap(element[0]).invoke('height').should('eq', size);
-  cy.wrap(element[0]).matchImageSnapshot(name, {
+  cy.wrap(element[0], { timeout: 1000 }).matchImageSnapshot(name, {
     failureThreshold: 0.1,
     failureThresholdType: 'percent',
+    customSnapshotIdentifier: ({ name, counter }) => `${name}-${counter}`,
   });
 });
 

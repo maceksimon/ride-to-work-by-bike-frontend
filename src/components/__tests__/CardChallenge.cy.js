@@ -46,7 +46,7 @@ describe('<CardChallenge>', () => {
         .and('have.backgroundColor', 'rgba(0, 0, 0, 0.47)')
         .and('contain', title);
       cy.dataCy('card-challenge-title-icon').then((element) => {
-        cy.testIcon({ element, name: 'person', size: 18 });
+        cy.testIcon({ element, name: 'card-challenge-title-person', size: 18 });
       });
       cy.dataCy('card-title')
         .find('a')
