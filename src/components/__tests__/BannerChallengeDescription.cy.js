@@ -57,9 +57,9 @@ function coreTests() {
         // loop over icons
         bannerChallengeDescription.transportTypes.forEach((type) => {
           cy.dataCy(`challenge-transport-icon-${getRouteIcon(type)}`).then(
-            ($el) => {
+            (element) => {
               // test icon
-              cy.testIcon({ element: $el, name: getRouteIcon(type), size: 18 });
+              cy.testIcon({ element, name: getRouteIcon(type), size: 18 });
             },
           );
         });

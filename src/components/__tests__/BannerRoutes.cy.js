@@ -59,17 +59,13 @@ describe('<BannerRoutes>', () => {
     });
 
     it('renders button icon with correct spacing', () => {
+      cy.dataCy('banner-routes-button-icon').then((element) => {
+        cy.testIcon({ element, name: 'add', size: 24 });
+      });
       cy.dataCy('banner-routes-button-icon')
         .should('be.visible')
         .and('have.color', white)
-        .and('have.css', 'margin-right', '8px')
-        .and('contain', 'add');
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('height')
-        .should('equal', 24);
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('width')
-        .should('equal', 24);
+        .and('have.css', 'margin-right', '8px');
     });
 
     it('has gray background', () => {
