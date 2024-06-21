@@ -231,7 +231,7 @@ function coreTests() {
   it('renders button icon with correct spacing', () => {
     // icon core test
     cy.dataCy('banner-routes-button-icon').then((element) => {
-      cy.testIcon({ element, name: 'add', size: 24 });
+      cy.testIcon({ element, name: 'banner-routes-add', size: 24 });
     });
     // icon additional tests
     cy.dataCy('banner-routes-button-icon')
