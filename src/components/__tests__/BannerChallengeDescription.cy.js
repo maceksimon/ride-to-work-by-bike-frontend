@@ -59,7 +59,11 @@ function coreTests() {
           cy.dataCy(`challenge-transport-icon-${getRouteIcon(type)}`).then(
             (element) => {
               // test icon
-              cy.testIcon({ element, name: getRouteIcon(type), size: 18 });
+              cy.testIcon({
+                element,
+                name: `banner-challenge-description-${getRouteIcon(type)}`,
+                size: 18,
+              });
             },
           );
         });
