@@ -74,7 +74,7 @@ describe('<FormLogin>', () => {
     it('renders password show/hide icon', () => {
       // TODO: fix corrupted snapshot
       // cy.dataCy('form-login-password-icon').then((element) => {
-      //   cy.testIcon({ element, name: 'form-login-password-show', color: `${colorPrimary}` });
+      //   cy.testIcon({ element, name: 'form-login-password-show', size: 18 });
       // })
       cy.dataCy('form-login-password-icon')
         .should('contain', 'visibility')
