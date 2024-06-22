@@ -123,6 +123,7 @@ Cypress.Commands.add('testIcon', ({ element, name, size }) => {
   cy.wrap(element[0]).should('be.visible').matchImageSnapshot(name, {
     failureThreshold: 0.1,
     failureThresholdType: 'percent',
+    screenshotsFolder: 'test/cypress/snapshots',
   });
 });
 

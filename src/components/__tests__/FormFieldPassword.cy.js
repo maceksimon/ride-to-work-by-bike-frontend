@@ -2,7 +2,10 @@ import { colors } from 'quasar';
 
 import FormFieldTestWrapper from 'components/global/FormFieldTestWrapper.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { testPasswordInputReveal } from '../../../test/cypress/support/commonTests';
+
+const colorPrimary = rideToWorkByBikeConfig.colorPrimary;
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -45,9 +48,15 @@ describe('<FormFieldPassword>', () => {
       // input
       cy.dataCy('form-password-input').should('be.visible');
       // icon
-      cy.dataCy('form-password-icon').then((element) => {
-        cy.testIcon({ element, name: 'form-field-password-show', size: 18 });
-      });
+      cy.dataCy('form-password-icon')
+        .should('contain', 'visibility')
+        .and('have.color', colorPrimary);
+      cy.dataCy('form-password-icon').invoke('height').should('be.equal', 18);
+      cy.dataCy('form-password-icon').invoke('width').should('be.equal', 18);
+      // TODO: fix corrupted snapshot file
+      // testPasswordInputReveal({
+      //   identifierPassword: 'form-password',
+      // });
     });
 
     it('allows user to reveal and hide password', () => {
