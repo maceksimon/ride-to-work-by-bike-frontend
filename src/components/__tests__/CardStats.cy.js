@@ -7,7 +7,6 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
-const blueGrey3 = getPaletteColor('blue-grey-3');
 
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
@@ -28,8 +27,6 @@ describe('<CardStats>', () => {
       cy.viewport('macbook-16');
     });
 
-    coreTests();
-
     it('renders title', () => {
       cy.window().then(() => {
         cy.dataCy('card-stats-title')
@@ -43,8 +40,20 @@ describe('<CardStats>', () => {
       });
     });
 
+    it('renders icon', () => {
+      cy.dataCy('card-stats-icon').then((element) => {
+        cy.testIcon({
+          element,
+          name: `card-stats-${card.icon}`,
+          size: 48,
+        });
+      });
+    });
+
     it('renders stats', () => {
+      // count
       cy.dataCy('card-stats-item').should('have.length', card.stats.length);
+      // items
       cy.dataCy('card-stats-item').each(($item, index) => {
         cy.wrap($item)
           .should('have.css', 'font-size', '14px')
@@ -52,14 +61,13 @@ describe('<CardStats>', () => {
           .and('have.color', black)
           .and('contain', card.stats[index].text);
       });
-
-      cy.dataCy('card-stats-item').each(($item, index) => {
-        cy.wrap($item)
-          .find('.q-icon')
-          .should('contain', card.stats[index].icon)
-          .and('have.color', blueGrey3)
-          .and('have.css', 'width', '14px')
-          .and('have.css', 'height', '14px');
+      // icons
+      cy.dataCy('card-stats-item-icon').each((element, index) => {
+        cy.testIcon({
+          element,
+          name: `card-stats-item-${card.stats[index].icon}`,
+          size: 14,
+        });
       });
     });
 
@@ -83,19 +91,5 @@ describe('<CardStats>', () => {
       });
       cy.viewport('iphone-6');
     });
-
-    coreTests();
   });
 });
-
-function coreTests(context) {
-  it('renders icon', () => {
-    cy.dataCy('card-stats-icon').then((element) => {
-      cy.testIcon({
-        element,
-        name: `card-stats-${card.icon}-${context}`,
-        size: 48,
-      });
-    });
-  });
-}
