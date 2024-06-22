@@ -167,30 +167,15 @@ describe('<CardEvent>', () => {
                   .should('contain', '1.')
                   .and('contain', '2023')
                   .and('contain', '12:00');
-                const $icon = $el.find('i');
-                if ($icon.length) {
-                  cy.wrap($icon)
-                    .should('be.visible')
-                    .and('have.color', blueGrey3)
-                    .and('have.css', 'width', '18px')
-                    .and('have.css', 'height', '18px');
-                }
               }
               if (index === 1) {
                 cy.wrap($el).should('contain', cardEvent.location);
-                const $icon = $el.find('i');
-                if ($icon.length) {
-                  cy.wrap($icon)
-                    .should('be.visible')
-                    .and('have.color', blueGrey3)
-                    .and('have.css', 'width', '18px')
-                    .and('have.css', 'height', '18px');
-                }
               }
             });
           cy.dataCy('dialog-event-date-icon').then((element) => {
             cy.testIcon({ element, name: 'card-event-dialog-event', size: 18 });
           });
+          cy.dataCy('dialog-event-date-icon').should('have.color', blueGrey3);
           cy.dataCy('dialog-event-location-icon').then((element) => {
             cy.testIcon({
               element,
@@ -198,6 +183,10 @@ describe('<CardEvent>', () => {
               size: 18,
             });
           });
+          cy.dataCy('dialog-event-location-icon').should(
+            'have.color',
+            blueGrey3,
+          );
         });
       });
     });
