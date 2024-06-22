@@ -8,7 +8,6 @@ const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
 const grey10 = getPaletteColor('grey-10');
 const blueGrey1 = getPaletteColor('blue-grey-1');
-const blueGrey5 = getPaletteColor('blue-grey-5');
 const blueGrey7 = getPaletteColor('blue-grey-7');
 
 const cardFirst = cardsProgress[0];
@@ -202,12 +201,13 @@ describe('<CardProgress>', () => {
     });
 
     it('renders title icon', () => {
-      cy.dataCy('card-progress-header')
-        .find('.q-icon')
-        .should('contain', card.icon)
-        .and('have.color', blueGrey5)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px');
+      cy.dataCy('card-progress-header-icon').then((element) => {
+        cy.testIcon({
+          element,
+          name: `card-progress-header-mobile-${card.icon}`,
+          size: 18,
+        });
+      });
     });
 
     it('renders percentage', () => {
