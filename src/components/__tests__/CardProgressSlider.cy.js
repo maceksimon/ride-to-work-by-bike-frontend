@@ -43,12 +43,13 @@ describe('<CardProgressSlider>', () => {
     });
 
     it('renders title icon', () => {
-      cy.dataCy('card-progress-header')
-        .find('.q-icon')
-        .should('contain', card.icon)
-        .and('have.color', blueGrey1)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px');
+      cy.dataCy('card-progress-header-icon').then((element) => {
+        cy.testIcon({
+          element,
+          name: `card-progress-header-${card.icon}`,
+          size: 18,
+        });
+      });
     });
 
     it('renders timeline', () => {
