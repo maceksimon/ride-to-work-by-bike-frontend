@@ -28,6 +28,8 @@ describe('<CardStats>', () => {
       cy.viewport('macbook-16');
     });
 
+    coreTests();
+
     it('renders title', () => {
       cy.window().then(() => {
         cy.dataCy('card-stats-title')
@@ -39,14 +41,6 @@ describe('<CardStats>', () => {
             expect($title.text()).to.equal(card.title);
           });
       });
-    });
-
-    it('renders icon', () => {
-      cy.dataCy('card-stats-icon')
-        .should('contain', card.icon)
-        .and('have.color', blueGrey3)
-        .and('have.css', 'width', '48px')
-        .and('have.css', 'height', '48px');
     });
 
     it('renders stats', () => {
@@ -89,5 +83,19 @@ describe('<CardStats>', () => {
       });
       cy.viewport('iphone-6');
     });
+
+    coreTests();
   });
 });
+
+function coreTests(context) {
+  it('renders icon', () => {
+    cy.dataCy('card-stats-icon').then((element) => {
+      cy.testIcon({
+        element,
+        name: `card-stats-${card.icon}-${context}`,
+        size: 48,
+      });
+    });
+  });
+}
