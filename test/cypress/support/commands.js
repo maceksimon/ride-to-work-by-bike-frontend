@@ -113,13 +113,16 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
 });
 
 Cypress.Commands.add('testIcon', ({ element, name, size }) => {
-  cy.wrap(element[0]).should('be.visible');
+  // timestamp for matching see https://docs.cypress.io/guides/tooling/visual-testing#Timestamps
+  const now = new Date(2024, 1, 1);
+  cy.clock(now);
+  // size
   cy.wrap(element[0]).invoke('width').should('eq', size);
   cy.wrap(element[0]).invoke('height').should('eq', size);
-  cy.wrap(element[0], { timeout: 1000 }).matchImageSnapshot(name, {
+  // snapshot
+  cy.wrap(element[0]).should('be.visible').matchImageSnapshot(name, {
     failureThreshold: 0.1,
     failureThresholdType: 'percent',
-    customSnapshotIdentifier: ({ name, counter }) => `${name}-${counter}`,
   });
 });
 

@@ -143,6 +143,7 @@ export default defineComponent({
             data-cy="card-progress-prizes"
           >
             <q-icon
+              v-if="prize.icon"
               :name="prize.icon"
               size="24px"
               color="white"
