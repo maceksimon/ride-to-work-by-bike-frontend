@@ -76,7 +76,7 @@ export default defineComponent({
     <!-- Content -->
     <div class="flex items-center gap-24">
       <!-- Help icon link for displaying modal dialog-->
-      <help-button size="8px" data-cy="help-button" />
+      <help-button small data-cy="help-button" />
       <!-- Notification icon link -->
       <a href="#">
         <q-icon
