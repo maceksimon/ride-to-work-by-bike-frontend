@@ -82,6 +82,13 @@ function coreTests() {
         cy.dataCy('challenge-link')
           .find('a')
           .should('have.attr', 'href', bannerChallengeDescription.link.url);
+        cy.dataCy('challenge-link-icon').then((element) => {
+          cy.testIcon({
+            element,
+            name: 'banner-challenge-description-launch',
+            size: 18,
+          });
+        });
       },
     );
   });
