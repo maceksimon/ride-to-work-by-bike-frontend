@@ -169,6 +169,7 @@ Cypress.Commands.add('waitForStylesheets', () => {
  * });
  */
 Cypress.Commands.add('testIcon', ({ element, name, size }) => {
+  cy.wrap(element[0]).should('be.visible');
   // timestamp for matching see https://docs.cypress.io/guides/tooling/visual-testing#Timestamps
   const now = new Date(2024, 1, 1);
   cy.clock(now);
@@ -176,11 +177,12 @@ Cypress.Commands.add('testIcon', ({ element, name, size }) => {
   cy.setDPR(1);
   cy.waitForFonts();
   cy.waitForStylesheets();
+  // remove scrollbar
+  cy.wrap(element[0]).invoke('attr', 'style', 'overflow: hidden');
   // size
   cy.wrap(element[0]).invoke('width').should('eq', size);
   cy.wrap(element[0]).invoke('height').should('eq', size);
   // snapshot
-  cy.wrap(element[0]).should('be.visible');
   cy.wrap(element[0]).matchImageSnapshot(name, {
     failureThreshold: 0.1,
     failureThresholdType: 'percent',
