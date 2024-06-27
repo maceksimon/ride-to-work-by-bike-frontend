@@ -73,7 +73,7 @@ describe('<SliderProgress>', () => {
         cy.dataCy('progress-slider-stats-icon').each((element, index) => {
           cy.testIcon({
             element,
-            name: `slider-progress-${progressStats[index].icon}`,
+            name: `slider-progress-${progressStats[index].icon}-desktop`,
             size: 18,
           });
         });
@@ -211,7 +211,7 @@ describe('<SliderProgress>', () => {
         cy.dataCy('progress-slider-stats-icon').each((element, index) => {
           cy.testIcon({
             element,
-            name: `slider-progress-${progressStats[index].icon}`,
+            name: `slider-progress-${progressStats[index].icon}-mobile`,
             size: 18,
           });
         });

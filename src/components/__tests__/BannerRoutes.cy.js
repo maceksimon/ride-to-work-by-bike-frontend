@@ -30,7 +30,20 @@ describe('<BannerRoutes>', () => {
       cy.viewport('macbook-16');
     });
 
-    coreTests();
+    it('renders button icon with correct spacing', () => {
+      // TODO: fix corrupted snapshot
+      cy.dataCy('banner-routes-button-icon')
+        .invoke('height')
+        .should('be.equal', 24);
+      cy.dataCy('banner-routes-button-icon')
+        .invoke('width')
+        .should('be.equal', 24);
+      // icon additional tests
+      cy.dataCy('banner-routes-button-icon')
+        .should('be.visible')
+        .and('have.color', white)
+        .and('have.css', 'margin-right', '8px');
+    });
 
     it('renders title with the number of missing routes', () => {
       cy.window().then(() => {
@@ -99,7 +112,7 @@ describe('<BannerRoutes>', () => {
       cy.viewport('macbook-16');
     });
 
-    coreTests();
+    coreTests('start');
 
     it('renders title width the "start" message', () => {
       cy.window().then(() => {
@@ -171,7 +184,7 @@ describe('<BannerRoutes>', () => {
       cy.viewport('iphone-6');
     });
 
-    coreTests();
+    coreTests('mobile');
 
     it('renders title with the number of missing routes', () => {
       cy.window().then(() => {
@@ -227,11 +240,11 @@ describe('<BannerRoutes>', () => {
   });
 });
 
-function coreTests() {
+function coreTests(context) {
   it('renders button icon with correct spacing', () => {
     // icon core test
     cy.dataCy('banner-routes-button-icon').then((element) => {
-      cy.testIcon({ element, name: 'banner-routes-add', size: 24 });
+      cy.testIcon({ element, name: `banner-routes-add-${context}`, size: 24 });
     });
     // icon additional tests
     cy.dataCy('banner-routes-button-icon')

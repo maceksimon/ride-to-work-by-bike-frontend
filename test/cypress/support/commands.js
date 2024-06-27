@@ -161,10 +161,10 @@ Cypress.Commands.add('testIcon', ({ element, name, size }) => {
   // timestamp for matching see https://docs.cypress.io/guides/tooling/visual-testing#Timestamps
   const now = new Date(2024, 1, 1);
   cy.clock(now);
-  // set DPR and wait for resources (to avoid empty snapshot)
-  cy.setDPR(1);
-
   cy.document()
+    // set DPR and wait for resources (to avoid empty snapshot)
+    .then((document) => document.fonts.ready)
+    .then(() => cy.setDPR(1))
     .then(() => cy.waitForStylesheets())
     .then(() => {
       // size

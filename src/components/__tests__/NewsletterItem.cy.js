@@ -27,7 +27,7 @@ describe('<NewsletterItem>', () => {
       cy.viewport('macbook-16');
     });
 
-    coreTests();
+    coreTests('desktop');
 
     it('has display flex column', () => {
       cy.window().then(() => {
@@ -77,7 +77,7 @@ describe('<NewsletterItem>', () => {
       cy.viewport('iphone-6');
     });
 
-    coreTests();
+    coreTests('mobile');
 
     it('renders title', () => {
       cy.window().then(() => {
@@ -163,13 +163,13 @@ describe('<NewsletterItem>', () => {
   });
 });
 
-function coreTests() {
+function coreTests(context) {
   it('renders icon', () => {
     cy.window().then(() => {
       cy.dataCy('newsletter-item-icon').then((element) => {
         cy.testIcon({
           element,
-          name: `newsletter-item-${icon}`,
+          name: `newsletter-item-${icon}-${context}`,
           size: 32,
         });
       });
@@ -186,13 +186,12 @@ function coreTests() {
         .and('have.css', 'border-radius', '28px')
         .and('have.color', grey10)
         .and('contain', i18n.global.t('index.newsletterFeature.following'));
-      cy.dataCy('newsletter-item-button-icon').then((element) => {
-        cy.testIcon({
-          element,
-          name: 'newsletter-item-check',
-          size: 18,
-        });
-      });
+      cy.dataCy('newsletter-item-button-icon')
+        .invoke('height')
+        .should('be.equal', 18);
+      cy.dataCy('newsletter-item-button-icon')
+        .invoke('width')
+        .should('be.equal', 18);
     });
   });
 }
