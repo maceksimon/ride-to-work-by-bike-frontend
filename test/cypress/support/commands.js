@@ -127,18 +127,6 @@ Cypress.Commands.add('setDPR', (dpr) => {
 });
 
 /**
- * Custom waitForFonts command that waits for all fonts to be loaded.
- * Used in combination with `waitForStylesheets` in `testIcon` command.
- */
-Cypress.Commands.add('waitForFonts', () => {
-  cy.document().then((document) => {
-    document.fonts.ready.then(() => {
-      cy.log('All fonts loaded');
-    });
-  });
-});
-
-/**
  * Custom waitForStylesheets command that waits for all stylesheets to be loaded
  * Used in combination with `waitForFonts` in `testIcon` command.
  */
@@ -175,22 +163,23 @@ Cypress.Commands.add('testIcon', ({ element, name, size }) => {
   cy.clock(now);
   // set DPR and wait for resources (to avoid empty snapshot)
   cy.setDPR(1);
-  cy.waitForFonts();
-  cy.waitForStylesheets();
-  // remove scrollbar
-  cy.wrap(element[0]).invoke('attr', 'style', 'overflow: hidden');
-  // size
-  cy.wrap(element[0]).invoke('width').should('eq', size);
-  cy.wrap(element[0]).invoke('height').should('eq', size);
-  // snapshot
-  cy.wrap(element[0]).matchImageSnapshot(name, {
-    failureThreshold: 0.1,
-    failureThresholdType: 'percent',
-    timeout: 1000,
-    customDiffConfig: { threshold: 0.4 },
-    screenshotsFolder: 'test/cypress/snapshots',
-    retries: 2,
-  });
+
+  cy.document()
+    .then(() => cy.waitForStylesheets())
+    .then(() => {
+      // size
+      cy.wrap(element[0]).invoke('width').should('eq', size);
+      cy.wrap(element[0]).invoke('height').should('eq', size);
+      // snapshot
+      cy.wrap(element[0]).matchImageSnapshot(name, {
+        failureThreshold: 0.1,
+        failureThresholdType: 'percent',
+        timeout: 1000,
+        customDiffConfig: { threshold: 0.4 },
+        screenshotsFolder: 'test/cypress/snapshots',
+        retries: 2,
+      });
+    });
 });
 
 Cypress.Commands.add('testMessageLanguageSelect', (i18n) => {
