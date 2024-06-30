@@ -45,11 +45,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row" data-cy="route-item-display">
-    <div class="col-12 col-sm-2 no-wrap" data-cy="column-direction">
+  <div class="text-grey-10" data-cy="route-item-display">
+    <div data-cy="section-direction">
       <!-- Column: Direction -->
       <div
-        class="flex gap-8 text-body1 text-weight-bold text-grey-10 q-pa-md"
+        class="flex gap-8 text-body1 text-weight-bold q-pa-md"
         data-cy="label-direction"
       >
         <!-- From work -->
@@ -73,7 +73,8 @@ export default defineComponent({
         </span>
       </div>
     </div>
-    <div class="col-12 col-sm-10" data-cy="column-distance">
+    <q-separator class="q-mx-md" />
+    <div data-cy="section-distance">
       <!-- Column: Distance -->
       <div class="flex items-center justify-between gap-8 q-pa-md">
         <!-- Transport type -->
@@ -93,7 +94,11 @@ export default defineComponent({
           </span>
         </div>
         <!-- Distance -->
-        <div v-if="route.distance" data-cy="label-distance">
+        <div
+          v-if="route.distance"
+          class="text-weight-bold"
+          data-cy="label-distance"
+        >
           {{ route.distance }} {{ $t('global.routeLengthUnit') }}
         </div>
       </div>
