@@ -21,17 +21,17 @@ export const useRoutes = () => {
   const getRouteIcon = (transport: TransportType): string => {
     switch (transport) {
       case 'car':
-        return 'directions_car';
+        return 'svguse:icons.svg#lucide-car-front';
       case 'bike':
-        return 'pedal_bike';
+        return 'svguse:icons.svg#lucide-bike';
       case 'walk':
-        return 'directions_walk';
+        return 'svguse:icons.svg#lucide-walk';
       case 'bus':
-        return 'directions_bus';
+        return 'svguse:icons.svg#lucide-bus';
       case 'none':
-        return 'block';
+        return 'svguse:icons.svg#lucide-ban';
       default:
-        return 'block';
+        return 'svguse:icons.svg#lucide-ban';
     }
   };
 

@@ -49,20 +49,21 @@ export default defineComponent({
     <div class="col-12 col-sm-2 no-wrap" data-cy="column-direction">
       <!-- Column: Direction -->
       <div
-        class="flex gap-8 text-subtitle2 text-weight-bold text-grey-10 q-pa-sm"
+        class="flex gap-8 text-body1 text-weight-bold text-grey-10 q-pa-md"
         data-cy="label-direction"
       >
         <!-- From work -->
-        <span v-if="route.direction === 'from_work'">
+        <span v-if="route.direction === 'fromWork'">
           <q-icon
             name="arrow_back"
+            color="grey-10"
             size="18px"
             data-cy="label-direction-icon"
           />
           {{ $t('routes.labelDirectionFromWork') }}
         </span>
         <!-- To work -->
-        <span v-if="route.direction === 'to_work'">
+        <span v-if="route.direction === 'toWork'">
           <q-icon
             name="arrow_forward"
             size="18px"
@@ -74,15 +75,18 @@ export default defineComponent({
     </div>
     <div class="col-12 col-sm-10" data-cy="column-distance">
       <!-- Column: Distance -->
-      <div class="flex items-center justify-between gap-8 q-pa-sm bg-grey-2">
+      <div class="flex items-center justify-between gap-8 q-pa-md">
         <!-- Transport type -->
         <div v-if="route.transport" class="flex no-wrap items-center gap-8">
           <!-- Icon -->
-          <q-icon
-            :name="getRouteIcon(route.transport)"
-            size="24px"
-            data-cy="icon-transport"
-          />
+          <q-avatar size="32px" color="secondary" data-cy="avatar-transport">
+            <q-icon
+              color="primary"
+              :name="getRouteIcon(route.transport)"
+              size="18px"
+              data-cy="icon-transport"
+            />
+          </q-avatar>
           <!-- Label -->
           <span data-cy="description-transport">
             {{ $t(`routes.transport.${route.transport}`) }}

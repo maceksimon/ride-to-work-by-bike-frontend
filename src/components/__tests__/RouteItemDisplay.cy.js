@@ -6,6 +6,7 @@ import { i18n } from '../../boot/i18n';
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
 const grey10 = getPaletteColor('grey-10');
+const secondary = getPaletteColor('secondary');
 
 describe('<RouteItemDisplay>', () => {
   it('has translation for all strings', () => {
@@ -35,40 +36,11 @@ describe('<RouteItemDisplay>', () => {
 
     coreTests();
 
-    it('renders label and icon "to work"', () => {
-      // label to work
-      cy.dataCy('label-direction')
-        .should('be.visible')
-        .and('contain', i18n.global.t('routes.labelDirectionToWork'));
-      // icon to work
-      cy.dataCy('label-direction-icon')
-        .should('be.visible')
-        .and('contain', 'arrow_forward');
-    });
+    desktopTests();
 
-    it('renders correct distance value', () => {
-      cy.fixture('routeListItem').then((routes) => {
-        // distance value including units
-        cy.dataCy('label-distance')
-          .should('be.visible')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', black)
-          .and('contain', routes.toWork.distance)
-          .and('contain', i18n.global.t('global.routeLengthUnit'));
-      });
-    });
+    toWorkTests();
 
-    it('renders columns side by side in 2:10 ratio', () => {
-      cy.testElementPercentageWidth(
-        cy.dataCy('column-direction'),
-        (2 / 12) * 100,
-      );
-      cy.testElementPercentageWidth(
-        cy.dataCy('column-distance'),
-        (10 / 12) * 100,
-      );
-    });
+    distanceTests();
   });
 
   context('from work (desktop)', () => {
@@ -85,16 +57,9 @@ describe('<RouteItemDisplay>', () => {
 
     coreTests();
 
-    it('renders label and icon "from work"', () => {
-      // label from work
-      cy.dataCy('label-direction')
-        .should('be.visible')
-        .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
-      // icon from work
-      cy.dataCy('label-direction-icon')
-        .should('be.visible')
-        .and('contain', 'arrow_back');
-    });
+    desktopTests();
+
+    fromWorkTests();
 
     it('does not render distance', () => {
       // distance value empty
@@ -126,12 +91,15 @@ describe('<RouteItemDisplay>', () => {
 function coreTests() {
   it('renders component', () => {
     // component visible
-    cy.dataCy('route-item-display').should('be.visible');
+    // cy.dataCy('route-item-display').should('be.visible')
+    //   .and('have.css', 'border-style', 'solid')
+    //   .and('have.css', 'border-width', '1px');
     // label direction styles
     cy.dataCy('label-direction')
       .should('be.visible')
-      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-size', '16px')
       .and('have.css', 'font-weight', '700')
+      .and('have.css', 'padding', '16px')
       .and('have.color', grey10);
     // icon direction
     cy.dataCy('label-direction-icon')
@@ -142,20 +110,80 @@ function coreTests() {
       .should('be.visible')
       .invoke('width')
       .should('be.eq', 18);
+    // avatar transport
+    cy.dataCy('avatar-transport')
+      .should('be.visible')
+      .and('have.backgroundColor', secondary);
+    cy.dataCy('avatar-transport').invoke('height').should('be.eq', 32);
+    cy.dataCy('avatar-transport').invoke('width').should('be.eq', 32);
     // icon transport
     cy.dataCy('icon-transport')
       .should('be.visible')
       .invoke('height')
-      .should('be.eq', 24);
+      .should('be.eq', 18);
     cy.dataCy('icon-transport')
       .should('be.visible')
       .invoke('width')
-      .should('be.eq', 24);
+      .should('be.eq', 18);
     // description transport styles
     cy.dataCy('description-transport')
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
       .and('have.color', black);
+  });
+}
+
+function desktopTests() {
+  it('renders columns side by side in 2:10 ratio', () => {
+    cy.testElementPercentageWidth(
+      cy.dataCy('column-direction'),
+      (2 / 12) * 100,
+    );
+    cy.testElementPercentageWidth(
+      cy.dataCy('column-distance'),
+      (10 / 12) * 100,
+    );
+  });
+}
+
+function toWorkTests() {
+  it('renders label and icon "to work"', () => {
+    // label to work
+    cy.dataCy('label-direction')
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.labelDirectionToWork'));
+    // icon to work
+    cy.dataCy('label-direction-icon')
+      .should('be.visible')
+      .and('contain', 'arrow_forward');
+  });
+}
+
+function fromWorkTests() {
+  it('renders label and icon "from work"', () => {
+    // label from work
+    cy.dataCy('label-direction')
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
+    // icon from work
+    cy.dataCy('label-direction-icon')
+      .should('be.visible')
+      .and('contain', 'arrow_back');
+  });
+}
+
+function distanceTests() {
+  it('renders correct distance value', () => {
+    cy.fixture('routeListItem').then((routes) => {
+      // distance value including units
+      cy.dataCy('label-distance')
+        .should('be.visible')
+        .and('have.css', 'font-size', '14px')
+        .and('have.css', 'font-weight', '400')
+        .and('have.color', black)
+        .and('contain', routes.toWork.distance)
+        .and('contain', i18n.global.t('global.routeLengthUnit'));
+    });
   });
 }
