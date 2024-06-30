@@ -2,6 +2,8 @@ import { colors } from 'quasar';
 
 import RouteItemDisplay from 'components/routes/RouteItemDisplay.vue';
 import { i18n } from '../../boot/i18n';
+import { hexToRgb } from 'app/test/cypress/utils';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -22,9 +24,10 @@ describe('<RouteItemDisplay>', () => {
     );
   });
 
-  context('to work - with distance (desktop)', () => {
+  context('to work - with distance', () => {
     beforeEach(() => {
       cy.fixture('routeListItem').then((routes) => {
+        cy.wrap(routes.toWork).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
             route: routes.toWork,
@@ -41,9 +44,10 @@ describe('<RouteItemDisplay>', () => {
     distanceTests();
   });
 
-  context('from work (desktop)', () => {
+  context('from work - no distance', () => {
     beforeEach(() => {
       cy.fixture('routeListItem').then((routes) => {
+        cy.wrap(routes.fromWork).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
             route: routes.fromWork,
@@ -62,29 +66,23 @@ describe('<RouteItemDisplay>', () => {
       cy.dataCy('label-distance').should('not.exist');
     });
   });
-
-  context('mobile', () => {
-    beforeEach(() => {
-      cy.fixture('routeListItem').then((routes) => {
-        cy.mount(RouteItemDisplay, {
-          props: {
-            route: routes.toWork,
-          },
-        });
-        cy.viewport('iphone-6');
-      });
-    });
-
-    coreTests();
-  });
 });
 
 function coreTests() {
   it('renders component', () => {
     // component visible
-    // cy.dataCy('route-item-display').should('be.visible')
-    //   .and('have.css', 'border-style', 'solid')
-    //   .and('have.css', 'border-width', '1px');
+    cy.dataCy('route-item-display')
+      .should('be.visible')
+      .and(
+        'have.css',
+        'border',
+        `1px solid ${hexToRgb(rideToWorkByBikeConfig.colorGray)}`,
+      )
+      .and(
+        'have.css',
+        'border-radius',
+        rideToWorkByBikeConfig.borderRadiusCard,
+      );
     // label direction styles
     cy.dataCy('label-direction')
       .should('be.visible')
@@ -156,14 +154,14 @@ function fromWorkTests() {
 
 function distanceTests() {
   it('renders correct distance value', () => {
-    cy.fixture('routeListItem').then((routes) => {
+    cy.get('@route').then((route) => {
       // distance value including units
       cy.dataCy('label-distance')
         .should('be.visible')
         .and('have.css', 'font-size', '14px')
         .and('have.css', 'font-weight', '700')
         .and('have.color', grey10)
-        .and('contain', routes.toWork.distance)
+        .and('contain', route.distance)
         .and('contain', i18n.global.t('global.routeLengthUnit'));
     });
   });

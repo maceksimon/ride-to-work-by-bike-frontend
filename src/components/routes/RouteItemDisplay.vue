@@ -20,6 +20,9 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
 import type { RouteItem } from '../types/Route';
 
@@ -35,9 +38,14 @@ export default defineComponent({
     },
   },
   setup() {
+    const { borderRadiusCard: borderRadius, colorGray: borderColor } =
+      rideToWorkByBikeConfig;
+
     const { getRouteIcon } = useRoutes();
 
     return {
+      borderColor,
+      borderRadius,
       getRouteIcon,
     };
   },
@@ -45,7 +53,14 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="text-grey-10" data-cy="route-item-display">
+  <div
+    class="text-grey-10"
+    data-cy="route-item-display"
+    :style="{
+      'border-radius': borderRadius,
+      border: `1px solid ${borderColor}`,
+    }"
+  >
     <div data-cy="section-direction">
       <!-- Column: Direction -->
       <div
