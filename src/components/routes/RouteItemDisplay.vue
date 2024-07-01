@@ -41,11 +41,12 @@ export default defineComponent({
     const { borderRadiusCard: borderRadius, colorGray: borderColor } =
       rideToWorkByBikeConfig;
 
-    const { getRouteIcon, getTransportLabel } = useRoutes();
+    const { getRouteDistance, getRouteIcon, getTransportLabel } = useRoutes();
 
     return {
       borderColor,
       borderRadius,
+      getRouteDistance,
       getRouteIcon,
       getTransportLabel,
     };
@@ -119,7 +120,7 @@ export default defineComponent({
           class="text-weight-bold"
           data-cy="label-distance"
         >
-          {{ route.distance }} {{ $t('global.routeLengthUnit') }}
+          {{ getRouteDistance(route) }}
         </div>
       </div>
     </div>
