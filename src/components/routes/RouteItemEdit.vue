@@ -13,7 +13,7 @@
  * - `displayLabel` (boolean, optional): Whether to display direction label.`
  *
  * @example
- * <route-list-item :route="route" />
+ * <route-item-edit :route="route" />
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A104042&mode=dev)
  */
@@ -22,15 +22,18 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 import { i18n } from 'src/boot/i18n';
 
-// composables
-import { useRoutes } from 'src/composables/useRoutes';
+// components
+import RouteInputTransportType from './RouteInputTransportType.vue';
 
 // types
 import type { FormOption } from '../types/Form';
-import type { RouteItem, RouteInputType } from '../types/Route';
+import type { RouteItem, RouteInputType, TransportType } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteItemEdit',
+  components: {
+    RouteInputTransportType,
+  },
   props: {
     route: {
       type: Object as () => RouteItem,
@@ -61,36 +64,7 @@ export default defineComponent({
       },
     ];
 
-    const { getRouteIcon } = useRoutes();
-    const optionsTransport: FormOption[] = [
-      {
-        label: '',
-        value: 'bike',
-        icon: getRouteIcon('bike'),
-      },
-      {
-        label: '',
-        value: 'walk',
-        icon: getRouteIcon('walk'),
-      },
-      {
-        label: '',
-        value: 'bus',
-        icon: getRouteIcon('bus'),
-      },
-      {
-        label: '',
-        value: 'car',
-        icon: getRouteIcon('car'),
-      },
-      {
-        label: '',
-        value: 'none',
-        icon: getRouteIcon('none'),
-      },
-    ];
-
-    const transport = ref<string>(props.route.transport || '');
+    const transport = ref<TransportType | null>(props.route.transport || null);
     // show distance input if transport is bike, walk or bus
     const isShownDistance = computed((): boolean => {
       return (
@@ -127,7 +101,6 @@ export default defineComponent({
       iconSize,
       isShownDistance,
       optionsAction,
-      optionsTransport,
       transport,
     };
   },
@@ -135,15 +108,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row items-center" data-cy="route-list-item">
-    <div v-if="displayLabel" class="col-12 col-sm-2" data-cy="column-direction">
-      <!-- Column: Direction -->
+  <div class="row items-center" data-cy="route-item-edit">
+    <div class="col-12 col-sm-2" data-cy="section-direction">
+      <!-- Section: Direction -->
       <div
         class="flex gap-8 text-subtitle2 text-weight-bold text-grey-10"
         data-cy="label-direction"
       >
         <!-- From work -->
-        <span v-if="route.direction === 'from_work'">
+        <span v-if="route.direction === 'fromWork'">
           <q-icon
             name="arrow_back"
             :size="iconSize"
@@ -152,7 +125,7 @@ export default defineComponent({
           {{ $t('routes.labelDirectionFromWork') }}
         </span>
         <!-- To work -->
-        <span v-if="route.direction === 'to_work'">
+        <span v-if="route.direction === 'toWork'">
           <q-icon
             name="arrow_forward"
             :size="iconSize"
@@ -162,50 +135,18 @@ export default defineComponent({
         </span>
       </div>
     </div>
-    <div
-      :class="[displayLabel ? 'col-12 col-sm-10' : 'col-12']"
-      data-cy="column-transport-distance"
-    >
+    <div class="col-12 col-sm-10" data-cy="section-transport-distance">
       <div class="row">
-        <!-- Column: Transport type -->
-        <div
-          :class="[displayLabel ? 'col-12 col-sm-4' : 'col-12 col-sm-5']"
-          data-cy="column-transport"
-        >
-          <!-- Label -->
-          <div
-            class="text-caption text-weight-bold text-grey-10"
-            data-cy="label-transport"
-          >
-            {{ $t('routes.labelTransportType') }}
-          </div>
-          <div class="q-mt-sm" data-cy="select-transport">
-            <!-- Toggle Buttons -->
-            <q-btn-toggle
-              v-model="transport"
-              no-caps
-              rounded
-              unelevated
-              toggle-color="primary"
-              color="white"
-              text-color="primary"
-              :options="optionsTransport"
-              data-cy="button-toggle-transport"
-            />
-            <!-- Description -->
-            <div
-              class="text-caption text-black q-mt-sm"
-              data-cy="description-transport"
-            >
-              {{ $t(`routes.transport.${transport}`) }}
-            </div>
-          </div>
-        </div>
-        <!-- Column: Distance -->
+        <!-- Section: Transport type -->
+        <route-input-transport-type
+          v-model="transport"
+          data-cy="section-transport"
+        />
+        <!-- Section: Distance -->
         <div
           v-show="isShownDistance"
-          :class="[displayLabel ? 'col-12 col-sm-8' : 'col-12 col-sm-7']"
-          data-cy="column-distance"
+          class="col-12 col-sm-8"
+          data-cy="section-distance"
         >
           <!-- Label -->
           <div
