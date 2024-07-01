@@ -41,12 +41,13 @@ export default defineComponent({
     const { borderRadiusCard: borderRadius, colorGray: borderColor } =
       rideToWorkByBikeConfig;
 
-    const { getRouteIcon } = useRoutes();
+    const { getRouteIcon, getTransportLabel } = useRoutes();
 
     return {
       borderColor,
       borderRadius,
       getRouteIcon,
+      getTransportLabel,
     };
   },
 });
@@ -93,11 +94,15 @@ export default defineComponent({
       <!-- Column: Distance -->
       <div class="flex items-center justify-between gap-8 q-pa-md">
         <!-- Transport type -->
-        <div v-if="route.transport" class="flex no-wrap items-center gap-8">
+        <div class="flex no-wrap items-center gap-8">
           <!-- Icon -->
-          <q-avatar size="32px" color="secondary" data-cy="avatar-transport">
+          <q-avatar
+            size="32px"
+            :color="route.transport ? 'secondary' : 'grey-2'"
+            data-cy="avatar-transport"
+          >
             <q-icon
-              color="primary"
+              :color="route.transport ? 'primary' : 'grey-7'"
               :name="getRouteIcon(route.transport)"
               size="18px"
               data-cy="icon-transport"
@@ -105,7 +110,7 @@ export default defineComponent({
           </q-avatar>
           <!-- Label -->
           <span data-cy="description-transport">
-            {{ $t(`routes.transport.${route.transport}`) }}
+            {{ getTransportLabel(route.transport) }}
           </span>
         </div>
         <!-- Distance -->

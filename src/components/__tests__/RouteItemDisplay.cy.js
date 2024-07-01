@@ -4,11 +4,15 @@ import RouteItemDisplay from 'components/routes/RouteItemDisplay.vue';
 import { i18n } from '../../boot/i18n';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { useRoutes } from 'src/composables/useRoutes';
 
 const { getPaletteColor } = colors;
+const grey2 = getPaletteColor('grey-2');
+const grey7 = getPaletteColor('grey-7');
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
+const { getTransportLabel } = useRoutes();
 
 describe('<RouteItemDisplay>', () => {
   it('has translation for all strings', () => {
@@ -18,7 +22,7 @@ describe('<RouteItemDisplay>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
-      ['bike', 'car', 'walk', 'bus', 'none'],
+      ['bike', 'car', 'walk', 'bus', 'none', 'unknown'],
       'routes.transport',
       i18n,
     );
@@ -27,10 +31,11 @@ describe('<RouteItemDisplay>', () => {
   context('to work - with distance', () => {
     beforeEach(() => {
       cy.fixture('routeListItem').then((routes) => {
-        cy.wrap(routes.toWork).as('route');
+        const route = routes.toWork;
+        cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
-            route: routes.toWork,
+            route: route,
           },
         });
         cy.viewport('macbook-16');
@@ -44,13 +49,83 @@ describe('<RouteItemDisplay>', () => {
     distanceTests();
   });
 
+  context('from work - with distance', () => {
+    beforeEach(() => {
+      cy.fixture('routeListItem').then((routes) => {
+        const route = routes.fromWork;
+        cy.wrap(route).as('route');
+        cy.mount(RouteItemDisplay, {
+          props: {
+            route: route,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    coreTests();
+
+    fromWorkTests();
+
+    distanceTests();
+  });
+
+  context('to work - empty', () => {
+    beforeEach(() => {
+      cy.fixture('routeListItem').then((routes) => {
+        const route = routes.toWork;
+        route.transport = null;
+        route.distance = null;
+        cy.wrap(route).as('route');
+        cy.mount(RouteItemDisplay, {
+          props: {
+            route: route,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    coreTests();
+
+    toWorkTests();
+
+    distanceTests();
+  });
+
+  context('from work - empty', () => {
+    beforeEach(() => {
+      cy.fixture('routeListItem').then((routes) => {
+        const route = routes.fromWork;
+        route.transport = null;
+        route.distance = null;
+        cy.wrap(route).as('route');
+        cy.mount(RouteItemDisplay, {
+          props: {
+            route: route,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    coreTests();
+
+    fromWorkTests();
+
+    distanceTests();
+  });
+
   context('from work - no distance', () => {
     beforeEach(() => {
       cy.fixture('routeListItem').then((routes) => {
-        cy.wrap(routes.fromWork).as('route');
+        const route = routes.fromWork;
+        // set distance to 0 for test purposes
+        route.distance = 0;
+        cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
-            route: routes.fromWork,
+            route: route,
           },
         });
         cy.viewport('macbook-16');
@@ -100,16 +175,13 @@ function coreTests() {
       .invoke('width')
       .should('be.eq', 18);
     // avatar transport
-    cy.dataCy('avatar-transport')
-      .should('be.visible')
-      .and('have.backgroundColor', secondary);
+    cy.dataCy('avatar-transport').should('be.visible');
     cy.dataCy('avatar-transport').invoke('height').should('be.eq', 32);
     cy.dataCy('avatar-transport').invoke('width').should('be.eq', 32);
     // icon transport
     cy.dataCy('icon-transport')
       .should('be.visible')
-      .and('have.css', 'font-size', '18px')
-      .and('have.color', primary);
+      .and('have.css', 'font-size', '18px');
     cy.dataCy('icon-transport').invoke('height').should('be.eq', 18);
     cy.dataCy('icon-transport').invoke('width').should('be.eq', 18);
     // description transport styles
@@ -118,6 +190,37 @@ function coreTests() {
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10);
+  });
+
+  it('renders correct transport value', () => {
+    cy.get('@route').then((route) => {
+      // test styles if transport value is logged
+      if (route.transport) {
+        // transport value
+        cy.dataCy('avatar-transport')
+          .should('be.visible')
+          .and('have.backgroundColor', secondary);
+        // icon transport
+        cy.dataCy('icon-transport')
+          .should('be.visible')
+          .and('have.color', primary);
+      } else {
+        // transport value empty
+        cy.dataCy('avatar-transport')
+          .should('be.visible')
+          .and('have.backgroundColor', grey2);
+        // icon transport question mark
+        cy.dataCy('icon-transport')
+          .should('be.visible')
+          .and('have.color', grey7);
+      }
+      cy.dataCy('description-transport').then((description) => {
+        cy.wrap(getTransportLabel(route.transport)).should(
+          'eq',
+          description.text(),
+        );
+      });
+    });
   });
 
   it('renders two sections stacked', () => {
@@ -155,14 +258,19 @@ function fromWorkTests() {
 function distanceTests() {
   it('renders correct distance value', () => {
     cy.get('@route').then((route) => {
-      // distance value including units
-      cy.dataCy('label-distance')
-        .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', grey10)
-        .and('contain', route.distance)
-        .and('contain', i18n.global.t('global.routeLengthUnit'));
+      if (route.transport) {
+        // distance value including units
+        cy.dataCy('label-distance')
+          .should('be.visible')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '700')
+          .and('have.color', grey10)
+          .and('contain', route.distance)
+          .and('contain', i18n.global.t('global.routeLengthUnit'));
+      } else {
+        // distance value empty
+        cy.dataCy('label-distance').should('not.exist');
+      }
     });
   });
 }

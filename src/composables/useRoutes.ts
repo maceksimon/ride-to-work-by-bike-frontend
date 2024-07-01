@@ -31,7 +31,21 @@ export const useRoutes = () => {
       case 'none':
         return 'svguse:icons.svg#lucide-ban';
       default:
-        return 'svguse:icons.svg#lucide-ban';
+        return 'svguse:icons.svg#question-mark';
+    }
+  };
+
+  /**
+   * Get a transport label based on given transport key.
+   *
+   * @param {TransportType} transport - The transport type.
+   * @return {string} The transport label.
+   */
+  const getTransportLabel = (transport: TransportType): string => {
+    if (transport) {
+      return i18n.global.t(`routes.transport.${transport}`);
+    } else {
+      return i18n.global.t('routes.transport.unknown');
     }
   };
 
@@ -116,5 +130,6 @@ export const useRoutes = () => {
     getDays,
     getRouteDistance,
     getRouteIcon,
+    getTransportLabel,
   };
 };
