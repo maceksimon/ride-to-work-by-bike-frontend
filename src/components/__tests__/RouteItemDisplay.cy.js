@@ -45,8 +45,6 @@ describe('<RouteItemDisplay>', () => {
     coreTests();
 
     toWorkTests();
-
-    distanceTests();
   });
 
   context('from work - with distance', () => {
@@ -66,8 +64,6 @@ describe('<RouteItemDisplay>', () => {
     coreTests();
 
     fromWorkTests();
-
-    distanceTests();
   });
 
   context('to work - empty', () => {
@@ -89,8 +85,6 @@ describe('<RouteItemDisplay>', () => {
     coreTests();
 
     toWorkTests();
-
-    distanceTests();
   });
 
   context('from work - empty', () => {
@@ -112,8 +106,6 @@ describe('<RouteItemDisplay>', () => {
     coreTests();
 
     fromWorkTests();
-
-    distanceTests();
   });
 
   context('from work - no distance', () => {
@@ -135,11 +127,6 @@ describe('<RouteItemDisplay>', () => {
     coreTests();
 
     fromWorkTests();
-
-    it('does not render distance', () => {
-      // distance value empty
-      cy.dataCy('label-distance').should('not.exist');
-    });
   });
 });
 
@@ -227,6 +214,24 @@ function coreTests() {
     cy.testElementPercentageWidth(cy.dataCy('section-direction'), 100);
     cy.testElementPercentageWidth(cy.dataCy('section-distance'), 100);
   });
+
+  it('renders correct distance value', () => {
+    cy.get('@route').then((route) => {
+      if (route.distance) {
+        // distance value including units
+        cy.dataCy('label-distance')
+          .should('be.visible')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '700')
+          .and('have.color', grey10)
+          .and('contain', route.distance)
+          .and('contain', i18n.global.t('global.routeLengthUnit'));
+      } else {
+        // distance value empty
+        cy.dataCy('label-distance').should('not.exist');
+      }
+    });
+  });
 }
 
 function toWorkTests() {
@@ -252,25 +257,5 @@ function fromWorkTests() {
     cy.dataCy('label-direction-icon')
       .should('be.visible')
       .and('contain', 'arrow_back');
-  });
-}
-
-function distanceTests() {
-  it('renders correct distance value', () => {
-    cy.get('@route').then((route) => {
-      if (route.transport) {
-        // distance value including units
-        cy.dataCy('label-distance')
-          .should('be.visible')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '700')
-          .and('have.color', grey10)
-          .and('contain', route.distance)
-          .and('contain', i18n.global.t('global.routeLengthUnit'));
-      } else {
-        // distance value empty
-        cy.dataCy('label-distance').should('not.exist');
-      }
-    });
   });
 }
