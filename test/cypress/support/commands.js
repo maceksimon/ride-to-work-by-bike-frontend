@@ -163,8 +163,8 @@ Cypress.Commands.add('testIcon', ({ element, name, size }) => {
   cy.clock(now);
   cy.document()
     // set DPR and wait for resources (to avoid empty snapshot)
-    .then((document) => document.fonts.ready)
     .then(() => cy.setDPR(1))
+    .then((document) => document.fonts.ready)
     .then(() => cy.waitForStylesheets())
     .then(() => {
       // size
