@@ -50,10 +50,10 @@ export const useRoutes = () => {
   };
 
   /**
-   * Returns the route distance including the unit.
+   * Get distance label for given route.
    *
-   * @param {RouteItem | null} route - The route item containing the distance.
-   * @return {string} The formatted distance label.
+   * @param {RouteItem} route - The route item.
+   * @return {string} The distance label.
    */
   const getRouteDistance = (route: RouteItem | null): string => {
     if (!route?.distance) return '';
