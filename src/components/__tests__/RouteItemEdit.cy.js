@@ -4,7 +4,6 @@ import RouteItemEdit from 'components/routes/RouteItemEdit.vue';
 import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor } = colors;
-const black = getPaletteColor('black');
 const grey10 = getPaletteColor('grey-10');
 
 describe('<RouteItemEdit>', () => {
@@ -174,7 +173,7 @@ function coreTests() {
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
-      .and('have.color', black)
+      .and('have.color', grey10)
       .and('contain', i18n.global.t('global.routeLengthUnit'));
   });
 
