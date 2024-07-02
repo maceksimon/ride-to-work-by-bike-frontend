@@ -2,9 +2,11 @@ import { colors } from 'quasar';
 import RouteListDisplay from 'components/routes/RouteListDisplay.vue';
 import { i18n } from '../../boot/i18n';
 import { testRouteListDayDate } from '../../../test/cypress/support/commonTests';
+import { useRoutes } from '../../../src/composables/useRoutes';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
+const { getTransportLabel } = useRoutes();
 
 describe('<RouteListDisplay>', () => {
   it('has translation for all strings', () => {
@@ -83,10 +85,7 @@ function coreTests() {
         }
         cy.wrap($element)
           .find('[data-cy="description-transport"]')
-          .should(
-            'contain',
-            i18n.global.t(`routes.transport.${routeList[index].transport}`),
-          );
+          .should('contain', getTransportLabel(routeList[index].transport));
       });
     });
   });
