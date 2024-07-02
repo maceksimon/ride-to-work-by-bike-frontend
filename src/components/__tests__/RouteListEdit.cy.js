@@ -80,6 +80,8 @@ function coreTests() {
   it('renders save button with edit count', () => {
     cy.dataCy('button-save')
       .should('be.visible')
+      .and('have.css', 'font-size', '16px')
+      .and('have.css', 'font-weight', '700')
       .and(
         'contain',
         i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
