@@ -20,6 +20,10 @@ describe('<RouteListEdit>', () => {
     });
 
     coreTests();
+
+    it('renders items in two columns', () => {
+      cy.testElementPercentageWidth(cy.dataCy('route-list-item-wrapper'), 50);
+    });
   });
 
   context('mobile', () => {
@@ -35,6 +39,10 @@ describe('<RouteListEdit>', () => {
     });
 
     coreTests();
+
+    it('renders items in one columns', () => {
+      cy.testElementPercentageWidth(cy.dataCy('route-list-item-wrapper'), 100);
+    });
   });
 });
 
