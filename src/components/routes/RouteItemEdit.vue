@@ -25,6 +25,9 @@ import { i18n } from 'src/boot/i18n';
 // components
 import RouteInputTransportType from './RouteInputTransportType.vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
 import type { FormOption } from '../types/Form';
 import type { RouteItem, RouteInputType, TransportType } from '../types/Route';
@@ -46,6 +49,9 @@ export default defineComponent({
   },
   emits: ['update:route'],
   setup(props, { emit }) {
+    const { borderRadiusCard: borderRadius, colorGray: borderColor } =
+      rideToWorkByBikeConfig;
+
     const routeInitial: RouteItem = { ...props.route };
 
     const action = ref<RouteInputType>(
@@ -97,6 +103,8 @@ export default defineComponent({
 
     return {
       action,
+      borderRadius,
+      borderColor,
       distance,
       iconSize,
       isShownDistance,
@@ -108,8 +116,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row items-center" data-cy="route-item-edit">
-    <div class="col-12 col-sm-2" data-cy="section-direction">
+  <div
+    class="text-grey-10"
+    :style="{
+      'border-radius': borderRadius,
+      border: `1px solid ${borderColor}`,
+    }"
+    data-cy="route-item-edit"
+  >
+    <div class="q-pa-md" data-cy="section-direction">
       <!-- Section: Direction -->
       <div
         class="flex gap-8 text-subtitle2 text-weight-bold text-grey-10"
@@ -135,17 +150,20 @@ export default defineComponent({
         </span>
       </div>
     </div>
-    <div class="col-12 col-sm-10" data-cy="section-transport-distance">
-      <div class="row">
+    <q-separator class="q-mx-md" />
+    <div class="q-pa-md" data-cy="section-transport-distance">
+      <div>
         <!-- Section: Transport type -->
         <route-input-transport-type
+          horizontal
           v-model="transport"
+          class="q-mt-sm"
           data-cy="section-transport"
         />
         <!-- Section: Distance -->
         <div
+          class="q-mt-lg"
           v-show="isShownDistance"
-          class="col-12 col-sm-8"
           data-cy="section-distance"
         >
           <!-- Label -->
@@ -157,7 +175,7 @@ export default defineComponent({
           </div>
           <div class="q-mt-sm">
             <div class="row q-col-gutter-sm">
-              <div class="col-12 col-sm-4">
+              <div class="col-auto">
                 <!-- Select: Action -->
                 <q-select
                   dense
@@ -172,43 +190,52 @@ export default defineComponent({
               </div>
               <div
                 v-if="action === 'input-number'"
-                class="col-8 col-sm-5 row items-center gap-8"
+                class="col-auto items-center"
               >
                 <!-- Input: Distance -->
-                <div class="col">
-                  <q-input
-                    dense
-                    outlined
-                    type="number"
-                    v-model="distance"
-                    :id="`route-item-distance-${route.id}`"
-                    :name="`route-item-distance-${route.id}`"
-                    min="0"
-                    max="999"
-                    data-cy="input-distance"
-                  />
-                </div>
-                <div class="col">
-                  <span data-cy="units-distance">
-                    {{ $t('global.routeLengthUnit') }}
-                  </span>
-                </div>
+                <q-input
+                  dense
+                  outlined
+                  type="number"
+                  v-model="distance"
+                  :id="`route-item-distance-${route.id}`"
+                  :name="`route-item-distance-${route.id}`"
+                  min="0"
+                  max="999"
+                  data-cy="input-distance"
+                >
+                  <template v-slot:append>
+                    <span
+                      class="text-subtitle2 text-weight-regular text-grey-10"
+                      data-cy="units-distance"
+                    >
+                      {{ $t('global.routeLengthUnit') }}
+                    </span>
+                  </template>
+                </q-input>
               </div>
-              <div v-else-if="action === 'input-map'" class="col-8 col-sm-5">
+              <div
+                v-else-if="action === 'input-map'"
+                class="col-auto items-center"
+              >
                 <!-- Button: Trace map -->
                 <q-btn
-                  unelevated
+                  flat
                   rounded
                   color="primary"
+                  size="16px"
                   data-cy="button-trace-map"
                 >
                   <!-- Icon -->
-                  <q-icon name="edit" size="18px" class="q-mr-sm" />
+                  <q-icon
+                    name="svguse:icons.svg#pencil"
+                    size="24px"
+                    class="q-mr-sm"
+                  />
                   <!-- Label -->
                   <span>{{ $t('routes.buttonTraceMap') }}</span>
                 </q-btn>
               </div>
-              <div class="col-2 flex items-center"></div>
             </div>
           </div>
         </div>
