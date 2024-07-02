@@ -85,6 +85,12 @@ describe('<RouteInputTransportType>', () => {
 function coreTests() {
   it('renders component', () => {
     cy.dataCy('route-input-transport-type').should('be.visible');
+    cy.dataCy('button-toggle-wrapper')
+      .should('be.visible')
+      .then((element) => {
+        const offsetHeight = element[0].offsetHeight;
+        expect(offsetHeight).to.be.eq(40);
+      });
     // label transport
     cy.dataCy('label-transport')
       .should('be.visible')

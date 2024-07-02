@@ -110,11 +110,13 @@ export default defineComponent({
       data-cy="select-transport"
     >
       <div
-        class="inline-block q-pa-xs"
+        class="inline-block"
         :style="{
+          padding: '2px',
           'border-radius': '9999px',
           border: `1px solid ${borderColor}`,
         }"
+        data-cy="button-toggle-wrapper"
       >
         <!-- Buttons -->
         <q-btn
