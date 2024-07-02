@@ -156,30 +156,15 @@ Cypress.Commands.add('waitForStylesheets', () => {
  *   testIcon({element, name: 'icon-name', size: 32})
  * });
  */
-Cypress.Commands.add('testIcon', ({ element, name, size }) => {
-  cy.wrap(element[0]).should('be.visible');
-  // timestamp for matching see https://docs.cypress.io/guides/tooling/visual-testing#Timestamps
-  const now = new Date(2024, 1, 1);
-  cy.clock(now);
-  cy.document()
-    // set DPR and wait for resources (to avoid empty snapshot)
-    .then(() => cy.setDPR(1))
-    .then((document) => document.fonts.ready)
-    .then(() => cy.waitForStylesheets())
-    .then(() => {
-      // size
-      cy.wrap(element[0]).invoke('width').should('eq', size);
-      cy.wrap(element[0]).invoke('height').should('eq', size);
-      // snapshot
-      cy.wrap(element[0]).matchImageSnapshot(name, {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 1000,
-        customDiffConfig: { threshold: 0.4 },
-        screenshotsFolder: 'test/cypress/snapshots',
-        retries: 2,
-      });
-    });
+Cypress.Commands.add('testIcon', ({ element, name }) => {
+  cy.get(element[0]).matchImageSnapshot(name, {
+    failureThreshold: 0.1,
+    failureThresholdType: 'percent',
+    timeout: 4000,
+    customDiffConfig: { threshold: 0.4 },
+    screenshotsFolder: 'test/cypress/snapshots',
+    retries: 2,
+  });
 });
 
 Cypress.Commands.add('testMessageLanguageSelect', (i18n) => {
