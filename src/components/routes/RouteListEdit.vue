@@ -100,7 +100,14 @@ export default defineComponent({
       </div>
     </div>
     <div class="flex items-center justify-center">
-      <q-btn rounded unelevated outline color="primary" data-cy="button-save">
+      <q-btn
+        rounded
+        unelevated
+        color="primary"
+        size="16px"
+        class="text-weight-bold"
+        data-cy="button-save"
+      >
         {{
           $tc('routes.buttonSaveChangesCount', dirtyCount, {
             count: dirtyCount,
