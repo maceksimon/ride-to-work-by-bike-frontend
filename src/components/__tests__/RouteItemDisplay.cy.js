@@ -5,6 +5,10 @@ import { i18n } from '../../boot/i18n';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useRoutes } from 'src/composables/useRoutes';
+import {
+  testLabelFromWork,
+  testLabelToWork,
+} from 'app/test/cypress/support/commonTests';
 
 const { getPaletteColor } = colors;
 const grey2 = getPaletteColor('grey-2');
@@ -43,8 +47,7 @@ describe('<RouteItemDisplay>', () => {
     });
 
     coreTests();
-
-    toWorkTests();
+    testLabelToWork();
   });
 
   context('from work - with distance', () => {
@@ -62,8 +65,7 @@ describe('<RouteItemDisplay>', () => {
     });
 
     coreTests();
-
-    fromWorkTests();
+    testLabelFromWork();
   });
 
   context('to work - empty', () => {
@@ -83,8 +85,7 @@ describe('<RouteItemDisplay>', () => {
     });
 
     coreTests();
-
-    toWorkTests();
+    testLabelToWork();
   });
 
   context('from work - empty', () => {
@@ -104,8 +105,7 @@ describe('<RouteItemDisplay>', () => {
     });
 
     coreTests();
-
-    fromWorkTests();
+    testLabelFromWork();
   });
 
   context('from work - no distance', () => {
@@ -125,8 +125,7 @@ describe('<RouteItemDisplay>', () => {
     });
 
     coreTests();
-
-    fromWorkTests();
+    testLabelFromWork();
   });
 });
 
@@ -231,31 +230,5 @@ function coreTests() {
         cy.dataCy('label-distance').should('not.exist');
       }
     });
-  });
-}
-
-function toWorkTests() {
-  it('renders label and icon "to work"', () => {
-    // label to work
-    cy.dataCy('label-direction')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelDirectionToWork'));
-    // icon to work
-    cy.dataCy('label-direction-icon')
-      .should('be.visible')
-      .and('contain', 'arrow_forward');
-  });
-}
-
-function fromWorkTests() {
-  it('renders label and icon "from work"', () => {
-    // label from work
-    cy.dataCy('label-direction')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
-    // icon from work
-    cy.dataCy('label-direction-icon')
-      .should('be.visible')
-      .and('contain', 'arrow_back');
   });
 }
