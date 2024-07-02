@@ -1,6 +1,10 @@
+import { colors } from 'quasar';
 import RouteListDisplay from 'components/routes/RouteListDisplay.vue';
 import { i18n } from '../../boot/i18n';
 import { testRouteListDayDate } from '../../../test/cypress/support/commonTests';
+
+const { getPaletteColor } = colors;
+const grey10 = getPaletteColor('grey-10');
 
 describe('<RouteListDisplay>', () => {
   it('has translation for all strings', () => {
@@ -50,6 +54,12 @@ function coreTests() {
   it('renders component', () => {
     // component visible
     cy.dataCy('route-list-display').should('be.visible');
+    // day title
+    cy.dataCy('route-list-day-date')
+      .should('be.visible')
+      .and('have.css', 'font-size', '18px')
+      .and('have.css', 'font-weight', '400')
+      .and('have.color', grey10);
     // items
     cy.dataCy('route-list-item').should('be.visible');
   });

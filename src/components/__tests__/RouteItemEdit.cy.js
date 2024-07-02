@@ -1,8 +1,11 @@
 import { colors } from 'quasar';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
-
 import RouteItemEdit from 'components/routes/RouteItemEdit.vue';
+import {
+  testLabelFromWork,
+  testLabelToWork,
+} from 'app/test/cypress/support/commonTests';
 import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor } = colors;
@@ -35,7 +38,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    toWorkTests();
+    testLabelToWork();
   });
 
   context('route to work', () => {
@@ -52,7 +55,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    toWorkTests();
+    testLabelToWork();
 
     it('renders the input distance value', () => {
       // make sure transport type is bike
@@ -92,7 +95,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    fromWorkTests();
+    testLabelFromWork();
   });
 
   context('mobile', () => {
@@ -109,7 +112,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    toWorkTests();
+    testLabelToWork();
   });
 });
 
@@ -212,31 +215,5 @@ function coreTests() {
     cy.dataCy('select-action').select(i18n.global.t('routes.actionTraceMap'));
     cy.dataCy('input-distance').should('not.exist');
     cy.dataCy('button-trace-map').should('be.visible');
-  });
-}
-
-function toWorkTests() {
-  it('renders label and icon "to work"', () => {
-    // label to work
-    cy.dataCy('label-direction')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelDirectionToWork'));
-    // icon to work
-    cy.dataCy('label-direction-icon')
-      .should('be.visible')
-      .and('contain', 'arrow_forward');
-  });
-}
-
-function fromWorkTests() {
-  it('renders label and icon "from work"', () => {
-    // label from work
-    cy.dataCy('label-direction')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
-    // icon from work
-    cy.dataCy('label-direction-icon')
-      .should('be.visible')
-      .and('contain', 'arrow_back');
   });
 }
