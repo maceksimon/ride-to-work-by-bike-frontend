@@ -72,7 +72,7 @@ export const testRouteListDayDate = (): void => {
     cy.dataCy('route-list-day-date')
       .should('be.visible')
       .and('have.css', 'font-size', '18px')
-      .and('have.css', 'font-weight', '500')
+      .and('have.css', 'font-weight', '400')
       .and('have.color', grey10);
   });
 };
