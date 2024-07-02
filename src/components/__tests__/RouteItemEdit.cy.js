@@ -1,4 +1,6 @@
 import { colors } from 'quasar';
+import { hexToRgb } from 'app/test/cypress/utils';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 import RouteItemEdit from 'components/routes/RouteItemEdit.vue';
 import { i18n } from '../../boot/i18n';
@@ -33,18 +35,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-
-    it('renders the input distance value', () => {
-      // make sure transport type is bike
-      cy.dataCy('button-toggle-transport').eq(0).click();
-      cy.fixture('routeListItem').then((routes) => {
-        // input distance value
-        cy.dataCy('input-distance')
-          .should('be.visible')
-          .invoke('val')
-          .should('eq', routes.toWork.distance.toString());
-      });
-    });
+    toWorkTests();
   });
 
   context('route to work', () => {
@@ -61,19 +52,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    labelDirectionTests();
-
-    it('renders label direction', () => {
-      // direction label
-      cy.dataCy('section-direction').should('be.visible');
-      cy.dataCy('label-direction').should(
-        'contain',
-        i18n.global.t('routes.labelDirectionToWork'),
-      );
-      // direction icon
-      cy.dataCy('label-direction-icon').should('be.visible');
-      cy.dataCy('label-direction-icon').should('contain', 'arrow_forward');
-    });
+    toWorkTests();
 
     it('renders the input distance value', () => {
       // make sure transport type is bike
@@ -113,19 +92,7 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    labelDirectionTests();
-
-    it('renders label direction', () => {
-      // direction label
-      cy.dataCy('section-direction').should('be.visible');
-      cy.dataCy('label-direction').should(
-        'contain',
-        i18n.global.t('routes.labelDirectionFromWork'),
-      );
-      // direation icon
-      cy.dataCy('label-direction-icon').should('be.visible');
-      cy.dataCy('label-direction-icon').should('contain', 'arrow_back');
-    });
+    fromWorkTests();
   });
 
   context('mobile', () => {
@@ -142,16 +109,42 @@ describe('<RouteItemEdit>', () => {
     });
 
     coreTests();
-    labelDirectionTests();
+    toWorkTests();
   });
 });
 
 function coreTests() {
   it('renders component', () => {
     // component visible
-    cy.dataCy('route-item-edit').should('be.visible');
+    cy.dataCy('route-item-edit')
+      .should('be.visible')
+      .and(
+        'have.css',
+        'border',
+        `1px solid ${hexToRgb(rideToWorkByBikeConfig.colorGray)}`,
+      )
+      .and(
+        'have.css',
+        'border-radius',
+        rideToWorkByBikeConfig.borderRadiusCard,
+      );
     // column transport
     cy.dataCy('section-transport').should('be.visible');
+  });
+
+  it('renders column direction', () => {
+    // column direction
+    cy.dataCy('section-direction').should('be.visible');
+    // label direction styles
+    cy.dataCy('label-direction')
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', grey10);
+    // icon direction styles
+    cy.dataCy('label-direction-icon').should('be.visible');
+    cy.dataCy('label-direction-icon').invoke('width').should('be.equal', 18);
+    cy.dataCy('label-direction-icon').invoke('height').should('be.equal', 18);
   });
 
   it('renders column distance', () => {
@@ -222,19 +215,28 @@ function coreTests() {
   });
 }
 
-function labelDirectionTests() {
-  it('renders column direction', () => {
-    // column direction
-    cy.dataCy('section-direction').should('be.visible');
-    // label direction styles
+function toWorkTests() {
+  it('renders label and icon "to work"', () => {
+    // label to work
     cy.dataCy('label-direction')
       .should('be.visible')
-      .and('have.css', 'font-size', '14px')
-      .and('have.css', 'font-weight', '700')
-      .and('have.color', grey10);
-    // icon direction styles
-    cy.dataCy('label-direction-icon').should('be.visible');
-    cy.dataCy('label-direction-icon').invoke('width').should('be.equal', 18);
-    cy.dataCy('label-direction-icon').invoke('height').should('be.equal', 18);
+      .and('contain', i18n.global.t('routes.labelDirectionToWork'));
+    // icon to work
+    cy.dataCy('label-direction-icon')
+      .should('be.visible')
+      .and('contain', 'arrow_forward');
+  });
+}
+
+function fromWorkTests() {
+  it('renders label and icon "from work"', () => {
+    // label from work
+    cy.dataCy('label-direction')
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
+    // icon from work
+    cy.dataCy('label-direction-icon')
+      .should('be.visible')
+      .and('contain', 'arrow_back');
   });
 }

@@ -186,7 +186,7 @@ export default defineComponent({
                   :id="`route-item-action-${route.id}`"
                   :options="optionsAction"
                   data-cy="select-action"
-                ></q-select>
+                />
               </div>
               <div
                 v-if="action === 'input-number'"
