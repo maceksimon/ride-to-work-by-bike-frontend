@@ -1,9 +1,6 @@
 import RouteListEdit from 'components/routes/RouteListEdit.vue';
 import { i18n } from '../../boot/i18n';
 import { testRouteListDayDate } from '../../../test/cypress/support/commonTests';
-import { useRoutes } from 'src/composables/useRoutes';
-
-const { getRouteIcon } = useRoutes();
 
 describe('<RouteListEdit>', () => {
   it('has translation for all strings', () => {
@@ -48,7 +45,7 @@ function coreTests() {
     // items visible
     cy.dataCy('route-list-item').should('be.visible');
     // direction labels visible
-    cy.dataCy('column-direction').should('be.visible');
+    cy.dataCy('section-direction').should('be.visible');
   });
 
   // day date (title) styles
@@ -58,16 +55,16 @@ function coreTests() {
     cy.fixture('routeList').then((routeList) => {
       // for each route check if icon is correct
       cy.dataCy('route-list-item').each(($element, index) => {
-        cy.wrap($element)
-          .find('[data-cy="button-toggle-transport"]')
-          .find('button[aria-pressed="true"]')
-          .should('contain', getRouteIcon(routeList[index].transport));
-        cy.wrap($element)
-          .find('[data-cy="description-transport"]')
-          .should(
-            'contain',
-            i18n.global.t(`routes.transport.${routeList[index].transport}`),
-          );
+        if (routeList[index].direction === 'toWork') {
+          cy.wrap($element)
+            .find('[data-cy="label-direction"]')
+            .should('contain', i18n.global.t('routes.labelDirectionToWork'));
+        }
+        if (routeList[index].direction === 'fromWork') {
+          cy.wrap($element)
+            .find('[data-cy="label-direction"]')
+            .should('contain', i18n.global.t('routes.labelDirectionFromWork'));
+        }
       });
     });
   });
@@ -83,7 +80,6 @@ function coreTests() {
     cy.dataCy('route-list-item')
       .first()
       .find('[data-cy="button-toggle-transport"]')
-      .find('button')
       .last()
       .click();
     cy.dataCy('button-save').should(
@@ -94,7 +90,6 @@ function coreTests() {
     cy.dataCy('route-list-item')
       .first()
       .find('[data-cy="button-toggle-transport"]')
-      .find('button')
       .first()
       .click();
     cy.dataCy('button-save').should(
@@ -106,14 +101,12 @@ function coreTests() {
     cy.dataCy('route-list-item')
       .first()
       .find('[data-cy="button-toggle-transport"]')
-      .find('button')
       .last()
       .click();
     // change last route
     cy.dataCy('route-list-item')
       .last()
       .find('[data-cy="button-toggle-transport"]')
-      .find('button')
       .first()
       .click();
     // count changes
@@ -125,13 +118,11 @@ function coreTests() {
     cy.dataCy('route-list-item')
       .first()
       .find('[data-cy="button-toggle-transport"]')
-      .find('button')
       .first()
       .click();
     cy.dataCy('route-list-item')
       .last()
       .find('[data-cy="button-toggle-transport"]')
-      .find('button')
       .last()
       .click();
     cy.dataCy('button-save').should(
