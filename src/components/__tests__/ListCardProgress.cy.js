@@ -63,11 +63,17 @@ describe('<ListCardProgress>', () => {
             .and('have.color', grey10)
             .and('have.css', 'font-weight', '700');
         });
-        cy.dataCy('card-list-progress-stats-icon').each((element, index) => {
-          cy.testIcon({
-            element,
-            name: `card-list-progress-${index}`,
-            size: 18,
+        cy.viewport(1280, 800).then(() => {
+          cy.window().then(() => {
+            cy.dataCy('card-list-progress-stats-icon').each(
+              (element, index) => {
+                cy.testIcon({
+                  element,
+                  name: `card-list-progress-${index}`,
+                  size: 18,
+                });
+              },
+            );
           });
         });
       });

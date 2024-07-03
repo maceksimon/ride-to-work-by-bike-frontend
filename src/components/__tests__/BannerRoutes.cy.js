@@ -30,21 +30,9 @@ describe('<BannerRoutes>', () => {
       cy.viewport('macbook-16');
     });
 
+    coreTests();
+
     it('renders button icon with correct spacing', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('banner-routes-button-icon').then((element) => {
-            cy.testIcon({ element, name: 'banner-routes-add', size: 24 });
-          });
-        });
-      });
-      // TODO: fix corrupted snapshot
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('height')
-        .should('be.equal', 24);
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('width')
-        .should('be.equal', 24);
       // icon additional tests
       cy.dataCy('banner-routes-button-icon')
         .should('be.visible')
@@ -249,12 +237,16 @@ describe('<BannerRoutes>', () => {
 
 function coreTests() {
   it('renders button icon with correct spacing', () => {
-    // icon core test
-    cy.dataCy('banner-routes-button-icon').then((element) => {
-      cy.testIcon({
-        element,
-        name: `banner-routes-add-${Cypress.currentTest.titlePath[0]}`,
-        size: 24,
+    cy.viewport(1280, 800).then(() => {
+      cy.window().then(() => {
+        // icon core test
+        cy.dataCy('banner-routes-button-icon').then((element) => {
+          cy.testIcon({
+            element,
+            name: `banner-routes-add-${Cypress.currentTest.titlePath[0]}`,
+            size: 24,
+          });
+        });
       });
     });
     // icon additional tests
