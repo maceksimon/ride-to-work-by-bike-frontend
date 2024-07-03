@@ -116,15 +116,20 @@ describe('<CardEvent>', () => {
 
     it('renders calendar button with an icon', () => {
       cy.window().then(() => {
+        // button
         cy.dataCy('calendar-button')
           .should('be.visible')
           .and('have.css', 'height', '42px')
           .and('have.css', 'width', '42px');
-        // TODO: fix corrupted snapshot
-        // cy.dataCy('card-event-calendar-icon').then((element) => {
-        //   cy.testIcon({ element, name: 'card-event-calendar', size: 18 });
-        // })
+        // icon
         cy.dataCy('card-event-calendar-icon').and('have.color', grey10);
+        cy.viewport(1280, 800).then(() => {
+          cy.window().then(() => {
+            cy.dataCy('card-event-calendar-icon').then((element) => {
+              cy.testIcon({ element, name: 'card-event-calendar', size: 18 });
+            });
+          });
+        });
       });
     });
 

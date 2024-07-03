@@ -54,16 +54,17 @@ describe('<FormFieldPasswordConfirm>', () => {
       cy.dataCy('form-password-confirm-icon')
         .should('contain', 'visibility')
         .and('have.color', colorPrimary);
-      cy.dataCy('form-password-confirm-icon')
-        .invoke('height')
-        .should('be.equal', 18);
-      cy.dataCy('form-password-confirm-icon')
-        .invoke('width')
-        .should('be.equal', 18);
-      // TODO: fix corrupted snapshot file
-      // cy.dataCy('form-password-confirm-icon').then((element) => {
-      //   cy.testIcon({ element, name: 'form-field-password-show', size: 18 });
-      // });
+      cy.viewport(1280, 800).then(() => {
+        cy.window().then(() => {
+          cy.dataCy('form-password-confirm-icon').then((element) => {
+            cy.testIcon({
+              element,
+              name: 'form-field-password-confirm',
+              size: 18,
+            });
+          });
+        });
+      });
     });
 
     it('allows user to reveal and hide password', () => {

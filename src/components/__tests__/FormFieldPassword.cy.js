@@ -51,12 +51,16 @@ describe('<FormFieldPassword>', () => {
       cy.dataCy('form-password-icon')
         .should('contain', 'visibility')
         .and('have.color', colorPrimary);
-      cy.dataCy('form-password-icon').invoke('height').should('be.equal', 18);
-      cy.dataCy('form-password-icon').invoke('width').should('be.equal', 18);
-      // TODO: fix corrupted snapshot file
-      // testPasswordInputReveal({
-      //   identifierPassword: 'form-password',
-      // });
+      cy.viewport(1280, 800).then(() => {
+        cy.window().then(() => {
+          cy.dataCy('form-password-icon').then((element) => {
+            cy.testIcon({ element, name: 'form-field-password', size: 18 });
+          });
+        });
+      });
+      testPasswordInputReveal({
+        identifierPassword: 'form-password',
+      });
     });
 
     it('allows user to reveal and hide password', () => {
