@@ -27,7 +27,7 @@ describe('<NewsletterItem>', () => {
       cy.viewport('macbook-16');
     });
 
-    coreTests('desktop');
+    coreTests();
 
     it('has display flex column', () => {
       cy.window().then(() => {
@@ -77,7 +77,7 @@ describe('<NewsletterItem>', () => {
       cy.viewport('iphone-6');
     });
 
-    coreTests('mobile');
+    coreTests();
 
     it('renders title', () => {
       cy.window().then(() => {
@@ -163,13 +163,13 @@ describe('<NewsletterItem>', () => {
   });
 });
 
-function coreTests(context) {
+function coreTests() {
   it('renders icon', () => {
     cy.window().then(() => {
       cy.dataCy('newsletter-item-icon').then((element) => {
         cy.testIcon({
           element,
-          name: `newsletter-item-${icon}-${context}`,
+          name: `newsletter-item-${icon}-${Cypress.currentTest.titlePath[0]}`,
           size: 32,
         });
       });

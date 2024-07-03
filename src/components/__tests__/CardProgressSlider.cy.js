@@ -28,7 +28,7 @@ describe('<CardProgressSlider>', () => {
       cy.viewport('macbook-16');
     });
 
-    coreTests('desktop');
+    coreTests();
 
     it('renders title', () => {
       cy.window().then(() => {
@@ -130,7 +130,7 @@ describe('<CardProgressSlider>', () => {
       cy.viewport('iphone-6');
     });
 
-    coreTests('mobile');
+    coreTests();
 
     it('renders title', () => {
       cy.window().then(() => {
@@ -195,12 +195,12 @@ describe('<CardProgressSlider>', () => {
   });
 });
 
-function coreTests(context) {
+function coreTests() {
   it('renders title icon', () => {
     cy.dataCy('card-progress-header-icon').then((element) => {
       cy.testIcon({
         element,
-        name: `card-progress-slider-header-${card.icon}-${context}`,
+        name: `card-progress-slider-header-${card.icon}-${Cypress.currentTest.titlePath[0]}`,
         size: 18,
       });
     });
