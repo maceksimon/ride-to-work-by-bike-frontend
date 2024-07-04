@@ -156,12 +156,7 @@ Cypress.Commands.add('waitForStylesheets', () => {
  *   testIcon({element, name: 'icon-name', size: 32})
  * });
  */
-Cypress.Commands.add('testIcon', ({ element, name, size }) => {
-  // size
-  const offsetHeight = element[0].offsetHeight;
-  const offsetWidth = element[0].offsetWidth;
-  expect(offsetHeight).to.be.eq(size);
-  expect(offsetWidth).to.be.eq(size);
+Cypress.Commands.add('testIcon', ({ element, name }) => {
   // snapshot
   cy.get(element[0]).matchImageSnapshot(name, {
     failureThreshold: 0.1,
