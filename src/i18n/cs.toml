@@ -551,11 +551,11 @@ tabCalendar = "Kalendář"
 tabList = "Seznam"
 tabMap = "Mapa"
 tabApp = "Aplikace"
+titleAutomaticLogging = "Automatický záznam"
 titleBottomPanel = "Zaznamenání {count} cesty | Zaznamenání {count} cest"
+titleManualLogging = "Ruční záznam"
 titleRoutes = "Cesty"
 titleTabApp = "Automatický záznam"
-titleAutomaticLogging = "Automatický záznam"
-titleManualLogging = "Ruční záznam"
 
 [table]
 textEmptyTable = "Žádné výsledky. Zkuste změnit nastavení filtrů."

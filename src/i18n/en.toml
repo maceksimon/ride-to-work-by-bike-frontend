@@ -548,11 +548,11 @@ tabCalendar = "Calendar"
 tabList = "List"
 tabMap = "Map"
 tabApp = "App"
+titleAutomaticLogging = "Automatic logging"
 titleBottomPanel = "Logging {count} route | Logging {count} routes"
+titleManualLogging = "Manual logging"
 titleRoutes = "Routes"
 titleTabApp = "Automatic logging"
-titleAutomaticLogging = "Automatic logging"
-titleManualLogging = "Manual logging"
 
 [table]
 textEmptyTable = "No results. Try changing the filter settings."

@@ -548,11 +548,11 @@ tabApp = "Aplikácia"
 tabCalendar = "Kalendár"
 tabList = "Zoznam"
 tabMap = "Mapa"
+titleAutomaticLogging = "Automatické zadávanie"
 titleBottomPanel = "Zaznamenání {count} cesty | Zaznamenání {count} cest"
+titleManualLogging = "Manuálne zadávanie"
 titleRoutes = "Cesty"
 titleTabApp = "Automatické nahrávanie"
-titleAutomaticLogging = "Automatické zadávanie"
-titleManualLogging = "Manuálne zadávanie"
 
 [table]
 textEmptyTable = "Žiadne výsledky. Skúste zmeniť nastavenia filtra."
