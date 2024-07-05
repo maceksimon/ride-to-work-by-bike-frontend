@@ -14,12 +14,7 @@ const grey10 = getPaletteColor('grey-10');
 describe('<RouteItemEdit>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
-      [
-        'labelDistance',
-        'labelDirectionFromWork',
-        'labelDirectionToWork',
-        'labelTransportType',
-      ],
+      ['labelDirectionFromWork', 'labelDirectionToWork'],
       'routes',
       i18n,
     );
@@ -155,22 +150,20 @@ function coreTests() {
     cy.dataCy('button-toggle-transport').eq(0).click();
     // column distance
     cy.dataCy('section-distance').should('be.visible');
-    cy.dataCy('label-distance')
+  });
+
+  // Note: We need to test this behaviour here since we have dynamic state.
+  it('allows to switch input type', () => {
+    // input type is input distance
+    cy.dataCy('select-action')
       .should('be.visible')
-      .and('have.css', 'font-size', '12px')
-      .and('have.css', 'font-weight', '700')
-      .and('have.color', grey10);
-    // select action
-    cy.dataCy('select-action').should('be.visible');
-    // input distance
+      .find('input')
+      .should('have.value', i18n.global.t('routes.actionInputDistance'));
+    cy.dataCy('button-trace-map').should('not.exist');
     cy.dataCy('input-distance').should('be.visible');
-    // input distance value styles
-    cy.dataCy('units-distance')
-      .should('be.visible')
-      .and('have.css', 'font-size', '14px')
-      .and('have.css', 'font-weight', '400')
-      .and('have.color', grey10)
-      .and('contain', i18n.global.t('global.routeLengthUnit'));
+    cy.dataCy('select-action').select(i18n.global.t('routes.actionTraceMap'));
+    cy.dataCy('input-distance').should('not.exist');
+    cy.dataCy('button-trace-map').should('be.visible');
   });
 
   it('hides distance if transport type is "car" or "none"', () => {
@@ -202,18 +195,5 @@ function coreTests() {
     );
     // distance is shown
     cy.dataCy('section-distance').should('be.visible');
-  });
-
-  it('allows to switch input type', () => {
-    // input type is input distance
-    cy.dataCy('select-action')
-      .should('be.visible')
-      .find('input')
-      .should('have.value', i18n.global.t('routes.actionInputDistance'));
-    cy.dataCy('button-trace-map').should('not.exist');
-    cy.dataCy('input-distance').should('be.visible');
-    cy.dataCy('select-action').select(i18n.global.t('routes.actionTraceMap'));
-    cy.dataCy('input-distance').should('not.exist');
-    cy.dataCy('button-trace-map').should('be.visible');
   });
 }
