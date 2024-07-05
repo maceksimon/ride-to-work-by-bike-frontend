@@ -12,6 +12,10 @@
  *   It should be of type `RouteItem`
  * - `displayLabel` (boolean, optional): Whether to display direction label.`
  *
+ * @components
+ * - `RouteInputTransportType`: Component to render a transport type input.
+ * - `RouteInputDistance`: Component to render a distance input.
+ *
  * @example
  * <route-item-edit :route="route" />
  *
@@ -20,21 +24,21 @@
 
 // libraries
 import { computed, defineComponent, ref, watch } from 'vue';
-import { i18n } from 'src/boot/i18n';
 
 // components
+import RouteInputDistance from './RouteInputDistance.vue';
 import RouteInputTransportType from './RouteInputTransportType.vue';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { FormOption } from '../types/Form';
 import type { RouteItem, RouteInputType, TransportType } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteItemEdit',
   components: {
+    RouteInputDistance,
     RouteInputTransportType,
   },
   props: {
@@ -58,17 +62,6 @@ export default defineComponent({
       props.route?.inputType || 'input-number',
     );
     const distance = ref<number>(props.route?.distance || 0);
-
-    const optionsAction: FormOption[] = [
-      {
-        label: i18n.global.t('routes.actionInputDistance'),
-        value: 'input-number',
-      },
-      {
-        label: i18n.global.t('routes.actionTraceMap'),
-        value: 'input-map',
-      },
-    ];
 
     const transport = ref<TransportType | null>(props.route.transport || null);
     // show distance input if transport is bike, walk or bus
@@ -108,7 +101,6 @@ export default defineComponent({
       distance,
       iconSize,
       isShownDistance,
-      optionsAction,
       transport,
     };
   },
@@ -161,84 +153,13 @@ export default defineComponent({
           data-cy="section-transport"
         />
         <!-- Section: Distance -->
-        <div
-          class="q-mt-lg"
+        <route-input-distance
           v-show="isShownDistance"
+          v-model="distance"
+          :modelAction="action"
+          @update:modelAction="action = $event"
           data-cy="section-distance"
-        >
-          <!-- Label -->
-          <div
-            class="text-caption text-weight-bold text-grey-10"
-            data-cy="label-distance"
-          >
-            {{ $t('routes.labelDistance') }}
-          </div>
-          <div class="q-mt-sm">
-            <div class="row q-col-gutter-sm">
-              <div class="col-auto">
-                <!-- Select: Action -->
-                <q-select
-                  dense
-                  outlined
-                  emit-value
-                  map-options
-                  v-model="action"
-                  :id="`route-item-action-${route.id}`"
-                  :options="optionsAction"
-                  data-cy="select-action"
-                />
-              </div>
-              <div
-                v-if="action === 'input-number'"
-                class="col-auto items-center"
-              >
-                <!-- Input: Distance -->
-                <q-input
-                  dense
-                  outlined
-                  type="number"
-                  v-model="distance"
-                  :id="`route-item-distance-${route.id}`"
-                  :name="`route-item-distance-${route.id}`"
-                  min="0"
-                  max="999"
-                  data-cy="input-distance"
-                >
-                  <template v-slot:append>
-                    <span
-                      class="text-subtitle2 text-weight-regular text-grey-10"
-                      data-cy="units-distance"
-                    >
-                      {{ $t('global.routeLengthUnit') }}
-                    </span>
-                  </template>
-                </q-input>
-              </div>
-              <div
-                v-else-if="action === 'input-map'"
-                class="col-auto items-center"
-              >
-                <!-- Button: Trace map -->
-                <q-btn
-                  flat
-                  rounded
-                  color="primary"
-                  size="16px"
-                  data-cy="button-trace-map"
-                >
-                  <!-- Icon -->
-                  <q-icon
-                    name="svguse:icons.svg#pencil"
-                    size="24px"
-                    class="q-mr-sm"
-                  />
-                  <!-- Label -->
-                  <span>{{ $t('routes.buttonTraceMap') }}</span>
-                </q-btn>
-              </div>
-            </div>
-          </div>
-        </div>
+        />
       </div>
     </div>
   </div>

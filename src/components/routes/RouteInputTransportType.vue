@@ -4,7 +4,7 @@
  *
  * @description * Use this component to render toggle buttons for selecting
  * transport type.
- * This component is used in `RouteItemEdit`.
+ * This component is used in `RouteItemEdit` and `RouteCalendarPanel`.
  *
  * @props
  * - `modelValue` (string, required): The object representing selected value.
