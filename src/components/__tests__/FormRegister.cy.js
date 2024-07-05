@@ -82,7 +82,6 @@ describe('<FormRegister>', () => {
 
     it('renders show/hide icons for password inputs', () => {
       // password
-
       cy.viewport(1280, 800).then(() => {
         cy.window().then(() => {
           cy.dataCy('form-register-password-icon').then((element) => {

@@ -243,7 +243,7 @@ function coreTests() {
         cy.dataCy('banner-routes-button-icon').then((element) => {
           cy.testIcon({
             element,
-            name: `banner-routes-add-${Cypress.currentTest.titlePath[0]}`,
+            name: `${Cypress.currentTest.titlePath}-add`,
             size: 24,
           });
         });

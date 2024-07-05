@@ -39,9 +39,17 @@ describe('DrawerMenu', () => {
   });
 
   it('should render each item with the expected icon and text content', () => {
-    cy.window().then(() => {
-      cy.dataCy('drawer-menu-icon').each((element, index) => {
-        cy.testIcon({ element, name: `drawer-menu-${index}`, size: 18 });
+    cy.viewport(1280, 800).then(() => {
+      cy.window().then(() => {
+        cy.window().then(() => {
+          cy.dataCy('drawer-menu-icon').each((element, index) => {
+            cy.testIcon({
+              element,
+              name: `${Cypress.currentTest.titlePath}-${index}`,
+              size: 18,
+            });
+          });
+        });
       });
     });
   });

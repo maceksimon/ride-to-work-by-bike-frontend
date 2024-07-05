@@ -71,10 +71,14 @@ describe('<SliderProgress>', () => {
             .and('have.css', 'font-weight', '700');
         });
         cy.dataCy('progress-slider-stats-icon').each((element, index) => {
-          cy.testIcon({
-            element,
-            name: `slider-progress-${progressStats[index].icon}-desktop`,
-            size: 18,
+          cy.viewport(1280, 800).then(() => {
+            cy.window().then(() => {
+              cy.testIcon({
+                element,
+                name: `${Cypress.currentTest.titlePath}-${progressStats[index].icon}`,
+                size: 18,
+              });
+            });
           });
         });
       });
@@ -209,10 +213,14 @@ describe('<SliderProgress>', () => {
             .and('have.css', 'font-weight', '700');
         });
         cy.dataCy('progress-slider-stats-icon').each((element, index) => {
-          cy.testIcon({
-            element,
-            name: `slider-progress-${progressStats[index].icon}-mobile`,
-            size: 18,
+          cy.viewport(1280, 800).then(() => {
+            cy.window().then(() => {
+              cy.testIcon({
+                element,
+                name: `${Cypress.currentTest.titlePath}-${progressStats[index].icon}`,
+                size: 18,
+              });
+            });
           });
         });
       });
@@ -225,13 +233,18 @@ describe('<SliderProgress>', () => {
     });
 
     it('renders button', () => {
-      cy.window().then(() => {
-        cy.dataCy('progress-slider-button')
-          .should('be.visible')
-          .and('have.css', 'border-color', hexToRgb('#212121'))
-          .and('have.css', 'border-radius', '28px')
-          .and('contain', i18n.global.t('index.progressSlider.button'));
-        cy.testElementPercentageWidth(cy.dataCy('progress-slider-button'), 100);
+      cy.viewport('iphone-6').then(() => {
+        cy.window().then(() => {
+          cy.dataCy('progress-slider-button')
+            .should('be.visible')
+            .and('have.css', 'border-color', hexToRgb('#212121'))
+            .and('have.css', 'border-radius', '28px')
+            .and('contain', i18n.global.t('index.progressSlider.button'));
+          cy.testElementPercentageWidth(
+            cy.dataCy('progress-slider-button'),
+            100,
+          );
+        });
       });
     });
   });

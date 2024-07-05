@@ -169,7 +169,7 @@ function coreTests() {
       cy.dataCy('newsletter-item-icon').then((element) => {
         cy.testIcon({
           element,
-          name: `newsletter-item-${icon}-${Cypress.currentTest.titlePath[0]}`,
+          name: `${Cypress.currentTest.titlePath}-${icon}`,
           size: 32,
         });
       });

@@ -197,11 +197,15 @@ describe('<CardProgressSlider>', () => {
 
 function coreTests() {
   it('renders title icon', () => {
-    cy.dataCy('card-progress-header-icon').then((element) => {
-      cy.testIcon({
-        element,
-        name: `card-progress-slider-header-${card.icon}-${Cypress.currentTest.titlePath[0]}`,
-        size: 18,
+    cy.viewport(1280, 800).then(() => {
+      cy.window().then(() => {
+        cy.dataCy('card-progress-header-icon').then((element) => {
+          cy.testIcon({
+            element,
+            name: `${Cypress.currentTest.titlePath}-header-${card.icon}`,
+            size: 18,
+          });
+        });
       });
     });
   });
