@@ -157,6 +157,7 @@ Cypress.Commands.add('waitForStylesheets', () => {
  * });
  */
 Cypress.Commands.add('testIcon', ({ element, name }) => {
+  cy.setDPR(1);
   // snapshot
   cy.get(element[0]).matchImageSnapshot(name, {
     failureThreshold: 0.1,
