@@ -113,38 +113,6 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
 });
 
 /**
- * Custom setDPR command that allows setting the devicePixelRatio
- * in the window object.
- *
- * @param {number} dpr - devicePixelRatio
- */
-Cypress.Commands.add('setDPR', (dpr) => {
-  cy.window().then((win) => {
-    Object.defineProperty(win, 'devicePixelRatio', {
-      get: () => dpr,
-    });
-  });
-});
-
-/**
- * Custom waitForStylesheets command that waits for all stylesheets to be loaded
- * Used in combination with `waitForFonts` in `testIcon` command.
- */
-Cypress.Commands.add('waitForStylesheets', () => {
-  cy.document().then((doc) => {
-    const stylesheets = Array.from(
-      doc.querySelectorAll('link[rel="stylesheet"]'),
-    );
-    const loadPromises = stylesheets.map((stylesheet) => {
-      return new Promise((resolve) => {
-        stylesheet.addEventListener('load', resolve);
-      });
-    });
-    return Promise.all(loadPromises);
-  });
-});
-
-/**
  * Custom testIcon command that takes an HTML element (icon) and tests
  * its size and snapshot.
  *
