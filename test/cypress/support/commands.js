@@ -140,7 +140,7 @@ Cypress.Commands.add('testIcon', ({ element, name }) => {
     failureThresholdType: 'percent',
     timeout: 4000,
     customDiffConfig: { threshold: 0.4 },
-    screenshotsFolder: customSnapshotsDir,
+    customSnapshotsDir: customSnapshotsDir,
     retries: 2,
   });
 });
