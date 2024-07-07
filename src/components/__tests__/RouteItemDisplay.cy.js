@@ -42,7 +42,11 @@ describe('<RouteItemDisplay>', () => {
         .and('contain', i18n.global.t('routes.labelDirectionToWork'));
       // icon to work
       cy.dataCy('label-direction-icon').then((element) => {
-        cy.testIcon({ element, name: 'route-item-display-to-work', size: 18 });
+        cy.testIcon({
+          element,
+          name: `${Cypress.currentTest.titlePath}-arrow-right`,
+          size: 18,
+        });
       });
     });
 
@@ -94,7 +98,7 @@ describe('<RouteItemDisplay>', () => {
       cy.dataCy('label-direction-icon').then((element) => {
         cy.testIcon({
           element,
-          name: 'route-item-display-from-work',
+          name: `${Cypress.currentTest.titlePath}-arrow-left`,
           size: 18,
         });
       });
@@ -141,7 +145,7 @@ function coreTests() {
     cy.dataCy('label-direction-icon').each((element, index) => {
       cy.testIcon({
         element,
-        name: `route-item-display-direction-${index}`,
+        name: `${Cypress.currentTest.titlePath}-direction-${index}`,
         size: 18,
       });
     });
@@ -149,7 +153,7 @@ function coreTests() {
     cy.dataCy('icon-transport').each((element, index) => {
       cy.testIcon({
         element,
-        name: `route-item-display-transport-${index}`,
+        name: `${Cypress.currentTest.titlePath}-transport-${index}`,
         size: 24,
       });
     });

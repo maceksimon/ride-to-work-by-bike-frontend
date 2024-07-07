@@ -91,7 +91,11 @@ describe('<RouteItemEdit>', () => {
       );
       // direction icon
       cy.dataCy('label-direction-icon').then((element) => {
-        cy.testIcon({ element, name: 'route-item-edit-to-work', size: 18 });
+        cy.testIcon({
+          element,
+          name: `${Cypress.currentTest.titlePath}-arrow-right`,
+          size: 18,
+        });
       });
     });
 
@@ -168,7 +172,7 @@ describe('<RouteItemEdit>', () => {
       cy.dataCy('label-direction-icon').then((element) => {
         cy.testIcon({
           element,
-          name: 'route-item-edit-from-work',
+          name: `${Cypress.currentTest.titlePath}-arrow-left`,
           size: 18,
         });
       });
@@ -393,7 +397,7 @@ function labelDirectionTests() {
     cy.dataCy('label-direction-icon').each((element, index) => {
       cy.testIcon({
         element,
-        name: `route-item-edit-direction-${index}`,
+        name: `${Cypress.currentTest.titlePath}-${index}`,
         size: 18,
       });
     });
