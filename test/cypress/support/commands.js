@@ -157,14 +157,22 @@ Cypress.Commands.add('waitForStylesheets', () => {
  * });
  */
 Cypress.Commands.add('testIcon', ({ element, name }) => {
-  cy.setDPR(1);
+  // Define custom snapshots directories for different browsers
+  const browserName = Cypress.browser.name;
+  const browserSnapshotDirs = {
+    chrome: 'chrome',
+    edge: 'edge',
+    electron: 'electron',
+    firefox: 'firefox',
+  };
+  const customSnapshotsDir = `test/cypress/snapshots/${browserSnapshotDirs[browserName]}`;
   // snapshot
   cy.get(element[0]).matchImageSnapshot(name, {
     failureThreshold: 0.1,
     failureThresholdType: 'percent',
     timeout: 4000,
     customDiffConfig: { threshold: 0.4 },
-    screenshotsFolder: 'test/cypress/snapshots',
+    screenshotsFolder: customSnapshotsDir,
     retries: 2,
   });
 });
