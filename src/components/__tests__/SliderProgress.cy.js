@@ -194,6 +194,28 @@ describe('<SliderProgress>', () => {
       });
     });
 
+    it('renders a slider with stat cards', () => {
+      cy.window().then(() => {
+        cy.dataCy('swiper-container').should('be.visible');
+      });
+    });
+
+    it('renders button', () => {
+      cy.viewport('iphone-6').then(() => {
+        cy.window().then(() => {
+          cy.dataCy('progress-slider-button')
+            .should('be.visible')
+            .and('have.css', 'border-color', hexToRgb('#212121'))
+            .and('have.css', 'border-radius', '28px')
+            .and('contain', i18n.global.t('index.progressSlider.button'));
+          cy.testElementPercentageWidth(
+            cy.dataCy('progress-slider-button'),
+            100,
+          );
+        });
+      });
+    });
+
     it('renders list of stats', () => {
       cy.window().then(() => {
         cy.dataCy('progress-slider-stats-item').should('have.length', 3);
@@ -222,28 +244,6 @@ describe('<SliderProgress>', () => {
               });
             });
           });
-        });
-      });
-    });
-
-    it('renders a slider with stat cards', () => {
-      cy.window().then(() => {
-        cy.dataCy('swiper-container').should('be.visible');
-      });
-    });
-
-    it('renders button', () => {
-      cy.viewport('iphone-6').then(() => {
-        cy.window().then(() => {
-          cy.dataCy('progress-slider-button')
-            .should('be.visible')
-            .and('have.css', 'border-color', hexToRgb('#212121'))
-            .and('have.css', 'border-radius', '28px')
-            .and('contain', i18n.global.t('index.progressSlider.button'));
-          cy.testElementPercentageWidth(
-            cy.dataCy('progress-slider-button'),
-            100,
-          );
         });
       });
     });
