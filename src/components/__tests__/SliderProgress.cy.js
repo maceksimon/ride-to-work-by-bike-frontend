@@ -75,7 +75,7 @@ describe('<SliderProgress>', () => {
             cy.window().then(() => {
               cy.testIcon({
                 element,
-                name: `${Cypress.currentTest.titlePath}-${progressStats[index].icon}`,
+                name: `${Cypress.currentTest.titlePath}-${index}`,
                 size: 18,
               });
             });
@@ -217,7 +217,7 @@ describe('<SliderProgress>', () => {
             cy.window().then(() => {
               cy.testIcon({
                 element,
-                name: `${Cypress.currentTest.titlePath}-${progressStats[index].icon}`,
+                name: `${Cypress.currentTest.titlePath}-${index}`,
                 size: 18,
               });
             });
