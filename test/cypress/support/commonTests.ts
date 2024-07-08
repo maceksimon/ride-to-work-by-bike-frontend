@@ -1,5 +1,4 @@
 import { colors } from 'quasar';
-import { i18n } from '../../../src/boot/i18n';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -74,32 +73,6 @@ export const testRouteListDayDate = (): void => {
       .and('have.css', 'font-size', '18px')
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10);
-  });
-};
-
-export const testLabelToWork = () => {
-  it('renders label and icon "to work"', () => {
-    // label to work
-    cy.dataCy('label-direction')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelDirectionToWork'));
-    // icon to work
-    cy.dataCy('label-direction-icon')
-      .should('be.visible')
-      .and('contain', 'arrow_forward');
-  });
-};
-
-export const testLabelFromWork = (): void => {
-  it('renders label and icon "from work"', () => {
-    // label from work
-    cy.dataCy('label-direction')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
-    // icon from work
-    cy.dataCy('label-direction-icon')
-      .should('be.visible')
-      .and('contain', 'arrow_back');
   });
 };
 
