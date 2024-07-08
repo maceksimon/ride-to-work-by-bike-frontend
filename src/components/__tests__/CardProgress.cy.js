@@ -193,15 +193,19 @@ describe('<CardProgress>', () => {
     });
 
     it('renders dark share link icon', () => {
-      cy.dataCy('card-progress-share-icon', { timeout: 5000 }).then(
-        (element) => {
-          cy.testIcon({
-            element,
-            name: `${Cypress.currentTest.titlePath}-share`,
-            size: 18,
-          });
-        },
-      );
+      cy.viewport(1280, 800).then(() => {
+        cy.window().then(() => {
+          cy.dataCy('card-progress-share-icon', { timeout: 5000 }).then(
+            (element) => {
+              cy.testIcon({
+                element,
+                name: `${Cypress.currentTest.titlePath}-share`,
+                size: 18,
+              });
+            },
+          );
+        });
+      });
     });
   });
 
