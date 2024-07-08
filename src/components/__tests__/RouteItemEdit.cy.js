@@ -210,3 +210,29 @@ function coreTests() {
       });
   });
 }
+
+function testLabelToWork() {
+  it('renders label and icon "to work"', () => {
+    // label to work
+    cy.dataCy('label-direction')
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.labelDirectionToWork'));
+    // icon to work
+    cy.dataCy('label-direction-icon')
+      .should('be.visible')
+      .and('contain', 'arrow_forward');
+  });
+}
+
+function testLabelFromWork() {
+  it('renders label and icon "from work"', () => {
+    // label from work
+    cy.dataCy('label-direction')
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
+    // icon from work
+    cy.dataCy('label-direction-icon')
+      .should('be.visible')
+      .and('contain', 'arrow_back');
+  });
+}
