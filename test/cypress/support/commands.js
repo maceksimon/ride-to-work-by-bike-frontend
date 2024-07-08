@@ -121,7 +121,7 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
  * @param {number} size - size of the icon
  *
  * @example cy.dataCy('icon').then((element) => {
- *   testIcon({element, name: 'icon-name', size: 32})
+ *   testIcon({element, name: 'icon-name'})
  * });
  */
 Cypress.Commands.add('testIcon', ({ element, name }) => {
@@ -131,7 +131,6 @@ Cypress.Commands.add('testIcon', ({ element, name }) => {
     failureThresholdType: 'percent',
     timeout: 4000,
     customDiffConfig: { threshold: 0.4 },
-    customSnapshotsDir: customSnapshotsDir,
     retries: 2,
   });
 });
