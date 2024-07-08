@@ -74,9 +74,11 @@ describe('<FormLogin>', () => {
     it('renders password show/hide icon', () => {
       cy.viewport(1280, 800).then(() => {
         cy.window().then(() => {
-          cy.dataCy('form-login-password-icon').then((element) => {
-            cy.testIcon({ element, name: 'form-login-password', size: 18 });
-          });
+          cy.dataCy('form-login-password-icon', { timeout: 5000 }).then(
+            (element) => {
+              cy.testIcon({ element, name: 'form-login-password', size: 18 });
+            },
+          );
         });
       });
       cy.dataCy('form-login-password-icon')
@@ -186,9 +188,11 @@ describe('<FormLogin>', () => {
       // icon
       cy.viewport(1280, 800).then(() => {
         cy.window().then(() => {
-          cy.dataCy('form-reset-finished-icon').then((element) => {
-            cy.testIcon({ element, name: 'form-login-finished', size: 40 });
-          });
+          cy.dataCy('form-reset-finished-icon', { timeout: 5000 }).then(
+            (element) => {
+              cy.testIcon({ element, name: 'form-login-finished', size: 40 });
+            },
+          );
         });
       });
       // title

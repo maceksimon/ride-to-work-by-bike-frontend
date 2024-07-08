@@ -125,15 +125,6 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
  * });
  */
 Cypress.Commands.add('testIcon', ({ element, name }) => {
-  // Define custom snapshots directories for different browsers
-  const browserName = Cypress.browser.name;
-  const browserSnapshotDirs = {
-    chrome: 'chrome',
-    edge: 'edge',
-    electron: 'electron',
-    firefox: 'firefox',
-  };
-  const customSnapshotsDir = `test/cypress/snapshots/${browserSnapshotDirs[browserName]}`;
   // snapshot
   cy.get(element[0]).matchImageSnapshot(name, {
     failureThreshold: 0.1,

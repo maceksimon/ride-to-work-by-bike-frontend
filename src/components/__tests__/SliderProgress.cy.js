@@ -70,15 +70,17 @@ describe('<SliderProgress>', () => {
             .and('have.color', grey10)
             .and('have.css', 'font-weight', '700');
         });
-        cy.dataCy('progress-slider-stats-icon').each((element, index) => {
-          cy.viewport(1280, 800).then(() => {
-            cy.window().then(() => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-${index}`,
-                size: 18,
-              });
-            });
+        cy.viewport(1280, 800).then(() => {
+          cy.window().then(() => {
+            cy.dataCy('progress-slider-stats-icon', { timeout: 5000 }).each(
+              (element, index) => {
+                cy.testIcon({
+                  element,
+                  name: `${Cypress.currentTest.titlePath}-${index}`,
+                  size: 18,
+                });
+              },
+            );
           });
         });
       });
@@ -234,15 +236,17 @@ describe('<SliderProgress>', () => {
             .and('have.color', grey10)
             .and('have.css', 'font-weight', '700');
         });
-        cy.dataCy('progress-slider-stats-icon').each((element, index) => {
-          cy.viewport(1280, 800).then(() => {
-            cy.window().then(() => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-${index}`,
-                size: 18,
-              });
-            });
+        cy.viewport(1280, 800).then(() => {
+          cy.window().then(() => {
+            cy.dataCy('progress-slider-stats-icon', { timeout: 5000 }).each(
+              (element, index) => {
+                cy.testIcon({
+                  element,
+                  name: `${Cypress.currentTest.titlePath}-${index}`,
+                  size: 18,
+                });
+              },
+            );
           });
         });
       });
