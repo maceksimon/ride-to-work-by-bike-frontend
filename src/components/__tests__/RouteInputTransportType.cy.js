@@ -114,6 +114,24 @@ function coreTests() {
       .and('have.color', grey10)
       .and('contain', i18n.global.t('routes.transport.bike'));
   });
+
+  it('renders icons correctly', () => {
+    // icons transport
+    cy.dataCy('icon-transport', { timeout: 4000 }).each((element, index) => {
+      cy.wrap(element)
+        .should('be.visible')
+        .matchImageSnapshot(
+          `${Cypress.currentTest.titlePath}-transport-${index}`,
+          {
+            failureThreshold: 0.1,
+            failureThresholdType: 'percent',
+            timeout: 4000,
+            customDiffConfig: { threshold: 0.4 },
+            retries: 2,
+          },
+        );
+    });
+  });
 }
 
 function interactionTests() {

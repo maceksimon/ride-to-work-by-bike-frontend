@@ -196,4 +196,17 @@ function coreTests() {
     // distance is shown
     cy.dataCy('section-distance').should('be.visible');
   });
+
+  it('renders icons correctly', () => {
+    // icon direction
+    cy.dataCy('label-direction-icon', { timeout: 4000 })
+      .should('be.visible')
+      .matchImageSnapshot(`${Cypress.currentTest.titlePath}-direction`, {
+        failureThreshold: 0.1,
+        failureThresholdType: 'percent',
+        timeout: 4000,
+        customDiffConfig: { threshold: 0.4 },
+        retries: 2,
+      });
+  });
 }
