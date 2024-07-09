@@ -65,6 +65,7 @@ export default defineComponent({
 
     // animation
     const drawEnabled = ref<boolean>(false);
+    const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
     const loggedRoutes = ref<Feature[]>([]);
     const drawRoute = ref<Feature>();
@@ -171,6 +172,7 @@ export default defineComponent({
       borderRadius,
       center,
       drawEnabled,
+      deleteEnabled,
       drawRoute,
       drawRoutePoints,
       loggedRoutes,
@@ -265,6 +267,29 @@ export default defineComponent({
                 />
               </q-avatar>
             </q-btn>
+            <!-- Button: Enable delete (delete point/vertex) -->
+            <q-btn
+              dense
+              round
+              unelevated
+              class="q-pa-none q-ma-none"
+              color="transparent"
+              text-color="primary"
+              @click.prevent="deleteEnabled = !deleteEnabled"
+            >
+              <q-avatar
+                size="32px"
+                class="q-pa-none q-ma-none"
+                :color="deleteEnabled ? 'secondary' : 'white'"
+              >
+                <q-icon
+                  name="mdi-pencil-remove"
+                  color="primary"
+                  size="18px"
+                  data-cy="icon-add-route"
+                />
+              </q-avatar>
+            </q-btn>
             <!-- Button: Undo -->
             <q-btn
               dense
@@ -313,17 +338,21 @@ export default defineComponent({
               <!-- Interaction modify handler -->
               <ol-interaction-modify
                 v-if="drawEnabled"
+                :delete-condition="() => deleteEnabled"
                 @modifyend="onModifyEnd"
-              >
-              </ol-interaction-modify>
+              />
+              <ol-interaction-modify
+                v-if="deleteEnabled"
+                :delete-condition="() => true"
+                @modifyend="onModifyEnd"
+              />
               <!-- Interaction draw handler -->
               <ol-interaction-draw
                 v-if="drawEnabled"
                 type="LineString"
                 @drawstart="onDrawStart"
                 @drawend="onDrawEnd"
-              >
-              </ol-interaction-draw>
+              />
               <!-- Interaction snap handler -->
               <ol-interaction-snap v-if="drawEnabled" />
               <!-- Style -->
