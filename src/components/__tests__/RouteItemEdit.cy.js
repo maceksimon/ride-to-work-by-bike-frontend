@@ -2,10 +2,6 @@ import { colors } from 'quasar';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import RouteItemEdit from 'components/routes/RouteItemEdit.vue';
-import {
-  testLabelFromWork,
-  testLabelToWork,
-} from 'app/test/cypress/support/commonTests';
 import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor } = colors;

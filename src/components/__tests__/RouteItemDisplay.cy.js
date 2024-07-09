@@ -5,10 +5,6 @@ import { i18n } from '../../boot/i18n';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useRoutes } from 'src/composables/useRoutes';
-import {
-  testLabelFromWork,
-  testLabelToWork,
-} from 'app/test/cypress/support/commonTests';
 
 const { getPaletteColor } = colors;
 const grey2 = getPaletteColor('grey-2');
