@@ -17,7 +17,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import {
   Map,
   MapControls,
@@ -26,14 +26,18 @@ import {
   Interactions,
   Styles,
 } from 'vue3-openlayers';
-import Feature from 'ol/Feature';
+import { Feature } from 'ol';
 import { LineString } from 'ol/geom';
+
+// composables
+import { useRoutesMap } from '../../composables/useRoutesMap';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import { Coordinate } from 'ol/coordinate';
+import type { Coordinate } from 'ol/coordinate';
+import type { DrawEvent } from 'ol/interaction/Draw';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -48,6 +52,7 @@ export default defineComponent({
     OlStyleStroke: Styles.OlStyleStroke,
     OlInteractionModify: Interactions.OlInteractionModify,
     OlInteractionDraw: Interactions.OlInteractionDraw,
+    OlInteractionSnap: Interactions.OlInteractionSnap,
     OlZoomControl: MapControls.OlZoomControl,
     OlZoomsliderControl: MapControls.OlZoomsliderControl,
   },
@@ -61,16 +66,22 @@ export default defineComponent({
     // animation
     const drawEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
-    const loggedRoutes = ref<(typeof Feature)[]>([]);
-    const drawRoute = ref<typeof Feature>();
+    const loggedRoutes = ref<Feature[]>([]);
+    const drawRoute = ref<Feature>();
+    const drawRoutePoints = computed((): Coordinate[] => {
+      return drawRoute.value?.getGeometry()?.getCoordinates() || [];
+    });
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
+      null,
+    );
+    const pointsLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
     const drawRouteHistory = ref<Coordinate[]>([]);
 
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
     const { getPaletteColor, lighten } = colors;
-    const bgColor = lighten(getPaletteColor('primary'), 0);
+    const primaryColor = lighten(getPaletteColor('primary'), 0);
 
     /**
      * Called when a new path is being drawn on the map.
@@ -82,20 +93,19 @@ export default defineComponent({
 
     /**
      * Called after a new path is drawn on the map.
-     * @param event
+     * @param event DrawEvent
      */
-    const onDrawEnd = async (event): Promise<void> => {
-      const feature = event.feature;
-      console.log('onDrawEnd', feature);
+    const onDrawEnd = async (event: DrawEvent): Promise<void> => {
       // await fetchPathName(feature);
-      drawRoute.value = feature;
+      const featureLineString = event.feature;
+      drawRoute.value = featureLineString;
       drawRoute.value &&
         drawRouteHistory.value.push(
           drawRoute.value.getGeometry().getCoordinates(),
         );
     };
 
-    const onModifyEnd = (event): void => {
+    const onModifyEnd = (event: DrawEvent): void => {
       const feature = event.features.getArray()[0];
       const newGeometry = feature.getGeometry()?.getCoordinates();
       drawRoute.value &&
@@ -140,6 +150,8 @@ export default defineComponent({
     const clearMapRoutes = (): void => {
       const source = vectorLayer.value?.vectorLayer.getSource();
       source && source.clear();
+      const pointsSource = pointsLayer.value?.vectorLayer.getSource();
+      pointsSource && pointsSource.clear();
     };
 
     /**
@@ -152,18 +164,23 @@ export default defineComponent({
       source && source.addFeature(pathFeature);
     };
 
+    const { styleFunction } = useRoutesMap();
+
     return {
       animationPath,
       borderRadius,
       center,
       drawEnabled,
       drawRoute,
+      drawRoutePoints,
       loggedRoutes,
       mapHeight,
       projection,
-      bgColor,
+      primaryColor,
       rotation,
+      styleFunction,
       vectorLayer,
+      pointsLayer,
       zoom,
       addMapRoute,
       onDrawStart,
@@ -223,7 +240,7 @@ export default defineComponent({
         >
           <q-toolbar
             class="col-auto gap-8 q-pa-sm"
-            :style="{ borderRadius: '9999px', backgroundColor: bgColor }"
+            :style="{ borderRadius: '9999px', backgroundColor: primaryColor }"
           >
             <!-- Button: Enable draw (draw route) -->
             <q-btn
@@ -307,8 +324,11 @@ export default defineComponent({
                 @drawend="onDrawEnd"
               >
               </ol-interaction-draw>
-              <!-- Styling for the drawn routes -->
-              <ol-style>
+              <!-- Interaction snap handler -->
+              <ol-interaction-snap v-if="drawEnabled" />
+              <!-- Style -->
+              <ol-style :override-style-function="styleFunction">
+                <!-- LineString style -->
                 <ol-style-stroke color="blue" :width="4"></ol-style-stroke>
               </ol-style>
             </ol-source-vector>
