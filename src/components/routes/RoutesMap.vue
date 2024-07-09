@@ -16,9 +16,24 @@
  */
 
 // libraries
+import { colors } from 'quasar';
 import { defineComponent, ref } from 'vue';
-import { Map, Layers, Sources, Interactions, Styles } from 'vue3-openlayers';
+import {
+  Map,
+  MapControls,
+  Layers,
+  Sources,
+  Interactions,
+  Styles,
+} from 'vue3-openlayers';
 import Feature from 'ol/Feature';
+import { LineString } from 'ol/geom';
+
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
+// types
+import { Coordinate } from 'ol/coordinate';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -33,6 +48,8 @@ export default defineComponent({
     OlStyleStroke: Styles.OlStyleStroke,
     OlInteractionModify: Interactions.OlInteractionModify,
     OlInteractionDraw: Interactions.OlInteractionDraw,
+    OlZoomControl: MapControls.OlZoomControl,
+    OlZoomsliderControl: MapControls.OlZoomsliderControl,
   },
   setup() {
     const center = ref([14.4378, 50.0755]);
@@ -41,17 +58,25 @@ export default defineComponent({
     const rotation = ref(0);
     const mapHeight = ref<string>('600px');
 
-    const drawEnable = ref<boolean>(true);
+    // animation
+    const drawEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
-    const drawnRoutes = ref<(typeof Feature)[]>([]);
+    const loggedRoutes = ref<(typeof Feature)[]>([]);
+    const drawRoute = ref<typeof Feature>();
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
+    const drawRouteHistory = ref<Coordinate[]>([]);
+
+    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
+    const { getPaletteColor, lighten } = colors;
+    const bgColor = lighten(getPaletteColor('primary'), 0);
 
     /**
      * Called when a new path is being drawn on the map.
+     * @returns {void}
      */
-    const drawstart = (): void => {
+    const onDrawStart = (): void => {
       clearMapRoutes();
     };
 
@@ -59,55 +84,57 @@ export default defineComponent({
      * Called after a new path is drawn on the map.
      * @param event
      */
-    const drawend = async (event): Promise<void> => {
+    const onDrawEnd = async (event): Promise<void> => {
       const feature = event.feature;
-      await fetchPathName(feature);
-      drawnRoutes.value.push(feature);
+      console.log('onDrawEnd', feature);
+      // await fetchPathName(feature);
+      drawRoute.value = feature;
+      drawRoute.value &&
+        drawRouteHistory.value.push(
+          drawRoute.value.getGeometry().getCoordinates(),
+        );
+    };
+
+    const onModifyEnd = (event): void => {
+      const feature = event.features.getArray()[0];
+      const newGeometry = feature.getGeometry()?.getCoordinates();
+      drawRoute.value &&
+        drawRoute.value.getGeometry().setCoordinates(newGeometry);
+      drawRoute.value &&
+        drawRouteHistory.value.push(
+          drawRoute.value.getGeometry().getCoordinates(),
+        );
     };
 
     /**
-     * For a given feature (LineString drawn on the map), fetches the
-     * name of the start and end point.
-     * @param feature Feature
+     * Undo last route modification.
+     * @returns {void}
      */
-    const fetchPathName = async (feature) => {
-      // get coordinates from pathFeature
-      const coordinates = feature.getGeometry()?.getCoordinates();
-      const startCoordinates = coordinates[0];
-      const endCoordinates = coordinates[coordinates.length - 1];
-      // assign names
-      feature['startName'] = await getLocationName(startCoordinates);
-      feature['endName'] = await getLocationName(endCoordinates);
-    };
-
-    /**
-     * Calls the OpenStreetMap API and returns the name of the location
-     * given its coordinates.
-     * @param coord number[]
-     */
-    const getLocationName = async (coord: number[]) => {
-      const [lon, lat] = coord;
-      // TODO: update fetch method (if we will use it)
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lon=${lon}&lat=${lat}`,
-      );
-      const data = await response.json();
-      const locationName = data.address.road;
-      return locationName;
+    const onUndo = (): void => {
+      if (drawRouteHistory.value.length === 1) return;
+      drawRouteHistory.value.pop();
+      const lastElement =
+        drawRouteHistory.value[drawRouteHistory.value.length - 1];
+      const lineString = new LineString(lastElement);
+      const newFeature = new Feature({
+        geometry: lineString,
+      });
+      clearMapRoutes();
+      addMapRoute(newFeature);
     };
 
     /**
      * Renders selected route on the map.
      * First clears all previously drawn routes from the map.
-     * @param pathFeature Feature
+     * @param feature Feature
      */
-    const onRenderRoute = (route) => {
+    const onRenderRoute = (feature: typeof Feature): void => {
       clearMapRoutes();
-      addMapRoute(route);
+      addMapRoute(feature);
     };
 
     /**
-     * Clears the drawn routes from the map.
+     * Clears all drawn routes from the map.
      * @returns {void}
      */
     const clearMapRoutes = (): void => {
@@ -118,105 +145,176 @@ export default defineComponent({
     /**
      * Adds the drawn route on the map.
      * @param pathFeature Feature
+     * @returns {void}
      */
-    const addMapRoute = (pathFeature) => {
+    const addMapRoute = (pathFeature: typeof Feature): void => {
       const source = vectorLayer.value?.vectorLayer.getSource();
       source && source.addFeature(pathFeature);
     };
 
     return {
       animationPath,
+      borderRadius,
       center,
-      drawEnable,
-      drawnRoutes,
+      drawEnabled,
+      drawRoute,
+      loggedRoutes,
       mapHeight,
       projection,
+      bgColor,
       rotation,
       vectorLayer,
       zoom,
       addMapRoute,
-      drawstart,
-      drawend,
+      onDrawStart,
+      onDrawEnd,
       onRenderRoute,
+      onModifyEnd,
+
+      onUndo,
+      drawRouteHistory,
     };
   },
 });
 </script>
 
 <template>
-  <div
-    class="row q-my-lg"
-    data-cy="routes-map"
-    :style="{
-      borderRadius: '16px',
-      overflow: 'hidden',
-      border: '1px solid #E0E0E0',
-    }"
-  >
-    <div class="col-12 col-sm-2">
-      <q-scroll-area :style="{ height: mapHeight }">
-        <!-- List: Drawn routes -->
-        <q-list separator>
-          <!-- List header -->
-          <q-item class="bg-primary text-white text-weight-bold text-center">
-            <q-item-section class="text-subtitle2 text-uppercase"
-              >Vaše trasy</q-item-section
+  <div>
+    <!-- Container: Map -->
+    <div
+      class="row q-my-lg"
+      data-cy="routes-map"
+      :style="{
+        borderRadius,
+        overflow: 'hidden',
+        border: '1px solid #E0E0E0',
+      }"
+    >
+      <div class="col-12 col-sm-2">
+        <q-scroll-area :style="{ height: mapHeight }">
+          <!-- List: Drawn routes -->
+          <q-list separator>
+            <!-- List header -->
+            <q-item class="bg-primary text-white text-weight-bold text-center">
+              <q-item-section class="text-subtitle2 text-uppercase"
+                >Vaše trasy</q-item-section
+              >
+            </q-item>
+            <!-- Item: Drawn route -->
+            <q-item
+              clickable
+              v-ripple
+              v-for="(route, index) in loggedRoutes"
+              :key="`route-${index}`"
+              @click="onRenderRoute(route)"
             >
-          </q-item>
-          <!-- Item: Drawn route -->
-          <q-item
-            clickable
-            v-ripple
-            v-for="(route, index) in drawnRoutes"
-            :key="`route-${index}`"
-            @click="onRenderRoute(route)"
+              <q-item-section v-if="route['startName'] && route['endName']">
+                {{ `${route['startName']} → ${route['endName']}` }}
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </q-scroll-area>
+      </div>
+      <div class="relative-position col-12 col-sm-10">
+        <!-- Tools -->
+        <div
+          class="flex justify-center absolute-top q-pa-sm"
+          style="z-index: 1"
+        >
+          <q-toolbar
+            class="col-auto gap-8 q-pa-sm"
+            :style="{ borderRadius: '9999px', backgroundColor: bgColor }"
           >
-            <q-item-section v-if="route['startName'] && route['endName']">
-              {{ `${route['startName']} → ${route['endName']}` }}
-            </q-item-section>
-          </q-item>
-        </q-list>
-      </q-scroll-area>
-    </div>
-    <div class="col-12 col-sm-10">
-      <!-- Map -->
-      <ol-map
-        :loadTilesWhileAnimating="true"
-        :loadTilesWhileInteracting="true"
-        :style="{ height: mapHeight }"
-      >
-        <!-- View -->
-        <ol-view
-          ref="view"
-          :center="center"
-          :rotation="rotation"
-          :zoom="zoom"
-          :projection="projection"
-        />
-        <!-- Layer for OpenStreetMap tiles -->
-        <ol-tile-layer>
-          <ol-source-osm />
-        </ol-tile-layer>
-        <!-- Layer for the drawn routes -->
-        <ol-vector-layer ref="vectorLayer" title="routes">
-          <ol-source-vector ref="vectorSource">
-            <!-- Interaction modify handler -->
-            <ol-interaction-modify v-if="drawEnable"> </ol-interaction-modify>
-            <!-- Interaction draw handler -->
-            <ol-interaction-draw
-              v-if="drawEnable"
-              type="LineString"
-              @drawstart="drawstart"
-              @drawend="drawend"
+            <!-- Button: Enable draw (draw route) -->
+            <q-btn
+              dense
+              round
+              unelevated
+              class="q-pa-none q-ma-none"
+              color="transparent"
+              text-color="primary"
+              @click.prevent="drawEnabled = !drawEnabled"
             >
-            </ol-interaction-draw>
-            <!-- Styling for the drawn routes -->
-            <ol-style>
-              <ol-style-stroke color="blue" :width="4"></ol-style-stroke>
-            </ol-style>
-          </ol-source-vector>
-        </ol-vector-layer>
-      </ol-map>
+              <q-avatar
+                size="32px"
+                class="q-pa-none q-ma-none"
+                :color="drawEnabled ? 'secondary' : 'white'"
+              >
+                <q-icon
+                  name="mdi-pencil-plus"
+                  color="primary"
+                  size="18px"
+                  data-cy="icon-add-route"
+                />
+              </q-avatar>
+            </q-btn>
+            <!-- Button: Undo -->
+            <q-btn
+              dense
+              round
+              unelevated
+              class="q-pa-none q-ma-none"
+              color="transparent"
+              text-color="primary"
+              @click.prevent="onUndo"
+            >
+              <q-avatar size="32px" class="q-pa-none q-ma-none" color="white">
+                <q-icon
+                  name="mdi-undo"
+                  color="primary"
+                  size="18px"
+                  data-cy="icon-add-route"
+                />
+              </q-avatar>
+            </q-btn>
+          </q-toolbar>
+        </div>
+        <!-- Map -->
+        <ol-map
+          :loadTilesWhileAnimating="true"
+          :loadTilesWhileInteracting="true"
+          :style="{ height: mapHeight }"
+        >
+          <!-- View -->
+          <ol-view
+            ref="view"
+            :center="center"
+            :rotation="rotation"
+            :zoom="zoom"
+            :projection="projection"
+          />
+          <!-- Layer for OpenStreetMap tiles -->
+          <ol-tile-layer>
+            <ol-source-osm />
+          </ol-tile-layer>
+          <!-- Controls -->
+          <ol-zoom-control zoomInLabel="➕" zoomOutLabel="➖" />
+          <ol-zoomslider-control />
+          <!-- Layer for the drawn routes -->
+          <ol-vector-layer ref="vectorLayer" title="routes">
+            <ol-source-vector ref="vectorSource">
+              <!-- Interaction modify handler -->
+              <ol-interaction-modify
+                v-if="drawEnabled"
+                @modifyend="onModifyEnd"
+              >
+              </ol-interaction-modify>
+              <!-- Interaction draw handler -->
+              <ol-interaction-draw
+                v-if="drawEnabled"
+                type="LineString"
+                @drawstart="onDrawStart"
+                @drawend="onDrawEnd"
+              >
+              </ol-interaction-draw>
+              <!-- Styling for the drawn routes -->
+              <ol-style>
+                <ol-style-stroke color="blue" :width="4"></ol-style-stroke>
+              </ol-style>
+            </ol-source-vector>
+          </ol-vector-layer>
+        </ol-map>
+      </div>
     </div>
   </div>
 </template>
