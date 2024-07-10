@@ -242,11 +242,15 @@ export default defineComponent({
         <!-- Toolbar -->
         <div
           class="flex justify-center absolute-top q-pa-sm"
-          style="z-index: 1"
+          :style="{ zIndex: 1, pointerEvents: 'none' }"
         >
           <q-toolbar
             class="col-auto gap-8 q-pa-sm"
-            :style="{ borderRadius: '9999px', backgroundColor: colorWhite }"
+            :style="{
+              borderRadius: '9999px',
+              backgroundColor: colorWhite,
+              pointerEvents: 'auto',
+            }"
           >
             <!-- Button: Enable draw (draw route) -->
             <q-btn
