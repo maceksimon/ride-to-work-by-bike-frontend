@@ -9,14 +9,20 @@ export const useGeocoding = () => {
    * @param feature Feature
    * @return Promise<void>
    */
-  const fetchPathName = async (feature: Feature): Promise<void> => {
+  const getRouteNames = async (
+    feature: Feature,
+  ): Promise<{ startName: string; endName: string }> => {
     // get coordinates from pathFeature
     const coordinates = feature.getGeometry()?.getCoordinates();
     const startCoordinates = coordinates[0];
     const endCoordinates = coordinates[coordinates.length - 1];
+    const startName = await getLocationName(startCoordinates);
+    const endName = await getLocationName(endCoordinates);
     // assign names
-    feature['startName'] = await getLocationName(startCoordinates);
-    feature['endName'] = await getLocationName(endCoordinates);
+    return {
+      startName: startName,
+      endName: endName,
+    };
   };
 
   /**
@@ -38,7 +44,7 @@ export const useGeocoding = () => {
   };
 
   return {
-    fetchPathName,
+    getRouteNames,
     getLocationName,
   };
 };
