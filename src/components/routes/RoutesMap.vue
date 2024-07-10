@@ -131,6 +131,11 @@ export default defineComponent({
       }
     };
 
+    /**
+     * Save drawRoute to local array of routes.
+     * Before saving, get start and end names of the route.
+     * @returns {Promise<void>}
+     */
     const onSaveRoute = async (): Promise<void> => {
       if (drawRoute.value) {
         const { startName, endName } = await getRouteNames(drawRoute.value);
@@ -145,6 +150,12 @@ export default defineComponent({
       }
     };
 
+    /**
+     * Called when a saved routes list item is clicked.
+     * Renders clicked route on the map.
+     * @param featureRoute FeatureRoute
+     * @returns {void}
+     */
     const onSavedRouteClick = (featureRoute: FeatureRoute): void => {
       renderSavedRoute(featureRoute.route);
     };
