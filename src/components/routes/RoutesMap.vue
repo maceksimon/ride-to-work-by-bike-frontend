@@ -123,6 +123,14 @@ export default defineComponent({
     };
 
     /**
+     * Toggles the draw mode.
+     */
+    const toggleDrawEnabled = (): void => {
+      drawEnabled.value = !drawEnabled.value;
+      clearMapRoutes();
+    };
+
+    /**
      * If possible, undo last route modification and update route on the map.
      * If there are no changes in history, do nothing.
      * @returns {void}
@@ -152,6 +160,8 @@ export default defineComponent({
           startName,
         };
         saveRoute(featureRoute);
+        // disable drawing
+        drawEnabled.value = false;
       }
     };
 
@@ -188,6 +198,7 @@ export default defineComponent({
       onUndo,
       renderSavedRoute,
       styleFunction,
+      toggleDrawEnabled,
     };
   },
 });
@@ -260,7 +271,7 @@ export default defineComponent({
               class="q-pa-none q-ma-none"
               color="transparent"
               text-color="primary"
-              @click.prevent="drawEnabled = !drawEnabled"
+              @click.prevent="toggleDrawEnabled"
             >
               <q-avatar
                 size="32px"
@@ -277,6 +288,7 @@ export default defineComponent({
             </q-btn>
             <!-- Button: Enable delete (delete point/vertex) -->
             <q-btn
+              v-show="drawEnabled"
               dense
               round
               unelevated
@@ -300,6 +312,7 @@ export default defineComponent({
             </q-btn>
             <!-- Button: Undo -->
             <q-btn
+              v-show="drawEnabled"
               dense
               round
               unelevated
@@ -319,6 +332,7 @@ export default defineComponent({
             </q-btn>
             <!-- Button: Save route -->
             <q-btn
+              v-show="drawEnabled"
               dense
               round
               unelevated
