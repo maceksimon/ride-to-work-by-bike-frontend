@@ -1,3 +1,6 @@
+// libraries
+import { toLonLat } from 'ol/proj';
+
 // types
 import type { Feature } from 'ol';
 
@@ -33,7 +36,7 @@ export const useGeocoding = () => {
    * @return Promise<string>
    */
   const getLocationName = async (coord: number[]): Promise<string> => {
-    const [lon, lat] = coord;
+    const [lon, lat] = toLonLat(coord, 'EPSG:3857');
     // TODO: update fetch method (if we will use it)
     const response = await fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lon=${lon}&lat=${lat}`,
