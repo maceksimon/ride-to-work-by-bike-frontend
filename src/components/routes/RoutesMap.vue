@@ -27,6 +27,8 @@ import {
   Styles,
 } from 'vue3-openlayers';
 import { Feature } from 'ol';
+import { LineString } from 'ol/geom';
+import { getLength } from 'ol/sphere';
 
 // composables
 import { useRoutesMap } from '../../composables/useRoutesMap';
@@ -42,9 +44,10 @@ import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
 
 export interface FeatureRoute {
+  endName: string;
+  length: number;
   route: Feature;
   startName: string;
-  endName: string;
 }
 
 export default defineComponent({
@@ -140,11 +143,18 @@ export default defineComponent({
       if (drawRoute.value) {
         // add route name
         const { startName, endName } = await getRouteNames(drawRoute.value);
+        // get route length
+        let length = 0;
+        const geom = drawRoute.value.getGeometry();
+        if (geom instanceof LineString) {
+          length = getLength(geom);
+        }
         // save route
         savedRoutes.value.push({
+          endName,
+          length,
           route: drawRoute.value,
           startName,
-          endName,
         } as FeatureRoute);
       }
     };
@@ -212,7 +222,13 @@ export default defineComponent({
               @click="onSavedRouteClick(route)"
             >
               <q-item-section v-if="route['startName'] && route['endName']">
-                {{ `${route['startName']} → ${route['endName']}` }}
+                <div>{{ `${route['startName']} → ${route['endName']}` }}</div>
+                <div v-if="route['length']">
+                  <small
+                    >{{ route['length'] }}
+                    {{ $t('global.routeLengthUnit') }}</small
+                  >
+                </div>
               </q-item-section>
             </q-item>
           </q-list>
