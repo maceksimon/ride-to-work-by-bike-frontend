@@ -7,13 +7,14 @@ import { getLength } from 'ol/sphere';
 // types
 import type { Ref } from 'vue';
 import type { Feature } from 'ol';
-import type { StyleFunction } from 'ol/style/Style';
+import type { OverrideStyleFunction } from 'vue3-openlayers/dist/components/styles';
 import type { FeatureRoute } from '../components/types/Route';
 
 const { getPaletteColor } = colors;
 const primaryColor = getPaletteColor('primary');
 
 export const useRoutesMap = () => {
+  // list of saved routes
   const savedRoutes = ref<FeatureRoute[]>([]);
 
   /**
@@ -45,7 +46,7 @@ export const useRoutesMap = () => {
    * @param feature Feature
    * @returns {Style[]}
    */
-  const styleFunction: StyleFunction = (feature) => {
+  const styleFunction: OverrideStyleFunction = (feature) => {
     const geometry = feature.getGeometry();
     // basic styles for LineString
     const styles = [
