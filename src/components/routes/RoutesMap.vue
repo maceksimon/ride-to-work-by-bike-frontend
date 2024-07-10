@@ -17,7 +17,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import {
   Map,
   MapControls,
@@ -31,13 +31,14 @@ import { LineString } from 'ol/geom';
 
 // composables
 import { useRoutesMap } from '../../composables/useRoutesMap';
+import { useRoutesMapVectorLayer } from '../../composables/useRoutesMapVectorLayer';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
 import type { Coordinate } from 'ol/coordinate';
-import type { DrawEvent } from 'ol/interaction/Draw';
+import type { DrawEvent, ModifyEvent } from 'ol/interaction/Draw';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -63,26 +64,24 @@ export default defineComponent({
     const rotation = ref(0);
     const mapHeight = ref<string>('600px');
 
+    // styles
+    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
+    const { getPaletteColor } = colors;
+    const bgColor = getPaletteColor('grey-8');
+
     // animation
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
     const loggedRoutes = ref<Feature[]>([]);
     const drawRoute = ref<Feature>();
-    const drawRoutePoints = computed((): Coordinate[] => {
-      return drawRoute.value?.getGeometry()?.getCoordinates() || [];
-    });
+    const drawRouteHistory = ref<Coordinate[]>([]);
+
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
-    const pointsLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
-      null,
-    );
-    const drawRouteHistory = ref<Coordinate[]>([]);
-
-    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
-    const { getPaletteColor, lighten } = colors;
-    const primaryColor = lighten(getPaletteColor('primary'), 0);
+    const { addMapRoute, clearMapRoutes, renderSavedRoute } =
+      useRoutesMapVectorLayer(vectorLayer);
 
     /**
      * Called when a new path is being drawn on the map.
@@ -95,26 +94,43 @@ export default defineComponent({
     /**
      * Called after a new path is drawn on the map.
      * @param event DrawEvent
+     * @returns {void}
      */
-    const onDrawEnd = async (event: DrawEvent): Promise<void> => {
-      // await fetchPathName(feature);
-      const featureLineString = event.feature;
-      drawRoute.value = featureLineString;
-      drawRoute.value &&
-        drawRouteHistory.value.push(
-          drawRoute.value.getGeometry().getCoordinates(),
-        );
+    const onDrawEnd = (event: DrawEvent): void => {
+      drawRoute.value = event.feature;
+      saveRouteToHistory(drawRoute.value);
     };
 
-    const onModifyEnd = (event: DrawEvent): void => {
+    /**
+     * Called after a path is modified on the map.
+     * @param event ModifyEvent
+     * @returns {void}
+     */
+    const onModifyEnd = (event: ModifyEvent): void => {
+      // get first feature (there should always be only one rendered in the layer)
       const feature = event.features.getArray()[0];
-      const newGeometry = feature.getGeometry()?.getCoordinates();
-      drawRoute.value &&
-        drawRoute.value.getGeometry().setCoordinates(newGeometry);
-      drawRoute.value &&
-        drawRouteHistory.value.push(
-          drawRoute.value.getGeometry().getCoordinates(),
-        );
+      const newCoordinates = feature.getGeometry()?.getCoordinates();
+
+      if (drawRoute.value?.getGeometry) {
+        // set new coordinates to drawRoute
+        drawRoute.value.getGeometry.setCoordinates(newCoordinates);
+        // save route to history
+        saveRouteToHistory(drawRoute.value);
+      }
+    };
+
+    /**
+     * Saves route coordinates into history. To enable "undo" action.
+     * @param route Feature
+     */
+    const saveRouteToHistory = (route: Feature): void => {
+      const geometry = route.getGeometry();
+      if (geometry) {
+        const coordinates = geometry.getCoordinates();
+        if (coordinates) {
+          drawRouteHistory.value.push(coordinates);
+        }
+      }
     };
 
     /**
@@ -134,37 +150,6 @@ export default defineComponent({
       addMapRoute(newFeature);
     };
 
-    /**
-     * Renders selected route on the map.
-     * First clears all previously drawn routes from the map.
-     * @param feature Feature
-     */
-    const onRenderRoute = (feature: typeof Feature): void => {
-      clearMapRoutes();
-      addMapRoute(feature);
-    };
-
-    /**
-     * Clears all drawn routes from the map.
-     * @returns {void}
-     */
-    const clearMapRoutes = (): void => {
-      const source = vectorLayer.value?.vectorLayer.getSource();
-      source && source.clear();
-      const pointsSource = pointsLayer.value?.vectorLayer.getSource();
-      pointsSource && pointsSource.clear();
-    };
-
-    /**
-     * Adds the drawn route on the map.
-     * @param pathFeature Feature
-     * @returns {void}
-     */
-    const addMapRoute = (pathFeature: typeof Feature): void => {
-      const source = vectorLayer.value?.vectorLayer.getSource();
-      source && source.addFeature(pathFeature);
-    };
-
     const { styleFunction } = useRoutesMap();
 
     return {
@@ -174,21 +159,19 @@ export default defineComponent({
       drawEnabled,
       deleteEnabled,
       drawRoute,
-      drawRoutePoints,
       loggedRoutes,
       mapHeight,
       projection,
-      primaryColor,
+      bgColor,
       rotation,
       styleFunction,
       vectorLayer,
-      pointsLayer,
       zoom,
       addMapRoute,
       onDrawStart,
       onDrawEnd,
-      onRenderRoute,
       onModifyEnd,
+      renderSavedRoute,
 
       onUndo,
       drawRouteHistory,
@@ -225,7 +208,7 @@ export default defineComponent({
               v-ripple
               v-for="(route, index) in loggedRoutes"
               :key="`route-${index}`"
-              @click="onRenderRoute(route)"
+              @click="renderSavedRoute(route)"
             >
               <q-item-section v-if="route['startName'] && route['endName']">
                 {{ `${route['startName']} → ${route['endName']}` }}
@@ -242,7 +225,7 @@ export default defineComponent({
         >
           <q-toolbar
             class="col-auto gap-8 q-pa-sm"
-            :style="{ borderRadius: '9999px', backgroundColor: primaryColor }"
+            :style="{ borderRadius: '9999px', backgroundColor: 'white' }"
           >
             <!-- Button: Enable draw (draw route) -->
             <q-btn
@@ -257,11 +240,11 @@ export default defineComponent({
               <q-avatar
                 size="32px"
                 class="q-pa-none q-ma-none"
-                :color="drawEnabled ? 'secondary' : 'white'"
+                :color="drawEnabled ? 'primary' : 'grey-3'"
               >
                 <q-icon
                   name="mdi-pencil-plus"
-                  color="primary"
+                  :color="drawEnabled ? 'white' : 'primary'"
                   size="18px"
                   data-cy="icon-add-route"
                 />
@@ -280,11 +263,11 @@ export default defineComponent({
               <q-avatar
                 size="32px"
                 class="q-pa-none q-ma-none"
-                :color="deleteEnabled ? 'secondary' : 'white'"
+                :color="deleteEnabled ? 'primary' : 'grey-3'"
               >
                 <q-icon
                   name="mdi-pencil-remove"
-                  color="primary"
+                  :color="deleteEnabled ? 'white' : 'primary'"
                   size="18px"
                   data-cy="icon-add-route"
                 />
@@ -300,7 +283,7 @@ export default defineComponent({
               text-color="primary"
               @click.prevent="onUndo"
             >
-              <q-avatar size="32px" class="q-pa-none q-ma-none" color="white">
+              <q-avatar size="32px" class="q-pa-none q-ma-none" color="grey-3">
                 <q-icon
                   name="mdi-undo"
                   color="primary"
