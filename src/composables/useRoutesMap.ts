@@ -1,8 +1,12 @@
+// libraries
 import { colors } from 'quasar';
 import { ref, unref } from 'vue';
 import { LineString, MultiPoint, Point } from 'ol/geom';
 import { Style, Stroke, Icon } from 'ol/style';
 import { getLength } from 'ol/sphere';
+
+// composables
+import { i18n } from '../boot/i18n';
 
 // types
 import type { Ref } from 'vue';
@@ -38,6 +42,11 @@ export const useRoutesMap = () => {
       length = getLength(geom);
     }
     return length;
+  };
+
+  const getRouteLengthLabel = (featureRoute: FeatureRoute): string => {
+    const length = getRouteLength(featureRoute.route);
+    return `${Math.round(length / 1000)} ${i18n.global.t('global.routeLengthUnit')}`;
   };
 
   /**
@@ -95,6 +104,7 @@ export const useRoutesMap = () => {
   return {
     savedRoutes,
     getRouteLength,
+    getRouteLengthLabel,
     saveRoute,
     styleFunction,
   };
