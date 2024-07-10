@@ -1,3 +1,5 @@
+import type { Feature } from 'ol';
+
 export type RouteItem = {
   id: string;
   date: string;
@@ -28,3 +30,10 @@ export type RouteCalendarDay = {
 };
 
 export type RouteTab = 'calendar' | 'list' | 'map' | 'app';
+
+export interface FeatureRoute {
+  endName: string;
+  length: number;
+  route: Feature;
+  startName: string;
+}

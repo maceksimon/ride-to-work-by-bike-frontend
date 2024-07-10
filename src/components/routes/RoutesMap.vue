@@ -26,10 +26,7 @@ import {
   Interactions,
   Styles,
 } from 'vue3-openlayers';
-import { Feature } from 'ol';
 import { fromLonLat } from 'ol/proj';
-import { LineString } from 'ol/geom';
-import { getLength } from 'ol/sphere';
 
 // composables
 import { useRoutesMap } from '../../composables/useRoutesMap';
@@ -43,13 +40,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // types
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
-
-export interface FeatureRoute {
-  endName: string;
-  length: number;
-  route: Feature;
-  startName: string;
-}
+import type { FeatureRoute } from '../types/Route';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -70,7 +61,7 @@ export default defineComponent({
   setup() {
     const center = ref(fromLonLat([14.4378, 50.0755]));
     const projection = ref('EPSG:3857');
-    const zoom = ref(12);
+    const zoom = ref(13);
     const rotation = ref(0);
     const mapHeight = ref<string>('600px');
 
@@ -83,7 +74,6 @@ export default defineComponent({
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
-    const savedRoutes = ref<FeatureRoute[]>([]);
 
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
@@ -93,7 +83,8 @@ export default defineComponent({
 
     const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
 
-    const { styleFunction } = useRoutesMap();
+    const { savedRoutes, getRouteLength, saveRoute, styleFunction } =
+      useRoutesMap();
 
     const { getRouteNames } = useGeocoding();
 
@@ -142,21 +133,15 @@ export default defineComponent({
 
     const onSaveRoute = async (): Promise<void> => {
       if (drawRoute.value) {
-        // add route name
         const { startName, endName } = await getRouteNames(drawRoute.value);
-        // get route length
-        let length = 0;
-        const geom = drawRoute.value.getGeometry();
-        if (geom instanceof LineString) {
-          length = getLength(geom);
-        }
-        // save route
-        savedRoutes.value.push({
+        const length = getRouteLength(drawRoute.value);
+        const featureRoute: FeatureRoute = {
           endName,
           length,
           route: drawRoute.value,
           startName,
-        } as FeatureRoute);
+        };
+        saveRoute(featureRoute);
       }
     };
 
