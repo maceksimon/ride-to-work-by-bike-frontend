@@ -27,18 +27,18 @@ import {
   Styles,
 } from 'vue3-openlayers';
 import { Feature } from 'ol';
-import { LineString } from 'ol/geom';
 
 // composables
 import { useRoutesMap } from '../../composables/useRoutesMap';
+import { useRoutesMapDraw } from '../../composables/useRoutesMapDraw';
 import { useRoutesMapVectorLayer } from '../../composables/useRoutesMapVectorLayer';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { Coordinate } from 'ol/coordinate';
-import type { DrawEvent, ModifyEvent } from 'ol/interaction/Draw';
+import type { DrawEvent } from 'ol/interaction/Draw';
+import type { ModifyEvent } from 'ol/interaction/Modify';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -50,7 +50,6 @@ export default defineComponent({
     OlSourceOsm: Sources.OlSourceOsm,
     OlSourceVector: Sources.OlSourceVector,
     OlStyle: Styles.OlStyle,
-    OlStyleStroke: Styles.OlStyleStroke,
     OlInteractionModify: Interactions.OlInteractionModify,
     OlInteractionDraw: Interactions.OlInteractionDraw,
     OlInteractionSnap: Interactions.OlInteractionSnap,
@@ -67,21 +66,23 @@ export default defineComponent({
     // styles
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
     const { getPaletteColor } = colors;
-    const bgColor = getPaletteColor('grey-8');
+    const colorWhite = getPaletteColor('white');
 
     // animation
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
     const loggedRoutes = ref<Feature[]>([]);
-    const drawRoute = ref<Feature>();
-    const drawRouteHistory = ref<Coordinate[]>([]);
 
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
     const { addMapRoute, clearMapRoutes, renderSavedRoute } =
       useRoutesMapVectorLayer(vectorLayer);
+
+    const { updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
+
+    const { styleFunction } = useRoutesMap();
 
     /**
      * Called when a new path is being drawn on the map.
@@ -97,8 +98,8 @@ export default defineComponent({
      * @returns {void}
      */
     const onDrawEnd = (event: DrawEvent): void => {
-      drawRoute.value = event.feature;
-      saveRouteToHistory(drawRoute.value);
+      const feature = event.feature;
+      updateDrawRoute(feature);
     };
 
     /**
@@ -107,50 +108,24 @@ export default defineComponent({
      * @returns {void}
      */
     const onModifyEnd = (event: ModifyEvent): void => {
-      // get first feature (there should always be only one rendered in the layer)
+      // get first feature (there should always be only one)
       const feature = event.features.getArray()[0];
-      const newCoordinates = feature.getGeometry()?.getCoordinates();
-
-      if (drawRoute.value?.getGeometry) {
-        // set new coordinates to drawRoute
-        drawRoute.value.getGeometry.setCoordinates(newCoordinates);
-        // save route to history
-        saveRouteToHistory(drawRoute.value);
-      }
+      updateDrawRoute(feature);
     };
 
     /**
-     * Saves route coordinates into history. To enable "undo" action.
-     * @param route Feature
-     */
-    const saveRouteToHistory = (route: Feature): void => {
-      const geometry = route.getGeometry();
-      if (geometry) {
-        const coordinates = geometry.getCoordinates();
-        if (coordinates) {
-          drawRouteHistory.value.push(coordinates);
-        }
-      }
-    };
-
-    /**
-     * Undo last route modification.
+     * If possible, undo last route modification and update route on the map.
+     * If there are no changes in history, do nothing.
      * @returns {void}
      */
     const onUndo = (): void => {
-      if (drawRouteHistory.value.length === 1) return;
-      drawRouteHistory.value.pop();
-      const lastElement =
-        drawRouteHistory.value[drawRouteHistory.value.length - 1];
-      const lineString = new LineString(lastElement);
-      const newFeature = new Feature({
-        geometry: lineString,
-      });
-      clearMapRoutes();
-      addMapRoute(newFeature);
+      const newFeature = undoDrawRoute();
+      if (newFeature) {
+        // update map
+        clearMapRoutes();
+        addMapRoute(newFeature);
+      }
     };
-
-    const { styleFunction } = useRoutesMap();
 
     return {
       animationPath,
@@ -158,13 +133,11 @@ export default defineComponent({
       center,
       drawEnabled,
       deleteEnabled,
-      drawRoute,
       loggedRoutes,
       mapHeight,
       projection,
-      bgColor,
+      colorWhite,
       rotation,
-      styleFunction,
       vectorLayer,
       zoom,
       addMapRoute,
@@ -172,9 +145,8 @@ export default defineComponent({
       onDrawEnd,
       onModifyEnd,
       renderSavedRoute,
-
+      styleFunction,
       onUndo,
-      drawRouteHistory,
     };
   },
 });
@@ -192,6 +164,7 @@ export default defineComponent({
         border: '1px solid #E0E0E0',
       }"
     >
+      <!-- Column: Drawn routes -->
       <div class="col-12 col-sm-2">
         <q-scroll-area :style="{ height: mapHeight }">
           <!-- List: Drawn routes -->
@@ -217,15 +190,17 @@ export default defineComponent({
           </q-list>
         </q-scroll-area>
       </div>
+
+      <!-- Column: Map -->
       <div class="relative-position col-12 col-sm-10">
-        <!-- Tools -->
+        <!-- Toolbar -->
         <div
           class="flex justify-center absolute-top q-pa-sm"
           style="z-index: 1"
         >
           <q-toolbar
             class="col-auto gap-8 q-pa-sm"
-            :style="{ borderRadius: '9999px', backgroundColor: 'white' }"
+            :style="{ borderRadius: '9999px', backgroundColor: colorWhite }"
           >
             <!-- Button: Enable draw (draw route) -->
             <q-btn
@@ -312,7 +287,7 @@ export default defineComponent({
           <ol-tile-layer>
             <ol-source-osm />
           </ol-tile-layer>
-          <!-- Controls -->
+          <!-- Zoom controls -->
           <ol-zoom-control zoomInLabel="➕" zoomOutLabel="➖" />
           <ol-zoomslider-control />
           <!-- Layer for the drawn routes -->
@@ -324,6 +299,7 @@ export default defineComponent({
                 :delete-condition="() => deleteEnabled"
                 @modifyend="onModifyEnd"
               />
+              <!-- Interaction delete handler -->
               <ol-interaction-modify
                 v-if="deleteEnabled"
                 :delete-condition="() => true"
@@ -339,10 +315,7 @@ export default defineComponent({
               <!-- Interaction snap handler -->
               <ol-interaction-snap v-if="drawEnabled" />
               <!-- Style -->
-              <ol-style :override-style-function="styleFunction">
-                <!-- LineString style -->
-                <ol-style-stroke color="blue" :width="4"></ol-style-stroke>
-              </ol-style>
+              <ol-style :override-style-function="styleFunction" />
             </ol-source-vector>
           </ol-vector-layer>
         </ol-map>
