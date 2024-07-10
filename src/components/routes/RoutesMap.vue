@@ -32,6 +32,7 @@ import { Feature } from 'ol';
 import { useRoutesMap } from '../../composables/useRoutesMap';
 import { useRoutesMapDraw } from '../../composables/useRoutesMapDraw';
 import { useRoutesMapVectorLayer } from '../../composables/useRoutesMapVectorLayer';
+import { useGeocoding } from '../../composables/useGeocoding';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -39,6 +40,12 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // types
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
+
+export interface FeatureRoute {
+  route: Feature;
+  startName: string;
+  endName: string;
+}
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -72,7 +79,7 @@ export default defineComponent({
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
-    const loggedRoutes = ref<Feature[]>([]);
+    const savedRoutes = ref<FeatureRoute[]>([]);
 
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
@@ -80,9 +87,11 @@ export default defineComponent({
     const { addMapRoute, clearMapRoutes, renderSavedRoute } =
       useRoutesMapVectorLayer(vectorLayer);
 
-    const { updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
+    const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
 
     const { styleFunction } = useRoutesMap();
+
+    const { getRouteNames } = useGeocoding();
 
     /**
      * Called when a new path is being drawn on the map.
@@ -127,26 +136,45 @@ export default defineComponent({
       }
     };
 
+    const onSaveRoute = async (): Promise<void> => {
+      if (drawRoute.value) {
+        // add route name
+        const { startName, endName } = await getRouteNames(drawRoute.value);
+        // save route
+        savedRoutes.value.push({
+          route: drawRoute.value,
+          startName,
+          endName,
+        } as FeatureRoute);
+      }
+    };
+
+    const onSavedRouteClick = (featureRoute: FeatureRoute): void => {
+      renderSavedRoute(featureRoute.route);
+    };
+
     return {
       animationPath,
       borderRadius,
       center,
-      drawEnabled,
+      colorWhite,
       deleteEnabled,
-      loggedRoutes,
+      drawEnabled,
       mapHeight,
       projection,
-      colorWhite,
       rotation,
+      savedRoutes,
       vectorLayer,
       zoom,
       addMapRoute,
       onDrawStart,
       onDrawEnd,
       onModifyEnd,
+      onSaveRoute,
+      onSavedRouteClick,
+      onUndo,
       renderSavedRoute,
       styleFunction,
-      onUndo,
     };
   },
 });
@@ -179,9 +207,9 @@ export default defineComponent({
             <q-item
               clickable
               v-ripple
-              v-for="(route, index) in loggedRoutes"
+              v-for="(route, index) in savedRoutes"
               :key="`route-${index}`"
-              @click="renderSavedRoute(route)"
+              @click="onSavedRouteClick(route)"
             >
               <q-item-section v-if="route['startName'] && route['endName']">
                 {{ `${route['startName']} → ${route['endName']}` }}
@@ -244,7 +272,7 @@ export default defineComponent({
                   name="mdi-pencil-remove"
                   :color="deleteEnabled ? 'white' : 'primary'"
                   size="18px"
-                  data-cy="icon-add-route"
+                  data-cy="icon-remove-point"
                 />
               </q-avatar>
             </q-btn>
@@ -263,7 +291,26 @@ export default defineComponent({
                   name="mdi-undo"
                   color="primary"
                   size="18px"
-                  data-cy="icon-add-route"
+                  data-cy="icon-undo"
+                />
+              </q-avatar>
+            </q-btn>
+            <!-- Button: Save route -->
+            <q-btn
+              dense
+              round
+              unelevated
+              class="q-pa-none q-ma-none"
+              color="transparent"
+              text-color="primary"
+              @click.prevent="onSaveRoute"
+            >
+              <q-avatar size="32px" class="q-pa-none q-ma-none" color="grey-3">
+                <q-icon
+                  name="mdi-check"
+                  color="primary"
+                  size="18px"
+                  data-cy="icon-save-route"
                 />
               </q-avatar>
             </q-btn>
