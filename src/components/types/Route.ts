@@ -1,5 +1,6 @@
 // types
 import type { TimestampOrNull } from '@quasar/quasar-ui-qcalendar';
+import type { Feature } from 'ol';
 
 export enum TransportDirection {
   toWork = 'toWork',
@@ -50,3 +51,10 @@ export type RouteLogData = {
   distance: string;
   transportType: TransportType;
 };
+
+export interface FeatureRoute {
+  endName: string;
+  length: number;
+  route: Feature;
+  startName: string;
+}
