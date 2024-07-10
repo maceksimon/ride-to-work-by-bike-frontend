@@ -1,14 +1,44 @@
 import { colors } from 'quasar';
-import { MultiPoint, Point } from 'ol/geom';
+import { ref, unref } from 'vue';
+import { LineString, MultiPoint, Point } from 'ol/geom';
 import { Style, Stroke, Icon } from 'ol/style';
+import { getLength } from 'ol/sphere';
 
 // types
+import type { Ref } from 'vue';
+import type { Feature } from 'ol';
 import type { StyleFunction } from 'ol/style/Style';
+import type { FeatureRoute } from '../components/types/Route';
 
 const { getPaletteColor } = colors;
 const primaryColor = getPaletteColor('primary');
 
 export const useRoutesMap = () => {
+  const savedRoutes = ref<FeatureRoute[]>([]);
+
+  /**
+   * Saves a route to the list of saved routes.
+   * @param {FeatureRoute} route - The route to be saved.
+   * @return {void}
+   */
+  const saveRoute = (route: FeatureRoute): void => {
+    savedRoutes.value.push(route);
+  };
+
+  /**
+   * Get the length of a route based on the geometry.
+   * @param {Feature | Ref<Feature>} route - The LineString route.
+   * @return {number} The length of the route.
+   */
+  const getRouteLength = (route: Feature | Ref<Feature>): number => {
+    let length = 0;
+    const geom = unref(route).getGeometry();
+    if (geom instanceof LineString) {
+      length = getLength(geom);
+    }
+    return length;
+  };
+
   /**
    * Styling for the drawn routes.
    * Uses function override to create styles for LineString vertices.
@@ -62,6 +92,9 @@ export const useRoutesMap = () => {
   };
 
   return {
+    savedRoutes,
+    getRouteLength,
+    saveRoute,
     styleFunction,
   };
 };
