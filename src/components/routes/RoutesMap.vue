@@ -83,8 +83,13 @@ export default defineComponent({
 
     const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
 
-    const { savedRoutes, getRouteLength, saveRoute, styleFunction } =
-      useRoutesMap();
+    const {
+      savedRoutes,
+      getRouteLength,
+      getRouteLengthLabel,
+      saveRoute,
+      styleFunction,
+    } = useRoutesMap();
 
     const { getRouteNames } = useGeocoding();
 
@@ -174,6 +179,7 @@ export default defineComponent({
       vectorLayer,
       zoom,
       addMapRoute,
+      getRouteLengthLabel,
       onDrawStart,
       onDrawEnd,
       onModifyEnd,
@@ -222,8 +228,7 @@ export default defineComponent({
                 <div>{{ `${route['startName']} → ${route['endName']}` }}</div>
                 <div v-if="route['length']">
                   <small>
-                    {{ route['length'] }}
-                    {{ $t('global.routeLengthUnit') }}
+                    {{ getRouteLengthLabel(route) }}
                   </small>
                 </div>
               </q-item-section>
