@@ -27,6 +27,7 @@ import {
   Styles,
 } from 'vue3-openlayers';
 import { Feature } from 'ol';
+import { fromLonLat } from 'ol/proj';
 import { LineString } from 'ol/geom';
 import { getLength } from 'ol/sphere';
 
@@ -67,8 +68,8 @@ export default defineComponent({
     OlZoomsliderControl: MapControls.OlZoomsliderControl,
   },
   setup() {
-    const center = ref([14.4378, 50.0755]);
-    const projection = ref('EPSG:4326');
+    const center = ref(fromLonLat([14.4378, 50.0755]));
+    const projection = ref('EPSG:3857');
     const zoom = ref(12);
     const rotation = ref(0);
     const mapHeight = ref<string>('600px');
@@ -224,10 +225,10 @@ export default defineComponent({
               <q-item-section v-if="route['startName'] && route['endName']">
                 <div>{{ `${route['startName']} → ${route['endName']}` }}</div>
                 <div v-if="route['length']">
-                  <small
-                    >{{ route['length'] }}
-                    {{ $t('global.routeLengthUnit') }}</small
-                  >
+                  <small>
+                    {{ route['length'] }}
+                    {{ $t('global.routeLengthUnit') }}
+                  </small>
                 </div>
               </q-item-section>
             </q-item>
