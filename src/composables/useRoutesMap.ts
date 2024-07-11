@@ -1,16 +1,18 @@
 // libraries
 import { colors } from 'quasar';
-import { ref, unref } from 'vue';
+import { onMounted, ref, unref } from 'vue';
 import { Map } from 'vue3-openlayers';
 import { LineString, MultiPoint, Point } from 'ol/geom';
 import { Style, Stroke, Icon } from 'ol/style';
 import { getLength } from 'ol/sphere';
+import { fromLonLat, useGeographic } from 'ol/proj';
 
 // composables
 import { i18n } from '../boot/i18n';
 
 // types
 import type { Ref } from 'vue';
+import type { Coordinate } from 'ol/coordinate';
 import type { Extent } from 'ol/extent';
 import type { Feature } from 'ol';
 import type { OverrideStyleFunction } from 'vue3-openlayers/dist/components/styles';
@@ -19,11 +21,16 @@ import type { FeatureRoute } from '../components/types/Route';
 const { getPaletteColor } = colors;
 const primaryColor = getPaletteColor('primary');
 
-export const useRoutesMap = (
-  mapRef: Ref<InstanceType<typeof Map.OlMap> | null>,
-) => {
+export const useRoutesMap = () => {
   // constants
   const MAX_ZOOM_CENTERING_FACTOR = 15;
+  const DEFAULT_MAP_ZOOM = 13;
+
+  const mapRef = ref<InstanceType<typeof Map.OlMap> | null>(null);
+  const center = ref<Coordinate>(fromLonLat([14.4378, 50.0755]));
+  const projection = ref('EPSG:3857');
+  const zoom = ref(DEFAULT_MAP_ZOOM);
+  const rotation = ref(0);
 
   // list of saved routes
   const savedRoutes = ref<FeatureRoute[]>([]);
@@ -101,6 +108,39 @@ export const useRoutesMap = (
     return `${Math.round(length / 1000)} ${i18n.global.t('global.routeLengthUnit')}`;
   };
 
+  onMounted(() => {
+    useGeographic();
+  });
+
+  /**
+   * Centers the map on the current location if geolocation is supported.
+   * If geolocation is not supported, an error message is logged to the console.
+   * @return {void}
+   */
+  const centerOnCurrentLocation = (): void => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const coords = fromLonLat([
+            position.coords.longitude,
+            position.coords.latitude,
+          ]);
+          center.value = coords;
+          if (mapRef.value?.map) {
+            const view = mapRef.value.map.getView();
+            view.setCenter(coords);
+            view.setZoom(DEFAULT_MAP_ZOOM);
+          }
+        },
+        (error) => {
+          console.error('Geolocation error:', error);
+        },
+      );
+    } else {
+      console.error('Geolocation is not supported by this browser.');
+    }
+  };
+
   /**
    * Styling for the drawn routes.
    * Uses function override to create styles for LineString vertices.
@@ -154,9 +194,15 @@ export const useRoutesMap = (
   };
 
   return {
+    mapRef,
+    center,
+    zoom,
+    projection,
+    rotation,
     savedRoutes,
     centerMapOnExtent,
     centerMapOnRoute,
+    centerOnCurrentLocation,
     getRouteExtent,
     getRouteLength,
     getRouteLengthLabel,

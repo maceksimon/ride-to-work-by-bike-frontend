@@ -25,7 +25,6 @@ import {
   Interactions,
   Styles,
 } from 'vue3-openlayers';
-import { fromLonLat } from 'ol/proj';
 
 // composables
 import { useRoutesMap } from '../../composables/useRoutesMap';
@@ -58,14 +57,23 @@ export default defineComponent({
     OlZoomsliderControl: MapControls.OlZoomsliderControl,
   },
   setup() {
-    const mapRef = ref<InstanceType<typeof Map.OlMap> | null>(null);
-    const center = ref(fromLonLat([14.4378, 50.0755]));
-    const projection = ref('EPSG:3857');
-    const zoom = ref(13);
-    const rotation = ref(0);
-    const mapHeight = ref<string>('600px');
+    const {
+      mapRef,
+      center,
+      zoom,
+      projection,
+      rotation,
+      savedRoutes,
+      centerMapOnRoute,
+      centerOnCurrentLocation,
+      getRouteLength,
+      getRouteLengthLabel,
+      saveRoute,
+      styleFunction,
+    } = useRoutesMap();
 
     // styles
+    const mapHeight = ref<string>('600px');
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
     const { getPaletteColor } = colors;
     const colorWhite = getPaletteColor('white');
@@ -74,15 +82,6 @@ export default defineComponent({
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
-
-    const {
-      savedRoutes,
-      centerMapOnRoute,
-      getRouteLength,
-      getRouteLengthLabel,
-      saveRoute,
-      styleFunction,
-    } = useRoutesMap(mapRef);
 
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
@@ -192,6 +191,7 @@ export default defineComponent({
       vectorLayer,
       zoom,
       addMapRoute,
+      centerOnCurrentLocation,
       getRouteLengthLabel,
       onDrawStart,
       onDrawEnd,
@@ -253,7 +253,7 @@ export default defineComponent({
 
       <!-- Column: Map -->
       <div class="relative-position col-12 col-sm-10">
-        <!-- Toolbar -->
+        <!-- Toolbar: Top -->
         <div
           class="flex justify-center absolute-top q-pa-sm"
           :style="{ zIndex: 1, pointerEvents: 'none' }"
@@ -354,6 +354,33 @@ export default defineComponent({
               </q-avatar>
             </q-btn>
           </q-toolbar>
+        </div>
+        <div
+          class="flex justify-start absolute-bottom q-pa-sm"
+          :style="{ zIndex: 1, pointerEvents: 'none' }"
+        >
+          <!-- Button: Center on current location -->
+          <q-btn
+            dense
+            round
+            unelevated
+            class="q-pa-none q-ma-none"
+            color="transparent"
+            text-color="primary"
+            :style="{
+              pointerEvents: 'auto',
+            }"
+            @click.prevent="centerOnCurrentLocation"
+          >
+            <q-avatar size="32px" class="q-pa-none q-ma-none" color="white">
+              <q-icon
+                name="sym_s_my_location"
+                color="primary"
+                size="18px"
+                data-cy="icon-add-route"
+              />
+            </q-avatar>
+          </q-btn>
         </div>
         <!-- Map -->
         <ol-map
