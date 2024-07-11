@@ -30,7 +30,6 @@ export const useRoutesMap = () => {
   const center = ref<Coordinate>(fromLonLat([14.4378, 50.0755]));
   const projection = ref('EPSG:3857');
   const zoom = ref(DEFAULT_MAP_ZOOM);
-  const rotation = ref(0);
 
   // list of saved routes
   const savedRoutes = ref<FeatureRoute[]>([]);
@@ -198,7 +197,6 @@ export const useRoutesMap = () => {
     center,
     zoom,
     projection,
-    rotation,
     savedRoutes,
     centerMapOnExtent,
     centerMapOnRoute,

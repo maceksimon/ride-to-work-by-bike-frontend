@@ -39,8 +39,19 @@ export const useGeocoding = () => {
       `https://nominatim.openstreetmap.org/reverse?format=json&lon=${lon}&lat=${lat}`,
     );
     const data = await response.json();
-    const locationName = data.address.road;
-    return locationName;
+    if (data.address?.road) {
+      return data.address.road;
+    }
+    if (data.address?.suburb) {
+      return data.address.suburb;
+    }
+    if (data.address?.city_district) {
+      return data.address.city_district;
+    }
+    if (data.address?.city) {
+      return data.address.city;
+    }
+    return '';
   };
 
   return {
