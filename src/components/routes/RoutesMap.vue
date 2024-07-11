@@ -6,7 +6,6 @@
  * view user's routes.
  *
  * Uses Vue 3 OpenLayers library to render the map.
- *
  * @see https://vue3openlayers.netlify.app/
  *
  * @example
