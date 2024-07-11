@@ -58,6 +58,7 @@ export default defineComponent({
     OlZoomsliderControl: MapControls.OlZoomsliderControl,
   },
   setup() {
+    const mapRef = ref<InstanceType<typeof Map.OlMap> | null>(null);
     const center = ref(fromLonLat([14.4378, 50.0755]));
     const projection = ref('EPSG:3857');
     const zoom = ref(13);
@@ -74,6 +75,15 @@ export default defineComponent({
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
 
+    const {
+      savedRoutes,
+      centerMapOnRoute,
+      getRouteLength,
+      getRouteLengthLabel,
+      saveRoute,
+      styleFunction,
+    } = useRoutesMap(mapRef);
+
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
@@ -81,14 +91,6 @@ export default defineComponent({
       useRoutesMapVectorLayer(vectorLayer);
 
     const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
-
-    const {
-      savedRoutes,
-      getRouteLength,
-      getRouteLengthLabel,
-      saveRoute,
-      styleFunction,
-    } = useRoutesMap();
 
     const { getRouteNames } = useGeocoding();
 
@@ -172,6 +174,7 @@ export default defineComponent({
      */
     const onSavedRouteClick = (featureRoute: FeatureRoute): void => {
       renderSavedRoute(featureRoute.route);
+      centerMapOnRoute(featureRoute.route);
     };
 
     return {
@@ -182,6 +185,7 @@ export default defineComponent({
       deleteEnabled,
       drawEnabled,
       mapHeight,
+      mapRef,
       projection,
       rotation,
       savedRoutes,
@@ -353,6 +357,7 @@ export default defineComponent({
         </div>
         <!-- Map -->
         <ol-map
+          ref="mapRef"
           :loadTilesWhileAnimating="true"
           :loadTilesWhileInteracting="true"
           :style="{ height: mapHeight }"

@@ -1,6 +1,7 @@
 // libraries
 import { colors } from 'quasar';
 import { ref, unref } from 'vue';
+import { Map } from 'vue3-openlayers';
 import { LineString, MultiPoint, Point } from 'ol/geom';
 import { Style, Stroke, Icon } from 'ol/style';
 import { getLength } from 'ol/sphere';
@@ -10,6 +11,7 @@ import { i18n } from '../boot/i18n';
 
 // types
 import type { Ref } from 'vue';
+import type { Extent } from 'ol/extent';
 import type { Feature } from 'ol';
 import type { OverrideStyleFunction } from 'vue3-openlayers/dist/components/styles';
 import type { FeatureRoute } from '../components/types/Route';
@@ -17,7 +19,12 @@ import type { FeatureRoute } from '../components/types/Route';
 const { getPaletteColor } = colors;
 const primaryColor = getPaletteColor('primary');
 
-export const useRoutesMap = () => {
+export const useRoutesMap = (
+  mapRef: Ref<InstanceType<typeof Map.OlMap> | null>,
+) => {
+  // constants
+  const MAX_ZOOM_CENTERING_FACTOR = 15;
+
   // list of saved routes
   const savedRoutes = ref<FeatureRoute[]>([]);
 
@@ -28,6 +35,46 @@ export const useRoutesMap = () => {
    */
   const saveRoute = (route: FeatureRoute): void => {
     savedRoutes.value.push(route);
+  };
+
+  /**
+   * Centers the map on the given route.
+   * @param {FeatureRoute} featureRoute - The route to center the map on.
+   * @return {void}
+   */
+  const centerMapOnRoute = (route: Feature): void => {
+    const extent = getRouteExtent(route);
+    if (extent) {
+      centerMapOnExtent(extent);
+    }
+  };
+
+  /**
+   * Get the extent of a route.
+   * If route is not a Feature, returns null.
+   * @param {Feature | Ref<Feature>} route - The LineString route.
+   * @return {Extent | null} The extent of the route.
+   */
+  const getRouteExtent = (route: Feature | Ref<Feature>): Extent | null => {
+    const geometry = unref(route).getGeometry();
+    return geometry ? geometry.getExtent() : null;
+  };
+
+  /**
+   * Centers the map on the given extent.
+   * Takes the MAX_ZOOM_CENTERING_FACTOR into account.
+   * @param {Extent} extent - The extent to center the map on.
+   * @return {void}
+   */
+  const centerMapOnExtent = (extent: Extent): void => {
+    const map = mapRef.value?.map;
+    if (map) {
+      const view = map.getView();
+      view.fit(extent, {
+        size: map.getSize(),
+        maxZoom: MAX_ZOOM_CENTERING_FACTOR,
+      });
+    }
   };
 
   /**
@@ -44,6 +91,11 @@ export const useRoutesMap = () => {
     return length;
   };
 
+  /**
+   * Returns a string representing the length of a route in kilometers.
+   * @param {FeatureRoute} featureRoute - The route to calculate the length for.
+   * @return {string} A string representing the length of the route in kilometers.
+   */
   const getRouteLengthLabel = (featureRoute: FeatureRoute): string => {
     const length = getRouteLength(featureRoute.route);
     return `${Math.round(length / 1000)} ${i18n.global.t('global.routeLengthUnit')}`;
@@ -103,6 +155,9 @@ export const useRoutesMap = () => {
 
   return {
     savedRoutes,
+    centerMapOnExtent,
+    centerMapOnRoute,
+    getRouteExtent,
     getRouteLength,
     getRouteLengthLabel,
     saveRoute,
