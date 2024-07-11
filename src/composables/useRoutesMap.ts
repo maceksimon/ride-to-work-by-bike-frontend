@@ -95,7 +95,7 @@ export const useRoutesMap = () => {
     if (geom instanceof LineString) {
       length = getLength(geom);
     }
-    return length;
+    return Math.round(length * 100);
   };
 
   /**
@@ -105,7 +105,7 @@ export const useRoutesMap = () => {
    */
   const getRouteLengthLabel = (featureRoute: FeatureRoute): string => {
     const length = getRouteLength(featureRoute.route);
-    return `${Math.round(length / 1000)} ${i18n.global.t('global.routeLengthUnit')}`;
+    return `${length} ${i18n.global.t('global.routeLengthUnit')}`;
   };
 
   onMounted(() => {
