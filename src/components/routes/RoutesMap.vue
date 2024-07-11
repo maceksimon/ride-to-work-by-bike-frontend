@@ -26,6 +26,9 @@ import {
   Styles,
 } from 'vue3-openlayers';
 
+// components
+import RoutesMapToolbar from './RoutesMapToolbar.vue';
+
 // composables
 import { useRoutesMap } from '../../composables/useRoutesMap';
 import { useRoutesMapDraw } from '../../composables/useRoutesMapDraw';
@@ -55,6 +58,7 @@ export default defineComponent({
     OlInteractionSnap: Interactions.OlInteractionSnap,
     OlZoomControl: MapControls.OlZoomControl,
     OlZoomsliderControl: MapControls.OlZoomsliderControl,
+    RoutesMapToolbar,
   },
   setup() {
     const {
@@ -62,7 +66,6 @@ export default defineComponent({
       center,
       zoom,
       projection,
-      rotation,
       savedRoutes,
       centerMapOnRoute,
       centerOnCurrentLocation,
@@ -186,7 +189,6 @@ export default defineComponent({
       mapHeight,
       mapRef,
       projection,
-      rotation,
       savedRoutes,
       vectorLayer,
       zoom,
@@ -254,134 +256,15 @@ export default defineComponent({
       <!-- Column: Map -->
       <div class="relative-position col-12 col-sm-10">
         <!-- Toolbar: Top -->
-        <div
-          class="flex justify-center absolute-top q-pa-sm"
-          :style="{ zIndex: 1, pointerEvents: 'none' }"
-        >
-          <q-toolbar
-            class="col-auto gap-8 q-pa-sm"
-            :style="{
-              borderRadius: '9999px',
-              backgroundColor: colorWhite,
-              pointerEvents: 'auto',
-            }"
-          >
-            <!-- Button: Enable draw (draw route) -->
-            <q-btn
-              dense
-              round
-              unelevated
-              class="q-pa-none q-ma-none"
-              color="transparent"
-              text-color="primary"
-              @click.prevent="toggleDrawEnabled"
-            >
-              <q-avatar
-                size="32px"
-                class="q-pa-none q-ma-none"
-                :color="drawEnabled ? 'primary' : 'grey-3'"
-              >
-                <q-icon
-                  name="mdi-pencil-plus"
-                  :color="drawEnabled ? 'white' : 'primary'"
-                  size="18px"
-                  data-cy="icon-add-route"
-                />
-              </q-avatar>
-            </q-btn>
-            <!-- Button: Enable delete (delete point/vertex) -->
-            <q-btn
-              v-show="drawEnabled"
-              dense
-              round
-              unelevated
-              class="q-pa-none q-ma-none"
-              color="transparent"
-              text-color="primary"
-              @click.prevent="deleteEnabled = !deleteEnabled"
-            >
-              <q-avatar
-                size="32px"
-                class="q-pa-none q-ma-none"
-                :color="deleteEnabled ? 'primary' : 'grey-3'"
-              >
-                <q-icon
-                  name="mdi-pencil-remove"
-                  :color="deleteEnabled ? 'white' : 'primary'"
-                  size="18px"
-                  data-cy="icon-remove-point"
-                />
-              </q-avatar>
-            </q-btn>
-            <!-- Button: Undo -->
-            <q-btn
-              v-show="drawEnabled"
-              dense
-              round
-              unelevated
-              class="q-pa-none q-ma-none"
-              color="transparent"
-              text-color="primary"
-              @click.prevent="onUndo"
-            >
-              <q-avatar size="32px" class="q-pa-none q-ma-none" color="grey-3">
-                <q-icon
-                  name="mdi-undo"
-                  color="primary"
-                  size="18px"
-                  data-cy="icon-undo"
-                />
-              </q-avatar>
-            </q-btn>
-            <!-- Button: Save route -->
-            <q-btn
-              v-show="drawEnabled"
-              dense
-              round
-              unelevated
-              class="q-pa-none q-ma-none"
-              color="transparent"
-              text-color="primary"
-              @click.prevent="onSaveRoute"
-            >
-              <q-avatar size="32px" class="q-pa-none q-ma-none" color="grey-3">
-                <q-icon
-                  name="mdi-check"
-                  color="primary"
-                  size="18px"
-                  data-cy="icon-save-route"
-                />
-              </q-avatar>
-            </q-btn>
-          </q-toolbar>
-        </div>
-        <div
-          class="flex justify-start absolute-bottom q-pa-sm"
-          :style="{ zIndex: 1, pointerEvents: 'none' }"
-        >
-          <!-- Button: Center on current location -->
-          <q-btn
-            dense
-            round
-            unelevated
-            class="q-pa-none q-ma-none"
-            color="transparent"
-            text-color="primary"
-            :style="{
-              pointerEvents: 'auto',
-            }"
-            @click.prevent="centerOnCurrentLocation"
-          >
-            <q-avatar size="32px" class="q-pa-none q-ma-none" color="white">
-              <q-icon
-                name="sym_s_my_location"
-                color="primary"
-                size="18px"
-                data-cy="icon-add-route"
-              />
-            </q-avatar>
-          </q-btn>
-        </div>
+        <routes-map-toolbar
+          :delete-enabled="deleteEnabled"
+          :draw-enabled="drawEnabled"
+          @current-position="centerOnCurrentLocation"
+          @save:route="onSaveRoute"
+          @update:delete-enabled="deleteEnabled = $event"
+          @update:draw-enabled="drawEnabled = $event"
+          @undo="onUndo"
+        />
         <!-- Map -->
         <ol-map
           ref="mapRef"
@@ -393,7 +276,6 @@ export default defineComponent({
           <ol-view
             ref="view"
             :center="center"
-            :rotation="rotation"
             :zoom="zoom"
             :projection="projection"
           />
