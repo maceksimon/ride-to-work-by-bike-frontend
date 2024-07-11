@@ -49,6 +49,7 @@ export default defineComponent({
   <div
     class="flex justify-center absolute-top q-pa-sm"
     :style="{ zIndex: 1, pointerEvents: 'none' }"
+    data-cy="toolbar-top"
   >
     <q-toolbar
       class="col-auto gap-8 q-pa-sm"
@@ -67,18 +68,20 @@ export default defineComponent({
         color="transparent"
         text-color="primary"
         @click.prevent="$emit('update:draw-enabled', !drawEnabled)"
+        data-cy="add-route-button"
       >
         <q-avatar
           size="32px"
           class="q-pa-none q-ma-none"
           :color="drawEnabled ? 'primary' : 'grey-3'"
+          data-cy="add-route-avatar"
         >
           <!-- Icon -->
           <q-icon
             name="mdi-pencil-plus"
             :color="drawEnabled ? 'white' : 'primary'"
             size="18px"
-            data-cy="icon-add-route"
+            data-cy="add-route-icon"
           />
         </q-avatar>
       </q-btn>
@@ -92,18 +95,20 @@ export default defineComponent({
         color="transparent"
         text-color="primary"
         @click.prevent="$emit('update:delete-enabled', !deleteEnabled)"
+        data-cy="delete-route-button"
       >
         <q-avatar
           size="32px"
           class="q-pa-none q-ma-none"
           :color="deleteEnabled ? 'primary' : 'grey-3'"
+          data-cy="delete-route-avatar"
         >
           <!-- Icon -->
           <q-icon
             name="mdi-pencil-remove"
             :color="deleteEnabled ? 'white' : 'primary'"
             size="18px"
-            data-cy="icon-remove-point"
+            data-cy="delete-route-icon"
           />
         </q-avatar>
       </q-btn>
@@ -117,14 +122,20 @@ export default defineComponent({
         color="transparent"
         text-color="primary"
         @click.prevent="$emit('undo')"
+        data-cy="undo-button"
       >
-        <q-avatar size="32px" class="q-pa-none q-ma-none" color="grey-3">
+        <q-avatar
+          size="32px"
+          class="q-pa-none q-ma-none"
+          color="grey-3"
+          data-cy="undo-avatar"
+        >
           <!-- Icon -->
           <q-icon
             name="mdi-undo"
             color="primary"
             size="18px"
-            data-cy="icon-undo"
+            data-cy="undo-icon"
           />
         </q-avatar>
       </q-btn>
@@ -138,14 +149,20 @@ export default defineComponent({
         color="transparent"
         text-color="primary"
         @click.prevent="$emit('save:route')"
+        data-cy="save-route-button"
       >
-        <q-avatar size="32px" class="q-pa-none q-ma-none" color="grey-3">
+        <q-avatar
+          size="32px"
+          class="q-pa-none q-ma-none"
+          color="grey-3"
+          data-cy="save-route-avatar"
+        >
           <!-- Icon -->
           <q-icon
             name="mdi-check"
             color="primary"
             size="18px"
-            data-cy="icon-save-route"
+            data-cy="save-route-icon"
           />
         </q-avatar>
       </q-btn>
@@ -155,6 +172,7 @@ export default defineComponent({
   <div
     class="flex justify-start absolute-bottom q-pa-sm"
     :style="{ zIndex: 1, pointerEvents: 'none' }"
+    data-cy="toolbar-bottom"
   >
     <!-- Button: Center on current location -->
     <q-btn
@@ -168,14 +186,20 @@ export default defineComponent({
         pointerEvents: 'auto',
       }"
       @click.prevent="$emit('current-position')"
+      data-cy="current-position-button"
     >
-      <q-avatar size="32px" class="q-pa-none q-ma-none" color="white">
+      <q-avatar
+        size="32px"
+        class="q-pa-none q-ma-none"
+        color="white"
+        data-cy="current-position-avatar"
+      >
         <!-- Icon -->
         <q-icon
           name="sym_s_my_location"
           color="primary"
           size="18px"
-          data-cy="icon-add-route"
+          data-cy="current-position-icon"
         />
       </q-avatar>
     </q-btn>
