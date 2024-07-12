@@ -43,6 +43,7 @@ import '@quasar/quasar-ui-qcalendar/dist/QCalendarMonth.css';
 import { createPinia } from 'pinia';
 
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import OpenLayersMap from 'vue3-openlayers';
 
 // Since Cypress v10 we cannot import `config` directly from VTU as Cypress bundles its own version of it
 // See https://github.com/cypress-io/cypress/issues/22611
@@ -108,6 +109,7 @@ Cypress.Commands.add('mount', (component, options = {}) => {
       app.use(VueLogger, loggerOptions);
       app.use(VuePlugin);
       app.use(createPinia());
+      app.use(OpenLayersMap);
     },
   });
 

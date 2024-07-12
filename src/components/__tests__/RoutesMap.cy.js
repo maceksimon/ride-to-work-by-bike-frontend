@@ -32,5 +32,8 @@ describe('<RoutesMap>', () => {
 function coreTests() {
   it('renders component', () => {
     cy.dataCy('routes-map').should('be.visible');
+    cy.dataCy('routes-map-map').should('be.visible');
+    cy.dataCy('toolbar-top').should('be.visible');
+    cy.dataCy('toolbar-bottom').should('be.visible');
   });
 }
