@@ -141,7 +141,9 @@ const routes: RouteRecordRaw[] = [
         path: routesConf['results_detail']['path'],
         name: routesConf['results_detail']['children']['name'],
         component: () => import('pages/ResultsDetailPage.vue'),
-        redirect: { name: routesConf['results_report']['children']['name'] },
+        redirect: {
+          name: routesConf['results_report']['children']['name'],
+        },
         children: [
           {
             path: routesConf['results_report']['path'],
