@@ -15,8 +15,8 @@
  */
 
 // libraries
-import { colors } from 'quasar';
-import { defineComponent, ref } from 'vue';
+import { colors, Screen } from 'quasar';
+import { computed, defineComponent, ref } from 'vue';
 import {
   Map,
   MapControls,
@@ -76,7 +76,13 @@ export default defineComponent({
     } = useRoutesMap();
 
     // styles
-    const mapHeight = ref<string>('600px');
+    const listHeight = computed((): string => {
+      if (Screen.lt.sm) {
+        ('600px');
+      }
+      return 'auto';
+    });
+    const mapHeight = '600px';
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
     const { getPaletteColor } = colors;
     const colorWhite = getPaletteColor('white');
@@ -186,6 +192,7 @@ export default defineComponent({
       colorWhite,
       deleteEnabled,
       drawEnabled,
+      listHeight,
       mapHeight,
       mapRef,
       projection,
@@ -223,7 +230,7 @@ export default defineComponent({
     >
       <!-- Column: Drawn routes -->
       <div class="col-12 col-sm-2">
-        <q-scroll-area :style="{ height: mapHeight }">
+        <q-scroll-area :style="{ height: listHeight }">
           <!-- List: Drawn routes -->
           <q-list separator>
             <!-- List header -->
@@ -264,6 +271,7 @@ export default defineComponent({
           @update:delete-enabled="deleteEnabled = $event"
           @update:draw-enabled="drawEnabled = $event"
           @undo="onUndo"
+          data-cy="routes-map-toolbar"
         />
         <!-- Map -->
         <ol-map
@@ -271,6 +279,7 @@ export default defineComponent({
           :loadTilesWhileAnimating="true"
           :loadTilesWhileInteracting="true"
           :style="{ height: mapHeight }"
+          data-cy="routes-map-map"
         >
           <!-- View -->
           <ol-view
