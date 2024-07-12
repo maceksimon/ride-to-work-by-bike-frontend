@@ -96,12 +96,11 @@ export const useRoutesMap = () => {
    * @return {number} The length of the route.
    */
   const getRouteLength = (route: Feature | Ref<Feature>): number => {
-    let length = 0;
     const geom = unref(route).getGeometry();
     if (geom instanceof LineString) {
-      length = getLength(geom);
+      return getLength(geom);
     }
-    return Math.round(length * 100);
+    return 0;
   };
 
   /**
@@ -111,7 +110,17 @@ export const useRoutesMap = () => {
    */
   const getRouteLengthLabel = (featureRoute: FeatureRoute): string => {
     const length = getRouteLength(featureRoute.route);
-    return `${length} ${i18n.global.t('global.routeLengthUnit')}`;
+    return formatLength(length);
+  };
+
+  /**
+   * Formats the length value to a rounded string with the global route length unit.
+   * @param {number} length - The length value to format.
+   * @return {string} The formatted length string.
+   */
+  const formatLength = (length: number) => {
+    const lengthRoudned = Math.round(length * 100);
+    return `${lengthRoudned} ${i18n.global.t('global.routeLengthUnit')}`;
   };
 
   onMounted(() => {
@@ -208,6 +217,7 @@ export const useRoutesMap = () => {
     centerMapOnExtent,
     centerMapOnRoute,
     centerOnCurrentLocation,
+    formatLength,
     getRouteExtent,
     getRouteLength,
     getRouteLengthLabel,

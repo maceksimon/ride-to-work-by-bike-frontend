@@ -30,10 +30,11 @@ import {
 import RoutesMapToolbar from './RoutesMapToolbar.vue';
 
 // composables
+import { useGeocoding } from '../../composables/useGeocoding';
 import { useRoutesMap } from '../../composables/useRoutesMap';
 import { useRoutesMapDraw } from '../../composables/useRoutesMapDraw';
+import { useRoutesMapTooltip } from '../../composables/useRoutesMapTooltip';
 import { useRoutesMapVectorLayer } from '../../composables/useRoutesMapVectorLayer';
-import { useGeocoding } from '../../composables/useGeocoding';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -48,6 +49,7 @@ export default defineComponent({
   components: {
     OlMap: Map.OlMap,
     OlView: Map.OlView,
+    OlOverlay: Map.OlOverlay,
     OlTileLayer: Layers.OlTileLayer,
     OlVectorLayer: Layers.OlVectorLayer,
     OlSourceOsm: Sources.OlSourceOsm,
@@ -61,6 +63,7 @@ export default defineComponent({
     RoutesMapToolbar,
   },
   setup() {
+    // map
     const {
       mapRef,
       center,
@@ -77,8 +80,8 @@ export default defineComponent({
 
     // styles
     const listHeight = computed((): string => {
-      if (Screen.lt.sm) {
-        ('600px');
+      if (Screen.gt.sm) {
+        return '600px';
       }
       return 'auto';
     });
@@ -92,22 +95,27 @@ export default defineComponent({
     const deleteEnabled = ref<boolean>(false);
     const animationPath = ref<string[][] | null>(null);
 
+    // geocoding
+    const { getRouteNames } = useGeocoding();
+    // draw
+    const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
+    // tooltip
+    const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
+      useRoutesMapTooltip();
+    // vector layer
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
     const { addMapRoute, clearMapRoutes, renderSavedRoute } =
       useRoutesMapVectorLayer(vectorLayer);
 
-    const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
-
-    const { getRouteNames } = useGeocoding();
-
     /**
      * Called when a new path is being drawn on the map.
      * @returns {void}
      */
-    const onDrawStart = (): void => {
+    const onDrawStart = (event: DrawEvent): void => {
       clearMapRoutes();
+      onDrawStartLength(event);
     };
 
     /**
@@ -118,6 +126,7 @@ export default defineComponent({
     const onDrawEnd = (event: DrawEvent): void => {
       const feature = event.feature;
       updateDrawRoute(feature);
+      onDrawEndLength();
     };
 
     /**
@@ -199,6 +208,10 @@ export default defineComponent({
       savedRoutes,
       vectorLayer,
       zoom,
+
+      tooltipCoord,
+      tooltipText,
+
       addMapRoute,
       centerOnCurrentLocation,
       getRouteLengthLabel,
@@ -323,8 +336,55 @@ export default defineComponent({
               <ol-style :override-style-function="styleFunction" />
             </ol-source-vector>
           </ol-vector-layer>
+
+          <!-- Tooltip on draw -->
+          <ol-overlay
+            v-if="tooltipCoord"
+            :position="tooltipCoord"
+            :offset="[0, -15]"
+            positioning="bottom-center"
+            :stopEvent="false"
+            :insertFirst="false"
+          >
+            <div class="tooltip tooltip-measure">
+              {{ tooltipText }}
+            </div>
+          </ol-overlay>
         </ol-map>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.tooltip {
+  position: relative;
+  background: rgba(0, 0, 0, 0.5);
+  border-radius: 4px;
+  color: white;
+  padding: 4px 8px;
+  opacity: 0.7;
+  white-space: nowrap;
+  font-size: 12px;
+  cursor: default;
+  user-select: none;
+}
+.tooltip-measure {
+  font-weight: bold;
+}
+.tooltip-info {
+  background-color: #ffcc33;
+  color: black;
+  border: 1px solid white;
+}
+.tooltip-measure:before {
+  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-right: 6px solid transparent;
+  border-left: 6px solid transparent;
+  content: '';
+  position: absolute;
+  bottom: -6px;
+  margin-left: -7px;
+  left: 50%;
+}
+</style>
