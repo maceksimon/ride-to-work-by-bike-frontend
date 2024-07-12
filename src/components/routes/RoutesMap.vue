@@ -372,11 +372,6 @@ export default defineComponent({
 .tooltip-measure {
   font-weight: bold;
 }
-.tooltip-info {
-  background-color: #ffcc33;
-  color: black;
-  border: 1px solid white;
-}
 .tooltip-measure:before {
   border-top: 6px solid rgba(0, 0, 0, 0.5);
   border-right: 6px solid transparent;
