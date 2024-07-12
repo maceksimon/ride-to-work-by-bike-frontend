@@ -1,6 +1,6 @@
 // libraries
 import { colors } from 'quasar';
-import { onMounted, ref, unref } from 'vue';
+import { onMounted, provide, ref, unref } from 'vue';
 import { Map } from 'vue3-openlayers';
 import { LineString, MultiPoint, Point } from 'ol/geom';
 import { Style, Stroke, Icon } from 'ol/style';
@@ -22,6 +22,13 @@ const { getPaletteColor } = colors;
 const primaryColor = getPaletteColor('primary');
 
 export const useRoutesMap = () => {
+  // provide ol options to child components
+  const isProduction = process.env.NODE_ENV === 'production';
+  const options = {
+    debug: !isProduction,
+  };
+  provide('ol-options', options);
+
   // constants
   const MAX_ZOOM_CENTERING_FACTOR = 15;
   const DEFAULT_MAP_ZOOM = 13;
