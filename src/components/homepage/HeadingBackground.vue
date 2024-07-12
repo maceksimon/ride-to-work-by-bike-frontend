@@ -16,7 +16,7 @@
  * @example
  * <heading-background :title="sectionTitle" />
  *
- * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A105612&mode=dev)
+ * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=7004-32012&t=q6B4M3KcptuW1mh3-1)
  */
 
 // libraries
