@@ -124,8 +124,8 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
  *   testIcon({element, name: 'icon-name'})
  * });
  */
-Cypress.Commands.add('testIcon', ({ element, name, size }) => {
-  cy.get(element).click();
+Cypress.Commands.add('testIcon', ({ element, name, size, click = true }) => {
+  if (click) cy.get(element).click();
   cy.get(element).invoke('width').should('eq', size);
   cy.get(element).invoke('height').should('eq', size);
   // snapshot
