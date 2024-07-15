@@ -8,7 +8,11 @@ const primaryLight = lighten(primary, 90);
 
 describe('<RegisterChallengePayment>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      ['labelPaymentType', 'textPaymentMinimum', 'textPaymentOrganizer'],
+      'register.challenge',
+      i18n,
+    );
   });
 
   context('desktop', () => {
