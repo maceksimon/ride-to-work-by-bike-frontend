@@ -28,6 +28,8 @@
  * - `FormFieldSelectCity`: Component to render city select field.
  * - `FormFieldSelectTable`: Component to render company select field.
  * - `FormFieldTextRequired`: Component to render text input field.
+ * - `FormFieldBusinessId`: Component to render business id input field.
+ * - `FormFieldSliderNumber`: Component to render number input field.
  *
  * @example
  * <form-field-test-wrapper component="FormFieldPassword" :testing="true" />
@@ -50,6 +52,7 @@ import FormFieldSelectCity from '../form/FormFieldSelectCity.vue';
 import FormFieldSelectTable from '../form/FormFieldSelectTable.vue';
 import FormFieldTextRequired from './FormFieldTextRequired.vue';
 import FormFieldBusinessId from '../form/FormFieldBusinessId.vue';
+import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
 
 export default defineComponent({
   name: 'FormFieldTestWrapper',
@@ -67,6 +70,7 @@ export default defineComponent({
     FormFieldSelectTable,
     FormFieldTextRequired,
     FormFieldBusinessId,
+    FormFieldSliderNumber,
   },
   props: {
     component: {
@@ -91,9 +95,12 @@ export default defineComponent({
     array: {
       type: Boolean,
     },
+    number: {
+      type: Number,
+    },
   },
   setup(props) {
-    const inputValue = ref(props.array ? [] : '');
+    const inputValue = ref(props.array ? [] : props.number ? props.number : '');
 
     return {
       inputValue,
