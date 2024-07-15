@@ -25,41 +25,74 @@
 import { colors } from 'quasar';
 import { defineComponent, ref } from 'vue';
 
+// composables
+import { i18n } from '../../boot/i18n';
+
+// components
+import FormFieldRadioRequired from 'components/form/FormFieldRadioRequired.vue';
+
 // types
 import type { FormOption } from '../types/Form';
 
 export default defineComponent({
   name: 'RegisterChallengePayment',
+  components: {
+    FormFieldRadioRequired,
+  },
   setup() {
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');
     const primaryLightColor = lighten(primaryColor, 90);
 
-    const optionsPaymentType: FormOption[] = [
+    const optionsPaymentAmount: FormOption[] = [
       {
-        label: 'Zaplatím startovné',
+        label: '390 Kč',
+        value: '390',
+      },
+      {
+        label: '500 Kč',
+        value: '500',
+      },
+      {
+        label: '700 Kč',
+        value: '700',
+      },
+      {
+        label: 'Vlastní',
+        value: 'custom',
+      },
+    ];
+
+    const optionsPaymentSubject: FormOption[] = [
+      {
+        label: i18n.global.t(
+          'register.challenge.labelPaymentSubjectIndividual',
+        ),
         value: 'individual',
       },
       {
-        label: 'Uplatním voucher',
+        label: i18n.global.t('register.challenge.labelPaymentSubjectVoucher'),
         value: 'voucher',
       },
       {
-        label: 'Platí za mě firma',
+        label: i18n.global.t('register.challenge.labelPaymentSubjectCompany'),
         value: 'company',
       },
       {
-        label: 'Platí za mě škola',
+        label: i18n.global.t('register.challenge.labelPaymentSubjectSchool'),
         value: 'school',
       },
     ];
 
-    const selectedPaymentType = ref<string>('');
+    const selectedPaymentAmount = ref<string>('');
+    const selectedPaymentSubject = ref<string>('');
 
     return {
-      optionsPaymentType,
+      optionsPaymentAmount,
+      optionsPaymentSubject,
       primaryLightColor,
-      selectedPaymentType,
+      selectedPaymentAmount,
+      selectedPaymentSubject,
     };
   },
 });
@@ -74,27 +107,44 @@ export default defineComponent({
     />
     <!-- Banner: Payment minimum -->
     <q-banner
-      class="q-pa-md text-primary"
+      class="q-my-lg q-pa-md text-primary"
       :style="{ backgroundColor: primaryLightColor }"
       data-cy="banner-payment-minimum"
     >
       <div v-html="$t('register.challenge.textPaymentMinimum')" />
     </q-banner>
-    <!-- Input: Payment type -->
-    <div class="q-pt-sm">
+    <!-- Input: Payment subject -->
+    <div class="q-my-lg">
       <label
         for="paymentType"
         class="text-caption text-weight-medium text-grey-10"
       >
-        {{ $t('register.challenge.labelPaymentType') }}
+        {{ $t('register.challenge.labelPaymentSubject') }}
       </label>
       <form-field-radio-required
         inline
         id="paymentType"
-        v-model="selectedPaymentType"
-        :options="optionsPaymentType"
-        class="q-mt-sm"
+        v-model="selectedPaymentSubject"
+        :options="optionsPaymentSubject"
+        class="q-mt-sm text-grey-10"
         data-cy="form-field-payment-type"
+      />
+    </div>
+    <!-- Input: Payment amount -->
+    <div class="q-my-lg">
+      <label
+        for="paymentAmount"
+        class="text-caption text-weight-medium text-grey-10"
+      >
+        {{ $t('register.challenge.labelPaymentAmount') }}
+      </label>
+      <form-field-radio-required
+        inline
+        id="paymentAmount"
+        v-model="selectedPaymentAmount"
+        :options="optionsPaymentAmount"
+        class="q-mt-sm text-grey-10"
+        data-cy="form-field-payment-amount"
       />
     </div>
   </div>

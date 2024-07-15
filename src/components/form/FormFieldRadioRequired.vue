@@ -90,6 +90,10 @@ export default defineComponent({
       color="primary"
       class="q-gutter-md"
       data-cy="form-field-radio"
-    />
+    >
+      <template v-slot:label="opt">
+        <span class="text-grey-10">{{ opt.label }}</span>
+      </template>
+    </q-option-group>
   </q-field>
 </template>
