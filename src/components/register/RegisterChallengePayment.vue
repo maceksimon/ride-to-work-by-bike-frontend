@@ -87,9 +87,9 @@ export default defineComponent({
       },
     ];
 
-    const selectedPaymentAmount = ref<string>('');
+    const selectedPaymentAmount = ref<string>('390');
     const selectedPaymentAmountCustom = ref<number>(390);
-    const selectedPaymentSubject = ref<string>('');
+    const selectedPaymentSubject = ref<string>('individual');
 
     /**
      * Returns the payment amount based on the selected payment amount
@@ -157,7 +157,7 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Payment amount -->
-    <div class="q-my-md">
+    <div v-if="selectedPaymentSubject === 'individual'" class="q-my-md">
       <label
         for="paymentAmount"
         class="text-caption text-weight-bold text-grey-10"
@@ -174,6 +174,8 @@ export default defineComponent({
         data-cy="form-field-payment-amount"
       />
     </div>
+    <!-- Input: Voucher -->
+    <div v-if="selectedPaymentSubject === 'voucher'"></div>
     <!-- Input: Custom amount -->
     <div v-if="selectedPaymentAmount === 'custom'">
       <form-field-slider-number
