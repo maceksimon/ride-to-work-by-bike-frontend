@@ -14,6 +14,7 @@
  *
  * @components
  * - `FormFieldRadioRequired`: Component to render radio buttons.
+ * - `FormFieldSliderNumber`: Component to render number input with slider.
  *
  * @example
  * <register-challenge-payment />
@@ -23,13 +24,14 @@
 
 // libraries
 import { colors } from 'quasar';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
 
 // components
 import FormFieldRadioRequired from 'components/form/FormFieldRadioRequired.vue';
+import FormFieldSliderNumber from 'components/form/FormFieldSliderNumber.vue';
 
 // types
 import type { FormOption } from '../types/Form';
@@ -38,6 +40,7 @@ export default defineComponent({
   name: 'RegisterChallengePayment',
   components: {
     FormFieldRadioRequired,
+    FormFieldSliderNumber,
   },
   setup() {
     const { getPaletteColor, lighten } = colors;
@@ -85,13 +88,35 @@ export default defineComponent({
     ];
 
     const selectedPaymentAmount = ref<string>('');
+    const selectedPaymentAmountCustom = ref<number>(390);
     const selectedPaymentSubject = ref<string>('');
+
+    /**
+     * Returns the payment amount based on the selected payment amount
+     * or the custom value.
+     */
+    const paymentAmount = computed((): number => {
+      if (selectedPaymentAmount.value === 'custom') {
+        return selectedPaymentAmountCustom.value;
+      }
+      return parseInt(selectedPaymentAmount.value);
+    });
+
+    watch(selectedPaymentAmount, (newValue) => {
+      if (newValue !== 'custom') {
+        selectedPaymentAmountCustom.value = parseInt(
+          selectedPaymentAmount.value,
+        );
+      }
+    });
 
     return {
       optionsPaymentAmount,
       optionsPaymentSubject,
+      paymentAmount,
       primaryLightColor,
       selectedPaymentAmount,
+      selectedPaymentAmountCustom,
       selectedPaymentSubject,
     };
   },
@@ -132,7 +157,7 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Payment amount -->
-    <div class="q-my-lg">
+    <div class="q-my-md">
       <label
         for="paymentAmount"
         class="text-caption text-weight-bold text-grey-10"
@@ -145,8 +170,18 @@ export default defineComponent({
         id="paymentAmount"
         v-model="selectedPaymentAmount"
         :options="optionsPaymentAmount"
-        class="q-mt-sm text-grey-10"
+        class="q-mt-sm"
         data-cy="form-field-payment-amount"
+      />
+    </div>
+    <!-- Input: Custom amount -->
+    <div v-if="selectedPaymentAmount === 'custom'">
+      <form-field-slider-number
+        v-model="selectedPaymentAmountCustom"
+        :min="390"
+        :max="2000"
+        class="text-grey-10"
+        data-cy="form-field-payment-amount-custom"
       />
     </div>
   </div>

@@ -116,4 +116,17 @@ function coreTests() {
       .should('be.visible')
       .and('have.length', 4);
   });
+
+  it('renders custom payment amount if selected', () => {
+    // enable custom payment amount
+    cy.dataCy('radio-option-custom').should('be.visible').click();
+    cy.dataCy('form-field-payment-amount-custom').should('be.visible');
+    // switch to fixed payment amount
+    cy.dataCy('radio-option-500').should('be.visible').click();
+    cy.dataCy('form-field-payment-amount-custom').should('not.exist');
+    // switch to custom payment amount
+    cy.dataCy('radio-option-custom').should('be.visible').click();
+    // custom amount is set to last selected
+    cy.dataCy('form-field-slider-number-input').should('have.value', '500');
+  });
 }
