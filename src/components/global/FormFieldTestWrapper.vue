@@ -33,6 +33,8 @@
  * - `FormFieldSelectTable`: Component to render company select field.
  * - `FormFieldTextRequired`: Component to render text input field.
  * - `RouteInputTransportType`: Component to render transport type input field.
+ * - `FormFieldBusinessId`: Component to render business id input field.
+ * - `FormFieldSliderNumber`: Component to render number input field.
  *
  * @slots
  * - `default`: Slot for input fields
@@ -59,6 +61,7 @@ import FormFieldSelectCity from '../form/FormFieldSelectCity.vue';
 import FormFieldSelectTable from '../form/FormFieldSelectTable.vue';
 import FormFieldTextRequired from './FormFieldTextRequired.vue';
 import FormFieldBusinessId from '../form/FormFieldBusinessId.vue';
+import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
 import RouteInputTransportType from '../routes/RouteInputTransportType.vue';
 
 export default defineComponent({
@@ -78,6 +81,7 @@ export default defineComponent({
     FormFieldSelectTable,
     FormFieldTextRequired,
     FormFieldBusinessId,
+    FormFieldSliderNumber,
     RouteInputTransportType,
   },
   props: {
@@ -107,9 +111,12 @@ export default defineComponent({
     validationMessage: {
       type: String,
     },
+    number: {
+      type: Number,
+    },
   },
   setup(props) {
-    const inputValue = ref(props.type === 'array' ? [] : props.type === 'boolean' ? false : '');
+    const inputValue = ref(props.type === 'array' ? [] : props.type === 'boolean' ? false : props.number ? props.number :'');
 
     return {
       inputValue,
