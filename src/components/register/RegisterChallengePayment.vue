@@ -117,7 +117,8 @@ export default defineComponent({
     <div class="q-my-lg">
       <label
         for="paymentType"
-        class="text-caption text-weight-medium text-grey-10"
+        class="text-caption text-weight-bold text-grey-10"
+        data-cy="form-field-payment-subject-label"
       >
         {{ $t('register.challenge.labelPaymentSubject') }}
       </label>
@@ -127,14 +128,15 @@ export default defineComponent({
         v-model="selectedPaymentSubject"
         :options="optionsPaymentSubject"
         class="q-mt-sm text-grey-10"
-        data-cy="form-field-payment-type"
+        data-cy="form-field-payment-subject"
       />
     </div>
     <!-- Input: Payment amount -->
     <div class="q-my-lg">
       <label
         for="paymentAmount"
-        class="text-caption text-weight-medium text-grey-10"
+        class="text-caption text-weight-bold text-grey-10"
+        data-cy="form-field-payment-amount-label"
       >
         {{ $t('register.challenge.labelPaymentAmount') }}
       </label>
