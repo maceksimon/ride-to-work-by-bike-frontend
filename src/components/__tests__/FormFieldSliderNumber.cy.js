@@ -56,8 +56,7 @@ function coreTests() {
   it('renders component', () => {
     // component
     cy.dataCy('form-field-slider-number').should('be.visible');
-    // slider
-    cy.dataCy('form-field-slider-number-slider').should('be.visible');
+    // input
     cy.dataCy('form-field-slider-number-input')
       .should('be.visible')
       .and('have.value', '500');
@@ -68,6 +67,37 @@ function coreTests() {
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10)
       .and('contain', i18n.global.t('global.currencyUnitCzk'));
+    // slider
+    cy.dataCy('form-field-slider-number-slider').should('be.visible');
+    cy.dataCy('form-field-slider-number-slider').matchImageSnapshot(
+      `${Cypress.currentTest.titlePath}-slider-default`,
+      {
+        failureThreshold: 0.1,
+        failureThresholdType: 'percent',
+        timeout: 4000,
+        customDiffConfig: { threshold: 0.4 },
+        retries: 2,
+      },
+    );
+  });
+
+  it('reacts to user interaction', () => {
+    cy.dataCy('form-field-slider-number-input').clear();
+    cy.dataCy('form-field-slider-number-input').type('1000');
+    cy.dataCy('form-field-slider-number-input').blur();
+    cy.dataCy('form-field-slider-number-input').should('have.value', '1000');
+    // slider
+    cy.dataCy('form-field-slider-number-slider').should('be.visible');
+    cy.dataCy('form-field-slider-number-slider').matchImageSnapshot(
+      `${Cypress.currentTest.titlePath}-slider-input`,
+      {
+        failureThreshold: 0.1,
+        failureThresholdType: 'percent',
+        timeout: 4000,
+        customDiffConfig: { threshold: 0.4 },
+        retries: 2,
+      },
+    );
   });
 
   it('renders slider and input side by side', () => {
