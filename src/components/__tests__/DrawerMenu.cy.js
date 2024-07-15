@@ -40,12 +40,14 @@ describe('DrawerMenu', () => {
 
   it('should render each item with the expected icon and text content', () => {
     cy.window().then(() => {
-      cy.dataCy('drawer-menu-icon').then(() => {
+      cy.dataCy('drawer-menu-icon').then((icons) => {
+        icons[0].click();
         cy.dataCy('drawer-menu-icon').each((element, index) => {
           cy.testIcon({
             element: element,
             name: `${Cypress.currentTest.titlePath}-${index}`,
             size: 18,
+            click: false,
           });
         });
       });
