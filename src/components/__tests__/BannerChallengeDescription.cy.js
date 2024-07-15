@@ -38,6 +38,7 @@ describe('<BannerChallengeDescription>', () => {
 });
 
 function coreTests() {
+  const iconSize = 18;
   it('renders component', () => {
     cy.fixture('bannerChallengeDescription').then(
       (bannerChallengeDescription) => {
@@ -60,9 +61,9 @@ function coreTests() {
             (element) => {
               // test icon
               cy.testIcon({
-                element,
+                element: element,
                 name: `banner-challenge-description-${getRouteIcon(type)}`,
-                size: 18,
+                size: iconSize,
               });
             },
           );
@@ -84,9 +85,9 @@ function coreTests() {
           .should('have.attr', 'href', bannerChallengeDescription.link.url);
         cy.dataCy('challenge-link-icon').then((element) => {
           cy.testIcon({
-            element,
+            element: element,
             name: 'banner-challenge-description-launch',
-            size: 18,
+            size: iconSize,
           });
         });
       },

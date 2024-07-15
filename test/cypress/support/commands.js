@@ -124,14 +124,18 @@ Cypress.Commands.add('testImageSrcAlt', (dataCySelector, src, alt) => {
  *   testIcon({element, name: 'icon-name'})
  * });
  */
-Cypress.Commands.add('testIcon', ({ element, name }) => {
+Cypress.Commands.add('testIcon', ({ element, name, size }) => {
+  cy.get(element).click();
+  cy.get(element).invoke('width').should('eq', size);
+  cy.get(element).invoke('height').should('eq', size);
   // snapshot
-  cy.get(element[0]).matchImageSnapshot(name, {
+  cy.get(element).matchImageSnapshot(name, {
     failureThreshold: 0.1,
     failureThresholdType: 'percent',
-    timeout: 4000,
+    timeout: 8000,
     customDiffConfig: { threshold: 0.4 },
-    retries: 2,
+    retries: 3,
+    //capture: 'viewport',
   });
 });
 

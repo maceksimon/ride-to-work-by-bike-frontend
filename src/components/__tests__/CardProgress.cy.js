@@ -14,6 +14,8 @@ const cardFirst = cardsProgress[0];
 const card = cardsProgress[1];
 
 describe('<CardProgress>', () => {
+  const iconSize24 = 24;
+  const iconSize18 = 18;
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'index.cardProgress', i18n);
     cy.testLanguageStringsInContext(['buttonShare'], 'global', i18n);
@@ -43,17 +45,13 @@ describe('<CardProgress>', () => {
     });
 
     it('renders first prize icon', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('card-progress-prizes-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-prize-${cardFirst.prizes[0].icon}`,
-                size: 24,
-              });
-            },
-          );
+      cy.window().then(() => {
+        cy.dataCy('card-progress-prizes-icon').then((element) => {
+          cy.testIcon({
+            element: element,
+            name: `${Cypress.currentTest.titlePath}-prize-${cardFirst.prizes[0].icon}`,
+            size: iconSize24,
+          });
         });
       });
     });
@@ -98,22 +96,17 @@ describe('<CardProgress>', () => {
     });
 
     it('renders white share link icon', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('card-progress-share-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-share`,
-                size: 18,
-              });
-            },
-          );
+      cy.window().then(() => {
+        cy.dataCy('card-progress-share-icon').then((element) => {
+          cy.testIcon({
+            element: element,
+            name: `${Cypress.currentTest.titlePath}-share`,
+            size: iconSize18,
+          });
         });
       });
     });
   });
-
   context('desktop: light', () => {
     beforeEach(() => {
       cy.mount(CardProgress, {
@@ -138,17 +131,13 @@ describe('<CardProgress>', () => {
     });
 
     it('renders title icon', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('card-progress-header-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-header-${card.icon}`,
-                size: 18,
-              });
-            },
-          );
+      cy.window().then(() => {
+        cy.dataCy('card-progress-share-icon').then((element) => {
+          cy.testIcon({
+            element: element,
+            name: `${Cypress.currentTest.titlePath}-header-${card.icon}`,
+            size: iconSize18,
+          });
         });
       });
     });
@@ -193,22 +182,17 @@ describe('<CardProgress>', () => {
     });
 
     it('renders dark share link icon', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('card-progress-share-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-share`,
-                size: 18,
-              });
-            },
-          );
+      cy.window().then(() => {
+        cy.dataCy('card-progress-share-icon').then((element) => {
+          cy.testIcon({
+            element: element,
+            name: `${Cypress.currentTest.titlePath}-share`,
+            size: iconSize18,
+          });
         });
       });
     });
   });
-
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(CardProgress, {
@@ -233,17 +217,13 @@ describe('<CardProgress>', () => {
     });
 
     it('renders title icon', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('card-progress-header-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({
-                element,
-                name: `${Cypress.currentTest.titlePath}-header-${card.icon}`,
-                size: 18,
-              });
-            },
-          );
+      cy.window().then(() => {
+        cy.dataCy('card-progress-header-icon').then((element) => {
+          cy.testIcon({
+            element: element,
+            name: `${Cypress.currentTest.titlePath}-header-${card.icon}`,
+            size: iconSize18,
+          });
         });
       });
     });

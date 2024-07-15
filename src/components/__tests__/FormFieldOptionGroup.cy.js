@@ -40,7 +40,11 @@ describe('<FormFieldOptionGroup>', () => {
         .should('have.css', 'border-radius', borderRadius);
       // test icons
       cy.dataCy('form-field-option-icon').each((element, index) => {
-        cy.testIcon({ element, name: `form-field-option-${index}`, size: 48 });
+        cy.testIcon({
+          element: element,
+          name: `form-field-option-${index}`,
+          size: 48,
+        });
       });
     });
 
@@ -53,7 +57,11 @@ describe('<FormFieldOptionGroup>', () => {
       cy.dataCy('form-field-option-check')
         .first()
         .then((element) => {
-          cy.testIcon({ element, name: 'form-field-option-check', size: 24 });
+          cy.testIcon({
+            element: element,
+            name: 'form-field-option-check',
+            size: 24,
+          });
         });
       // highlight last option
       cy.dataCy('form-field-option').last().click();

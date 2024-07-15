@@ -201,7 +201,7 @@ function coreTests() {
       cy.window().then(() => {
         cy.dataCy('card-progress-header-icon').then((element) => {
           cy.testIcon({
-            element,
+            element: element,
             name: `${Cypress.currentTest.titlePath}-header-${card.icon}`,
             size: 18,
           });

@@ -15,6 +15,7 @@ const modalDialogWidth = 560;
 const userEmail = 'test.user@example.com';
 
 describe('<HelpButton>', () => {
+  const iconSize24 = 24;
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'index.help', i18n);
   });
@@ -50,9 +51,9 @@ describe('<HelpButton>', () => {
     it('renders help icon', () => {
       cy.dataCy('icon-help').then((element) => {
         cy.testIcon({
-          element,
+          element: element,
           name: 'help-button-question-mark-grey',
-          size: 24,
+          size: iconSize24,
         });
       });
     });
@@ -90,9 +91,9 @@ describe('<HelpButton>', () => {
     it('renders help icon', () => {
       cy.dataCy('icon-help').then((element) => {
         cy.testIcon({
-          element,
+          element: element,
           name: 'help-button-question-mark-primary',
-          size: 24,
+          size: iconSize24,
         });
       });
     });
@@ -128,7 +129,7 @@ describe('<HelpButton>', () => {
     it('renders help icon', () => {
       cy.dataCy('icon-help').then((element) => {
         cy.testIcon({
-          element,
+          element: element,
           name: 'help-button-question-mark-small',
           size: 12,
         });

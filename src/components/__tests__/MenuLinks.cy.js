@@ -10,6 +10,7 @@ const blueGrey1 = getPaletteColor('blue-grey-1');
 describe('<MenuLinks>', () => {
   context('social', () => {
     const title = 'Find us on social media';
+    const iconSize18 = 18;
 
     beforeEach(() => {
       cy.mount(MenuLinks, {
@@ -60,9 +61,9 @@ describe('<MenuLinks>', () => {
     it('renders icon for each link', () => {
       cy.dataCy('menu-links-icon').each((element, index) => {
         cy.testIcon({
-          element,
+          element: element,
           name: `menu-links-social-${index}`,
-          size: 18,
+          size: iconSize18,
         });
       });
     });
@@ -99,9 +100,9 @@ describe('<MenuLinks>', () => {
     it('renders icon for each link', () => {
       cy.dataCy('menu-links-icon').each((element, index) => {
         cy.testIcon({
-          element,
+          element: element,
           name: `menu-links-useful-${index}`,
-          size: 18,
+          size: iconSize18,
         });
       });
     });

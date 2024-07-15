@@ -14,6 +14,8 @@ const blueGrey7 = getPaletteColor('blue-grey-7');
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
 describe('<CardEvent>', () => {
+  const iconSize24 = 24;
+  const iconSize18 = 18;
   context('desktop', () => {
     beforeEach(() => {
       cy.fixture('cardEvent').then((cardEvent) => {
@@ -91,7 +93,11 @@ describe('<CardEvent>', () => {
             .and('contain', year)
             .and('contain', hour);
           cy.dataCy('card-event-date-icon').then((element) => {
-            cy.testIcon({ element, name: 'card-event-event', size: 24 });
+            cy.testIcon({
+              element: element,
+              name: 'card-event-event',
+              size: iconSize24,
+            });
           });
           cy.dataCy('card-event-date-icon').should('have.color', blueGrey2);
         });
@@ -107,7 +113,11 @@ describe('<CardEvent>', () => {
             .and('have.css', 'font-weight', '400')
             .and('contain', cardEvent.location);
           cy.dataCy('card-event-location-icon').then((element) => {
-            cy.testIcon({ element, name: 'card-event-location', size: 24 });
+            cy.testIcon({
+              element: element,
+              name: 'card-event-location',
+              size: iconSize24,
+            });
           });
           cy.dataCy('card-event-location-icon').should('have.color', blueGrey2);
         });
@@ -123,10 +133,18 @@ describe('<CardEvent>', () => {
           .and('have.css', 'width', '42px');
         // icon
         cy.dataCy('card-event-calendar-icon').and('have.color', grey10);
-        cy.viewport(1280, 800).then(() => {
-          cy.window().then(() => {
+        cy.window().then(() => {
+          /*
+           * Change viewport fix: `The "target" argument must be an instance
+           * of Buffer or Uint8Array. Received null` error
+           */
+          cy.viewport(1280, 800).then(() => {
             cy.dataCy('card-event-calendar-icon').then((element) => {
-              cy.testIcon({ element, name: 'card-event-calendar', size: 18 });
+              cy.testIcon({
+                element: element,
+                name: 'card-event-calendar',
+                size: iconSize18,
+              });
             });
           });
         });
@@ -178,14 +196,18 @@ describe('<CardEvent>', () => {
               }
             });
           cy.dataCy('dialog-event-date-icon').then((element) => {
-            cy.testIcon({ element, name: 'card-event-dialog-event', size: 18 });
+            cy.testIcon({
+              element: element,
+              name: 'card-event-dialog-event',
+              size: iconSize18,
+            });
           });
           cy.dataCy('dialog-event-date-icon').should('have.color', blueGrey3);
           cy.dataCy('dialog-event-location-icon').then((element) => {
             cy.testIcon({
-              element,
+              element: element,
               name: 'card-event-dialog-location',
-              size: 18,
+              size: iconSize18,
             });
           });
           cy.dataCy('dialog-event-location-icon').should(

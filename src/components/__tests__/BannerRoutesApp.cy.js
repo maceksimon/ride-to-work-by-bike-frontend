@@ -116,7 +116,11 @@ function coreTests() {
         .and('have.color', black);
       // Icon (should be visible when app is linked)
       cy.dataCy('banner-routes-app-icon').then((element) => {
-        cy.testIcon({ element, name: 'banner-routes-app-check', size: 18 });
+        cy.testIcon({
+          element: element,
+          name: 'banner-routes-app-check',
+          size: 18,
+        });
       });
       // Status (linked)
       cy.dataCy('banner-routes-app-status')
