@@ -486,7 +486,13 @@ buttonGoogle = "Registrácia cez Facebook"
 buttonFacebook = "Registrácia cez Google"
 
 [register.challenge]
-labelPaymentType = "Platba vstupného poplatku"
+buttonAddCompany = "Pridanie novej"
+labelPaymentSubject = "Platba vstupného poplatku"
+labelPaymentAmount = "Výška vstupného poplatku"
+labelPaymentSubjectCompany = "Spoločnosť platí za mňa"
+labelPaymentSubjectIndividual = "Začiatočný poplatok zaplatím ja"
+labelPaymentSubjectSchool = "Škola platí za mňa"
+labelPaymentSubjectVoucher = "Uplatňujem poukaz"
 textCountdownSeptember = "Do septembrovej výzvy zostáva {days} dní a {hours}:{minutes}:{seconds} hodín!"
 textCountdownOctober = "Do októbrovej výzvy zostáva {days} dní a {hours}:{minutes}:{seconds} hodín!"
 textCountdownMay = "Do májovej výzvy zostáva {days} dní a {hours}:{minutes}:{seconds} hodín!"
@@ -500,7 +506,6 @@ titleStepParticipation = "Účasť"
 titleStepCompany = "Spoločnosť / škola / skupina"
 titleStepMerch = "Štartovací balíček"
 titleStepTeam = "Tím"
-buttonAddCompany = "Pridanie novej"
 
 [register.coordinator]
 title.may = "Registrácia koordinátora na&nbsp;Májovú výzvu"

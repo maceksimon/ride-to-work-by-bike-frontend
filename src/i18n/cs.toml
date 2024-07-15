@@ -489,7 +489,13 @@ buttonGoogle = "Registrovat přes Facebook"
 buttonFacebook = "Registrovat přes Google"
 
 [register.challenge]
-labelPaymentType = "Platba startovného"
+buttonAddCompany = "Přidat novou"
+labelPaymentAmount = "Výše startovného"
+labelPaymentSubject = "Platba startovného"
+labelPaymentSubjectCompany = "Platí za mě firma"
+labelPaymentSubjectIndividual = "Zaplatím startovné"
+labelPaymentSubjectSchool = "Platí za mě škola"
+labelPaymentSubjectVoucher = "Uplatním voucher"
 textCountdownSeptember = "Do Záříjové výzvy zbývá {days} dní a {hours}:{minutes}:{seconds} hodin!"
 textCountdownOctober = "Do Říjnové výzvy zbývá {days} dní a {hours}:{minutes}:{seconds} hodin!"
 textCountdownMay = "Do Květnové výzvy zbývá {days} dní a {hours}:{minutes}:{seconds} hodin!"
@@ -503,7 +509,6 @@ titleStepParticipation = "Účast"
 titleStepCompany = "Firma / škola / skupina"
 titleStepMerch = "Startovací balíček"
 titleStepTeam = "Tým"
-buttonAddCompany = "Přidat novou"
 
 [register.coordinator]
 title.may = "Registrace koordinátora do&nbsp;Květnové výzvy"
