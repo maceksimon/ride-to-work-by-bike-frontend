@@ -3,8 +3,16 @@ import RegisterChallengePayment from 'components/register/RegisterChallengePayme
 import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor, lighten } = colors;
+const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
 const primaryLight = lighten(primary, 90);
+
+const optionsPaymentSubject = [
+  'labelPaymentSubjectIndividual',
+  'labelPaymentSubjectVoucher',
+  'labelPaymentSubjectCompany',
+  'labelPaymentSubjectSchool',
+];
 
 describe('<RegisterChallengePayment>', () => {
   it('has translation for all strings', () => {
@@ -49,7 +57,9 @@ describe('<RegisterChallengePayment>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
     cy.dataCy('register-challenge-payment').should('be.visible');
+    // text
     cy.dataCy('text-payment-organizer')
       .should('be.visible')
       .then(($element) => {
@@ -59,6 +69,7 @@ function coreTests() {
           expect($element.text()).to.equal(text);
         });
       });
+    // banner
     cy.dataCy('banner-payment-minimum')
       .should('be.visible')
       .and('have.color', primary)
@@ -71,5 +82,38 @@ function coreTests() {
           expect($element.text()).to.equal(text);
         });
       });
+    // input subject
+    cy.dataCy('form-field-payment-subject-label')
+      .should('be.visible')
+      .and('have.color', grey10)
+      .and('have.css', 'font-size', '12px')
+      .and('have.css', 'font-weight', '700')
+      .and(
+        'have.text',
+        i18n.global.t('register.challenge.labelPaymentSubject'),
+      );
+    cy.dataCy('form-field-payment-subject').should('be.visible');
+    cy.dataCy('form-field-payment-subject')
+      .find('[role="radio"]')
+      .should('be.visible')
+      .and('have.length', 4)
+      .each((element, index) => {
+        cy.wrap(element).should(
+          'contain',
+          i18n.global.t(`register.challenge.${optionsPaymentSubject[index]}`),
+        );
+      });
+    // input amount
+    cy.dataCy('form-field-payment-amount-label')
+      .should('be.visible')
+      .and('have.color', grey10)
+      .and('have.css', 'font-size', '12px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.text', i18n.global.t('register.challenge.labelPaymentAmount'));
+    cy.dataCy('form-field-payment-amount').should('be.visible');
+    cy.dataCy('form-field-payment-amount')
+      .find('[role="radio"]')
+      .should('be.visible')
+      .and('have.length', 4);
   });
 }
