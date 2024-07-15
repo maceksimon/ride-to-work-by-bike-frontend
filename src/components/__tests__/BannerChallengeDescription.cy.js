@@ -64,6 +64,7 @@ function coreTests() {
                 element: element,
                 name: `${Cypress.currentTest.titlePath}-banner-challenge-description-${getRouteIcon(type)}`,
                 size: iconSize,
+                click: false,
               });
             },
           );
@@ -88,6 +89,7 @@ function coreTests() {
             element: element,
             name: `${Cypress.currentTest.titlePath}-banner-challenge-description-launch`,
             size: iconSize,
+            click: false,
           });
         });
       },
