@@ -88,6 +88,7 @@ describe('<FooterBar>', () => {
             element,
             name: `footer-social-menu-icon-${index}`,
             size: 18,
+            click: false,
           });
         });
       });
