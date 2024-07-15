@@ -24,6 +24,13 @@ import { defineComponent, ref } from 'vue';
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 
+// types
+import type { FormPaymentVoucher } from '../types/Form';
+
+// fixtures
+import voucherFull from '../../../test/cypress/fixtures/registerPaymentVoucherFull.json';
+import voucherHalf from '../../../test/cypress/fixtures/registerPaymentVoucherHalf.json';
+
 export default defineComponent({
   name: 'FormFieldVoucher',
   components: {
@@ -39,13 +46,14 @@ export default defineComponent({
      * @returns {void}
      */
     const onSubmitVoucher = (): void => {
+      let voucher: FormPaymentVoucher | null = null;
       // TODO: Add API call and remove dummy data
-      const voucher = {
-        code: 'AB-CDEFGH',
-        name: 'Sleva 50% (-195 Kč)',
-        amount: 195,
-      };
-
+      if (code.value === 'FULL') {
+        voucher = voucherFull;
+      }
+      if (code.value === 'HALF') {
+        voucher = voucherHalf;
+      }
       if (voucher) {
         // reset input value
         code.value = '';

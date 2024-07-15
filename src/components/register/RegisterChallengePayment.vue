@@ -15,6 +15,7 @@
  * @components
  * - `FormFieldRadioRequired`: Component to render radio buttons.
  * - `FormFieldSliderNumber`: Component to render number input with slider.
+ * - `FormFieldVoucher`: Component to render voucher widget.
  *
  * @example
  * <register-challenge-payment />
@@ -24,49 +25,37 @@
 
 // libraries
 import { colors } from 'quasar';
-import { computed, defineComponent, ref, watch } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
+import { useFormatPrice } from '../../composables/useFormatPrice';
 
 // components
 import FormFieldRadioRequired from 'components/form/FormFieldRadioRequired.vue';
 import FormFieldSliderNumber from 'components/form/FormFieldSliderNumber.vue';
+import FormFieldVoucher from 'components/form/FormFieldVoucher.vue';
 
 // types
-import type { FormOption } from '../types/Form';
+import type { FormOption, FormPaymentVoucher } from '../types/Form';
 
 export default defineComponent({
   name: 'RegisterChallengePayment',
   components: {
     FormFieldRadioRequired,
     FormFieldSliderNumber,
+    FormFieldVoucher,
   },
   setup() {
+    // constants
+    const PAYMENT_AMOUNT_MIN = 390;
+    const PAYMENT_AMOUNT_MAX = 2000;
+
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');
     const primaryLightColor = lighten(primaryColor, 90);
 
-    const optionsPaymentAmount: FormOption[] = [
-      {
-        label: '390 Kč',
-        value: '390',
-      },
-      {
-        label: '500 Kč',
-        value: '500',
-      },
-      {
-        label: '700 Kč',
-        value: '700',
-      },
-      {
-        label: 'Vlastní',
-        value: 'custom',
-      },
-    ];
-
-    const optionsPaymentSubject: FormOption[] = [
+    const optionsPaymentSubject: FormOption[] = reactive([
       {
         label: i18n.global.t(
           'register.challenge.labelPaymentSubjectIndividual',
@@ -85,11 +74,35 @@ export default defineComponent({
         label: i18n.global.t('register.challenge.labelPaymentSubjectSchool'),
         value: 'school',
       },
-    ];
+    ]);
 
-    const selectedPaymentAmount = ref<string>('390');
-    const selectedPaymentAmountCustom = ref<number>(390);
+    const { formatPriceCurrency } = useFormatPrice();
+    const defaultPaymentOption = {
+      label: formatPriceCurrency(PAYMENT_AMOUNT_MIN, 'CZK'),
+      value: String(PAYMENT_AMOUNT_MIN),
+    };
+    const optionsPaymentAmount: FormOption[] = reactive([
+      defaultPaymentOption,
+      {
+        label: '500 Kč',
+        value: '500',
+      },
+      {
+        label: '700 Kč',
+        value: '700',
+      },
+      {
+        label: 'Vlastní',
+        value: 'custom',
+      },
+    ]);
+
+    const selectedPaymentAmount = ref<string>(String(PAYMENT_AMOUNT_MIN));
+    const selectedPaymentAmountCustom = ref<number>(PAYMENT_AMOUNT_MIN);
+    const paymentAmountMax = ref<number>(PAYMENT_AMOUNT_MAX);
+    const paymentAmountMin = ref<number>(PAYMENT_AMOUNT_MIN);
     const selectedPaymentSubject = ref<string>('individual');
+    const isEntryFeeFree = ref<boolean>(false);
 
     /**
      * Returns the payment amount based on the selected payment amount
@@ -102,6 +115,10 @@ export default defineComponent({
       return parseInt(selectedPaymentAmount.value);
     });
 
+    /**
+     * After selecting a payment amount from the given options,
+     * set it as the default value for custom payment amount.
+     */
     watch(selectedPaymentAmount, (newValue) => {
       if (newValue !== 'custom') {
         selectedPaymentAmountCustom.value = parseInt(
@@ -110,14 +127,53 @@ export default defineComponent({
       }
     });
 
+    /**
+     * Handles voucher submission.
+     * If there is a new price for entry fee, se it as the default value.
+     * if entry fee is free, display voluntary contribution.
+     */
+    const onUpdateVoucher = (voucher: FormPaymentVoucher): void => {
+      // amount = discounted price
+      if (voucher.amount) {
+        // discount the lowest price in the price options
+        optionsPaymentAmount.shift();
+        optionsPaymentAmount.unshift({
+          label: formatPriceCurrency(voucher.amount, 'CZK'),
+          value: String(voucher.amount),
+        });
+        // set min amount for custom amount
+        paymentAmountMin.value = voucher.amount;
+        // if default entry fee is selected, set it to discounted value
+        if (selectedPaymentAmount.value === defaultPaymentOption.value) {
+          selectedPaymentAmount.value = String(voucher.amount);
+        }
+      }
+      // no amount = free entry
+      else {
+        isEntryFeeFree.value = true;
+      }
+    };
+
+    const onRemoveVoucher = (): void => {
+      isEntryFeeFree.value = false;
+      optionsPaymentAmount.shift();
+      optionsPaymentAmount.unshift(defaultPaymentOption);
+      paymentAmountMin.value = PAYMENT_AMOUNT_MIN;
+    };
+
     return {
+      isEntryFeeFree,
       optionsPaymentAmount,
       optionsPaymentSubject,
       paymentAmount,
+      paymentAmountMax,
+      paymentAmountMin,
       primaryLightColor,
       selectedPaymentAmount,
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
+      onRemoveVoucher,
+      onUpdateVoucher,
     };
   },
 });
@@ -157,7 +213,13 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Payment amount -->
-    <div v-if="selectedPaymentSubject === 'individual'" class="q-my-md">
+    <div
+      v-if="
+        selectedPaymentSubject === 'individual' ||
+        (selectedPaymentSubject === 'voucher' && !isEntryFeeFree)
+      "
+      class="q-my-md"
+    >
       <label
         for="paymentAmount"
         class="text-caption text-weight-bold text-grey-10"
@@ -175,13 +237,15 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Voucher -->
-    <div v-if="selectedPaymentSubject === 'voucher'"></div>
+    <div v-if="selectedPaymentSubject === 'voucher'">
+      <form-field-voucher @update:voucher="onUpdateVoucher" />
+    </div>
     <!-- Input: Custom amount -->
     <div v-if="selectedPaymentAmount === 'custom'">
       <form-field-slider-number
         v-model="selectedPaymentAmountCustom"
-        :min="390"
-        :max="2000"
+        :min="paymentAmountMin"
+        :max="paymentAmountMax"
         class="text-grey-10"
         data-cy="form-field-payment-amount-custom"
       />
