@@ -62,7 +62,7 @@ function coreTests() {
               // test icon
               cy.testIcon({
                 element: element,
-                name: `banner-challenge-description-${getRouteIcon(type)}`,
+                name: `${Cypress.currentTest.titlePath}-banner-challenge-description-${getRouteIcon(type)}`,
                 size: iconSize,
               });
             },
@@ -86,7 +86,7 @@ function coreTests() {
         cy.dataCy('challenge-link-icon').then((element) => {
           cy.testIcon({
             element: element,
-            name: 'banner-challenge-description-launch',
+            name: `${Cypress.currentTest.titlePath}-banner-challenge-description-launch`,
             size: iconSize,
           });
         });
