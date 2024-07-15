@@ -34,10 +34,16 @@ describe('<RegisterChallengePayment>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      cy.mount(RegisterChallengePayment, {
-        props: {},
+      cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
+        cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
+          cy.wrap(voucherFull).as('voucherFull');
+          cy.wrap(voucherHalf).as('voucherHalf');
+          cy.mount(RegisterChallengePayment, {
+            props: {},
+          });
+          cy.viewport('macbook-16');
+        });
       });
-      cy.viewport('macbook-16');
     });
 
     coreTests();
@@ -45,10 +51,16 @@ describe('<RegisterChallengePayment>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.mount(RegisterChallengePayment, {
-        props: {},
+      cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
+        cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
+          cy.wrap(voucherFull).as('voucherFull');
+          cy.wrap(voucherHalf).as('voucherHalf');
+          cy.mount(RegisterChallengePayment, {
+            props: {},
+          });
+          cy.viewport('iphone-6');
+        });
       });
-      cy.viewport('iphone-6');
     });
 
     coreTests();
@@ -128,5 +140,20 @@ function coreTests() {
     cy.dataCy('radio-option-custom').should('be.visible').click();
     // custom amount is set to last selected
     cy.dataCy('form-field-slider-number-input').should('have.value', '500');
+  });
+
+  it('allows to apply voucher (HALF)', () => {
+    cy.get('@voucherHalf').then((voucher) => {
+      cy.dataCy('radio-option-voucher').should('be.visible').click();
+      cy.dataCy('form-field-voucher-input').type(voucher.code);
+      cy.dataCy('form-field-voucher-submit').click();
+      cy.dataCy('form-field-voucher-input').should('have.value', '');
+      cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
+      cy.dataCy('radio-option-custom').click();
+      cy.dataCy('form-field-slider-number-input').should(
+        'have.value',
+        voucher.amount.toString(),
+      );
+    });
   });
 }

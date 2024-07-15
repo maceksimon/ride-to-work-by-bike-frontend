@@ -43,7 +43,12 @@ function coreTests() {
   });
 
   it('clears input after successful submit', () => {
-    cy.dataCy('form-field-voucher-input').type('AB-CDEFGH');
+    // submit voucher
+    cy.dataCy('form-field-voucher-input').type('FULL');
+    cy.dataCy('form-field-voucher-submit').click();
+    cy.dataCy('form-field-voucher-input').should('have.value', '');
+    // submit voucher
+    cy.dataCy('form-field-voucher-input').type('HALF');
     cy.dataCy('form-field-voucher-submit').click();
     cy.dataCy('form-field-voucher-input').should('have.value', '');
   });

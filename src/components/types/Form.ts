@@ -60,3 +60,9 @@ export type FormCardMerchType = {
   label: string;
   sizes: FormOption[];
 };
+
+export type FormPaymentVoucher = {
+  code: string;
+  name: string;
+  amount: number;
+};
