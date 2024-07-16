@@ -36,3 +36,9 @@ urlVideoOnboarding = "https://www.youtube.com/embed/ItfTtrEutgo?rel=0"
 challengeMonth = "may"
 challengeStartDate = "2024-10-01T12:00:00"
 containerWidth = "752px"
+
+# Map settings
+mapProjection = "EPSG:3857"
+mapCenterLon = "14.4378"
+mapCenterLat = "50.0755"
+mapZoom = "13"

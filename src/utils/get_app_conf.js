@@ -62,6 +62,14 @@ const getAppConfig = (process) => {
     config['challengeStartDate'] = process.env.CHALLENGE_START_DATE;
   } else if (process.env.CONTAINER_WIDTH) {
     config['containerWidth'] = process.env.CONTAINER_WIDTH;
+  } else if (process.env.MAP_PROJECTION) {
+    config['mapProjection'] = process.env.MAP_PROJECTION;
+  } else if (process.env.MAP_CENTER_LON) {
+    config['mapCenterLon'] = process.env.MAP_CENTER_LON;
+  } else if (process.env.MAP_CENTER_LAT) {
+    config['mapCenterLat'] = process.env.MAP_CENTER_LAT;
+  } else if (process.env.MAP_ZOOM) {
+    config['mapZoom'] = process.env.MAP_ZOOM;
   }
 
   return config;
