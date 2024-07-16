@@ -2,6 +2,17 @@ import RouteListEdit from 'components/routes/RouteListEdit.vue';
 import { i18n } from '../../boot/i18n';
 import { testRouteListDayDate } from '../../../test/cypress/support/commonTests';
 
+// selectors
+const selectorButtonSave = 'button-save';
+const selectorRouteListEdit = 'route-list-edit';
+const selectorRouteListItem = 'route-list-item';
+const selectorRouteListItemWrapper = 'route-list-item-wrapper';
+const selectorSectionDirection = 'section-direction';
+
+// variables
+const routeListItemWrapperWidthDesktop = 50;
+const routeListItemWrapperWidthMobile = 100;
+
 describe('<RouteListEdit>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'routes', i18n);
@@ -22,7 +33,10 @@ describe('<RouteListEdit>', () => {
     coreTests();
 
     it('renders items in two columns', () => {
-      cy.testElementPercentageWidth(cy.dataCy('route-list-item-wrapper'), 50);
+      cy.testElementPercentageWidth(
+        cy.dataCy(selectorRouteListItemWrapper),
+        routeListItemWrapperWidthDesktop,
+      );
     });
   });
 
@@ -41,7 +55,10 @@ describe('<RouteListEdit>', () => {
     coreTests();
 
     it('renders items in one columns', () => {
-      cy.testElementPercentageWidth(cy.dataCy('route-list-item-wrapper'), 100);
+      cy.testElementPercentageWidth(
+        cy.dataCy(selectorRouteListItemWrapper),
+        routeListItemWrapperWidthMobile,
+      );
     });
   });
 });
@@ -49,11 +66,11 @@ describe('<RouteListEdit>', () => {
 function coreTests() {
   it('renders component', () => {
     // component visible
-    cy.dataCy('route-list-edit').should('be.visible');
+    cy.dataCy(selectorRouteListEdit).should('be.visible');
     // items visible
-    cy.dataCy('route-list-item').should('be.visible');
+    cy.dataCy(selectorRouteListItem).should('be.visible');
     // direction labels visible
-    cy.dataCy('section-direction').should('be.visible');
+    cy.dataCy(selectorSectionDirection).should('be.visible');
   });
 
   // day date (title) styles
@@ -62,7 +79,7 @@ function coreTests() {
   it('renders route list transport methods', () => {
     cy.fixture('routeList').then((routeList) => {
       // for each route check if icon is correct
-      cy.dataCy('route-list-item').each(($element, index) => {
+      cy.dataCy(selectorRouteListItem).each(($element, index) => {
         if (routeList[index].direction === 'toWork') {
           cy.wrap($element)
             .find('[data-cy="label-direction"]')
@@ -78,7 +95,7 @@ function coreTests() {
   });
 
   it('renders save button with edit count', () => {
-    cy.dataCy('button-save')
+    cy.dataCy(selectorButtonSave)
       .should('be.visible')
       .and('have.css', 'font-size', '16px')
       .and('have.css', 'font-weight', '700')
@@ -87,109 +104,109 @@ function coreTests() {
         i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
       );
     // introduce a change
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="button-toggle-transport"]')
       .last()
       .click();
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
     );
     // revert change
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="button-toggle-transport"]')
       .first()
       .click();
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
     );
     // introduce two changes
     // change first route
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="button-toggle-transport"]')
       .last()
       .click();
     // change last route
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .last()
       .find('[data-cy="button-toggle-transport"]')
       .first()
       .click();
     // count changes
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 2, { count: 2 }),
     );
     // revert changes
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="button-toggle-transport"]')
       .first()
       .click();
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .last()
       .find('[data-cy="button-toggle-transport"]')
       .last()
       .click();
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
     );
 
     // test inputting distance value
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="input-distance"]')
       .clear();
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="input-distance"]')
       .type(1);
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="input-distance"]')
       .blur();
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
     );
     // reset
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="input-distance"]')
       .clear();
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="input-distance"]')
       .type(10);
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="input-distance"]')
       .blur();
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
     );
 
     // test changing input type
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="select-action"]')
       .select(i18n.global.t('routes.actionTraceMap'));
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
     );
     // reset
-    cy.dataCy('route-list-item')
+    cy.dataCy(selectorRouteListItem)
       .first()
       .find('[data-cy="select-action"]')
       .select(i18n.global.t('routes.actionInputDistance'));
-    cy.dataCy('button-save').should(
+    cy.dataCy(selectorButtonSave).should(
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
     );
