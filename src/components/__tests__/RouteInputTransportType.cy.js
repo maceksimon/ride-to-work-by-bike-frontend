@@ -21,6 +21,7 @@ const selectorRouteInputTransportType = 'route-input-transport-type';
 
 // variables
 const avatarTransportSize = 32;
+const buttonToggleWrapperHeight = 40;
 const iconTransportSize = 18;
 
 describe('<RouteInputTransportType>', () => {
@@ -98,7 +99,7 @@ function coreTests() {
       .should('be.visible')
       .then((element) => {
         const offsetHeight = element[0].offsetHeight;
-        expect(offsetHeight).to.be.eq(40);
+        expect(offsetHeight).to.be.eq(buttonToggleWrapperHeight);
       });
     // label transport
     cy.dataCy(selectorLabelTransport)
