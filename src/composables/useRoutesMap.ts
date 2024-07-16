@@ -110,9 +110,9 @@ export const useRoutesMap = () => {
   };
 
   /**
-   * Returns a string representing the length of a route in kilometers.
+   * Get length of route in kilometers.
    * @param {FeatureRoute} featureRoute - The route to calculate the length for.
-   * @return {string} A string representing the length of the route in kilometers.
+   * @return {string} Length of the route in kilometers.
    */
   const getRouteLengthLabel = (featureRoute: FeatureRoute): string => {
     const length = getRouteLength(featureRoute.route);
