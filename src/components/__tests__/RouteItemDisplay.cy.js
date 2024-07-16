@@ -14,6 +14,24 @@ const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
 const { getTransportLabel } = useRoutes();
 
+// selectors
+const selectorAvatarTransport = 'avatar-transport';
+const selectorDescriptionTransport = 'description-transport';
+const selectorDirectionIcon = 'label-direction-icon';
+const selectorIconTransport = 'icon-transport';
+const selectorLabelDirection = 'label-direction';
+const selectorLabelDistance = 'label-distance';
+const selectorSectionDirection = 'section-direction';
+const selectorSectionDistance = 'section-distance';
+const selectorRouteItemDisplay = 'route-item-display';
+
+// variables
+const avatarTransportSize = 32;
+const iconDirectionSize = 18;
+const iconTransportSize = 18;
+const sectionDirectionPercentageWidth = 100;
+const sectionDistancePercentageWidth = 100;
+
 describe('<RouteItemDisplay>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -128,7 +146,7 @@ describe('<RouteItemDisplay>', () => {
 function coreTests() {
   it('renders component', () => {
     // component visible
-    cy.dataCy('route-item-display')
+    cy.dataCy(selectorRouteItemDisplay)
       .should('be.visible')
       .and(
         'have.css',
@@ -141,33 +159,41 @@ function coreTests() {
         rideToWorkByBikeConfig.borderRadiusCard,
       );
     // label direction styles
-    cy.dataCy('label-direction')
+    cy.dataCy(selectorLabelDirection)
       .should('be.visible')
       .and('have.css', 'font-size', '16px')
       .and('have.css', 'font-weight', '700')
       .and('have.css', 'padding', '16px')
       .and('have.color', grey10);
     // icon direction
-    cy.dataCy('label-direction-icon')
+    cy.dataCy(selectorDirectionIcon)
       .should('be.visible')
       .invoke('height')
-      .should('be.eq', 18);
-    cy.dataCy('label-direction-icon')
+      .should('be.eq', iconDirectionSize);
+    cy.dataCy(selectorDirectionIcon)
       .should('be.visible')
       .invoke('width')
-      .should('be.eq', 18);
+      .should('be.eq', iconDirectionSize);
     // avatar transport
-    cy.dataCy('avatar-transport').should('be.visible');
-    cy.dataCy('avatar-transport').invoke('height').should('be.eq', 32);
-    cy.dataCy('avatar-transport').invoke('width').should('be.eq', 32);
+    cy.dataCy(selectorAvatarTransport).should('be.visible');
+    cy.dataCy(selectorAvatarTransport)
+      .invoke('height')
+      .should('be.eq', avatarTransportSize);
+    cy.dataCy(selectorAvatarTransport)
+      .invoke('width')
+      .should('be.eq', avatarTransportSize);
     // icon transport
-    cy.dataCy('icon-transport')
+    cy.dataCy(selectorIconTransport)
       .should('be.visible')
       .and('have.css', 'font-size', '18px');
-    cy.dataCy('icon-transport').invoke('height').should('be.eq', 18);
-    cy.dataCy('icon-transport').invoke('width').should('be.eq', 18);
+    cy.dataCy(selectorIconTransport)
+      .invoke('height')
+      .should('be.eq', iconTransportSize);
+    cy.dataCy(selectorIconTransport)
+      .invoke('width')
+      .should('be.eq', iconTransportSize);
     // description transport styles
-    cy.dataCy('description-transport')
+    cy.dataCy(selectorDescriptionTransport)
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
@@ -179,24 +205,24 @@ function coreTests() {
       // test styles if transport value is logged
       if (route.transport) {
         // transport value
-        cy.dataCy('avatar-transport')
+        cy.dataCy(selectorAvatarTransport)
           .should('be.visible')
           .and('have.backgroundColor', secondary);
         // icon transport
-        cy.dataCy('icon-transport')
+        cy.dataCy(selectorIconTransport)
           .should('be.visible')
           .and('have.color', primary);
       } else {
         // transport value empty
-        cy.dataCy('avatar-transport')
+        cy.dataCy(selectorAvatarTransport)
           .should('be.visible')
           .and('have.backgroundColor', grey2);
         // icon transport question mark
-        cy.dataCy('icon-transport')
+        cy.dataCy(selectorIconTransport)
           .should('be.visible')
           .and('have.color', grey7);
       }
-      cy.dataCy('description-transport').then((description) => {
+      cy.dataCy(selectorDescriptionTransport).then((description) => {
         cy.wrap(getTransportLabel(route.transport)).should(
           'eq',
           description.text(),
@@ -206,15 +232,21 @@ function coreTests() {
   });
 
   it('renders two sections stacked', () => {
-    cy.testElementPercentageWidth(cy.dataCy('section-direction'), 100);
-    cy.testElementPercentageWidth(cy.dataCy('section-distance'), 100);
+    cy.testElementPercentageWidth(
+      cy.dataCy(selectorSectionDirection),
+      sectionDirectionPercentageWidth,
+    );
+    cy.testElementPercentageWidth(
+      cy.dataCy(selectorSectionDistance),
+      sectionDistancePercentageWidth,
+    );
   });
 
   it('renders correct distance value', () => {
     cy.get('@route').then((route) => {
       if (route.distance) {
         // distance value including units
-        cy.dataCy('label-distance')
+        cy.dataCy(selectorLabelDistance)
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '700')
@@ -223,14 +255,14 @@ function coreTests() {
           .and('contain', i18n.global.t('global.routeLengthUnit'));
       } else {
         // distance value empty
-        cy.dataCy('label-distance').should('not.exist');
+        cy.dataCy(selectorLabelDistance).should('not.exist');
       }
     });
   });
 
   it('renders icons correctly', () => {
     // icon direction
-    cy.dataCy('label-direction-icon', { timeout: 4000 })
+    cy.dataCy(selectorDirectionIcon, { timeout: 4000 })
       .should('be.visible')
       .matchImageSnapshot(`${Cypress.currentTest.titlePath}-direction`, {
         failureThreshold: 0.1,
@@ -240,7 +272,7 @@ function coreTests() {
         retries: 2,
       });
     // icon transport
-    cy.dataCy('icon-transport', { timeout: 4000 })
+    cy.dataCy(selectorIconTransport, { timeout: 4000 })
       .should('be.visible')
       .matchImageSnapshot(`${Cypress.currentTest.titlePath}-transport`, {
         failureThreshold: 0.1,
@@ -255,11 +287,11 @@ function coreTests() {
 function testLabelToWork() {
   it('renders label and icon "to work"', () => {
     // label to work
-    cy.dataCy('label-direction')
+    cy.dataCy(selectorLabelDirection)
       .should('be.visible')
       .and('contain', i18n.global.t('routes.labelDirectionToWork'));
     // icon to work
-    cy.dataCy('label-direction-icon')
+    cy.dataCy(selectorDirectionIcon)
       .should('be.visible')
       .and('contain', 'arrow_forward');
   });
@@ -268,11 +300,11 @@ function testLabelToWork() {
 function testLabelFromWork() {
   it('renders label and icon "from work"', () => {
     // label from work
-    cy.dataCy('label-direction')
+    cy.dataCy(selectorLabelDirection)
       .should('be.visible')
       .and('contain', i18n.global.t('routes.labelDirectionFromWork'));
     // icon from work
-    cy.dataCy('label-direction-icon')
+    cy.dataCy(selectorDirectionIcon)
       .should('be.visible')
       .and('contain', 'arrow_back');
   });
