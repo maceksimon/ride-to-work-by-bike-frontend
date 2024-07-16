@@ -12,6 +12,8 @@ import type {
 } from 'src/components/types/Route';
 
 export const useRoutes = () => {
+  const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
+
   /**
    * Returns the icon name corresponding to the given route.
    *
@@ -21,17 +23,17 @@ export const useRoutes = () => {
   const getRouteIcon = (transport: TransportType): string => {
     switch (transport) {
       case 'car':
-        return 'svguse:icons.svg#lucide-car-front';
+        return `svguse:${customSVGIconsFilePath}#lucide-car-front`;
       case 'bike':
-        return 'svguse:icons.svg#lucide-bike';
+        return `svguse:${customSVGIconsFilePath}#lucide-bike`;
       case 'walk':
-        return 'svguse:icons.svg#lucide-walk';
+        return `svguse:${customSVGIconsFilePath}#lucide-walk`;
       case 'bus':
-        return 'svguse:icons.svg#lucide-bus';
+        return `svguse:${customSVGIconsFilePath}#lucide-bus`;
       case 'none':
-        return 'svguse:icons.svg#lucide-ban';
+        return `svguse:${customSVGIconsFilePath}#lucide-ban`;
       default:
-        return 'svguse:icons.svg#question-mark';
+        return `svguse:${customSVGIconsFilePath}#question-mark`;
     }
   };
 
