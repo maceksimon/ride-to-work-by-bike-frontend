@@ -41,17 +41,7 @@ describe('<RouteInputDistance>', () => {
         .find('input')
         .should('have.value', i18n.global.t('routes.actionInputDistance'));
       // input type and input distance are on the same line
-      cy.dataCy('section-input-action').then((element) => {
-        const offsetTop = element[0].offsetTop;
-        const offsetHeight = element[0].offsetHeight;
-        cy.dataCy('section-input-number').then((sibling) => {
-          const siblingOffsetTop = sibling[0].offsetTop;
-          const siblingOffsetHeight = sibling[0].offsetHeight;
-          expect(offsetTop + offsetHeight).to.be.eq(
-            siblingOffsetTop + siblingOffsetHeight,
-          );
-        });
-      });
+      cy.testElementsSideBySide('section-input-action', 'section-input-number');
     });
   });
 
@@ -76,17 +66,7 @@ describe('<RouteInputDistance>', () => {
         .find('input')
         .should('have.value', i18n.global.t('routes.actionTraceMap'));
       // input type and input distance are on the same line
-      cy.dataCy('section-input-action').then((element) => {
-        const offsetTop = element[0].offsetTop;
-        const offsetHeight = element[0].offsetHeight;
-        cy.dataCy('section-input-map').then((sibling) => {
-          const siblingOffsetTop = sibling[0].offsetTop;
-          const siblingOffsetHeight = sibling[0].offsetHeight;
-          expect(offsetTop + offsetHeight).to.be.eq(
-            siblingOffsetTop + siblingOffsetHeight,
-          );
-        });
-      });
+      cy.testElementsSideBySide('section-input-action', 'section-input-map');
     });
   });
 
