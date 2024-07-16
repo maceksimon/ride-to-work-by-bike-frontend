@@ -45,6 +45,10 @@ export interface ConfigGlobal {
   urlApiLogin: string;
   urlApiRefresh: string;
   urlLoginRegisterBackgroundImage: string;
+  mapProjection: string;
+  mapCenterLon: string;
+  mapCenterLat: string;
+  mapZoom: string;
 }
 
 export interface ConfigAppVersion {

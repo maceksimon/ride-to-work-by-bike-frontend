@@ -10,6 +10,9 @@ import { fromLonLat, useGeographic } from 'ol/proj';
 // composables
 import { i18n } from '../boot/i18n';
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // types
 import type { Ref } from 'vue';
 import type { Coordinate } from 'ol/coordinate';
@@ -30,13 +33,16 @@ export const useRoutesMap = () => {
   provide('ol-options', options);
 
   // constants
-  const MAX_ZOOM_CENTERING_FACTOR = 15;
-  const DEFAULT_MAP_ZOOM = 13;
+  const maxZoomCenteringFactor = 15;
+  const defaultMapZoom = Number(rideToWorkByBikeConfig.mapZoom);
+  const defaultMapProjection = rideToWorkByBikeConfig.mapProjection;
+  const defaultMapLon = Number(rideToWorkByBikeConfig.mapCenterLon);
+  const defaultMapLat = Number(rideToWorkByBikeConfig.mapCenterLat);
 
   const mapRef = ref<InstanceType<typeof Map.OlMap> | null>(null);
-  const center = ref<Coordinate>(fromLonLat([14.4378, 50.0755]));
-  const projection = ref('EPSG:3857');
-  const zoom = ref(DEFAULT_MAP_ZOOM);
+  const center = ref<Coordinate>(fromLonLat([defaultMapLon, defaultMapLat]));
+  const projection = ref(defaultMapProjection);
+  const zoom = ref(defaultMapZoom);
 
   // list of saved routes
   const savedRoutes = ref<FeatureRoute[]>([]);
@@ -75,7 +81,7 @@ export const useRoutesMap = () => {
 
   /**
    * Centers the map on the given extent.
-   * Takes the MAX_ZOOM_CENTERING_FACTOR into account.
+   * Takes the maxZoomCenteringFactor into account.
    * @param {Extent} extent - The extent to center the map on.
    * @return {void}
    */
@@ -85,7 +91,7 @@ export const useRoutesMap = () => {
       const view = map.getView();
       view.fit(extent, {
         size: map.getSize(),
-        maxZoom: MAX_ZOOM_CENTERING_FACTOR,
+        maxZoom: maxZoomCenteringFactor,
       });
     }
   };
@@ -144,7 +150,7 @@ export const useRoutesMap = () => {
           if (mapRef.value?.map) {
             const view = mapRef.value.map.getView();
             view.setCenter(coords);
-            view.setZoom(DEFAULT_MAP_ZOOM);
+            view.setZoom(defaultMapZoom);
           }
         },
         (error) => {
