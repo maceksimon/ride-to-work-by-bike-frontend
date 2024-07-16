@@ -265,7 +265,7 @@ function coreTests() {
 
   it('renders icons correctly', () => {
     // icon direction
-    cy.dataCy(selectorDirectionIcon, { timeout: 4000 })
+    cy.dataCy(selectorDirectionIcon)
       .should('be.visible')
       .matchImageSnapshot(`${Cypress.currentTest.titlePath}-direction`, {
         failureThreshold: 0.1,
@@ -275,7 +275,7 @@ function coreTests() {
         retries: 2,
       });
     // icon transport
-    cy.dataCy(selectorIconTransport, { timeout: 4000 })
+    cy.dataCy(selectorIconTransport)
       .should('be.visible')
       .matchImageSnapshot(`${Cypress.currentTest.titlePath}-transport`, {
         failureThreshold: 0.1,
