@@ -76,8 +76,11 @@ export default defineComponent({
       },
     ];
 
+    const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
+
     return {
       action,
+      customSVGIconsFilePath,
       distance,
       optionsAction,
     };
@@ -148,7 +151,7 @@ export default defineComponent({
           >
             <!-- Icon -->
             <q-icon
-              name="svguse:icons.svg#pencil"
+              :name="`svguse:${customSVGIconsFilePath}#pencil`"
               size="24px"
               class="q-mr-sm"
               data-cy="icon-trace-map"
