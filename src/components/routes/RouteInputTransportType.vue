@@ -9,6 +9,8 @@
  * @props
  * - `modelValue` (string, required): The object representing selected value.
  *   It should be of type `string`.
+ * - `horizontal` (boolean, default: false): Whether the buttons and label
+ *   should be displayed side by side in a row.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
