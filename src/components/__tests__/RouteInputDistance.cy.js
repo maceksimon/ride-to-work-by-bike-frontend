@@ -4,6 +4,7 @@ import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
+const iconTraceMapSelector = 'icon-trace-map';
 
 describe('<RouteInputDistance>', () => {
   it('has translation for all strings', () => {
@@ -136,8 +137,8 @@ function buttonMapTests() {
       .should('be.visible')
       .and('have.css', 'font-size', '16px')
       .and('contain', i18n.global.t('routes.buttonTraceMap'));
-    cy.dataCy('icon-trace-map').should('be.visible');
-    cy.dataCy('icon-trace-map').invoke('width').should('be.equal', 24);
-    cy.dataCy('icon-trace-map').invoke('height').should('be.equal', 24);
+    cy.dataCy(iconTraceMapSelector).should('be.visible');
+    cy.dataCy(iconTraceMapSelector).invoke('width').should('be.equal', 24);
+    cy.dataCy(iconTraceMapSelector).invoke('height').should('be.equal', 24);
   });
 }
