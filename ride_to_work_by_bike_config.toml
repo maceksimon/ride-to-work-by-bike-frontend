@@ -120,3 +120,10 @@ facebookLoginSdkOptions = '''
   "scope": "email,public_profile"
 }
 '''
+
+# MAP SETTINGS
+
+mapProjection = "EPSG:3857"
+mapCenterLon = "14.4378"
+mapCenterLat = "50.0755"
+mapZoom = "13"
