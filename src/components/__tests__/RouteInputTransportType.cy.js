@@ -137,22 +137,20 @@ function coreTests() {
 
   it('renders icons correctly', () => {
     // icons transport
-    cy.dataCy(selectorIconTransport, { timeout: 4000 }).each(
-      (element, index) => {
-        cy.wrap(element)
-          .should('be.visible')
-          .matchImageSnapshot(
-            `${Cypress.currentTest.titlePath}-transport-${index}`,
-            {
-              failureThreshold: 0.1,
-              failureThresholdType: 'percent',
-              timeout: 4000,
-              customDiffConfig: { threshold: 0.4 },
-              retries: 2,
-            },
-          );
-      },
-    );
+    cy.dataCy(selectorIconTransport).each((element, index) => {
+      cy.wrap(element)
+        .should('be.visible')
+        .matchImageSnapshot(
+          `${Cypress.currentTest.titlePath}-transport-${index}`,
+          {
+            failureThreshold: 0.1,
+            failureThresholdType: 'percent',
+            timeout: 4000,
+            customDiffConfig: { threshold: 0.4 },
+            retries: 2,
+          },
+        );
+    });
   });
 }
 
