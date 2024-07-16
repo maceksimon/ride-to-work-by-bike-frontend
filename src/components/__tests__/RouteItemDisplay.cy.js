@@ -6,13 +6,16 @@ import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useRoutes } from 'src/composables/useRoutes';
 
+// composables
 const { getPaletteColor } = colors;
+const { getTransportLabel } = useRoutes();
+
+// colors
 const grey2 = getPaletteColor('grey-2');
 const grey7 = getPaletteColor('grey-7');
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
-const { getTransportLabel } = useRoutes();
 
 // selectors
 const selectorAvatarTransport = 'avatar-transport';
