@@ -6,6 +6,10 @@ import { i18n } from '../../boot/i18n';
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
+const avatarTransportSelector = 'avatar-transport';
+const avatarTransportSize = 32;
+const iconTransportSelector = 'icon-transport';
+const iconTransportSize = 18;
 
 describe('<RouteInputTransportType>', () => {
   it('has translation for all strings', () => {
@@ -89,13 +93,23 @@ function coreTests() {
       .and('have.color', grey10)
       .and('contain', i18n.global.t('routes.labelTransportType'));
     // avatar
-    cy.dataCy('avatar-transport').should('be.visible');
-    cy.dataCy('avatar-transport').invoke('height').should('be.eq', 32);
-    cy.dataCy('avatar-transport').invoke('width').should('be.eq', 32);
+    cy.dataCy(avatarTransportSelector).should('be.visible');
+    cy.dataCy(avatarTransportSelector)
+      .invoke('height')
+      .should('be.eq', avatarTransportSize);
+    cy.dataCy(avatarTransportSelector)
+      .invoke('width')
+      .should('be.eq', avatarTransportSize);
     // icon
-    cy.dataCy('icon-transport').should('be.visible').and('have.color', primary);
-    cy.dataCy('icon-transport').invoke('height').should('be.eq', 18);
-    cy.dataCy('icon-transport').invoke('width').should('be.eq', 18);
+    cy.dataCy(iconTransportSelector)
+      .should('be.visible')
+      .and('have.color', primary);
+    cy.dataCy(iconTransportSelector)
+      .invoke('height')
+      .should('be.eq', iconTransportSize);
+    cy.dataCy(iconTransportSelector)
+      .invoke('width')
+      .should('be.eq', iconTransportSize);
     // description transport
     cy.dataCy('description-transport')
       .should('be.visible')
@@ -107,20 +121,22 @@ function coreTests() {
 
   it('renders icons correctly', () => {
     // icons transport
-    cy.dataCy('icon-transport', { timeout: 4000 }).each((element, index) => {
-      cy.wrap(element)
-        .should('be.visible')
-        .matchImageSnapshot(
-          `${Cypress.currentTest.titlePath}-transport-${index}`,
-          {
-            failureThreshold: 0.1,
-            failureThresholdType: 'percent',
-            timeout: 4000,
-            customDiffConfig: { threshold: 0.4 },
-            retries: 2,
-          },
-        );
-    });
+    cy.dataCy(iconTransportSelector, { timeout: 4000 }).each(
+      (element, index) => {
+        cy.wrap(element)
+          .should('be.visible')
+          .matchImageSnapshot(
+            `${Cypress.currentTest.titlePath}-transport-${index}`,
+            {
+              failureThreshold: 0.1,
+              failureThresholdType: 'percent',
+              timeout: 4000,
+              customDiffConfig: { threshold: 0.4 },
+              retries: 2,
+            },
+          );
+      },
+    );
   });
 }
 
