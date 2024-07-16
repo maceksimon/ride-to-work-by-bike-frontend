@@ -558,7 +558,7 @@ textEmptyTable = "Žiadne výsledky. Skúste zmeniť nastavenia filtra."
 [routes.transport]
 bike = "Na bicykli"
 car = "Autom"
-none = "Nič"
+none = "Žiadna"
 walk = "Pešo"
 bus = "Verejnou dopravou"
 unknown = "Nevyplnené"
