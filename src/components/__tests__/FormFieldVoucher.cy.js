@@ -6,15 +6,19 @@ const selectorFormFieldVoucher = 'form-field-voucher';
 const selecotrFormFieldVoucherInput = 'form-field-voucher-input';
 const selectorFormFieldVoucherSubmit = 'form-field-voucher-submit';
 const selectorQNotifyMessage = '.q-notification__message';
+const selectorVoucherBanner = 'voucher-banner';
+const selectorVoucherBannerCode = 'voucher-banner-code';
+const selectorVoucherBannerName = 'voucher-banner-name';
+const selectorVoucherButtonRemove = 'voucher-button-remove';
+const selectorVoucherWidget = 'voucher-widget';
 
-const codeFull = 'FULL';
-const codeHalf = 'HALF';
+// variables
 const codeInvalid = 'ABCD';
 
 describe('<FormFieldVoucher>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
-      ['buttonVoucherSubmit', 'labelVoucher'],
+      ['buttonVoucherSubmit', 'labelVoucher', 'textVoucher'],
       'form',
       i18n,
     );
@@ -45,46 +49,83 @@ describe('<FormFieldVoucher>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
     cy.dataCy(selectorFormFieldVoucher).should('be.visible');
+    // widget
+    cy.dataCy(selectorVoucherWidget).should('be.visible');
+    // input
     cy.dataCy(selecotrFormFieldVoucherInput).should('be.visible');
+    // button
     cy.dataCy(selectorFormFieldVoucherSubmit)
       .should('be.visible')
       .and('contain', i18n.global.t('form.buttonVoucherSubmit'));
   });
 
-  it('clears input after successful submit', () => {
+  it('allows to submit and remove HALF voucher', () => {
+    cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
+      // submit voucher
+      cy.dataCy(selecotrFormFieldVoucherInput).type(voucherHalf.code);
+      cy.dataCy(selectorFormFieldVoucherSubmit).click();
+      // banner
+      cy.dataCy(selectorVoucherBanner).should('be.visible');
+      cy.dataCy(selectorVoucherBannerCode)
+        .should('be.visible')
+        .and('contain', voucherHalf.code)
+        .and('contain', i18n.global.t('form.textVoucher'));
+      cy.dataCy(selectorVoucherBannerName)
+        .should('be.visible')
+        .and('contain', voucherHalf.name);
+      // user message
+      cy.get(selectorQNotifyMessage)
+        .should('be.visible')
+        .and('contain', i18n.global.t('notify.voucherApplySuccess'));
+      // remove voucher
+      cy.dataCy(selectorVoucherButtonRemove).should('be.visible');
+      cy.dataCy(selectorVoucherButtonRemove).click();
+      cy.dataCy(selectorVoucherBanner).should('not.exist');
+      // widget
+      cy.dataCy(selectorVoucherWidget).should('be.visible');
+    });
+  });
+
+  it('allows to submit and remove FULL voucher', () => {
+    cy.fixture('registerPaymentVoucherHalf').then((voucherFull) => {
+      // submit voucher
+      cy.dataCy(selecotrFormFieldVoucherInput).type(voucherFull.code);
+      cy.dataCy(selectorFormFieldVoucherSubmit).click();
+      // banner
+      cy.dataCy(selectorVoucherBanner).should('be.visible');
+      cy.dataCy(selectorVoucherBannerCode)
+        .should('be.visible')
+        .and('contain', voucherFull.code)
+        .and('contain', i18n.global.t('form.textVoucher'));
+      cy.dataCy(selectorVoucherBannerName)
+        .should('be.visible')
+        .and('contain', voucherFull.name);
+      // user message
+      cy.get(selectorQNotifyMessage)
+        .should('be.visible')
+        .and('contain', i18n.global.t('notify.voucherApplySuccess'));
+      // remove voucher
+      cy.dataCy(selectorVoucherButtonRemove).should('be.visible');
+      cy.dataCy(selectorVoucherButtonRemove).click();
+      cy.dataCy(selectorVoucherBanner).should('not.exist');
+      // widget
+      cy.dataCy(selectorVoucherWidget).should('be.visible');
+    });
+  });
+
+  it('does not allow to submit invalid voucher', () => {
     // submit voucher
-    cy.dataCy(selecotrFormFieldVoucherInput).type(codeFull);
-    cy.dataCy(selectorFormFieldVoucherSubmit).click();
-    cy.dataCy(selecotrFormFieldVoucherInput)
-      .find('input')
-      .should('have.value', codeFull);
-    // user message
-    cy.get(selectorQNotifyMessage)
-      .should('be.visible')
-      .and('contain', i18n.global.t('notify.voucherApplySuccess'));
-    cy.dataCy(selecotrFormFieldVoucherInput).clear();
-    // submit voucher
-    cy.dataCy(selecotrFormFieldVoucherInput).type(codeHalf);
-    cy.dataCy(selectorFormFieldVoucherSubmit).click();
-    cy.dataCy(selecotrFormFieldVoucherInput)
-      .find('input')
-      .should('have.value', codeHalf);
-    // user message
-    cy.get(selectorQNotifyMessage)
-      .should('be.visible')
-      .and('contain', i18n.global.t('notify.voucherApplySuccess'));
-    cy.dataCy(selecotrFormFieldVoucherInput).clear();
-    // submit invalid voucher
     cy.dataCy(selecotrFormFieldVoucherInput).type(codeInvalid);
     cy.dataCy(selectorFormFieldVoucherSubmit).click();
-    cy.dataCy(selecotrFormFieldVoucherInput)
-      .find('input')
-      .should('have.value', codeInvalid);
+    // banner
+    cy.dataCy(selectorVoucherBanner).should('not.exist');
     // user message
     cy.get(selectorQNotifyMessage)
       .should('be.visible')
       .and('contain', i18n.global.t('notify.voucherApplyError'));
-    cy.dataCy(selecotrFormFieldVoucherInput).clear();
+    // widget
+    cy.dataCy(selectorVoucherWidget).should('be.visible');
   });
 }
