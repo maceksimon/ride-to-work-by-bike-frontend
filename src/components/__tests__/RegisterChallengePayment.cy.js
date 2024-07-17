@@ -165,19 +165,49 @@ function coreTests() {
       cy.dataCy('voucher-button-remove').click();
       // invalid voucher is input
       cy.dataCy('form-field-voucher-input').should('be.visible');
-      cy.dataCy('form-field-voucher-input').type('ABCD');
+    });
+  });
+
+  it('does not allow to apply invalid voucher', () => {
+    // option default amount is active
+    cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
+      .should('be.visible')
+      .click();
+    // option voucher payment is active
+    cy.dataCy('radio-option-voucher').should('be.visible').click();
+    cy.dataCy('form-field-voucher-input').type('ABCD');
+    cy.dataCy('form-field-voucher-submit').click();
+    cy.dataCy('form-field-voucher-input')
+      .find('input')
+      .should('have.value', 'ABCD');
+    // option with default amount is available
+    cy.dataCy(`radio-option-${defaultPaymentAmountMin}`).click();
+    cy.dataCy('radio-option-custom').click();
+    // custom amount is set to default value
+    cy.dataCy('form-field-slider-number-input').should(
+      'have.value',
+      defaultPaymentAmountMin.toString(),
+    );
+  });
+
+  it('allows to apply voucher (FULL)', () => {
+    cy.get('@voucherFull').then((voucher) => {
+      // option default amount is active
+      cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
+        .should('be.visible')
+        .click();
+      // option voucher payment is active
+      cy.dataCy('radio-option-voucher').should('be.visible').click();
+      // input voucher
+      cy.dataCy('form-field-voucher-input').type(voucher.code);
       cy.dataCy('form-field-voucher-submit').click();
-      cy.dataCy('form-field-voucher-input')
-        .find('input')
-        .should('have.value', 'ABCD');
-      // option with default amount is available
-      cy.dataCy(`radio-option-${defaultPaymentAmountMin}`).click();
-      cy.dataCy('radio-option-custom').click();
-      // custom amount is set to default value
-      cy.dataCy('form-field-slider-number-input').should(
-        'have.value',
-        defaultPaymentAmountMin.toString(),
-      );
+      // option amount hidden
+      cy.dataCy('form-field-payment-amount').should('not.exist');
+      // custom amount hidden
+      cy.dataCy('form-field-payment-amount-custom').should('not.exist');
+      // clear input
+      cy.dataCy('form-field-donation').should('be.visible');
+      // TODO: add donation
     });
   });
 }

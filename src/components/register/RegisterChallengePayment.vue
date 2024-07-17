@@ -266,7 +266,7 @@ export default defineComponent({
     </div>
     <!-- Input: Donation -->
     <div v-if="selectedPaymentSubject === 'voucher' && isEntryFeeFree">
-      <form-field-donation class="q-mt-md" />
+      <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
     </div>
     <!-- Input: Custom amount -->
     <div v-if="selectedPaymentAmount === 'custom' && !isEntryFeeFree">
