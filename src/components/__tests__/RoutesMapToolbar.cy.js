@@ -1,6 +1,29 @@
 import RoutesMapToolbar from 'components/routes/RoutesMapToolbar.vue';
 import { i18n } from '../../boot/i18n';
 
+// selectors
+const selectorAddRouteAvatar = 'add-route-avatar';
+const selectorAddRouteButton = 'add-route-button';
+const selectorAddRouteIcon = 'add-route-icon';
+const selectorCurrentPositionAvatar = 'current-position-avatar';
+const selectorCurrentPositionButton = 'current-position-button';
+const selectorCurrentPositionIcon = 'current-position-icon';
+const selectorDeleteRouteAvatar = 'delete-route-avatar';
+const selectorDeleteRouteButton = 'delete-route-button';
+const selectorDeleteRouteIcon = 'delete-route-icon';
+const selectorUndoButton = 'undo-button';
+const selectorUndoAvatar = 'undo-avatar';
+const selectorUndoIcon = 'undo-icon';
+const selectorSaveRouteAvatar = 'save-route-avatar';
+const selectorSaveRouteButton = 'save-route-button';
+const selectorSaveRouteIcon = 'save-route-icon';
+const selectorToolbarTop = 'toolbar-top';
+const selectorToolbarBottom = 'toolbar-bottom';
+
+// variables
+const avatarSize = 32;
+const iconSize = 18;
+
 describe('<RoutesMapToolbar>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'index.component', i18n);
@@ -51,66 +74,100 @@ describe('<RoutesMapToolbar>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.dataCy('toolbar-top').should('be.visible');
-    cy.dataCy('toolbar-bottom').should('be.visible');
+    cy.dataCy(selectorToolbarTop).should('be.visible');
+    cy.dataCy(selectorToolbarBottom).should('be.visible');
   });
 
   it('renders draw button', () => {
-    cy.dataCy('add-route-button')
+    cy.dataCy(selectorAddRouteButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
-    cy.dataCy('add-route-avatar').should('be.visible');
-    cy.dataCy('add-route-avatar').invoke('height').should('be.equal', 32);
-    cy.dataCy('add-route-avatar').invoke('width').should('be.equal', 32);
-    cy.dataCy('add-route-icon').invoke('height').should('be.equal', 18);
-    cy.dataCy('add-route-icon').invoke('width').should('be.equal', 18);
+    cy.dataCy(selectorAddRouteAvatar).should('be.visible');
+    cy.dataCy(selectorAddRouteAvatar)
+      .invoke('height')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorAddRouteAvatar)
+      .invoke('width')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorAddRouteIcon)
+      .invoke('height')
+      .should('be.equal', iconSize);
+    cy.dataCy(selectorAddRouteIcon)
+      .invoke('width')
+      .should('be.equal', iconSize);
   });
 
   it('renders current location button', () => {
-    cy.dataCy('current-position-button')
+    cy.dataCy(selectorCurrentPositionButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
-    cy.dataCy('current-position-avatar').should('be.visible');
-    cy.dataCy('current-position-avatar')
+    cy.dataCy(selectorCurrentPositionAvatar).should('be.visible');
+    cy.dataCy(selectorCurrentPositionAvatar)
       .invoke('height')
-      .should('be.equal', 32);
-    cy.dataCy('current-position-avatar').invoke('width').should('be.equal', 32);
-    cy.dataCy('current-position-icon').invoke('height').should('be.equal', 18);
-    cy.dataCy('current-position-icon').invoke('width').should('be.equal', 18);
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorCurrentPositionAvatar)
+      .invoke('width')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorCurrentPositionIcon)
+      .invoke('height')
+      .should('be.equal', iconSize);
+    cy.dataCy(selectorCurrentPositionIcon)
+      .invoke('width')
+      .should('be.equal', iconSize);
   });
 }
 
 function drawEnabledTests() {
   it('renders delete button', () => {
-    cy.dataCy('delete-route-button')
+    cy.dataCy(selectorDeleteRouteButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
-    cy.dataCy('delete-route-avatar').should('be.visible');
-    cy.dataCy('delete-route-avatar').invoke('height').should('be.equal', 32);
-    cy.dataCy('delete-route-avatar').invoke('width').should('be.equal', 32);
-    cy.dataCy('delete-route-icon').invoke('height').should('be.equal', 18);
-    cy.dataCy('delete-route-icon').invoke('width').should('be.equal', 18);
+    cy.dataCy(selectorDeleteRouteAvatar).should('be.visible');
+    cy.dataCy(selectorDeleteRouteAvatar)
+      .invoke('height')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorDeleteRouteAvatar)
+      .invoke('width')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorDeleteRouteIcon)
+      .invoke('height')
+      .should('be.equal', iconSize);
+    cy.dataCy(selectorDeleteRouteIcon)
+      .invoke('width')
+      .should('be.equal', iconSize);
   });
 
   it('renders undo button', () => {
-    cy.dataCy('undo-button')
+    cy.dataCy(selectorUndoButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
-    cy.dataCy('undo-avatar').should('be.visible');
-    cy.dataCy('undo-avatar').invoke('height').should('be.equal', 32);
-    cy.dataCy('undo-avatar').invoke('width').should('be.equal', 32);
-    cy.dataCy('undo-icon').invoke('height').should('be.equal', 18);
-    cy.dataCy('undo-icon').invoke('width').should('be.equal', 18);
+    cy.dataCy(selectorUndoAvatar).should('be.visible');
+    cy.dataCy(selectorUndoAvatar)
+      .invoke('height')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorUndoAvatar)
+      .invoke('width')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorUndoIcon).invoke('height').should('be.equal', iconSize);
+    cy.dataCy(selectorUndoIcon).invoke('width').should('be.equal', iconSize);
   });
 
   it('renders save route button', () => {
-    cy.dataCy('save-route-button')
+    cy.dataCy(selectorSaveRouteButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
-    cy.dataCy('save-route-avatar').should('be.visible');
-    cy.dataCy('save-route-avatar').invoke('height').should('be.equal', 32);
-    cy.dataCy('save-route-avatar').invoke('width').should('be.equal', 32);
-    cy.dataCy('save-route-icon').invoke('height').should('be.equal', 18);
-    cy.dataCy('save-route-icon').invoke('width').should('be.equal', 18);
+    cy.dataCy(selectorSaveRouteAvatar).should('be.visible');
+    cy.dataCy(selectorSaveRouteAvatar)
+      .invoke('height')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorSaveRouteAvatar)
+      .invoke('width')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorSaveRouteIcon)
+      .invoke('height')
+      .should('be.equal', iconSize);
+    cy.dataCy(selectorSaveRouteIcon)
+      .invoke('width')
+      .should('be.equal', iconSize);
   });
 }
