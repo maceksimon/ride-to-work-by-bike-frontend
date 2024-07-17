@@ -136,7 +136,7 @@ export default defineComponent({
 
     /**
      * Handles voucher submission.
-     * If there is a new price for entry fee, se it as the default value.
+     * Updates payment options, minimum payment amount and current payment amount.
      * if entry fee is free, display voluntary contribution.
      */
     const onUpdateVoucher = (voucher: FormPaymentVoucher): void => {
@@ -150,8 +150,9 @@ export default defineComponent({
         });
         // set min amount for custom amount
         paymentAmountMin.value = voucher.amount;
-        // if default entry fee is selected, set it to discounted value
-        if (selectedPaymentAmount.value === defaultPaymentOption.value) {
+        // if current value is not in new options, set it to discounted value
+        const optionValues = optionsPaymentAmount.map((option) => option.value);
+        if (!optionValues.includes(String(selectedPaymentAmount.value))) {
           selectedPaymentAmount.value = String(voucher.amount);
         }
       }
@@ -161,11 +162,21 @@ export default defineComponent({
       }
     };
 
+    /**
+     * Removes voucher.
+     * Updates payment options, minimum payment amount and current payment amount.
+     * @return {void}
+     */
     const onRemoveVoucher = (): void => {
       isEntryFeeFree.value = false;
       optionsPaymentAmount.shift();
       optionsPaymentAmount.unshift(defaultPaymentOption);
       paymentAmountMin.value = defaultPaymentAmountMin;
+      // if current value is not in new options, set it to default value
+      const optionValues = optionsPaymentAmount.map((option) => option.value);
+      if (!optionValues.includes(String(selectedPaymentAmount.value))) {
+        selectedPaymentAmount.value = String(defaultPaymentOption.value);
+      }
     };
 
     return {
