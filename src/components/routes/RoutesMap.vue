@@ -111,7 +111,7 @@ export default defineComponent({
 
     /**
      * Called when a new path is being drawn on the map.
-     * @returns {void}
+     * @return {void}
      */
     const onDrawStart = (event: DrawEvent): void => {
       clearMapRoutes();
@@ -121,7 +121,7 @@ export default defineComponent({
     /**
      * Called after a new path is drawn on the map.
      * @param event DrawEvent
-     * @returns {void}
+     * @return {void}
      */
     const onDrawEnd = (event: DrawEvent): void => {
       const feature = event.feature;
@@ -132,7 +132,7 @@ export default defineComponent({
     /**
      * Called after a path is modified on the map.
      * @param event ModifyEvent
-     * @returns {void}
+     * @return {void}
      */
     const onModifyEnd = (event: ModifyEvent): void => {
       // get first feature (there should always be only one)
@@ -151,7 +151,7 @@ export default defineComponent({
     /**
      * If possible, undo last route modification and update route on the map.
      * If there are no changes in history, do nothing.
-     * @returns {void}
+     * @return {void}
      */
     const onUndo = (): void => {
       const newFeature = undoDrawRoute();
@@ -165,7 +165,7 @@ export default defineComponent({
     /**
      * Save drawRoute to local array of routes.
      * Before saving, get start and end names of the route.
-     * @returns {Promise<void>}
+     * @return {Promise<void>}
      */
     const onSaveRoute = async (): Promise<void> => {
       if (drawRoute.value) {
@@ -187,7 +187,7 @@ export default defineComponent({
      * Called when a saved routes list item is clicked.
      * Renders clicked route on the map.
      * @param featureRoute FeatureRoute
-     * @returns {void}
+     * @return {void}
      */
     const onSavedRouteClick = (featureRoute: FeatureRoute): void => {
       renderSavedRoute(featureRoute.route);

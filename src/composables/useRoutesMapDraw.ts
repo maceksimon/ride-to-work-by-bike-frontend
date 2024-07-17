@@ -14,7 +14,7 @@ export const useRoutesMapDraw = () => {
    * Updates current route after drawing on the map.
    * Also saves route coordinates into history.
    * @param feature Feature
-   * @returns {void}
+   * @return {void}
    */
   const updateDrawRoute = (feature: Feature): void => {
     drawRoute.value = feature;
@@ -24,7 +24,7 @@ export const useRoutesMapDraw = () => {
   /**
    * Saves route coordinates into history. To enable "undo" action.
    * @param route Feature
-   * @returns {void}
+   * @return {void}
    */
   const saveRouteToHistory = (route: Feature): void => {
     const geometry = route.getGeometry();
@@ -39,7 +39,7 @@ export const useRoutesMapDraw = () => {
   /**
    * Returns one-before-last element in history.
    * If there is only one element in history, returns null.
-   * @returns {Feature | null}
+   * @return {Feature | null}
    */
   const undoDrawRoute = (): Feature | null => {
     if (drawRouteHistory.value.length === 1) {
