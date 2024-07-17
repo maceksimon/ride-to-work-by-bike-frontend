@@ -36,7 +36,7 @@ export default defineComponent({
   components: {
     FormFieldTextRequired,
   },
-  emits: ['update:voucher'],
+  emits: ['remove:voucher', 'update:voucher'],
   setup(props, { emit }) {
     const code = ref('');
 
@@ -55,10 +55,9 @@ export default defineComponent({
         voucher = voucherHalf;
       }
       if (voucher) {
-        // reset input value
-        code.value = '';
-        // emit voucher data
         emit('update:voucher', voucher);
+      } else {
+        emit('remove:voucher');
       }
     };
 
