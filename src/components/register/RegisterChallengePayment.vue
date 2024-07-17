@@ -32,9 +32,9 @@ import { i18n } from '../../boot/i18n';
 import { useFormatPrice } from '../../composables/useFormatPrice';
 
 // components
-import FormFieldRadioRequired from 'components/form/FormFieldRadioRequired.vue';
-import FormFieldSliderNumber from 'components/form/FormFieldSliderNumber.vue';
-import FormFieldVoucher from 'components/form/FormFieldVoucher.vue';
+import FormFieldRadioRequired from '../form/FormFieldRadioRequired.vue';
+import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
+import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 
 // types
 import type { FormOption, FormPaymentVoucher } from '../types/Form';
@@ -238,7 +238,10 @@ export default defineComponent({
     </div>
     <!-- Input: Voucher -->
     <div v-if="selectedPaymentSubject === 'voucher'">
-      <form-field-voucher @update:voucher="onUpdateVoucher" />
+      <form-field-voucher
+        @update:voucher="onUpdateVoucher"
+        @remove:voucher="onRemoveVoucher"
+      />
     </div>
     <!-- Input: Custom amount -->
     <div v-if="selectedPaymentAmount === 'custom'">
