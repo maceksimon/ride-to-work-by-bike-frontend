@@ -15,7 +15,7 @@ export const useRoutesMapVectorLayer = (
   /**
    * Adds the drawn route on the map.
    * @param pathFeature Feature
-   * @returns {void}
+   * @return {void}
    */
   const addMapRoute = (pathFeature: Feature): void => {
     source.value && source.value.addFeature(pathFeature);
@@ -23,7 +23,7 @@ export const useRoutesMapVectorLayer = (
 
   /**
    * Clears all drawn routes from the map.
-   * @returns {void}
+   * @return {void}
    */
   const clearMapRoutes = (): void => {
     const source = vectorLayer.value?.vectorLayer.getSource();
@@ -34,7 +34,7 @@ export const useRoutesMapVectorLayer = (
    * Renders selected route on the map.
    * First clears all previously drawn routes from the map.
    * @param feature Feature
-   * @returns {void}
+   * @return {void}
    */
   const renderSavedRoute = (feature: Feature): void => {
     clearMapRoutes();
