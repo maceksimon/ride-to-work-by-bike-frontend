@@ -51,8 +51,12 @@ export default defineComponent({
   },
   setup() {
     // constants
-    const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
-    const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
+    const defaultPaymentAmountMax = Number(
+      rideToWorkByBikeConfig.entryFeePaymentMax,
+    );
+    const defaultPaymentAmountMin = Number(
+      rideToWorkByBikeConfig.entryFeePaymentMin,
+    );
 
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');
