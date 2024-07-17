@@ -1,6 +1,16 @@
 import RoutesCalendar from 'components/routes/RoutesCalendar.vue';
 import { i18n } from '../../boot/i18n';
 
+// selectors
+const selectorCalendarItemDisplayFromWork = 'calendar-item-display-from-work';
+const selectorCalendarItemDisplayToWork = 'calendar-item-display-to-work';
+const selectorCalendarItemIconFromWorkActive =
+  'calendar-item-icon-fromwork-active';
+const selectorCalendarItemIconFromWorkEmpty =
+  'calendar-item-icon-fromwork-empty';
+const selectorCalendarItemIconToWorkActive = 'calendar-item-icon-towork-active';
+const selectorCalendarItemIconToWorkEmpty = 'calendar-item-icon-towork-empty';
+
 const dayNames = [
   i18n.global.t('time.mondayShort'),
   i18n.global.t('time.tuesdayShort'),
@@ -66,14 +76,14 @@ function coreTests() {
   it('renders two routes for each past day', () => {
     // check dates in the past
     cy.get('.q-past-day')
-      .find('[data-cy="calendar-item-display-to-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
       .should('be.visible');
     cy.get('.q-past-day')
-      .find('[data-cy="calendar-item-display-from-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayFromWork}"]`)
       .should('be.visible');
     // no routes for future dates
     cy.get('.q-future-day')
-      .find('[data-cy="calendar-item-display-to-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
       .should('not.exist');
   });
 
@@ -86,7 +96,7 @@ function coreTests() {
   it('allows to enable multiple active routes', () => {
     // enable today's "from work" route
     cy.get('.q-current-day')
-      .find('[data-cy="calendar-item-display-from-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayFromWork}"]`)
       .click();
     // both today's routes are active
     checkTodayFromWorkActive();
@@ -94,7 +104,7 @@ function coreTests() {
     // enable a past day's to work route
     cy.get('.q-past-day')
       .first()
-      .find('[data-cy="calendar-item-display-to-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
       .click();
     // from work is active
     checkTodayToWorkActive();
@@ -102,14 +112,14 @@ function coreTests() {
     checkPastDayToWorkActive();
     // disable today's "to work" route
     cy.get('.q-current-day')
-      .find('[data-cy="calendar-item-display-to-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
       .click();
     checkTodayToWorkInactive();
     checkTodayFromWorkActive();
     checkPastDayToWorkActive();
     // disable today's "from work" route
     cy.get('.q-current-day')
-      .find('[data-cy="calendar-item-display-from-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayFromWork}"]`)
       .click();
     checkTodayToWorkInactive();
     checkTodayFromWorkInactive();
@@ -117,7 +127,7 @@ function coreTests() {
     // distable a past day's to work route
     cy.get('.q-past-day')
       .first()
-      .find('[data-cy="calendar-item-display-to-work"]')
+      .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
       .click();
     checkTodayToWorkInactive();
     checkTodayFromWorkInactive();
@@ -127,44 +137,44 @@ function coreTests() {
 
 function checkTodayToWorkActive() {
   cy.get('.q-current-day')
-    .find('[data-cy="calendar-item-display-to-work"]')
-    .find('[data-cy="calendar-item-icon-towork-active"]')
+    .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
+    .find(`[data-cy="${selectorCalendarItemIconToWorkActive}"]`)
     .should('be.visible');
 }
 
 function checkTodayFromWorkActive() {
   cy.get('.q-current-day')
-    .find('[data-cy="calendar-item-display-from-work"]')
-    .find('[data-cy="calendar-item-icon-fromwork-active"]')
+    .find(`[data-cy="${selectorCalendarItemDisplayFromWork}"]`)
+    .find(`[data-cy="${selectorCalendarItemIconFromWorkActive}"]`)
     .should('be.visible');
 }
 
 function checkPastDayToWorkActive() {
   cy.get('.q-past-day')
     .first()
-    .find('[data-cy="calendar-item-display-to-work"]')
-    .find('[data-cy="calendar-item-icon-towork-active"]')
+    .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
+    .find(`[data-cy="${selectorCalendarItemIconToWorkActive}"]`)
     .should('be.visible');
 }
 
 function checkTodayToWorkInactive() {
   cy.get('.q-current-day')
-    .find('[data-cy="calendar-item-display-to-work"]')
-    .find('[data-cy="calendar-item-icon-towork-empty"]')
+    .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
+    .find(`[data-cy="${selectorCalendarItemIconToWorkEmpty}"]`)
     .should('be.visible');
 }
 
 function checkTodayFromWorkInactive() {
   cy.get('.q-current-day')
-    .find('[data-cy="calendar-item-display-from-work"]')
-    .find('[data-cy="calendar-item-icon-fromwork-empty"]')
+    .find(`[data-cy="${selectorCalendarItemDisplayFromWork}"]`)
+    .find(`[data-cy="${selectorCalendarItemIconFromWorkEmpty}"]`)
     .should('be.visible');
 }
 
 function checkPastDayToWorkInactive() {
   cy.get('.q-past-day')
     .first()
-    .find('[data-cy="calendar-item-display-to-work"]')
-    .find('[data-cy="calendar-item-icon-towork-empty"]')
+    .find(`[data-cy="${selectorCalendarItemDisplayToWork}"]`)
+    .find(`[data-cy="${selectorCalendarItemIconToWorkEmpty}"]`)
     .should('be.visible');
 }
