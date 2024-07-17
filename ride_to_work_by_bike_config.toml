@@ -36,3 +36,7 @@ urlVideoOnboarding = "https://www.youtube.com/embed/ItfTtrEutgo?rel=0"
 challengeMonth = "may"
 challengeStartDate = "2024-10-01T12:00:00"
 containerWidth = "752px"
+
+# Challenge registration
+entryFeePaymentMin = "390"
+entryFeePaymentMax = "2000"

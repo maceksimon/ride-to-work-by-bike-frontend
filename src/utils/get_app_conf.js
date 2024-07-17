@@ -62,6 +62,10 @@ const getAppConfig = (process) => {
     config['challengeStartDate'] = process.env.CHALLENGE_START_DATE;
   } else if (process.env.CONTAINER_WIDTH) {
     config['containerWidth'] = process.env.CONTAINER_WIDTH;
+  } else if (process.env.ENTRY_FEE_PAYMENT_MIN) {
+    config['entryFeePaymentMin'] = process.env.ENTRY_FEE_PAYMENT_MIN;
+  } else if (process.env.ENTRY_FEE_PAYMENT_MAX) {
+    config['entryFeePaymentMax'] = process.env.ENTRY_FEE_PAYMENT_MAX;
   }
 
   return config;
