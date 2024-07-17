@@ -36,6 +36,9 @@ import FormFieldRadioRequired from '../form/FormFieldRadioRequired.vue';
 import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
 import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
 import type { FormOption, FormPaymentVoucher } from '../types/Form';
 
@@ -48,8 +51,8 @@ export default defineComponent({
   },
   setup() {
     // constants
-    const PAYMENT_AMOUNT_MIN = 390;
-    const PAYMENT_AMOUNT_MAX = 2000;
+    const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
+    const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
 
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');
@@ -78,8 +81,8 @@ export default defineComponent({
 
     const { formatPriceCurrency } = useFormatPrice();
     const defaultPaymentOption = {
-      label: formatPriceCurrency(PAYMENT_AMOUNT_MIN, 'CZK'),
-      value: String(PAYMENT_AMOUNT_MIN),
+      label: formatPriceCurrency(defaultPaymentAmountMin, 'CZK'),
+      value: String(defaultPaymentAmountMin),
     };
     const optionsPaymentAmount: FormOption[] = reactive([
       defaultPaymentOption,
@@ -97,10 +100,10 @@ export default defineComponent({
       },
     ]);
 
-    const selectedPaymentAmount = ref<string>(String(PAYMENT_AMOUNT_MIN));
-    const selectedPaymentAmountCustom = ref<number>(PAYMENT_AMOUNT_MIN);
-    const paymentAmountMax = ref<number>(PAYMENT_AMOUNT_MAX);
-    const paymentAmountMin = ref<number>(PAYMENT_AMOUNT_MIN);
+    const selectedPaymentAmount = ref<string>(String(defaultPaymentAmountMin));
+    const selectedPaymentAmountCustom = ref<number>(defaultPaymentAmountMin);
+    const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
+    const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
     const selectedPaymentSubject = ref<string>('individual');
     const isEntryFeeFree = ref<boolean>(false);
 
@@ -158,7 +161,7 @@ export default defineComponent({
       isEntryFeeFree.value = false;
       optionsPaymentAmount.shift();
       optionsPaymentAmount.unshift(defaultPaymentOption);
-      paymentAmountMin.value = PAYMENT_AMOUNT_MIN;
+      paymentAmountMin.value = defaultPaymentAmountMin;
     };
 
     return {
