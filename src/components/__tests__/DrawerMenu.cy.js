@@ -42,32 +42,35 @@ describe('DrawerMenu', () => {
     cy.window().then(() => {
       const drawerMenuIcon = 'drawer-menu-icon';
       const drawerBottomMenuIcon = 'drawer-bottom-menu-icon';
+      const drawerMenuIconSize = 18;
 
-      cy.dataCy(drawerMenuIcon).then(() => {
-        cy.dataCy(drawerMenuIcon)
-          .should('be.visible')
-          .each((element, index) => {
-            if (index === 0) cy.get(element).click();
-            cy.testIcon({
-              element: element,
-              name: `${Cypress.currentTest.titlePath}-drawer-menu-${index}`,
-              size: 18,
-              click: false,
+      cy.viewport(500, 500).then(() => {
+        cy.dataCy(drawerMenuIcon).then(() => {
+          cy.dataCy(drawerMenuIcon)
+            .should('be.visible')
+            .each((element, index) => {
+              if (index === 0) cy.get(element).click();
+              cy.testIcon({
+                element: element,
+                name: `${Cypress.currentTest.titlePath}-drawer-menu-${index}`,
+                size: drawerMenuIconSize,
+                click: false,
+              });
             });
-          });
-      });
+        });
 
-      cy.dataCy(drawerBottomMenuIcon).then(() => {
-        cy.dataCy(drawerBottomMenuIcon)
-          .should('be.visible')
-          .each((element, index) => {
-            cy.testIcon({
-              element: element,
-              name: `${Cypress.currentTest.titlePath}-drawer-bottom-menu${index}`,
-              size: 18,
-              click: false,
+        cy.dataCy(drawerBottomMenuIcon).then(() => {
+          cy.dataCy(drawerBottomMenuIcon)
+            .should('be.visible')
+            .each((element, index) => {
+              cy.testIcon({
+                element: element,
+                name: `${Cypress.currentTest.titlePath}-drawer-bottom-menu${index}`,
+                size: drawerMenuIconSize,
+                click: false,
+              });
             });
-          });
+        });
       });
     });
   });
