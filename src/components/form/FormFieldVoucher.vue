@@ -43,6 +43,7 @@ export default defineComponent({
   emits: ['remove:voucher', 'update:voucher'],
   setup(props, { emit }) {
     const code = ref('');
+    const voucher = ref<FormPaymentVoucher | null>(null);
 
     /**
      * Submits voucher data to API
@@ -50,20 +51,19 @@ export default defineComponent({
      * @returns {void}
      */
     const onSubmitVoucher = (): void => {
-      let voucher: FormPaymentVoucher | null = null;
       // TODO: Add API call and remove dummy data
       if (code.value === 'FULL') {
-        voucher = voucherFull;
+        voucher.value = voucherFull;
       }
       if (code.value === 'HALF') {
-        voucher = voucherHalf;
+        voucher.value = voucherHalf;
       }
-      if (voucher) {
+      if (voucher.value) {
         Notify.create({
           type: 'positive',
           message: i18n.global.t('notify.voucherApplySuccess'),
         });
-        emit('update:voucher', voucher);
+        emit('update:voucher', voucher.value);
       } else {
         Notify.create({
           type: 'negative',
@@ -73,8 +73,20 @@ export default defineComponent({
       }
     };
 
+    /**
+     * Resets the code and voucher values and emits a 'remove:voucher' event.
+     * @return {void}
+     */
+    const onRemoveVoucher = (): void => {
+      code.value = '';
+      voucher.value = null;
+      emit('remove:voucher');
+    };
+
     return {
       code,
+      voucher,
+      onRemoveVoucher,
       onSubmitVoucher,
     };
   },
@@ -82,27 +94,63 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row items-center q-col-gutter-md" data-cy="form-field-voucher">
-    <div class="col">
-      <!-- Input: Voucher -->
-      <form-field-text-required
-        v-model="code"
-        name="voucher"
-        :label="$t('form.labelVoucher')"
-        data-cy="form-field-voucher-input"
-      />
-    </div>
-    <div class="col-auto">
-      <!-- Button: Submit -->
-      <q-btn
-        rounded
-        unelevated
-        color="primary"
-        :label="$t('form.buttonVoucherSubmit')"
-        @click="onSubmitVoucher"
-        class="q-mt-sm"
-        data-cy="form-field-voucher-submit"
-      />
+  <div data-cy="form-field-voucher">
+    <q-banner
+      v-if="voucher"
+      inline-actions
+      rounded
+      class="bg-grey-2"
+      data-cy="voucher-banner"
+    >
+      <div class="row q-col-gutter-x-md">
+        <div class="col-12 col-sm text-grey-10" data-cy="voucher-banner-code">
+          {{ $t('form.textVoucher') }}: {{ voucher.code }}
+        </div>
+        <div
+          class="col-12 col-sm-auto text-weight-bold text-primary"
+          data-cy="voucher-banner-name"
+        >
+          {{ voucher.name }}
+        </div>
+      </div>
+      <template v-slot:action>
+        <q-btn
+          dense
+          flat
+          color="primary"
+          icon="mdi-close"
+          size="18px"
+          data-cy="voucher-button-remove"
+          @click.prevent="onRemoveVoucher"
+        />
+      </template>
+    </q-banner>
+    <div
+      v-else
+      class="row items-center q-col-gutter-md"
+      data-cy="voucher-widget"
+    >
+      <div class="col">
+        <!-- Input: Voucher -->
+        <form-field-text-required
+          v-model="code"
+          name="voucher"
+          :label="$t('form.labelVoucher')"
+          data-cy="form-field-voucher-input"
+        />
+      </div>
+      <div class="col-auto">
+        <!-- Button: Submit -->
+        <q-btn
+          rounded
+          unelevated
+          color="primary"
+          :label="$t('form.buttonVoucherSubmit')"
+          @click="onSubmitVoucher"
+          class="q-mt-sm"
+          data-cy="form-field-voucher-submit"
+        />
+      </div>
     </div>
   </div>
 </template>
