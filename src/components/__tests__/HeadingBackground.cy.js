@@ -3,8 +3,23 @@ import { i18n } from '../../boot/i18n';
 
 import HeadingBackground from '../homepage/HeadingBackground.vue';
 
+// composables
 const { getPaletteColor } = colors;
+
+// colors
 const primary = getPaletteColor('primary');
+
+// selectors
+const selectorHeadingBackground = 'heading-background';
+const selectorHeadingBackgroundHighlight = 'heading-background-highlight';
+const selectorHeadingBackgroundImage = 'heading-background-image';
+const selectorHeadingBackgroundTitle = 'heading-background-title';
+const selectorSectionImage = 'section-image';
+const selectorSectionText = 'section-text';
+
+// variables
+const sectionImageWidthMobile = 100;
+const sectionTextWidthMobile = 100;
 
 describe('<HeadingBackground>', () => {
   it('has translation for all strings', () => {
@@ -26,7 +41,7 @@ describe('<HeadingBackground>', () => {
     coreTests();
 
     it('renders sections side-by-side', () => {
-      cy.testElementsSideBySide('section-text', 'section-image');
+      cy.testElementsSideBySide(selectorSectionText, selectorSectionImage);
     });
   });
 
@@ -41,8 +56,14 @@ describe('<HeadingBackground>', () => {
     coreTests();
 
     it('renders sections stacked', () => {
-      cy.testElementPercentageWidth(cy.dataCy('section-text'), 100);
-      cy.testElementPercentageWidth(cy.dataCy('section-image'), 100);
+      cy.testElementPercentageWidth(
+        cy.dataCy(selectorSectionImage),
+        sectionImageWidthMobile,
+      );
+      cy.testElementPercentageWidth(
+        cy.dataCy(selectorSectionText),
+        sectionTextWidthMobile,
+      );
     });
   });
 });
@@ -50,9 +71,9 @@ describe('<HeadingBackground>', () => {
 function coreTests() {
   it('renders component', () => {
     // component
-    cy.dataCy('heading-background').should('be.visible');
+    cy.dataCy(selectorHeadingBackground).should('be.visible');
     // highlight
-    cy.dataCy('heading-background-highlight')
+    cy.dataCy(selectorHeadingBackgroundHighlight)
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '700')
@@ -66,7 +87,7 @@ function coreTests() {
         });
       });
     // title
-    cy.dataCy('heading-background-title')
+    cy.dataCy(selectorHeadingBackgroundTitle)
       .should('be.visible')
       .and('have.css', 'font-size', '40px')
       .and('have.css', 'font-weight', '700')
@@ -80,13 +101,13 @@ function coreTests() {
         });
       });
     // image
-    cy.dataCy('heading-background-image')
+    cy.dataCy(selectorHeadingBackgroundImage)
       .should('be.visible')
       .find('img')
       .invoke('attr', 'alt')
       .should('eq', i18n.global.t('index.headingBackground.imageAltText'));
     // image snapshot
-    cy.dataCy('heading-background-image').then((element) => {
+    cy.dataCy(selectorHeadingBackgroundImage).then((element) => {
       cy.wrap(element).matchImageSnapshot({
         failureThreshold: 0.1,
         failureThresholdType: 'percent',
