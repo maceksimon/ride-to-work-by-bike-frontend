@@ -27,7 +27,7 @@ export const useRoutesMapTooltip = () => {
    * @param {DrawEvent} evt - The draw event object.
    * @return {void} This function does not return anything.
    */
-  const onDrawStartLength = (evt: DrawEvent) => {
+  const onDrawStartLength = (evt: DrawEvent): void => {
     route.value = evt.feature;
     const geom = route.value.getGeometry();
     if (geom instanceof LineString) {
@@ -48,7 +48,7 @@ export const useRoutesMapTooltip = () => {
    * Cleans up the drawn route, unsets the tooltip, and cleans up event listeners.
    * @return {void} This function does not return anything.
    */
-  const onDrawEndLength = () => {
+  const onDrawEndLength = (): void => {
     // remove drawn route
     route.value = null;
     // unset tooltip so that a new one can be created
@@ -58,7 +58,13 @@ export const useRoutesMapTooltip = () => {
     unByKey(listener);
   };
 
-  const formatGeometryLength = (line: LineString) => {
+  /**
+   * Calculates the length of a LineString geometry.
+   * Returns the length in kilometers.
+   * @param {LineString} line - The LineString geometry.
+   * @return {string} The length in kilometers.
+   */
+  const formatGeometryLength = (line: LineString): string => {
     const length = getLength(line);
     return formatLength(length);
   };
