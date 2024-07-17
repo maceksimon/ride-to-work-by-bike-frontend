@@ -13,6 +13,7 @@
  * - `update:modelValue`: Emitted as a part of v-model structure.
  *
  * @components
+ * - `FormFieldDonation`: Component to render donation widget.
  * - `FormFieldRadioRequired`: Component to render radio buttons.
  * - `FormFieldSliderNumber`: Component to render number input with slider.
  * - `FormFieldVoucher`: Component to render voucher widget.
@@ -32,6 +33,7 @@ import { i18n } from '../../boot/i18n';
 import { useFormatPrice } from '../../composables/useFormatPrice';
 
 // components
+import FormFieldDonation from '../form/FormFieldDonation.vue';
 import FormFieldRadioRequired from '../form/FormFieldRadioRequired.vue';
 import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
 import FormFieldVoucher from '../form/FormFieldVoucher.vue';
@@ -45,6 +47,7 @@ import type { FormOption, FormPaymentVoucher } from '../types/Form';
 export default defineComponent({
   name: 'RegisterChallengePayment',
   components: {
+    FormFieldDonation,
     FormFieldRadioRequired,
     FormFieldSliderNumber,
     FormFieldVoucher,
@@ -261,8 +264,12 @@ export default defineComponent({
         @remove:voucher="onRemoveVoucher"
       />
     </div>
+    <!-- Input: Donation -->
+    <div v-if="selectedPaymentSubject === 'voucher' && isEntryFeeFree">
+      <form-field-donation class="q-mt-md" />
+    </div>
     <!-- Input: Custom amount -->
-    <div v-if="selectedPaymentAmount === 'custom'">
+    <div v-if="selectedPaymentAmount === 'custom' && !isEntryFeeFree">
       <form-field-slider-number
         v-model="selectedPaymentAmountCustom"
         :min="paymentAmountMin"
