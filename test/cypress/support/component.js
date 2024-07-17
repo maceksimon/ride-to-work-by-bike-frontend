@@ -35,7 +35,7 @@ import 'quasar/dist/icon-set/fontawesome-v5.umd.prod';
 import '@quasar/extras/fontawesome-v5/fontawesome-v5.css';
 
 import { installQuasarPlugin } from '@quasar/quasar-app-extension-testing-e2e-cypress';
-import { Dialog } from 'quasar';
+import { Dialog, Notify } from 'quasar';
 import VuePlugin from '@quasar/quasar-ui-qcalendar';
 import '@quasar/quasar-ui-qcalendar/dist/QCalendarMonth.css';
 import { createPinia } from 'pinia';
@@ -59,7 +59,7 @@ config.global.mocks = {
 // We do want transitions to show when doing visual testing :)
 config.global.stubs = {};
 
-installQuasarPlugin({ plugins: { Dialog } });
+installQuasarPlugin({ plugins: { Dialog, Notify } });
 
 import VueLogger from 'vuejs3-logger';
 import { register } from 'swiper/element/bundle';

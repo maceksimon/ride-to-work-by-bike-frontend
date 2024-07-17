@@ -422,6 +422,10 @@ buttonFacebook = "Login via Facebook"
 title = "Log your rides from your mobile phone!"
 description = "Download the app and log rides from anywhere."
 
+[notify]
+voucherApplySuccess = "Voucher successfully redeemed"
+voucherApplyError = "Invalid voucher"
+
 [offer]
 titleOfferValidation = "To use it, just show proof of identity on the spot:"
 labelOfferValidationTshirt = "T-shirt or neck warmer"

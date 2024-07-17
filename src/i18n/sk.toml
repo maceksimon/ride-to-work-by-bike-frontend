@@ -422,6 +422,10 @@ buttonFacebook = "Prihlásenie cez Facebook"
 title = "Nahrávajte svoje jazdy z mobilného telefónu!"
 description = "Stiahnite si aplikáciu a prihlasujte jazdy odkiaľkoľvek."
 
+[notify]
+voucherApplySuccess = "Voucher bol úspešne uplatnený"
+voucherApplyError = "Neplatný voucher"
+
 [offer]
 titleOfferValidation = "Chcete-li ji použít, stačí se na místě prokázat dokladem totožnosti:"
 labelOfferValidationTshirt = "Tričko nebo nákrčník"

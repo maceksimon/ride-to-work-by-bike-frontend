@@ -19,10 +19,14 @@
  */
 
 // libraries
+import { Notify } from 'quasar';
 import { defineComponent, ref } from 'vue';
 
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
+
+// composables
+import { i18n } from '../../boot/i18n';
 
 // types
 import type { FormPaymentVoucher } from '../types/Form';
@@ -55,8 +59,16 @@ export default defineComponent({
         voucher = voucherHalf;
       }
       if (voucher) {
+        Notify.create({
+          type: 'positive',
+          message: i18n.global.t('notify.voucherApplySuccess'),
+        });
         emit('update:voucher', voucher);
       } else {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('notify.voucherApplyError'),
+        });
         emit('remove:voucher');
       }
     };
