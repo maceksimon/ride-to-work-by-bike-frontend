@@ -72,18 +72,19 @@ describe('<FormLogin>', () => {
     });
 
     it('renders password show/hide icon', () => {
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('form-login-password-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({ element, name: 'form-login-password', size: 18 });
-            },
-          );
-        });
+      cy.viewport(500, 500).then(() => {
+        cy.dataCy('form-login-password-icon')
+          .should('contain', 'visibility')
+          .and('have.color', `${colorPrimary}`)
+          .then((element) => {
+            cy.testIcon({
+              element: element,
+              name: 'form-login-password',
+              size: 18,
+            });
+          });
       });
-      cy.dataCy('form-login-password-icon')
-        .should('contain', 'visibility')
-        .and('have.color', `${colorPrimary}`);
+
       cy.dataCy('form-login-password-icon')
         .invoke('height')
         .should('be.equal', 18);
@@ -185,16 +186,17 @@ describe('<FormLogin>', () => {
         .should('be.visible')
         .and('have.backgroundColor', 'rgba(255, 255, 255, 0.5)')
         .and('have.css', 'border-radius', '9999px');
-      // icon
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('form-reset-finished-icon', { timeout: 5000 }).then(
-            (element) => {
-              cy.testIcon({ element, name: 'form-login-finished', size: 40 });
-            },
-          );
+      cy.viewport(500, 500).then(() => {
+        // icon
+        cy.dataCy('form-reset-finished-icon').then((element) => {
+          cy.testIcon({
+            element: element,
+            name: 'form-login-finished',
+            size: 40,
+          });
         });
       });
+
       // title
       cy.dataCy('form-reset-finished-title')
         .should('be.visible')

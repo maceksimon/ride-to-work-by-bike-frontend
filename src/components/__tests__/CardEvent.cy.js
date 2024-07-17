@@ -92,14 +92,15 @@ describe('<CardEvent>', () => {
             .and('contain', date)
             .and('contain', year)
             .and('contain', hour);
-          cy.dataCy('card-event-date-icon').then((element) => {
-            cy.testIcon({
-              element: element,
-              name: 'card-event-event',
-              size: iconSize24,
+          cy.dataCy('card-event-date-icon')
+            .should('have.color', blueGrey2)
+            .then((element) => {
+              cy.testIcon({
+                element: element,
+                name: 'card-event-event',
+                size: iconSize24,
+              });
             });
-          });
-          cy.dataCy('card-event-date-icon').should('have.color', blueGrey2);
         });
       });
     });
@@ -112,14 +113,15 @@ describe('<CardEvent>', () => {
             .and('have.css', 'font-size', '14px')
             .and('have.css', 'font-weight', '400')
             .and('contain', cardEvent.location);
-          cy.dataCy('card-event-location-icon').then((element) => {
-            cy.testIcon({
-              element: element,
-              name: 'card-event-location',
-              size: iconSize24,
+          cy.dataCy('card-event-location-icon')
+            .should('have.color', blueGrey2)
+            .then((element) => {
+              cy.testIcon({
+                element: element,
+                name: 'card-event-location',
+                size: iconSize24,
+              });
             });
-          });
-          cy.dataCy('card-event-location-icon').should('have.color', blueGrey2);
         });
       });
     });
@@ -132,21 +134,20 @@ describe('<CardEvent>', () => {
           .and('have.css', 'height', '42px')
           .and('have.css', 'width', '42px');
         // icon
-        cy.dataCy('card-event-calendar-icon').and('have.color', grey10);
-        cy.window().then(() => {
-          /*
-           * Change viewport fix: `The "target" argument must be an instance
-           * of Buffer or Uint8Array. Received null` error
-           */
-          cy.viewport(1280, 800).then(() => {
-            cy.dataCy('card-event-calendar-icon').then((element) => {
+        /*
+         * Change viewport fix: `The "target" argument must be an instance
+         * of Buffer or Uint8Array. Received null` error
+         */
+        cy.viewport(500, 500).then(() => {
+          cy.dataCy('card-event-calendar-icon')
+            .and('have.color', grey10)
+            .then((element) => {
               cy.testIcon({
                 element: element,
                 name: 'card-event-calendar',
                 size: iconSize18,
               });
             });
-          });
         });
       });
     });
@@ -195,25 +196,24 @@ describe('<CardEvent>', () => {
                 cy.wrap($el).should('contain', cardEvent.location);
               }
             });
-          cy.dataCy('dialog-event-date-icon').then((element) => {
-            cy.testIcon({
-              element: element,
-              name: 'card-event-dialog-event',
-              size: iconSize18,
+          cy.dataCy('dialog-event-date-icon')
+            .should('have.color', blueGrey3)
+            .then((element) => {
+              cy.testIcon({
+                element: element,
+                name: 'card-event-dialog-event',
+                size: iconSize18,
+              });
             });
-          });
-          cy.dataCy('dialog-event-date-icon').should('have.color', blueGrey3);
-          cy.dataCy('dialog-event-location-icon').then((element) => {
-            cy.testIcon({
-              element: element,
-              name: 'card-event-dialog-location',
-              size: iconSize18,
+          cy.dataCy('dialog-event-location-icon')
+            .should('have.color', blueGrey3)
+            .then((element) => {
+              cy.testIcon({
+                element: element,
+                name: 'card-event-dialog-location',
+                size: iconSize18,
+              });
             });
-          });
-          cy.dataCy('dialog-event-location-icon').should(
-            'have.color',
-            blueGrey3,
-          );
         });
       });
     });

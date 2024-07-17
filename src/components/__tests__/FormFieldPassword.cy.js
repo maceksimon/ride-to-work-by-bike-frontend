@@ -26,12 +26,7 @@ describe('<FormFieldPassword>', () => {
           component: 'FormFieldPassword',
         },
       });
-      /*
-       * Use defautl viewport size instead of
-       * cy.viewport('macbook-16');
-       * this fix issue with making  input icon
-       * snaphot image
-       */
+      cy.viewport('macbook-16');
     });
 
     it('renders password field', () => {
@@ -52,17 +47,19 @@ describe('<FormFieldPassword>', () => {
         .and('have.css', 'border-radius', '8px');
       // input
       cy.dataCy('form-password-input').should('be.visible');
-      // icon
-      cy.dataCy('form-password-icon')
-        .should('contain', 'visibility')
-        .and('have.color', colorPrimary)
-        .then((element) => {
-          cy.testIcon({
-            element: element,
-            name: 'form-field-password',
-            size: 18,
+      cy.viewport(500, 500).then(() => {
+        // icon
+        cy.dataCy('form-password-icon')
+          .should('contain', 'visibility')
+          .and('have.color', colorPrimary)
+          .then((element) => {
+            cy.testIcon({
+              element: element,
+              name: 'form-field-password',
+              size: 18,
+            });
           });
-        });
+      });
       testPasswordInputReveal({
         identifierPassword: 'form-password',
       });

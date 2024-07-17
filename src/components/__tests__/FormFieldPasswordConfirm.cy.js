@@ -50,20 +50,18 @@ describe('<FormFieldPasswordConfirm>', () => {
         .and('have.css', 'border-radius', '8px');
       // input
       cy.dataCy('form-password-confirm-input').should('be.visible');
-      // icon
-      cy.dataCy('form-password-confirm-icon')
-        .should('contain', 'visibility')
-        .and('have.color', colorPrimary);
-      cy.viewport(1280, 800).then(() => {
-        cy.window().then(() => {
-          cy.dataCy('form-password-confirm-icon').then((element) => {
+      cy.viewport(500, 500).then(() => {
+        // icon
+        cy.dataCy('form-password-confirm-icon')
+          .should('contain', 'visibility')
+          .and('have.color', colorPrimary)
+          .then((element) => {
             cy.testIcon({
-              element,
+              element: element,
               name: 'form-field-password-confirm',
               size: 18,
             });
           });
-        });
       });
     });
 
