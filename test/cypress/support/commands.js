@@ -187,8 +187,8 @@ Cypress.Commands.add(
       cy.dataCy(siblingElementSelector).then((sibling) => {
         const siblingOffsetTop = sibling[0].offsetTop;
         const siblingOffsetHeight = sibling[0].offsetHeight;
-        expect(offsetTop + offsetHeight / 2).to.be.eq(
-          siblingOffsetTop + siblingOffsetHeight / 2,
+        expect(Math.round(offsetTop + offsetHeight / 2)).to.be.eq(
+          Math.round(siblingOffsetTop + siblingOffsetHeight / 2),
         );
       });
     });

@@ -26,17 +26,7 @@ describe('<HeadingBackground>', () => {
     coreTests();
 
     it('renders sections side-by-side', () => {
-      cy.dataCy('section-text').then((element) => {
-        const offsetTop = element[0].offsetTop;
-        const offsetHeight = element[0].offsetHeight;
-        cy.dataCy('section-image').then((sibling) => {
-          const siblingOffsetTop = sibling[0].offsetTop;
-          const siblingOffsetHeight = sibling[0].offsetHeight;
-          expect(Math.round(offsetTop + offsetHeight / 2)).to.be.equal(
-            Math.round(siblingOffsetTop + siblingOffsetHeight / 2),
-          );
-        });
-      });
+      cy.testElementsSideBySide('section-text', 'section-image');
     });
   });
 
