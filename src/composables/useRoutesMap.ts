@@ -174,7 +174,7 @@ export const useRoutesMap = () => {
    * Styling for the drawn routes.
    * Uses function override to create styles for LineString vertices.
    * @param feature FeatureLike
-   * @returns {Style[]}
+   * @return {Style[]}
    */
   const styleFunction: OverrideStyleFunction = (feature: FeatureLike) => {
     const geometry = feature.getGeometry();
