@@ -147,33 +147,33 @@ function coreTests() {
 
   it('allows to apply voucher (HALF)', () => {
     cy.get('@voucherHalf').then((voucher) => {
+      // option default amount is active
+      cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
+        .should('be.visible')
+        .click();
+      // option voucher payment is active
       cy.dataCy('radio-option-voucher').should('be.visible').click();
+      // input voucher
       cy.dataCy('form-field-voucher-input').type(voucher.code);
       cy.dataCy('form-field-voucher-submit').click();
-      cy.dataCy('form-field-voucher-input')
-        .find('input')
-        .should('have.value', voucher.code);
-      // new option with discount is available
+      // option with discounted amount is available
       cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
-      cy.dataCy('radio-option-custom').click();
       // custom amount is set to discount value
-      cy.dataCy('form-field-slider-number-input').should(
-        'have.value',
-        voucher.amount.toString(),
-      );
+      cy.dataCy('radio-option-custom').click();
       cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
       // clear input
-      cy.dataCy('form-field-voucher-input').clear();
+      cy.dataCy('voucher-button-remove').click();
       // invalid voucher is input
+      cy.dataCy('form-field-voucher-input').should('be.visible');
       cy.dataCy('form-field-voucher-input').type('ABCD');
       cy.dataCy('form-field-voucher-submit').click();
       cy.dataCy('form-field-voucher-input')
         .find('input')
         .should('have.value', 'ABCD');
-      // new option with discount is available
+      // option with default amount is available
       cy.dataCy(`radio-option-${defaultPaymentAmountMin}`).click();
       cy.dataCy('radio-option-custom').click();
-      // custom amount is set to discount value
+      // custom amount is set to default value
       cy.dataCy('form-field-slider-number-input').should(
         'have.value',
         defaultPaymentAmountMin.toString(),

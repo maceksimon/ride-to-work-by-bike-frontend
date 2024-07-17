@@ -99,7 +99,7 @@ export default defineComponent({
       v-if="voucher"
       inline-actions
       rounded
-      class="bg-grey-2"
+      class="bg-grey-2 q-my-lg"
       data-cy="voucher-banner"
     >
       <div class="row q-col-gutter-x-md">
