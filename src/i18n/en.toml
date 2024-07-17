@@ -413,6 +413,10 @@ buttonFacebook = "Login via Facebook"
 title = "Log your rides from your mobile phone!"
 description = "Download the app and log rides from anywhere."
 
+[notify]
+geolocationError = "Error in geolocation attempt: {error}"
+geolocationNotSupported = "Your browser does not support geolocation."
+
 [offer]
 titleOfferValidation = "To use it, just show proof of identity on the spot:"
 labelOfferValidationTshirt = "T-shirt or neck warmer"

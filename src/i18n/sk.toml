@@ -413,6 +413,10 @@ buttonFacebook = "Prihlásenie cez Facebook"
 title = "Nahrávajte svoje jazdy z mobilného telefónu!"
 description = "Stiahnite si aplikáciu a prihlasujte jazdy odkiaľkoľvek."
 
+[notify]
+geolocationError = "Chyba pri pokuse o určenie polohy: {error}"
+geolocationNotSupported = "Váš prehliadač nepodporuje geolokáciu."
+
 [offer]
 titleOfferValidation = "Chcete-li ji použít, stačí se na místě prokázat dokladem totožnosti:"
 labelOfferValidationTshirt = "Tričko nebo nákrčník"
