@@ -1,6 +1,9 @@
 import { colors } from 'quasar';
 import RegisterChallengePayment from 'components/register/RegisterChallengePayment.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
+const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
 
 const { getPaletteColor, lighten } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -158,7 +161,9 @@ function coreTests() {
         'have.value',
         voucher.amount.toString(),
       );
-
+      cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
+      // clear input
+      cy.dataCy('form-field-voucher-input').clear();
       // invalid voucher is input
       cy.dataCy('form-field-voucher-input').type('ABCD');
       cy.dataCy('form-field-voucher-submit').click();
@@ -166,12 +171,12 @@ function coreTests() {
         .find('input')
         .should('have.value', 'ABCD');
       // new option with discount is available
-      cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
+      cy.dataCy(`radio-option-${defaultPaymentAmountMin}`).click();
       cy.dataCy('radio-option-custom').click();
       // custom amount is set to discount value
       cy.dataCy('form-field-slider-number-input').should(
         'have.value',
-        voucher.amount.toString(),
+        defaultPaymentAmountMin.toString(),
       );
     });
   });
