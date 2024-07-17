@@ -495,6 +495,12 @@ buttonFacebook = "Login via Facebook"
 title = "Log your rides from your mobile phone!"
 description = "Download the app and log rides from anywhere."
 
+[notify]
+voucherApplySuccess = "Voucher successfully redeemed"
+voucherApplyError = "Invalid voucher"
+geolocationError = "Error in geolocation attempt: {error}"
+geolocationNotSupported = "Your browser does not support geolocation."
+
 [notifications]
 buttonMarkAllAsRead = "Mark all as read"
 buttonNotificationHistory = "Notification history"
@@ -507,10 +513,6 @@ labelTitle = "Notification"
 labelUnread = "Unread"
 labelMarkAllAsRead = "Mark all as read"
 textNoUnreadNotifications = "You have no unread notifications"
-
-[notify]
-voucherApplySuccess = "Voucher successfully redeemed"
-voucherApplyError = "Invalid voucher"
 
 [offer]
 titleOfferValidation = "To use it, just show proof of identity on the spot:"

@@ -498,6 +498,12 @@ buttonFacebook = "Přihlásit přes Facebook"
 title = "Zaznamenávejte si jízdy z mobilu!"
 description = "Stáhněte si appku a zapisujte jízdy odkudkoliv."
 
+[notify]
+voucherApplySuccess = "Voucher byl úspěšně uplatněn"
+voucherApplyError = "Neplatný voucher"
+geolocationError = "Chyba v pokusu o geolokaci: {error}"
+geolocationNotSupported = "Váš prohlížeč nepodporuje geolokaci."
+
 [notifications]
 buttonMarkAllAsRead = "Označit vše jako přečtené"
 buttonNotificationHistory = "Historie notifikací"
@@ -510,10 +516,6 @@ labelTitle = "Notifikace"
 labelUnread = "Nepřečteno"
 labelMarkAllAsRead = "Označit vše jako přečtené"
 textNoUnreadNotifications = "Nemáte žádné nepřečtené notifikace"
-
-[notify]
-voucherApplySuccess = "Voucher byl úspěšně uplatněn"
-voucherApplyError = "Neplatný voucher"
 
 [offer]
 titleOfferValidation = "Pro využití se stačí na místě prokázat:"

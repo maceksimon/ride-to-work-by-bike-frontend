@@ -495,6 +495,12 @@ buttonFacebook = "Prihlásenie cez Facebook"
 title = "Nahrávajte svoje jazdy z mobilného telefónu!"
 description = "Stiahnite si aplikáciu a prihlasujte jazdy odkiaľkoľvek."
 
+[notify]
+voucherApplySuccess = "Voucher bol úspešne uplatnený"
+voucherApplyError = "Neplatný voucher"
+geolocationError = "Chyba pri pokuse o určenie polohy: {error}"
+geolocationNotSupported = "Váš prehliadač nepodporuje geolokáciu."
+
 [notifications]
 buttonMarkAllAsRead = "Označiť všetko ako prečítané"
 buttonNotificationHistory = "História oznámení"
@@ -507,10 +513,6 @@ labelTitle = "Oznámenie"
 labelUnread = "Neprečité"
 labelMarkAllAsRead = "Označiť všetko ako prečítané"
 textNoUnreadNotifications = "Nemáte žiadne neprečítané oznámenia"
-
-[notify]
-voucherApplySuccess = "Voucher bol úspešne uplatnený"
-voucherApplyError = "Neplatný voucher"
 
 [offer]
 titleOfferValidation = "Chcete-li ji použít, stačí se na místě prokázat dokladem totožnosti:"

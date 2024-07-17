@@ -1,5 +1,5 @@
 // libraries
-import { colors } from 'quasar';
+import { colors, Notify } from 'quasar';
 import { onMounted, provide, ref, unref } from 'vue';
 import { Map } from 'vue3-openlayers';
 import { LineString, MultiPoint, Point } from 'ol/geom';
@@ -154,11 +154,17 @@ export const useRoutesMap = () => {
           }
         },
         (error) => {
-          console.error('Geolocation error:', error);
+          Notify.create({
+            type: 'negative',
+            message: i18n.global.t('notify.geolocationError', { error: error }),
+          });
         },
       );
     } else {
-      console.error('Geolocation is not supported by this browser.');
+      Notify.create({
+        type: 'negative',
+        message: i18n.global.t('notify.geolocationNotSupported'),
+      });
     }
   };
 
