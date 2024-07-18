@@ -89,6 +89,7 @@ export default defineComponent({
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
     const { getPaletteColor } = colors;
     const colorWhite = getPaletteColor('white');
+    const colorGrey4 = getPaletteColor('grey-4');
 
     // animation
     const drawEnabled = ref<boolean>(false);
@@ -199,6 +200,7 @@ export default defineComponent({
       borderRadius,
       center,
       colorWhite,
+      colorGrey4,
       deleteEnabled,
       drawEnabled,
       listHeight,
@@ -238,7 +240,7 @@ export default defineComponent({
       :style="{
         borderRadius,
         overflow: 'hidden',
-        border: '1px solid #E0E0E0',
+        border: `1px solid ${colorGrey4}`,
       }"
     >
       <!-- Column: Drawn routes -->
