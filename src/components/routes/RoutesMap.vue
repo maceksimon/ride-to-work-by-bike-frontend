@@ -306,7 +306,7 @@ export default defineComponent({
             <ol-source-osm />
           </ol-tile-layer>
           <!-- Zoom controls -->
-          <ol-zoom-control zoomInLabel="➕" zoomOutLabel="➖" />
+          <ol-zoom-control />
           <ol-zoomslider-control />
           <!-- Layer for the drawn routes -->
           <ol-vector-layer ref="vectorLayer" title="routes">
