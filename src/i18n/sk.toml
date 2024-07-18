@@ -748,6 +748,12 @@ titleTabApp = "Automatické nahrávanie"
 titleAutomaticLogging = "Automatické zadávanie"
 titleManualLogging = "Manuálne zadávanie"
 titleYourRoutes = "Vaše trasy"
+tooltipDrawEnable = "Nová cesta"
+tooltipDrawDisable = "Zrušiť vykresľovanie"
+tooltipDeleteEnable = "Odstrániť body trasy"
+tooltipDeleteDisable = "Zastaviť mazanie"
+tooltipSave = "Uložiť cestu"
+tooltipUndo = "Späť"
 
 [statsBar]
 labelFrequency = "pravidelnosť"
