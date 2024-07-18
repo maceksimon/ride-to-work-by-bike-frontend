@@ -8,6 +8,7 @@ export type RouteItem = {
   distance: number;
   transport: TransportType;
   inputType?: RouteInputType;
+  routeFeature: RouteFeature;
 };
 
 export type TransportType = 'bike' | 'car' | 'walk' | 'bus' | 'none';
@@ -31,9 +32,9 @@ export type RouteCalendarDay = {
 
 export type RouteTab = 'calendar' | 'list' | 'map' | 'app';
 
-export interface FeatureRoute {
+export interface RouteFeature {
   endName: string;
   length: number;
-  route: Feature;
+  feature: Feature;
   startName: string;
 }

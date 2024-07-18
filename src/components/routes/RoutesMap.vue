@@ -42,7 +42,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // types
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
-import type { FeatureRoute } from '../types/Route';
+import type { RouteFeature } from '../types/Route';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -175,13 +175,13 @@ export default defineComponent({
       if (drawRoute.value) {
         const { startName, endName } = await getRouteNames(drawRoute.value);
         const length = getRouteLength(drawRoute.value);
-        const featureRoute: FeatureRoute = {
+        const routeFeature: RouteFeature = {
           endName,
           length,
-          route: drawRoute.value,
+          feature: drawRoute.value,
           startName,
         };
-        saveRoute(featureRoute);
+        saveRoute(routeFeature);
         clearDrawHistory();
         // disable drawing
         drawEnabled.value = false;
@@ -191,12 +191,12 @@ export default defineComponent({
     /**
      * Called when a saved routes list item is clicked.
      * Renders clicked route on the map.
-     * @param featureRoute FeatureRoute
+     * @param routeFeature RouteFeature
      * @return {void}
      */
-    const onSavedRouteClick = (featureRoute: FeatureRoute): void => {
-      renderSavedRoute(featureRoute.route);
-      centerMapOnRoute(featureRoute.route);
+    const onSavedRouteClick = (routeFeature: RouteFeature): void => {
+      renderSavedRoute(routeFeature.feature);
+      centerMapOnRoute(routeFeature.feature);
     };
 
     return {
