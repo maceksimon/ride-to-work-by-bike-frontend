@@ -91,6 +91,7 @@ function coreTests() {
         cy.get('@routeLength').then((routeLength) => {
           const length = element.text().replace(/\D/g, '');
           cy.wrap(parseInt(length)).should('be.lessThan', routeLength);
+          cy.wrap(parseInt(length)).as('shorterRouteLength');
         });
       });
     // new route matches old routes' start and finish name
@@ -141,6 +142,40 @@ function coreTests() {
       .then((element) => {
         cy.get('@finishName').then((finishName) => {
           cy.wrap(element.text()).should('equal', finishName);
+        });
+      });
+    toggleDrawTool();
+    drawFeature();
+    // overwrite route with a different shorter route
+    cy.dataCy(selectorRoutesMapMap).click(routePoint2[0], routePoint2[1]);
+    cy.dataCy(selectorRoutesMapMap).dblclick(routePoint3[0], routePoint3[1]);
+    saveRoute();
+    // has shorter route, since it is a straight line
+    cy.dataCy(`${selectorRouteListItem}-3`)
+      .find(`[data-cy="${selectorRouteItemLength}"]`)
+      .should('be.visible')
+      .then((element) => {
+        cy.get('@shorterRouteLength').then((routeLength) => {
+          const length = element.text().replace(/\D/g, '');
+          // length is shorter because it is only the middle part of the line
+          cy.wrap(parseInt(length)).should('be.lessThan', routeLength);
+        });
+      });
+    // new route does not match old routes' start and finish name
+    cy.dataCy(`${selectorRouteListItem}-3`)
+      .find(`[data-cy="${selectorRouteItemNameStart}"]`)
+      .should('be.visible')
+      .then((element) => {
+        cy.get('@startName').then((startName) => {
+          cy.wrap(element.text()).should('not.equal', startName);
+        });
+      });
+    cy.dataCy(`${selectorRouteListItem}-3`)
+      .find(`[data-cy="${selectorRouteItemNameFinish}"]`)
+      .should('be.visible')
+      .then((element) => {
+        cy.get('@finishName').then((finishName) => {
+          cy.wrap(element.text()).should('not.equal', finishName);
         });
       });
   });
