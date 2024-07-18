@@ -30,6 +30,7 @@ export type RouteItem = {
   distance: string;
   transport: TransportType;
   inputType?: RouteInputType;
+  routeFeature: RouteFeature;
 };
 
 export type RouteInputType = 'input-number' | 'input-map';
@@ -52,9 +53,9 @@ export type RouteLogData = {
   transportType: TransportType;
 };
 
-export interface FeatureRoute {
+export interface RouteFeature {
   endName: string;
   length: number;
-  route: Feature;
+  feature: Feature;
   startName: string;
 }
