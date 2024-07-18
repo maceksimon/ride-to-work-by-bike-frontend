@@ -80,6 +80,14 @@ export default defineComponent({
           @click.prevent="$emit('update:draw-enabled', !drawEnabled)"
           data-cy="add-route-button"
         >
+          <q-tooltip :delay="300" class="text-body2">
+            <span v-if="!drawEnabled">{{
+              $t('routes.tooltipDrawEnable')
+            }}</span>
+            <span v-if="drawEnabled">{{
+              $t('routes.tooltipDrawDisable')
+            }}</span>
+          </q-tooltip>
           <q-avatar
             :size="avatarSize"
             class="q-pa-none q-ma-none"
@@ -107,6 +115,14 @@ export default defineComponent({
           @click.prevent="$emit('update:delete-enabled', !deleteEnabled)"
           data-cy="delete-route-button"
         >
+          <q-tooltip :delay="300" class="text-body2">
+            <span v-if="!deleteEnabled">{{
+              $t('routes.tooltipDeleteEnable')
+            }}</span>
+            <span v-if="deleteEnabled">{{
+              $t('routes.tooltipDeleteDisable')
+            }}</span>
+          </q-tooltip>
           <q-avatar
             :size="avatarSize"
             class="q-pa-none q-ma-none"
@@ -134,6 +150,9 @@ export default defineComponent({
           @click.prevent="$emit('undo')"
           data-cy="undo-button"
         >
+          <q-tooltip :delay="300" class="text-body2">
+            {{ $t('routes.tooltipUndo') }}
+          </q-tooltip>
           <q-avatar
             :size="avatarSize"
             class="q-pa-none q-ma-none"
@@ -161,6 +180,9 @@ export default defineComponent({
           @click.prevent="$emit('save:route')"
           data-cy="save-route-button"
         >
+          <q-tooltip :delay="300" class="text-body2">
+            {{ $t('routes.tooltipSave') }}
+          </q-tooltip>
           <q-avatar
             :size="avatarSize"
             class="q-pa-none q-ma-none"

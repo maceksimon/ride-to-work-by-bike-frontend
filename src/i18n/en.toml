@@ -662,6 +662,12 @@ titleTabApp = "Automatic logging"
 titleAutomaticLogging = "Automatic logging"
 titleManualLogging = "Manual logging"
 titleYourRoutes = "Your routes"
+tooltipDrawEnable = "New path"
+tooltipDrawDisable = "Quit drawing"
+tooltipDeleteEnable = "Delete points"
+tooltipDeleteDisable = "Quit deleting"
+tooltipSave = "Save path"
+tooltipUndo = "Undo"
 
 [table]
 textEmptyTable = "No results. Try changing the filter settings."
