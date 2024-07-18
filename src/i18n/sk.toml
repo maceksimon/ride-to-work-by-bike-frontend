@@ -745,6 +745,9 @@ titleBottomPanelNoRoutes = "Žiadne vybrané trasy"
 titleManualLogging = "Manuálne zadávanie"
 titleRoutes = "Cesty"
 titleTabApp = "Automatické nahrávanie"
+titleAutomaticLogging = "Automatické zadávanie"
+titleManualLogging = "Manuálne zadávanie"
+titleYourRoutes = "Vaše trasy"
 
 [statsBar]
 labelFrequency = "pravidelnosť"
