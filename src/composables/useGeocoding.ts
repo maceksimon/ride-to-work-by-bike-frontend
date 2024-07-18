@@ -1,3 +1,6 @@
+// libraries
+import { LineString } from 'ol/geom';
+
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
@@ -16,16 +19,24 @@ export const useGeocoding = () => {
     feature: Feature,
   ): Promise<{ startName: string; endName: string }> => {
     // get coordinates from pathFeature
-    const coordinates = feature.getGeometry()?.getCoordinates();
-    const startCoordinates = coordinates[0];
-    const endCoordinates = coordinates[coordinates.length - 1];
-    const startName = await getLocationName(startCoordinates);
-    const endName = await getLocationName(endCoordinates);
-    // assign names
-    return {
-      startName: startName,
-      endName: endName,
-    };
+    const geometry = feature.getGeometry();
+    if (geometry instanceof LineString) {
+      const coordinates = geometry.getCoordinates();
+      const startCoordinates = coordinates[0];
+      const endCoordinates = coordinates[coordinates.length - 1];
+      const startName = await getLocationName(startCoordinates);
+      const endName = await getLocationName(endCoordinates);
+      // assign names
+      return {
+        startName: startName,
+        endName: endName,
+      };
+    } else {
+      return {
+        startName: '',
+        endName: '',
+      };
+    }
   };
 
   /**
