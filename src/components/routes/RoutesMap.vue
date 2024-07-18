@@ -52,7 +52,7 @@ export default defineComponent({
     OlOverlay: Map.OlOverlay,
     OlTileLayer: Layers.OlTileLayer,
     OlVectorLayer: Layers.OlVectorLayer,
-    OlSourceOsm: Sources.OlSourceOsm,
+    // OlSourceOsm: Sources.OlSourceOsm,
     OlSourceVector: Sources.OlSourceVector,
     OlStyle: Styles.OlStyle,
     OlInteractionModify: Interactions.OlInteractionModify,
@@ -60,6 +60,7 @@ export default defineComponent({
     OlInteractionSnap: Interactions.OlInteractionSnap,
     OlZoomControl: MapControls.OlZoomControl,
     OlZoomsliderControl: MapControls.OlZoomsliderControl,
+    OlSourceXyz: Sources.OlSourceXyz,
     RoutesMapToolbar,
   },
   setup() {
@@ -70,6 +71,7 @@ export default defineComponent({
       zoom,
       projection,
       savedRoutes,
+      source,
       centerMapOnRoute,
       centerOnCurrentLocation,
       getRouteLength,
@@ -224,6 +226,7 @@ export default defineComponent({
       onSavedRouteClick,
       onUndo,
       renderSavedRoute,
+      source,
       styleFunction,
       toggleDrawEnabled,
     };
@@ -309,7 +312,8 @@ export default defineComponent({
           />
           <!-- Layer for OpenStreetMap tiles -->
           <ol-tile-layer>
-            <ol-source-osm />
+            <!-- <ol-source-osm /> -->
+            <ol-source-xyz :url="source" />
           </ol-tile-layer>
           <!-- Zoom controls -->
           <ol-zoom-control />
