@@ -8,7 +8,8 @@ import type { Coordinate } from 'ol/coordinate';
 
 export const useRoutesMapDraw = () => {
   const drawRoute = ref<Feature>();
-  const drawRouteHistory = ref<Coordinate[]>([]);
+  // each route is saved as an array of coordinates
+  const drawRouteHistory = ref<Coordinate[][]>([]);
 
   /**
    * Updates current route after drawing on the map.
@@ -28,7 +29,7 @@ export const useRoutesMapDraw = () => {
    */
   const saveRouteToHistory = (route: Feature): void => {
     const geometry = route.getGeometry();
-    if (geometry) {
+    if (geometry instanceof LineString) {
       const coordinates = geometry.getCoordinates();
       if (coordinates) {
         drawRouteHistory.value.push(coordinates);
