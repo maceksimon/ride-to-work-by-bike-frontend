@@ -149,7 +149,11 @@ export default defineComponent({
      */
     const toggleDrawEnabled = (): void => {
       drawEnabled.value = !drawEnabled.value;
+      if (!drawEnabled.value) {
+        deleteEnabled.value = false;
+      }
       clearMapRoutes();
+      clearDrawHistory();
     };
 
     /**
@@ -185,6 +189,7 @@ export default defineComponent({
         clearDrawHistory();
         // disable drawing
         drawEnabled.value = false;
+        deleteEnabled.value = false;
       }
     };
 
@@ -250,9 +255,12 @@ export default defineComponent({
       <div class="col-12 col-sm-2">
         <q-scroll-area :style="{ height: listHeight }">
           <!-- List: Drawn routes -->
-          <q-list separator>
+          <q-list separator data-cy="routes-list">
             <!-- List header -->
-            <q-item class="bg-primary text-white text-weight-bold text-center">
+            <q-item
+              class="bg-primary text-white text-weight-bold text-center"
+              data-cy="routes-list-header"
+            >
               <q-item-section class="text-subtitle2 text-uppercase">
                 {{ $t('routes.titleYourRoutes') }}
               </q-item-section>
@@ -264,14 +272,23 @@ export default defineComponent({
               v-for="(route, index) in savedRoutes"
               :key="`route-${index}`"
               @click="onSavedRouteClick(route)"
+              :data-cy="`route-list-item-${index}`"
             >
               <q-item-section v-if="route['startName'] && route['endName']">
                 <div>
-                  <span>{{ route['startName'] }}</span>
-                  <q-icon name="sym_s_arrow_right_alt" class="q-px-xs" />
-                  <span>{{ route['endName'] }}</span>
+                  <span data-cy="route-item-name-start">{{
+                    route['startName']
+                  }}</span>
+                  <q-icon
+                    name="sym_s_arrow_right_alt"
+                    class="q-px-xs"
+                    data-cy="route-item-name-icon"
+                  />
+                  <span data-cy="route-item-name-finish">{{
+                    route['endName']
+                  }}</span>
                 </div>
-                <div v-if="route['length']">
+                <div v-if="route['length']" data-cy="route-item-length">
                   <small>
                     {{ getRouteLengthLabel(route) }}
                   </small>
