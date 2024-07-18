@@ -557,6 +557,7 @@ titleRoutes = "Routes"
 titleTabApp = "Automatic logging"
 titleAutomaticLogging = "Automatic logging"
 titleManualLogging = "Manual logging"
+titleYourRoutes = "Your routes"
 
 [table]
 textEmptyTable = "No results. Try changing the filter settings."

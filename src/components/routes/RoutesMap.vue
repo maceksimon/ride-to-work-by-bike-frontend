@@ -248,9 +248,9 @@ export default defineComponent({
           <q-list separator>
             <!-- List header -->
             <q-item class="bg-primary text-white text-weight-bold text-center">
-              <q-item-section class="text-subtitle2 text-uppercase"
-                >Vaše trasy</q-item-section
-              >
+              <q-item-section class="text-subtitle2 text-uppercase">
+                {{ $t('routes.titleYourRoutes') }}
+              </q-item-section>
             </q-item>
             <!-- Item: Drawn route -->
             <q-item
@@ -261,7 +261,11 @@ export default defineComponent({
               @click="onSavedRouteClick(route)"
             >
               <q-item-section v-if="route['startName'] && route['endName']">
-                <div>{{ `${route['startName']} → ${route['endName']}` }}</div>
+                <div>
+                  <span>{{ route['startName'] }}</span>
+                  <q-icon name="sym_s_arrow_right_alt" class="q-px-xs" />
+                  <span>{{ route['endName'] }}</span>
+                </div>
                 <div v-if="route['length']">
                   <small>
                     {{ getRouteLengthLabel(route) }}

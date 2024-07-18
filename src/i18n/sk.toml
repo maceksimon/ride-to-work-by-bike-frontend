@@ -557,6 +557,7 @@ titleRoutes = "Cesty"
 titleTabApp = "Automatické nahrávanie"
 titleAutomaticLogging = "Automatické zadávanie"
 titleManualLogging = "Manuálne zadávanie"
+titleYourRoutes = "Vaše trasy"
 
 [table]
 textEmptyTable = "Žiadne výsledky. Skúste zmeniť nastavenia filtra."
