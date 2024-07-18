@@ -32,4 +32,5 @@ export interface ConfigGlobal {
   mapCenterLon: string;
   mapCenterLat: string;
   mapZoom: string;
+  mapGeocodingApiUrl: string;
 }
