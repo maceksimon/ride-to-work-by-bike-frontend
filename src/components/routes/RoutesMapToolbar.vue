@@ -41,6 +41,15 @@ export default defineComponent({
       default: false,
     },
   },
+  setup() {
+    const avatarSize = '32px';
+    const iconSize = '18px';
+
+    return {
+      avatarSize,
+      iconSize,
+    };
+  },
 });
 </script>
 
@@ -72,7 +81,7 @@ export default defineComponent({
           data-cy="add-route-button"
         >
           <q-avatar
-            size="32px"
+            :size="avatarSize"
             class="q-pa-none q-ma-none"
             :color="drawEnabled ? 'primary' : 'grey-3'"
             data-cy="add-route-avatar"
@@ -81,7 +90,7 @@ export default defineComponent({
             <q-icon
               name="mdi-pencil-plus"
               :color="drawEnabled ? 'white' : 'primary'"
-              size="18px"
+              :size="iconSize"
               data-cy="add-route-icon"
             />
           </q-avatar>
@@ -99,7 +108,7 @@ export default defineComponent({
           data-cy="delete-route-button"
         >
           <q-avatar
-            size="32px"
+            :size="avatarSize"
             class="q-pa-none q-ma-none"
             :color="deleteEnabled ? 'primary' : 'grey-3'"
             data-cy="delete-route-avatar"
@@ -108,7 +117,7 @@ export default defineComponent({
             <q-icon
               name="mdi-pencil-remove"
               :color="deleteEnabled ? 'white' : 'primary'"
-              size="18px"
+              :size="iconSize"
               data-cy="delete-route-icon"
             />
           </q-avatar>
@@ -126,7 +135,7 @@ export default defineComponent({
           data-cy="undo-button"
         >
           <q-avatar
-            size="32px"
+            :size="avatarSize"
             class="q-pa-none q-ma-none"
             color="grey-3"
             data-cy="undo-avatar"
@@ -135,7 +144,7 @@ export default defineComponent({
             <q-icon
               name="mdi-undo"
               color="primary"
-              size="18px"
+              :size="iconSize"
               data-cy="undo-icon"
             />
           </q-avatar>
@@ -153,7 +162,7 @@ export default defineComponent({
           data-cy="save-route-button"
         >
           <q-avatar
-            size="32px"
+            :size="avatarSize"
             class="q-pa-none q-ma-none"
             color="grey-3"
             data-cy="save-route-avatar"
@@ -162,7 +171,7 @@ export default defineComponent({
             <q-icon
               name="mdi-check"
               color="primary"
-              size="18px"
+              :size="iconSize"
               data-cy="save-route-icon"
             />
           </q-avatar>
@@ -190,7 +199,7 @@ export default defineComponent({
         data-cy="current-position-button"
       >
         <q-avatar
-          size="32px"
+          :size="avatarSize"
           class="q-pa-none q-ma-none"
           color="white"
           data-cy="current-position-avatar"
@@ -199,7 +208,7 @@ export default defineComponent({
           <q-icon
             name="sym_s_my_location"
             color="primary"
-            size="18px"
+            :size="iconSize"
             data-cy="current-position-icon"
           />
         </q-avatar>

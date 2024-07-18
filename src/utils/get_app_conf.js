@@ -107,6 +107,8 @@ const getAppConfig = (process) => {
     config['mapCenterLat'] = process.env.MAP_CENTER_LAT;
   } else if (process.env.MAP_ZOOM) {
     config['mapZoom'] = process.env.MAP_ZOOM;
+  } else if (process.env.MAP_GEOCODING_API_URL) {
+    config['mapGeocodingApiUrl'] = process.env.MAP_GEOCODING_API_URL;
   }
 
   return config;
