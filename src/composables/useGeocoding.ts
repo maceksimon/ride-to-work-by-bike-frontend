@@ -1,3 +1,6 @@
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
 // types
 import type { Feature } from 'ol';
 
@@ -34,10 +37,9 @@ export const useGeocoding = () => {
    */
   const getLocationName = async (coord: number[]): Promise<string> => {
     const [lon, lat] = coord;
+    const apiUrl = rideToWorkByBikeConfig.mapGeocodingApiUrl;
     // TODO: update fetch method (if we will use it)
-    const response = await fetch(
-      `https://nominatim.openstreetmap.org/reverse?format=json&lon=${lon}&lat=${lat}`,
-    );
+    const response = await fetch(`${apiUrl}?format=json&lon=${lon}&lat=${lat}`);
     const data = await response.json();
     if (data.address?.road) {
       return data.address.road;
