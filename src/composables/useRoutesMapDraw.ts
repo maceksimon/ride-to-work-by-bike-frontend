@@ -63,9 +63,18 @@ export const useRoutesMapDraw = () => {
     return null;
   };
 
+  /**
+   * Clears the draw route history.
+   * @return {void}
+   */
+  const clearDrawHistory = (): void => {
+    drawRouteHistory.value = [];
+  };
+
   return {
     drawRoute,
     drawRouteHistory,
+    clearDrawHistory,
     updateDrawRoute,
     undoDrawRoute,
   };

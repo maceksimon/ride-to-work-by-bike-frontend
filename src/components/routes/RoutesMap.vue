@@ -101,7 +101,8 @@ export default defineComponent({
     // geocoding
     const { getRouteNames } = useGeocoding();
     // draw
-    const { drawRoute, updateDrawRoute, undoDrawRoute } = useRoutesMapDraw();
+    const { drawRoute, clearDrawHistory, updateDrawRoute, undoDrawRoute } =
+      useRoutesMapDraw();
     // tooltip
     const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
       useRoutesMapTooltip();
@@ -181,6 +182,7 @@ export default defineComponent({
           startName,
         };
         saveRoute(featureRoute);
+        clearDrawHistory();
         // disable drawing
         drawEnabled.value = false;
       }
@@ -210,12 +212,11 @@ export default defineComponent({
       mapRef,
       projection,
       savedRoutes,
-      vectorLayer,
-      zoom,
-
+      source,
       tooltipCoord,
       tooltipText,
-
+      vectorLayer,
+      zoom,
       addMapRoute,
       centerOnCurrentLocation,
       getRouteLengthLabel,
@@ -226,7 +227,6 @@ export default defineComponent({
       onSavedRouteClick,
       onUndo,
       renderSavedRoute,
-      source,
       styleFunction,
       toggleDrawEnabled,
     };
