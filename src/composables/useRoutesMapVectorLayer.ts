@@ -14,11 +14,11 @@ export const useRoutesMapVectorLayer = (
 
   /**
    * Adds the drawn route on the map.
-   * @param pathFeature Feature
+   * @param feature Feature
    * @return {void}
    */
-  const addMapRoute = (pathFeature: Feature): void => {
-    source.value && source.value.addFeature(pathFeature);
+  const addMapRoute = (feature: Feature): void => {
+    source.value && source.value.addFeature(feature);
   };
 
   /**

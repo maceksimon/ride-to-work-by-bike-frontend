@@ -19,7 +19,7 @@ import type { Coordinate } from 'ol/coordinate';
 import type { Extent } from 'ol/extent';
 import type { Feature } from 'ol';
 import type { OverrideStyleFunction } from 'vue3-openlayers/dist/components/styles';
-import type { FeatureRoute } from '../components/types/Route';
+import type { RouteFeature } from '../components/types/Route';
 import type { FeatureLike } from 'ol/Feature';
 
 const { getPaletteColor } = colors;
@@ -49,24 +49,24 @@ export const useRoutesMap = () => {
   const customSVGIconsFilePath = 'icons/routes_map';
 
   // list of saved routes
-  const savedRoutes = ref<FeatureRoute[]>([]);
+  const savedRoutes = ref<RouteFeature[]>([]);
 
   /**
    * Saves a route to the list of saved routes.
-   * @param {FeatureRoute} route - The route to be saved.
+   * @param {RouteFeature} routeFeature - The route to be saved.
    * @return {void}
    */
-  const saveRoute = (route: FeatureRoute): void => {
-    savedRoutes.value.push(route);
+  const saveRoute = (routeFeature: RouteFeature): void => {
+    savedRoutes.value.push(routeFeature);
   };
 
   /**
    * Centers the map on the given route.
-   * @param {FeatureRoute} featureRoute - The route to center the map on.
+   * @param {Feature} feature - The feature to center the map on.
    * @return {void}
    */
-  const centerMapOnRoute = (route: Feature): void => {
-    const extent = getRouteExtent(route);
+  const centerMapOnRoute = (feature: Feature): void => {
+    const extent = getRouteExtent(feature);
     if (extent) {
       centerMapOnExtent(extent);
     }
@@ -75,11 +75,11 @@ export const useRoutesMap = () => {
   /**
    * Get the extent of a route.
    * If route is not a Feature, returns null.
-   * @param {Feature | Ref<Feature>} route - The LineString route.
-   * @return {Extent | null} The extent of the route.
+   * @param {Feature | Ref<Feature>} feature - The LineString feature.
+   * @return {Extent | null} The extent of the feature.
    */
-  const getRouteExtent = (route: Feature | Ref<Feature>): Extent | null => {
-    const geometry = unref(route).getGeometry();
+  const getRouteExtent = (feature: Feature | Ref<Feature>): Extent | null => {
+    const geometry = unref(feature).getGeometry();
     return geometry ? geometry.getExtent() : null;
   };
 
@@ -102,11 +102,11 @@ export const useRoutesMap = () => {
 
   /**
    * Get the length of a route based on the geometry.
-   * @param {Feature | Ref<Feature>} route - The LineString route.
-   * @return {number} The length of the route.
+   * @param {Feature | Ref<Feature>} feature - The LineString feature.
+   * @return {number} The length of the feature.
    */
-  const getRouteLength = (route: Feature | Ref<Feature>): number => {
-    const geom = unref(route).getGeometry();
+  const getRouteLength = (feature: Feature | Ref<Feature>): number => {
+    const geom = unref(feature).getGeometry();
     if (geom instanceof LineString) {
       return getLength(geom);
     }
@@ -115,11 +115,11 @@ export const useRoutesMap = () => {
 
   /**
    * Get length of route in kilometers.
-   * @param {FeatureRoute} featureRoute - The route to calculate the length for.
+   * @param {RouteFeature} routeFeature - The route to calculate the length for.
    * @return {string} Length of the route in kilometers.
    */
-  const getRouteLengthLabel = (featureRoute: FeatureRoute): string => {
-    const length = getRouteLength(featureRoute.route);
+  const getRouteLengthLabel = (routeFeature: RouteFeature): string => {
+    const length = getRouteLength(routeFeature.feature);
     return formatLength(length);
   };
 

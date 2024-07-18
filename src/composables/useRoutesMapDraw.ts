@@ -27,8 +27,8 @@ export const useRoutesMapDraw = () => {
    * @param route Feature
    * @return {void}
    */
-  const saveRouteToHistory = (route: Feature): void => {
-    const geometry = route.getGeometry();
+  const saveRouteToHistory = (feature: Feature): void => {
+    const geometry = feature.getGeometry();
     if (geometry instanceof LineString) {
       const coordinates = geometry.getCoordinates();
       if (coordinates) {
