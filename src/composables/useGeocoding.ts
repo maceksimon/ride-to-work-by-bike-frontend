@@ -1,8 +1,11 @@
 // libraries
 import { LineString } from 'ol/geom';
 
+// composables
+import { i18n } from '../boot/i18n';
+
 // config
-import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 // types
 import type { Feature } from 'ol';
@@ -11,7 +14,7 @@ export const useGeocoding = () => {
   /**
    * For a given feature (LineString drawn on the map), fetches the
    * name of the start and end point.
-   *
+   * If name not available, returns default labels.
    * @param feature Feature
    * @return Promise<void>
    */
@@ -32,9 +35,10 @@ export const useGeocoding = () => {
         endName: endName,
       };
     } else {
+      // default labels for start and finish
       return {
-        startName: '',
-        endName: '',
+        startName: i18n.global.t('routes.labelStart'),
+        endName: i18n.global.t('routes.labelFinish'),
       };
     }
   };
