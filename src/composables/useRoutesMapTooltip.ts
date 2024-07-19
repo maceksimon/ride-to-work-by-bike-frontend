@@ -26,6 +26,11 @@ export const useRoutesMapTooltip = (selectedRoutes: RouteItem[]) => {
 
   const { formatLength } = useRoutesMap();
 
+  /**
+   * Generates the content of the tooltip.
+   * Displays date of the first route being logged + count of all routes.
+   * Displays current route length
+   */
   const tooltipText = computed((): string => {
     const textMoreRoutes = moreRoutesCount
       ? ` (+${moreRoutesCount} ${i18n.global.tc('global.routes', moreRoutesCount)})`
