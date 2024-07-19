@@ -35,6 +35,6 @@ export type RouteTab = 'calendar' | 'list' | 'map' | 'app';
 export interface RouteFeature {
   endName: string;
   length: number;
-  feature: Feature;
+  feature: Feature | null;
   startName: string;
 }
