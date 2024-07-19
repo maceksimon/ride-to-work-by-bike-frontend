@@ -30,7 +30,7 @@ export type RouteItem = {
   distance: string;
   transport: TransportType;
   inputType?: RouteInputType;
-  routeFeature: RouteFeature;
+  routeFeature: RouteFeature | null;
 };
 
 export type RouteInputType = 'input-number' | 'input-map';

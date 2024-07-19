@@ -24,7 +24,12 @@ const routePoint4 = [600, 200];
 
 describe('<RoutesMap>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext(['titleYourRoutes'], 'routes', i18n);
+    cy.testLanguageStringsInContext(
+      ['titleYourRoutes', 'tooltipDrawing', 'tooltipRouteLength'],
+      'routes',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(['routes'], 'global', i18n);
   });
 
   context('desktop', () => {
