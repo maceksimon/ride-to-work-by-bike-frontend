@@ -27,39 +27,6 @@ export const useRoutesMapStorage = () => {
     return JSON.stringify(coords1) === JSON.stringify(coords2);
   };
 
-  // function groupRouteItemsByFeature(routeItems: RouteItem[]): Map<RouteFeature, RouteItem[]> {
-  //   const groups = new Map<RouteFeature, RouteItem[]>();
-
-  //   routeItems.forEach((item) => {
-  //     let foundGroup = false;
-
-  //     for (const [feature, group] of groups) {
-  //       if (
-  //         item.routeFeature !== null &&
-  //         item.routeFeature.feature !== null &&
-  //         feature.feature !== null &&
-  //         compareFeatures(item.routeFeature.feature, feature.feature)
-  //       ) {
-  //         group.push(item);
-  //         foundGroup = true;
-  //         break;
-  //       }
-  //     }
-
-  //     if (!foundGroup) {
-  //       if (item.routeFeature !== null) {
-  //         groups.set(item.routeFeature, [item]);
-  //       }
-  //     }
-  //   });
-
-  //   return groups;
-  // }
-
-  // const savedRoutesGrouped = computed((): Map<RouteFeature, RouteItem[]> => {
-  //   return groupRouteItemsByFeature(savedRoutes.value as RouteItem[]);
-  // });
-
   /**
    * Saves a route to the list of saved routes.
    * @param {RouteItem[]} routes - The route to be saved.
@@ -67,19 +34,28 @@ export const useRoutesMapStorage = () => {
    */
   const saveRoutes = (routes: RouteItem[]): void => {
     routes.forEach((route) => {
+      const index = findSavedRouteIndex(route);
       // if route is already in the list, update it
-      const index = savedRoutes.value.findIndex((savedRoute) => {
-        return (
-          savedRoute.date === route.date &&
-          savedRoute.direction === route.direction
-        );
-      });
       if (index !== -1) {
         savedRoutes.value[index] = route;
-        return;
+      } else {
+        // add new route
+        savedRoutes.value.push(route);
       }
-      // else, add new route
-      savedRoutes.value.push(route);
+    });
+  };
+
+  /**
+   * Return index of the given route in the list of saved routes.
+   * @param {RouteItem} route - Searched route.
+   * @return {number} Index of the route.
+   */
+  const findSavedRouteIndex = (route: RouteItem): number => {
+    return savedRoutes.value.findIndex((savedRoute) => {
+      return (
+        savedRoute.date === route.date &&
+        savedRoute.direction === route.direction
+      );
     });
   };
 
