@@ -67,6 +67,18 @@ export const useRoutesMapStorage = () => {
    */
   const saveRoutes = (routes: RouteItem[]): void => {
     routes.forEach((route) => {
+      // if route is already in the list, update it
+      const index = savedRoutes.value.findIndex((savedRoute) => {
+        return (
+          savedRoute.date === route.date &&
+          savedRoute.direction === route.direction
+        );
+      });
+      if (index !== -1) {
+        savedRoutes.value[index] = route;
+        return;
+      }
+      // else, add new route
       savedRoutes.value.push(route);
     });
   };
