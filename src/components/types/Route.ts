@@ -8,7 +8,7 @@ export type RouteItem = {
   distance: number;
   transport: TransportType;
   inputType?: RouteInputType;
-  routeFeature: RouteFeature;
+  routeFeature: RouteFeature | null;
 };
 
 export type TransportType = 'bike' | 'car' | 'walk' | 'bus' | 'none';

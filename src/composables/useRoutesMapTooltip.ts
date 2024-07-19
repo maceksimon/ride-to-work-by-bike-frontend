@@ -1,26 +1,44 @@
 // libraries
-import { ref } from 'vue';
+import { date } from 'quasar';
+import { computed, ref } from 'vue';
 import { getLength } from 'ol/sphere';
 import { LineString } from 'ol/geom';
 import { unByKey } from 'ol/Observable';
 
 // composables
 import { useRoutesMap } from './useRoutesMap';
+import { i18n } from '../boot/i18n';
 
 // types
 import type { Coordinate } from 'ol/coordinate';
 import type { EventsKey } from 'ol/events';
 import type { Feature } from 'ol';
 import type { DrawEvent } from 'ol/interaction/Draw';
+import type { RouteItem } from '../components/types/Route';
 
-export const useRoutesMapTooltip = () => {
+export const useRoutesMapTooltip = (selectedRoutes: RouteItem[]) => {
   // parallel to drawn route
   const route = ref<Feature | null>(null);
   const tooltipCoord = ref<Coordinate | null>(null);
-  const tooltipText = ref('');
+  const tooltipLength = ref('');
   let listener: EventsKey;
+  const moreRoutesCount = selectedRoutes.length - 1;
 
   const { formatLength } = useRoutesMap();
+
+  const tooltipText = computed((): string => {
+    const textMoreRoutes = moreRoutesCount
+      ? ` (+${moreRoutesCount} ${i18n.global.tc('global.routes', moreRoutesCount)})`
+      : '';
+    return `
+      <div>
+        ${i18n.global.t('routes.tooltipDrawing')}: ${date.formatDate(selectedRoutes[0].date, 'D. M.')}${textMoreRoutes}
+      </div>
+      <div>
+        ${i18n.global.t('routes.tooltipRouteLength')}: ${tooltipLength.value}
+      </div>
+    `;
+  });
 
   /**
    * Handles the start of a draw event for measuring the length of a line.
@@ -36,7 +54,7 @@ export const useRoutesMapTooltip = () => {
       listener = geom.on('change', (evt) => {
         const geom = evt.target;
         if (geom instanceof LineString) {
-          tooltipText.value = formatGeometryLength(geom);
+          tooltipLength.value = formatGeometryLength(geom);
           tooltipCoord.value = geom.getLastCoordinate();
         }
       });
@@ -53,7 +71,7 @@ export const useRoutesMapTooltip = () => {
     route.value = null;
     // unset tooltip so that a new one can be created
     tooltipCoord.value = null;
-    tooltipText.value = '';
+    tooltipLength.value = '';
     // cleanup listeners
     unByKey(listener);
   };
@@ -72,6 +90,7 @@ export const useRoutesMapTooltip = () => {
   return {
     route,
     tooltipCoord,
+    tooltipLength,
     tooltipText,
     onDrawStartLength,
     onDrawEndLength,
