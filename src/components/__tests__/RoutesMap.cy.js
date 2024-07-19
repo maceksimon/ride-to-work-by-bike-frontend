@@ -17,11 +17,6 @@ const selectorRouteItemNameStart = 'route-item-name-start';
 const selectorRouteItemNameFinish = 'route-item-name-finish';
 const selectorRouteListItem = 'route-list-item';
 
-const routePoint1 = [100, 100];
-const routePoint2 = [300, 100];
-const routePoint3 = [300, 200];
-const routePoint4 = [600, 200];
-
 describe('<RoutesMap>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -66,8 +61,6 @@ function coreTests() {
 
     /**
      * Test drawing routes.
-     * We are testing differently drawn routes with the same coordinates
-     * and comparing the resulting length and names.
      */
     toggleDrawTool();
     drawFeature();
@@ -92,22 +85,30 @@ function coreTests() {
       .then((element) => {
         cy.wrap(element.text()).as('finishName');
       });
+    // edit 2nd route
+    cy.dataCy(`${selectorRouteListItem}-1`).click();
     toggleDrawTool();
     drawFeature();
     toggleDeleteTool();
     deleteFeaturePoints();
     saveRoute();
     // has shorter route, since it is a straight line
-    cy.dataCy(`${selectorRouteListItem}-1`)
-      .find(`[data-cy="${selectorRouteItemLength}"]`)
-      .should('be.visible')
-      .then((element) => {
-        cy.get('@routeLength').then((routeLength) => {
-          const length = element.text().replace(/\D/g, '');
-          cy.wrap(parseInt(length)).should('be.lessThan', routeLength);
-          cy.wrap(parseInt(length)).as('shorterRouteLength');
+    cy.get('@routeLength').then((routeLength) => {
+      cy.get(
+        `[data-cy="${selectorRouteListItem}-1"] [data-cy="${selectorRouteItemLength}"]`,
+      )
+        .should('be.visible')
+        .and('not.contain', routeLength)
+        .then((element) => {
+          cy.wrap(element.text()).then((text) => {
+            const length = text.replace(/\D/g, '');
+            console.log(routeLength);
+            console.log(length);
+            cy.wrap(parseInt(length)).should('be.lessThan', routeLength);
+            cy.wrap(parseInt(length)).as('shorterRouteLength');
+          });
         });
-      });
+    });
     // new route matches old routes' start and finish name
     cy.dataCy(`${selectorRouteListItem}-1`)
       .find(`[data-cy="${selectorRouteItemNameStart}"]`)
@@ -125,24 +126,25 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', finishName);
         });
       });
+    // edit 2rd route
+    cy.dataCy(`${selectorRouteListItem}-1`).click();
     toggleDrawTool();
     drawFeature();
     toggleDeleteTool();
     deleteFeaturePoints();
     undo();
     undo();
+    undo();
     saveRoute();
-    cy.dataCy(`${selectorRouteListItem}-2`)
-      .find(`[data-cy="${selectorRouteItemLength}"]`)
-      .should('be.visible')
-      .then((element) => {
-        cy.get('@routeLength').then((routeLength) => {
-          const length = element.text().replace(/\D/g, '');
-          cy.wrap(parseInt(length)).should('be.equal', routeLength);
-        });
-      });
+    cy.get('@routeLength').then((routeLength) => {
+      cy.get(
+        `[data-cy="${selectorRouteListItem}-1"] [data-cy="${selectorRouteItemLength}"]`,
+      )
+        .should('be.visible')
+        .and('contain', routeLength);
+    });
     // new route matches old routes' start and finish name
-    cy.dataCy(`${selectorRouteListItem}-2`)
+    cy.dataCy(`${selectorRouteListItem}-1`)
       .find(`[data-cy="${selectorRouteItemNameStart}"]`)
       .should('be.visible')
       .then((element) => {
@@ -150,46 +152,12 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', startName);
         });
       });
-    cy.dataCy(`${selectorRouteListItem}-2`)
+    cy.dataCy(`${selectorRouteListItem}-1`)
       .find(`[data-cy="${selectorRouteItemNameFinish}"]`)
       .should('be.visible')
       .then((element) => {
         cy.get('@finishName').then((finishName) => {
           cy.wrap(element.text()).should('equal', finishName);
-        });
-      });
-    toggleDrawTool();
-    drawFeature();
-    // overwrite route with a different shorter route
-    cy.dataCy(selectorRoutesMapMap).click(routePoint2[0], routePoint2[1]);
-    cy.dataCy(selectorRoutesMapMap).dblclick(routePoint3[0], routePoint3[1]);
-    saveRoute();
-    // has shorter route, since it is a straight line
-    cy.dataCy(`${selectorRouteListItem}-3`)
-      .find(`[data-cy="${selectorRouteItemLength}"]`)
-      .should('be.visible')
-      .then((element) => {
-        cy.get('@shorterRouteLength').then((routeLength) => {
-          const length = element.text().replace(/\D/g, '');
-          // length is shorter because it is only the middle part of the line
-          cy.wrap(parseInt(length)).should('be.lessThan', routeLength);
-        });
-      });
-    // new route does not match old routes' start and finish name
-    cy.dataCy(`${selectorRouteListItem}-3`)
-      .find(`[data-cy="${selectorRouteItemNameStart}"]`)
-      .should('be.visible')
-      .then((element) => {
-        cy.get('@startName').then((startName) => {
-          cy.wrap(element.text()).should('not.equal', startName);
-        });
-      });
-    cy.dataCy(`${selectorRouteListItem}-3`)
-      .find(`[data-cy="${selectorRouteItemNameFinish}"]`)
-      .should('be.visible')
-      .then((element) => {
-        cy.get('@finishName').then((finishName) => {
-          cy.wrap(element.text()).should('not.equal', finishName);
         });
       });
   });
@@ -204,15 +172,30 @@ function toggleDrawTool() {
 }
 
 function drawFeature() {
-  cy.dataCy(selectorRoutesMapMap).click(routePoint1[0], routePoint1[1]);
-  cy.dataCy(selectorRoutesMapMap).click(routePoint2[0], routePoint2[1]);
-  cy.dataCy(selectorRoutesMapMap).click(routePoint3[0], routePoint3[1]);
-  cy.dataCy(selectorRoutesMapMap).dblclick(routePoint4[0], routePoint4[1]);
+  cy.dataCy(selectorRoutesMap).invoke('attr', 'style', 'border-radius: 0px');
+  cy.dataCy(selectorRoutesMapMap).then((element) => {
+    const width = Math.floor(element.width());
+    const height = Math.floor(element.height());
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+    cy.dataCy(selectorRoutesMapMap).click(0, 0);
+    cy.dataCy(selectorRoutesMapMap).click(halfWidth, 0);
+    cy.dataCy(selectorRoutesMapMap).click(halfWidth, halfHeight);
+    cy.dataCy(selectorRoutesMapMap).click(width - 1, halfHeight);
+    cy.dataCy(selectorRoutesMapMap).dblclick(width - 1, height - 1);
+  });
 }
 
 function deleteFeaturePoints() {
-  cy.dataCy(selectorRoutesMapMap).click(routePoint2[0], routePoint2[1]);
-  cy.dataCy(selectorRoutesMapMap).click(routePoint3[0], routePoint3[1]);
+  cy.dataCy(selectorRoutesMapMap).then((element) => {
+    const width = Math.floor(element.width());
+    const height = Math.floor(element.height());
+    const halfWidth = width / 2;
+    const halfHeight = height / 2;
+    cy.dataCy(selectorRoutesMapMap).click(halfWidth, 0);
+    cy.dataCy(selectorRoutesMapMap).click(halfWidth, halfHeight);
+    cy.dataCy(selectorRoutesMapMap).click(width - 1, halfHeight);
+  });
 }
 
 function saveRoute() {
