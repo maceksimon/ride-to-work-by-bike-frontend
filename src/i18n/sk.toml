@@ -419,6 +419,7 @@ description = "Stiahnite si aplikáciu a prihlasujte jazdy odkiaľkoľvek."
 [notify]
 geolocationError = "Chyba pri pokuse o určenie polohy: {error}"
 geolocationNotSupported = "Váš prehliadač nepodporuje geolokáciu."
+noRouteSelected = "Nie je vybraná žiadna trasa na zaznamenanie."
 
 [offer]
 titleOfferValidation = "Chcete-li ji použít, stačí se na místě prokázat dokladem totožnosti:"
@@ -564,7 +565,7 @@ titleYourRoutes = "Vaše trasy"
 tooltipDeleteDisable = "Zastaviť mazanie"
 tooltipDeleteEnable = "Odstrániť body trasy"
 tooltipDrawDisable = "Zrušiť vykresľovanie"
-tooltipDrawEnable = "Nová cesta"
+tooltipDrawEnable = "Pridať/upraviť cestu"
 tooltipDrawing = "Zapisujete"
 tooltipRouteLength = "Dĺžka trasy"
 tooltipSave = "Uložiť cestu"

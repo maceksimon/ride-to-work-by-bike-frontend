@@ -34,6 +34,11 @@ describe('<RoutesMap>', () => {
       'global',
       i18n,
     );
+    cy.testLanguageStringsInContext(
+      ['geolocationError', 'geolocationNotSupported', 'noRouteSelected'],
+      'notify',
+      i18n,
+    );
   });
 
   context('desktop', () => {

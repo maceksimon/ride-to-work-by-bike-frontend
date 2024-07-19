@@ -15,7 +15,7 @@
  */
 
 // libraries
-import { colors, date, Screen } from 'quasar';
+import { colors, date, Notify, Screen } from 'quasar';
 import { computed, defineComponent, ref } from 'vue';
 import {
   Map,
@@ -30,6 +30,7 @@ import {
 import RoutesMapToolbar from './RoutesMapToolbar.vue';
 
 // composables
+import { i18n } from '../../boot/i18n';
 import { useGeocoding } from '../../composables/useGeocoding';
 import { useRoutesMap } from '../../composables/useRoutesMap';
 import { useRoutesMapDraw } from '../../composables/useRoutesMapDraw';
@@ -99,10 +100,13 @@ export default defineComponent({
     const colorWhite = getPaletteColor('white');
     const colorGrey4 = getPaletteColor('grey-4');
 
-    // animation
+    // drawing
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
-    const animationPath = ref<string[][] | null>(null);
+    // by default, edited routes are those selected in the calendar.
+    const editedRoutes = ref<RouteItem[]>(
+      selectedRoutesFixture as RouteItem[],
+    ) as Ref<RouteItem[]>;
 
     // geocoding
     const { getRouteNames } = useGeocoding();
@@ -110,9 +114,6 @@ export default defineComponent({
     const { drawRoute, clearDrawHistory, updateDrawRoute, undoDrawRoute } =
       useRoutesMapDraw();
     // tooltip
-    const editedRoutes = ref<RouteItem[]>(
-      selectedRoutesFixture as RouteItem[],
-    ) as Ref<RouteItem[]>;
     const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
       useRoutesMapTooltip(editedRoutes);
     // vector layer
@@ -157,11 +158,17 @@ export default defineComponent({
      * Toggles the draw mode.
      */
     const toggleDrawEnabled = (): void => {
+      if (!editedRoutes.value.length) {
+        Notify.create({
+          type: 'warning',
+          message: i18n.global.t('notify.noRouteSelected'),
+        });
+        return;
+      }
       drawEnabled.value = !drawEnabled.value;
       if (!drawEnabled.value) {
         deleteEnabled.value = false;
       }
-      clearMapRoutes();
       clearDrawHistory();
     };
 
@@ -185,11 +192,12 @@ export default defineComponent({
      * @return {Promise<void>}
      */
     const onSaveRoute = async (): Promise<void> => {
+      let routesToSave = [] as RouteItem[];
       if (drawRoute.value) {
         const { startName, endName } = await getRouteNames(drawRoute.value);
         const length = getRouteLength(drawRoute.value);
         // for each route being edited, set the routeFeature prop
-        const routesToSave: RouteItem[] = editedRoutes.value.map((route) => {
+        routesToSave = editedRoutes.value.map((route) => {
           const feature = drawRoute.value?.clone();
           route.routeFeature = {
             endName,
@@ -199,16 +207,19 @@ export default defineComponent({
           };
           return route;
         });
+      }
+      if (routesToSave) {
         // save routes locally
         saveRoutes(routesToSave);
 
         // TODO: Save routes via API request
-
-        clearDrawHistory();
-        // disable drawing
-        drawEnabled.value = false;
-        deleteEnabled.value = false;
       }
+      clearDrawHistory();
+      // disable drawing
+      drawEnabled.value = false;
+      deleteEnabled.value = false;
+      // clear edited routes to avoid duplicate entries
+      editedRoutes.value = [];
     };
 
     /**
@@ -219,15 +230,23 @@ export default defineComponent({
      */
     const onSavedRouteClick = (route: RouteItem): void => {
       if (route.routeFeature?.feature) {
-        renderSavedRoute(route.routeFeature.feature);
-        centerMapOnRoute(route.routeFeature.feature);
+        const newEditedRoute = {
+          ...route,
+          routeFeature: {
+            ...route.routeFeature,
+            feature: route.routeFeature.feature.clone(),
+          },
+        };
+        // ensures, that update does not happen until saved
+        editedRoutes.value = [newEditedRoute];
+        renderSavedRoute(newEditedRoute.routeFeature.feature);
+        centerMapOnRoute(newEditedRoute.routeFeature.feature);
       }
     };
 
     const { formatDate } = date;
 
     return {
-      animationPath,
       borderRadius,
       center,
       colorWhite,
@@ -345,7 +364,7 @@ export default defineComponent({
           @current-position="centerOnCurrentLocation"
           @save:route="onSaveRoute"
           @update:delete-enabled="deleteEnabled = $event"
-          @update:draw-enabled="drawEnabled = $event"
+          @update:draw-enabled="toggleDrawEnabled"
           @undo="onUndo"
           data-cy="routes-map-toolbar"
         />

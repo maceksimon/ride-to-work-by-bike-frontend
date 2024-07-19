@@ -422,6 +422,7 @@ description = "Stáhněte si appku a zapisujte jízdy odkudkoliv."
 [notify]
 geolocationError = "Chyba v pokusu o geolokaci: {error}"
 geolocationNotSupported = "Váš prohlížeč nepodporuje geolokaci."
+noRouteSelected = "Není vybrána žádná cesta k zaznamenání."
 
 [offer]
 titleOfferValidation = "Pro využití se stačí na místě prokázat:"
@@ -567,7 +568,7 @@ titleYourRoutes = "Vaše trasy"
 tooltipDeleteDisable = "Ukončit mazání"
 tooltipDeleteEnable = "Smazat body cesty"
 tooltipDrawDisable = "Zrušit zakreslování"
-tooltipDrawEnable = "Nová cesta"
+tooltipDrawEnable = "Přidat/upravit cestu"
 tooltipDrawing = "Zapisujete"
 tooltipRouteLength = "Délka cesty"
 tooltipSave = "Uložit cestu"
