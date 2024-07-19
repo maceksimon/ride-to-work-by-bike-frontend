@@ -7,6 +7,8 @@
  * @props
  * - `drawEnabled` (boolean, required): Enabled state for draw tool.
  * - `deleteEnabled` (boolean, required): Enabled state for delete tool.
+ * - `saveDisabled` (boolean, required): Disabled state for save button.
+ * - `drawDisabled` (boolean, required): Disabled state for draw button.
  *
  * @events
  * - `update:draw-enabled`: Emitted when draw tool is toggled.
@@ -37,6 +39,14 @@ export default defineComponent({
       default: false,
     },
     deleteEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    saveDisabled: {
+      type: Boolean,
+      default: false,
+    },
+    drawDisabled: {
       type: Boolean,
       default: false,
     },
@@ -79,6 +89,7 @@ export default defineComponent({
           class="q-pa-none q-ma-none"
           color="transparent"
           text-color="primary"
+          :disabled="drawDisabled"
           @click.prevent="$emit('update:draw-enabled', !drawEnabled)"
           data-cy="add-route-button"
         >
@@ -182,6 +193,7 @@ export default defineComponent({
           class="q-pa-none q-ma-none"
           color="transparent"
           text-color="primary"
+          :disabled="saveDisabled"
           @click.prevent="$emit('save:route')"
           data-cy="save-route-button"
         >
