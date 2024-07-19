@@ -10,8 +10,8 @@
   {
     "id": "00002",
     "date": "2024-08-14",
-    "distance": 0,
     "direction": "fromWork",
+    "distance": 0,
     "transport": "bike",
     "routeFeature": null
   },

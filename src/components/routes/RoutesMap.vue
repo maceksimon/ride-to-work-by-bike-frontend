@@ -42,7 +42,10 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // types
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
-import type { RouteFeature } from '../types/Route';
+import type { RouteFeature, RouteItem } from '../types/Route';
+
+// fixtures
+import selectedRoutesFixture from '../../../test/cypress/fixtures/routeListSelected.json';
 
 export default defineComponent({
   name: 'RoutesMap',
@@ -104,8 +107,9 @@ export default defineComponent({
     const { drawRoute, clearDrawHistory, updateDrawRoute, undoDrawRoute } =
       useRoutesMapDraw();
     // tooltip
+    const selectedRoutes: RouteItem[] = selectedRoutesFixture as RouteItem[];
     const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
-      useRoutesMapTooltip();
+      useRoutesMapTooltip(selectedRoutes);
     // vector layer
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
@@ -373,9 +377,7 @@ export default defineComponent({
             :stopEvent="false"
             :insertFirst="false"
           >
-            <div class="tooltip tooltip-measure">
-              {{ tooltipText }}
-            </div>
+            <div class="tooltip tooltip-measure" v-html="tooltipText" />
           </ol-overlay>
         </ol-map>
       </div>
@@ -386,11 +388,11 @@ export default defineComponent({
 <style scoped>
 .tooltip {
   position: relative;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.9);
   border-radius: 4px;
   color: white;
   padding: 4px 8px;
-  opacity: 0.7;
+  opacity: 0.9;
   white-space: nowrap;
   font-size: 12px;
   cursor: default;
@@ -400,7 +402,7 @@ export default defineComponent({
   font-weight: bold;
 }
 .tooltip-measure:before {
-  border-top: 6px solid rgba(0, 0, 0, 0.5);
+  border-top: 6px solid rgba(0, 0, 0, 0.9);
   border-right: 6px solid transparent;
   border-left: 6px solid transparent;
   content: '';
