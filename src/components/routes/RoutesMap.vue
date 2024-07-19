@@ -15,7 +15,7 @@
  */
 
 // libraries
-import { colors, Screen } from 'quasar';
+import { colors, date, Screen } from 'quasar';
 import { computed, defineComponent, ref } from 'vue';
 import {
   Map,
@@ -33,6 +33,7 @@ import RoutesMapToolbar from './RoutesMapToolbar.vue';
 import { useGeocoding } from '../../composables/useGeocoding';
 import { useRoutesMap } from '../../composables/useRoutesMap';
 import { useRoutesMapDraw } from '../../composables/useRoutesMapDraw';
+import { useRoutesMapStorage } from '../../composables/useRoutesMapStorage';
 import { useRoutesMapTooltip } from '../../composables/useRoutesMapTooltip';
 import { useRoutesMapVectorLayer } from '../../composables/useRoutesMapVectorLayer';
 
@@ -40,9 +41,10 @@ import { useRoutesMapVectorLayer } from '../../composables/useRoutesMapVectorLay
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
+import type { Ref } from 'vue';
+import type { RouteItem } from '../types/Route';
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
-import type { RouteFeature, RouteItem } from '../types/Route';
 
 // fixtures
 import selectedRoutesFixture from '../../../test/cypress/fixtures/routeListSelected.json';
@@ -73,15 +75,16 @@ export default defineComponent({
       center,
       zoom,
       projection,
-      savedRoutes,
       source,
       centerMapOnRoute,
       centerOnCurrentLocation,
       getRouteLength,
       getRouteLengthLabel,
-      saveRoute,
       styleFunction,
     } = useRoutesMap();
+
+    // map routes
+    const { savedRoutes, saveRoutes } = useRoutesMapStorage();
 
     // styles
     const listHeight = computed((): string => {
@@ -107,9 +110,11 @@ export default defineComponent({
     const { drawRoute, clearDrawHistory, updateDrawRoute, undoDrawRoute } =
       useRoutesMapDraw();
     // tooltip
-    const selectedRoutes: RouteItem[] = selectedRoutesFixture as RouteItem[];
+    const editedRoutes = ref<RouteItem[]>(
+      selectedRoutesFixture as RouteItem[],
+    ) as Ref<RouteItem[]>;
     const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
-      useRoutesMapTooltip(selectedRoutes);
+      useRoutesMapTooltip(editedRoutes);
     // vector layer
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
@@ -183,13 +188,22 @@ export default defineComponent({
       if (drawRoute.value) {
         const { startName, endName } = await getRouteNames(drawRoute.value);
         const length = getRouteLength(drawRoute.value);
-        const routeFeature: RouteFeature = {
-          endName,
-          length,
-          feature: drawRoute.value,
-          startName,
-        };
-        saveRoute(routeFeature);
+        // for each route being edited, set the routeFeature prop
+        const routesToSave: RouteItem[] = editedRoutes.value.map((route) => {
+          const feature = drawRoute.value?.clone();
+          route.routeFeature = {
+            endName,
+            length,
+            feature: feature ? feature : null,
+            startName,
+          };
+          return route;
+        });
+        // save routes locally
+        saveRoutes(routesToSave);
+
+        // TODO: Save routes via API request
+
         clearDrawHistory();
         // disable drawing
         drawEnabled.value = false;
@@ -200,13 +214,17 @@ export default defineComponent({
     /**
      * Called when a saved routes list item is clicked.
      * Renders clicked route on the map.
-     * @param routeFeature RouteFeature
+     * @param route RouteItem
      * @return {void}
      */
-    const onSavedRouteClick = (routeFeature: RouteFeature): void => {
-      renderSavedRoute(routeFeature.feature);
-      centerMapOnRoute(routeFeature.feature);
+    const onSavedRouteClick = (route: RouteItem): void => {
+      if (route.routeFeature?.feature) {
+        renderSavedRoute(route.routeFeature.feature);
+        centerMapOnRoute(route.routeFeature.feature);
+      }
     };
+
+    const { formatDate } = date;
 
     return {
       animationPath,
@@ -228,6 +246,7 @@ export default defineComponent({
       zoom,
       addMapRoute,
       centerOnCurrentLocation,
+      formatDate,
       getRouteLengthLabel,
       onDrawStart,
       onDrawEnd,
@@ -278,10 +297,16 @@ export default defineComponent({
               @click="onSavedRouteClick(route)"
               :data-cy="`route-list-item-${index}`"
             >
-              <q-item-section v-if="route['startName'] && route['endName']">
+              <q-item-section
+                v-if="
+                  route.routeFeature &&
+                  route.routeFeature['startName'] &&
+                  route.routeFeature['endName']
+                "
+              >
                 <div>
                   <span data-cy="route-item-name-start">{{
-                    route['startName']
+                    route.routeFeature['startName']
                   }}</span>
                   <q-icon
                     name="sym_s_arrow_right_alt"
@@ -289,13 +314,21 @@ export default defineComponent({
                     data-cy="route-item-name-icon"
                   />
                   <span data-cy="route-item-name-finish">{{
-                    route['endName']
+                    route.routeFeature['endName']
                   }}</span>
                 </div>
-                <div v-if="route['length']" data-cy="route-item-length">
+                <div
+                  v-if="route.routeFeature['length']"
+                  data-cy="route-item-length"
+                >
                   <small>
-                    {{ getRouteLengthLabel(route) }}
+                    {{ getRouteLengthLabel(route.routeFeature) }}
                   </small>
+                  <small class="q-px-xs"> - </small>
+                  <small>
+                    {{ formatDate(route.date, 'D. M.') }}
+                  </small>
+                  <small> ({{ $t(`global.${route.direction}`) }}) </small>
                 </div>
               </q-item-section>
             </q-item>

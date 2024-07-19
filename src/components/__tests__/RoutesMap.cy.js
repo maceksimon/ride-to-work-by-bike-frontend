@@ -29,7 +29,11 @@ describe('<RoutesMap>', () => {
       'routes',
       i18n,
     );
-    cy.testLanguageStringsInContext(['routes'], 'global', i18n);
+    cy.testLanguageStringsInContext(
+      ['fromWork', 'routes', 'toWork'],
+      'global',
+      i18n,
+    );
   });
 
   context('desktop', () => {

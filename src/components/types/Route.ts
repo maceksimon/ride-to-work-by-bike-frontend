@@ -56,6 +56,6 @@ export type RouteLogData = {
 export interface RouteFeature {
   endName: string;
   length: number;
-  feature: Feature;
+  feature: Feature | null;
   startName: string;
 }

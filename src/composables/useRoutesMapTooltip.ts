@@ -10,19 +10,19 @@ import { useRoutesMap } from './useRoutesMap';
 import { i18n } from '../boot/i18n';
 
 // types
+import type { Ref } from 'vue';
 import type { Coordinate } from 'ol/coordinate';
 import type { EventsKey } from 'ol/events';
 import type { Feature } from 'ol';
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { RouteItem } from '../components/types/Route';
 
-export const useRoutesMapTooltip = (selectedRoutes: RouteItem[]) => {
+export const useRoutesMapTooltip = (selectedRoutes: Ref<RouteItem[]>) => {
   // parallel to drawn route
   const route = ref<Feature | null>(null);
   const tooltipCoord = ref<Coordinate | null>(null);
   const tooltipLength = ref('');
   let listener: EventsKey;
-  const moreRoutesCount = selectedRoutes.length - 1;
 
   const { formatLength } = useRoutesMap();
 
@@ -31,13 +31,16 @@ export const useRoutesMapTooltip = (selectedRoutes: RouteItem[]) => {
    * Displays date of the first route being logged + count of all routes.
    * Displays current route length
    */
+  const moreRoutesCount = computed(
+    (): number => selectedRoutes.value.length - 1,
+  );
   const tooltipText = computed((): string => {
-    const textMoreRoutes = moreRoutesCount
-      ? ` (+${moreRoutesCount} ${i18n.global.tc('global.routes', moreRoutesCount)})`
+    const textMoreRoutes = moreRoutesCount.value
+      ? ` (+${moreRoutesCount.value} ${i18n.global.tc('global.routes', moreRoutesCount.value)})`
       : '';
     return `
       <div>
-        ${i18n.global.t('routes.tooltipDrawing')}: ${date.formatDate(selectedRoutes[0].date, 'D. M.')}${textMoreRoutes}
+        ${i18n.global.t('routes.tooltipDrawing')}: ${date.formatDate(selectedRoutes.value[0].date, 'D. M.')}${textMoreRoutes}
       </div>
       <div>
         ${i18n.global.t('routes.tooltipRouteLength')}: ${tooltipLength.value}

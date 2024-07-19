@@ -48,18 +48,6 @@ export const useRoutesMap = () => {
   const zoom = ref(defaultMapZoom);
   const customSVGIconsFilePath = 'icons/routes_map';
 
-  // list of saved routes
-  const savedRoutes = ref<RouteFeature[]>([]);
-
-  /**
-   * Saves a route to the list of saved routes.
-   * @param {RouteFeature} routeFeature - The route to be saved.
-   * @return {void}
-   */
-  const saveRoute = (routeFeature: RouteFeature): void => {
-    savedRoutes.value.push(routeFeature);
-  };
-
   /**
    * Centers the map on the given route.
    * @param {Feature} feature - The feature to center the map on.
@@ -119,7 +107,9 @@ export const useRoutesMap = () => {
    * @return {string} Length of the route in kilometers.
    */
   const getRouteLengthLabel = (routeFeature: RouteFeature): string => {
-    const length = getRouteLength(routeFeature.feature);
+    const length = routeFeature.feature
+      ? getRouteLength(routeFeature.feature)
+      : 0;
     return formatLength(length);
   };
 
@@ -231,7 +221,6 @@ export const useRoutesMap = () => {
     center,
     zoom,
     projection,
-    savedRoutes,
     source,
     centerMapOnExtent,
     centerMapOnRoute,
@@ -240,7 +229,6 @@ export const useRoutesMap = () => {
     getRouteExtent,
     getRouteLength,
     getRouteLengthLabel,
-    saveRoute,
     styleFunction,
   };
 };
