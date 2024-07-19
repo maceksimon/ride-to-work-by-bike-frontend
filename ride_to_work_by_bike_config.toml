@@ -126,6 +126,6 @@ facebookLoginSdkOptions = '''
 mapProjection = "EPSG:3857"
 mapCenterLon = "14.4378"
 mapCenterLat = "50.0755"
-mapZoom = "13"
+mapZoom = "14"
 mapGeocodingApiUrl = "https://nominatim.openstreetmap.org/reverse"
 mapSource = "https://mnk-osm-tiles.dopracenakole.net/{z}/{x}/{y}.png"

@@ -351,11 +351,8 @@ export default defineComponent({
                     route.routeFeature['endName']
                   }}</span>
                 </div>
-                <div
-                  v-if="route.routeFeature['length']"
-                  data-cy="route-item-length"
-                >
-                  <small>
+                <div v-if="route.routeFeature['length']">
+                  <small data-cy="route-item-length">
                     {{ getRouteLengthLabel(route.routeFeature) }}
                   </small>
                   <small class="q-px-xs"> - </small>
