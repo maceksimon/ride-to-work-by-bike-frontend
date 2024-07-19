@@ -111,8 +111,13 @@ export default defineComponent({
     // geocoding
     const { getRouteNames } = useGeocoding();
     // draw
-    const { drawRoute, clearDrawHistory, updateDrawRoute, undoDrawRoute } =
-      useRoutesMapDraw();
+    const {
+      drawRoute,
+      drawRouteHistory,
+      clearDrawHistory,
+      updateDrawRoute,
+      undoDrawRoute,
+    } = useRoutesMapDraw();
     // tooltip
     const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
       useRoutesMapTooltip(editedRoutes);
@@ -244,6 +249,14 @@ export default defineComponent({
       }
     };
 
+    const isDrawDisabled = computed((): boolean => {
+      return !editedRoutes.value.length;
+    });
+
+    const isSaveDisabled = computed((): boolean => {
+      return !drawRouteHistory.value.length;
+    });
+
     const { formatDate } = date;
 
     return {
@@ -253,6 +266,8 @@ export default defineComponent({
       colorGrey4,
       deleteEnabled,
       drawEnabled,
+      isDrawDisabled,
+      isSaveDisabled,
       listHeight,
       mapHeight,
       mapRef,
@@ -361,6 +376,8 @@ export default defineComponent({
         <routes-map-toolbar
           :delete-enabled="deleteEnabled"
           :draw-enabled="drawEnabled"
+          :draw-disabled="isDrawDisabled"
+          :save-disabled="isSaveDisabled"
           @current-position="centerOnCurrentLocation"
           @save:route="onSaveRoute"
           @update:delete-enabled="deleteEnabled = $event"
