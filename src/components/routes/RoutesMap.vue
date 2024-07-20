@@ -58,7 +58,6 @@ export default defineComponent({
     OlOverlay: Map.OlOverlay,
     OlTileLayer: Layers.OlTileLayer,
     OlVectorLayer: Layers.OlVectorLayer,
-    // OlSourceOsm: Sources.OlSourceOsm,
     OlSourceVector: Sources.OlSourceVector,
     OlStyle: Styles.OlStyle,
     OlInteractionModify: Interactions.OlInteractionModify,
@@ -70,6 +69,19 @@ export default defineComponent({
     RoutesMapToolbar,
   },
   setup() {
+    // styles
+    const listHeight = computed((): string => {
+      if (Screen.gt.sm) {
+        return '600px';
+      }
+      return '300px';
+    });
+    const mapHeight = '600px';
+    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
+    const { getPaletteColor } = colors;
+    const colorWhite = getPaletteColor('white');
+    const colorGrey4 = getPaletteColor('grey-4');
+
     // map
     const {
       mapRef,
@@ -86,19 +98,6 @@ export default defineComponent({
 
     // map routes
     const { savedRoutes, saveRoutes } = useRoutesMapStorage();
-
-    // styles
-    const listHeight = computed((): string => {
-      if (Screen.gt.sm) {
-        return '600px';
-      }
-      return 'auto';
-    });
-    const mapHeight = '600px';
-    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
-    const { getPaletteColor } = colors;
-    const colorWhite = getPaletteColor('white');
-    const colorGrey4 = getPaletteColor('grey-4');
 
     // drawing
     const drawEnabled = ref<boolean>(false);
@@ -323,46 +322,58 @@ export default defineComponent({
               </q-item-section>
             </q-item>
             <!-- Item: Drawn route -->
-            <q-item
-              clickable
-              v-ripple
-              v-for="(route, index) in savedRoutes"
-              :key="`route-${index}`"
-              @click="onSavedRouteClick(route)"
-              :data-cy="`route-list-item-${index}`"
-            >
-              <q-item-section
-                v-if="
-                  route.routeFeature &&
-                  route.routeFeature['startName'] &&
-                  route.routeFeature['endName']
-                "
+            <template v-if="savedRoutes.length">
+              <q-item
+                clickable
+                v-ripple
+                v-for="(route, index) in savedRoutes"
+                :key="`route-${index}`"
+                @click="onSavedRouteClick(route)"
+                :data-cy="`route-list-item-${index}`"
               >
-                <div>
-                  <span data-cy="route-item-name-start">{{
-                    route.routeFeature['startName']
-                  }}</span>
-                  <q-icon
-                    name="sym_s_arrow_right_alt"
-                    class="q-px-xs"
-                    data-cy="route-item-name-icon"
-                  />
-                  <span data-cy="route-item-name-finish">{{
+                <q-item-section
+                  v-if="
+                    route.routeFeature &&
+                    route.routeFeature['startName'] &&
                     route.routeFeature['endName']
-                  }}</span>
-                </div>
-                <div v-if="route.routeFeature['length']">
-                  <small data-cy="route-item-length">
-                    {{ getRouteLengthLabel(route.routeFeature) }}
-                  </small>
-                  <small class="q-px-xs"> - </small>
-                  <small>
-                    {{ formatDate(route.date, 'D. M.') }}
-                  </small>
-                  <small> ({{ $t(`global.${route.direction}`) }}) </small>
-                </div>
-              </q-item-section>
-            </q-item>
+                  "
+                >
+                  <div>
+                    <span data-cy="route-item-name-start">{{
+                      route.routeFeature['startName']
+                    }}</span>
+                    <q-icon
+                      name="sym_s_arrow_right_alt"
+                      class="q-px-xs"
+                      data-cy="route-item-name-icon"
+                    />
+                    <span data-cy="route-item-name-finish">{{
+                      route.routeFeature['endName']
+                    }}</span>
+                  </div>
+                  <div v-if="route.routeFeature['length']">
+                    <small data-cy="route-item-length">
+                      {{ getRouteLengthLabel(route.routeFeature) }}
+                    </small>
+                    <small class="q-px-xs"> - </small>
+                    <small>
+                      {{ formatDate(route.date, 'D. M.') }}
+                    </small>
+                    <small> ({{ $t(`global.${route.direction}`) }}) </small>
+                  </div>
+                </q-item-section>
+              </q-item>
+            </template>
+            <template v-else>
+              <q-item
+                class="text-center text-grey-6"
+                data-cy="routes-list-empty"
+              >
+                <q-item-section>
+                  {{ $t('routes.textNoRoutes') }}
+                </q-item-section>
+              </q-item>
+            </template>
           </q-list>
         </q-scroll-area>
       </div>

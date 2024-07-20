@@ -20,7 +20,12 @@ const selectorRouteListItem = 'route-list-item';
 describe('<RoutesMap>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
-      ['titleYourRoutes', 'tooltipDrawing', 'tooltipRouteLength'],
+      [
+        'textNoRoutes',
+        'titleYourRoutes',
+        'tooltipDrawing',
+        'tooltipRouteLength',
+      ],
       'routes',
       i18n,
     );
