@@ -74,7 +74,7 @@ export default defineComponent({
       if (Screen.gt.sm) {
         return '600px';
       }
-      return '300px';
+      return '150px';
     });
     const mapHeight = '600px';
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
@@ -309,18 +309,19 @@ export default defineComponent({
     >
       <!-- Column: Drawn routes -->
       <div class="col-12 col-sm-2">
-        <q-scroll-area :style="{ height: listHeight }">
-          <!-- List: Drawn routes -->
-          <q-list separator data-cy="routes-list">
-            <!-- List header -->
-            <q-item
-              class="bg-primary text-white text-weight-bold text-center"
-              data-cy="routes-list-header"
-            >
-              <q-item-section class="text-subtitle2 text-uppercase">
-                {{ $t('routes.titleYourRoutes') }}
-              </q-item-section>
-            </q-item>
+        <!-- List: Drawn routes -->
+        <q-list separator data-cy="routes-list">
+          <!-- List header -->
+          <q-item
+            class="bg-primary text-white text-weight-bold text-center"
+            data-cy="routes-list-header"
+          >
+            <q-item-section class="text-subtitle2 text-uppercase">
+              {{ $t('routes.titleYourRoutes') }}
+            </q-item-section>
+          </q-item>
+
+          <q-scroll-area :style="{ height: listHeight }">
             <!-- Item: Drawn route -->
             <template v-if="savedRoutes.length">
               <q-item
@@ -374,8 +375,8 @@ export default defineComponent({
                 </q-item-section>
               </q-item>
             </template>
-          </q-list>
-        </q-scroll-area>
+          </q-scroll-area>
+        </q-list>
       </div>
 
       <!-- Column: Map -->
