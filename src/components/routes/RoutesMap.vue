@@ -72,7 +72,7 @@ export default defineComponent({
     // styles
     const listHeight = computed((): string => {
       if (Screen.gt.sm) {
-        return '600px';
+        return '552px';
       }
       return '150px';
     });
