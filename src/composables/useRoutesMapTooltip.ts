@@ -6,8 +6,9 @@ import { LineString } from 'ol/geom';
 import { unByKey } from 'ol/Observable';
 
 // composables
-import { useRoutesMap } from './useRoutesMap';
 import { i18n } from '../boot/i18n';
+import { useRoutes } from './useRoutes';
+import { useRoutesMap } from './useRoutesMap';
 
 // types
 import type { Ref } from 'vue';
@@ -16,8 +17,15 @@ import type { EventsKey } from 'ol/events';
 import type { Feature } from 'ol';
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { RouteItem } from '../components/types/Route';
+import type { TransportType } from '../components/types/Route';
 
-export const useRoutesMapTooltip = (selectedRoutes: Ref<RouteItem[]>) => {
+export const useRoutesMapTooltip = ({
+  routes,
+  transport,
+}: {
+  routes: Ref<RouteItem[]>;
+  transport: Ref<TransportType>;
+}) => {
   // parallel to drawn route
   const route = ref<Feature | null>(null);
   const tooltipCoord = ref<Coordinate | null>(null);
@@ -25,22 +33,24 @@ export const useRoutesMapTooltip = (selectedRoutes: Ref<RouteItem[]>) => {
   let listener: EventsKey;
 
   const { formatLength } = useRoutesMap();
+  const { getTransportLabel } = useRoutes();
 
   /**
    * Generates the content of the tooltip.
    * Displays date of the first route being logged + count of all routes.
    * Displays current route length
    */
-  const moreRoutesCount = computed(
-    (): number => selectedRoutes.value.length - 1,
-  );
+  const moreRoutesCount = computed((): number => routes.value.length - 1);
   const tooltipText = computed((): string => {
     const textMoreRoutes = moreRoutesCount.value
       ? ` (+${moreRoutesCount.value} ${i18n.global.tc('global.routes', moreRoutesCount.value)})`
       : '';
     return `
       <div>
-        ${i18n.global.t('routes.tooltipDrawing')}: ${date.formatDate(selectedRoutes.value[0].date, 'D. M.')}${textMoreRoutes}
+        ${i18n.global.t('routes.tooltipDrawing')}: ${date.formatDate(routes.value[0].date, 'D. M.')}${textMoreRoutes}
+      </div>
+      <div>
+        ${i18n.global.t('routes.labelTransportType')}: ${getTransportLabel(transport.value)}
       </div>
       <div>
         ${i18n.global.t('routes.tooltipRouteLength')}: ${tooltipLength.value}
@@ -71,12 +81,17 @@ export const useRoutesMapTooltip = (selectedRoutes: Ref<RouteItem[]>) => {
 
   /**
    * Called after draw is finished.
-   * Cleans up the drawn route, unsets the tooltip, and cleans up event listeners.
-   * @return {void} This function does not return anything.
+   * @return {void}
    */
   const onDrawEndLength = (): void => {
-    // remove drawn route
-    route.value = null;
+    clearTooltip();
+  };
+
+  /**
+   * Clears the tooltip by resetting values and removing listeners.
+   * @return {void}
+   */
+  const clearTooltip = (): void => {
     // unset tooltip so that a new one can be created
     tooltipCoord.value = null;
     tooltipLength.value = '';
@@ -100,6 +115,7 @@ export const useRoutesMapTooltip = (selectedRoutes: Ref<RouteItem[]>) => {
     tooltipCoord,
     tooltipLength,
     tooltipText,
+    clearTooltip,
     onDrawStartLength,
     onDrawEndLength,
   };
