@@ -17,6 +17,7 @@ const selectorUndoIcon = 'undo-icon';
 const selectorSaveRouteAvatar = 'save-route-avatar';
 const selectorSaveRouteButton = 'save-route-button';
 const selectorSaveRouteIcon = 'save-route-icon';
+const selectorSource = 'change-source-select';
 const selectorToolbarTop = 'toolbar-top';
 const selectorToolbarBottom = 'toolbar-bottom';
 
@@ -26,7 +27,20 @@ const iconSize = 18;
 
 describe('<RoutesMapToolbar>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(['rtwbb'], 'global', i18n);
+    cy.testLanguageStringsInContext(
+      [
+        'tooltipDrawDisabled',
+        'tooltipDrawEnable',
+        'tooltipDrawDisable',
+        'tooltipDeleteEnable',
+        'tooltipDeleteDisable',
+        'tooltipUndo',
+        'tooltipSave',
+      ],
+      'routes',
+      i18n,
+    );
   });
 
   context('draw disabled', () => {
@@ -114,6 +128,16 @@ function coreTests() {
     cy.dataCy(selectorCurrentPositionIcon)
       .invoke('width')
       .should('be.equal', iconSize);
+  });
+
+  it('renders source select', () => {
+    cy.dataCy(selectorSource).should('be.visible');
+    cy.dataCy(selectorSource).click();
+    cy.get('.q-menu')
+      .find('.q-item')
+      .should('have.length', 2)
+      .and('contain', i18n.global.t('global.rtwbb'))
+      .and('contain', i18n.global.t('global.osm'));
   });
 }
 
