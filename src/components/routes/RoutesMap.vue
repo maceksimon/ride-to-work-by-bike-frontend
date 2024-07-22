@@ -46,7 +46,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import type { Ref } from 'vue';
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
-import type { RouteItem } from '../types/Route';
+import type { RouteFeature, RouteItem } from '../types/Route';
 import type { TransportType } from '../types/Route';
 import type XYZ from 'ol/source/XYZ';
 
@@ -192,6 +192,11 @@ export default defineComponent({
       }
     };
 
+    /**
+     * Resets the edited route to the initial state.
+     * Works if there is only one saved route.
+     * @return {void}
+     */
     const resetEditedRoute = (): void => {
       if (editedRoutes.value.length === 1) {
         const editedRoute = editedRoutes.value[0];
@@ -239,7 +244,7 @@ export default defineComponent({
             length,
             feature: feature ? feature : null,
             startName,
-          };
+          } as RouteFeature;
           return route;
         });
       }
@@ -407,8 +412,8 @@ export default defineComponent({
                 v-ripple
                 v-for="(route, index) in savedRoutes"
                 :key="`route-${index}`"
-                @click="onSavedRouteClick(route)"
-                :class="getRouteClasses(route)"
+                @click="onSavedRouteClick(route as RouteItem)"
+                :class="getRouteClasses(route as RouteItem)"
                 :data-cy="`route-list-item-${index}`"
               >
                 <q-item-section
@@ -433,7 +438,9 @@ export default defineComponent({
                   </div>
                   <div v-if="route.routeFeature['length']">
                     <small data-cy="route-item-length">
-                      {{ getRouteLengthLabel(route.routeFeature) }}
+                      {{
+                        getRouteLengthLabel(route.routeFeature as RouteFeature)
+                      }}
                     </small>
                     <small class="q-px-xs"> - </small>
                     <small>
