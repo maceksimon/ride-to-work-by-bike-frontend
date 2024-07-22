@@ -109,8 +109,10 @@ const getAppConfig = (process) => {
     config['mapZoom'] = process.env.MAP_ZOOM;
   } else if (process.env.MAP_GEOCODING_API_URL) {
     config['mapGeocodingApiUrl'] = process.env.MAP_GEOCODING_API_URL;
-  } else if (process.env.MAP_SOURCE) {
-    config['mapSource'] = process.env.MAP_SOURCE;
+  } else if (process.env.MAP_SOURCE_RTWBB) {
+    config['mapSourceRtwbb'] = process.env.MAP_SOURCE_RTWBB;
+  } else if (process.env.MAP_SOURCE_OSM) {
+    config['mapSourceOsm'] = process.env.MAP_SOURCE_OSM;
   }
 
   return config;

@@ -27,11 +27,12 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'RoutesMapToolbar',
   emits: [
-    'update:draw-enabled',
-    'update:delete-enabled',
-    'undo',
-    'save:route',
     'current-position',
+    'save:route',
+    'toggle:source',
+    'undo',
+    'update:delete-enabled',
+    'update:draw-enabled',
   ],
   props: {
     drawEnabled: {
@@ -228,7 +229,7 @@ export default defineComponent({
     </div>
     <!-- Toolbar: Bottom -->
     <div
-      class="flex justify-start absolute-bottom q-pa-sm"
+      class="flex justify-start absolute-bottom q-pa-sm gap-8"
       :style="{ zIndex: 1, pointerEvents: 'none' }"
       data-cy="toolbar-bottom"
     >
@@ -258,6 +259,35 @@ export default defineComponent({
             color="primary"
             :size="iconSize"
             data-cy="current-position-icon"
+          />
+        </q-avatar>
+      </q-btn>
+      <!-- Button: Change map source -->
+      <q-btn
+        dense
+        round
+        unelevated
+        class="q-pa-none q-ma-none"
+        color="transparent"
+        text-color="primary"
+        :style="{
+          pointerEvents: 'auto',
+        }"
+        @click.prevent="$emit('toggle:source')"
+        data-cy="change-source-button"
+      >
+        <q-avatar
+          :size="avatarSize"
+          class="q-pa-none q-ma-none"
+          color="white"
+          data-cy="change-source-avatar"
+        >
+          <!-- Icon -->
+          <q-icon
+            name="mdi-layers-outline"
+            color="primary"
+            :size="iconSize"
+            data-cy="change-source-icon"
           />
         </q-avatar>
       </q-btn>

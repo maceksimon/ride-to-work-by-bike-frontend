@@ -47,6 +47,7 @@ import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
 import type { RouteItem } from '../types/Route';
 import type { TransportType } from '../types/Route';
+import type XYZ from 'ol/source/XYZ';
 
 // fixtures
 import selectedRoutesFixture from '../../../test/cypress/fixtures/routeListSelected.json';
@@ -97,6 +98,8 @@ export default defineComponent({
       getRouteLengthLabel,
       styleFunction,
     } = useRoutesMap();
+
+    const mapSourceRef = ref<{ source: XYZ } | null>(null);
 
     // map routes
     const { savedRoutes, saveRoutes } = useRoutesMapStorage();
@@ -257,6 +260,29 @@ export default defineComponent({
       }
     };
 
+    /**
+     * Called when map source is toggled.
+     * Checks which source is enabled, and updates and refreshes map source.
+     * Official example did not work: https://vue3openlayers.netlify.app/componentsguide/sources/xyz/
+     * @return {void}
+     */
+    const onSourceToggle = (): void => {
+      if (mapSourceRef.value) {
+        const mapSourceRtwbb = rideToWorkByBikeConfig.mapSourceRtwbb;
+        const mapSourceOsm = rideToWorkByBikeConfig.mapSourceOsm;
+        // switch map source
+        if (source.value === mapSourceOsm) {
+          source.value = mapSourceRtwbb;
+          mapSourceRef.value.source.setUrl(mapSourceRtwbb);
+          mapSourceRef.value.source.refresh();
+        } else {
+          source.value = mapSourceOsm;
+          mapSourceRef.value.source.setUrl(mapSourceOsm);
+          mapSourceRef.value.source.refresh();
+        }
+      }
+    };
+
     const isDrawDisabled = computed((): boolean => {
       return !editedRoutes.value.length;
     });
@@ -284,6 +310,7 @@ export default defineComponent({
       listHeight,
       mapHeight,
       mapRef,
+      mapSourceRef,
       projection,
       savedRoutes,
       source,
@@ -301,6 +328,7 @@ export default defineComponent({
       onModifyEnd,
       onSaveRoute,
       onSavedRouteClick,
+      onSourceToggle,
       onUndo,
       renderSavedRoute,
       styleFunction,
@@ -405,6 +433,7 @@ export default defineComponent({
           :undo-disabled="isUndoDisabled"
           @current-position="centerOnCurrentLocation"
           @save:route="onSaveRoute"
+          @toggle:source="onSourceToggle"
           @update:delete-enabled="deleteEnabled = $event"
           @update:draw-enabled="toggleDrawEnabled"
           @undo="onUndo"
@@ -428,7 +457,7 @@ export default defineComponent({
           <!-- Layer for OpenStreetMap tiles -->
           <ol-tile-layer>
             <!-- <ol-source-osm /> -->
-            <ol-source-xyz :url="source" />
+            <ol-source-xyz ref="mapSourceRef" :url="source" />
           </ol-tile-layer>
           <!-- Zoom controls -->
           <ol-zoom-control />
