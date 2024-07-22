@@ -25,6 +25,7 @@ import {
   Interactions,
   Styles,
 } from 'vue3-openlayers';
+import { LineString } from 'ol/geom';
 
 // components
 import RoutesMapToolbar from './RoutesMapToolbar.vue';
@@ -180,12 +181,14 @@ export default defineComponent({
         });
         return;
       }
-      drawEnabled.value = !drawEnabled.value;
-      if (!drawEnabled.value) {
+      if (drawEnabled.value === true) {
         clearTooltip();
         deleteEnabled.value = false;
+        clearDrawHistory();
+        drawEnabled.value = false;
+      } else {
+        drawEnabled.value = true;
       }
-      clearDrawHistory();
     };
 
     /**
@@ -246,13 +249,19 @@ export default defineComponent({
      */
     const onSavedRouteClick = (route: RouteItem): void => {
       if (route.routeFeature?.feature) {
+        const feature = route.routeFeature.feature.clone();
         const newEditedRoute = {
           ...route,
           routeFeature: {
             ...route.routeFeature,
-            feature: route.routeFeature.feature.clone(),
+            feature,
           },
         };
+        // set history entry
+        const geometry = feature.getGeometry();
+        if (geometry instanceof LineString) {
+          drawRouteHistory.value = [geometry.getCoordinates()];
+        }
         // ensures, that update does not happen until saved
         editedRoutes.value = [newEditedRoute];
         renderSavedRoute(newEditedRoute.routeFeature.feature);
