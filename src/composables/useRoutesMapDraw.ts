@@ -9,7 +9,7 @@ import type { Coordinate } from 'ol/coordinate';
 export const useRoutesMapDraw = () => {
   const drawRoute = ref<Feature>();
   // each route is saved as an array of coordinates
-  const drawRouteHistory = ref<Coordinate[][]>([]);
+  const drawRouteHistory = ref<Coordinate[][]>([[[0, 0]]]);
 
   /**
    * Updates current route after drawing on the map.
@@ -68,7 +68,7 @@ export const useRoutesMapDraw = () => {
    * @return {void}
    */
   const clearDrawHistory = (): void => {
-    drawRouteHistory.value = [];
+    drawRouteHistory.value = [[[0, 0]]];
   };
 
   return {
