@@ -42,11 +42,15 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    drawDisabled: {
+      type: Boolean,
+      default: false,
+    },
     saveDisabled: {
       type: Boolean,
       default: false,
     },
-    drawDisabled: {
+    undoDisabled: {
       type: Boolean,
       default: false,
     },
@@ -95,12 +99,15 @@ export default defineComponent({
         >
           <!-- Tooltip -->
           <q-tooltip :delay="tooltipDelay" class="text-body2">
-            <span v-if="!drawEnabled">{{
-              $t('routes.tooltipDrawEnable')
-            }}</span>
-            <span v-if="drawEnabled">{{
-              $t('routes.tooltipDrawDisable')
-            }}</span>
+            <span v-if="drawDisabled">
+              {{ $t('routes.tooltipDrawDisabled') }}
+            </span>
+            <span v-else-if="!drawEnabled">
+              {{ $t('routes.tooltipDrawEnable') }}
+            </span>
+            <span v-else-if="drawEnabled">
+              {{ $t('routes.tooltipDrawDisable') }}
+            </span>
           </q-tooltip>
           <q-avatar
             :size="avatarSize"
@@ -162,6 +169,7 @@ export default defineComponent({
           class="q-pa-none q-ma-none"
           color="transparent"
           text-color="primary"
+          :disabled="undoDisabled"
           @click.prevent="$emit('undo')"
           data-cy="undo-button"
         >

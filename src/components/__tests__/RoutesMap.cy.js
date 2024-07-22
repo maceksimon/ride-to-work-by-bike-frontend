@@ -25,6 +25,7 @@ describe('<RoutesMap>', () => {
         'textNoRoutes',
         'titleYourRoutes',
         'tooltipDrawing',
+        'tooltipDrawDisabled',
         'tooltipRouteLength',
       ],
       'routes',
@@ -74,7 +75,9 @@ function coreTests() {
      * Test drawing routes.
      */
     toggleDrawTool();
+    testUndoSaveDisabled();
     drawFeature();
+    testUndoSaveEnabled();
     saveRoute();
     // save parameters of route 0
     cy.dataCy(`${selectorRouteListItem}-0`)
@@ -96,10 +99,16 @@ function coreTests() {
       .then((element) => {
         cy.wrap(element.text()).as('finishName');
       });
+    // before clicking edit, draw tool is disabled
+    cy.dataCy(selectorAddRouteButton).should('be.disabled');
     // edit 2nd route
     cy.dataCy(`${selectorRouteListItem}-1`).click();
+    // after clicking a route item, draw tool is enabled
+    cy.dataCy(selectorAddRouteButton).should('not.be.disabled');
     toggleDrawTool();
+    testUndoSaveDisabled();
     drawFeature();
+    testUndoSaveEnabled();
     toggleDeleteTool();
     deleteFeaturePoints();
     saveRoute();
@@ -140,9 +149,12 @@ function coreTests() {
     // edit 2rd route
     cy.dataCy(`${selectorRouteListItem}-1`).click();
     toggleDrawTool();
+    testUndoSaveDisabled();
     drawFeature();
+    testUndoSaveEnabled();
     toggleDeleteTool();
     deleteFeaturePoints();
+    testUndoSaveEnabled();
     undo();
     undo();
     undo();
@@ -215,4 +227,16 @@ function saveRoute() {
 
 function undo() {
   cy.dataCy(selectorUndoButton).click();
+}
+
+function testUndoSaveDisabled() {
+  // disabled undo + save
+  cy.dataCy(selectorUndoButton).should('be.disabled');
+  cy.dataCy(selectorSaveRouteButton).should('be.disabled');
+}
+
+function testUndoSaveEnabled() {
+  // disabled undo + save
+  cy.dataCy(selectorUndoButton).should('not.be.disabled');
+  cy.dataCy(selectorSaveRouteButton).should('not.be.disabled');
 }
