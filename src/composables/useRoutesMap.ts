@@ -39,13 +39,13 @@ export const useRoutesMap = () => {
   const defaultMapProjection = rideToWorkByBikeConfig.mapProjection;
   const defaultMapLon = Number(rideToWorkByBikeConfig.mapCenterLon);
   const defaultMapLat = Number(rideToWorkByBikeConfig.mapCenterLat);
-  const defaultMapSource = rideToWorkByBikeConfig.mapSource;
+  const mapSourceOsm = rideToWorkByBikeConfig.mapSourceOsm;
 
   const mapRef = ref<InstanceType<typeof Map.OlMap> | null>(null);
   const center = ref<Coordinate>(fromLonLat([defaultMapLon, defaultMapLat]));
-  const projection = ref(defaultMapProjection);
-  const source = ref(defaultMapSource);
-  const zoom = ref(defaultMapZoom);
+  const projection = ref<string>(defaultMapProjection);
+  const source = ref<string>(mapSourceOsm);
+  const zoom = ref<number>(defaultMapZoom);
   const customSVGIconsFilePath = 'icons/routes_map';
 
   /**
