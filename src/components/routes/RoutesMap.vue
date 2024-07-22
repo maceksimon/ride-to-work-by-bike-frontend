@@ -186,8 +186,24 @@ export default defineComponent({
         deleteEnabled.value = false;
         clearDrawHistory();
         drawEnabled.value = false;
+        resetEditedRoute();
       } else {
         drawEnabled.value = true;
+      }
+    };
+
+    const resetEditedRoute = (): void => {
+      if (editedRoutes.value.length === 1) {
+        const editedRoute = editedRoutes.value[0];
+        const savedRoute = savedRoutes.value.find((savedRoute) => {
+          return (
+            savedRoute.date === editedRoute.date &&
+            savedRoute.direction === editedRoute.direction
+          );
+        }) as RouteItem | undefined;
+        if (savedRoute && savedRoute.routeFeature?.feature) {
+          renderSavedRoute(savedRoute.routeFeature.feature);
+        }
       }
     };
 
@@ -289,12 +305,29 @@ export default defineComponent({
     });
 
     const isSaveDisabled = computed((): boolean => {
-      return !drawRouteHistory.value.length;
+      return drawRouteHistory.value.length <= 1;
     });
 
     const isUndoDisabled = computed((): boolean => {
-      return !drawRouteHistory.value.length;
+      return drawRouteHistory.value.length <= 1;
     });
+
+    /**
+     * Returns CSS classes for a given route based on whether it is being
+     * edited.
+     * @param {RouteItem} route - The route to get classes for.
+     * @return {string} The CSS classes.
+     */
+    const getRouteClasses = (route: RouteItem) => {
+      const activeClasses = 'bg-secondary text-primary';
+      const isActive = editedRoutes.value.some((editedRoute) => {
+        return (
+          editedRoute.date === route.date &&
+          editedRoute.direction === route.direction
+        );
+      });
+      return isActive ? activeClasses : '';
+    };
 
     const { formatDate } = date;
 
@@ -323,6 +356,7 @@ export default defineComponent({
       addMapRoute,
       centerOnCurrentLocation,
       formatDate,
+      getRouteClasses,
       getRouteLengthLabel,
       onDrawStart,
       onDrawEnd,
@@ -374,6 +408,7 @@ export default defineComponent({
                 v-for="(route, index) in savedRoutes"
                 :key="`route-${index}`"
                 @click="onSavedRouteClick(route)"
+                :class="getRouteClasses(route)"
                 :data-cy="`route-list-item-${index}`"
               >
                 <q-item-section
@@ -469,7 +504,7 @@ export default defineComponent({
               <!-- Interaction modify handler -->
               <ol-interaction-modify
                 v-if="drawEnabled"
-                :delete-condition="() => deleteEnabled"
+                :delete-condition="() => false"
                 @modifyend="onModifyEnd"
               />
               <!-- Interaction delete handler -->
