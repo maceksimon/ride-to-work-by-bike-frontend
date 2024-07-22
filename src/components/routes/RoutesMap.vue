@@ -265,6 +265,10 @@ export default defineComponent({
       return !drawRouteHistory.value.length;
     });
 
+    const isUndoDisabled = computed((): boolean => {
+      return !drawRouteHistory.value.length;
+    });
+
     const { formatDate } = date;
 
     return {
@@ -276,6 +280,7 @@ export default defineComponent({
       drawEnabled,
       isDrawDisabled,
       isSaveDisabled,
+      isUndoDisabled,
       listHeight,
       mapHeight,
       mapRef,
@@ -397,6 +402,7 @@ export default defineComponent({
           :draw-enabled="drawEnabled"
           :draw-disabled="isDrawDisabled"
           :save-disabled="isSaveDisabled"
+          :undo-disabled="isUndoDisabled"
           @current-position="centerOnCurrentLocation"
           @save:route="onSaveRoute"
           @update:delete-enabled="deleteEnabled = $event"
