@@ -21,12 +21,18 @@ describe('<RoutesMap>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       [
+        'labelTransportType',
         'textNoRoutes',
         'titleYourRoutes',
         'tooltipDrawing',
         'tooltipRouteLength',
       ],
       'routes',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      ['bike', 'car', 'none', 'walk', 'bus', 'unknown'],
+      'routes.transport',
       i18n,
     );
     cy.testLanguageStringsInContext(

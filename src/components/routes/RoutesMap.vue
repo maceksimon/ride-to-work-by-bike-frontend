@@ -43,9 +43,10 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
 import type { Ref } from 'vue';
-import type { RouteItem } from '../types/Route';
 import type { DrawEvent } from 'ol/interaction/Draw';
 import type { ModifyEvent } from 'ol/interaction/Modify';
+import type { RouteItem } from '../types/Route';
+import type { TransportType } from '../types/Route';
 
 // fixtures
 import selectedRoutesFixture from '../../../test/cypress/fixtures/routeListSelected.json';
@@ -70,17 +71,18 @@ export default defineComponent({
   },
   setup() {
     // styles
+    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
+    const { getPaletteColor } = colors;
+    const colorWhite = getPaletteColor('white');
+    const colorGrey4 = getPaletteColor('grey-4');
     const listHeight = computed((): string => {
       if (Screen.gt.sm) {
+        // list header = scroll area is 48px lower than the map
         return '552px';
       }
       return '150px';
     });
     const mapHeight = '600px';
-    const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
-    const { getPaletteColor } = colors;
-    const colorWhite = getPaletteColor('white');
-    const colorGrey4 = getPaletteColor('grey-4');
 
     // map
     const {
@@ -106,6 +108,7 @@ export default defineComponent({
     const editedRoutes = ref<RouteItem[]>(
       selectedRoutesFixture as RouteItem[],
     ) as Ref<RouteItem[]>;
+    const transportType = ref<TransportType>('bike');
 
     // geocoding
     const { getRouteNames } = useGeocoding();
@@ -118,8 +121,13 @@ export default defineComponent({
       undoDrawRoute,
     } = useRoutesMapDraw();
     // tooltip
-    const { tooltipCoord, tooltipText, onDrawStartLength, onDrawEndLength } =
-      useRoutesMapTooltip(editedRoutes);
+    const {
+      tooltipCoord,
+      tooltipText,
+      clearTooltip,
+      onDrawStartLength,
+      onDrawEndLength,
+    } = useRoutesMapTooltip({ routes: editedRoutes, transport: transportType });
     // vector layer
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
@@ -171,6 +179,7 @@ export default defineComponent({
       }
       drawEnabled.value = !drawEnabled.value;
       if (!drawEnabled.value) {
+        clearTooltip();
         deleteEnabled.value = false;
       }
       clearDrawHistory();
@@ -275,6 +284,7 @@ export default defineComponent({
       source,
       tooltipCoord,
       tooltipText,
+      transportType,
       vectorLayer,
       zoom,
       addMapRoute,
