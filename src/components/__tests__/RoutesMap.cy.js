@@ -50,10 +50,14 @@ describe('<RoutesMap>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      cy.mount(RoutesMap, {
-        props: {},
+      cy.fixture('routeListSelectedMultiple').then((routes) => {
+        cy.mount(RoutesMap, {
+          props: {
+            selectedRoutes: routes,
+          },
+        });
+        cy.viewport('macbook-16');
       });
-      cy.viewport('macbook-16');
     });
 
     coreTests();
@@ -72,14 +76,16 @@ function coreTests() {
       .and('contain', i18n.global.t('routes.titleYourRoutes'));
 
     /**
-     * Test drawing routes.
+     * Scenario: After selecting 3 items in calendar, user moves to map.
+     * Then user draws a route.
+     * Route is saved into the three separate entries.
      */
     toggleDrawTool();
     testUndoSaveDisabled();
     drawFeature();
     testUndoSaveEnabled();
     saveRoute();
-    // save parameters of route 0
+    // load parameters from route 0
     cy.dataCy(`${selectorRouteListItem}-0`)
       .find(`[data-cy="${selectorRouteItemLength}"]`)
       .should('be.visible')

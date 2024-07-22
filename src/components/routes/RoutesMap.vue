@@ -8,6 +8,9 @@
  * Uses Vue 3 OpenLayers library to render the map.
  * @see https://vue3openlayers.netlify.app/
  *
+ * @props
+ * - `selectedRoutes` - (RouteItem[], optional): The routes to be drawn.
+ *
  * @example
  * <routes-map />
  *
@@ -71,7 +74,13 @@ export default defineComponent({
     OlSourceXyz: Sources.OlSourceXyz,
     RoutesMapToolbar,
   },
-  setup() {
+  props: {
+    selectedRoutes: {
+      type: Array as () => RouteItem[],
+      default: () => [],
+    },
+  },
+  setup(props) {
     // styles
     const { borderRadiusCard: borderRadius } = rideToWorkByBikeConfig;
     const { getPaletteColor } = colors;
@@ -109,8 +118,11 @@ export default defineComponent({
     const drawEnabled = ref<boolean>(false);
     const deleteEnabled = ref<boolean>(false);
     // by default, edited routes are those selected in the calendar.
+
     const editedRoutes = ref<RouteItem[]>(
-      selectedRoutesFixture as RouteItem[],
+      props.selectedRoutes.length
+        ? props.selectedRoutes
+        : (selectedRoutesFixture as RouteItem[]),
     ) as Ref<RouteItem[]>;
     const transportType = ref<TransportType>('bike');
 
