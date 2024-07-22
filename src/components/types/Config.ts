@@ -69,7 +69,8 @@ export interface ConfigGlobal {
   mapCenterLat: string;
   mapZoom: string;
   mapGeocodingApiUrl: string;
-  mapSource: string;
+  mapSourceRtwbb: string;
+  mapSourceOsm: string;
 }
 
 export interface ConfigAppVersion {
