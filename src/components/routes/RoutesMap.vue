@@ -261,25 +261,17 @@ export default defineComponent({
     };
 
     /**
-     * Called when map source is toggled.
-     * Checks which source is enabled, and updates and refreshes map source.
+     * Called when map source is changed.
+     * Sets the given source and refreshes the tiles.
      * Official example did not work: https://vue3openlayers.netlify.app/componentsguide/sources/xyz/
+     * @param selectedSource string - source url
      * @return {void}
      */
-    const onSourceToggle = (): void => {
+    const onUpdateSource = (selectedSource: string): void => {
       if (mapSourceRef.value) {
-        const mapSourceRtwbb = rideToWorkByBikeConfig.mapSourceRtwbb;
-        const mapSourceOsm = rideToWorkByBikeConfig.mapSourceOsm;
-        // switch map source
-        if (source.value === mapSourceOsm) {
-          source.value = mapSourceRtwbb;
-          mapSourceRef.value.source.setUrl(mapSourceRtwbb);
-          mapSourceRef.value.source.refresh();
-        } else {
-          source.value = mapSourceOsm;
-          mapSourceRef.value.source.setUrl(mapSourceOsm);
-          mapSourceRef.value.source.refresh();
-        }
+        source.value = selectedSource;
+        mapSourceRef.value.source.setUrl(selectedSource);
+        mapSourceRef.value.source.refresh();
       }
     };
 
@@ -328,7 +320,7 @@ export default defineComponent({
       onModifyEnd,
       onSaveRoute,
       onSavedRouteClick,
-      onSourceToggle,
+      onUpdateSource,
       onUndo,
       renderSavedRoute,
       styleFunction,
@@ -433,7 +425,7 @@ export default defineComponent({
           :undo-disabled="isUndoDisabled"
           @current-position="centerOnCurrentLocation"
           @save:route="onSaveRoute"
-          @toggle:source="onSourceToggle"
+          @update:source="onUpdateSource"
           @update:delete-enabled="deleteEnabled = $event"
           @update:draw-enabled="toggleDrawEnabled"
           @undo="onUndo"
