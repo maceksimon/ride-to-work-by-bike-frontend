@@ -7,10 +7,12 @@ import type { Ref } from 'vue';
 import type { Feature } from 'ol';
 
 export const useRoutesMapVectorLayer = (
-  vectorLayer: Ref<typeof Layers.OlVectorLayer>,
+  vectorLayer: Ref<InstanceType<typeof Layers.OlVectorLayer> | null>,
 ) => {
   // vector layer source
-  const source = computed(() => vectorLayer.value?.vectorLayer.getSource());
+  const source = computed(
+    () => vectorLayer && vectorLayer.value?.vectorLayer.getSource(),
+  );
 
   /**
    * Adds the drawn route on the map.
@@ -26,7 +28,7 @@ export const useRoutesMapVectorLayer = (
    * @return {void}
    */
   const clearMapRoutes = (): void => {
-    const source = vectorLayer.value?.vectorLayer.getSource();
+    const source = vectorLayer && vectorLayer.value?.vectorLayer.getSource();
     source && source.clear();
   };
 
