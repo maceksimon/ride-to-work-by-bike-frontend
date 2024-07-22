@@ -5,41 +5,50 @@
  * @description * Use this component to render a toolbar for a RoutesMap.
  *
  * @props
- * - `drawEnabled` (boolean, required): Enabled state for draw tool.
  * - `deleteEnabled` (boolean, required): Enabled state for delete tool.
- * - `saveDisabled` (boolean, required): Disabled state for save button.
+ * - `drawEnabled` (boolean, required): Enabled state for draw tool.
  * - `drawDisabled` (boolean, required): Disabled state for draw button.
+ * - `saveDisabled` (boolean, required): Disabled state for save button.
+ * - `undoDisabled` (boolean, required): Disabled state for undo button.
+ *
  *
  * @events
+ * - `current-position`: Emitted when current position button is clicked.
+ * - `save:route`: Emitted when save button is clicked.
+ * - `undo`: Emitted when undo button is clicked.
  * - `update:draw-enabled`: Emitted when draw tool is toggled.
  * - `update:delete-enabled`: Emitted when delete tool is toggled.
- * - `undo`: Emitted when undo button is clicked.
- * - `save`: Emitted when save button is clicked.
- * - `current-position`: Emitted when current position button is clicked.
+ * - `update:source`: Emitted when source is changed.
  *
  * @example
  * <routes-map-toolbar />
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
+
+// composables
+import { i18n } from '../../boot/i18n';
+
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 export default defineComponent({
   name: 'RoutesMapToolbar',
   emits: [
     'current-position',
     'save:route',
-    'toggle:source',
     'undo',
     'update:delete-enabled',
     'update:draw-enabled',
+    'update:source',
   ],
   props: {
-    drawEnabled: {
+    deleteEnabled: {
       type: Boolean,
       default: false,
     },
-    deleteEnabled: {
+    drawEnabled: {
       type: Boolean,
       default: false,
     },
@@ -59,11 +68,26 @@ export default defineComponent({
   setup() {
     const avatarSize = '32px';
     const iconSize = '18px';
+    const mapSourceRtwbb = rideToWorkByBikeConfig.mapSourceRtwbb;
+    const mapSourceOsm = rideToWorkByBikeConfig.mapSourceOsm;
+    const source = ref(mapSourceRtwbb);
+    const sourceOptions = computed(() => [
+      {
+        label: i18n.global.t('global.rtwbb'),
+        value: mapSourceRtwbb,
+      },
+      {
+        label: i18n.global.t('global.osm'),
+        value: mapSourceOsm,
+      },
+    ]);
     const tooltipDelay = 300;
 
     return {
       avatarSize,
       iconSize,
+      source,
+      sourceOptions,
       tooltipDelay,
     };
   },
@@ -229,7 +253,7 @@ export default defineComponent({
     </div>
     <!-- Toolbar: Bottom -->
     <div
-      class="flex justify-start absolute-bottom q-pa-sm gap-8"
+      class="flex column items-start justify-start absolute-bottom q-pa-sm gap-8"
       :style="{ zIndex: 1, pointerEvents: 'none' }"
       data-cy="toolbar-bottom"
     >
@@ -262,35 +286,22 @@ export default defineComponent({
           />
         </q-avatar>
       </q-btn>
-      <!-- Button: Change map source -->
-      <q-btn
+      <!-- Select: Map source -->
+      <q-select
         dense
-        round
-        unelevated
-        class="q-pa-none q-ma-none"
-        color="transparent"
-        text-color="primary"
+        rounded
+        filled
+        emit-value
+        map-options
+        bg-color="white"
+        v-model="source"
+        :options="sourceOptions"
         :style="{
           pointerEvents: 'auto',
         }"
-        @click.prevent="$emit('toggle:source')"
-        data-cy="change-source-button"
-      >
-        <q-avatar
-          :size="avatarSize"
-          class="q-pa-none q-ma-none"
-          color="white"
-          data-cy="change-source-avatar"
-        >
-          <!-- Icon -->
-          <q-icon
-            name="mdi-layers-outline"
-            color="primary"
-            :size="iconSize"
-            data-cy="change-source-icon"
-          />
-        </q-avatar>
-      </q-btn>
+        @update:model-value="$emit('update:source', source)"
+        data-cy="change-source-select"
+      />
     </div>
   </div>
 </template>
