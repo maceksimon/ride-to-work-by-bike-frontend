@@ -35,11 +35,13 @@ from = "od"
 fromWork = "z práce"
 man = "Muž"
 male = "Pánské"
+osm = "OSM"
 to = "do"
 toWork = "do práce"
 woman = "Žena"
 routes = "cestu|cest"
 routeLengthUnit = "km"
+rtwbb = "DPNK"
 weightUnitGram = "g"
 
 [calendar]

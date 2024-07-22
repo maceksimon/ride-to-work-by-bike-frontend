@@ -35,11 +35,13 @@ from = "from"
 fromWork = "from work"
 man = "Man"
 male = "Male"
+osm = "OSM"
 to = "to"
 toWork = "to work"
 woman = "Woman"
 routes = "route|routes"
 routeLengthUnit = "km"
+rtwbb = "RTWBB"
 weightUnitGram = "g"
 
 [calendar]
