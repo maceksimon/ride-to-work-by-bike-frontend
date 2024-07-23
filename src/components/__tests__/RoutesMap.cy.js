@@ -76,6 +76,7 @@ function coreTests() {
       .and('contain', i18n.global.t('routes.titleYourRoutes'));
 
     /**
+     * TEST DRAW
      * Scenario: After selecting 1 items in calendar, user moves to map.
      * Then user draws a route.
      * Route is saved into the sidebar.
@@ -105,7 +106,14 @@ function coreTests() {
       .then((element) => {
         cy.wrap(element.text()).as('finishName');
       });
-    // before clicking edit, draw and delete is disabled
+
+    /**
+     * TEST DELETE
+     * Scenario: User clicks on a saved route in sidebar.
+     * Redraws the route.
+     * Deletes vertices from the route to make it shorter.
+     * Saves the route.
+     */
     cy.dataCy(selectorAddRouteButton).should('be.disabled');
     cy.dataCy(selectorDeleteRouteButton).should('be.disabled');
     // edit route
@@ -154,7 +162,15 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', finishName);
         });
       });
-    // edit route
+
+    /**
+     * TEST UNDO
+     * Scenario: User clicks on a saved route in sidebar.
+     * Redraws the route.
+     * Deletes vertices from the route to make it shorter.
+     * Uses undo to revert to the original route.
+     * Saves the route.
+     */
     cy.dataCy(`${selectorRouteListItem}-0`).click();
     toggleDrawTool();
     testUndoSaveDisabled();
