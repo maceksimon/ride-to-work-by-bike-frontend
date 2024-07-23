@@ -1,3 +1,4 @@
+import { colors } from 'quasar';
 import RoutesMapToolbar from 'components/routes/RoutesMapToolbar.vue';
 import { i18n } from '../../boot/i18n';
 
@@ -20,30 +21,45 @@ const selectorSaveRouteIcon = 'save-route-icon';
 const selectorSource = 'change-source-select';
 const selectorToolbarTop = 'toolbar-top';
 const selectorToolbarBottom = 'toolbar-bottom';
+const selectorTooltipAddRouteDisabled = 'tooltip-add-route-disabled';
+const selectorTooltipAddRouteDisable = 'tooltip-add-route-disable';
+const selectorTooltipAddRouteEnable = 'tooltip-add-route-enable';
+const selectorTooltipDeleteRouteEnable = 'tooltip-delete-route-enable';
+const selectorTooltipDeleteRouteDisable = 'tooltip-delete-route-disable';
+const selectorTooltipDeleteRouteDisabled = 'tooltip-delete-route-disabled';
+const selectorTooltipSave = 'tooltip-save';
+const selectorTooltipUndo = 'tooltip-undo';
 
 // variables
 const avatarSize = 32;
 const iconSize = 18;
+
+// colors
+const { getPaletteColor } = colors;
+const grey3 = getPaletteColor('grey-3');
+const primary = getPaletteColor('primary');
+const white = getPaletteColor('white');
 
 describe('<RoutesMapToolbar>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['rtwbb'], 'global', i18n);
     cy.testLanguageStringsInContext(
       [
+        'tooltipDrawDisable',
         'tooltipDrawDisabled',
         'tooltipDrawEnable',
-        'tooltipDrawDisable',
-        'tooltipDeleteEnable',
         'tooltipDeleteDisable',
-        'tooltipUndo',
+        'tooltipDeleteDisabled',
+        'tooltipDeleteEnable',
         'tooltipSave',
+        'tooltipUndo',
       ],
       'routes',
       i18n,
     );
   });
 
-  context('draw disabled', () => {
+  context('draw inactive', () => {
     beforeEach(() => {
       cy.mount(RoutesMapToolbar, {
         props: {
@@ -54,6 +70,10 @@ describe('<RoutesMapToolbar>', () => {
     });
 
     coreTests();
+    inactiveDrawTest();
+    inactiveDeleteTest();
+    inactiveUndoTest();
+    inactiveSaveTest();
   });
 
   context('draw enabled', () => {
@@ -67,14 +87,17 @@ describe('<RoutesMapToolbar>', () => {
     });
 
     coreTests();
-    drawEnabledTests();
+    activeDrawTest();
+    inactiveDeleteTest();
+    inactiveUndoTest();
+    inactiveSaveTest();
   });
 
-  context('draw enabled + delete enabled', () => {
+  context('delete enabled', () => {
     beforeEach(() => {
       cy.mount(RoutesMapToolbar, {
         props: {
-          drawEnabled: true,
+          drawEnabled: false,
           deleteEnabled: true,
         },
       });
@@ -82,7 +105,84 @@ describe('<RoutesMapToolbar>', () => {
     });
 
     coreTests();
-    drawEnabledTests();
+    inactiveDrawTest();
+    activeDeleteTest();
+    inactiveUndoTest();
+    inactiveSaveTest();
+  });
+
+  context('draw disabled + delete disabled', () => {
+    beforeEach(() => {
+      cy.mount(RoutesMapToolbar, {
+        props: {
+          drawDisabled: true,
+          deleteDisabled: true,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+
+    it('shows a disabled draw button with tooltip', () => {
+      cy.dataCy(selectorAddRouteButton)
+        .invoke('attr', 'disabled')
+        .should('eq', 'disabled');
+      cy.dataCy(selectorAddRouteAvatar).should('have.backgroundColor', grey3);
+      cy.dataCy(selectorAddRouteIcon).should('have.color', primary);
+      cy.dataCy(selectorAddRouteAvatar).trigger('mouseenter');
+      cy.dataCy(selectorTooltipAddRouteDisabled)
+        .should('be.visible')
+        .and('contain', i18n.global.t('routes.tooltipDrawDisabled'));
+    });
+
+    it('shows a disabled delete button with tooltip', () => {
+      cy.dataCy(selectorDeleteRouteButton)
+        .invoke('attr', 'disabled')
+        .should('eq', 'disabled');
+      cy.dataCy(selectorDeleteRouteAvatar).should(
+        'have.backgroundColor',
+        grey3,
+      );
+      cy.dataCy(selectorDeleteRouteIcon).should('have.color', primary);
+      cy.dataCy(selectorDeleteRouteAvatar).trigger('mouseenter');
+      cy.dataCy(selectorTooltipDeleteRouteDisabled)
+        .should('be.visible')
+        .and('contain', i18n.global.t('routes.tooltipDeleteDisabled'));
+    });
+
+    inactiveUndoTest();
+    inactiveSaveTest();
+  });
+
+  context('undo and save disabled', () => {
+    beforeEach(() => {
+      cy.mount(RoutesMapToolbar, {
+        props: {
+          undoDisabled: true,
+          saveDisabled: true,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+
+    it('shows a disabled undo button', () => {
+      cy.dataCy(selectorUndoButton)
+        .invoke('attr', 'disabled')
+        .should('eq', 'disabled');
+      cy.dataCy(selectorUndoAvatar).should('have.backgroundColor', grey3);
+      cy.dataCy(selectorUndoIcon).should('have.color', primary);
+    });
+
+    it('shows a disabled save button', () => {
+      cy.dataCy(selectorSaveRouteButton)
+        .invoke('attr', 'disabled')
+        .should('eq', 'disabled');
+      cy.dataCy(selectorSaveRouteAvatar).and('have.backgroundColor', grey3);
+      cy.dataCy(selectorSaveRouteIcon).and('have.color', primary);
+    });
   });
 });
 
@@ -90,9 +190,7 @@ function coreTests() {
   it('renders component', () => {
     cy.dataCy(selectorToolbarTop).should('be.visible');
     cy.dataCy(selectorToolbarBottom).should('be.visible');
-  });
-
-  it('renders draw button', () => {
+    // draw button
     cy.dataCy(selectorAddRouteButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
@@ -109,40 +207,7 @@ function coreTests() {
     cy.dataCy(selectorAddRouteIcon)
       .invoke('width')
       .should('be.equal', iconSize);
-  });
-
-  it('renders current location button', () => {
-    cy.dataCy(selectorCurrentPositionButton)
-      .should('be.visible')
-      .and('have.css', 'padding', '0px');
-    cy.dataCy(selectorCurrentPositionAvatar).should('be.visible');
-    cy.dataCy(selectorCurrentPositionAvatar)
-      .invoke('height')
-      .should('be.equal', avatarSize);
-    cy.dataCy(selectorCurrentPositionAvatar)
-      .invoke('width')
-      .should('be.equal', avatarSize);
-    cy.dataCy(selectorCurrentPositionIcon)
-      .invoke('height')
-      .should('be.equal', iconSize);
-    cy.dataCy(selectorCurrentPositionIcon)
-      .invoke('width')
-      .should('be.equal', iconSize);
-  });
-
-  it('renders source select', () => {
-    cy.dataCy(selectorSource).should('be.visible');
-    cy.dataCy(selectorSource).click();
-    cy.get('.q-menu')
-      .find('.q-item')
-      .should('have.length', 2)
-      .and('contain', i18n.global.t('global.rtwbb'))
-      .and('contain', i18n.global.t('global.osm'));
-  });
-}
-
-function drawEnabledTests() {
-  it('renders delete button', () => {
+    // delete button
     cy.dataCy(selectorDeleteRouteButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
@@ -159,9 +224,7 @@ function drawEnabledTests() {
     cy.dataCy(selectorDeleteRouteIcon)
       .invoke('width')
       .should('be.equal', iconSize);
-  });
-
-  it('renders undo button', () => {
+    // undo button
     cy.dataCy(selectorUndoButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
@@ -174,9 +237,7 @@ function drawEnabledTests() {
       .should('be.equal', avatarSize);
     cy.dataCy(selectorUndoIcon).invoke('height').should('be.equal', iconSize);
     cy.dataCy(selectorUndoIcon).invoke('width').should('be.equal', iconSize);
-  });
-
-  it('renders save route button', () => {
+    // save button
     cy.dataCy(selectorSaveRouteButton)
       .should('be.visible')
       .and('have.css', 'padding', '0px');
@@ -193,5 +254,99 @@ function drawEnabledTests() {
     cy.dataCy(selectorSaveRouteIcon)
       .invoke('width')
       .should('be.equal', iconSize);
+    // current position button
+    cy.dataCy(selectorCurrentPositionButton)
+      .should('be.visible')
+      .and('have.css', 'padding', '0px');
+    cy.dataCy(selectorCurrentPositionAvatar).should('be.visible');
+    cy.dataCy(selectorCurrentPositionAvatar)
+      .invoke('height')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorCurrentPositionAvatar)
+      .invoke('width')
+      .should('be.equal', avatarSize);
+    cy.dataCy(selectorCurrentPositionIcon)
+      .invoke('height')
+      .should('be.equal', iconSize);
+    cy.dataCy(selectorCurrentPositionIcon)
+      .invoke('width')
+      .should('be.equal', iconSize);
+    // source select
+    cy.dataCy(selectorSource).should('be.visible');
+    cy.dataCy(selectorSource).click();
+    cy.get('.q-menu')
+      .find('.q-item')
+      .should('have.length', 2)
+      .and('contain', i18n.global.t('global.rtwbb'))
+      .and('contain', i18n.global.t('global.osm'));
+  });
+}
+
+function activeDrawTest() {
+  it('shows active draw button with tooltip', () => {
+    cy.dataCy(selectorAddRouteAvatar).should('have.backgroundColor', primary);
+    cy.dataCy(selectorAddRouteIcon).should('have.color', white);
+    cy.dataCy(selectorAddRouteButton).trigger('mouseenter');
+    cy.dataCy(selectorTooltipAddRouteDisable)
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.tooltipDrawDisable'));
+  });
+}
+
+function activeDeleteTest() {
+  it('shows active delete button with tooltip', () => {
+    cy.dataCy(selectorDeleteRouteAvatar).should(
+      'have.backgroundColor',
+      primary,
+    );
+    cy.dataCy(selectorDeleteRouteIcon).should('have.color', white);
+    cy.dataCy(selectorDeleteRouteButton).trigger('mouseenter');
+    cy.dataCy(selectorTooltipDeleteRouteDisable)
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.tooltipDeleteDisable'));
+  });
+}
+
+function inactiveDeleteTest() {
+  it('shows inactive delete button with tooltip', () => {
+    cy.dataCy(selectorDeleteRouteAvatar).should('have.backgroundColor', grey3);
+    cy.dataCy(selectorDeleteRouteIcon).should('have.color', primary);
+    cy.dataCy(selectorDeleteRouteButton).trigger('mouseenter');
+    cy.dataCy(selectorTooltipDeleteRouteEnable)
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.tooltipDeleteEnable'));
+  });
+}
+
+function inactiveDrawTest() {
+  it('shows inactive draw button with tooltip', () => {
+    cy.dataCy(selectorAddRouteAvatar).should('have.backgroundColor', grey3);
+    cy.dataCy(selectorAddRouteIcon).should('have.color', primary);
+    cy.dataCy(selectorAddRouteButton).trigger('mouseenter');
+    cy.dataCy(selectorTooltipAddRouteEnable)
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.tooltipDrawEnable'));
+  });
+}
+
+function inactiveUndoTest() {
+  it('shows inactive undo button with tooltip', () => {
+    cy.dataCy(selectorUndoAvatar).should('have.backgroundColor', grey3);
+    cy.dataCy(selectorUndoIcon).should('have.color', primary);
+    cy.dataCy(selectorUndoButton).trigger('mouseenter');
+    cy.dataCy(selectorTooltipUndo)
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.tooltipUndo'));
+  });
+}
+
+function inactiveSaveTest() {
+  it('shows inactive save button with tooltip', () => {
+    cy.dataCy(selectorSaveRouteAvatar).should('have.backgroundColor', grey3);
+    cy.dataCy(selectorSaveRouteIcon).should('have.color', primary);
+    cy.dataCy(selectorSaveRouteButton).trigger('mouseenter');
+    cy.dataCy(selectorTooltipSave)
+      .should('be.visible')
+      .and('contain', i18n.global.t('routes.tooltipSave'));
   });
 }

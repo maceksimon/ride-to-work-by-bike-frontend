@@ -6,6 +6,7 @@
  *
  * @props
  * - `deleteEnabled` (boolean, required): Enabled state for delete tool.
+ * - `deleteDisabled` (boolean, required): Disabled state for delete button.
  * - `drawEnabled` (boolean, required): Enabled state for draw tool.
  * - `drawDisabled` (boolean, required): Disabled state for draw button.
  * - `saveDisabled` (boolean, required): Disabled state for save button.
@@ -45,6 +46,10 @@ export default defineComponent({
   ],
   props: {
     deleteEnabled: {
+      type: Boolean,
+      default: false,
+    },
+    deleteDisabled: {
       type: Boolean,
       default: false,
     },
@@ -123,14 +128,18 @@ export default defineComponent({
           data-cy="add-route-button"
         >
           <!-- Tooltip -->
-          <q-tooltip :delay="tooltipDelay" class="text-body2">
-            <span v-if="drawDisabled">
+          <q-tooltip
+            :delay="tooltipDelay"
+            class="text-body2"
+            data-cy="tooltip-add-route"
+          >
+            <span v-if="drawDisabled" data-cy="tooltip-add-route-disabled">
               {{ $t('routes.tooltipDrawDisabled') }}
             </span>
-            <span v-else-if="!drawEnabled">
+            <span v-else-if="!drawEnabled" data-cy="tooltip-add-route-enable">
               {{ $t('routes.tooltipDrawEnable') }}
             </span>
-            <span v-else-if="drawEnabled">
+            <span v-else-if="drawEnabled" data-cy="tooltip-add-route-disable">
               {{ $t('routes.tooltipDrawDisable') }}
             </span>
           </q-tooltip>
@@ -151,24 +160,31 @@ export default defineComponent({
         </q-btn>
         <!-- Button: Enable delete (delete point/vertex) -->
         <q-btn
-          v-show="drawEnabled"
           dense
           round
           unelevated
           class="q-pa-none q-ma-none"
           color="transparent"
           text-color="primary"
+          :disabled="deleteDisabled"
           @click.prevent="$emit('update:delete-enabled', !deleteEnabled)"
           data-cy="delete-route-button"
         >
           <!-- Tooltip -->
           <q-tooltip :delay="tooltipDelay" class="text-body2">
-            <span v-if="!deleteEnabled">{{
-              $t('routes.tooltipDeleteEnable')
-            }}</span>
-            <span v-if="deleteEnabled">{{
-              $t('routes.tooltipDeleteDisable')
-            }}</span>
+            <span v-if="deleteDisabled" data-cy="tooltip-delete-route-disabled">
+              {{ $t('routes.tooltipDeleteDisabled') }}
+            </span>
+            <span
+              v-else-if="!deleteEnabled"
+              data-cy="tooltip-delete-route-enable"
+              >{{ $t('routes.tooltipDeleteEnable') }}</span
+            >
+            <span
+              v-else-if="deleteEnabled"
+              data-cy="tooltip-delete-route-disable"
+              >{{ $t('routes.tooltipDeleteDisable') }}</span
+            >
           </q-tooltip>
           <q-avatar
             :size="avatarSize"
@@ -187,7 +203,6 @@ export default defineComponent({
         </q-btn>
         <!-- Button: Undo -->
         <q-btn
-          v-show="drawEnabled"
           dense
           round
           unelevated
@@ -199,7 +214,11 @@ export default defineComponent({
           data-cy="undo-button"
         >
           <!-- Tooltip -->
-          <q-tooltip :delay="tooltipDelay" class="text-body2">
+          <q-tooltip
+            :delay="tooltipDelay"
+            class="text-body2"
+            data-cy="tooltip-undo"
+          >
             {{ $t('routes.tooltipUndo') }}
           </q-tooltip>
           <q-avatar
@@ -219,7 +238,6 @@ export default defineComponent({
         </q-btn>
         <!-- Button: Save route -->
         <q-btn
-          v-show="drawEnabled"
           dense
           round
           unelevated
@@ -231,7 +249,11 @@ export default defineComponent({
           data-cy="save-route-button"
         >
           <!-- Tooltip -->
-          <q-tooltip :delay="tooltipDelay" class="text-body2">
+          <q-tooltip
+            :delay="tooltipDelay"
+            class="text-body2"
+            data-cy="tooltip-save"
+          >
             {{ $t('routes.tooltipSave') }}
           </q-tooltip>
           <q-avatar
