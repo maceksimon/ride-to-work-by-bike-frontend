@@ -38,7 +38,7 @@ export const useRoutesMapVectorLayer = (
    * @param feature Feature
    * @return {void}
    */
-  const renderSavedRoute = (feature: Feature): void => {
+  const renderRoute = (feature: Feature): void => {
     clearMapRoutes();
     addMapRoute(feature);
   };
@@ -46,6 +46,6 @@ export const useRoutesMapVectorLayer = (
   return {
     addMapRoute,
     clearMapRoutes,
-    renderSavedRoute,
+    renderRoute,
   };
 };
