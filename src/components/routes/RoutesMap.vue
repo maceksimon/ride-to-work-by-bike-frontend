@@ -97,11 +97,12 @@ export default defineComponent({
 
     // map
     const {
-      mapRef,
       center,
-      zoom,
+      interactions,
+      mapRef,
       projection,
       source,
+      zoom,
       centerMapOnRoute,
       centerOnCurrentLocation,
       getRouteLength,
@@ -387,6 +388,7 @@ export default defineComponent({
       colorGrey4,
       deleteEnabled,
       drawEnabled,
+      interactions,
       isDeleteDisabled,
       isDrawDisabled,
       isSaveDisabled,
@@ -535,6 +537,7 @@ export default defineComponent({
           :loadTilesWhileAnimating="true"
           :loadTilesWhileInteracting="true"
           :style="{ height: mapHeight }"
+          :interactions="interactions"
           data-cy="routes-map-map"
         >
           <!-- View -->
