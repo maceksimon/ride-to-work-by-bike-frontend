@@ -76,28 +76,28 @@ const routesConf: RoutesConf = {
     path: 'detail',
     children: {
       fullPath: '/results/detail',
-      name: 'results_detail',
+      name: 'results-detail',
     },
   },
   results_report: {
     path: 'report',
     children: {
       fullPath: '/results/detail/report',
-      name: 'results_detail_report',
+      name: 'results-detail-report',
     },
   },
   results_regularity: {
     path: 'regularity',
     children: {
       fullPath: '/results/detail/regularity',
-      name: 'results_detail_regularity',
+      name: 'results-detail-regularity',
     },
   },
   results_performance: {
     path: 'performance',
     children: {
       fullPath: '/results/detail/performance',
-      name: 'results_detail_performance',
+      name: 'results-detail-performance',
     },
   },
   routes: {
@@ -111,28 +111,28 @@ const routesConf: RoutesConf = {
     path: 'calendar',
     children: {
       fullPath: '/routes/calendar',
-      name: 'routes_calendar',
+      name: 'routes-calendar',
     },
   },
   routes_list: {
     path: 'list',
     children: {
       fullPath: '/routes/list',
-      name: 'routes_list',
+      name: 'routes-list',
     },
   },
   routes_map: {
     path: 'map',
     children: {
       fullPath: '/routes/map',
-      name: 'routes_map',
+      name: 'routes-map',
     },
   },
   routes_app: {
     path: 'app',
     children: {
       fullPath: '/routes/app',
-      name: 'routes_app',
+      name: 'routes-app',
     },
   },
 };
