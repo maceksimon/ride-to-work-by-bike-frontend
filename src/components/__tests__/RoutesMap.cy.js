@@ -50,7 +50,7 @@ describe('<RoutesMap>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      cy.fixture('routeListSelectedMultiple').then((routes) => {
+      cy.fixture('routeListSelected').then((routes) => {
         cy.mount(RoutesMap, {
           props: {
             selectedRoutes: routes,
@@ -76,9 +76,9 @@ function coreTests() {
       .and('contain', i18n.global.t('routes.titleYourRoutes'));
 
     /**
-     * Scenario: After selecting 3 items in calendar, user moves to map.
+     * Scenario: After selecting 1 items in calendar, user moves to map.
      * Then user draws a route.
-     * Route is saved into the three separate entries.
+     * Route is saved into the sidebar.
      */
     toggleDrawTool();
     testUndoSaveDisabled();
@@ -105,12 +105,14 @@ function coreTests() {
       .then((element) => {
         cy.wrap(element.text()).as('finishName');
       });
-    // before clicking edit, draw tool is disabled
+    // before clicking edit, draw and delete is disabled
     cy.dataCy(selectorAddRouteButton).should('be.disabled');
-    // edit 2nd route
-    cy.dataCy(`${selectorRouteListItem}-1`).click();
-    // after clicking a route item, draw tool is enabled
+    cy.dataCy(selectorDeleteRouteButton).should('be.disabled');
+    // edit route
+    cy.dataCy(`${selectorRouteListItem}-0`).click();
+    // after clicking a route item, draw and delete is is enabled
     cy.dataCy(selectorAddRouteButton).should('not.be.disabled');
+    cy.dataCy(selectorDeleteRouteButton).should('not.be.disabled');
     toggleDrawTool();
     testUndoSaveDisabled();
     drawFeature();
@@ -121,7 +123,7 @@ function coreTests() {
     // has shorter route, since it is a straight line
     cy.get('@routeLength').then((routeLength) => {
       cy.get(
-        `[data-cy="${selectorRouteListItem}-1"] [data-cy="${selectorRouteItemLength}"]`,
+        `[data-cy="${selectorRouteListItem}-0"] [data-cy="${selectorRouteItemLength}"]`,
       )
         .should('be.visible')
         .and('not.contain', routeLength)
@@ -136,7 +138,7 @@ function coreTests() {
         });
     });
     // new route matches old routes' start and finish name
-    cy.dataCy(`${selectorRouteListItem}-1`)
+    cy.dataCy(`${selectorRouteListItem}-0`)
       .find(`[data-cy="${selectorRouteItemNameStart}"]`)
       .should('be.visible')
       .then((element) => {
@@ -144,7 +146,7 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', startName);
         });
       });
-    cy.dataCy(`${selectorRouteListItem}-1`)
+    cy.dataCy(`${selectorRouteListItem}-0`)
       .find(`[data-cy="${selectorRouteItemNameFinish}"]`)
       .should('be.visible')
       .then((element) => {
@@ -152,8 +154,8 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', finishName);
         });
       });
-    // edit 2rd route
-    cy.dataCy(`${selectorRouteListItem}-1`).click();
+    // edit route
+    cy.dataCy(`${selectorRouteListItem}-0`).click();
     toggleDrawTool();
     testUndoSaveDisabled();
     drawFeature();
@@ -167,13 +169,13 @@ function coreTests() {
     saveRoute();
     cy.get('@routeLength').then((routeLength) => {
       cy.get(
-        `[data-cy="${selectorRouteListItem}-1"] [data-cy="${selectorRouteItemLength}"]`,
+        `[data-cy="${selectorRouteListItem}-0"] [data-cy="${selectorRouteItemLength}"]`,
       )
         .should('be.visible')
         .and('contain', routeLength);
     });
     // new route matches old routes' start and finish name
-    cy.dataCy(`${selectorRouteListItem}-1`)
+    cy.dataCy(`${selectorRouteListItem}-0`)
       .find(`[data-cy="${selectorRouteItemNameStart}"]`)
       .should('be.visible')
       .then((element) => {
@@ -181,7 +183,7 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', startName);
         });
       });
-    cy.dataCy(`${selectorRouteListItem}-1`)
+    cy.dataCy(`${selectorRouteListItem}-0`)
       .find(`[data-cy="${selectorRouteItemNameFinish}"]`)
       .should('be.visible')
       .then((element) => {

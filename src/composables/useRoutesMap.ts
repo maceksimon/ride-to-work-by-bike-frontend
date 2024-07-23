@@ -6,6 +6,7 @@ import { LineString, MultiPoint, Point } from 'ol/geom';
 import { Style, Stroke, Icon } from 'ol/style';
 import { getLength } from 'ol/sphere';
 import { fromLonLat, useGeographic } from 'ol/proj';
+import { defaults as defaultInteractions } from 'ol/interaction';
 
 // composables
 import { i18n } from '../boot/i18n';
@@ -47,6 +48,9 @@ export const useRoutesMap = () => {
   const source = ref<string>(mapSourceRtwbb);
   const zoom = ref<number>(defaultMapZoom);
   const customSVGIconsFilePath = 'icons/routes_map';
+  const interactions = defaultInteractions({
+    doubleClickZoom: false,
+  });
 
   /**
    * Centers the map on the given route.
@@ -217,11 +221,12 @@ export const useRoutesMap = () => {
   };
 
   return {
-    mapRef,
     center,
-    zoom,
+    interactions,
+    mapRef,
     projection,
     source,
+    zoom,
     centerMapOnExtent,
     centerMapOnRoute,
     centerOnCurrentLocation,
