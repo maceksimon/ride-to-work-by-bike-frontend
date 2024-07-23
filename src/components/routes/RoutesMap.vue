@@ -149,7 +149,7 @@ export default defineComponent({
     const vectorLayer = ref<InstanceType<typeof Layers.OlVectorLayer> | null>(
       null,
     );
-    const { addMapRoute, clearMapRoutes, renderSavedRoute } =
+    const { addMapRoute, clearMapRoutes, renderRoute } =
       useRoutesMapVectorLayer(vectorLayer);
 
     /**
@@ -196,16 +196,20 @@ export default defineComponent({
         });
         return;
       }
-      // toggle between draw and delete
-      deleteEnabled.value = false;
       if (drawEnabled.value === true) {
         drawEnabled.value = false;
         clearTooltip();
-        clearDrawHistory();
         resetEditedRoute();
+        clearDrawHistory();
       } else {
         drawEnabled.value = true;
+        // reset history only if delete has not been enabled before
+        if (!deleteEnabled.value) {
+          setEditedRouteHistory();
+        }
       }
+      // switch off delete mode
+      deleteEnabled.value = false;
     };
 
     /**
@@ -221,15 +225,36 @@ export default defineComponent({
         });
         return;
       }
-      // toggle between draw and delete
-      drawEnabled.value = false;
       if (deleteEnabled.value === true) {
         deleteEnabled.value = false;
         clearTooltip();
-        clearDrawHistory();
         resetEditedRoute();
+        clearDrawHistory();
       } else {
         deleteEnabled.value = true;
+        // reset history only if draw has not been enabled before
+        if (!drawEnabled.value) {
+          setEditedRouteHistory();
+        }
+      }
+      // switch off draw mode
+      drawEnabled.value = false;
+    };
+
+    /**
+     * Sets the draw route history from the currently edited route.
+     * @return {void}
+     */
+    const setEditedRouteHistory = (): void => {
+      if (editedRoutes.value.length === 1) {
+        const feature = editedRoutes.value[0].routeFeature?.feature;
+        if (feature) {
+          // set history entry
+          const geometry = feature.clone().getGeometry();
+          if (geometry instanceof LineString) {
+            drawRouteHistory.value = [geometry.getCoordinates()];
+          }
+        }
       }
     };
 
@@ -241,14 +266,11 @@ export default defineComponent({
     const resetEditedRoute = (): void => {
       if (editedRoutes.value.length === 1) {
         const editedRoute = editedRoutes.value[0];
-        const savedRoute = savedRoutes.value.find((savedRoute) => {
-          return (
-            savedRoute.date === editedRoute.date &&
-            savedRoute.direction === editedRoute.direction
-          );
-        }) as RouteItem | undefined;
-        if (savedRoute && savedRoute.routeFeature?.feature) {
-          renderSavedRoute(savedRoute.routeFeature.feature);
+        if (editedRoute && editedRoute.routeFeature?.feature) {
+          const newFeature = editedRoute.routeFeature.feature.clone();
+          newFeature.setGeometry(new LineString(drawRouteHistory.value[0]));
+          editedRoute.routeFeature.feature = newFeature;
+          renderRoute(editedRoute.routeFeature.feature);
         }
       }
     };
@@ -319,14 +341,9 @@ export default defineComponent({
             feature,
           },
         };
-        // set history entry
-        const geometry = feature.getGeometry();
-        if (geometry instanceof LineString) {
-          drawRouteHistory.value = [geometry.getCoordinates()];
-        }
         // ensures, that update does not happen until saved
         editedRoutes.value = [newEditedRoute];
-        renderSavedRoute(newEditedRoute.routeFeature.feature);
+        renderRoute(newEditedRoute.routeFeature.feature);
         centerMapOnRoute(newEditedRoute.routeFeature.feature);
       }
     };
@@ -388,6 +405,8 @@ export default defineComponent({
       colorGrey4,
       deleteEnabled,
       drawEnabled,
+      drawRouteHistory,
+      editedRoutes,
       interactions,
       isDeleteDisabled,
       isDrawDisabled,
@@ -417,7 +436,7 @@ export default defineComponent({
       onSavedRouteClick,
       onUpdateSource,
       onUndo,
-      renderSavedRoute,
+      renderRoute,
       styleFunction,
       toggleDeleteEnabled,
       toggleDrawEnabled,

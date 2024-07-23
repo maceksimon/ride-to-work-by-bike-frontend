@@ -207,6 +207,54 @@ function coreTests() {
           cy.wrap(element.text()).should('equal', finishName);
         });
       });
+
+    /**
+     * TEST RESET ROUTE
+     * Scenario: User clicks on a saved route in sidebar.
+     * Redraws the route.
+     * Turns off draw tool.
+     * Route resets to the original route.
+     */
+    cy.dataCy(`${selectorRouteListItem}-0`).click();
+    cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
+      `${Cypress.currentTest.titlePath}-map`,
+      {
+        failureThreshold: 0.1,
+        failureThresholdType: 'percent',
+        timeout: 4000,
+        customDiffConfig: { threshold: 0.4 },
+        retries: 2,
+      },
+    );
+    toggleDrawTool();
+    // draw random route
+    cy.dataCy(selectorRoutesMapMap).click(50, 50);
+    cy.dataCy(selectorRoutesMapMap).click(100, 100);
+    toggleDrawTool();
+    // identical snapshot
+    cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
+      `${Cypress.currentTest.titlePath}-map`,
+      {
+        failureThreshold: 0.1,
+        failureThresholdType: 'percent',
+        timeout: 4000,
+        customDiffConfig: { threshold: 0.4 },
+        retries: 2,
+      },
+    );
+    toggleDeleteTool();
+    deleteFeaturePoints();
+    toggleDeleteTool();
+    // identical snapshot
+    cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
+      `${Cypress.currentTest.titlePath}-map`,
+      {
+        failureThreshold: 0.05,
+        failureThresholdType: 'percent',
+        customDiffConfig: { threshold: 0.2 },
+        retries: 2,
+      },
+    );
   });
 }
 
