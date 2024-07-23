@@ -184,8 +184,10 @@ export default defineComponent({
 
     /**
      * Toggles the draw mode.
+     * When switched off, resets currently edited route to initial state.
      */
     const toggleDrawEnabled = (): void => {
+      // do not allow if no routes are selected
       if (!editedRoutes.value.length) {
         Notify.create({
           type: 'warning',
@@ -193,14 +195,40 @@ export default defineComponent({
         });
         return;
       }
+      // toggle between draw and delete
+      deleteEnabled.value = false;
       if (drawEnabled.value === true) {
-        clearTooltip();
-        deleteEnabled.value = false;
-        clearDrawHistory();
         drawEnabled.value = false;
+        clearTooltip();
+        clearDrawHistory();
         resetEditedRoute();
       } else {
         drawEnabled.value = true;
+      }
+    };
+
+    /**
+     * Toggles the delete mode.
+     * When switched off, resets currently edited route to initial state.
+     */
+    const toggleDeleteEnabled = (): void => {
+      // do not allow if no routes are selected
+      if (!editedRoutes.value.length) {
+        Notify.create({
+          type: 'warning',
+          message: i18n.global.t('notify.noRouteSelected'),
+        });
+        return;
+      }
+      // toggle between draw and delete
+      drawEnabled.value = false;
+      if (deleteEnabled.value === true) {
+        deleteEnabled.value = false;
+        clearTooltip();
+        clearDrawHistory();
+        resetEditedRoute();
+      } else {
+        deleteEnabled.value = true;
       }
     };
 
@@ -321,6 +349,10 @@ export default defineComponent({
       return !editedRoutes.value.length;
     });
 
+    const isDeleteDisabled = computed((): boolean => {
+      return !editedRoutes.value.length;
+    });
+
     const isSaveDisabled = computed((): boolean => {
       return drawRouteHistory.value.length <= 1;
     });
@@ -355,6 +387,7 @@ export default defineComponent({
       colorGrey4,
       deleteEnabled,
       drawEnabled,
+      isDeleteDisabled,
       isDrawDisabled,
       isSaveDisabled,
       isUndoDisabled,
@@ -384,6 +417,7 @@ export default defineComponent({
       onUndo,
       renderSavedRoute,
       styleFunction,
+      toggleDeleteEnabled,
       toggleDrawEnabled,
     };
   },
@@ -482,6 +516,7 @@ export default defineComponent({
         <!-- Toolbar: Top -->
         <routes-map-toolbar
           :delete-enabled="deleteEnabled"
+          :delete-disabled="isDeleteDisabled"
           :draw-enabled="drawEnabled"
           :draw-disabled="isDrawDisabled"
           :save-disabled="isSaveDisabled"
@@ -489,7 +524,7 @@ export default defineComponent({
           @current-position="centerOnCurrentLocation"
           @save:route="onSaveRoute"
           @update:source="onUpdateSource"
-          @update:delete-enabled="deleteEnabled = $event"
+          @update:delete-enabled="toggleDeleteEnabled"
           @update:draw-enabled="toggleDrawEnabled"
           @undo="onUndo"
           data-cy="routes-map-toolbar"
