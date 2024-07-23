@@ -194,7 +194,7 @@ export default defineComponent({
           >
             <!-- Icon -->
             <q-icon
-              name="mdi-pencil-remove"
+              name="mdi-eraser"
               :color="deleteEnabled ? 'white' : 'primary'"
               :size="iconSize"
               data-cy="delete-route-icon"
