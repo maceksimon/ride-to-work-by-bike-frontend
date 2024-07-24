@@ -13,6 +13,7 @@
  * - `update:modelValue`: Emitted as a part of v-model structure.
  *
  * @components
+ * - `FormFieldCompany`: Component to render company select.
  * - `FormFieldDonation`: Component to render donation widget.
  * - `FormFieldRadioRequired`: Component to render radio buttons.
  * - `FormFieldSliderNumber`: Component to render number input with slider.
@@ -33,6 +34,7 @@ import { i18n } from '../../boot/i18n';
 import { useFormatPrice } from '../../composables/useFormatPrice';
 
 // components
+import FormFieldCompany from '../global/FormFieldCompany.vue';
 import FormFieldDonation from '../form/FormFieldDonation.vue';
 import FormFieldRadioRequired from '../form/FormFieldRadioRequired.vue';
 import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
@@ -47,6 +49,7 @@ import type { FormOption, FormPaymentVoucher } from '../types/Form';
 export default defineComponent({
   name: 'RegisterChallengePayment',
   components: {
+    FormFieldCompany,
     FormFieldDonation,
     FormFieldRadioRequired,
     FormFieldSliderNumber,
@@ -113,6 +116,7 @@ export default defineComponent({
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
     const selectedPaymentSubject = ref<string>('individual');
     const isEntryFeeFree = ref<boolean>(false);
+    const selectedCompany = ref<string>('');
 
     /**
      * Returns the payment amount based on the selected payment amount
@@ -191,6 +195,7 @@ export default defineComponent({
       paymentAmountMax,
       paymentAmountMin,
       primaryLightColor,
+      selectedCompany,
       selectedPaymentAmount,
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
@@ -265,9 +270,14 @@ export default defineComponent({
         @remove:voucher="onRemoveVoucher"
       />
     </div>
-    <!-- Input: Donation -->
-    <div v-if="selectedPaymentSubject === 'voucher' && isEntryFeeFree">
-      <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
+    <!-- Input: Company -->
+    <div v-if="selectedPaymentSubject === 'company'">
+      <form-field-company v-model="selectedCompany"
+        class="text-grey-10"
+        :label="$t('register.challenge.labelCompanyOrSchool')"
+        data-cy="form-field-company"
+      />
+      <p class="q-mt-lg text-grey-10" data-cy="payment-company-text">{{ $t('register.challenge.textCompany') }}</p>
     </div>
     <!-- Input: Custom amount -->
     <div v-if="selectedPaymentAmount === 'custom' && !isEntryFeeFree">
@@ -278,6 +288,10 @@ export default defineComponent({
         class="text-grey-10"
         data-cy="form-field-payment-amount-custom"
       />
+    </div>
+    <!-- Input: Donation -->
+    <div v-if="(selectedPaymentSubject === 'voucher' && isEntryFeeFree) || selectedPaymentSubject === 'company'">
+      <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
     </div>
   </div>
 </template>
