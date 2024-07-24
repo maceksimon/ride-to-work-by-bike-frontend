@@ -3,7 +3,10 @@ import RegisterChallengePayment from 'components/register/RegisterChallengePayme
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// variables
 const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
+const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
+const sliderClickTolerance = 10;
 
 const { getPaletteColor, lighten } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -190,7 +193,7 @@ function coreTests() {
     );
   });
 
-  it('allows to apply voucher (FULL)', () => {
+  it.only('allows to apply voucher (FULL)', () => {
     cy.get('@voucherFull').then((voucher) => {
       // option default amount is active
       cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
@@ -207,7 +210,25 @@ function coreTests() {
       cy.dataCy('form-field-payment-amount-custom').should('not.exist');
       // clear input
       cy.dataCy('form-field-donation').should('be.visible');
-      // TODO: add donation
+
+      /**
+       * If voucher FULL is applied, user still has option to add donation
+       */
+      cy.dataCy('form-field-donation-checkbox').click();
+      cy.dataCy('form-field-slider-number-input')
+        .should('be.visible')
+        .and('have.value', defaultPaymentAmountMin.toString());
+      // click in the middle of slider
+      cy.dataCy('form-field-slider-number-slider')
+        .should('be.visible')
+        .click();
+      cy.dataCy('form-field-slider-number-input')
+        .invoke('val').then(value => {
+          const intValue = parseInt(value);
+          const midValue = parseInt(Math.round((parseInt(defaultPaymentAmountMax) + parseInt(defaultPaymentAmountMin)) / 2))
+          // clicking on the slider is not entirely precise - we define tolerance
+          expect(Math.abs(intValue - midValue)).to.be.lessThan(sliderClickTolerance);
+        })
     });
   });
 }
