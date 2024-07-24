@@ -15,8 +15,10 @@
  * @components
  * - `FormFieldCompany`: Component to render company select.
  * - `FormFieldDonation`: Component to render donation widget.
+ * - `FormFieldPhone`: Component to render phone input.
  * - `FormFieldRadioRequired`: Component to render radio buttons.
  * - `FormFieldSliderNumber`: Component to render number input with slider.
+ * - `FormFieldTextRequired`: Component to render required text field.
  * - `FormFieldVoucher`: Component to render voucher widget.
  *
  * @example
@@ -36,8 +38,10 @@ import { useFormatPrice } from '../../composables/useFormatPrice';
 // components
 import FormFieldCompany from '../global/FormFieldCompany.vue';
 import FormFieldDonation from '../form/FormFieldDonation.vue';
+import FormFieldPhone from '../global/FormFieldPhone.vue';
 import FormFieldRadioRequired from '../form/FormFieldRadioRequired.vue';
 import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
+import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 
 // config
@@ -51,8 +55,10 @@ export default defineComponent({
   components: {
     FormFieldCompany,
     FormFieldDonation,
+    FormFieldPhone,
     FormFieldRadioRequired,
     FormFieldSliderNumber,
+    FormFieldTextRequired,
     FormFieldVoucher,
   },
   setup() {
@@ -117,6 +123,13 @@ export default defineComponent({
     const selectedPaymentSubject = ref<string>('individual');
     const isEntryFeeFree = ref<boolean>(false);
     const selectedCompany = ref<string>('');
+    const isRegistrationCoordinator = ref<boolean>(false);
+    const formRegisterCoordinator = reactive({
+      jobTitle: '',
+      phone: '',
+      responsibility: false,
+      terms: false,
+    })
 
     /**
      * Returns the payment amount based on the selected payment amount
@@ -188,7 +201,9 @@ export default defineComponent({
 
     return {
       borderRadius,
+      formRegisterCoordinator,
       isEntryFeeFree,
+      isRegistrationCoordinator,
       optionsPaymentAmount,
       optionsPaymentSubject,
       paymentAmount,
@@ -294,6 +309,108 @@ export default defineComponent({
     <div v-if="(selectedPaymentSubject === 'voucher' && isEntryFeeFree) || selectedPaymentSubject === 'company'">
       <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
     </div>
-
+    <!-- Section: Register coordinator -->
+     <!-- TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY -->
+    <div v-if="selectedPaymentSubject === 'company'" class="q-mt-md">
+      <!-- Checkbox: Register coordinator -->
+      <q-checkbox
+        dense
+        v-model="isRegistrationCoordinator"
+        color="primary"
+        :true-value="true"
+        :false-value="false"
+        class="text-primary text-weight-bold"
+        data-cy="register-coordinator-checkbox"
+      >
+        {{ $t('companyCoordinator.labelRegisterCoordinator') }}
+      </q-checkbox>
+      <div v-if="isRegistrationCoordinator">
+        <div
+          class="q-mt-lg"
+          v-html="$t('companyCoordinator.textBecomeCoordinator')"
+          data-cy="register-coordinator-text"
+        />
+        <!-- Section: Inputs -->
+        <div class="row q-col-gutter-md q-mt-none">
+          <!-- Input: job title -->
+          <form-field-text-required
+            v-model="formRegisterCoordinator.jobTitle"
+            name="form-job-title"
+            label="form.labelJobTitle"
+            label-short="form.labelJobTitleShort"
+            class="col-12 col-sm-6"
+            data-cy="register-coordinator-job-title"
+          />
+          <!-- Input: phone -->
+          <form-field-phone
+            v-model="formRegisterCoordinator.phone"
+            class="col-12 col-sm-6"
+            data-cy="register-coordinator-phone"
+          />
+        </div>
+        <!-- Input: confirm responsibility -->
+        <div data-cy="register-coordinator-responsibility">
+          <q-field
+            dense
+            borderless
+            hide-bottom-space
+            :model-value="formRegisterCoordinator.responsibility"
+            :rules="[
+              (val) =>
+                !!val ||
+                $t('register.coordinator.form.messageResponsibilityRequired'),
+            ]"
+          >
+            <q-checkbox
+              dense
+              v-model="formRegisterCoordinator.responsibility"
+              color="primary"
+              :true-value="true"
+              :false-value="false"
+              class="text-grey-10"
+            >
+              <span>{{
+                $t('register.coordinator.form.labelResponsibility')
+              }}</span>
+            </q-checkbox>
+          </q-field>
+        </div>
+        <!-- Input: confirm consent -->
+        <div class="q-mt-sm" data-cy="register-coordinator-terms">
+          <q-field
+            dense
+            borderless
+            hide-bottom-space
+            :model-value="formRegisterCoordinator.terms"
+            :rules="[
+              (val) =>
+                !!val || $t('register.coordinator.form.messageTermsRequired'),
+            ]"
+          >
+            <q-checkbox
+              dense
+              id="form-register-coordinator-terms"
+              v-model="formRegisterCoordinator.terms"
+              color="primary"
+              :true-value="true"
+              :false-value="false"
+              rules="required"
+              class="text-grey-10"
+            >
+              <!-- Default slot: label -->
+              <span>
+                {{ $t('register.coordinator.form.labelPrivacyConsent') }}
+                <!-- Link: terms -->
+                <!-- TODO: Link to terms page -->
+                <a href="#" target="_blank" class="text-primary">{{
+                  $t('register.coordinator.form.linkPrivacyConsent')
+                }}</a
+                >.
+              </span>
+            </q-checkbox>
+          </q-field>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
