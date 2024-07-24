@@ -16,6 +16,12 @@ const selectorPaymentAmountLabel = 'form-field-payment-amount-label';
 const selectorPaymentSubject = 'form-field-payment-subject';
 const selectorPaymentSubjectLabel = 'form-field-payment-subject-label';
 const selectorRegisterChallengePayment = 'register-challenge-payment';
+const selectorCoordinatorCheckbox = 'register-coordinator-checkbox';
+const selectorCoordinatorText = 'register-coordinator-text';
+const selectorCoordinatorJobTitle = 'register-coordinator-job-title';
+const selectorCoordinatorPhone = 'register-coordinator-phone';
+const selectorCoordinatorResponsibility = 'register-coordinator-responsibility';
+const selectorCoordinatorTerms = 'register-coordinator-terms';
 const selectorSliderNumberInput = 'form-field-slider-number-input';
 const selectorSliderNumberSlider = 'form-field-slider-number-slider';
 const selectorTextPaymentOrganizer = 'text-payment-organizer';
@@ -62,6 +68,14 @@ describe('<RegisterChallengePayment>', () => {
         'textPaymentOrganizer',
       ],
       'register.challenge',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      [
+        'labelRegisterCoordinator',
+        'textBecomeCoordinator',
+      ],
+      'companyCoordinator',
       i18n,
     );
   });
@@ -265,6 +279,45 @@ function coreTests() {
 
     // if company is paying the fee, user still has option to add donation
     testDonation();
+
+    /**
+     * Scenario: Selected company has no company coordinator
+     * Displays checkbox with coordinator option
+     * If option is checked, displays partial form for registration
+     */
+    cy.dataCy(selectorCoordinatorCheckbox)
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', primary)
+      .and('contain', i18n.global.t('companyCoordinator.labelRegisterCoordinator'));
+    // only show form when enabled
+    cy.dataCy(selectorCoordinatorText).should('not.exist');
+    cy.dataCy(selectorCoordinatorPhone).should('not.exist');
+    cy.dataCy(selectorCoordinatorJobTitle).should('not.exist');
+    cy.dataCy(selectorCoordinatorResponsibility).should('not.exist');
+    cy.dataCy(selectorCoordinatorTerms).should('not.exist');
+    // enable
+    cy.dataCy(selectorCoordinatorCheckbox).click();
+    // form
+    cy.dataCy(selectorCoordinatorText)
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .then(($el) => {
+        cy.stripHtmlTags(
+          i18n.global.t('companyCoordinator.textBecomeCoordinator'),
+        ).then((translation) => {
+          expect($el.text()).to.eq(translation);
+        });
+      });
+    // phone label
+    cy.dataCy(selectorCoordinatorPhone).should('be.visible')
+    // input label
+    cy.dataCy(selectorCoordinatorJobTitle).should('be.visible');
+    // checkbox responsibility
+    cy.dataCy(selectorCoordinatorResponsibility).should('be.visible');
+    // checkbox terms
+    cy.dataCy(selectorCoordinatorTerms).should('be.visible');
   });
 }
 
