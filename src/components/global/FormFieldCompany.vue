@@ -35,6 +35,7 @@ import DialogDefault from 'src/components/global/DialogDefault.vue';
 import FormAddCompany from 'src/components/form/FormAddCompany.vue';
 
 // composables
+import { i18n } from 'src/boot/i18n';
 import { useValidation } from 'src/composables/useValidation';
 
 // types
@@ -54,6 +55,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    label: {
+      type: String,
+      default: i18n.global.t('form.labelCompany'),
+    }
   },
   setup(props, { emit }) {
     const options = ref<string[]>([]);
@@ -70,6 +75,16 @@ export default defineComponent({
     const companyNew: FormCompanyFields = {
       name: '',
       vatId: '',
+      address: [
+        {
+          street: '',
+          houseNumber: '',
+          city: '',
+          zip: '',
+          cityChallenge: '',
+          department: '',
+        },
+      ],
     };
 
     // handles select input
@@ -145,8 +160,8 @@ export default defineComponent({
 <template>
   <div data-cy="form-company">
     <!-- Label -->
-    <label for="form-company" class="text-caption text-bold">
-      {{ $t('form.labelCompany') }}
+    <label for="form-company" class="text-caption text-bold" data-cy="form-field-company-label">
+      {{ label }}
     </label>
     <div class="row">
       <div class="col-12 col-sm" data-cy="col-input">
