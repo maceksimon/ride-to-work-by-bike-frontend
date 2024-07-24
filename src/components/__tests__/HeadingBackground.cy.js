@@ -35,14 +35,28 @@ describe('<HeadingBackground>', () => {
       cy.mount(HeadingBackground, {
         props: {},
       });
-      cy.viewport('macbook-16');
     });
 
     coreTests();
 
     it('renders sections side-by-side', () => {
+      cy.viewport('macbook-16');
       cy.testElementsSideBySide(selectorSectionText, selectorSectionImage);
     });
+
+    it('renders image', () => {
+      cy.dataCy(selectorHeadingBackgroundImage).then((element) => {
+        cy.wrap(element).matchImageSnapshot({
+          failureThreshold: 0.1,
+          failureThresholdType: 'percent',
+          timeout: 5000,
+          customDiffConfig: { threshold: 0.5 },
+          screenshotsFolder: 'test/cypress/snapshots',
+          retries: 2,
+          name: `heading-background-image-${Cypress.currentTest.titlePath[0]}`,
+        });
+      });
+    })
   });
 
   context('mobile', () => {
@@ -65,6 +79,20 @@ describe('<HeadingBackground>', () => {
         sectionTextWidthMobile,
       );
     });
+
+    it('renders image', () => {
+      cy.dataCy(selectorHeadingBackgroundImage).then((element) => {
+        cy.wrap(element).matchImageSnapshot({
+          failureThreshold: 0.1,
+          failureThresholdType: 'percent',
+          timeout: 5000,
+          customDiffConfig: { threshold: 0.5 },
+          screenshotsFolder: 'test/cypress/snapshots',
+          retries: 2,
+          name: `heading-background-image-${Cypress.currentTest.titlePath[0]}`,
+        });
+      });
+    })
   });
 });
 
@@ -106,17 +134,5 @@ function coreTests() {
       .find('img')
       .invoke('attr', 'alt')
       .should('eq', i18n.global.t('index.headingBackground.imageAltText'));
-    // image snapshot
-    cy.dataCy(selectorHeadingBackgroundImage).then((element) => {
-      cy.wrap(element).matchImageSnapshot({
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 5000,
-        customDiffConfig: { threshold: 0.5 },
-        screenshotsFolder: 'test/cypress/snapshots',
-        retries: 2,
-        name: `heading-background-image-${Cypress.currentTest.titlePath[0]}`,
-      });
-    });
   });
 }
