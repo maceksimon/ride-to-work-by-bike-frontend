@@ -272,6 +272,7 @@ export default defineComponent({
     </div>
     <!-- Input: Company -->
     <div v-if="selectedPaymentSubject === 'company'">
+      <q-separator class="q-my-lg" />
       <form-field-company v-model="selectedCompany"
         class="text-grey-10"
         :label="$t('register.challenge.labelCompanyOrSchool')"
@@ -293,5 +294,6 @@ export default defineComponent({
     <div v-if="(selectedPaymentSubject === 'voucher' && isEntryFeeFree) || selectedPaymentSubject === 'company'">
       <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
     </div>
+
   </div>
 </template>
