@@ -3,11 +3,33 @@ import RegisterChallengePayment from 'components/register/RegisterChallengePayme
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// selectors
+const selectorDonation = 'form-field-donation';
+const selectorDonationCheckbox = 'form-field-donation-checkbox';
+const selectorRegisterChallengePayment = 'register-challenge-payment';
+const selectorTextPaymentOrganizer = 'text-payment-organizer';
+const selectorBannerPaymentMinimum = 'banner-payment-minimum';
+const selectorPaymentAmount = 'form-field-payment-amount';
+const selectorPaymentAmountCustom = 'form-field-payment-amount-custom';
+const selectorPaymentAmountLabel = 'form-field-payment-amount-label';
+const selectorPaymentSubject = 'form-field-payment-subject';
+const selectorPaymentSubjectLabel = 'form-field-payment-subject-label';
+const selectorRadioOptionCustom = 'radio-option-custom';
+const selectorSliderNumberInput = 'form-field-slider-number-input';
+const selectorVoucherInput = 'form-field-voucher-input';
+const selectorVoucherSubmit = 'form-field-voucher-submit';
+const selectorRadioOptionVoucher = 'radio-option-voucher';
+const selectorVoucherButtonRemove = 'voucher-button-remove';
+const selectorSliderNumberSlider = 'form-field-slider-number-slider';
+
 // variables
 const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
 const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
+const borderRadiusCardSmall = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const sliderClickTolerance = 10;
+const testNumberValue = 500;
 
+// colors
 const { getPaletteColor, lighten } = colors;
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
@@ -76,9 +98,9 @@ describe('<RegisterChallengePayment>', () => {
 function coreTests() {
   it('renders component', () => {
     // component
-    cy.dataCy('register-challenge-payment').should('be.visible');
+    cy.dataCy(selectorRegisterChallengePayment).should('be.visible');
     // text
-    cy.dataCy('text-payment-organizer')
+    cy.dataCy(selectorTextPaymentOrganizer)
       .should('be.visible')
       .then(($element) => {
         cy.stripHtmlTags(
@@ -88,11 +110,12 @@ function coreTests() {
         });
       });
     // banner
-    cy.dataCy('banner-payment-minimum')
+    cy.dataCy(selectorBannerPaymentMinimum)
       .should('be.visible')
       .and('have.color', primary)
       .and('have.backgroundColor', primaryLight)
       .and('have.css', 'padding', '16px')
+      .and('have.css', 'border-radius', borderRadiusCardSmall)
       .then(($element) => {
         cy.stripHtmlTags(
           i18n.global.t('register.challenge.textPaymentMinimum'),
@@ -101,7 +124,7 @@ function coreTests() {
         });
       });
     // input subject
-    cy.dataCy('form-field-payment-subject-label')
+    cy.dataCy(selectorPaymentSubjectLabel)
       .should('be.visible')
       .and('have.color', grey10)
       .and('have.css', 'font-size', '12px')
@@ -110,8 +133,8 @@ function coreTests() {
         'have.text',
         i18n.global.t('register.challenge.labelPaymentSubject'),
       );
-    cy.dataCy('form-field-payment-subject').should('be.visible');
-    cy.dataCy('form-field-payment-subject')
+    cy.dataCy(selectorPaymentSubject).should('be.visible');
+    cy.dataCy(selectorPaymentSubject)
       .find('[role="radio"]')
       .should('be.visible')
       .and('have.length', 4)
@@ -122,14 +145,14 @@ function coreTests() {
         );
       });
     // input amount
-    cy.dataCy('form-field-payment-amount-label')
+    cy.dataCy(selectorPaymentAmountLabel)
       .should('be.visible')
       .and('have.color', grey10)
       .and('have.css', 'font-size', '12px')
       .and('have.css', 'font-weight', '700')
       .and('have.text', i18n.global.t('register.challenge.labelPaymentAmount'));
-    cy.dataCy('form-field-payment-amount').should('be.visible');
-    cy.dataCy('form-field-payment-amount')
+    cy.dataCy(selectorPaymentAmount).should('be.visible');
+    cy.dataCy(selectorPaymentAmount)
       .find('[role="radio"]')
       .should('be.visible')
       .and('have.length', 4);
@@ -137,92 +160,92 @@ function coreTests() {
 
   it('renders custom payment amount if selected', () => {
     // enable custom payment amount
-    cy.dataCy('radio-option-custom').should('be.visible').click();
-    cy.dataCy('form-field-payment-amount-custom').should('be.visible');
+    cy.dataCy(selectorRadioOptionCustom).should('be.visible').click();
+    cy.dataCy(selectorPaymentAmountCustom).should('be.visible');
     // switch to fixed payment amount
-    cy.dataCy('radio-option-500').should('be.visible').click();
-    cy.dataCy('form-field-payment-amount-custom').should('not.exist');
+    cy.dataCy(getRadioOption(testNumberValue)).should('be.visible').click();
+    cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
     // switch to custom payment amount
-    cy.dataCy('radio-option-custom').should('be.visible').click();
+    cy.dataCy(selectorRadioOptionCustom).should('be.visible').click();
     // custom amount is set to last selected
-    cy.dataCy('form-field-slider-number-input').should('have.value', '500');
+    cy.dataCy(selectorSliderNumberInput).should('have.value', testNumberValue.toString());
   });
 
   it('allows to apply voucher (HALF)', () => {
     cy.get('@voucherHalf').then((voucher) => {
       // option default amount is active
-      cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
+      cy.dataCy(getRadioOption(defaultPaymentAmountMin))
         .should('be.visible')
         .click();
       // option voucher payment is active
-      cy.dataCy('radio-option-voucher').should('be.visible').click();
+      cy.dataCy(selectorRadioOptionVoucher).should('be.visible').click();
       // input voucher
-      cy.dataCy('form-field-voucher-input').type(voucher.code);
-      cy.dataCy('form-field-voucher-submit').click();
+      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherSubmit).click();
       // option with discounted amount is available
-      cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
+      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
       // custom amount is set to discount value
-      cy.dataCy('radio-option-custom').click();
-      cy.dataCy(`radio-option-${voucher.amount}`).should('be.visible');
+      cy.dataCy(selectorRadioOptionCustom).click();
+      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
       // clear input
-      cy.dataCy('voucher-button-remove').click();
+      cy.dataCy(selectorVoucherButtonRemove).click();
       // invalid voucher is input
-      cy.dataCy('form-field-voucher-input').should('be.visible');
+      cy.dataCy(selectorVoucherInput).should('be.visible');
     });
   });
 
   it('does not allow to apply invalid voucher', () => {
     // option default amount is active
-    cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
+    cy.dataCy(getRadioOption(defaultPaymentAmountMin))
       .should('be.visible')
       .click();
     // option voucher payment is active
-    cy.dataCy('radio-option-voucher').should('be.visible').click();
-    cy.dataCy('form-field-voucher-input').type('ABCD');
-    cy.dataCy('form-field-voucher-submit').click();
-    cy.dataCy('form-field-voucher-input')
+    cy.dataCy(selectorRadioOptionVoucher).should('be.visible').click();
+    cy.dataCy(selectorVoucherInput).type('ABCD');
+    cy.dataCy(selectorVoucherSubmit).click();
+    cy.dataCy(selectorVoucherInput)
       .find('input')
       .should('have.value', 'ABCD');
     // option with default amount is available
-    cy.dataCy(`radio-option-${defaultPaymentAmountMin}`).click();
-    cy.dataCy('radio-option-custom').click();
+    cy.dataCy(getRadioOption(defaultPaymentAmountMin)).click();
+    cy.dataCy(selectorRadioOptionCustom).click();
     // custom amount is set to default value
-    cy.dataCy('form-field-slider-number-input').should(
+    cy.dataCy(selectorSliderNumberInput).should(
       'have.value',
       defaultPaymentAmountMin.toString(),
     );
   });
 
-  it.only('allows to apply voucher (FULL)', () => {
+  it('allows to apply voucher (FULL)', () => {
     cy.get('@voucherFull').then((voucher) => {
       // option default amount is active
-      cy.dataCy(`radio-option-${defaultPaymentAmountMin}`)
+      cy.dataCy(getRadioOption(defaultPaymentAmountMin))
         .should('be.visible')
         .click();
       // option voucher payment is active
-      cy.dataCy('radio-option-voucher').should('be.visible').click();
+      cy.dataCy(selectorRadioOptionVoucher).should('be.visible').click();
       // input voucher
-      cy.dataCy('form-field-voucher-input').type(voucher.code);
-      cy.dataCy('form-field-voucher-submit').click();
+      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherSubmit).click();
       // option amount hidden
-      cy.dataCy('form-field-payment-amount').should('not.exist');
+      cy.dataCy(selectorPaymentAmount).should('not.exist');
       // custom amount hidden
-      cy.dataCy('form-field-payment-amount-custom').should('not.exist');
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
       // clear input
-      cy.dataCy('form-field-donation').should('be.visible');
+      cy.dataCy(selectorDonation).should('be.visible');
 
       /**
        * If voucher FULL is applied, user still has option to add donation
        */
-      cy.dataCy('form-field-donation-checkbox').click();
-      cy.dataCy('form-field-slider-number-input')
+      cy.dataCy(selectorDonationCheckbox).click();
+      cy.dataCy(selectorSliderNumberInput)
         .should('be.visible')
         .and('have.value', defaultPaymentAmountMin.toString());
       // click in the middle of slider
-      cy.dataCy('form-field-slider-number-slider')
+      cy.dataCy(selectorSliderNumberSlider)
         .should('be.visible')
         .click();
-      cy.dataCy('form-field-slider-number-input')
+      cy.dataCy(selectorSliderNumberInput)
         .invoke('val').then(value => {
           const intValue = parseInt(value);
           const midValue = parseInt(Math.round((parseInt(defaultPaymentAmountMax) + parseInt(defaultPaymentAmountMin)) / 2))
@@ -231,4 +254,8 @@ function coreTests() {
         })
     });
   });
+}
+
+function getRadioOption(value) {
+  return `radio-option-${value}`;
 }

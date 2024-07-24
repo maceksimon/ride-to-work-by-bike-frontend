@@ -60,7 +60,7 @@ export default defineComponent({
     const defaultPaymentAmountMin = Number(
       rideToWorkByBikeConfig.entryFeePaymentMin,
     );
-
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');
     const primaryLightColor = lighten(primaryColor, 90);
@@ -183,6 +183,7 @@ export default defineComponent({
     };
 
     return {
+      borderRadius,
       isEntryFeeFree,
       optionsPaymentAmount,
       optionsPaymentSubject,
@@ -210,7 +211,7 @@ export default defineComponent({
     <!-- Banner: Payment minimum -->
     <q-banner
       class="q-my-lg q-pa-md text-primary"
-      :style="{ backgroundColor: primaryLightColor }"
+      :style="{ backgroundColor: primaryLightColor, borderRadius }"
       data-cy="banner-payment-minimum"
     >
       <div v-html="$t('register.challenge.textPaymentMinimum')" />
