@@ -81,11 +81,13 @@ function coreTests() {
      * Then user draws a route.
      * Route is saved into the sidebar.
      */
+    testEditDeleteEnabled();
     toggleDrawTool();
     testUndoSaveDisabled();
     drawFeature();
     testUndoSaveEnabled();
     saveRoute();
+    testEditDeleteDisabled();
     // load parameters from route 0
     cy.dataCy(`${selectorRouteListItem}-0`)
       .find(`[data-cy="${selectorRouteItemLength}"]`)
@@ -114,10 +116,9 @@ function coreTests() {
      * Deletes vertices from the route to make it shorter.
      * Saves the route.
      */
-    cy.dataCy(selectorAddRouteButton).should('be.disabled');
-    cy.dataCy(selectorDeleteRouteButton).should('be.disabled');
     // edit route
     cy.dataCy(`${selectorRouteListItem}-0`).click();
+    testEditDeleteEnabled();
     // after clicking a route item, draw and delete is is enabled
     cy.dataCy(selectorAddRouteButton).should('not.be.disabled');
     cy.dataCy(selectorDeleteRouteButton).should('not.be.disabled');
@@ -128,6 +129,7 @@ function coreTests() {
     toggleDeleteTool();
     deleteFeaturePoints();
     saveRoute();
+    testEditDeleteDisabled();
     // has shorter route, since it is a straight line
     cy.get('@routeLength').then((routeLength) => {
       cy.get(
@@ -138,8 +140,6 @@ function coreTests() {
         .then((element) => {
           cy.wrap(element.text()).then((text) => {
             const length = text.replace(/\D/g, '');
-            console.log(routeLength);
-            console.log(length);
             cy.wrap(parseInt(length)).should('be.lessThan', routeLength);
             cy.wrap(parseInt(length)).as('shorterRouteLength');
           });
@@ -172,6 +172,7 @@ function coreTests() {
      * Saves the route.
      */
     cy.dataCy(`${selectorRouteListItem}-0`).click();
+    testEditDeleteEnabled();
     toggleDrawTool();
     testUndoSaveDisabled();
     drawFeature();
@@ -183,6 +184,8 @@ function coreTests() {
     undo();
     undo();
     saveRoute();
+    testEditDeleteDisabled();
+    matchRouteSnapshot();
     cy.get('@routeLength').then((routeLength) => {
       cy.get(
         `[data-cy="${selectorRouteListItem}-0"] [data-cy="${selectorRouteItemLength}"]`,
@@ -216,45 +219,22 @@ function coreTests() {
      * Route resets to the original route.
      */
     cy.dataCy(`${selectorRouteListItem}-0`).click();
-    cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
-      `${Cypress.currentTest.titlePath}-map`,
-      {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 4000,
-        customDiffConfig: { threshold: 0.4 },
-        retries: 2,
-      },
-    );
+    testEditDeleteEnabled();
+    matchRouteSnapshot();
     toggleDrawTool();
     // draw random route
     cy.dataCy(selectorRoutesMapMap).click(50, 50);
     cy.dataCy(selectorRoutesMapMap).click(100, 100);
     toggleDrawTool();
     // identical snapshot
-    cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
-      `${Cypress.currentTest.titlePath}-map`,
-      {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 4000,
-        customDiffConfig: { threshold: 0.4 },
-        retries: 2,
-      },
-    );
+    matchRouteSnapshot();
+    testEditDeleteEnabled();
     toggleDeleteTool();
     deleteFeaturePoints();
     toggleDeleteTool();
     // identical snapshot
-    cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
-      `${Cypress.currentTest.titlePath}-map`,
-      {
-        failureThreshold: 0.05,
-        failureThresholdType: 'percent',
-        customDiffConfig: { threshold: 0.2 },
-        retries: 2,
-      },
-    );
+    matchRouteSnapshot();
+    testEditDeleteEnabled();
   });
 }
 
@@ -301,6 +281,16 @@ function undo() {
   cy.dataCy(selectorUndoButton).click();
 }
 
+function testEditDeleteDisabled() {
+  cy.dataCy(selectorAddRouteButton).should('be.disabled');
+  cy.dataCy(selectorDeleteRouteButton).should('be.disabled');
+}
+
+function testEditDeleteEnabled() {
+  cy.dataCy(selectorAddRouteButton).should('not.be.disabled');
+  cy.dataCy(selectorDeleteRouteButton).should('not.be.disabled');
+}
+
 function testUndoSaveDisabled() {
   // disabled undo + save
   cy.dataCy(selectorUndoButton).should('be.disabled');
@@ -311,4 +301,17 @@ function testUndoSaveEnabled() {
   // disabled undo + save
   cy.dataCy(selectorUndoButton).should('not.be.disabled');
   cy.dataCy(selectorSaveRouteButton).should('not.be.disabled');
+}
+
+function matchRouteSnapshot() {
+  cy.dataCy(selectorRoutesMapMap).matchImageSnapshot(
+    `${Cypress.currentTest.titlePath}-map`,
+    {
+      failureThreshold: 0.05,
+      failureThresholdType: 'percent',
+      timeout: 4000,
+      customDiffConfig: { threshold: 0.2 },
+      retries: 2,
+    },
+  );
 }
