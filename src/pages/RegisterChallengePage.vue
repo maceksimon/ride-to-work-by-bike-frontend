@@ -29,13 +29,14 @@ import { QForm, QStepper } from 'quasar';
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 // components
-import FormFieldCompanyAddress from 'src/components/form/FormFieldCompanyAddress.vue';
-import FormFieldSelectTable from 'src/components/form/FormFieldSelectTable.vue';
-import FormFieldListMerch from 'src/components/form/FormFieldListMerch.vue';
-import FormFieldOptionGroup from 'src/components/form/FormFieldOptionGroup.vue';
-import FormPersonalDetails from 'src/components/form/FormPersonalDetails.vue';
-import LoginRegisterHeader from 'components/global/LoginRegisterHeader.vue';
-import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
+import FormFieldCompanyAddress from '../components/form/FormFieldCompanyAddress.vue';
+import FormFieldSelectTable from '../components/form/FormFieldSelectTable.vue';
+import FormFieldListMerch from '../components/form/FormFieldListMerch.vue';
+import FormFieldOptionGroup from '../components/form/FormFieldOptionGroup.vue';
+import FormPersonalDetails from '../components/form/FormPersonalDetails.vue';
+import LoginRegisterHeader from '../components/global/LoginRegisterHeader.vue';
+import RegisterChallengePayment from '../components/register/RegisterChallengePayment.vue';
+import TopBarCountdown from '../components/global/TopBarCountdown.vue';
 
 // composables
 import { useStepperValidation } from 'src/composables/useStepperValidation';
@@ -57,6 +58,7 @@ export default defineComponent({
     FormFieldOptionGroup,
     FormPersonalDetails,
     LoginRegisterHeader,
+    RegisterChallengePayment,
     TopBarCountdown,
   },
   setup() {
@@ -313,7 +315,10 @@ export default defineComponent({
             class="bg-white q-mt-lg"
             data-cy="step-2"
           >
-            <q-form ref="stepPaymentRef"> Content of step 2 </q-form>
+            <q-form ref="stepPaymentRef">
+              <register-challenge-payment />
+            </q-form>
+            <!-- TODO: Handle redirection to payment gateway and back to registration -->
             <q-stepper-navigation class="flex justify-end">
               <q-btn
                 unelevated
