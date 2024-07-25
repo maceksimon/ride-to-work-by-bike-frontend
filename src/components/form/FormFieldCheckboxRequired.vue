@@ -7,13 +7,14 @@
  * @props
  * - `modelValue` (boolean, required): Value of the checkbox.
  *   It should be of type `boolean`.
- * - `label` (string, required): Label of the checkbox.
- *   It should be of type `string`.
  * - `validationMessage` (string, required): Validation message of the checkbox.
  *   It should be of type `string`.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
+ *
+ * @slots
+ * - `default`: Label for the checkbox.
  *
  * @example
  * <form-field-checkbox-required v-model="isChecked" :label="label" :validation-message="validationMessage" />
@@ -29,10 +30,6 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Boolean,
-      required: true,
-    },
-    label: {
-      type: String,
       required: true,
     },
     validationMessage: {
@@ -73,7 +70,7 @@ export default defineComponent({
       data-cy="form-field-checkbox-required-input"
     >
       <span data-cy="form-field-checkbox-required-label">
-        {{ label }}
+        <slot />
       </span>
     </q-checkbox>
   </q-field>
