@@ -262,13 +262,3 @@ export default defineComponent({
     </q-form>
   </div>
 </template>
-
-<style scoped lang="scss">
-:deep(.q-checkbox__bg) {
-  border: 1px solid $grey-6;
-  border-radius: 4px;
-}
-:deep(.q-checkbox__svg) {
-  padding: 3px;
-}
-</style>

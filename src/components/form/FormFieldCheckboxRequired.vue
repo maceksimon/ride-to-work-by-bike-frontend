@@ -1,4 +1,4 @@
-<script lang='ts'>
+<script lang="ts">
 /**
  * FormFieldCheckboxRequired Component
  *
@@ -50,8 +50,8 @@ export default defineComponent({
     return {
       model,
     };
-  }
-})
+  },
+});
 </script>
 
 <template>
@@ -60,11 +60,8 @@ export default defineComponent({
     borderless
     hide-bottom-space
     :model-value="model"
-    :rules="[
-      (val) =>
-        !!val ||
-        validationMessage,
-    ]"
+    :rules="[(val) => !!val || validationMessage]"
+    data-cy="form-field-checkbox-required"
   >
     <q-checkbox
       dense
@@ -73,8 +70,9 @@ export default defineComponent({
       :true-value="true"
       :false-value="false"
       class="text-grey-10"
+      data-cy="form-field-checkbox-required-input"
     >
-      <span>
+      <span data-cy="form-field-checkbox-required-label">
         {{ label }}
       </span>
     </q-checkbox>
