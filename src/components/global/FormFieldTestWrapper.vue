@@ -33,6 +33,9 @@
  * - `FormFieldSelectTable`: Component to render company select field.
  * - `FormFieldTextRequired`: Component to render text input field.
  *
+ * @slots
+ * - `default`: Slot for input fields
+ *
  * @example
  * <form-field-test-wrapper component="FormFieldPassword" :testing="true" />
  */
@@ -124,5 +127,7 @@ export default defineComponent({
     :options="options"
     :required="required"
     :validation-message="validationMessage"
-  />
+  >
+    <slot />
+  </component>
 </template>

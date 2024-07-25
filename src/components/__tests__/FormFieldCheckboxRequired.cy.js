@@ -32,8 +32,10 @@ describe('<FormFieldCheckboxRequired>', () => {
             props: {
               boolean: true,
               component: 'FormFieldCheckboxRequired',
-              label,
               validationMessage,
+            },
+            slots: {
+              default: label,
             },
           });
         });
