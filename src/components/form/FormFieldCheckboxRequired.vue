@@ -4,6 +4,8 @@
  *
  * @description * Use this component to render a required checkbox input field.
  *
+ * Note: This component is used in `FormRegisterCoordinator`.
+ *
  * @props
  * - `modelValue` (boolean, required): Value of the checkbox.
  *   It should be of type `boolean`.

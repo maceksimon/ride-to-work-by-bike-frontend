@@ -15,7 +15,10 @@ const checkboxSize = 16;
 
 describe('<FormFieldCheckboxRequired>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext([
+      'labelResponsibility',
+      'messageResponsibilityRequired',
+    ], 'register.coordinator.form', i18n);
   });
 
   context('default', () => {
