@@ -34,6 +34,13 @@ const iconDirectionSize = 18;
 const iconTransportSize = 18;
 const sectionDirectionPercentageWidth = 100;
 const sectionDistancePercentageWidth = 100;
+const snapshotParameters = {
+  failureThreshold: 0.1,
+  failureThresholdType: 'percent',
+  timeout: 4000,
+  customDiffConfig: { threshold: 0.4 },
+  retries: 2,
+}
 
 describe('<RouteItemDisplay>', () => {
   it('has translation for all strings', () => {
@@ -267,23 +274,17 @@ function coreTests() {
     // icon direction
     cy.dataCy(selectorDirectionIcon)
       .should('be.visible')
-      .matchImageSnapshot(`${Cypress.currentTest.titlePath}-direction`, {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 4000,
-        customDiffConfig: { threshold: 0.4 },
-        retries: 2,
-      });
+      .matchImageSnapshot(
+        `${Cypress.currentTest.titlePath}-direction`,
+        snapshotParameters
+      );
     // icon transport
     cy.dataCy(selectorIconTransport)
       .should('be.visible')
-      .matchImageSnapshot(`${Cypress.currentTest.titlePath}-transport`, {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 4000,
-        customDiffConfig: { threshold: 0.4 },
-        retries: 2,
-      });
+      .matchImageSnapshot(
+        `${Cypress.currentTest.titlePath}-transport`,
+        snapshotParameters
+      );
   });
 }
 
