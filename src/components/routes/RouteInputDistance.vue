@@ -27,6 +27,7 @@ import { computed, defineComponent } from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
+import { useValidation } from '../../composables/useValidation';
 
 // types
 import type { FormOption } from '../types/Form';
@@ -42,6 +43,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    isValidated: {
+      type: Boolean,
+      default: true,
+    }
   },
   emits: ['update:modelValue', 'update:modelAction'],
   setup(props, { emit }) {
@@ -78,11 +83,14 @@ export default defineComponent({
 
     const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
 
+    const { isFilled } = useValidation()
+
     return {
       action,
       customSVGIconsFilePath,
       distance,
       optionsAction,
+      isFilled,
     };
   },
 });
@@ -125,6 +133,13 @@ export default defineComponent({
             min="0"
             max="999"
             data-cy="input-distance"
+            :rules="[
+              (val) =>
+                isFilled(val) || !isValidated ||
+                $t('form.messageFieldRequired', {
+                  fieldName: $t('routes.labelValidationDistance'),
+                }),
+            ]"
           >
             <template v-slot:append>
               <span

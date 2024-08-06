@@ -9,6 +9,7 @@ const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 // selectors
+const classSelectorMessages = '.q-field__messages';
 const selectorButtonTraceMap = 'button-trace-map';
 const selectorIconTraceMap = 'icon-trace-map';
 const selectorInputDistance = 'input-distance';
@@ -51,6 +52,7 @@ describe('<RouteInputDistance>', () => {
 
     coreTests();
     inputTests();
+    isValidatedTests();
 
     it('renders inputs side by side (align-bottom)', () => {
       // input type is input distance
@@ -107,6 +109,7 @@ describe('<RouteInputDistance>', () => {
 
     coreTests();
     inputTests();
+    isValidatedTests();
   });
 
   context('mobile - input map', () => {
@@ -122,6 +125,22 @@ describe('<RouteInputDistance>', () => {
 
     coreTests();
     buttonMapTests();
+  });
+
+
+  context('desktop - input number - not validated', () => {
+    beforeEach(() => {
+      cy.mount(RouteInputDistance, {
+        props: {
+          modelAction: 'input-number',
+          modelValue: 0,
+          isValidated: false,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    isNotValidatedTests();
   });
 });
 
@@ -168,4 +187,43 @@ function buttonMapTests() {
       .invoke('height')
       .should('be.equal', iconTraceMapSize);
   });
+}
+
+function isValidatedTests() {
+  it('validates input', () => {
+    cy.dataCy(selectorSectionInputNumber).find('input').should('be.visible').and('have.value', 0);
+    cy.dataCy(selectorSectionInputNumber).find('input').focus();
+    cy.dataCy(selectorSectionInputNumber).find('input').blur();
+    cy.dataCy(selectorSectionInputNumber)
+      .find(classSelectorMessages)
+      .should(
+        'contain',
+        i18n.global.t('form.messageFieldRequired', {
+          fieldName: i18n.global.t('routes.labelValidationDistance'),
+        }),
+      );
+  })
+}
+
+function isNotValidatedTests() {
+  it('does not validate input', () => {
+    cy.dataCy(selectorSectionInputNumber).find('input').should('be.visible').and('have.value', 0);
+    cy.dataCy(selectorSectionInputNumber).find('input').focus();
+    cy.dataCy(selectorSectionInputNumber).find('input').blur();
+    cy.dataCy(selectorSectionInputNumber)
+      .find(classSelectorMessages)
+      .then(() => {
+        // wait for animation
+        return new Cypress.Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 500);
+        });
+      }).then(() => {
+        cy.dataCy(selectorSectionInputNumber)
+          .find(classSelectorMessages)
+          .last()
+          .should('be.empty');
+      });
+  })
 }
