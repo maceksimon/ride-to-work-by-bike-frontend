@@ -14,8 +14,8 @@
  * - `name` (string): The name used for id and test selectors.
  * - `options` (array): The options used for radio button tests.
  * - `required` (boolean): If the input is required.
- * - `array` (boolean): If the input is an array.
- * - `boolean` (boolean): If the input is a boolean.
+ * - `type` (boolean): Input type.
+ * - `validationMessage` (string): The message used for validation error.
  *
  * @components
  * - `FormFieldCheckboxRequired`: Component to render checkbox input field.
@@ -97,18 +97,16 @@ export default defineComponent({
     required: {
       type: Boolean,
     },
-    array: {
-      type: Boolean,
-    },
-    boolean: {
-      type: Boolean,
+    type: {
+      type: String as () => 'array' | 'boolean' | 'string',
+      default: 'string',
     },
     validationMessage: {
       type: String,
     },
   },
   setup(props) {
-    const inputValue = ref(props.array ? [] : props.boolean ? false : '');
+    const inputValue = ref(props.type === 'array' ? [] : props.type === 'boolean' ? false : '');
 
     return {
       inputValue,

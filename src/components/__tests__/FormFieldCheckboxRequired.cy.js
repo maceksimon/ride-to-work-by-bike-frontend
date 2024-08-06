@@ -3,6 +3,8 @@ import FormFieldTestWrapper from '../global/FormFieldTestWrapper.vue';
 import { i18n } from '../../boot/i18n';
 
 // selectors
+const classSelectorMessages = '.q-field__messages';
+const classSelectorCheckboxBg = '.q-checkbox__bg';
 const selectorCheckboxRequired = 'form-field-checkbox-required';
 const selectorCheckboxRequiredLabel = 'form-field-checkbox-required-label';
 
@@ -33,7 +35,7 @@ describe('<FormFieldCheckboxRequired>', () => {
         ).then((validationMessage) => {
           cy.mount(FormFieldTestWrapper, {
             props: {
-              boolean: true,
+              type: 'boolean',
               component: 'FormFieldCheckboxRequired',
               validationMessage,
             },
@@ -62,16 +64,16 @@ function coreTests() {
       );
     // checkbox border
     cy.dataCy(selectorCheckboxRequired)
-      .find('.q-checkbox__bg')
+      .find(classSelectorCheckboxBg)
       .should('have.css', 'border-radius', '4px');
     // checkbox height
     cy.dataCy(selectorCheckboxRequired)
-      .find('.q-checkbox__bg')
+      .find(classSelectorCheckboxBg)
       .invoke('height')
       .should('be.equal', checkboxSize);
     // checkbox width
     cy.dataCy(selectorCheckboxRequired)
-      .find('.q-checkbox__bg')
+      .find(classSelectorCheckboxBg)
       .invoke('width')
       .should('be.equal', checkboxSize);
   });
@@ -79,11 +81,11 @@ function coreTests() {
   it('validates checkbox', () => {
     cy.dataCy(selectorCheckboxRequired).click();
     cy.dataCy(selectorCheckboxRequired)
-      .find('.q-field__messages')
-      .should('not.exist');
+      .find(classSelectorMessages)
+      .should('not.exist')
     cy.dataCy(selectorCheckboxRequired).click();
     cy.dataCy(selectorCheckboxRequired)
-      .find('.q-field__messages')
+      .find(classSelectorMessages)
       .should('be.visible')
       .and(
         'contain',
@@ -93,7 +95,7 @@ function coreTests() {
       );
     cy.dataCy(selectorCheckboxRequired).click();
     cy.dataCy(selectorCheckboxRequired)
-      .find('.q-field__messages')
+      .find(classSelectorMessages)
       .should('not.exist');
   });
 }
