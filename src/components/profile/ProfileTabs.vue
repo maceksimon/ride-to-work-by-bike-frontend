@@ -79,12 +79,13 @@ export default defineComponent({
       />
     </q-tabs>
     <!-- Separator -->
-    <q-separator />
+    <q-separator class="q-mx-lg" />
     <!-- Tab panels -->
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Details -->
       <q-tab-panel
         :name="tabsProfile.details"
+        class="q-px-lg"
         data-cy="profile-tabs-panel-details"
       >
         <!-- <profile-details /> -->
