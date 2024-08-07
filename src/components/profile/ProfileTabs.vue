@@ -79,7 +79,7 @@ export default defineComponent({
       />
     </q-tabs>
     <!-- Separator -->
-    <q-separator class="q-mx-lg" />
+    <q-separator />
     <!-- Tab panels -->
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Details -->
