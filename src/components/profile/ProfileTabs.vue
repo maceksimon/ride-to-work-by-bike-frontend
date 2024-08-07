@@ -6,7 +6,6 @@
  * Note: Used on `ProfilePage`.
  *
  * @components
- * - `CHILD`: Component to ... .
  *
  * @example
  * <profile-tabs />
@@ -45,66 +44,53 @@ export default defineComponent({
       active-color="primary"
       indicator-color="primary"
       align="center"
-      data-cy="route-tabs"
+      data-cy="profile-tabs"
     >
       <q-route-tab
         :to="routesConf['profile_details'].path"
         name="details"
         :label="$t('profile.tabDetails')"
-        data-cy="route-tabs-button-details"
+        data-cy="profile-tabs-button-details"
       />
       <q-route-tab
         :to="routesConf['profile_forms'].path"
         name="forms"
         :label="$t('profile.tabForms')"
-        data-cy="route-tabs-button-forms"
+        data-cy="profile-tabs-button-forms"
       />
       <q-route-tab
         :to="routesConf['profile_newsletter'].path"
         name="newsletter"
         :label="$t('profile.tabNewsletter')"
-        data-cy="route-tabs-button-newsletter"
+        data-cy="profile-tabs-button-newsletter"
       />
       <q-route-tab
         :to="routesConf['profile_notifications'].path"
         name="notifications"
         :label="$t('profile.tabNotifications')"
-        data-cy="route-tabs-button-notifications"
+        data-cy="profile-tabs-button-notifications"
       />
     </q-tabs>
     <!-- Separator -->
-    <q-separator class="q-mx-lg" />
+    <q-separator />
     <!-- Tab panels -->
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Details -->
-      <q-tab-panel
-        class="q-px-lg"
-        name="details"
-        data-cy="route-tabs-panel-details"
-      >
+      <q-tab-panel name="details" data-cy="profile-tabs-panel-details">
         Personal details
       </q-tab-panel>
       <!-- Panel: Forms -->
-      <q-tab-panel
-        class="q-px-lg"
-        name="forms"
-        data-cy="route-tabs-panel-forms"
-      >
+      <q-tab-panel name="forms" data-cy="profile-tabs-panel-forms">
         Forms
       </q-tab-panel>
       <!-- Panel: Newsletter -->
-      <q-tab-panel
-        class="q-px-lg"
-        name="newsletter"
-        data-cy="route-tabs-panel-newsletter"
-      >
+      <q-tab-panel name="newsletter" data-cy="profile-tabs-panel-newsletter">
         Newsletter
       </q-tab-panel>
       <!-- Panel: Notifications -->
       <q-tab-panel
-        class="q-px-lg"
         name="notifications"
-        data-cy="route-tabs-panel-notifications"
+        data-cy="profile-tabs-panel-notifications"
       >
         Notifications
       </q-tab-panel>
