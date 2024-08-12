@@ -104,7 +104,7 @@ export default defineComponent({
         @click.prevent="isDialogOpen = true"
       >
         <q-icon name="edit" size="18px" class="q-mr-sm" />
-        {{ $t('global.buttonEdit') }}
+        {{ $t('navigation.edit') }}
       </q-btn>
     </div>
     <!-- Dialog: Edit -->
@@ -115,7 +115,7 @@ export default defineComponent({
       </template>
       <!-- Content -->
       <template #content>
-        <slot name="form" />
+        <slot name="form" :close="() => (isDialogOpen = false)" />
       </template>
     </dialog-default>
   </div>

@@ -10,7 +10,7 @@ const selectorDialogEdit = 'dialog-edit';
 
 describe('<DetailsItem>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext(['buttonEdit'], 'global', i18n);
+    cy.testLanguageStringsInContext(['edit'], 'navigation', i18n);
   });
 
   context('desktop', () => {

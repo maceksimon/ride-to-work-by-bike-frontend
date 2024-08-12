@@ -8,6 +8,7 @@
  *
  * @components
  * - `DetailsItem`: Component to display a row of data.
+ * - `FormUpdateNickname`: Component to render a form for updating nickname.
  *
  * @example
  * <personal-details />
@@ -16,20 +17,22 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 
 // components
 import DetailsItem from '../../components/profile/DetailsItem.vue';
+import FormUpdateNickname from '../../components/form/FormUpdateNickname.vue';
 
 export default defineComponent({
   name: 'PersonalDetails',
   components: {
     DetailsItem,
+    FormUpdateNickname,
   },
   setup() {
-    const profile = {
+    const profile = reactive({
       nickname: 'MyNickname',
-    };
+    });
 
     return {
       profile,
@@ -59,9 +62,13 @@ export default defineComponent({
         :empty-label="$t('profile.labelNicknameEmpty')"
         data-cy="personal-details-nickname"
       >
-        <template #form>
+        <template #form="{ close }">
           <!-- Form: Update nickname -->
-          <form-update-nickname />
+          <form-update-nickname
+            :on-close="close"
+            :value="profile.nickname"
+            @update:value="profile.nickname = $event"
+          />
         </template>
       </details-item>
     </div>
