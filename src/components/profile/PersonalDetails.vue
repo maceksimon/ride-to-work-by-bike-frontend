@@ -44,10 +44,7 @@ export default defineComponent({
 <template>
   <div data-cy="personal-details">
     <!-- Title -->
-    <h2
-      class="text-h6 text-weight-bold text-grey-10 q-my-none"
-      data-cy="personal-details-title"
-    >
+    <h2 class="text-h6 text-grey-10 q-my-none" data-cy="personal-details-title">
       {{ $t('profile.titlePersonalDetails') }}
     </h2>
     <!-- Details -->
@@ -68,6 +65,7 @@ export default defineComponent({
             :on-close="close"
             :value="profile.nickname"
             @update:value="profile.nickname = $event"
+            data-cy="personal-details-form-nickname"
           />
         </template>
       </details-item>
