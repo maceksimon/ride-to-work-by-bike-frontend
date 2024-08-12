@@ -2,38 +2,33 @@
 /**
  * PersonalDetails Component
  *
- * @description * Use this component to ... .
- * You can adjust its appearance by ... .
- *
- * @props
- * - `NAME` (TYPE, required): The object representing ... .
- *   It should be of type `TYPE`.
- *
- * @events
- * - `update:modelValue`: Emitted as a part of v-model structure.
- *
- * @slots
- * - `content`: For ... .
- *   exposed props and methods:
- *     - `state`
+ * @description * Use this component to display a PersonalDetails section
+ * on the profile page.
+ * Note: This component is used on `ProfilePage`.
  *
  * @components
- * - `CHILD`: Component to ... .
+ * - `DetailsItem`: Component to display a row of data.
  *
  * @example
- * <PersonalDetails></PersonalDetails>
+ * <personal-details />
  *
- * @see [Figma Design](...)
+ * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=4858-104393&t=31rhAtfu6ZZ8sEf1-1)
  */
 
 // libraries
 import { defineComponent } from 'vue';
 
+// components
+import DetailsItem from '../../components/profile/DetailsItem.vue';
+
 export default defineComponent({
   name: 'PersonalDetails',
+  components: {
+    DetailsItem,
+  },
   setup() {
     const profile = {
-      nickname: 'nickname',
+      nickname: 'MyNickname',
     };
 
     return {
@@ -45,10 +40,16 @@ export default defineComponent({
 
 <template>
   <div data-cy="personal-details">
-    <h2 class="text-h6 text-weight-bold text-grey-10">
+    <!-- Title -->
+    <h2
+      class="text-h6 text-weight-bold text-grey-10 q-my-none"
+      data-cy="personal-details-title"
+    >
       {{ $t('profile.titlePersonalDetails') }}
     </h2>
-    <div>
+    <!-- Details -->
+    <div class="q-mt-lg">
+      <!-- Nickname -->
       <details-item
         editable
         :label="$t('profile.labelNickname')"
@@ -59,6 +60,7 @@ export default defineComponent({
         data-cy="personal-details-nickname"
       >
         <template #form>
+          <!-- Form: Update nickname -->
           <form-update-nickname />
         </template>
       </details-item>

@@ -82,13 +82,16 @@ export default defineComponent({
 
 <template>
   <div class="row q-col-gutter-md" data-cy="details-item">
+    <!-- Label -->
     <div :class="[editable ? 'col-4 col-md-3 col-lg-2' : 'col-4 col-md-4']">
       <div data-cy="details-item-label">{{ label }}</div>
     </div>
+    <!-- Value + description -->
     <div :class="[editable ? 'col-8 col-md-6 col-lg-8' : 'col-8 col-md-8']">
       <div data-cy="details-item-value">{{ value }}</div>
       <div data-cy="details-item-description">{{ description }}</div>
     </div>
+    <!-- Button: Edit -->
     <div v-if="editable" class="col-12 col-md-3 col-lg-2 flex justify-end">
       <q-btn
         v-if="editable"
@@ -97,15 +100,20 @@ export default defineComponent({
         outline
         color="primary"
         class="q-ml-auto"
-        :label="$t('global.buttonEdit')"
         data-cy="details-item-edit"
         @click.prevent="isDialogOpen = true"
-      />
+      >
+        <q-icon name="edit" size="18px" class="q-mr-sm" />
+        {{ $t('global.buttonEdit') }}
+      </q-btn>
     </div>
+    <!-- Dialog: Edit -->
     <dialog-default v-model="isDialogOpen" data-cy="dialog-edit">
+      <!-- Title -->
       <template #title>
         {{ dialogTitle }}
       </template>
+      <!-- Content -->
       <template #content>
         <slot name="form" />
       </template>

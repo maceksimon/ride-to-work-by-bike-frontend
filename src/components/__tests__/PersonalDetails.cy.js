@@ -6,7 +6,17 @@ const selectorPersonalDetails = 'personal-details';
 
 describe('<PersonalDetails>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'profile', i18n);
+    cy.testLanguageStringsInContext(
+      [
+        'descriptionNickname',
+        'labelNickname',
+        'labelNicknameEmpty',
+        'titlePersonalDetails',
+        'titleUpdateNickname',
+      ],
+      'profile',
+      i18n,
+    );
   });
 
   context('desktop', () => {

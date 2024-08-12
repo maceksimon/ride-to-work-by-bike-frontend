@@ -437,7 +437,7 @@ titleStep2 = "Pozvite na výzvu svojich blízkych"
 
 [profile]
 descriptionNickname = "Zobrazuje sa vo verejných výsledkoch namiesto vášho mena"
-labelNickname = "Nickname"
+labelNickname = "Prezývka"
 labelNicknameEmpty = "Žiadna prezývka"
 tabDetails = "Vaše údaje"
 tabForms = "Dotazníky"

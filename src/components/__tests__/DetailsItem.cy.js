@@ -11,17 +11,6 @@ const selectorDialogEdit = 'dialog-edit';
 describe('<DetailsItem>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['buttonEdit'], 'global', i18n);
-    cy.testLanguageStringsInContext(
-      [
-        'descriptionNickname',
-        'labelNickname',
-        'labelNicknameEmpty',
-        'titlePersonalDetails',
-        'titleUpdateNickname',
-      ],
-      'profile',
-      i18n,
-    );
   });
 
   context('desktop', () => {
