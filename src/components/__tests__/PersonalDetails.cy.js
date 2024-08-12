@@ -12,6 +12,13 @@ const selectorNickname = 'personal-details-nickname';
 const selectorFormNickname = 'personal-details-form-nickname';
 const dataSelectorNicknameValue = '[data-cy="details-item-value"]';
 const dataSelectorNicknameEdit = '[data-cy="details-item-edit"]';
+const dataSelectorNicknameEmpty = '[data-cy="details-item-empty"]';
+const dataSelectorNicknameInput = '[data-cy="form-input"]';
+const dataSelectorNicknameButtonCancel = '[data-cy="form-button-cancel"]';
+const dataSelectorNicknameButtonSave = '[data-cy="form-button-save"]';
+
+// variables
+const newNickname = 'Cyklobaron';
 
 describe('<PersonalDetails>', () => {
   it('has translation for all strings', () => {
@@ -69,7 +76,7 @@ function coreTests() {
       cy.dataCy(selectorPersonalDetails)
         .find(dataSelectorNicknameValue)
         .should('be.visible')
-        .and('contain', personalDetails.nickname);
+        .and('have.text', personalDetails.nickname);
       // nickname edit button
       cy.dataCy(selectorPersonalDetails)
         .find(dataSelectorNicknameEdit)
@@ -77,6 +84,88 @@ function coreTests() {
         .click();
       // nickname edit form
       cy.dataCy(selectorFormNickname).should('be.visible');
+      // change nickname
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .type(newNickname);
+      // cancel
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameButtonCancel)
+        .click();
+      // nickname is the same
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.nickname);
+      // change nickname
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameEdit)
+        .should('be.visible')
+        .click();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .type(newNickname);
+      // save
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameButtonSave)
+        .click();
+      // nickname is different
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameValue)
+        .should('be.visible')
+        .and('have.text', newNickname);
+      // delete nickname
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameEdit)
+        .should('be.visible')
+        .click();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameButtonSave)
+        .click();
+      // nickname is empty
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameValue)
+        .should('not.exist');
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameEmpty)
+        .should('be.visible')
+        .and('have.text', i18n.global.t('profile.labelNicknameEmpty'));
+      // reset nickname
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameEdit)
+        .should('be.visible')
+        .click();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .type(personalDetails.nickname);
+      // save (enter)
+      cy.dataCy(selectorFormNickname)
+        .find(dataSelectorNicknameInput)
+        .type('{enter}');
+      // nickname is original value
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameEmpty)
+        .should('not.exist');
+      cy.dataCy(selectorPersonalDetails)
+        .find(dataSelectorNicknameValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.nickname);
     });
   });
 }
