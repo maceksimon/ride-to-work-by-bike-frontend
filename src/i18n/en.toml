@@ -436,10 +436,15 @@ titleStep1 = "We're glad you're taking the challenge with us!"
 titleStep2 = "Invite your loved ones to the challenge"
 
 [profile]
+descriptionNickname = "Appears in public results instead of your name"
+labelNickname = "Nickname"
+labelNicknameEmpty = "No nickname"
 tabDetails = "Your data"
 tabForms = "Questionnaires"
 tabNewsletter = "Newsletter"
 tabNotifications = "Notification history"
+titlePersonalDetails = "Personal Details"
+titleUpdateNickname = "Edit nickname"
 
 [register.form]
 titleRegister = "Registration"

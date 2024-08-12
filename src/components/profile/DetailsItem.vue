@@ -9,6 +9,7 @@
  * - `description` (string, required): Description of the item.
  * - `editable` (boolean, default: false): Whether the value is editable.
  * - `emptyLabel` (string, required): Label used when value is empty.
+ * - `dialogTitle` (string, required): Title of the edit dialog.
  * - `label` (string, required): Label of the item.
  * - `value` (string, required): Value of the item.
  *
@@ -55,6 +56,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    dialogTitle: {
+      type: String,
+      required: true,
+    },
     label: {
       type: String,
       required: true,
@@ -76,15 +81,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row" data-cy="details-item">
-    <div :class="[editable ? 'col-12 col-md-3 col-lg-2' : 'col-12 col-md-4']">
+  <div class="row q-col-gutter-md" data-cy="details-item">
+    <div :class="[editable ? 'col-4 col-md-3 col-lg-2' : 'col-4 col-md-4']">
       <div data-cy="details-item-label">{{ label }}</div>
     </div>
-    <div :class="[editable ? 'col-12 col-md-6 col-lg-8' : 'col-12 col-md-8']">
+    <div :class="[editable ? 'col-8 col-md-6 col-lg-8' : 'col-8 col-md-8']">
       <div data-cy="details-item-value">{{ value }}</div>
       <div data-cy="details-item-description">{{ description }}</div>
     </div>
-    <div v-if="editable" class="col-12 col-md-3 col-lg-2">
+    <div v-if="editable" class="col-12 col-md-3 col-lg-2 flex justify-end">
       <q-btn
         v-if="editable"
         rounded
@@ -94,9 +99,13 @@ export default defineComponent({
         class="q-ml-auto"
         :label="$t('global.buttonEdit')"
         data-cy="details-item-edit"
+        @click.prevent="isDialogOpen = true"
       />
     </div>
-    <dialog-default v-model="isDialogOpen">
+    <dialog-default v-model="isDialogOpen" data-cy="dialog-edit">
+      <template #title>
+        {{ dialogTitle }}
+      </template>
       <template #content>
         <slot name="form" />
       </template>

@@ -436,10 +436,15 @@ titleStep1 = "Sme radi, že ste prijali túto výzvu spolu s nami!"
 titleStep2 = "Pozvite na výzvu svojich blízkych"
 
 [profile]
+descriptionNickname = "Zobrazuje sa vo verejných výsledkoch namiesto vášho mena"
+labelNickname = "Nickname"
+labelNicknameEmpty = "Žiadna prezývka"
 tabDetails = "Vaše údaje"
 tabForms = "Dotazníky"
 tabNewsletter = "Newsletter"
 tabNotifications = "História oznámení"
+titlePersonalDetails = "Osobné údaje"
+titleUpdateNickname = "Upraviť prezývku"
 
 [register.form]
 titleRegister = "Registrácia"

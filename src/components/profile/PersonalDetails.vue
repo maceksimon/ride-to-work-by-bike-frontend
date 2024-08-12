@@ -53,6 +53,7 @@ export default defineComponent({
         editable
         :label="$t('profile.labelNickname')"
         :value="profile.nickname"
+        :dialog-title="$t('profile.titleUpdateNickname')"
         :description="$t('profile.descriptionNickname')"
         :empty-label="$t('profile.labelNicknameEmpty')"
         data-cy="personal-details-nickname"
