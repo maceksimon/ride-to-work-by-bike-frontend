@@ -62,7 +62,12 @@ export const useValidation = () => {
     if (typeof val === 'number') {
       return val > 0;
     } else {
-      return val?.length > 0;
+      const numberVal: number = parseInt(val);
+      if (isNaN(numberVal)) {
+        return val?.length > 0;
+      } else {
+        return numberVal > 0;
+      }
     }
   };
 
