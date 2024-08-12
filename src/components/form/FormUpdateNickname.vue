@@ -60,9 +60,13 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-form data-cy="form-nickname" @submit.prevent="onUpdateNickname">
+  <q-form @submit.prevent="onUpdateNickname" data-cy="form-update-nickname">
     <!-- Label -->
-    <label for="form-nickname" class="text-grey-10 text-caption text-bold">
+    <label
+      for="form-nickname"
+      class="text-grey-10 text-caption text-bold"
+      data-cy="form-label"
+    >
       {{ $t('form.labelNicknameOptional') }}
     </label>
     <q-input
@@ -75,7 +79,7 @@ export default defineComponent({
       id="form-nickname"
       name="nickname"
       :hint="$t('form.hintNickname')"
-      data-cy="form-nickname-input"
+      data-cy="form-input"
     />
     <div class="q-mt-xl flex justify-end gap-8">
       <!-- Button: Cancel -->
@@ -86,7 +90,7 @@ export default defineComponent({
         color="primary"
         :label="$t('navigation.discardChanges')"
         @click.prevent="closeDialog"
-        data-cy="form-nickname-cancel"
+        data-cy="form-button-cancel"
       />
       <!-- Button: Save -->
       <q-btn
@@ -95,7 +99,7 @@ export default defineComponent({
         color="primary"
         :label="$t('navigation.edit')"
         @click.prevent="onUpdateNickname"
-        data-cy="form-nickname-save"
+        data-cy="form-button-save"
       />
     </div>
   </q-form>
