@@ -23,6 +23,9 @@ import { defineComponent, reactive } from 'vue';
 import DetailsItem from '../../components/profile/DetailsItem.vue';
 import FormUpdateNickname from '../../components/form/FormUpdateNickname.vue';
 
+// fixtures
+import formPersonalDetails from '../../../test/cypress/fixtures/formPersonalDetails.json';
+
 export default defineComponent({
   name: 'PersonalDetails',
   components: {
@@ -30,9 +33,7 @@ export default defineComponent({
     FormUpdateNickname,
   },
   setup() {
-    const profile = reactive({
-      nickname: 'MyNickname',
-    });
+    const profile = reactive(formPersonalDetails);
 
     return {
       profile,
