@@ -11,6 +11,8 @@
  *   It should be of type `number`.
  * - `modelAction` (string, required): The selected distance input type.
  *   It should be of type `string`.
+ * - `hasValidation` (boolean, default: true): Whether the input should
+ *   be validated.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -43,10 +45,10 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    isValidated: {
+    hasValidation: {
       type: Boolean,
       default: true,
-    }
+    },
   },
   emits: ['update:modelValue', 'update:modelAction'],
   setup(props, { emit }) {
@@ -83,7 +85,7 @@ export default defineComponent({
 
     const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
 
-    const { isFilled } = useValidation()
+    const { isFilled, isAboveZero } = useValidation();
 
     return {
       action,
@@ -91,6 +93,7 @@ export default defineComponent({
       distance,
       optionsAction,
       isFilled,
+      isAboveZero,
     };
   },
 });
@@ -135,10 +138,15 @@ export default defineComponent({
             data-cy="input-distance"
             :rules="[
               (val) =>
-                isFilled(val) || !isValidated ||
+                isFilled(val) ||
+                !hasValidation ||
                 $t('form.messageFieldRequired', {
                   fieldName: $t('routes.labelValidationDistance'),
                 }),
+              (val) =>
+                isAboveZero(val) ||
+                !hasValidation ||
+                $t('form.messageFieldAboveZero'),
             ]"
           >
             <template v-slot:append>

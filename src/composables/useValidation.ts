@@ -50,7 +50,21 @@ export const useValidation = () => {
     return confirm === password;
   };
 
-  const isFilled = (val: string): boolean => val?.length > 0;
+  const isFilled = (val: string | number): boolean => {
+    if (typeof val === 'number') {
+      return val !== 0;
+    } else {
+      return val?.length > 0;
+    }
+  };
+
+  const isAboveZero = (val: string | number): boolean => {
+    if (typeof val === 'number') {
+      return val > 0;
+    } else {
+      return val?.length > 0;
+    }
+  };
 
   const isStrongPassword = (value: string): boolean => {
     const isLong = value.length > 5;
@@ -69,6 +83,7 @@ export const useValidation = () => {
     isEmailList,
     isFilled,
     isIdentical,
+    isAboveZero,
     isPhone,
     isStrongPassword,
     isBusinessId,

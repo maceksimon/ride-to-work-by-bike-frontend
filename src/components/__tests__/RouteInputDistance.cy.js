@@ -36,6 +36,7 @@ describe('<RouteInputDistance>', () => {
       'routes',
       i18n,
     );
+    cy.testLanguageStringsInContext(['messageFieldAboveZero'], 'form', i18n);
     // not testing global.routeLengthUnit (identical across languages)
   });
 
@@ -127,6 +128,34 @@ describe('<RouteInputDistance>', () => {
     buttonMapTests();
   });
 
+  context('mobile - input number negative', () => {
+    beforeEach(() => {
+      cy.mount(RouteInputDistance, {
+        props: {
+          modelAction: 'input-number',
+          modelValue: -1,
+        },
+      });
+      cy.viewport('iphone-6');
+    });
+
+    isValidatedNegativeTests();
+  });
+
+  context('mobile - input map', () => {
+    beforeEach(() => {
+      cy.mount(RouteInputDistance, {
+        props: {
+          modelAction: 'input-map',
+          modelValue: 0,
+        },
+      });
+      cy.viewport('iphone-6');
+    });
+
+    coreTests();
+    buttonMapTests();
+  });
 
   context('desktop - input number - not validated', () => {
     beforeEach(() => {
@@ -134,7 +163,7 @@ describe('<RouteInputDistance>', () => {
         props: {
           modelAction: 'input-number',
           modelValue: 0,
-          isValidated: false,
+          hasValidation: false,
         },
       });
       cy.viewport('macbook-16');
@@ -190,8 +219,11 @@ function buttonMapTests() {
 }
 
 function isValidatedTests() {
-  it('validates input', () => {
-    cy.dataCy(selectorSectionInputNumber).find('input').should('be.visible').and('have.value', 0);
+  it('validates input when 0', () => {
+    cy.dataCy(selectorSectionInputNumber)
+      .find('input')
+      .should('be.visible')
+      .and('have.value', 0);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
@@ -202,12 +234,29 @@ function isValidatedTests() {
           fieldName: i18n.global.t('routes.labelValidationDistance'),
         }),
       );
-  })
+  });
+}
+
+function isValidatedNegativeTests() {
+  it('validates input when negative value', () => {
+    cy.dataCy(selectorSectionInputNumber)
+      .find('input')
+      .should('be.visible')
+      .and('have.value', -1);
+    cy.dataCy(selectorSectionInputNumber).find('input').focus();
+    cy.dataCy(selectorSectionInputNumber).find('input').blur();
+    cy.dataCy(selectorSectionInputNumber)
+      .find(classSelectorMessages)
+      .should('contain', i18n.global.t('form.messageFieldAboveZero'));
+  });
 }
 
 function isNotValidatedTests() {
   it('does not validate input', () => {
-    cy.dataCy(selectorSectionInputNumber).find('input').should('be.visible').and('have.value', 0);
+    cy.dataCy(selectorSectionInputNumber)
+      .find('input')
+      .should('be.visible')
+      .and('have.value', 0);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
@@ -219,11 +268,12 @@ function isNotValidatedTests() {
             resolve();
           }, 500);
         });
-      }).then(() => {
+      })
+      .then(() => {
         cy.dataCy(selectorSectionInputNumber)
           .find(classSelectorMessages)
           .last()
           .should('be.empty');
       });
-  })
+  });
 }
