@@ -88,7 +88,8 @@ export default defineComponent({
     </div>
     <!-- Value + description -->
     <div :class="[editable ? 'col-8 col-md-6 col-lg-8' : 'col-8 col-md-8']">
-      <div data-cy="details-item-value">{{ value }}</div>
+      <div v-if="value" data-cy="details-item-value">{{ value }}</div>
+      <div v-else data-cy="details-item-empty">{{ emptyLabel }}</div>
       <div data-cy="details-item-description">{{ description }}</div>
     </div>
     <!-- Button: Edit -->

@@ -96,9 +96,9 @@ export default defineComponent({
       <q-btn
         rounded
         unelevated
+        type="submit"
         color="primary"
         :label="$t('navigation.edit')"
-        @click.prevent="onUpdateNickname"
         data-cy="form-button-save"
       />
     </div>

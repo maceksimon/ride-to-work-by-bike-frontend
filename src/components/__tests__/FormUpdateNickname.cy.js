@@ -17,7 +17,16 @@ const initialValue = 'initialValue';
 
 describe('<FormUpdateNickname>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      ['hintNickname', 'labelNicknameOptional'],
+      'form',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      ['edit', 'discardChanges'],
+      'navigation',
+      i18n,
+    );
   });
 
   context('desktop', () => {
