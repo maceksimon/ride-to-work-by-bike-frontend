@@ -81,16 +81,22 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row q-col-gutter-md" data-cy="details-item">
+  <div class="row q-col-gutter-md text-grey-10" data-cy="details-item">
     <!-- Label -->
     <div :class="[editable ? 'col-4 col-md-3 col-lg-2' : 'col-4 col-md-4']">
       <div data-cy="details-item-label">{{ label }}</div>
     </div>
     <!-- Value + description -->
     <div :class="[editable ? 'col-8 col-md-6 col-lg-8' : 'col-8 col-md-8']">
-      <div v-if="value" data-cy="details-item-value">{{ value }}</div>
-      <div v-else data-cy="details-item-empty">{{ emptyLabel }}</div>
-      <div data-cy="details-item-description">{{ description }}</div>
+      <div v-if="value" class="text-weight-bold" data-cy="details-item-value">
+        {{ value }}
+      </div>
+      <div v-else class="text-grey-7 text-italic" data-cy="details-item-empty">
+        {{ emptyLabel }}
+      </div>
+      <div class="text-caption text-grey-7" data-cy="details-item-description">
+        {{ description }}
+      </div>
     </div>
     <!-- Button: Edit -->
     <div v-if="editable" class="col-12 col-md-3 col-lg-2 flex justify-end">
