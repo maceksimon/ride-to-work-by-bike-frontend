@@ -2,7 +2,7 @@
 /**
  * RouteCalendarPanel Component
  *
- * @description * Use this component to log routes log routes in the calendar.
+ * @description * Use this component to log routes in the calendar.
  * Upon calendar click, it displays a dismissable dialog panel.
  * Panel contains inputs for specifying the entered route.
  * Upon confirmation, it logs the entered route.
@@ -17,6 +17,7 @@
  * - `update:route`: Emitted when route is updated.
  *
  * @components
+ * - `RouteInputDistance`: Component to render distance input.
  * - `RouteInputTransportType`: Component to render transport type selector.
  *
  * @example
@@ -26,10 +27,21 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
+
+// components
+import RouteInputDistance from './RouteInputDistance.vue';
+import RouteInputTransportType from './RouteInputTransportType.vue';
+
+// types
+import type { RouteInputType, TransportType } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteCalendarPanel',
+  components: {
+    RouteInputDistance,
+    RouteInputTransportType,
+  },
   props: {
     modelValue: {
       type: Boolean,
@@ -50,6 +62,10 @@ export default defineComponent({
       },
     });
 
+    const action = ref<RouteInputType>('input-number');
+    const distance = ref<number>(0);
+    const transportType = ref<TransportType>('bike');
+
     const countRoutes = computed(() => props.routes.length);
 
     const isDisabledSubmit = computed(() => countRoutes.value === 0);
@@ -57,10 +73,13 @@ export default defineComponent({
     const minWidth = '65vw';
 
     return {
+      action,
+      distance,
       countRoutes,
       isOpen,
       isDisabledSubmit,
       minWidth,
+      transportType,
     };
   },
 });
@@ -73,27 +92,33 @@ export default defineComponent({
       :style="{ minWidth: minWidth }"
     >
       <!-- Section: Card header -->
-      <q-card-section class="q-pt-none" data-cy="dialog-header">
+      <q-card-section class="q-px-lg q-pt-sm q-pb-none" data-cy="dialog-header">
         <!-- Title -->
         <h3 v-if="$slots.title" class="text-h6 q-mt-sm q-pt-xs q-mb-none">
           {{
             $tc(
               'routes.titleBottomPanel',
-              { countRoutes },
+              countRoutes,
               { count: countRoutes },
             )
           }}
         </h3>
       </q-card-section>
-      <q-card-section>
-        <div class="row" data-cy="dialog-body">
-          <div class="col-auto">
-            <!-- <route-input-transport-type v-model="transportType"> -->
+      <q-card-section class="q-pa-lg">
+        <div class="row q-col-gutter-lg items-start" data-cy="dialog-body">
+          <div class="col-12 col-sm-auto">
+            <route-input-transport-type v-model="transportType" />
           </div>
-          <div class="col">
-            <!-- route input select -->
+          <div class="col-12 col-sm">
+            <route-input-distance
+              v-model="distance"
+              :modelAction="action"
+              @update:modelAction="action = $event"
+              data-cy="section-distance"
+              class="q-mt-none"
+            />
           </div>
-          <div class="col-auto">
+          <div class="col-12 col-sm-auto flex self-end justify-end">
             <q-btn
               unelevated
               round

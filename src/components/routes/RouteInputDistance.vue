@@ -100,7 +100,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="q-mt-lg" data-cy="route-input-distance">
+  <div data-cy="route-input-distance">
     <!-- Label -->
     <div
       class="text-caption text-weight-bold text-grey-10"

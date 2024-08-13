@@ -158,6 +158,7 @@ export default defineComponent({
           v-model="distance"
           :modelAction="action"
           @update:modelAction="action = $event"
+          class="q-mt-lg"
           data-cy="section-distance"
         />
       </div>
