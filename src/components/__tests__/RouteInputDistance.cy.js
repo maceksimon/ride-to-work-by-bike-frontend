@@ -45,7 +45,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: 0,
+          modelValue: '0',
         },
       });
       cy.viewport('macbook-16');
@@ -53,7 +53,7 @@ describe('<RouteInputDistance>', () => {
 
     coreTests();
     inputTests();
-    isValidatedTests();
+    validateZeroTests();
 
     it('renders inputs side by side (align-bottom)', () => {
       // input type is input distance
@@ -74,7 +74,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-map',
-          modelValue: 0,
+          modelValue: '0',
         },
       });
       cy.viewport('macbook-16');
@@ -102,7 +102,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: 0,
+          modelValue: '0',
         },
       });
       cy.viewport('iphone-6');
@@ -110,7 +110,7 @@ describe('<RouteInputDistance>', () => {
 
     coreTests();
     inputTests();
-    isValidatedTests();
+    validateZeroTests();
   });
 
   context('mobile - input map', () => {
@@ -118,7 +118,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-map',
-          modelValue: 0,
+          modelValue: '0',
         },
       });
       cy.viewport('iphone-6');
@@ -128,12 +128,26 @@ describe('<RouteInputDistance>', () => {
     buttonMapTests();
   });
 
+  context('mobile - input number empty', () => {
+    beforeEach(() => {
+      cy.mount(RouteInputDistance, {
+        props: {
+          modelAction: 'input-number',
+          modelValue: '',
+        },
+      });
+      cy.viewport('iphone-6');
+    });
+
+    validateEmptyTests();
+  });
+
   context('mobile - input number negative', () => {
     beforeEach(() => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: -1,
+          modelValue: '-1',
         },
       });
       cy.viewport('iphone-6');
@@ -147,7 +161,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-map',
-          modelValue: 0,
+          modelValue: '0',
         },
       });
       cy.viewport('iphone-6');
@@ -162,7 +176,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: 0,
+          modelValue: '0',
           hasValidation: false,
         },
       });
@@ -218,12 +232,26 @@ function buttonMapTests() {
   });
 }
 
-function isValidatedTests() {
+function validateZeroTests() {
   it('validates input when 0', () => {
     cy.dataCy(selectorSectionInputNumber)
       .find('input')
       .should('be.visible')
       .and('have.value', 0);
+    cy.dataCy(selectorSectionInputNumber).find('input').focus();
+    cy.dataCy(selectorSectionInputNumber).find('input').blur();
+    cy.dataCy(selectorSectionInputNumber)
+      .find(classSelectorMessages)
+      .should('contain', i18n.global.t('form.messageFieldAboveZero'));
+  });
+}
+
+function validateEmptyTests() {
+  it('validates input when empty', () => {
+    cy.dataCy(selectorSectionInputNumber)
+      .find('input')
+      .should('be.visible')
+      .and('have.value', '');
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
