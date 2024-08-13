@@ -6,19 +6,25 @@ const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 // selectors
+const selectorEmail = 'personal-details-email';
+const selectorFormEmail = 'personal-details-form-email';
+const selectorFormNickname = 'personal-details-form-nickname';
+const selectorNickname = 'personal-details-nickname';
 const selectorPersonalDetails = 'personal-details';
 const selectorTitle = 'personal-details-title';
-const selectorNickname = 'personal-details-nickname';
-const selectorFormNickname = 'personal-details-form-nickname';
-const dataSelectorNicknameValue = '[data-cy="details-item-value"]';
-const dataSelectorNicknameEdit = '[data-cy="details-item-edit"]';
-const dataSelectorNicknameEmpty = '[data-cy="details-item-empty"]';
-const dataSelectorNicknameInput = '[data-cy="form-input"]';
-const dataSelectorNicknameButtonCancel = '[data-cy="form-button-cancel"]';
-const dataSelectorNicknameButtonSave = '[data-cy="form-button-save"]';
+const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
+const dataSelectorButtonSave = '[data-cy="form-button-save"]';
+const dataSelectorEdit = '[data-cy="details-item-edit"]';
+const dataSelectorEmpty = '[data-cy="details-item-empty"]';
+const dataSelectorInput = '[data-cy="form-input"]';
+const dataSelectorInputEmail = '[data-cy="form-email"]';
+const dataSelectorInputPassword = '[data-cy="form-password"]';
+const dataSelectorValue = '[data-cy="details-item-value"]';
 
 // variables
 const newNickname = 'Cyklobaron';
+const newEmail = 'ride@dopracenakole.cz';
+const password = 'password';
 
 describe('<PersonalDetails>', () => {
   it('has translation for all strings', () => {
@@ -60,112 +66,180 @@ describe('<PersonalDetails>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
+    cy.dataCy(selectorPersonalDetails).should('be.visible');
+    // title
+    cy.dataCy(selectorTitle)
+      .should('be.visible')
+      .and('have.css', 'font-size', '20px')
+      .and('have.css', 'font-weight', '500')
+      .and('have.color', grey10)
+      .and('contain', i18n.global.t('profile.titlePersonalDetails'));
+    // nickname row
+    cy.dataCy(selectorNickname).should('be.visible');
+  });
+
+  it('allows to edit nickname', () => {
     cy.fixture('formPersonalDetails').then((personalDetails) => {
-      // component
-      cy.dataCy(selectorPersonalDetails).should('be.visible');
-      // title
-      cy.dataCy(selectorTitle)
-        .should('be.visible')
-        .and('have.css', 'font-size', '20px')
-        .and('have.css', 'font-weight', '500')
-        .and('have.color', grey10)
-        .and('contain', i18n.global.t('profile.titlePersonalDetails'));
-      // nickname row
-      cy.dataCy(selectorNickname).should('be.visible');
       // nickname value
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameValue)
+        .find(dataSelectorValue)
         .should('be.visible')
         .and('have.text', personalDetails.nickname);
       // nickname edit button
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameEdit)
+        .find(dataSelectorEdit)
         .should('be.visible')
         .click();
       // nickname edit form
       cy.dataCy(selectorFormNickname).should('be.visible');
       // change nickname
       cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
+        .find(dataSelectorInput)
         .should('be.visible')
         .clear();
-      cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
-        .type(newNickname);
+      cy.dataCy(selectorFormNickname).find(dataSelectorInput).type(newNickname);
       // cancel
-      cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameButtonCancel)
-        .click();
+      cy.dataCy(selectorFormNickname).find(dataSelectorButtonCancel).click();
       // nickname is the same
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameValue)
+        .find(dataSelectorValue)
         .should('be.visible')
         .and('have.text', personalDetails.nickname);
       // change nickname
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameEdit)
+        .find(dataSelectorEdit)
         .should('be.visible')
         .click();
       cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
+        .find(dataSelectorInput)
         .should('be.visible')
         .clear();
-      cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
-        .type(newNickname);
+      cy.dataCy(selectorFormNickname).find(dataSelectorInput).type(newNickname);
       // save
-      cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameButtonSave)
-        .click();
+      cy.dataCy(selectorFormNickname).find(dataSelectorButtonSave).click();
       // nickname is different
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameValue)
+        .find(dataSelectorValue)
         .should('be.visible')
         .and('have.text', newNickname);
       // delete nickname
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameEdit)
+        .find(dataSelectorEdit)
         .should('be.visible')
         .click();
       cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
+        .find(dataSelectorInput)
         .should('be.visible')
         .clear();
-      cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameButtonSave)
-        .click();
+      cy.dataCy(selectorFormNickname).find(dataSelectorButtonSave).click();
       // nickname is empty
-      cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameValue)
-        .should('not.exist');
+      cy.dataCy(selectorNickname).find(dataSelectorValue).should('not.exist');
       cy.dataCy(selectorPersonalDetails)
-        .find(dataSelectorNicknameEmpty)
+        .find(dataSelectorEmpty)
         .should('be.visible')
         .and('have.text', i18n.global.t('profile.labelNicknameEmpty'));
       // reset nickname
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameEdit)
+        .find(dataSelectorEdit)
         .should('be.visible')
         .click();
       cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
+        .find(dataSelectorInput)
         .should('be.visible')
         .clear();
       cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
+        .find(dataSelectorInput)
         .type(personalDetails.nickname);
       // save (enter)
-      cy.dataCy(selectorFormNickname)
-        .find(dataSelectorNicknameInput)
-        .type('{enter}');
+      cy.dataCy(selectorFormNickname).find(dataSelectorInput).type('{enter}');
       // nickname is original value
+      cy.dataCy(selectorNickname).find(dataSelectorEmpty).should('not.exist');
       cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameEmpty)
-        .should('not.exist');
-      cy.dataCy(selectorNickname)
-        .find(dataSelectorNicknameValue)
+        .find(dataSelectorValue)
         .should('be.visible')
         .and('have.text', personalDetails.nickname);
+    });
+  });
+
+  it.only('allows to edit email', () => {
+    cy.fixture('formPersonalDetails').then((personalDetails) => {
+      // email value
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.email);
+      // email edit button
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorEdit)
+        .should('be.visible')
+        .click();
+      // email edit form
+      cy.dataCy(selectorFormEmail).should('be.visible');
+      // change email
+      cy.dataCy(selectorFormEmail)
+        .find(dataSelectorInputEmail)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorFormEmail).find(dataSelectorInputEmail).type(newEmail);
+      cy.dataCy(selectorFormEmail)
+        .find(dataSelectorInputPassword)
+        .type(password);
+      // cancel
+      cy.dataCy(selectorFormEmail).find(dataSelectorButtonCancel).click();
+      // email is the same
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.email);
+      // change email
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorEdit)
+        .should('be.visible')
+        .click();
+      cy.dataCy(selectorFormEmail)
+        .find(dataSelectorInputEmail)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorFormEmail).find(dataSelectorInputEmail).type(newEmail);
+      cy.dataCy(selectorFormEmail)
+        .find(dataSelectorInputPassword)
+        .type(password);
+      // save
+      cy.dataCy(selectorFormEmail).find(dataSelectorButtonSave).click();
+      // email is different
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', newEmail);
+      // deleting email is not possible
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorEdit)
+        .should('be.visible')
+        .click();
+      cy.dataCy(selectorFormEmail)
+        .should('be.visible')
+        .find(dataSelectorInputEmail)
+        .clear();
+      cy.dataCy(selectorFormEmail).find(dataSelectorButtonSave).click();
+      cy.dataCy(selectorFormEmail).should('be.visible');
+      // fill in original email
+      cy.dataCy(selectorFormEmail)
+        .should('be.visible')
+        .find(dataSelectorInputEmail)
+        .type(personalDetails.email);
+      // cannot save without password
+      cy.dataCy(selectorFormEmail).find(dataSelectorButtonSave).click();
+      cy.dataCy(selectorFormEmail).should('be.visible');
+      // fill in password
+      cy.dataCy(selectorFormEmail)
+        .find(dataSelectorInputPassword)
+        .type(password);
+      cy.dataCy(selectorFormEmail).find(dataSelectorButtonSave).click();
+      cy.dataCy(selectorEmail)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.email);
     });
   });
 }
