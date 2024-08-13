@@ -21,9 +21,10 @@
 import { defineComponent, reactive } from 'vue';
 
 // components
-import DetailsItem from '../../components/profile/DetailsItem.vue';
-import FormUpdateEmail from '../../components/form/FormUpdateEmail.vue';
-import FormUpdateNickname from '../../components/form/FormUpdateNickname.vue';
+import DetailsItem from '../profile/DetailsItem.vue';
+import FormUpdateEmail from '../form/FormUpdateEmail.vue';
+import FormUpdateGender from '../form/FormUpdateGender.vue';
+import FormUpdateNickname from '../form/FormUpdateNickname.vue';
 
 // fixtures
 import formPersonalDetails from '../../../test/cypress/fixtures/formPersonalDetails.json';
@@ -33,6 +34,7 @@ export default defineComponent({
   components: {
     DetailsItem,
     FormUpdateEmail,
+    FormUpdateGender,
     FormUpdateNickname,
   },
   setup() {
@@ -91,6 +93,26 @@ export default defineComponent({
             :value="profile.email"
             @update:value="profile.email = $event"
             data-cy="personal-details-form-email"
+          />
+        </template>
+      </details-item>
+      <!-- Gender -->
+      <details-item
+        editable
+        :label="$t('profile.labelGender')"
+        :value="profile.gender"
+        :dialog-title="$t('profile.titleUpdateGender')"
+        :empty-label="$t('profile.labelGenderEmpty')"
+        class="q-mb-lg"
+        data-cy="personal-details-gender"
+      >
+        <template #form="{ close }">
+          <!-- Form: Update gender -->
+          <form-update-gender
+            :on-close="close"
+            :value="profile.gender"
+            @update:value="profile.gender = $event"
+            data-cy="personal-details-form-gender"
           />
         </template>
       </details-item>
