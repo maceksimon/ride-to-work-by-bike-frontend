@@ -73,12 +73,12 @@ function coreTests() {
       // nickname row
       cy.dataCy(selectorNickname).should('be.visible');
       // nickname value
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameValue)
         .should('be.visible')
         .and('have.text', personalDetails.nickname);
       // nickname edit button
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameEdit)
         .should('be.visible')
         .click();
@@ -97,12 +97,12 @@ function coreTests() {
         .find(dataSelectorNicknameButtonCancel)
         .click();
       // nickname is the same
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameValue)
         .should('be.visible')
         .and('have.text', personalDetails.nickname);
       // change nickname
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameEdit)
         .should('be.visible')
         .click();
@@ -118,12 +118,12 @@ function coreTests() {
         .find(dataSelectorNicknameButtonSave)
         .click();
       // nickname is different
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameValue)
         .should('be.visible')
         .and('have.text', newNickname);
       // delete nickname
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameEdit)
         .should('be.visible')
         .click();
@@ -135,7 +135,7 @@ function coreTests() {
         .find(dataSelectorNicknameButtonSave)
         .click();
       // nickname is empty
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameValue)
         .should('not.exist');
       cy.dataCy(selectorPersonalDetails)
@@ -143,7 +143,7 @@ function coreTests() {
         .should('be.visible')
         .and('have.text', i18n.global.t('profile.labelNicknameEmpty'));
       // reset nickname
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameEdit)
         .should('be.visible')
         .click();
@@ -159,10 +159,10 @@ function coreTests() {
         .find(dataSelectorNicknameInput)
         .type('{enter}');
       // nickname is original value
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameEmpty)
         .should('not.exist');
-      cy.dataCy(selectorPersonalDetails)
+      cy.dataCy(selectorNickname)
         .find(dataSelectorNicknameValue)
         .should('be.visible')
         .and('have.text', personalDetails.nickname);

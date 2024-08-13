@@ -12,6 +12,10 @@
  * @events
  * - `update:value`: Emitted when value successfully changes.
  *
+ * @components
+ * - `FormFieldEmailRequired` - Component to render email field.
+ * - `FormFieldPassword` - Component to render password field.
+ *
  * @example
  * <form-update-email :value="email" @update:value="onUpdateEmail">
  *
@@ -21,8 +25,16 @@
 // libraries
 import { defineComponent, onMounted, ref } from 'vue';
 
+// components
+import FormFieldEmail from '../global/FormFieldEmail.vue';
+import FormFieldPassword from '../global/FormFieldPassword.vue';
+
 export default defineComponent({
   name: 'FormUpdateEmail',
+  components: {
+    FormFieldEmail,
+    FormFieldPassword,
+  },
   props: {
     value: {
       type: String,
@@ -36,6 +48,7 @@ export default defineComponent({
   emits: ['update:value', 'close'],
   setup(props, { emit }) {
     const inputValue = ref<string>('');
+    const password = ref<string>('');
 
     onMounted(() => {
       inputValue.value = props.value;
@@ -52,6 +65,7 @@ export default defineComponent({
 
     return {
       inputValue,
+      password,
       closeDialog,
       onUpdateEmail,
     };
@@ -62,12 +76,29 @@ export default defineComponent({
 <template>
   <q-form @submit.prevent="onUpdateEmail" data-cy="form-update-email">
     <!-- Label -->
-    <label
-      for="form-email"
-      class="text-grey-10 text-caption text-bold"
-      data-cy="form-label"
-    >
-      {{ $t('form.labelEmailOptional') }}
-    </label>
+    <form-field-email v-model="inputValue" data-cy="form-email" />
+    <p>{{ $t('profile.textPasswordConfirm') }}</p>
+    <form-field-password v-model="password" data-cy="form-password" />
+    <div class="q-mt-xl flex justify-end gap-8">
+      <!-- Button: Cancel -->
+      <q-btn
+        rounded
+        unelevated
+        outline
+        color="primary"
+        :label="$t('navigation.discardChanges')"
+        @click.prevent="closeDialog"
+        data-cy="form-button-cancel"
+      />
+      <!-- Button: Save -->
+      <q-btn
+        rounded
+        unelevated
+        type="submit"
+        color="primary"
+        :label="$t('navigation.edit')"
+        data-cy="form-button-save"
+      />
+    </div>
   </q-form>
 </template>

@@ -8,6 +8,7 @@
  *
  * @components
  * - `DetailsItem`: Component to display a row of data.
+ * - `FormUpdateEmail`: Component to render a form for updating email.
  * - `FormUpdateNickname`: Component to render a form for updating nickname.
  *
  * @example
@@ -21,6 +22,7 @@ import { defineComponent, reactive } from 'vue';
 
 // components
 import DetailsItem from '../../components/profile/DetailsItem.vue';
+import FormUpdateEmail from '../../components/form/FormUpdateEmail.vue';
 import FormUpdateNickname from '../../components/form/FormUpdateNickname.vue';
 
 // fixtures
@@ -30,6 +32,7 @@ export default defineComponent({
   name: 'PersonalDetails',
   components: {
     DetailsItem,
+    FormUpdateEmail,
     FormUpdateNickname,
   },
   setup() {
