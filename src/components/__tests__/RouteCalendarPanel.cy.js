@@ -22,7 +22,9 @@ describe('<RouteCalendarPanel>', () => {
           ],
         },
         slots: {
-          title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, { count: routeCountSingle }),
+          title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+            count: routeCountSingle,
+          }),
         },
       });
       cy.viewport('macbook-16');
@@ -43,7 +45,9 @@ describe('<RouteCalendarPanel>', () => {
           ],
         },
         slots: {
-          title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, { count: routeCountSingle }),
+          title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+            count: routeCountSingle,
+          }),
         },
       });
       cy.viewport('iphone-6');

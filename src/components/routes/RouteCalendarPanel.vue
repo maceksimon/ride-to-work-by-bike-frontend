@@ -96,11 +96,7 @@ export default defineComponent({
         <!-- Title -->
         <h3 v-if="$slots.title" class="text-h6 q-mt-sm q-pt-xs q-mb-none">
           {{
-            $tc(
-              'routes.titleBottomPanel',
-              countRoutes,
-              { count: countRoutes },
-            )
+            $tc('routes.titleBottomPanel', countRoutes, { count: countRoutes })
           }}
         </h3>
       </q-card-section>
