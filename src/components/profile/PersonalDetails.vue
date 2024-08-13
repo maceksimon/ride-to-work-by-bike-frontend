@@ -58,6 +58,7 @@ export default defineComponent({
         :dialog-title="$t('profile.titleUpdateNickname')"
         :description="$t('profile.descriptionNickname')"
         :empty-label="$t('profile.labelNicknameEmpty')"
+        class="q-mb-lg"
         data-cy="personal-details-nickname"
       >
         <template #form="{ close }">
@@ -67,6 +68,26 @@ export default defineComponent({
             :value="profile.nickname"
             @update:value="profile.nickname = $event"
             data-cy="personal-details-form-nickname"
+          />
+        </template>
+      </details-item>
+      <!-- Email -->
+      <details-item
+        editable
+        :label="$t('profile.labelEmail')"
+        :value="profile.email"
+        :dialog-title="$t('profile.titleUpdateEmail')"
+        :empty-label="$t('profile.labelEmailEmpty')"
+        class="q-mb-lg"
+        data-cy="personal-details-email"
+      >
+        <template #form="{ close }">
+          <!-- Form: Update email -->
+          <form-update-email
+            :on-close="close"
+            :value="profile.email"
+            @update:value="profile.email = $event"
+            data-cy="personal-details-form-email"
           />
         </template>
       </details-item>

@@ -438,6 +438,8 @@ titleStep2 = "Pozvite na výzvu svojich blízkych"
 
 [profile]
 descriptionNickname = "Zobrazuje sa vo verejných výsledkoch namiesto vášho mena"
+labelEmail = "E-mail"
+labelEmailEmpty = "Žiadny e-mail"
 labelNickname = "Prezývka"
 labelNicknameEmpty = "Žiadna prezývka"
 tabDetails = "Vaše údaje"
@@ -446,6 +448,7 @@ tabNewsletter = "Newsletter"
 tabNotifications = "História oznámení"
 titlePersonalDetails = "Osobné údaje"
 titleUpdateNickname = "Upraviť prezývku"
+titleUpdateEmail = "Upraviť e-mail"
 
 [register.form]
 titleRegister = "Registrácia"

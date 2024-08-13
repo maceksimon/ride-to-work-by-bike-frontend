@@ -6,7 +6,7 @@
  * section of the profile page.
  *
  * @props
- * - `description` (string, required): Description of the item.
+ * - `description` (string, false): Description of the item.
  * - `editable` (boolean, default: false): Whether the value is editable.
  * - `emptyLabel` (string, required): Label used when value is empty.
  * - `dialogTitle` (string, required): Title of the edit dialog.
@@ -46,7 +46,7 @@ export default defineComponent({
   props: {
     description: {
       type: String,
-      required: true,
+      required: false,
     },
     editable: {
       type: Boolean,
@@ -94,7 +94,11 @@ export default defineComponent({
       <div v-else class="text-grey-7 text-italic" data-cy="details-item-empty">
         {{ emptyLabel }}
       </div>
-      <div class="text-caption text-grey-7" data-cy="details-item-description">
+      <div
+        v-if="description"
+        class="text-caption text-grey-7"
+        data-cy="details-item-description"
+      >
         {{ description }}
       </div>
     </div>

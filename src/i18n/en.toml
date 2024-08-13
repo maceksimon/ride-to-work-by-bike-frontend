@@ -438,6 +438,8 @@ titleStep2 = "Invite your loved ones to the challenge"
 
 [profile]
 descriptionNickname = "Appears in public results instead of your name"
+labelEmail = "Email"
+labelEmailEmpty = "No email"
 labelNickname = "Nickname"
 labelNicknameEmpty = "No nickname"
 tabDetails = "Your data"
@@ -446,6 +448,7 @@ tabNewsletter = "Newsletter"
 tabNotifications = "Notification history"
 titlePersonalDetails = "Personal Details"
 titleUpdateNickname = "Edit nickname"
+titleUpdateEmail = "Edit e-mail"
 
 [register.form]
 titleRegister = "Registration"
