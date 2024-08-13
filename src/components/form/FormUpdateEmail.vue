@@ -78,7 +78,7 @@ export default defineComponent({
     <!-- Label -->
     <form-field-email v-model="inputValue" data-cy="form-email" />
     <p>{{ $t('profile.textPasswordConfirm') }}</p>
-    <form-field-password v-model="password" data-cy="form-password" />
+    <form-field-password hide-hint v-model="password" data-cy="form-password" />
     <div class="q-mt-xl flex justify-end gap-8">
       <!-- Button: Cancel -->
       <q-btn
