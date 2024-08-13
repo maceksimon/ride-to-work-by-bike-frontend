@@ -14,6 +14,7 @@
  *   It should be of type `string`.
  * - `bgColor` (string, default: 'transparent'): The background color of the
  *   input.
+ * - `hideHint` (boolean, default: false): Whether to show hint or not.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -40,6 +41,10 @@ export default defineComponent({
     bgColor: {
       type: String as () => 'white' | 'transparent',
       default: 'transparent',
+    },
+    hideHint: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['update:modelValue'],
@@ -80,7 +85,7 @@ export default defineComponent({
       hide-bottom-space
       v-model="password"
       id="form-password"
-      :hint="$t('form.hintPassword')"
+      :hint="hideHint ? '' : $t('form.hintPassword')"
       :type="isHiddenPassword ? 'password' : 'text'"
       :rules="[
         (val) =>

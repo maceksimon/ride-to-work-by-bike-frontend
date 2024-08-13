@@ -1,6 +1,7 @@
 import { colors } from 'quasar';
 
 import FormFieldTestWrapper from 'components/global/FormFieldTestWrapper.vue';
+import FormFieldPassword from '../global/FormFieldPassword.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { testPasswordInputReveal } from '../../../test/cypress/support/commonTests';
@@ -28,6 +29,8 @@ describe('<FormFieldPassword>', () => {
       });
       cy.viewport('macbook-16');
     });
+
+    showHintTests();
 
     it('renders password field', () => {
       // input label
@@ -101,4 +104,34 @@ describe('<FormFieldPassword>', () => {
         .should('contain', i18n.global.t('form.hintPassword'));
     });
   });
+
+  context('desktop - hidden hint', () => {
+    beforeEach(() => {
+      cy.mount(FormFieldPassword, {
+        props: {
+          hideHint: true,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    hiddenHintTests();
+  });
 });
+
+function showHintTests() {
+  it('renders hint', () => {
+    cy.dataCy('form-password').should(
+      'contain',
+      i18n.global.t('form.hintPassword'),
+    );
+  });
+}
+function hiddenHintTests() {
+  it('renders hint', () => {
+    cy.dataCy('form-password').should(
+      'not.contain',
+      i18n.global.t('form.hintPassword'),
+    );
+  });
+}
