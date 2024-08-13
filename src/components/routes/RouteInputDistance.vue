@@ -133,7 +133,7 @@ export default defineComponent({
             outlined
             type="number"
             v-model="distance"
-            min="0"
+            min="1"
             max="999"
             data-cy="input-distance"
             :rules="[
