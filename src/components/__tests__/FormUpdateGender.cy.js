@@ -1,5 +1,9 @@
+import { colors } from 'quasar';
 import FormUpdateGender from 'components/form/FormUpdateGender.vue';
 import { i18n } from '../../boot/i18n';
+
+const { getPaletteColor } = colors;
+const grey10 = getPaletteColor('grey-10');
 
 // selectors
 const selectorFormUpdateGender = 'form-update-gender';
@@ -57,5 +61,10 @@ function coreTests() {
     cy.dataCy(selectorFormButtonSave)
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.edit'));
+    cy.dataCy(selectorFormGender)
+      .find('.q-field__messages')
+      .should('contain', i18n.global.t('form.messageOptionRequired'));
+    cy.dataCy(selectorFormGender).find('.q-radio__label').first().click();
+    cy.get('.q-field__messages').should('not.exist');
   });
 }
