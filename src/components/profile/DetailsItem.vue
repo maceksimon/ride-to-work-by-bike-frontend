@@ -55,7 +55,6 @@ export default defineComponent({
   props: {
     description: {
       type: String,
-      required: false,
     },
     editable: {
       type: Boolean,
@@ -63,11 +62,9 @@ export default defineComponent({
     },
     emptyLabel: {
       type: String,
-      required: false,
     },
     dialogTitle: {
       type: String,
-      required: true,
     },
     label: {
       type: String,
@@ -75,7 +72,6 @@ export default defineComponent({
     },
     value: {
       type: String,
-      required: false,
     },
   },
   emits: ['update:value'],
