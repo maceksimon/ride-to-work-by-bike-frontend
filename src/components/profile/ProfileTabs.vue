@@ -19,12 +19,18 @@ import { defineComponent, ref } from 'vue';
 // routes
 import { routesConf } from 'src/router/routes_conf';
 
-type ProfileTabsOption = 'details' | 'forms' | 'newsletter' | 'notifications';
+enum tabsProfile {
+  details = 'details',
+  forms = 'forms',
+  newsletter = 'newsletter',
+  notifications = 'notifications',
+  none = '',
+}
 
 export default defineComponent({
   name: 'ProfileTabs',
   setup() {
-    const activeTab = ref('' as ProfileTabsOption);
+    const activeTab = ref(tabsProfile.none);
 
     return {
       activeTab,
