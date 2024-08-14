@@ -15,6 +15,19 @@ const selectorDetailsItemEdit = 'details-item-edit';
 const selectorDetailsItemEmpty = 'details-item-empty';
 const selectorDialogEdit = 'dialog-edit';
 
+// variables
+const slotButton = 'Slot Button';
+const slotLabel = 'Slot Label';
+const slotValue = 'Slot Value';
+const props = {
+  description: 'Description',
+  editable: true,
+  label: 'Label',
+  value: 'Value',
+  emptyLabel: 'EmptyLabel',
+  dialogTitle: 'DialogTitle',
+};
+
 describe('<DetailsItem>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['edit'], 'navigation', i18n);
@@ -23,20 +36,66 @@ describe('<DetailsItem>', () => {
   context('desktop', () => {
     beforeEach(() => {
       cy.mount(DetailsItem, {
-        props: {
-          description: 'Description',
-          editable: true,
-          label: 'Label',
-          value: 'Value',
-          emptyLabel: 'EmptyLabel',
-          dialogTitle: 'DialogTitle',
+        props,
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+    propLabelTests();
+    propValueTests();
+    propDescriptionTests();
+    editableTests();
+  });
+
+  context('desktop - slot label', () => {
+    beforeEach(() => {
+      cy.mount(DetailsItem, {
+        props,
+        slots: {
+          label: `<div>${slotLabel}</div>`,
         },
       });
       cy.viewport('macbook-16');
     });
 
     coreTests();
-    editableTests();
+    slotLabelTests();
+    propValueTests();
+    propDescriptionTests();
+  });
+
+  context('desktop - slot value', () => {
+    beforeEach(() => {
+      cy.mount(DetailsItem, {
+        props,
+        slots: {
+          value: `<div>${slotValue}</div>`,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    propLabelTests();
+    slotValueTests();
+  });
+
+  context('desktop - slot button', () => {
+    beforeEach(() => {
+      cy.mount(DetailsItem, {
+        props,
+        slots: {
+          button: `<span>${slotButton}</span>`,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+    propLabelTests();
+    propValueTests();
+    propDescriptionTests();
+    slotButtonTests();
   });
 
   context('desktop - empty', () => {
@@ -54,6 +113,7 @@ describe('<DetailsItem>', () => {
       cy.viewport('macbook-16');
     });
 
+    coreTests();
     emptyTests();
     editableTests();
   });
@@ -61,19 +121,15 @@ describe('<DetailsItem>', () => {
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(DetailsItem, {
-        props: {
-          description: 'Description',
-          editable: true,
-          label: 'Label',
-          value: 'Value',
-          emptyLabel: 'EmptyLabel',
-          dialogTitle: 'DialogTitle',
-        },
+        props,
       });
       cy.viewport('iphone-6');
     });
 
     coreTests();
+    propLabelTests();
+    propValueTests();
+    propDescriptionTests();
     editableTests();
   });
 });
@@ -81,21 +137,6 @@ describe('<DetailsItem>', () => {
 function coreTests() {
   it('renders component', () => {
     cy.dataCy(selectorDetailsItem).should('be.visible');
-    cy.dataCy(selectorDetailsItemLabel)
-      .should('be.visible')
-      .and('have.css', 'font-size', '14px')
-      .and('have.css', 'font-weight', '400')
-      .and('have.color', grey10);
-    cy.dataCy(selectorDetailsItemValue)
-      .should('be.visible')
-      .and('have.css', 'font-size', '14px')
-      .and('have.css', 'font-weight', '700')
-      .and('have.color', grey10);
-    cy.dataCy(selectorDetailsItemDescription)
-      .should('be.visible')
-      .and('have.css', 'font-size', '12px')
-      .and('have.css', 'font-weight', '400')
-      .and('have.color', grey7);
   });
 }
 
@@ -121,10 +162,60 @@ function emptyTests() {
   });
 }
 
+function propDescriptionTests() {
+  it('renders description', () => {
+    cy.dataCy(selectorDetailsItemDescription)
+      .should('be.visible')
+      .and('have.css', 'font-size', '12px')
+      .and('have.css', 'font-weight', '400')
+      .and('have.color', grey7);
+  });
+}
+
 function editableTests() {
   it('renders edit button and dialog', () => {
     cy.dataCy(selectorDetailsItemEdit).should('be.visible').click();
     cy.dataCy(selectorDialogEdit).should('be.visible');
     cy.dataCy(selectorDialogEdit).should('contain', 'DialogTitle');
+  });
+}
+
+function slotButtonTests() {
+  it('renders slot button', () => {
+    cy.dataCy(selectorDetailsItemEdit).should('contain', slotButton);
+  });
+}
+
+function propLabelTests() {
+  it('renders prop label', () => {
+    cy.dataCy(selectorDetailsItemLabel)
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '400')
+      .and('have.color', grey10)
+      .and('contain', props.label);
+  });
+}
+
+function slotLabelTests() {
+  it('renders slot label', () => {
+    cy.dataCy(selectorDetailsItemLabel).should('contain', slotLabel);
+  });
+}
+
+function propValueTests() {
+  it('renders prop value', () => {
+    cy.dataCy(selectorDetailsItemValue)
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', grey10)
+      .and('contain', props.value);
+  });
+}
+
+function slotValueTests() {
+  it('renders slot value', () => {
+    cy.dataCy(selectorDetailsItemValue).should('contain', slotValue);
   });
 }

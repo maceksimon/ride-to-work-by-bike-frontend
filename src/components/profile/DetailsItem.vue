@@ -4,6 +4,12 @@
  *
  * @description * Use this component to render a details row in PersonalDetails
  * section of the profile page.
+ * You can render label by passing the `label` prop, or use the `label` slot.
+ * You can render values by passing the `value`, `description` and
+ * 'emptyLabel' prop, or use the `value` slot to render custom content.
+ * You can override the default edit button using the `button` slot.
+ * If you want to make the value editable, pass the `editable` prop.
+ * Use the `form` slot to render the update form in the dialog.
  *
  * @props
  * - `description` (string, false): Description of the item.
@@ -17,7 +23,10 @@
  * - `update:value`: Emitted when value is updated
  *
  * @slots
+ * - `button`: For rendering custom edit button content.
  * - `form`: For rendering update form in the dialog.
+ * - `label`: For rendering custom label.
+ * - `value`: For rendering custom value.
  *
  * @components
  * - `DialogDefault`: Component to render a modal dialog.
@@ -54,7 +63,7 @@ export default defineComponent({
     },
     emptyLabel: {
       type: String,
-      required: true,
+      required: false,
     },
     dialogTitle: {
       type: String,
@@ -66,7 +75,7 @@ export default defineComponent({
     },
     value: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   emits: ['update:value'],
@@ -82,25 +91,49 @@ export default defineComponent({
 
 <template>
   <div class="row q-col-gutter-md text-grey-10" data-cy="details-item">
-    <!-- Label -->
+    <!-- Section: Label -->
     <div :class="[editable ? 'col-4 col-md-3 col-lg-2' : 'col-4 col-md-4']">
-      <div data-cy="details-item-label">{{ label }}</div>
+      <!-- Slot: Label (takes precedence over label prop) -->
+      <template v-if="$slots.label">
+        <div data-cy="details-item-label">
+          <slot name="label" />
+        </div>
+      </template>
+      <!-- Label -->
+      <template v-else>
+        <div data-cy="details-item-label">
+          {{ label }}
+        </div>
+      </template>
     </div>
-    <!-- Value + description -->
+    <!-- Section: Value -->
     <div :class="[editable ? 'col-8 col-md-6 col-lg-8' : 'col-8 col-md-8']">
-      <div v-if="value" class="text-weight-bold" data-cy="details-item-value">
-        {{ value }}
-      </div>
-      <div v-else class="text-grey-7 text-italic" data-cy="details-item-empty">
-        {{ emptyLabel }}
-      </div>
-      <div
-        v-if="description"
-        class="text-caption text-grey-7"
-        data-cy="details-item-description"
-      >
-        {{ description }}
-      </div>
+      <!-- Slot: Value (takes precedence over value prop) -->
+      <template v-if="$slots.value">
+        <div class="text-weight-bold" data-cy="details-item-value">
+          <slot name="value" />
+        </div>
+      </template>
+      <!-- Value + Description -->
+      <template v-else>
+        <div v-if="value" class="text-weight-bold" data-cy="details-item-value">
+          {{ value }}
+        </div>
+        <div
+          v-else
+          class="text-grey-7 text-italic"
+          data-cy="details-item-empty"
+        >
+          {{ emptyLabel }}
+        </div>
+        <div
+          v-if="description"
+          class="text-caption text-grey-7"
+          data-cy="details-item-description"
+        >
+          {{ description }}
+        </div>
+      </template>
     </div>
     <!-- Button: Edit -->
     <div v-if="editable" class="col-12 col-md-3 col-lg-2 flex justify-end">
@@ -114,8 +147,15 @@ export default defineComponent({
         data-cy="details-item-edit"
         @click.prevent="isDialogOpen = true"
       >
-        <q-icon name="edit" size="18px" class="q-mr-sm" />
-        {{ $t('navigation.edit') }}
+        <!-- Slot: Button (option to override default) -->
+        <template v-if="$slots.button">
+          <slot name="button" />
+        </template>
+        <!-- Default: Edit -->
+        <template v-else>
+          <q-icon name="edit" size="18px" class="q-mr-sm" />
+          {{ $t('navigation.edit') }}
+        </template>
       </q-btn>
     </div>
     <!-- Dialog: Edit -->
@@ -124,7 +164,7 @@ export default defineComponent({
       <template #title>
         {{ dialogTitle }}
       </template>
-      <!-- Content -->
+      <!-- Content (passes "form" slot into DialogDefault "content" slot) -->
       <template #content>
         <slot name="form" :close="() => (isDialogOpen = false)" />
       </template>
