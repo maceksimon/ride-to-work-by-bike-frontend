@@ -129,6 +129,14 @@ export default defineComponent({
           class="col-12 col-sm-6"
         >
         </details-item>
+        <!-- Organization type -->
+        <details-item
+          :label="$t('profile.labelOrganization')"
+          :value="profile.organization"
+          :empty-label="$t('profile.labelOrganizationEmpty')"
+          class="col-12 col-sm-6"
+        >
+        </details-item>
       </div>
     </div>
   </div>
