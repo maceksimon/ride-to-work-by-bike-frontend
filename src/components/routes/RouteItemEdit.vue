@@ -75,9 +75,9 @@ export default defineComponent({
       ([actionNew, distanceNew, transportNew]) => {
         // if settings are the same as initial, mark dirty as false
         if (
-          actionNew === (routeInitial?.inputType || 'input-number') &&
-          Number(distanceNew) === Number(routeInitial.distance) &&
-          transportNew === routeInitial?.transport
+          actionNew === (routeInitial?.action || 'input-number') &&
+          Number(distanceNew) === Number(routeInitial?.distance || 0) &&
+          transportNew === routeInitial?.transportType
         ) {
           emit('update:route', false);
         }

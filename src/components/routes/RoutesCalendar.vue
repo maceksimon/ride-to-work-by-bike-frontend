@@ -30,9 +30,10 @@ import RouteCalendarPanel from './RouteCalendarPanel.vue';
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
 import type {
-  TransportDirection,
   RouteCalendarActive,
   RouteCalendarDay,
+  RouteItem,
+  TransportDirection,
 } from '../types/Route';
 
 // fixtures
@@ -184,7 +185,9 @@ export default defineComponent({
     }
 
     const isOpenPanel = ref<boolean>(true);
-    const panelRoutes = [routesListCalendarFixture[0].toWork];
+    const panelRoutes: RouteItem[] = [
+      routesListCalendarFixture[0].toWork as RouteItem,
+    ];
 
     return {
       activeRoutes,
