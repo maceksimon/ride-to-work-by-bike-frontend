@@ -76,19 +76,26 @@ export default defineComponent({
   },
   emits: ['update:value'],
   setup() {
+    // styles
+    const maxWidthLabel = '140px';
+
     const isDialogOpen = ref<boolean>(false);
 
     return {
       isDialogOpen,
+      maxWidthLabel,
     };
   },
 });
 </script>
 
 <template>
-  <div class="row q-col-gutter-md text-grey-10" data-cy="details-item">
+  <div
+    class="row q-col-gutter-md items-start text-grey-10"
+    data-cy="details-item"
+  >
     <!-- Section: Label -->
-    <div :class="[editable ? 'col-4 col-md-3 col-lg-2' : 'col-4 col-md-4']">
+    <div class="col" :style="{ maxWidth: maxWidthLabel }">
       <!-- Slot: Label (takes precedence over label prop) -->
       <template v-if="$slots.label">
         <div data-cy="details-item-label">
@@ -103,7 +110,7 @@ export default defineComponent({
       </template>
     </div>
     <!-- Section: Value -->
-    <div :class="[editable ? 'col-8 col-md-6 col-lg-8' : 'col-8 col-md-8']">
+    <div class="col">
       <!-- Slot: Value (takes precedence over value prop) -->
       <template v-if="$slots.value">
         <div class="text-weight-bold" data-cy="details-item-value">
@@ -132,7 +139,11 @@ export default defineComponent({
       </template>
     </div>
     <!-- Button: Edit -->
-    <div v-if="editable" class="col-12 col-md-3 col-lg-2 flex justify-end">
+    <div
+      v-if="editable"
+      class="col-12 col-sm-auto flex justify-end"
+      data-cy="details-section-edit"
+    >
       <q-btn
         v-if="editable"
         rounded

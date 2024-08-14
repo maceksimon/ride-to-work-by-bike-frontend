@@ -13,9 +13,11 @@ const selectorDetailsItemLabel = 'details-item-label';
 const selectorDetailsItemValue = 'details-item-value';
 const selectorDetailsItemEdit = 'details-item-edit';
 const selectorDetailsItemEmpty = 'details-item-empty';
+const selectorDetailsSectionEdit = 'details-section-edit';
 const selectorDialogEdit = 'dialog-edit';
 
 // variables
+const maxWidthLabel = 140;
 const slotButton = 'Slot Button';
 const slotForm = 'Slot Form';
 const slotLabel = 'Slot Label';
@@ -141,12 +143,19 @@ describe('<DetailsItem>', () => {
     propValueTests();
     propDescriptionTests();
     editableTests();
+    mobileTests();
   });
 });
 
 function coreTests() {
   it('renders component', () => {
     cy.dataCy(selectorDetailsItem).should('be.visible');
+  });
+}
+
+function mobileTests() {
+  it('renders full-width button section', () => {
+    cy.testElementPercentageWidth(cy.dataCy(selectorDetailsSectionEdit), 100);
   });
 }
 
@@ -204,7 +213,11 @@ function propLabelTests() {
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10)
-      .and('contain', props.label);
+      .and('contain', props.label)
+      .invoke('width')
+      .then((width) => {
+        expect(width).to.be.lessThan(maxWidthLabel + 1);
+      });
   });
 }
 
