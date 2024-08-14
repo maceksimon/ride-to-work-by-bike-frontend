@@ -130,9 +130,11 @@ export default defineComponent({
 
     /**
      * Finds the index of the active route based on timestamp and direction.
-     * @param {Timestamp} timestamp - The timestamp of the route item.
-     * @param {TransportDirection} direction - The direction of the route item.
-     * @return {number} The index of the active route.
+     * @param {Object} payload - Object containing the timestamp and
+     * the direction of the route item.
+     * - `timestamp` (Timestamp): The timestamp of the route item.
+     * - `direction` (TransportDirection): The direction of the route item.
+     * @return {number} The index of the active route or -1 if route not found.
      */
     function getActiveIndex({
       timestamp,
