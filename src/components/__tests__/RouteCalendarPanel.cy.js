@@ -1,6 +1,16 @@
 import RouteCalendarPanel from 'components/routes/RouteCalendarPanel.vue';
 import { i18n } from '../../boot/i18n';
 
+// selectors
+const selectorDialogCard = 'dialog-card';
+const selectorDialogTitle = 'dialog-title';
+const selectorDialogSaveButton = 'dialog-save-button';
+const selectorRouteCalendarPanel = 'route-calendar-panel';
+const selectorRouteInputDistance = 'route-input-distance';
+const selectorRouteInputTransportType = 'route-input-transport-type';
+const selectorSectionDistance = 'section-distance';
+const selectorSectionTransport = 'section-transport';
+
 // variables
 const routeCountSingle = 1;
 // const routeCountMultiple = 5;
@@ -10,22 +20,22 @@ describe('<RouteCalendarPanel>', () => {
     cy.testLanguageStringsInContext([], 'index.component', i18n);
   });
 
-  context('desktop', () => {
+  context('desktop - logged route', () => {
     beforeEach(() => {
-      cy.mount(RouteCalendarPanel, {
-        props: {
-          modelValue: true,
-          routes: [
-            {
-              id: '1',
-            },
-          ],
-        },
-        slots: {
-          title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-            count: routeCountSingle,
-          }),
-        },
+      cy.fixture('routeList').then((listRoutes) => {
+        const routes = [listRoutes[0]];
+        cy.wrap(routes).as('routes');
+        cy.mount(RouteCalendarPanel, {
+          props: {
+            modelValue: true,
+            routes,
+          },
+          slots: {
+            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+              count: routeCountSingle,
+            }),
+          },
+        });
       });
       cy.viewport('macbook-16');
     });
@@ -33,32 +43,138 @@ describe('<RouteCalendarPanel>', () => {
     coreTests();
   });
 
-  context('mobile', () => {
+  context('desktop - empty route', () => {
     beforeEach(() => {
-      cy.mount(RouteCalendarPanel, {
-        props: {
-          modelValue: true,
-          routes: [
-            {
-              id: '2',
-            },
-          ],
-        },
-        slots: {
-          title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-            count: routeCountSingle,
-          }),
-        },
+      cy.fixture('routeList').then((listRoutes) => {
+        const routes = [listRoutes[2]];
+        cy.wrap(routes).as('routes');
+        cy.mount(RouteCalendarPanel, {
+          props: {
+            modelValue: true,
+            routes,
+          },
+          slots: {
+            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+              count: routeCountSingle,
+            }),
+          },
+        });
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+    unloggedRouteTests();
+  });
+
+  context('desktop - multiple routes', () => {
+    beforeEach(() => {
+      cy.fixture('routeList').then((routes) => {
+        cy.wrap(routes).as('routes');
+        cy.mount(RouteCalendarPanel, {
+          props: {
+            modelValue: true,
+            routes,
+          },
+          slots: {
+            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+              count: routeCountSingle,
+            }),
+          },
+        });
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+    unloggedRouteTests();
+  });
+
+  context('mobile - one route', () => {
+    beforeEach(() => {
+      cy.fixture('routeList').then((listRoutes) => {
+        const routes = [listRoutes[0]];
+        cy.wrap(routes).as('routes');
+        cy.mount(RouteCalendarPanel, {
+          props: {
+            modelValue: true,
+            routes,
+          },
+          slots: {
+            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+              count: routeCountSingle,
+            }),
+          },
+        });
       });
       cy.viewport('iphone-6');
     });
 
     coreTests();
+    mobileTests();
+  });
+
+  context('mobile - multiple routes', () => {
+    beforeEach(() => {
+      cy.fixture('routeList').then((routes) => {
+        cy.wrap(routes).as('routes');
+        cy.mount(RouteCalendarPanel, {
+          props: {
+            modelValue: true,
+            routes,
+          },
+          slots: {
+            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+              count: routeCountSingle,
+            }),
+          },
+        });
+      });
+      cy.viewport('iphone-6');
+    });
+
+    coreTests();
+    mobileTests();
+    unloggedRouteTests();
   });
 });
 
 function coreTests() {
   it('renders component', () => {
-    cy.dataCy('route-calendar-panel').should('be.visible');
+    cy.get('@routes').then((routes) => {
+      cy.dataCy(selectorRouteCalendarPanel).should('be.visible');
+      cy.dataCy(selectorDialogTitle)
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routes.length, {
+            count: routes.length,
+          }),
+        );
+      cy.dataCy(selectorSectionDistance).should('be.visible');
+      cy.dataCy(selectorSectionTransport).should('be.visible');
+      cy.dataCy(selectorRouteInputDistance).should('be.visible');
+      cy.dataCy(selectorRouteInputTransportType).should('be.visible');
+    });
+  });
+}
+
+function unloggedRouteTests() {
+  it('renders disabled button by default', () => {
+    cy.dataCy(selectorDialogSaveButton).should('be.visible').and('be.disabled');
+  });
+}
+
+function mobileTests() {
+  it('renders panel full width', () => {
+    cy.dataCy(selectorDialogCard)
+      .should('be.visible')
+      .invoke('width')
+      .then((width) => {
+        // should be 100% of viewport
+        expect(width).to.equal(window.innerWidth);
+      });
+    cy.testElementPercentageWidth(cy.dataCy(selectorSectionDistance), 100);
+    cy.testElementPercentageWidth(cy.dataCy(selectorSectionTransport), 100);
   });
 }

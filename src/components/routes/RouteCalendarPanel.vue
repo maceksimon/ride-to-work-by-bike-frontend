@@ -131,11 +131,12 @@ export default defineComponent({
     <q-card
       class="relative-position full-width overflow-visible bg-white"
       :style="{ minWidth: minWidth }"
+      data-cy="dialog-card"
     >
       <!-- Section: Card header -->
       <q-card-section class="q-px-lg q-pt-sm q-pb-none" data-cy="dialog-header">
         <!-- Title -->
-        <h3 v-if="$slots.title" class="text-h6 q-mt-sm q-pt-xs q-mb-none">
+        <h3 class="text-h6 q-mt-sm q-pt-xs q-mb-none" data-cy="dialog-title">
           {{
             $tc('routes.titleBottomPanel', routesCount, { count: routesCount })
           }}
@@ -144,18 +145,21 @@ export default defineComponent({
       <q-card-section class="q-pa-lg">
         <div class="row q-col-gutter-lg items-start" data-cy="dialog-body">
           <!-- Input: Transport type -->
-          <div class="col-12 col-sm-auto">
-            <route-input-transport-type v-model="transportType" />
+          <div class="col-12 col-sm-auto" data-cy="section-transport">
+            <route-input-transport-type
+              v-model="transportType"
+              data-cy="route-input-transport-type"
+            />
           </div>
           <!-- Input: Distance (or link to map) -->
-          <div class="col-12 col-sm">
+          <div class="col-12 col-sm" data-cy="section-distance">
             <route-input-distance
               v-show="isShownDistance"
               v-model="distance"
               :modelAction="action"
               @update:modelAction="action = $event"
-              data-cy="section-distance"
               class="q-mt-none"
+              data-cy="route-input-distance"
             />
           </div>
           <!-- Button: Save -->
@@ -166,7 +170,7 @@ export default defineComponent({
               color="primary"
               :disabled="isDisabledSave"
               @click="onSave"
-              data-cy="dialog-confirm-button"
+              data-cy="dialog-save-button"
             >
               <q-icon name="check" color="white" size="24px" />
             </q-btn>
