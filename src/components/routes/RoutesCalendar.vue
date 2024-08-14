@@ -32,7 +32,6 @@ import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
 import type {
   RouteCalendarActive,
   RouteCalendarDay,
-  RouteItem,
   TransportDirection,
 } from '../types/Route';
 
@@ -184,10 +183,15 @@ export default defineComponent({
       }
     }
 
+    /**
+     * Triggered when user saves active routes.
+     * Clears active selection
+     */
+    function onSave(): void {
+      activeRoutes.value = [];
+    }
+
     const isOpenPanel = ref<boolean>(true);
-    const panelRoutes: RouteItem[] = [
-      routesListCalendarFixture[0].toWork as RouteItem,
-    ];
 
     return {
       activeRoutes,
@@ -195,7 +199,6 @@ export default defineComponent({
       isOpenPanel,
       locale,
       monthNameAndYear,
-      panelRoutes,
       routesMap,
       selectedDate,
       theme,
@@ -203,6 +206,7 @@ export default defineComponent({
       onClickItem,
       onNext,
       onPrev,
+      onSave,
       onToday,
     };
   },
@@ -274,6 +278,10 @@ export default defineComponent({
         </template>
       </q-calendar-month>
     </div>
-    <route-calendar-panel v-model="isOpenPanel" :routes="panelRoutes" />
+    <route-calendar-panel
+      v-model="isOpenPanel"
+      :routes="activeRoutes"
+      @save="onSave"
+    />
   </div>
 </template>

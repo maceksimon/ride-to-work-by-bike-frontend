@@ -17,7 +17,11 @@ const routeCountSingle = 1;
 
 describe('<RouteCalendarPanel>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      ['titleBottomPanel', 'titleBottomPanelNoRoutes'],
+      'routes',
+      i18n,
+    );
   });
 
   context('desktop - logged route', () => {

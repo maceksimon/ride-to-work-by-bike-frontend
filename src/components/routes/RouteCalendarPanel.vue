@@ -28,7 +28,7 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, watch } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
@@ -56,7 +56,7 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['save', 'update:modelValue'],
   setup(props, { emit }) {
     // styles
     const minWidth = '65vw';
@@ -69,6 +69,15 @@ export default defineComponent({
     });
 
     const routesCount = computed((): number => props.routes.length);
+
+    // control dialog open state based on selected routes count
+    watch(routesCount, () => {
+      if (routesCount.value === 0) {
+        isOpen.value = false;
+      } else {
+        isOpen.value = true;
+      }
+    });
 
     // if one selected route, load its values as initial
     const routeInitial: RouteLogData | null =
@@ -99,7 +108,7 @@ export default defineComponent({
      */
     const onSave = (): void => {
       // TODO: send API request
-      isOpen.value = false;
+      emit('save');
     };
 
     return {
@@ -137,9 +146,16 @@ export default defineComponent({
       <q-card-section class="q-px-lg q-pt-sm q-pb-none" data-cy="dialog-header">
         <!-- Title -->
         <h3 class="text-h6 q-mt-sm q-pt-xs q-mb-none" data-cy="dialog-title">
-          {{
-            $tc('routes.titleBottomPanel', routesCount, { count: routesCount })
-          }}
+          <template v-if="routesCount > 0">
+            {{
+              $tc('routes.titleBottomPanel', routesCount, {
+                count: routesCount,
+              })
+            }}
+          </template>
+          <template v-else>
+            {{ $t('routes.titleBottomPanelNoRoutes') }}
+          </template>
         </h3>
       </q-card-section>
       <q-card-section class="q-pa-lg">
