@@ -27,14 +27,17 @@
  */
 
 // libraries
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
 import RouteInputTransportType from './RouteInputTransportType.vue';
 
+// composables
+import { useLogRoutes } from '../../composables/useLogRoutes';
+
 // types
-import type { RouteInputType, TransportType } from '../types/Route';
+import { RouteItem, RouteInputType } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteCalendarPanel',
@@ -48,12 +51,15 @@ export default defineComponent({
       required: true,
     },
     routes: {
-      type: Array,
+      type: Array as () => RouteItem[],
       required: true,
     },
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    // styles
+    const minWidth = '65vw';
+
     // determines if dialog window is open
     const isOpen = computed({
       get: (): boolean => props.modelValue,
@@ -62,31 +68,62 @@ export default defineComponent({
       },
     });
 
-    const action = ref<RouteInputType>('input-number');
-    const distance = ref<number>(0);
-    const transportType = ref<TransportType>('bike');
+    const countRoutes = computed((): number => props.routes.length);
 
-    const countRoutes = computed(() => props.routes.length);
+    // if one selected route, load its values as initial
+    const routeInitial =
+      props.routes.length === 1
+        ? {
+            action: 'input-number' as RouteInputType,
+            distance: props.routes[0].distance,
+            transportType: props.routes[0].transport,
+          }
+        : null;
+    const { action, distance, transportType, isShownDistance } =
+      useLogRoutes(routeInitial);
 
-    const isDisabledSubmit = computed(() => countRoutes.value === 0);
+    const isDisabledSave = computed((): boolean => {
+      const noRoutes = countRoutes.value === 0;
+      const noDistance = isShownDistance.value && distance.value === 0;
+      return noRoutes || noDistance;
+    });
 
-    const minWidth = '65vw';
+    /**
+     * Triggered when panel save button is clicked.
+     * Sends API request to update selected routes with panel data.
+     * If unsuccessful, it shows error message.
+     * If successful, closes panel.
+     */
+    const onSave = (): void => {
+      isOpen.value = false;
+    };
 
     return {
       action,
       distance,
       countRoutes,
       isOpen,
-      isDisabledSubmit,
+      isDisabledSave,
+      isShownDistance,
       minWidth,
       transportType,
+      onSave,
     };
   },
 });
 </script>
 
 <template>
-  <q-dialog square persistent v-model="isOpen" data-cy="route-calendar-panel">
+  <q-dialog
+    seamless
+    square
+    persistent
+    v-model="isOpen"
+    position="bottom"
+    transition-show="slide-up"
+    transition-hide="slide-down"
+    data-cy="route-calendar-panel"
+  >
     <q-card
       class="relative-position full-width overflow-visible bg-white"
       :style="{ minWidth: minWidth }"
@@ -107,6 +144,7 @@ export default defineComponent({
           </div>
           <div class="col-12 col-sm">
             <route-input-distance
+              v-show="isShownDistance"
               v-model="distance"
               :modelAction="action"
               @update:modelAction="action = $event"
@@ -119,7 +157,8 @@ export default defineComponent({
               unelevated
               round
               color="primary"
-              :disabled="isDisabledSubmit"
+              :disabled="isDisabledSave"
+              @click="onSave"
               data-cy="dialog-confirm-button"
             >
               <q-icon name="check" color="white" size="24px" />

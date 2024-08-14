@@ -8,6 +8,7 @@
  * @components
  * - `CalendarNavigation`: Component to render navigation buttons.
  * - `CalendarItemDisplay`: Component to render calendar items.
+ * - `RouteCalendarPanel`: Component to render dialog panel.
  *
  * @example
  * <routes-calendar />
@@ -24,6 +25,7 @@ import { i18n } from '../../boot/i18n';
 // components
 import CalendarItemDisplay from './CalendarItemDisplay.vue';
 import CalendarNavigation from './CalendarNavigation.vue';
+import RouteCalendarPanel from './RouteCalendarPanel.vue';
 
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
@@ -41,6 +43,7 @@ export default defineComponent({
   components: {
     CalendarItemDisplay,
     CalendarNavigation,
+    RouteCalendarPanel,
   },
   setup() {
     const calendar = ref<typeof QCalendarMonth | null>(null);
@@ -180,11 +183,16 @@ export default defineComponent({
       }
     }
 
+    const isOpenPanel = ref<boolean>(true);
+    const panelRoutes = [routesListCalendarFixture[0].toWork];
+
     return {
       activeRoutes,
       calendar,
+      isOpenPanel,
       locale,
       monthNameAndYear,
+      panelRoutes,
       routesMap,
       selectedDate,
       theme,
@@ -263,5 +271,6 @@ export default defineComponent({
         </template>
       </q-calendar-month>
     </div>
+    <route-calendar-panel v-model="isOpenPanel" :routes="panelRoutes" />
   </div>
 </template>

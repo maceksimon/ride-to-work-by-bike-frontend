@@ -23,17 +23,20 @@
  */
 
 // libraries
-import { computed, defineComponent, ref, watch } from 'vue';
+import { defineComponent, watch } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
 import RouteInputTransportType from './RouteInputTransportType.vue';
 
+// composables
+import { useLogRoutes } from '../../composables/useLogRoutes';
+
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { RouteItem, RouteInputType, TransportType } from '../types/Route';
+import type { RouteItem } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteItemEdit',
@@ -58,24 +61,12 @@ export default defineComponent({
 
     const routeInitial: RouteItem = { ...props.route };
 
-    const action = ref<RouteInputType>(
-      props.route?.inputType || 'input-number',
-    );
-    const distance = ref<number>(props.route?.distance || 0);
-
-    const transport = ref<TransportType | null>(props.route.transport || null);
-    // show distance input if transport is bike, walk or bus
-    const isShownDistance = computed((): boolean => {
-      return (
-        transport.value === 'bike' ||
-        transport.value === 'walk' ||
-        transport.value === 'bus'
-      );
-    });
+    const { action, distance, transportType, isShownDistance } =
+      useLogRoutes(null);
 
     // watcher for changes compared to the initial state (dirty)
     watch(
-      [action, distance, transport],
+      [action, distance, transportType],
       ([actionNew, distanceNew, transportNew]) => {
         // if settings are the same as initial, mark dirty as false
         if (
@@ -101,7 +92,7 @@ export default defineComponent({
       distance,
       iconSize,
       isShownDistance,
-      transport,
+      transportType,
     };
   },
 });
@@ -148,7 +139,7 @@ export default defineComponent({
         <!-- Section: Transport type -->
         <route-input-transport-type
           horizontal
-          v-model="transport"
+          v-model="transportType"
           class="q-mt-sm"
           data-cy="section-transport"
         />
