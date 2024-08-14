@@ -17,6 +17,7 @@ const selectorDialogEdit = 'dialog-edit';
 
 // variables
 const slotButton = 'Slot Button';
+const slotForm = 'Slot Form';
 const slotLabel = 'Slot Label';
 const slotValue = 'Slot Value';
 const props = {
@@ -37,6 +38,9 @@ describe('<DetailsItem>', () => {
     beforeEach(() => {
       cy.mount(DetailsItem, {
         props,
+        slots: {
+          form: `<div>${slotForm}</div>`,
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -109,6 +113,9 @@ describe('<DetailsItem>', () => {
           emptyLabel: 'EmptyLabel',
           dialogTitle: 'DialogTitle',
         },
+        slots: {
+          form: `<div>${slotForm}</div>`,
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -122,6 +129,9 @@ describe('<DetailsItem>', () => {
     beforeEach(() => {
       cy.mount(DetailsItem, {
         props,
+        slots: {
+          form: `<div>${slotForm}</div>`,
+        },
       });
       cy.viewport('iphone-6');
     });
@@ -177,6 +187,7 @@ function editableTests() {
     cy.dataCy(selectorDetailsItemEdit).should('be.visible').click();
     cy.dataCy(selectorDialogEdit).should('be.visible');
     cy.dataCy(selectorDialogEdit).should('contain', 'DialogTitle');
+    cy.dataCy(selectorDialogEdit).should('contain', slotForm);
   });
 }
 
