@@ -38,7 +38,8 @@ import RouteInputTransportType from './RouteInputTransportType.vue';
 import { useLogRoutes } from '../../composables/useLogRoutes';
 
 // types
-import { RouteItem, RouteInputType } from '../types/Route';
+import type { RouteItem, RouteInputType } from '../types/Route';
+import type { RouteInitialData } from '../../composables/useLogRoutes';
 
 export default defineComponent({
   name: 'RouteCalendarPanel',
@@ -71,7 +72,7 @@ export default defineComponent({
     const routesCount = computed((): number => props.routes.length);
 
     // if one selected route, load its values as initial
-    const routeInitial =
+    const routeInitial: RouteInitialData | null =
       props.routes.length === 1
         ? {
             action: 'input-number' as RouteInputType,
