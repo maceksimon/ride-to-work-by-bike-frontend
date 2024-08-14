@@ -4,13 +4,14 @@
  *
  * @description * Use this component to log routes in the calendar.
  * Upon calendar click, it displays a dismissable dialog panel.
+ * Interaction with page is allowed outside the dialog.
  * Panel contains inputs for specifying the entered route.
  * Upon confirmation, it logs the entered route.
  * It is used in combination with `RoutesCalendar` component.
  *
  * @props
  * - `modelValue` (boolean, required): The "isOpen" state of the dialog.
- *   It should be of type `boolean`.
+ * - `routes` (RouteItem[], required): The list of routes to log.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -60,7 +61,6 @@ export default defineComponent({
     // styles
     const minWidth = '65vw';
 
-    // determines if dialog window is open
     const isOpen = computed({
       get: (): boolean => props.modelValue,
       set: (value: boolean): void => {
@@ -68,7 +68,7 @@ export default defineComponent({
       },
     });
 
-    const countRoutes = computed((): number => props.routes.length);
+    const routesCount = computed((): number => props.routes.length);
 
     // if one selected route, load its values as initial
     const routeInitial =
@@ -79,11 +79,14 @@ export default defineComponent({
             transportType: props.routes[0].transport,
           }
         : null;
+    // TODO: finalize behaviour for multiple routes
+
+    // route logging data with initial values
     const { action, distance, transportType, isShownDistance } =
       useLogRoutes(routeInitial);
 
     const isDisabledSave = computed((): boolean => {
-      const noRoutes = countRoutes.value === 0;
+      const noRoutes = routesCount.value === 0;
       const noDistance = isShownDistance.value && distance.value === 0;
       return noRoutes || noDistance;
     });
@@ -95,13 +98,14 @@ export default defineComponent({
      * If successful, closes panel.
      */
     const onSave = (): void => {
+      // TODO: send API request
       isOpen.value = false;
     };
 
     return {
       action,
       distance,
-      countRoutes,
+      routesCount,
       isOpen,
       isDisabledSave,
       isShownDistance,
@@ -133,15 +137,17 @@ export default defineComponent({
         <!-- Title -->
         <h3 v-if="$slots.title" class="text-h6 q-mt-sm q-pt-xs q-mb-none">
           {{
-            $tc('routes.titleBottomPanel', countRoutes, { count: countRoutes })
+            $tc('routes.titleBottomPanel', routesCount, { count: routesCount })
           }}
         </h3>
       </q-card-section>
       <q-card-section class="q-pa-lg">
         <div class="row q-col-gutter-lg items-start" data-cy="dialog-body">
+          <!-- Input: Transport type -->
           <div class="col-12 col-sm-auto">
             <route-input-transport-type v-model="transportType" />
           </div>
+          <!-- Input: Distance (or link to map) -->
           <div class="col-12 col-sm">
             <route-input-distance
               v-show="isShownDistance"
@@ -152,6 +158,7 @@ export default defineComponent({
               class="q-mt-none"
             />
           </div>
+          <!-- Button: Save -->
           <div class="col-12 col-sm-auto flex self-end justify-end">
             <q-btn
               unelevated
