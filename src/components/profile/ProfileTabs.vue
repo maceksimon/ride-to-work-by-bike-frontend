@@ -35,6 +35,7 @@ export default defineComponent({
     return {
       activeTab,
       routesConf,
+      tabsProfile,
     };
   },
 });
@@ -82,20 +83,26 @@ export default defineComponent({
     <!-- Tab panels -->
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Details -->
-      <q-tab-panel name="details" data-cy="profile-tabs-panel-details">
+      <q-tab-panel
+        :name="tabsProfile.details"
+        data-cy="profile-tabs-panel-details"
+      >
         <!-- <profile-details /> -->
       </q-tab-panel>
       <!-- Panel: Forms -->
-      <q-tab-panel name="forms" data-cy="profile-tabs-panel-forms">
+      <q-tab-panel :name="tabsProfile.forms" data-cy="profile-tabs-panel-forms">
         <!-- <profile-forms /> -->
       </q-tab-panel>
       <!-- Panel: Newsletter -->
-      <q-tab-panel name="newsletter" data-cy="profile-tabs-panel-newsletter">
+      <q-tab-panel
+        :name="tabsProfile.newsletter"
+        data-cy="profile-tabs-panel-newsletter"
+      >
         <!-- <profile-newsletter /> -->
       </q-tab-panel>
       <!-- Panel: Notifications -->
       <q-tab-panel
-        name="notifications"
+        :name="tabsProfile.notifications"
         data-cy="profile-tabs-panel-notifications"
       >
         <!-- <profile-notifications /> -->
