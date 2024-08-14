@@ -53,7 +53,7 @@ export default defineComponent({
     <h2 class="text-h6 text-grey-10 q-my-none" data-cy="personal-details-title">
       {{ $t('profile.titlePersonalDetails') }}
     </h2>
-    <!-- Details -->
+    <!-- Personal info -->
     <div class="q-mt-lg">
       <!-- Nickname -->
       <details-item
@@ -116,6 +116,19 @@ export default defineComponent({
           />
         </template>
       </details-item>
+    </div>
+
+    <!-- Challenge info -->
+    <div class="q-mt-xl">
+      <div class="row q-col-gutter-md">
+        <!-- Organization type -->
+        <details-item
+          :label="$t('profile.labelOrganizationType')"
+          :value="profile.organizationType"
+          :empty-label="$t('profile.labelOrganizationTypeEmpty')"
+        >
+        </details-item>
+      </div>
     </div>
   </div>
 </template>

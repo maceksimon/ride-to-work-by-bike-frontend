@@ -4,5 +4,6 @@
   "lastName": "Doe",
   "email": "anonym@dopracenakole.cz",
   "gender": "male",
-  "language": "en"
+  "language": "en",
+  "organizationType": "company"
 }
