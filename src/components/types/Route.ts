@@ -36,3 +36,9 @@ export type RouteCalendarActive = {
 };
 
 export type RouteTab = 'calendar' | 'list' | 'map' | 'app';
+
+export type RouteLogData = {
+  action: RouteInputType;
+  distance: number;
+  transportType: TransportType;
+};
