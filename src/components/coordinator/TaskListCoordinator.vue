@@ -73,9 +73,11 @@ export default defineComponent({
         props.tasks.forEach((task: TaskCoordinator) => {
           const taskMonth = date.formatDate(task.date, 'MMMM YYYY');
           // if a new month, push month into the task
-          taskMonth !== month
-            ? tasks.push({ ...task, month: taskMonth })
-            : tasks.push(task);
+          if (taskMonth !== month) {
+            tasks.push({ ...task, month: taskMonth });
+          } else {
+            tasks.push(task);
+          }
           month = taskMonth;
         });
 
