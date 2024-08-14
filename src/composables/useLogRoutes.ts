@@ -14,7 +14,6 @@ export const useLogRoutes = (initialRoute: RouteLogData | null) => {
   const transportType = ref<TransportType>(
     initialRoute?.transportType || 'bike',
   );
-
   const isShownDistance = computed((): boolean => {
     return (
       transportType.value === 'bike' ||

@@ -36,7 +36,7 @@ import { useLogRoutes } from '../../composables/useLogRoutes';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { RouteItem } from '../types/Route';
+import type { RouteItem, RouteInputType, RouteLogData } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteItemEdit',
@@ -59,10 +59,15 @@ export default defineComponent({
     const { borderRadiusCard: borderRadius, colorGray: borderColor } =
       rideToWorkByBikeConfig;
 
-    const routeInitial: RouteItem = { ...props.route };
-
+    const routeInitial: RouteLogData | null = props.route
+      ? {
+          action: 'input-number' as RouteInputType,
+          distance: props.route.distance,
+          transportType: props.route.transport,
+        }
+      : null;
     const { action, distance, transportType, isShownDistance } =
-      useLogRoutes(null);
+      useLogRoutes(routeInitial);
 
     // watcher for changes compared to the initial state (dirty)
     watch(
