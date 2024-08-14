@@ -83,22 +83,22 @@ export default defineComponent({
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Details -->
       <q-tab-panel name="details" data-cy="profile-tabs-panel-details">
-        Personal details
+        <!-- <profile-details /> -->
       </q-tab-panel>
       <!-- Panel: Forms -->
       <q-tab-panel name="forms" data-cy="profile-tabs-panel-forms">
-        Forms
+        <!-- <profile-forms /> -->
       </q-tab-panel>
       <!-- Panel: Newsletter -->
       <q-tab-panel name="newsletter" data-cy="profile-tabs-panel-newsletter">
-        Newsletter
+        <!-- <profile-newsletter /> -->
       </q-tab-panel>
       <!-- Panel: Notifications -->
       <q-tab-panel
         name="notifications"
         data-cy="profile-tabs-panel-notifications"
       >
-        Notifications
+        <!-- <profile-notifications /> -->
       </q-tab-panel>
     </q-tab-panels>
   </div>
