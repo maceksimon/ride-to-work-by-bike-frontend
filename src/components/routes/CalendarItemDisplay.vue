@@ -38,13 +38,12 @@ import { computed, defineComponent } from 'vue';
 // composables
 import { useRoutes } from 'src/composables/useRoutes';
 
+// enums
+import { TransportDirection } from '../types/Route';
+
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
-import type {
-  RouteCalendarDay,
-  RouteItem,
-  TransportDirection,
-} from '../types/Route';
+import type { RouteCalendarDay, RouteItem } from '../types/Route';
 
 export default defineComponent({
   name: 'CalendarItemDisplay',
@@ -68,7 +67,7 @@ export default defineComponent({
     disabled: {
       type: Boolean,
       default: false,
-    }
+    },
   },
   emits: ['item-click'],
   setup(props, { emit }) {
@@ -92,13 +91,14 @@ export default defineComponent({
     const customSVGIconViewPort = '0 0 133 40';
 
     return {
+      customSVGIconsFilePath,
+      customSVGIconViewPort,
       iconSize,
       route,
+      TransportDirection,
       getRouteDistance,
       getRouteIcon,
       onClick,
-      customSVGIconsFilePath,
-      customSVGIconViewPort,
     };
   },
 });
@@ -116,7 +116,7 @@ export default defineComponent({
       data-cy="calendar-item-display-item"
     >
       <!-- Background: To work -->
-      <template v-if="direction === 'toWork'">
+      <template v-if="direction === TransportDirection.toWork">
         <!-- Icon: To work - active -->
         <q-icon
           v-if="active"
@@ -145,7 +145,7 @@ export default defineComponent({
         />
       </template>
       <!-- Background: From work -->
-      <template v-if="direction === 'fromWork'">
+      <template v-if="direction === TransportDirection.fromWork">
         <!-- Icon: From work - active -->
         <q-icon
           v-if="active"

@@ -1,6 +1,7 @@
 import RouteListEdit from 'components/routes/RouteListEdit.vue';
 import { i18n } from '../../boot/i18n';
 import { testRouteListDayDate } from '../../../test/cypress/support/commonTests';
+import { TransportDirection } from '../../../src/components/types/Route';
 
 // selectors
 const selectorButtonSave = 'button-save';
@@ -80,12 +81,12 @@ function coreTests() {
     cy.fixture('routeList').then((routeList) => {
       // for each route check if icon is correct
       cy.dataCy(selectorRouteListItem).each(($element, index) => {
-        if (routeList[index].direction === 'toWork') {
+        if (routeList[index].direction === TransportDirection.toWork) {
           cy.wrap($element)
             .find('[data-cy="label-direction"]')
             .should('contain', i18n.global.t('routes.labelDirectionToWork'));
         }
-        if (routeList[index].direction === 'fromWork') {
+        if (routeList[index].direction === TransportDirection.fromWork) {
           cy.wrap($element)
             .find('[data-cy="label-direction"]')
             .should('contain', i18n.global.t('routes.labelDirectionFromWork'));

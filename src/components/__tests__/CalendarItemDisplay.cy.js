@@ -1,6 +1,7 @@
 import { colors } from 'quasar';
 import CalendarItemDisplay from 'components/routes/CalendarItemDisplay.vue';
 import { i18n } from '../../boot/i18n';
+import { TransportDirection } from '../../../src/components/types/Route';
 
 const { getPaletteColor } = colors;
 
@@ -16,7 +17,7 @@ describe('<CalendarItemDisplay>', () => {
         cy.mount(CalendarItemDisplay, {
           props: {
             active: true,
-            direction: 'toWork',
+            direction: TransportDirection.toWork,
             day,
           },
         });
@@ -26,7 +27,7 @@ describe('<CalendarItemDisplay>', () => {
 
     coreTests();
 
-    loggedTests({ active: true, direction: 'toWork' });
+    loggedTests({ active: true, direction: TransportDirection.toWork });
   });
 
   context('toWork - empty active', () => {
@@ -34,7 +35,7 @@ describe('<CalendarItemDisplay>', () => {
       cy.mount(CalendarItemDisplay, {
         props: {
           active: true,
-          direction: 'toWork',
+          direction: TransportDirection.toWork,
         },
       });
       cy.viewport('iphone-6');
@@ -52,7 +53,7 @@ describe('<CalendarItemDisplay>', () => {
         cy.wrap(day).as('day');
         cy.mount(CalendarItemDisplay, {
           props: {
-            direction: 'toWork',
+            direction: TransportDirection.toWork,
             day,
           },
         });
@@ -62,14 +63,14 @@ describe('<CalendarItemDisplay>', () => {
 
     coreTests();
 
-    loggedTests({ active: false, direction: 'toWork' });
+    loggedTests({ active: false, direction: TransportDirection.toWork });
   });
 
   context('toWork - empty', () => {
     beforeEach(() => {
       cy.mount(CalendarItemDisplay, {
         props: {
-          direction: 'toWork',
+          direction: TransportDirection.toWork,
         },
       });
       cy.viewport('iphone-6');
@@ -88,7 +89,7 @@ describe('<CalendarItemDisplay>', () => {
         cy.mount(CalendarItemDisplay, {
           props: {
             active: true,
-            direction: 'fromWork',
+            direction: TransportDirection.fromWork,
             day,
           },
         });
@@ -98,7 +99,7 @@ describe('<CalendarItemDisplay>', () => {
 
     coreTests();
 
-    loggedTests({ active: true, direction: 'fromWork' });
+    loggedTests({ active: true, direction: TransportDirection.fromWork });
   });
 
   context('fromWork - empty active', () => {
@@ -106,7 +107,7 @@ describe('<CalendarItemDisplay>', () => {
       cy.mount(CalendarItemDisplay, {
         props: {
           active: true,
-          direction: 'fromWork',
+          direction: TransportDirection.fromWork,
         },
       });
       cy.viewport('iphone-6');
@@ -124,7 +125,7 @@ describe('<CalendarItemDisplay>', () => {
         cy.wrap(day).as('day');
         cy.mount(CalendarItemDisplay, {
           props: {
-            direction: 'fromWork',
+            direction: TransportDirection.fromWork,
             day,
           },
         });
@@ -134,14 +135,14 @@ describe('<CalendarItemDisplay>', () => {
 
     coreTests();
 
-    loggedTests({ active: false, direction: 'fromWork' });
+    loggedTests({ active: false, direction: TransportDirection.fromWork });
   });
 
   context('fromWork - empty', () => {
     beforeEach(() => {
       cy.mount(CalendarItemDisplay, {
         props: {
-          direction: 'fromWork',
+          direction: TransportDirection.fromWork,
         },
       });
       cy.viewport('iphone-6');

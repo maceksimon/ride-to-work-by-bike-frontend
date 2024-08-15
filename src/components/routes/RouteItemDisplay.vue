@@ -20,14 +20,17 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// composables
+import { useRoutes } from 'src/composables/useRoutes';
+
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// enums
+import { TransportDirection } from '../types/Route';
+
 // types
 import type { RouteItem } from '../types/Route';
-
-// composables
-import { useRoutes } from 'src/composables/useRoutes';
 
 export default defineComponent({
   name: 'RouteItemDisplay',
@@ -46,6 +49,7 @@ export default defineComponent({
     return {
       borderColor,
       borderRadius,
+      TransportDirection,
       getRouteDistance,
       getRouteIcon,
       getTransportLabel,
@@ -80,7 +84,7 @@ export default defineComponent({
           {{ $t('routes.labelDirectionFromWork') }}
         </span>
         <!-- To work -->
-        <span v-if="route.direction === 'toWork'">
+        <span v-if="route.direction === TransportDirection.toWork">
           <q-icon
             name="arrow_forward"
             size="18px"

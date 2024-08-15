@@ -3,6 +3,7 @@ import RouteListDisplay from 'components/routes/RouteListDisplay.vue';
 import { i18n } from '../../boot/i18n';
 import { testRouteListDayDate } from '../../../test/cypress/support/commonTests';
 import { useRoutes } from '../../../src/composables/useRoutes';
+import { TransportDirection } from '../../../src/components/types/Route';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -73,12 +74,12 @@ function coreTests() {
     cy.fixture('routeList').then((routeList) => {
       // for each route check if icon is correct
       cy.dataCy('route-list-item').each(($element, index) => {
-        if (routeList[index].direction === 'toWork') {
+        if (routeList[index].direction === TransportDirection.toWork) {
           cy.wrap($element)
             .find('[data-cy="label-direction"]')
             .should('contain', i18n.global.t('routes.labelDirectionToWork'));
         }
-        if (routeList[index].direction === 'fromWork') {
+        if (routeList[index].direction === TransportDirection.fromWork) {
           cy.wrap($element)
             .find('[data-cy="label-direction"]')
             .should('contain', i18n.global.t('routes.labelDirectionFromWork'));
