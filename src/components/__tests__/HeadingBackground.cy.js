@@ -45,18 +45,11 @@ describe('<HeadingBackground>', () => {
     });
 
     it('renders image', () => {
-      cy.dataCy(selectorHeadingBackgroundImage).then((element) => {
-        cy.wrap(element).matchImageSnapshot({
-          failureThreshold: 0.1,
-          failureThresholdType: 'percent',
-          timeout: 5000,
-          customDiffConfig: { threshold: 0.5 },
-          screenshotsFolder: 'test/cypress/snapshots',
-          retries: 2,
-          name: `heading-background-image-${Cypress.currentTest.titlePath[0]}`,
-        });
-      });
-    })
+      cy.matchImageSnapshotNamed(
+        selectorHeadingBackgroundImage,
+        `${Cypress.currentTest.titlePath[0]}-background-image`,
+      );
+    });
   });
 
   context('mobile', () => {
@@ -81,18 +74,11 @@ describe('<HeadingBackground>', () => {
     });
 
     it('renders image', () => {
-      cy.dataCy(selectorHeadingBackgroundImage).then((element) => {
-        cy.wrap(element).matchImageSnapshot({
-          failureThreshold: 0.1,
-          failureThresholdType: 'percent',
-          timeout: 5000,
-          customDiffConfig: { threshold: 0.5 },
-          screenshotsFolder: 'test/cypress/snapshots',
-          retries: 2,
-          name: `heading-background-image-${Cypress.currentTest.titlePath[0]}`,
-        });
-      });
-    })
+      cy.matchImageSnapshotNamed(
+        selectorHeadingBackgroundImage,
+        `${Cypress.currentTest.titlePath[0]}-background-image`,
+      );
+    });
   });
 });
 

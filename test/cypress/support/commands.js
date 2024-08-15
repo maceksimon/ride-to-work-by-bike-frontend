@@ -174,6 +174,20 @@ Cypress.Commands.add(
   },
 );
 
+Cypress.Commands.add(
+  'matchImageSnapshotNamed',
+  (dataCySelector, name, failureThreshold = 0.1) => {
+    cy.dataCy(dataCySelector).matchImageSnapshot({
+      customDiffConfig: { threshold: 0.5 },
+      failureThreshold: failureThreshold,
+      failureThresholdType: 'percent',
+      name,
+      retries: 2,
+      screenshotsFolder: 'test/cypress/snapshots',
+    });
+  },
+);
+
 Cypress.Commands.add('stripHtmlTags', (htmlString) => {
   cy.wrap(htmlString.replace(/<\/?[^>]+(>|$)/g, ''));
 });
