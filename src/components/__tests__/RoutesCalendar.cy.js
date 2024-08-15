@@ -8,11 +8,15 @@ const classSelectorHeadWeekday = '.q-calendar-month__head--weekday';
 const classSelectorOutsideDay = '.q-outside';
 const classSelectorPastDay = '.q-past-day';
 const dataSelectorItemFromWork = '[data-cy="calendar-item-display-from-work"]';
-const dataSelectorItemFromWorkActive = '[data-cy="calendar-item-icon-fromwork-active"]';
-const dataSelectorItemFromWorkEmpty = '[data-cy="calendar-item-icon-fromwork-empty"]';
+const dataSelectorItemFromWorkActive =
+  '[data-cy="calendar-item-icon-fromwork-active"]';
+const dataSelectorItemFromWorkEmpty =
+  '[data-cy="calendar-item-icon-fromwork-empty"]';
 const dataSelectorItemToWork = '[data-cy="calendar-item-display-to-work"]';
-const dataSelectorItemToWorkActive = '[data-cy="calendar-item-icon-towork-active"]';
-const dataSelectorItemToWorkEmpty = '[data-cy="calendar-item-icon-towork-empty"]';
+const dataSelectorItemToWorkActive =
+  '[data-cy="calendar-item-icon-towork-active"]';
+const dataSelectorItemToWorkEmpty =
+  '[data-cy="calendar-item-icon-towork-empty"]';
 const selectorCalendarTitle = 'calendar-title';
 
 const dayNames = [
@@ -92,47 +96,38 @@ function coreTests() {
   });
 
   // First route of the current date is active
-  it('renders default active route', () => {
+  it('renders inactive routes by default', () => {
     // check for active background
-    checkTodayToWorkActive();
+    checkTodayToWorkInactive();
+    checkTodayFromWorkInactive();
   });
 
   it('allows to enable multiple active routes', () => {
+    // enable today's "to work" route
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
     // enable today's "from work" route
-    cy.get(classSelectorCurrentDay)
-      .find(dataSelectorItemFromWork)
-      .click();
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
     // both today's routes are active
     checkTodayFromWorkActive();
     checkTodayToWorkActive();
     // enable a past day's to work route
-    cy.get(classSelectorPastDay)
-      .first()
-      .find(dataSelectorItemFromWork)
-      .click();
+    cy.get(classSelectorPastDay).first().find(dataSelectorItemFromWork).click();
     // from work is active
     checkTodayToWorkActive();
     checkTodayFromWorkActive();
     checkPastDayToWorkActive();
     // disable today's "to work" route
-    cy.get(classSelectorCurrentDay)
-      .find(dataSelectorItemToWork)
-      .click();
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
     checkTodayToWorkInactive();
     checkTodayFromWorkActive();
     checkPastDayToWorkActive();
     // disable today's "from work" route
-    cy.get(classSelectorCurrentDay)
-      .find(dataSelectorItemFromWork)
-      .click();
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
     checkTodayToWorkInactive();
     checkTodayFromWorkInactive();
     checkPastDayToWorkActive();
     // distable a past day's to work route
-    cy.get(classSelectorPastDay)
-      .first()
-      .find(dataSelectorItemFromWork)
-      .click();
+    cy.get(classSelectorPastDay).first().find(dataSelectorItemFromWork).click();
     checkTodayToWorkInactive();
     checkTodayFromWorkInactive();
     checkPastDayToWorkInactive();
@@ -150,7 +145,7 @@ function coreTests() {
       .first()
       .find(dataSelectorItemToWorkActive)
       .should('not.exist');
-  })
+  });
 }
 
 function checkTodayToWorkActive() {
