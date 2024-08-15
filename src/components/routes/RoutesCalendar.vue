@@ -18,7 +18,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { parsed, QCalendarMonth, today } from '@quasar/quasar-ui-qcalendar';
+import { QCalendarMonth, today } from '@quasar/quasar-ui-qcalendar';
 import { defineComponent, computed, ref } from 'vue';
 import { i18n } from '../../boot/i18n';
 
@@ -32,6 +32,7 @@ import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
 import type {
   RouteCalendarActive,
   RouteCalendarDay,
+  RouteItem,
   TransportDirection,
 } from '../types/Route';
 
@@ -103,9 +104,39 @@ export default defineComponent({
     });
 
     // Active state
-    const activeRoutes = ref<RouteCalendarActive[]>([
-      { timestamp: parsed(today()), direction: 'toWork' },
-    ]);
+    const activeRoutes = ref<RouteCalendarActive[]>([]);
+
+    const activeRoutesComputed = computed((): RouteItem[] => {
+      return activeRoutes.value.map((activeRoute: RouteCalendarActive) => {
+        if (activeRoute.timestamp && activeRoute.direction) {
+          /**
+           * You are selecting from logged days.
+           * You need to enable routes that are not logged by creating a fresh route to write into.
+           */
+          const day: RouteCalendarDay =
+            routesMap.value[activeRoute.timestamp.date];
+          if (day && activeRoute.direction === 'toWork') {
+            console.log(day.toWork);
+            return { ...day.toWork };
+          }
+          if (day && activeRoute.direction === 'fromWork') {
+            console.log(day.fromWork);
+            return { ...day.fromWork };
+          } else {
+            return {
+              id: '',
+              date: activeRoute.timestamp.date,
+              direction: activeRoute.direction,
+              transport: 'bike',
+              distance: 0,
+              inputType: 'input-number',
+            };
+          }
+        } else {
+          return [];
+        }
+      });
+    });
 
     /**
      * Determines if route item is active.
@@ -191,10 +222,11 @@ export default defineComponent({
       activeRoutes.value = [];
     }
 
-    const isOpenPanel = ref<boolean>(true);
+    const isOpenPanel = ref<boolean>(false);
 
     return {
       activeRoutes,
+      activeRoutesComputed,
       calendar,
       isOpenPanel,
       locale,
@@ -280,7 +312,7 @@ export default defineComponent({
     </div>
     <route-calendar-panel
       v-model="isOpenPanel"
-      :routes="activeRoutes"
+      :routes="activeRoutesComputed"
       @save="onSave"
     />
   </div>

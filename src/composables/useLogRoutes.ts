@@ -1,19 +1,32 @@
 // libraries
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 
 // types
 import type {
   RouteInputType,
-  RouteLogData,
+  RouteItem,
   TransportType,
 } from 'src/components/types/Route';
 
-export const useLogRoutes = (initialRoute: RouteLogData | null) => {
-  const action = ref<RouteInputType>(initialRoute?.action || 'input-number');
-  const distance = ref<number>(initialRoute?.distance || 0);
-  const transportType = ref<TransportType>(
-    initialRoute?.transportType || 'bike',
-  );
+export const useLogRoutes = (routes: RouteItem[]) => {
+  const routesCount = computed((): number => routes.length);
+
+  const action = ref<RouteInputType>('input-number');
+  const distance = ref<number>(0);
+  const transportType = ref<TransportType>('bike');
+
+  const setRouteInputData = (routes: RouteItem[]): void => {
+    if (routes.length === 1) {
+      action.value = routes[0].inputType || 'input-number';
+      distance.value = routes[0].distance || 0;
+      transportType.value = routes[0].transport || 'bike';
+    }
+  };
+
+  onMounted(() => {
+    watch(routes, () => setRouteInputData(routes));
+  });
+
   const isShownDistance = computed((): boolean => {
     return (
       transportType.value === 'bike' ||
@@ -25,6 +38,7 @@ export const useLogRoutes = (initialRoute: RouteLogData | null) => {
   return {
     action,
     distance,
+    routesCount,
     transportType,
     isShownDistance,
   };

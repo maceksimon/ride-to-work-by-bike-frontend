@@ -38,7 +38,7 @@ import RouteInputTransportType from './RouteInputTransportType.vue';
 import { useLogRoutes } from '../../composables/useLogRoutes';
 
 // types
-import type { RouteItem, RouteInputType, RouteLogData } from '../types/Route';
+import type { RouteItem } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteCalendarPanel',
@@ -68,31 +68,19 @@ export default defineComponent({
       },
     });
 
-    const routesCount = computed((): number => props.routes.length);
+    // route logging data with initial values
+    const { action, distance, routesCount, transportType, isShownDistance } =
+      useLogRoutes(props.routes);
 
     // control dialog open state based on selected routes count
     watch(routesCount, () => {
+      console.log('watched');
       if (routesCount.value === 0) {
         isOpen.value = false;
       } else {
         isOpen.value = true;
       }
     });
-
-    // if one selected route, load its values as initial
-    const routeInitial: RouteLogData | null =
-      props.routes.length === 1
-        ? {
-            action: 'input-number' as RouteInputType,
-            distance: props.routes[0].distance,
-            transportType: props.routes[0].transport,
-          }
-        : null;
-    // TODO: finalize behaviour for multiple routes
-
-    // route logging data with initial values
-    const { action, distance, transportType, isShownDistance } =
-      useLogRoutes(routeInitial);
 
     const isDisabledSave = computed((): boolean => {
       const noRoutes = routesCount.value === 0;
