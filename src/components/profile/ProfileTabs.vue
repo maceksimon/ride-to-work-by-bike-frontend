@@ -17,7 +17,7 @@
 import { defineComponent, ref } from 'vue';
 
 // routes
-import { routesConf } from 'src/router/routes_conf';
+import { routesConf } from '../../router/routes_conf';
 
 enum tabsProfile {
   details = 'details',
@@ -55,25 +55,25 @@ export default defineComponent({
     >
       <q-route-tab
         :to="routesConf['profile_details'].path"
-        name="details"
+        :name="tabsProfile.details"
         :label="$t('profile.tabDetails')"
         data-cy="profile-tabs-button-details"
       />
       <q-route-tab
         :to="routesConf['profile_forms'].path"
-        name="forms"
+        :name="tabsProfile.forms"
         :label="$t('profile.tabForms')"
         data-cy="profile-tabs-button-forms"
       />
       <q-route-tab
         :to="routesConf['profile_newsletter'].path"
-        name="newsletter"
+        :name="tabsProfile.newsletter"
         :label="$t('profile.tabNewsletter')"
         data-cy="profile-tabs-button-newsletter"
       />
       <q-route-tab
         :to="routesConf['profile_notifications'].path"
-        name="notifications"
+        :name="tabsProfile.notifications"
         :label="$t('profile.tabNotifications')"
         data-cy="profile-tabs-button-notifications"
       />
