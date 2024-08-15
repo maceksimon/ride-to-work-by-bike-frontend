@@ -28,7 +28,7 @@
  */
 
 // libraries
-import { computed, defineComponent, watch } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
@@ -68,20 +68,13 @@ export default defineComponent({
       },
     });
 
-    // route logging data with initial values
+    // Make props into computed ref so it can be passed as a reactive value.
+    const routes = computed(() => props.routes);
+    // Get panel input state from a composable.
     const { action, distance, routesCount, transportType, isShownDistance } =
-      useLogRoutes(props.routes);
+      useLogRoutes(routes);
 
-    // control dialog open state based on selected routes count
-    watch(routesCount, () => {
-      console.log('watched');
-      if (routesCount.value === 0) {
-        isOpen.value = false;
-      } else {
-        isOpen.value = true;
-      }
-    });
-
+    // Determines if save button should be disabled.
     const isDisabledSave = computed((): boolean => {
       const noRoutes = routesCount.value === 0;
       const noDistance = isShownDistance.value && distance.value === 0;

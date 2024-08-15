@@ -19,7 +19,7 @@
 // libraries
 import { colors } from 'quasar';
 import { QCalendarMonth, today } from '@quasar/quasar-ui-qcalendar';
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, watch } from 'vue';
 import { i18n } from '../../boot/i18n';
 
 // components
@@ -107,35 +107,42 @@ export default defineComponent({
     const activeRoutes = ref<RouteCalendarActive[]>([]);
 
     const activeRoutesComputed = computed((): RouteItem[] => {
-      return activeRoutes.value.map((activeRoute: RouteCalendarActive) => {
-        if (activeRoute.timestamp && activeRoute.direction) {
-          /**
-           * You are selecting from logged days.
-           * You need to enable routes that are not logged by creating a fresh route to write into.
-           */
-          const day: RouteCalendarDay =
-            routesMap.value[activeRoute.timestamp.date];
-          if (day && activeRoute.direction === 'toWork') {
-            console.log(day.toWork);
-            return { ...day.toWork };
-          }
-          if (day && activeRoute.direction === 'fromWork') {
-            console.log(day.fromWork);
-            return { ...day.fromWork };
+      return activeRoutes.value.map(
+        (activeRoute: RouteCalendarActive): RouteItem => {
+          if (activeRoute.timestamp && activeRoute.direction) {
+            /**
+             * You are selecting from logged days.
+             * You need to enable routes that are not logged by creating a fresh route to write into.
+             */
+            const day: RouteCalendarDay =
+              routesMap.value[activeRoute.timestamp.date];
+            if (day && activeRoute.direction === 'toWork') {
+              return { ...day.toWork };
+            }
+            if (day && activeRoute.direction === 'fromWork') {
+              return { ...day.fromWork };
+            } else {
+              return {
+                id: '',
+                date: activeRoute.timestamp.date,
+                direction: activeRoute.direction,
+                transport: 'bike',
+                distance: 0,
+                inputType: 'input-number',
+              };
+            }
           } else {
             return {
               id: '',
-              date: activeRoute.timestamp.date,
-              direction: activeRoute.direction,
+              date: '',
+              direction: 'toWork',
               transport: 'bike',
               distance: 0,
               inputType: 'input-number',
             };
           }
-        } else {
-          return [];
-        }
-      });
+        },
+      );
     });
 
     /**
@@ -223,6 +230,17 @@ export default defineComponent({
     }
 
     const isOpenPanel = ref<boolean>(false);
+    // control dialog open state based on selected routes count
+    watch(
+      (): number => activeRoutes.value.length,
+      (length): void => {
+        if (length === 0) {
+          isOpenPanel.value = false;
+        } else {
+          isOpenPanel.value = true;
+        }
+      },
+    );
 
     return {
       activeRoutes,
