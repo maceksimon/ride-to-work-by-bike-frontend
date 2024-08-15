@@ -23,7 +23,7 @@
  */
 
 // libraries
-import { defineComponent, watch } from 'vue';
+import { computed, defineComponent, watch } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
@@ -35,8 +35,11 @@ import { useLogRoutes } from '../../composables/useLogRoutes';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// enums
+import { TransportDirection } from '../types/Route';
+
 // types
-import type { RouteItem, RouteInputType, RouteLogData } from '../types/Route';
+import type { RouteItem } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteItemEdit',
@@ -59,15 +62,9 @@ export default defineComponent({
     const { borderRadiusCard: borderRadius, colorGray: borderColor } =
       rideToWorkByBikeConfig;
 
-    const routeInitial: RouteLogData | null = props.route
-      ? {
-          action: 'input-number' as RouteInputType,
-          distance: props.route.distance,
-          transportType: props.route.transport,
-        }
-      : null;
+    const routes = computed(() => [props.route]);
     const { action, distance, transportType, isShownDistance } =
-      useLogRoutes(routeInitial);
+      useLogRoutes(routes);
 
     // watcher for changes compared to the initial state (dirty)
     watch(
@@ -75,9 +72,9 @@ export default defineComponent({
       ([actionNew, distanceNew, transportNew]) => {
         // if settings are the same as initial, mark dirty as false
         if (
-          actionNew === (routeInitial?.action || 'input-number') &&
-          Number(distanceNew) === Number(routeInitial?.distance || 0) &&
-          transportNew === routeInitial?.transportType
+          actionNew === (props.route?.inputType || 'input-number') &&
+          Number(distanceNew) === Number(props.route?.distance || 0) &&
+          transportNew === props.route?.transport
         ) {
           emit('update:route', false);
         }
@@ -98,6 +95,7 @@ export default defineComponent({
       iconSize,
       isShownDistance,
       transportType,
+      TransportDirection,
     };
   },
 });
@@ -119,7 +117,7 @@ export default defineComponent({
         data-cy="label-direction"
       >
         <!-- From work -->
-        <span v-if="route.direction === 'fromWork'">
+        <span v-if="route.direction === TransportDirection.fromWork">
           <q-icon
             name="arrow_back"
             :size="iconSize"
@@ -128,7 +126,7 @@ export default defineComponent({
           {{ $t('routes.labelDirectionFromWork') }}
         </span>
         <!-- To work -->
-        <span v-if="route.direction === 'toWork'">
+        <span v-if="route.direction === TransportDirection.toWork">
           <q-icon
             name="arrow_forward"
             :size="iconSize"

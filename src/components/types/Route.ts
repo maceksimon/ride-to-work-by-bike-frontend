@@ -15,7 +15,10 @@ export type TransportType = 'bike' | 'car' | 'walk' | 'bus' | 'none';
 
 export type RouteInputType = 'input-number' | 'input-map';
 
-export type TransportDirection = 'toWork' | 'fromWork';
+export enum TransportDirection {
+  toWork = 'toWork',
+  fromWork = 'fromWork',
+}
 
 export type RouteListDay = {
   id: string;

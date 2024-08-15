@@ -34,12 +34,10 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
   };
 
   // update panel input data when routes change (user clicks on calendar route).
-  watch(
-    () => routes.value,
-    () => {
-      setInputsFromRoute(routes.value);
-    },
-  );
+  setInputsFromRoute(routes.value);
+  watch(routes, () => {
+    setInputsFromRoute(routes.value);
+  });
 
   const isShownDistance = computed((): boolean => {
     return (

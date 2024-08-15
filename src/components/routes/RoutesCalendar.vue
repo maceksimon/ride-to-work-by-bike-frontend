@@ -27,17 +27,19 @@ import CalendarItemDisplay from './CalendarItemDisplay.vue';
 import CalendarNavigation from './CalendarNavigation.vue';
 import RouteCalendarPanel from './RouteCalendarPanel.vue';
 
+// enums
+import { TransportDirection } from '../types/Route';
+
+// fixtures
+import routesListCalendarFixture from '../../../test/cypress/fixtures/routeListCalendar.json';
+
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
 import type {
   RouteCalendarActive,
   RouteCalendarDay,
   RouteItem,
-  TransportDirection,
 } from '../types/Route';
-
-// fixtures
-import routesListCalendarFixture from '../../../test/cypress/fixtures/routeListCalendar.json';
 
 export default defineComponent({
   name: 'RoutesCalendar',
@@ -107,42 +109,39 @@ export default defineComponent({
     const activeRoutes = ref<RouteCalendarActive[]>([]);
 
     const activeRoutesComputed = computed((): RouteItem[] => {
-      return activeRoutes.value.map(
-        (activeRoute: RouteCalendarActive): RouteItem => {
-          if (activeRoute.timestamp && activeRoute.direction) {
-            /**
-             * You are selecting from logged days.
-             * You need to enable routes that are not logged by creating a fresh route to write into.
-             */
-            const day: RouteCalendarDay =
-              routesMap.value[activeRoute.timestamp.date];
-            if (day && activeRoute.direction === 'toWork') {
-              return { ...day.toWork };
-            }
-            if (day && activeRoute.direction === 'fromWork') {
-              return { ...day.fromWork };
-            } else {
-              return {
-                id: '',
-                date: activeRoute.timestamp.date,
-                direction: activeRoute.direction,
-                transport: 'bike',
-                distance: 0,
-                inputType: 'input-number',
-              };
-            }
+      const routes = [] as RouteItem[];
+      activeRoutes.value.forEach((activeRoute: RouteCalendarActive): void => {
+        if (activeRoute.timestamp && activeRoute.direction) {
+          const day: RouteCalendarDay =
+            routesMap.value[activeRoute.timestamp.date];
+          if (
+            day &&
+            activeRoute.direction === TransportDirection.toWork &&
+            day.toWork
+          ) {
+            // Route is already logged - load data.
+            routes.push({ ...day.toWork });
+          } else if (
+            day &&
+            activeRoute.direction === TransportDirection.fromWork &&
+            day.fromWork
+          ) {
+            // Route is already logged - load data.
+            routes.push({ ...day.fromWork });
           } else {
-            return {
+            // Route is not logged - create empty route.
+            routes.push({
               id: '',
-              date: '',
-              direction: 'toWork',
+              date: activeRoute.timestamp.date,
+              direction: activeRoute.direction,
               transport: 'bike',
               distance: 0,
               inputType: 'input-number',
-            };
+            });
           }
-        },
-      );
+        }
+      });
+      return routes;
     });
 
     /**
@@ -229,8 +228,10 @@ export default defineComponent({
       activeRoutes.value = [];
     }
 
+    /**
+     * Control dialog open state based on selected routes count.
+     */
     const isOpenPanel = ref<boolean>(false);
-    // control dialog open state based on selected routes count
     watch(
       (): number => activeRoutes.value.length,
       (length): void => {
@@ -252,6 +253,7 @@ export default defineComponent({
       routesMap,
       selectedDate,
       theme,
+      TransportDirection,
       isActive,
       onClickItem,
       onNext,
@@ -306,9 +308,11 @@ export default defineComponent({
           <div v-if="!timestamp.future" class="q-my-sm" data-cy="calendar-day">
             <!-- Route to work -->
             <calendar-item-display
-              :active="isActive({ timestamp, direction: 'toWork' })"
+              :active="
+                isActive({ timestamp, direction: TransportDirection.toWork })
+              "
               :disabled="outside"
-              direction="toWork"
+              :direction="TransportDirection.toWork"
               :day="routesMap[timestamp.date]"
               :timestamp="timestamp"
               @item-click="onClickItem"
@@ -316,9 +320,11 @@ export default defineComponent({
             />
             <!-- Route from work -->
             <calendar-item-display
-              :active="isActive({ timestamp, direction: 'fromWork' })"
+              :active="
+                isActive({ timestamp, direction: TransportDirection.fromWork })
+              "
               :disabled="outside"
-              direction="fromWork"
+              :direction="TransportDirection.fromWork"
               :day="routesMap[timestamp.date]"
               :timestamp="timestamp"
               @item-click="onClickItem"
