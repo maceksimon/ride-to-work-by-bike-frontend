@@ -1,8 +1,8 @@
 <script lang="ts">
 /**
- * PersonalDetails Component
+ * ProfileDetails Component
  *
- * @description * Use this component to display a PersonalDetails section
+ * @description * Use this component to display a ProfileDetails section
  * on the profile page.
  * Note: This component is used on `ProfilePage`.
  *
@@ -12,7 +12,7 @@
  * - `FormUpdateNickname`: Component to render a form for updating nickname.
  *
  * @example
- * <personal-details />
+ * <profile-details />
  *
  * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=4858-104393&t=31rhAtfu6ZZ8sEf1-1)
  */
@@ -30,7 +30,7 @@ import FormUpdateNickname from '../form/FormUpdateNickname.vue';
 import formPersonalDetails from '../../../test/cypress/fixtures/formPersonalDetails.json';
 
 export default defineComponent({
-  name: 'PersonalDetails',
+  name: 'ProfileDetails',
   components: {
     DetailsItem,
     FormUpdateEmail,
@@ -48,9 +48,9 @@ export default defineComponent({
 </script>
 
 <template>
-  <div data-cy="personal-details">
+  <div data-cy="profile-details">
     <!-- Title -->
-    <h2 class="text-h6 text-grey-10 q-my-none" data-cy="personal-details-title">
+    <h2 class="text-h6 text-grey-10 q-my-none" data-cy="profile-details-title">
       {{ $t('profile.titlePersonalDetails') }}
     </h2>
     <!-- Personal info -->
@@ -64,7 +64,7 @@ export default defineComponent({
         :description="$t('profile.descriptionNickname')"
         :empty-label="$t('profile.labelNicknameEmpty')"
         class="q-mb-lg"
-        data-cy="personal-details-nickname"
+        data-cy="profile-details-nickname"
       >
         <template #form="{ close }">
           <!-- Form: Update nickname -->
@@ -72,7 +72,7 @@ export default defineComponent({
             :on-close="close"
             :value="profile.nickname"
             @update:value="profile.nickname = $event"
-            data-cy="personal-details-form-nickname"
+            data-cy="profile-details-form-nickname"
           />
         </template>
       </details-item>
@@ -84,7 +84,7 @@ export default defineComponent({
         :dialog-title="$t('profile.titleUpdateEmail')"
         :empty-label="$t('profile.labelEmailEmpty')"
         class="q-mb-lg"
-        data-cy="personal-details-email"
+        data-cy="profile-details-email"
       >
         <template #form="{ close }">
           <!-- Form: Update email -->
@@ -92,7 +92,7 @@ export default defineComponent({
             :on-close="close"
             :value="profile.email"
             @update:value="profile.email = $event"
-            data-cy="personal-details-form-email"
+            data-cy="profile-details-form-email"
           />
         </template>
       </details-item>
@@ -104,7 +104,7 @@ export default defineComponent({
         :dialog-title="$t('profile.titleUpdateGender')"
         :empty-label="$t('profile.labelGenderEmpty')"
         class="q-mb-lg"
-        data-cy="personal-details-gender"
+        data-cy="profile-details-gender"
       >
         <template #form="{ close }">
           <!-- Form: Update gender -->
@@ -112,7 +112,7 @@ export default defineComponent({
             :on-close="close"
             :value="profile.gender"
             @update:value="profile.gender = $event"
-            data-cy="personal-details-form-gender"
+            data-cy="profile-details-form-gender"
           />
         </template>
       </details-item>

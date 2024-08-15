@@ -1,17 +1,17 @@
 import { colors } from 'quasar';
-import PersonalDetails from 'components/profile/PersonalDetails.vue';
+import ProfileDetails from 'components/profile/ProfileDetails.vue';
 import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 // selectors
-const selectorEmail = 'personal-details-email';
-const selectorFormEmail = 'personal-details-form-email';
-const selectorFormNickname = 'personal-details-form-nickname';
-const selectorNickname = 'personal-details-nickname';
-const selectorPersonalDetails = 'personal-details';
-const selectorTitle = 'personal-details-title';
+const selectorEmail = 'profile-details-email';
+const selectorFormEmail = 'profile-details-form-email';
+const selectorFormNickname = 'profile-details-form-nickname';
+const selectorNickname = 'profile-details-nickname';
+const selectorPersonalDetails = 'profile-details';
+const selectorTitle = 'profile-details-title';
 const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
 const dataSelectorButtonSave = '[data-cy="form-button-save"]';
 const dataSelectorEdit = '[data-cy="details-item-edit"]';
@@ -26,7 +26,7 @@ const newNickname = 'Cyklobaron';
 const newEmail = 'ride@dopracenakole.cz';
 const password = 'password';
 
-describe('<PersonalDetails>', () => {
+describe('<ProfileDetails>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       [
@@ -43,7 +43,7 @@ describe('<PersonalDetails>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      cy.mount(PersonalDetails, {
+      cy.mount(ProfileDetails, {
         props: {},
       });
       cy.viewport('macbook-16');
@@ -54,7 +54,7 @@ describe('<PersonalDetails>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.mount(PersonalDetails, {
+      cy.mount(ProfileDetails, {
         props: {},
       });
       cy.viewport('iphone-6');

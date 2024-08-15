@@ -2,7 +2,7 @@
 /**
  * DetailsItem Component
  *
- * @description * Use this component to render a details row in PersonalDetails
+ * @description * Use this component to render a details row in ProfileDetails
  * section of the profile page.
  * You can render label by passing the `label` prop, or use the `label` slot.
  * You can render values by passing the `value`, `description` and
