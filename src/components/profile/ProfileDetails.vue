@@ -50,7 +50,10 @@ export default defineComponent({
 <template>
   <div data-cy="profile-details">
     <!-- Title -->
-    <h2 class="text-h6 text-grey-10 q-my-none" data-cy="profile-details-title">
+    <h2
+      class="text-h6 text-grey-10 q-my-none"
+      data-cy="profile-title-personal-details"
+    >
       {{ $t('profile.titlePersonalDetails') }}
     </h2>
     <!-- Personal info -->
@@ -118,23 +121,33 @@ export default defineComponent({
       </details-item>
     </div>
 
-    <!-- Challenge info -->
-    <div class="q-mt-xl">
-      <div class="row q-col-gutter-md">
+    <!-- Title -->
+    <h2
+      class="text-h6 text-grey-10 q-mb-none q-mt-xl"
+      data-cy="profile-title-challenge-details"
+    >
+      {{ $t('profile.titleChallengeDetails') }}
+    </h2>
+
+    <!-- Challenge details -->
+    <div class="q-mt-lg">
+      <div class="row q-col-gutter-lg">
         <!-- Organization type -->
         <details-item
           :label="$t('profile.labelOrganizationType')"
           :value="profile.organizationType"
           :empty-label="$t('profile.labelOrganizationTypeEmpty')"
           class="col-12 col-sm-6"
+          data-cy="profile-details-organization-type"
         >
         </details-item>
-        <!-- Organization type -->
+        <!-- Organization -->
         <details-item
           :label="$t('profile.labelOrganization')"
           :value="profile.organization"
           :empty-label="$t('profile.labelOrganizationEmpty')"
           class="col-12 col-sm-6"
+          data-cy="profile-details-organization"
         >
         </details-item>
       </div>

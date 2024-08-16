@@ -6,6 +6,7 @@ const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 // selectors
+const classSelectorMessages = '.q-field__messages';
 const selectorFormUpdateGender = 'form-update-gender';
 const selectorFormLabel = 'form-label';
 const selectorFormGender = 'form-gender';
@@ -62,9 +63,9 @@ function coreTests() {
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.edit'));
     cy.dataCy(selectorFormGender)
-      .find('.q-field__messages')
+      .find(classSelectorMessages)
       .should('contain', i18n.global.t('form.messageOptionRequired'));
     cy.dataCy(selectorFormGender).find('.q-radio__label').first().click();
-    cy.get('.q-field__messages').should('not.exist');
+    cy.get(classSelectorMessages).should('not.exist');
   });
 }

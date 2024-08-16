@@ -8,10 +8,13 @@ const grey10 = getPaletteColor('grey-10');
 // selectors
 const selectorEmail = 'profile-details-email';
 const selectorFormEmail = 'profile-details-form-email';
+const selectorFormGender = 'profile-details-form-gender';
 const selectorFormNickname = 'profile-details-form-nickname';
+const selectorGender = 'profile-details-gender';
 const selectorNickname = 'profile-details-nickname';
 const selectorPersonalDetails = 'profile-details';
-const selectorTitle = 'profile-details-title';
+const selectorTitlePersonalDetails = 'profile-title-personal-details';
+const selectorTitleChallengeDetails = 'profile-title-challenge-details';
 const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
 const dataSelectorButtonSave = '[data-cy="form-button-save"]';
 const dataSelectorEdit = '[data-cy="details-item-edit"]';
@@ -23,6 +26,7 @@ const dataSelectorValue = '[data-cy="details-item-value"]';
 
 // variables
 const newNickname = 'Cyklobaron';
+const newGender = 'female';
 const newEmail = 'ride@dopracenakole.cz';
 const password = 'password';
 
@@ -31,9 +35,16 @@ describe('<ProfileDetails>', () => {
     cy.testLanguageStringsInContext(
       [
         'descriptionNickname',
+        'labelEmail',
+        'labelEmailEmpty',
+        'labelGender',
+        'labelGenderEmpty',
         'labelNickname',
         'labelNicknameEmpty',
+        'titleChallengeDetails',
         'titlePersonalDetails',
+        'titleUpdateEmail',
+        'titleUpdateGender',
         'titleUpdateNickname',
       ],
       'profile',
@@ -68,15 +79,26 @@ function coreTests() {
   it('renders component', () => {
     // component
     cy.dataCy(selectorPersonalDetails).should('be.visible');
-    // title
-    cy.dataCy(selectorTitle)
+    // title personal details
+    cy.dataCy(selectorTitlePersonalDetails)
       .should('be.visible')
       .and('have.css', 'font-size', '20px')
       .and('have.css', 'font-weight', '500')
       .and('have.color', grey10)
       .and('contain', i18n.global.t('profile.titlePersonalDetails'));
-    // nickname row
+    // row nickname
     cy.dataCy(selectorNickname).should('be.visible');
+    // row email
+    cy.dataCy(selectorEmail).should('be.visible');
+    // row gender
+    cy.dataCy(selectorGender).should('be.visible');
+    // title challenge details
+    cy.dataCy(selectorTitleChallengeDetails)
+      .should('be.visible')
+      .and('have.css', 'font-size', '20px')
+      .and('have.css', 'font-weight', '500')
+      .and('have.color', grey10)
+      .and('contain', i18n.global.t('profile.titleChallengeDetails'));
   });
 
   it('allows to edit nickname', () => {
@@ -162,7 +184,7 @@ function coreTests() {
     });
   });
 
-  it.only('allows to edit email', () => {
+  it('allows to edit email', () => {
     cy.fixture('formPersonalDetails').then((personalDetails) => {
       // email value
       cy.dataCy(selectorEmail)
@@ -235,11 +257,77 @@ function coreTests() {
       cy.dataCy(selectorFormEmail)
         .find(dataSelectorInputPassword)
         .type(password);
-      cy.dataCy(selectorFormEmail).find(dataSelectorButtonSave).click();
+      // save (enter)
+      cy.dataCy(selectorFormEmail).find(dataSelectorInputEmail).type('{enter}');
       cy.dataCy(selectorEmail)
         .find(dataSelectorValue)
         .should('be.visible')
         .and('have.text', personalDetails.email);
+    });
+  });
+
+  it('allows to edit gender', () => {
+    cy.fixture('formPersonalDetails').then((personalDetails) => {
+      // gender value
+      cy.dataCy(selectorGender)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.gender);
+      // gender edit button
+      cy.dataCy(selectorGender)
+        .find(dataSelectorEdit)
+        .should('be.visible')
+        .click();
+      // gender edit form
+      cy.dataCy(selectorFormGender).should('be.visible');
+      // change gender
+      cy.dataCy(selectorFormGender)
+        .find('.q-radio__label')
+        // female
+        .first()
+        .click();
+      // cancel
+      cy.dataCy(selectorFormGender).find(dataSelectorButtonCancel).click();
+      // gender is the same
+      cy.dataCy(selectorGender)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', personalDetails.gender);
+      // gender edit button
+      cy.dataCy(selectorGender)
+        .find(dataSelectorEdit)
+        .should('be.visible')
+        .click();
+      // gender edit form
+      cy.dataCy(selectorFormGender).should('be.visible');
+      // change gender
+      cy.dataCy(selectorFormGender)
+        .find('.q-radio__label')
+        // female
+        .first()
+        .click();
+      // save
+      cy.dataCy(selectorFormGender).find(dataSelectorButtonSave).click();
+      // gender is different
+      cy.dataCy(selectorGender)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', newGender);
+      // reset gender
+      cy.dataCy(selectorGender)
+        .find(dataSelectorEdit)
+        .should('be.visible')
+        .click();
+      // gender edit form
+      cy.dataCy(selectorFormGender).should('be.visible');
+      // change gender
+      cy.dataCy(selectorFormGender)
+        .find('.q-radio__label')
+        // male
+        .last()
+        .click();
+      // save
+      cy.dataCy(selectorFormGender).find(dataSelectorButtonSave).click();
     });
   });
 }
