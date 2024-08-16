@@ -266,7 +266,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div data-cy="routes-calendar">
+  <div data-cy="routes-calendar" class="relative-position">
     <!-- Top bar -->
     <div class="row q-pb-sm q-my-lg items-center gap-8">
       <!-- Title -->
@@ -338,6 +338,7 @@ export default defineComponent({
       v-model="isOpenPanel"
       :routes="activeRoutesComputed"
       @save="onSave"
+      data-cy="route-calendar-panel"
     />
   </div>
 </template>

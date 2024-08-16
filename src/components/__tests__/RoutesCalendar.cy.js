@@ -7,6 +7,8 @@ const classSelectorFutureDay = '.q-future-day';
 const classSelectorHeadWeekday = '.q-calendar-month__head--weekday';
 const classSelectorOutsideDay = '.q-outside';
 const classSelectorPastDay = '.q-past-day';
+const dataSelectorButtonSave = '[data-cy="dialog-save-button"]';
+const dataSelectorInputDistance = '[data-cy="input-distance"]';
 const dataSelectorItemFromWork = '[data-cy="calendar-item-display-from-work"]';
 const dataSelectorItemFromWorkActive =
   '[data-cy="calendar-item-icon-fromwork-active"]';
@@ -18,6 +20,11 @@ const dataSelectorItemToWorkActive =
 const dataSelectorItemToWorkEmpty =
   '[data-cy="calendar-item-icon-towork-empty"]';
 const selectorCalendarTitle = 'calendar-title';
+const selectorRouteCalendarPanel = 'route-calendar-panel';
+
+// variables
+const routeCountSingle = 1;
+const routeCountMultiple = 2;
 
 const dayNames = [
   i18n.global.t('time.mondayShort'),
@@ -34,7 +41,7 @@ describe('<RoutesCalendar>', () => {
     cy.testLanguageStringsInContext([], 'index.component', i18n);
   });
 
-  context('desktop', () => {
+  context('desktop - fixed date', () => {
     beforeEach(() => {
       // set default date
       const now = new Date(2024, 5, 17);
@@ -47,6 +54,76 @@ describe('<RoutesCalendar>', () => {
     });
 
     coreTests();
+  });
+
+  context('desktop - current date', () => {
+    beforeEach(() => {
+      // skipping the cy.clock call, as it breaks the interaction with q-dialog
+      cy.mount(RoutesCalendar, {
+        props: {},
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it.only('renders bottom panel on day selection', () => {
+      cy.dataCy('routes-calendar').click();
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      // Note: cy.dataCy(selectorRouteCalendarPanel) is "not visible" because of its CSS properties.
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+            count: routeCountSingle,
+          }),
+        );
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="route-input-transport-type"]')
+        .should('be.visible');
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="route-input-distance"]')
+        .should('be.visible');
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorButtonSave)
+        .should('be.visible')
+        .and('be.disabled');
+      // fill in distance
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputDistance)
+        .should('be.visible')
+        .focus();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputDistance)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputDistance)
+        .should('be.visible')
+        .type('10');
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorButtonSave)
+        .should('not.be.disabled');
+      // save
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorButtonSave)
+        .click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('not.be.visible');
+
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routeCountMultiple, {
+            count: routeCountMultiple,
+          }),
+        );
+    });
   });
 
   // TODO: Responsive version (option to use mini-mode) https://qcalendar.netlify.app/developing/qcalendarmonth-minimode/minimode-getting-started
