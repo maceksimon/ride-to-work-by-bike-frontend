@@ -25,6 +25,7 @@ import DetailsItem from '../profile/DetailsItem.vue';
 import FormUpdateEmail from '../form/FormUpdateEmail.vue';
 import FormUpdateGender from '../form/FormUpdateGender.vue';
 import FormUpdateNickname from '../form/FormUpdateNickname.vue';
+import LanguageSwitcher from '../global/LanguageSwitcher.vue';
 
 // fixtures
 import formPersonalDetails from '../../../test/cypress/fixtures/formPersonalDetails.json';
@@ -36,6 +37,7 @@ export default defineComponent({
     FormUpdateEmail,
     FormUpdateGender,
     FormUpdateNickname,
+    LanguageSwitcher,
   },
   setup() {
     const profile = reactive(formPersonalDetails);
@@ -117,6 +119,18 @@ export default defineComponent({
             @update:value="profile.gender = $event"
             data-cy="profile-details-form-gender"
           />
+        </template>
+      </details-item>
+      <!-- Language -->
+      <details-item
+        :label="$t('profile.labelLanguage')"
+        :value="profile.language"
+        :empty-label="$t('profile.labelLanguageEmpty')"
+        class="q-mb-lg"
+        data-cy="profile-details-language"
+      >
+        <template #value>
+          <language-switcher variant="light" class="full-width justify-start" />
         </template>
       </details-item>
     </div>

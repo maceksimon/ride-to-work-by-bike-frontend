@@ -11,6 +11,7 @@ const selectorFormEmail = 'profile-details-form-email';
 const selectorFormGender = 'profile-details-form-gender';
 const selectorFormNickname = 'profile-details-form-nickname';
 const selectorGender = 'profile-details-gender';
+const selectorLanguage = 'profile-details-language';
 const selectorNickname = 'profile-details-nickname';
 const selectorPersonalDetails = 'profile-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
@@ -39,6 +40,8 @@ describe('<ProfileDetails>', () => {
         'labelEmailEmpty',
         'labelGender',
         'labelGenderEmpty',
+        'labelLanguage',
+        'labelLanguageEmpty',
         'labelNickname',
         'labelNicknameEmpty',
         'titleChallengeDetails',
@@ -76,7 +79,7 @@ describe('<ProfileDetails>', () => {
 });
 
 function coreTests() {
-  it('renders component', () => {
+  it.only('renders component', () => {
     // component
     cy.dataCy(selectorPersonalDetails).should('be.visible');
     // title personal details
@@ -92,6 +95,8 @@ function coreTests() {
     cy.dataCy(selectorEmail).should('be.visible');
     // row gender
     cy.dataCy(selectorGender).should('be.visible');
+    // row language
+    cy.dataCy(selectorLanguage).should('be.visible');
     // title challenge details
     cy.dataCy(selectorTitleChallengeDetails)
       .should('be.visible')
