@@ -233,14 +233,14 @@ export default defineComponent({
     /**
      * Control dialog open state based on selected routes count.
      */
-    const isOpenPanel = ref<boolean>(false);
+    const isPanelOpen = ref<boolean>(false);
     watch(
       (): number => activeRoutes.value.length,
       (length): void => {
         if (length === 0) {
-          isOpenPanel.value = false;
+          isPanelOpen.value = false;
         } else {
-          isOpenPanel.value = true;
+          isPanelOpen.value = true;
         }
       },
     );
@@ -249,7 +249,7 @@ export default defineComponent({
       activeRoutes,
       activeRoutesComputed,
       calendar,
-      isOpenPanel,
+      isPanelOpen,
       locale,
       monthNameAndYear,
       routesMap,
@@ -337,7 +337,7 @@ export default defineComponent({
       </q-calendar-month>
     </div>
     <route-calendar-panel
-      v-model="isOpenPanel"
+      v-model="isPanelOpen"
       :routes="activeRoutesComputed"
       @save="onSave"
       data-cy="route-calendar-panel"
