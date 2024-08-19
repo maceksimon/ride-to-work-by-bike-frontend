@@ -11,10 +11,6 @@ const selectorRouteInputTransportType = 'route-input-transport-type';
 const selectorSectionDistance = 'section-distance';
 const selectorSectionTransport = 'section-transport';
 
-// variables
-const routeCountSingle = 1;
-// const routeCountMultiple = 5;
-
 describe('<RouteCalendarPanel>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -34,11 +30,6 @@ describe('<RouteCalendarPanel>', () => {
             modelValue: true,
             routes,
           },
-          slots: {
-            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-              count: routeCountSingle,
-            }),
-          },
         });
       });
       cy.viewport('macbook-16');
@@ -57,11 +48,6 @@ describe('<RouteCalendarPanel>', () => {
             modelValue: true,
             routes,
           },
-          slots: {
-            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-              count: routeCountSingle,
-            }),
-          },
         });
       });
       cy.viewport('macbook-16');
@@ -79,11 +65,6 @@ describe('<RouteCalendarPanel>', () => {
           props: {
             modelValue: true,
             routes,
-          },
-          slots: {
-            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-              count: routeCountSingle,
-            }),
           },
         });
       });
@@ -104,11 +85,6 @@ describe('<RouteCalendarPanel>', () => {
             modelValue: true,
             routes,
           },
-          slots: {
-            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-              count: routeCountSingle,
-            }),
-          },
         });
       });
       cy.viewport('iphone-6');
@@ -126,11 +102,6 @@ describe('<RouteCalendarPanel>', () => {
           props: {
             modelValue: true,
             routes,
-          },
-          slots: {
-            title: i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-              count: routeCountSingle,
-            }),
           },
         });
       });
