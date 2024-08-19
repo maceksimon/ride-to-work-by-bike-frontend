@@ -14,6 +14,13 @@ export enum TransportType {
   none = 'none',
 }
 
+export enum RouteTab {
+  calendar = 'calendar',
+  list = 'list',
+  map = 'map',
+  app = 'app',
+}
+
 export type RouteItem = {
   id: string;
   date: string;
@@ -43,8 +50,6 @@ export type RouteCalendarActive = {
   timestamp: TimestampOrNull;
   direction: TransportDirection;
 };
-
-export type RouteTab = 'calendar' | 'list' | 'map' | 'app';
 
 export type RouteLogData = {
   action: RouteInputType;

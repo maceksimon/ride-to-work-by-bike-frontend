@@ -31,15 +31,17 @@ import RoutesCalendar from './RoutesCalendar.vue';
 import RouteListDisplay from './RouteListDisplay.vue';
 import RouteListEdit from './RouteListEdit.vue';
 
+// enums
+import { RouteTab } from '../types/Route';
+
 // types
-import type { RouteItem, RouteTab } from '../types/Route';
+import type { RouteItem } from '../types/Route';
 
 // routes
 import { routesConf } from 'src/router/routes_conf';
 
 // fixtures
 import routeListFixture from '../../../test/cypress/fixtures/routeList.json';
-// @ts-expect-error to cast routeListFixture to RouteItem type
 const routeList: RouteItem[] = routeListFixture as RouteItem[];
 
 export default defineComponent({
@@ -71,6 +73,7 @@ export default defineComponent({
       lockedTabs,
       routeList,
       routesConf,
+      RouteTab,
       isLocked,
     };
   },
@@ -91,41 +94,41 @@ export default defineComponent({
     >
       <q-route-tab
         :to="routesConf['routes_calendar'].path"
-        name="calendar"
+        :name="RouteTab.calendar"
         icon="mdi-calendar-blank"
         alert-icon="mdi-lock"
-        :alert="isLocked('calendar')"
-        :disable="isLocked('calendar')"
+        :alert="isLocked(RouteTab.calendar)"
+        :disable="isLocked(RouteTab.calendar)"
         :label="$t('routes.tabCalendar')"
         data-cy="route-tabs-button-calendar"
       />
       <q-route-tab
         :to="routesConf['routes_list'].path"
-        name="list"
+        :name="RouteTab.list"
         icon="mdi-format-list-bulleted"
         alert-icon="mdi-lock"
-        :alert="isLocked('list')"
-        :disable="isLocked('list')"
+        :alert="isLocked(RouteTab.list)"
+        :disable="isLocked(RouteTab.list)"
         :label="$t('routes.tabList')"
         data-cy="route-tabs-button-list"
       />
       <q-route-tab
         :to="routesConf['routes_map'].path"
-        name="map"
+        :name="RouteTab.map"
         icon="mdi-map"
         alert-icon="mdi-lock"
-        :alert="isLocked('map')"
-        :disable="isLocked('map')"
+        :alert="isLocked(RouteTab.map)"
+        :disable="isLocked(RouteTab.map)"
         :label="$t('routes.tabMap')"
         data-cy="route-tabs-button-map"
       />
       <q-route-tab
         :to="routesConf['routes_app'].path"
-        name="app"
+        :name="RouteTab.app"
         icon="mdi-cellphone"
         alert-icon="mdi-lock"
-        :alert="isLocked('app')"
-        :disable="isLocked('app')"
+        :alert="isLocked(RouteTab.app)"
+        :disable="isLocked(RouteTab.app)"
         :label="$t('routes.tabApp')"
         data-cy="route-tabs-button-app"
       />
@@ -135,21 +138,24 @@ export default defineComponent({
     <!-- Tab panels -->
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Calendar -->
-      <q-tab-panel name="calendar" data-cy="route-tabs-panel-calendar">
+      <q-tab-panel
+        :name="RouteTab.calendar"
+        data-cy="route-tabs-panel-calendar"
+      >
         <routes-calendar />
       </q-tab-panel>
       <!-- Panel: List -->
-      <q-tab-panel name="list" data-cy="route-tabs-panel-list">
+      <q-tab-panel :name="RouteTab.list" data-cy="route-tabs-panel-list">
         <div class="text-h6">{{ $t('routes.tabList') }}</div>
         <route-list-edit :routes="routeList" data-cy="route-list-edit" />
         <route-list-display :routes="routeList" data-cy="route-list-display" />
       </q-tab-panel>
       <!-- Panel: Map -->
-      <q-tab-panel name="map" data-cy="route-tabs-panel-map">
+      <q-tab-panel :name="RouteTab.map" data-cy="route-tabs-panel-map">
         <div class="text-h6">{{ $t('routes.tabMap') }}</div>
       </q-tab-panel>
       <!-- Panel: App -->
-      <q-tab-panel name="app" data-cy="route-tabs-panel-app">
+      <q-tab-panel :name="RouteTab.app" data-cy="route-tabs-panel-app">
         <div class="text-h6">{{ $t('routes.tabApp') }}</div>
         <routes-apps data-cy="routes-apps" />
       </q-tab-panel>
