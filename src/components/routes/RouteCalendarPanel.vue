@@ -126,7 +126,10 @@ export default defineComponent({
       <!-- Section: Card header -->
       <q-card-section class="q-px-lg q-pt-sm q-pb-none" data-cy="dialog-header">
         <!-- Title -->
-        <h3 class="text-h6 q-mt-sm q-pt-xs q-mb-none" data-cy="dialog-title">
+        <h3
+          class="text-h5 text-weight-bold text-grey-10 q-mt-sm q-pt-xs q-mb-none"
+          data-cy="dialog-title"
+        >
           <template v-if="routesCount > 0">
             {{
               $tc('routes.titleBottomPanel', routesCount, {

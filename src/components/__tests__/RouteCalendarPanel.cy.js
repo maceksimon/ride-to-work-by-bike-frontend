@@ -1,5 +1,9 @@
+import { colors } from 'quasar';
 import RouteCalendarPanel from 'components/routes/RouteCalendarPanel.vue';
 import { i18n } from '../../boot/i18n';
+
+const { getPaletteColor } = colors;
+const grey10 = getPaletteColor('grey-10');
 
 // selectors
 const selectorDialogCard = 'dialog-card';
@@ -120,6 +124,9 @@ function coreTests() {
       cy.dataCy(selectorRouteCalendarPanel).should('be.visible');
       cy.dataCy(selectorDialogTitle)
         .should('be.visible')
+        .and('have.css', 'font-size', '24px')
+        .and('have.css', 'font-weight', '700')
+        .and('have.color', grey10)
         .and(
           'contain',
           i18n.global.t('routes.titleBottomPanel', routes.length, {
