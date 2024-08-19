@@ -65,8 +65,7 @@ describe('<RoutesCalendar>', () => {
       cy.viewport('macbook-16');
     });
 
-    it.only('renders bottom panel on day selection', () => {
-      cy.dataCy('routes-calendar').click();
+    it('renders panel with dynamic heading if routes are selected', () => {
       cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
       // Note: cy.dataCy(selectorRouteCalendarPanel) is "not visible" because of its CSS properties.
       cy.dataCy(selectorRouteCalendarPanel)
@@ -84,6 +83,41 @@ describe('<RoutesCalendar>', () => {
       cy.dataCy(selectorRouteCalendarPanel)
         .find('[data-cy="route-input-distance"]')
         .should('be.visible');
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routeCountMultiple, {
+            count: routeCountMultiple,
+          }),
+        );
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('not.be.visible');
+    });
+
+    it('renders inputs and allows saving when value is entered', () => {
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+            count: routeCountSingle,
+          }),
+        );
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="route-input-transport-type"]')
+        .should('be.visible');
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="route-input-distance"]')
+        .should('be.visible');
+      // save disabed
       cy.dataCy(selectorRouteCalendarPanel)
         .find(dataSelectorButtonSave)
         .should('be.visible')
@@ -101,6 +135,7 @@ describe('<RoutesCalendar>', () => {
         .find(dataSelectorInputDistance)
         .should('be.visible')
         .type('10');
+      // save enabled
       cy.dataCy(selectorRouteCalendarPanel)
         .find(dataSelectorButtonSave)
         .should('not.be.disabled');
@@ -108,14 +143,34 @@ describe('<RoutesCalendar>', () => {
       cy.dataCy(selectorRouteCalendarPanel)
         .find(dataSelectorButtonSave)
         .click();
+      // panel is closed
       cy.dataCy(selectorRouteCalendarPanel)
         .find('[data-cy="dialog-header"]')
         .should('not.be.visible');
     });
 
-    it('renders panel based on selected routes and updates heading', () => {
+    it('allows to manually close panel and reopen on interaction', () => {
       cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      // show panel with 1 route
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+            count: routeCountSingle,
+          }),
+        );
+      // close button
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-close"]')
+        .click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('not.be.visible');
+      // enable new route
       cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      // show panel with 2 routes
       cy.dataCy(selectorRouteCalendarPanel)
         .find('[data-cy="dialog-header"]')
         .should('be.visible')
@@ -125,11 +180,6 @@ describe('<RoutesCalendar>', () => {
             count: routeCountMultiple,
           }),
         );
-      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
-      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
-      cy.dataCy(selectorRouteCalendarPanel)
-        .find('[data-cy="dialog-header"]')
-        .should('not.be.visible');
     });
   });
 });
