@@ -75,7 +75,7 @@ export default defineComponent({
       useLogRoutes(routes);
 
     // Determines if save button should be disabled.
-    const isDisabledSave = computed((): boolean => {
+    const isSaveBtnDisabled = computed((): boolean => {
       const noRoutes = routesCount.value === 0;
       const noDistance = isShownDistance.value && distance.value === 0;
       return noRoutes || noDistance;
@@ -97,7 +97,7 @@ export default defineComponent({
       distance,
       routesCount,
       isOpen,
-      isDisabledSave,
+      isSaveBtnDisabled,
       isShownDistance,
       minWidth,
       transportType,
@@ -168,7 +168,7 @@ export default defineComponent({
               unelevated
               round
               color="primary"
-              :disabled="isDisabledSave"
+              :disabled="isSaveBtnDisabled"
               @click="onSave"
               data-cy="dialog-save-button"
             >
