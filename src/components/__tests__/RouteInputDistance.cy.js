@@ -156,6 +156,20 @@ describe('<RouteInputDistance>', () => {
     isValidatedNegativeTests();
   });
 
+  context('mobile - input number decimal', () => {
+    beforeEach(() => {
+      cy.mount(RouteInputDistance, {
+        props: {
+          modelAction: 'input-number',
+          modelValue: '0.5',
+        },
+      });
+      cy.viewport('iphone-6');
+    });
+
+    valuePassingTests();
+  });
+
   context('mobile - input map', () => {
     beforeEach(() => {
       cy.mount(RouteInputDistance, {
@@ -243,6 +257,33 @@ function validateZeroTests() {
     cy.dataCy(selectorSectionInputNumber)
       .find(classSelectorMessages)
       .should('contain', i18n.global.t('form.messageFieldAboveZero'));
+  });
+}
+
+function valuePassingTests() {
+  it('validates input when 0.5', () => {
+    cy.dataCy(selectorSectionInputNumber)
+      .find('input')
+      .should('be.visible')
+      .and('have.value', 0.5);
+    cy.dataCy(selectorSectionInputNumber).find('input').focus();
+    cy.dataCy(selectorSectionInputNumber).find('input').blur();
+    cy.dataCy(selectorSectionInputNumber)
+      .find(classSelectorMessages)
+      .then(() => {
+        // wait for animation
+        return new Cypress.Promise((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 500);
+        });
+      })
+      .then(() => {
+        cy.dataCy(selectorSectionInputNumber)
+          .find(classSelectorMessages)
+          .last()
+          .should('be.empty');
+      });
   });
 }
 
