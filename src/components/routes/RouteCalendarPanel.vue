@@ -22,7 +22,7 @@
  * - `RouteInputTransportType`: Component to render transport type selector.
  *
  * @example
- * <route-calendar-panel v-model="isOpen" />
+ * <route-calendar-panel v-model="isOpen" :routes="routes" />
  *
  * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=8279-39418&t=Uzwf1ZVoIaYMizTE-1)
  */
