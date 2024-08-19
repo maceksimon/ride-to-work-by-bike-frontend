@@ -111,7 +111,9 @@ describe('<RoutesCalendar>', () => {
       cy.dataCy(selectorRouteCalendarPanel)
         .find('[data-cy="dialog-header"]')
         .should('not.be.visible');
+    });
 
+    it('renders panel based on selected routes and updates heading', () => {
       cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
       cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
       cy.dataCy(selectorRouteCalendarPanel)
@@ -123,10 +125,13 @@ describe('<RoutesCalendar>', () => {
             count: routeCountMultiple,
           }),
         );
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find('[data-cy="dialog-header"]')
+        .should('not.be.visible');
     });
   });
-
-  // TODO: Responsive version (option to use mini-mode) https://qcalendar.netlify.app/developing/qcalendarmonth-minimode/minimode-getting-started
 });
 
 function coreTests() {

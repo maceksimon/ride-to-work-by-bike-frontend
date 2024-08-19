@@ -5,6 +5,8 @@
  * @description * Use this component to render a calendar for logging routes.
  * This component is used on `RoutesPage` in `RouteTabs` component.
  *
+ * Note: Calendar is NOT made responsive. We use list view to log routes on mobile.
+ *
  * @components
  * - `CalendarNavigation`: Component to render navigation buttons.
  * - `CalendarItemDisplay`: Component to render calendar items.
