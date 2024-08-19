@@ -30,7 +30,7 @@ import CalendarNavigation from './CalendarNavigation.vue';
 import RouteCalendarPanel from './RouteCalendarPanel.vue';
 
 // enums
-import { TransportDirection } from '../types/Route';
+import { TransportDirection, TransportType } from '../types/Route';
 
 // fixtures
 import routesListCalendarFixture from '../../../test/cypress/fixtures/routeListCalendar.json';
@@ -136,7 +136,7 @@ export default defineComponent({
               id: '',
               date: activeRoute.timestamp.date,
               direction: activeRoute.direction,
-              transport: 'bike',
+              transport: TransportType.bike,
               distance: 0,
               inputType: 'input-number',
             });

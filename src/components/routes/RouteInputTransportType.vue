@@ -30,8 +30,8 @@ import { useRoutes } from '../../composables/useRoutes';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
-// types
-import type { TransportType } from '../types/Route';
+// enums
+import { TransportType } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteInputTransportType',
@@ -53,31 +53,31 @@ export default defineComponent({
 
     const optionsTransport: { value: TransportType; icon: string }[] = [
       {
-        value: 'bike',
-        icon: getRouteIcon('bike'),
+        value: TransportType.bike,
+        icon: getRouteIcon(TransportType.bike),
       },
       {
-        value: 'walk',
-        icon: getRouteIcon('walk'),
+        value: TransportType.walk,
+        icon: getRouteIcon(TransportType.walk),
       },
       {
-        value: 'bus',
-        icon: getRouteIcon('bus'),
+        value: TransportType.bus,
+        icon: getRouteIcon(TransportType.bus),
       },
       {
-        value: 'car',
-        icon: getRouteIcon('car'),
+        value: TransportType.car,
+        icon: getRouteIcon(TransportType.car),
       },
       {
-        value: 'none',
-        icon: getRouteIcon('none'),
+        value: TransportType.none,
+        icon: getRouteIcon(TransportType.none),
       },
     ];
 
     const transport = computed({
       get: (): TransportType => {
         if (!props.modelValue) {
-          return 'bike';
+          return TransportType.bike;
         }
         return props.modelValue;
       },

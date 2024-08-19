@@ -1,20 +1,19 @@
 // libraries
 import { computed, ref, watch } from 'vue';
 
+// enums
+import { TransportType } from 'src/components/types/Route';
+
 // types
 import type { ComputedRef } from 'vue';
-import type {
-  RouteInputType,
-  RouteItem,
-  TransportType,
-} from 'src/components/types/Route';
+import type { RouteInputType, RouteItem } from 'src/components/types/Route';
 
 export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
   const routesCount = computed((): number => routes.value.length);
 
   const action = ref<RouteInputType>('input-number');
   const distance = ref<number>(0);
-  const transportType = ref<TransportType>('bike');
+  const transportType = ref<TransportType>(TransportType.bike);
 
   /**
    * Sets the panel input data based on the provided routes.
@@ -25,11 +24,11 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
     if (routes.length === 1) {
       action.value = routes[0].inputType || 'input-number';
       distance.value = routes[0].distance || 0;
-      transportType.value = routes[0].transport || 'bike';
+      transportType.value = routes[0].transport || TransportType.bike;
     } else {
       action.value = 'input-number';
       distance.value = 0;
-      transportType.value = 'bike';
+      transportType.value = TransportType.bike;
     }
   };
 
@@ -41,9 +40,9 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
 
   const isShownDistance = computed((): boolean => {
     return (
-      transportType.value === 'bike' ||
-      transportType.value === 'walk' ||
-      transportType.value === 'bus'
+      transportType.value === TransportType.bike ||
+      transportType.value === TransportType.walk ||
+      transportType.value === TransportType.bus
     );
   });
 

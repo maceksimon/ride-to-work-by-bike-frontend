@@ -4,12 +4,11 @@ import { date } from 'quasar';
 // composables
 import { i18n } from 'src/boot/i18n';
 
+// enums
+import { TransportType } from 'src/components/types/Route';
+
 // types
-import type {
-  RouteItem,
-  RouteListDay,
-  TransportType,
-} from 'src/components/types/Route';
+import type { RouteItem, RouteListDay } from 'src/components/types/Route';
 
 export const useRoutes = () => {
   const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
@@ -22,15 +21,15 @@ export const useRoutes = () => {
    */
   const getRouteIcon = (transport: TransportType): string => {
     switch (transport) {
-      case 'car':
+      case TransportType.car:
         return `svguse:${customSVGIconsFilePath}#lucide-car-front`;
-      case 'bike':
+      case TransportType.bike:
         return `svguse:${customSVGIconsFilePath}#lucide-bike`;
-      case 'walk':
+      case TransportType.walk:
         return `svguse:${customSVGIconsFilePath}#lucide-walk`;
-      case 'bus':
+      case TransportType.bus:
         return `svguse:${customSVGIconsFilePath}#lucide-bus`;
-      case 'none':
+      case TransportType.none:
         return `svguse:${customSVGIconsFilePath}#lucide-ban`;
       default:
         return `svguse:${customSVGIconsFilePath}#question-mark`;

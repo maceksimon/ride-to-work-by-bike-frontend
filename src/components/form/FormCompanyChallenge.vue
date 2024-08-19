@@ -27,8 +27,10 @@ import { defineComponent, ref } from 'vue';
 import FormFieldDateRequired from '../form/FormFieldDateRequired.vue';
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 
+// enums
+import { TransportType } from '../types/Route';
+
 // types
-import type { TransportType } from '../types/Route';
 type ChallengeType = 'regularity' | 'performance';
 type ChallengeParticipants = 'individuals' | 'teams' | 'subsidiaries';
 
@@ -41,7 +43,10 @@ export default defineComponent({
   setup() {
     const challengeType = ref<ChallengeType>('regularity');
     const challengeParticipants = ref<ChallengeParticipants>('individuals');
-    const challengeTransportType = ref<TransportType[]>(['bike', 'walk']);
+    const challengeTransportType = ref<TransportType[]>([
+      TransportType.bike,
+      TransportType.walk,
+    ]);
     const challengeTitle = ref<string>('');
     const challengeDescription = ref<string>('');
     const challengeInfoUrl = ref<string>('');
