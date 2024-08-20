@@ -20,7 +20,12 @@
 
 // libraries
 import { colors } from 'quasar';
-import { QCalendarMonth, today } from '@quasar/quasar-ui-qcalendar';
+import {
+  addToDate,
+  parseTimestamp,
+  QCalendarMonth,
+  today,
+} from '@quasar/quasar-ui-qcalendar';
 import { defineComponent, computed, ref, watch } from 'vue';
 import { i18n } from '../../boot/i18n';
 
@@ -31,6 +36,9 @@ import RouteCalendarPanel from './RouteCalendarPanel.vue';
 
 // composables
 import { useCalendarRoutes } from '../../composables/useCalendarRoutes';
+
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { TransportDirection } from '../types/Route';
@@ -54,6 +62,22 @@ export default defineComponent({
     const selectedDate = ref<string>(today());
     const locale = computed((): string => {
       return i18n.global.locale;
+    });
+    // disable logging outside the specified time window
+    const { challengeLoggingWindowDays } = rideToWorkByBikeConfig;
+    const disabledAfter = computed((): string | null => {
+      const timestamp = parseTimestamp(today());
+      const timestampFuture = timestamp
+        ? addToDate(timestamp, { day: 1 })
+        : null;
+      return timestampFuture?.date || null;
+    });
+    const disabledBefore = computed((): string | null => {
+      const timestamp = parseTimestamp(today());
+      const timestampPast = timestamp
+        ? addToDate(timestamp, { day: -1 * challengeLoggingWindowDays })
+        : null;
+      return timestampPast?.date || null;
     });
 
     // Define calendar CSS vars for calendar theme
@@ -155,6 +179,8 @@ export default defineComponent({
     return {
       activeRouteItems,
       calendar,
+      disabledAfter,
+      disabledBefore,
       isPanelOpen,
       isActiveRouteLogged,
       locale,
@@ -204,6 +230,8 @@ export default defineComponent({
         no-active-date
         use-navigation
         short-weekday-label
+        :disabled-before="disabledBefore"
+        :disabled-after="disabledAfter"
         :locale="locale"
         :show-month-label="false"
         :weekdays="[1, 2, 3, 4, 5, 6, 0]"
@@ -220,7 +248,7 @@ export default defineComponent({
               :active="
                 isActive({ timestamp, direction: TransportDirection.toWork })
               "
-              :disabled="outside"
+              :disabled="outside || timestamp.disabled"
               :direction="TransportDirection.toWork"
               :day="routesMap[timestamp.date]"
               :timestamp="timestamp"
@@ -232,7 +260,7 @@ export default defineComponent({
               :active="
                 isActive({ timestamp, direction: TransportDirection.fromWork })
               "
-              :disabled="outside"
+              :disabled="outside || timestamp.disabled"
               :direction="TransportDirection.fromWork"
               :day="routesMap[timestamp.date]"
               :timestamp="timestamp"

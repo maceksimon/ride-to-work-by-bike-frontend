@@ -6,7 +6,7 @@ const classSelectorCurrentDay = '.q-current-day';
 const classSelectorFutureDay = '.q-future-day';
 const classSelectorHeadWeekday = '.q-calendar-month__head--weekday';
 const classSelectorOutsideDay = '.q-outside';
-const classSelectorPastDay = '.q-past-day';
+const classSelectorPastDay = '.q-past-day:not(.q-disabled-day)';
 const dataSelectorButtonSave = '[data-cy="dialog-save-button"]';
 const dataSelectorDialogClose = '[data-cy="dialog-close"]';
 const dataSelectorDialogHeader = '[data-cy="dialog-header"]';

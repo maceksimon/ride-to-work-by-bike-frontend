@@ -29,4 +29,5 @@ export interface ConfigGlobal {
   challengeMonth: 'may' | 'october' | 'september';
   containerWidth: string;
   challengeStartDate: string;
+  challengeLoggingWindowDays: number;
 }
