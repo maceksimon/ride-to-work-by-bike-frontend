@@ -75,9 +75,11 @@ export default defineComponent({
 
 <template>
   <q-form @submit.prevent="onUpdateEmail" data-cy="form-update-email">
-    <!-- Label -->
+    <!-- Input: Email -->
     <form-field-email v-model="inputValue" data-cy="form-email" />
+    <!-- Message: Confirm password to save changes -->
     <p>{{ $t('profile.textPasswordConfirm') }}</p>
+    <!-- Input: Password -->
     <form-field-password hide-hint v-model="password" data-cy="form-password" />
     <div class="q-mt-xl flex justify-end gap-8">
       <!-- Button: Cancel -->
