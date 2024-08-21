@@ -78,7 +78,7 @@ export default defineComponent({
     <!-- Input: Email -->
     <form-field-email v-model="inputValue" data-cy="form-email" />
     <!-- Message: Confirm password to save changes -->
-    <p>{{ $t('profile.textPasswordConfirm') }}</p>
+    <p data-cy="form-message">{{ $t('profile.textPasswordConfirm') }}</p>
     <!-- Input: Password -->
     <form-field-password hide-hint v-model="password" data-cy="form-password" />
     <div class="q-mt-xl flex justify-end gap-8">
