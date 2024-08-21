@@ -1,12 +1,14 @@
 import RoutesCalendar from 'components/routes/RoutesCalendar.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // selectors
 const classSelectorCurrentDay = '.q-current-day';
 const classSelectorFutureDay = '.q-future-day';
 const classSelectorHeadWeekday = '.q-calendar-month__head--weekday';
 const classSelectorOutsideDay = '.q-outside';
-const classSelectorPastDay = '.q-past-day:not(.q-disabled-day)';
+const classSelectorPastDay = '.q-past-day';
+const classSelectorPastDayNotDisabled = '.q-past-day:not(.q-disabled-day)';
 const dataSelectorButtonSave = '[data-cy="dialog-save-button"]';
 const dataSelectorDialogClose = '[data-cy="dialog-close"]';
 const dataSelectorDialogHeader = '[data-cy="dialog-header"]';
@@ -34,6 +36,7 @@ const selectorRoutesCalendar = 'routes-calendar';
 // variables
 const routeCountSingle = 1;
 const routeCountMultiple = 2;
+const { challengeLoggingWindowDays } = rideToWorkByBikeConfig;
 
 const dayNames = [
   i18n.global.t('time.mondayShort'),
@@ -63,6 +66,75 @@ describe('<RoutesCalendar>', () => {
     });
 
     coreTests();
+  });
+
+  context('desktop - fixed date logged route today', () => {
+    beforeEach(() => {
+      // set default date
+      const now = new Date(2024, 5, 16);
+      cy.clock(now);
+      cy.wrap(now).as('now');
+      cy.mount(RoutesCalendar, {
+        props: {},
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('only allows to select a single logged route', () => {
+      // select today's "to work" route (LOGGED)
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      cy.dataCy(selectorRoutesCalendar)
+        .find(dataSelectorItemFromWorkActive)
+        .should('have.length', 0);
+      cy.dataCy(selectorRoutesCalendar)
+        .find(dataSelectorItemToWorkActive)
+        .should('have.length', 1);
+      // select today's "from work" route
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      // only one route should be active
+      cy.dataCy(selectorRoutesCalendar)
+        .find(dataSelectorItemFromWorkActive)
+        .should('have.length', 1);
+      cy.dataCy(selectorRoutesCalendar)
+        .find(dataSelectorItemToWorkActive)
+        .should('have.length', 0);
+      /**
+       * Above tests suffice for a 1-day logging window case.
+       * Following tests apply for past days if challengeLoggingWindowDays > 1.
+       */
+      if (challengeLoggingWindowDays > 1) {
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemToWorkLogged)
+          .first()
+          .click({ force: true });
+        // only one route should be active
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemFromWorkActive)
+          .should('have.length', 0);
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemToWorkActive)
+          .should('have.length', 1);
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemFromWorkLogged)
+          .first()
+          .click({ force: true });
+        // only one route should be active
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemFromWorkActive)
+          .should('have.length', 1);
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemToWorkActive)
+          .should('have.length', 0);
+        // select today's "to work" route
+        cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemFromWorkActive)
+          .should('have.length', 0);
+        cy.dataCy(selectorRoutesCalendar)
+          .find(dataSelectorItemToWorkActive)
+          .should('have.length', 1);
+      }
+    });
   });
 
   context('desktop - current date', () => {
@@ -177,7 +249,7 @@ describe('<RoutesCalendar>', () => {
       cy.dataCy(selectorRouteCalendarPanel)
         .find(dataSelectorDialogHeader)
         .should('not.be.visible');
-      // enable new route
+      // select new route
       cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
       // show panel with 2 routes
       cy.dataCy(selectorRouteCalendarPanel)
@@ -243,35 +315,47 @@ function coreTests() {
     checkTodayFromWorkInactive();
   });
 
-  it('allows to enable multiple active routes', () => {
-    // enable today's "to work" route
+  it('allows to select multiple routes', () => {
+    // select today's "to work" route
     cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
-    // enable today's "from work" route
+    // select today's "from work" route
     cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
     // both today's routes are active
     checkTodayFromWorkActive();
     checkTodayToWorkActive();
-    // enable a past day's to work route
-    cy.get(classSelectorPastDay).first().find(dataSelectorItemFromWork).click();
-    // from work is active
-    checkTodayToWorkActive();
-    checkTodayFromWorkActive();
-    checkPastDayToWorkActive();
-    // disable today's "to work" route
-    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
-    checkTodayToWorkInactive();
-    checkTodayFromWorkActive();
-    checkPastDayToWorkActive();
-    // disable today's "from work" route
-    cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
-    checkTodayToWorkInactive();
-    checkTodayFromWorkInactive();
-    checkPastDayToWorkActive();
-    // distable a past day's to work route
-    cy.get(classSelectorPastDay).first().find(dataSelectorItemFromWork).click();
-    checkTodayToWorkInactive();
-    checkTodayFromWorkInactive();
-    checkPastDayToWorkInactive();
+    /**
+     * Above tests suffice for a 1-day logging window case.
+     * Following tests apply for past days if challengeLoggingWindowDays > 1.
+     */
+    if (challengeLoggingWindowDays > 1) {
+      // select a past day's to work route
+      cy.get(classSelectorPastDayNotDisabled)
+        .first()
+        .find(dataSelectorItemFromWork)
+        .click();
+      // from work is active
+      checkTodayToWorkActive();
+      checkTodayFromWorkActive();
+      checkPastDayToWorkActive();
+      // disable today's "to work" route
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+      checkTodayToWorkInactive();
+      checkTodayFromWorkActive();
+      checkPastDayToWorkActive();
+      // disable today's "from work" route
+      cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+      checkTodayToWorkInactive();
+      checkTodayFromWorkInactive();
+      checkPastDayToWorkActive();
+      // disable a past day's to work route
+      cy.get(classSelectorPastDayNotDisabled)
+        .first()
+        .find(dataSelectorItemFromWork)
+        .click();
+      checkTodayToWorkInactive();
+      checkTodayFromWorkInactive();
+      checkPastDayToWorkInactive();
+    }
   });
 
   it('does not allow to select a day outside current month', () => {
@@ -286,50 +370,6 @@ function coreTests() {
       .first()
       .find(dataSelectorItemToWorkActive)
       .should('not.exist');
-  });
-
-  it('only allows to select a single logged route', () => {
-    // enable today's "to work" route
-    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
-    // enable today's "from work" route
-    cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
-    // only one route should be active
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemFromWorkActive)
-      .should('have.length', 1);
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemToWorkActive)
-      .should('have.length', 1);
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemToWorkLogged)
-      .first()
-      .click({ force: true });
-    // only one route should be active
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemFromWorkActive)
-      .should('have.length', 0);
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemToWorkActive)
-      .should('have.length', 1);
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemFromWorkLogged)
-      .first()
-      .click({ force: true });
-    // only one route should be active
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemFromWorkActive)
-      .should('have.length', 1);
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemToWorkActive)
-      .should('have.length', 0);
-    // enable today's "to work" route
-    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemFromWorkActive)
-      .should('have.length', 0);
-    cy.dataCy(selectorRoutesCalendar)
-      .find(dataSelectorItemToWorkActive)
-      .should('have.length', 1);
   });
 }
 
@@ -348,7 +388,7 @@ function checkTodayFromWorkActive() {
 }
 
 function checkPastDayToWorkActive() {
-  cy.get(classSelectorPastDay)
+  cy.get(classSelectorPastDayNotDisabled)
     .first()
     .find(dataSelectorItemFromWork)
     .find(dataSelectorItemFromWorkActive)
@@ -370,7 +410,7 @@ function checkTodayFromWorkInactive() {
 }
 
 function checkPastDayToWorkInactive() {
-  cy.get(classSelectorPastDay)
+  cy.get(classSelectorPastDayNotDisabled)
     .first()
     .find(dataSelectorItemToWork)
     .find(dataSelectorItemToWorkEmpty)
