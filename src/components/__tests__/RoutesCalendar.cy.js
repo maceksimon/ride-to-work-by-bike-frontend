@@ -371,6 +371,72 @@ function coreTests() {
       .find(dataSelectorItemToWorkActive)
       .should('not.exist');
   });
+
+  it('only allows to select a single logged route', () => {
+    // enable today's "to work" route
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+    // enable today's "from work" route
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemFromWork).click();
+    // only one route should be active
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkActive)
+      .should('have.length', 1);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkActive)
+      .should('have.length', 1);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkLogged)
+      .first()
+      .click({ force: true });
+    // only one route should be active
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkActive)
+      .should('have.length', 0);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkActive)
+      .should('have.length', 1);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkLogged)
+      .first()
+      .click({ force: true });
+    // only one route should be active
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkActive)
+      .should('have.length', 1);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkActive)
+      .should('have.length', 0);
+    // enable today's "to work" route
+    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkActive)
+      .should('have.length', 0);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkActive)
+      .should('have.length', 1);
+  });
+
+  it('it allows to select max number of logged routes', () => {
+    // click on all routes to work
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkEmpty)
+      .each((item) => {
+        cy.wrap(item).click({ force: true });
+      });
+    // max routes that should be active is the logging window from config
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemToWorkActive)
+      .should('have.length.at.most', challengeLoggingWindowDays);
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkEmpty)
+      .each((item) => {
+        cy.wrap(item).click({ force: true });
+      });
+    // max routes that should be active is the logging window from config
+    cy.dataCy(selectorRoutesCalendar)
+      .find(dataSelectorItemFromWorkActive)
+      .should('have.length.at.most', challengeLoggingWindowDays);
+  });
 }
 
 function checkTodayToWorkActive() {
