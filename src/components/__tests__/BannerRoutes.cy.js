@@ -13,10 +13,14 @@ const primary = getPaletteColor('primary');
 const selectorBannerRoutes = 'banner-routes-card';
 const selectorTitle = 'banner-routes-title';
 const selectorButton = 'banner-routes-button-add-routes';
+const selectorButtonIcon = 'banner-routes-button-icon';
+const selectorSectionTitle = 'banner-routes-section-title';
+const selectorSectionButton = 'banner-routes-section-button';
 
 // variables
 const { borderRadiusCard, colorSecondaryOpacity } = rideToWorkByBikeConfig;
 const routesCount = 3;
+const iconSize = 24;
 
 describe('<BannerRoutes>', () => {
   it('has translation for all strings', () => {
@@ -42,39 +46,19 @@ describe('<BannerRoutes>', () => {
 
     it('renders title with the number of missing routes', () => {
       cy.window().then(() => {
-        cy.dataCy('banner-routes-title').should('contain', routesCount);
+        cy.dataCy(selectorTitle).should('contain', routesCount);
       });
     });
 
     it('renders "add routes" button', () => {
-      cy.dataCy('banner-routes-button-add-routes')
+      cy.dataCy(selectorButton)
         .should('be.visible')
         .and('contain', i18n.global.t('index.bannerRoutes.addRoutes'));
     });
 
-    it('renders button icon with correct spacing', () => {
-      cy.dataCy('banner-routes-button-icon')
-        .should('be.visible')
-        .and('have.color', white)
-        .and('have.css', 'margin-right', '8px')
-        .and('contain', 'add');
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('height')
-        .should('equal', 24);
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('width')
-        .should('equal', 24);
-    });
-
     it('renders title section and button section side to side', () => {
-      cy.testElementPercentageWidth(
-        cy.dataCy('banner-routes-section-title'),
-        67,
-      );
-      cy.testElementPercentageWidth(
-        cy.dataCy('banner-routes-section-button'),
-        33,
-      );
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 67);
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 33);
     });
   });
 
@@ -93,7 +77,7 @@ describe('<BannerRoutes>', () => {
 
     it('renders title width the "start" message', () => {
       cy.window().then(() => {
-        cy.dataCy('banner-routes-title').should(
+        cy.dataCy(selectorTitle).should(
           'contain',
           i18n.global.t('index.bannerRoutes.titleStart'),
         );
@@ -101,34 +85,14 @@ describe('<BannerRoutes>', () => {
     });
 
     it('renders "first routes" button', () => {
-      cy.dataCy('banner-routes-button-add-routes')
+      cy.dataCy(selectorButton)
         .should('be.visible')
         .and('contain', i18n.global.t('index.bannerRoutes.addFirstRoutes'));
     });
 
-    it('renders button icon with correct spacing', () => {
-      cy.dataCy('banner-routes-button-icon')
-        .should('be.visible')
-        .and('have.color', white)
-        .and('have.css', 'margin-right', '8px')
-        .and('contain', 'add');
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('height')
-        .should('equal', 24);
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('width')
-        .should('equal', 24);
-    });
-
     it('renders title section and button section stacked', () => {
-      cy.testElementPercentageWidth(
-        cy.dataCy('banner-routes-section-title'),
-        100,
-      );
-      cy.testElementPercentageWidth(
-        cy.dataCy('banner-routes-section-button'),
-        100,
-      );
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 100);
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 100);
     });
   });
 
@@ -147,39 +111,19 @@ describe('<BannerRoutes>', () => {
 
     it('renders title with the number of missing routes', () => {
       cy.window().then(() => {
-        cy.dataCy('banner-routes-title').should('contain', routesCount);
+        cy.dataCy(selectorTitle).should('contain', routesCount);
       });
     });
 
     it('renders "add routes" button', () => {
-      cy.dataCy('banner-routes-button-add-routes')
+      cy.dataCy(selectorButton)
         .should('be.visible')
         .and('contain', i18n.global.t('index.bannerRoutes.addRoutes'));
     });
 
-    it('renders button icon with correct spacing', () => {
-      cy.dataCy('banner-routes-button-icon')
-        .should('be.visible')
-        .and('have.color', white)
-        .and('have.css', 'margin-right', '8px')
-        .and('contain', 'add');
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('height')
-        .should('equal', 24);
-      cy.dataCy('banner-routes-button-icon')
-        .invoke('width')
-        .should('equal', 24);
-    });
-
     it('renders title section and button section stacked', () => {
-      cy.testElementPercentageWidth(
-        cy.dataCy('banner-routes-section-title'),
-        100,
-      );
-      cy.testElementPercentageWidth(
-        cy.dataCy('banner-routes-section-button'),
-        100,
-      );
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 100);
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 100);
     });
   });
 });
@@ -209,15 +153,13 @@ function coreTests() {
       .and('have.css', 'padding-left', '24px')
       .and('have.css', 'padding-bottom', '16px')
       .and('have.css', 'padding-right', '24px');
-  });
-
-  it('renders button icon with correct spacing', () => {
-    cy.dataCy('banner-routes-button-icon')
+    // button icon
+    cy.dataCy(selectorButtonIcon)
       .should('be.visible')
       .and('have.color', white)
       .and('have.css', 'margin-right', '8px')
       .and('contain', 'add');
-    cy.dataCy('banner-routes-button-icon').invoke('height').should('equal', 24);
-    cy.dataCy('banner-routes-button-icon').invoke('width').should('equal', 24);
+    cy.dataCy(selectorButtonIcon).invoke('height').should('equal', iconSize);
+    cy.dataCy(selectorButtonIcon).invoke('width').should('equal', iconSize);
   });
 }
