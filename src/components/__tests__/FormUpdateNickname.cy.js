@@ -60,23 +60,32 @@ describe('<FormUpdateNickname>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
     cy.dataCy(selectorFormUpdateNickname)
       .should('be.visible')
       .and('contain', i18n.global.t('form.hintNickname'));
-    cy.dataCy(selectorInput)
-      .should('be.visible')
-      .should('have.value', initialValue);
+    // label
     cy.dataCy(selectorLabel)
       .should('be.visible')
       .and('have.css', 'font-size', '12px')
       .and('have.css', 'font-weight', '700')
       .and('have.color', grey10)
       .and('contain', i18n.global.t('form.labelNicknameOptional'));
+    // input
+    cy.dataCy(selectorInput)
+      .should('be.visible')
+      .should('have.value', initialValue);
+    // cancel
     cy.dataCy(selectorButtonCancel)
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.discardChanges'));
+    // save
     cy.dataCy(selectorButtonSave)
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.edit'));
+  });
+
+  it('renders buttons side by side', () => {
+    cy.testElementsSideBySide(selectorButtonCancel, selectorButtonSave);
   });
 }

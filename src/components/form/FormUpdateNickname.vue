@@ -69,6 +69,7 @@ export default defineComponent({
     >
       {{ $t('form.labelNicknameOptional') }}
     </label>
+    <!-- Input -->
     <q-input
       clearable
       dense
