@@ -1,4 +1,6 @@
 import { colors } from 'quasar';
+import { createPinia, setActivePinia } from 'pinia';
+import { useLoginStore } from 'src/stores/login';
 
 import FormLogin from '../login/FormLogin.vue';
 import { i18n } from '../../boot/i18n';
@@ -233,12 +235,18 @@ describe('<FormLogin>', () => {
     });
   });
 
-  context('mobile', () => {
+  context('desktop - login store', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormLogin, {
         props: {},
       });
-      cy.viewport('iphone-6');
+      cy.viewport('macbook-16');
+    });
+
+    it('uses the login store', () => {
+      const loginStore = useLoginStore();
+      expect(loginStore.user.email).to.equal('test@example.com');
     });
   });
 });
