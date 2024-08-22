@@ -4,12 +4,14 @@
  *
  * @description * Use this component to display a ProfileDetails section
  * on the profile page.
- * Note: This component is used on `ProfilePage`.
+ * Note: This component is used on `ProfilePage` in `ProfileTabs` component.
  *
  * @components
  * - `DetailsItem`: Component to display a row of data.
  * - `FormUpdateEmail`: Component to render a form for updating email.
+ * - `FormUpdateGender`: Component to render a form for updating gender.
  * - `FormUpdateNickname`: Component to render a form for updating nickname.
+ * - `LanguageSwitcher`: Component to render a language switcher.
  *
  * @example
  * <profile-details />
@@ -30,6 +32,9 @@ import LanguageSwitcher from '../global/LanguageSwitcher.vue';
 // fixtures
 import formPersonalDetails from '../../../test/cypress/fixtures/formPersonalDetails.json';
 
+// types
+import type { Profile } from '../types/Profile';
+
 export default defineComponent({
   name: 'ProfileDetails',
   components: {
@@ -40,7 +45,7 @@ export default defineComponent({
     LanguageSwitcher,
   },
   setup() {
-    const profile = reactive(formPersonalDetails);
+    const profile: Profile = reactive(formPersonalDetails as Profile);
 
     return {
       profile,
@@ -130,7 +135,12 @@ export default defineComponent({
         data-cy="profile-details-language"
       >
         <template #value>
-          <language-switcher variant="light" class="full-width justify-start" />
+          <!-- Language switcher -->
+          <language-switcher
+            variant="light"
+            class="full-width justify-start"
+            data-cy="profile-details-language-switcher"
+          />
         </template>
       </details-item>
     </div>
@@ -153,8 +163,7 @@ export default defineComponent({
           :empty-label="$t('profile.labelOrganizationTypeEmpty')"
           class="col-12 col-sm-6"
           data-cy="profile-details-organization-type"
-        >
-        </details-item>
+        />
         <!-- Organization -->
         <details-item
           :label="$t('profile.labelOrganization')"
@@ -162,8 +171,7 @@ export default defineComponent({
           :empty-label="$t('profile.labelOrganizationEmpty')"
           class="col-12 col-sm-6"
           data-cy="profile-details-organization"
-        >
-        </details-item>
+        />
       </div>
     </div>
   </div>

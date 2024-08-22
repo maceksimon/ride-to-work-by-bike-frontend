@@ -12,6 +12,7 @@ const selectorFormGender = 'profile-details-form-gender';
 const selectorFormNickname = 'profile-details-form-nickname';
 const selectorGender = 'profile-details-gender';
 const selectorLanguage = 'profile-details-language';
+const selectorLanguageSwitcher = 'profile-details-language-switcher';
 const selectorNickname = 'profile-details-nickname';
 const selectorPersonalDetails = 'profile-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
@@ -79,10 +80,10 @@ describe('<ProfileDetails>', () => {
 });
 
 function coreTests() {
-  it.only('renders component', () => {
+  it('renders component', () => {
     // component
     cy.dataCy(selectorPersonalDetails).should('be.visible');
-    // title personal details
+    // page title
     cy.dataCy(selectorTitlePersonalDetails)
       .should('be.visible')
       .and('have.css', 'font-size', '20px')
@@ -97,6 +98,7 @@ function coreTests() {
     cy.dataCy(selectorGender).should('be.visible');
     // row language
     cy.dataCy(selectorLanguage).should('be.visible');
+    cy.dataCy(selectorLanguageSwitcher).should('be.visible');
     // title challenge details
     cy.dataCy(selectorTitleChallengeDetails)
       .should('be.visible')
