@@ -77,7 +77,7 @@ export default defineComponent({
     // Determines if save button should be disabled.
     const isSaveBtnDisabled = computed((): boolean => {
       const noRoutes = routesCount.value === 0;
-      const noDistance = isShownDistance.value && distance.value === 0;
+      const noDistance = isShownDistance.value && distance.value === '0.00';
       return noRoutes || noDistance;
     });
 

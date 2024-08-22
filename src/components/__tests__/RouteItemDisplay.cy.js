@@ -40,7 +40,7 @@ const snapshotParameters = {
   timeout: 4000,
   customDiffConfig: { threshold: 0.4 },
   retries: 2,
-}
+};
 
 describe('<RouteItemDisplay>', () => {
   it('has translation for all strings', () => {
@@ -94,10 +94,7 @@ describe('<RouteItemDisplay>', () => {
 
   context('to work - empty', () => {
     beforeEach(() => {
-      cy.fixture('routeListItem').then((routes) => {
-        const route = routes.toWork;
-        route.transport = null;
-        route.distance = null;
+      cy.fixture('routeEmpty').then((route) => {
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
@@ -114,10 +111,7 @@ describe('<RouteItemDisplay>', () => {
 
   context('from work - empty', () => {
     beforeEach(() => {
-      cy.fixture('routeListItem').then((routes) => {
-        const route = routes.fromWork;
-        route.transport = null;
-        route.distance = null;
+      cy.fixture('routeEmpty').then((route) => {
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
@@ -134,10 +128,7 @@ describe('<RouteItemDisplay>', () => {
 
   context('from work - no distance', () => {
     beforeEach(() => {
-      cy.fixture('routeListItem').then((routes) => {
-        const route = routes.fromWork;
-        // set distance to 0 for test purposes
-        route.distance = 0;
+      cy.fixture('routeEmpty').then((route) => {
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
@@ -276,14 +267,14 @@ function coreTests() {
       .should('be.visible')
       .matchImageSnapshot(
         `${Cypress.currentTest.titlePath}-direction`,
-        snapshotParameters
+        snapshotParameters,
       );
     // icon transport
     cy.dataCy(selectorIconTransport)
       .should('be.visible')
       .matchImageSnapshot(
         `${Cypress.currentTest.titlePath}-transport`,
-        snapshotParameters
+        snapshotParameters,
       );
   });
 }

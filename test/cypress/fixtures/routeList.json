@@ -3,7 +3,7 @@
     "id": "2024-08-15-toWork",
     "date": "2024-08-15",
     "transport": "bike",
-    "distance": 10,
+    "distance": "10.00",
     "direction": "toWork",
     "dirty": false
   },
@@ -11,7 +11,7 @@
     "id": "2024-08-14-toWork",
     "date": "2024-08-14",
     "transport": "car",
-    "distance": 0,
+    "distance": "0.00",
     "direction": "toWork",
     "dirty": false
   },
@@ -19,7 +19,7 @@
     "id": "2024-08-14-fromWork",
     "date": "2024-08-14",
     "transport": "bike",
-    "distance": 12,
+    "distance": "12.00",
     "direction": "fromWork",
     "dirty": false
   },
@@ -27,7 +27,7 @@
     "id": "2024-08-11-fromWork",
     "date": "2024-08-11",
     "transport": "bus",
-    "distance": 10,
+    "distance": "10.00",
     "direction": "fromWork",
     "dirty": false
   },
@@ -35,7 +35,7 @@
     "id": "2024-08-10-toWork",
     "date": "2024-08-10",
     "transport": "car",
-    "distance": 0,
+    "distance": "0.00",
     "direction": "toWork",
     "dirty": false
   },
@@ -43,7 +43,7 @@
     "id": "2024-08-10-toWork",
     "date": "2024-08-10",
     "transport": "car",
-    "distance": 0,
+    "distance": "0.00",
     "direction": "toWork",
     "dirty": false
   },
@@ -51,7 +51,7 @@
     "id": "2024-08-05-toWork",
     "date": "2024-08-05",
     "transport": "bike",
-    "distance": 15,
+    "distance": "15.00",
     "direction": "toWork",
     "dirty": false
   }

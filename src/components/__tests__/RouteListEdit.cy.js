@@ -232,16 +232,11 @@ function coreTests() {
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
     );
-
     // test inputting distance value
     cy.dataCy(selectorRouteListItem)
       .first()
       .find(dataSelectorInputDistance)
-      .clear();
-    cy.dataCy(selectorRouteListItem)
-      .first()
-      .find(dataSelectorInputDistance)
-      .type(1);
+      .type('{backspace}');
     cy.dataCy(selectorRouteListItem)
       .first()
       .find(dataSelectorInputDistance)
@@ -250,15 +245,11 @@ function coreTests() {
       'contain',
       i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
     );
-    // reset
+    // reset distance value
     cy.dataCy(selectorRouteListItem)
       .first()
       .find(dataSelectorInputDistance)
-      .clear();
-    cy.dataCy(selectorRouteListItem)
-      .first()
-      .find(dataSelectorInputDistance)
-      .type(10);
+      .type('0');
     cy.dataCy(selectorRouteListItem)
       .first()
       .find(dataSelectorInputDistance)

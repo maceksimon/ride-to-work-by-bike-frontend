@@ -64,7 +64,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
             date: activeRoute.timestamp.date,
             direction: activeRoute.direction,
             transport: TransportType.bike,
-            distance: 0,
+            distance: '0.00',
             inputType: 'input-number',
           });
         }

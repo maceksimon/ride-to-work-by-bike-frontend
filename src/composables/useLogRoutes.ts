@@ -12,7 +12,7 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
   const routesCount = computed((): number => routes.value.length);
 
   const action = ref<RouteInputType>('input-number');
-  const distance = ref<number>(0);
+  const distance = ref<string>('0.00');
   const transportType = ref<TransportType>(TransportType.bike);
 
   /**
@@ -23,11 +23,11 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
   const setInputsFromRoute = (routes: RouteItem[]): void => {
     if (routes.length === 1) {
       action.value = routes[0].inputType || 'input-number';
-      distance.value = routes[0].distance || 0;
+      distance.value = routes[0].distance || '0.00';
       transportType.value = routes[0].transport || TransportType.bike;
     } else {
       action.value = 'input-number';
-      distance.value = 0;
+      distance.value = '0.00';
       transportType.value = TransportType.bike;
     }
   };

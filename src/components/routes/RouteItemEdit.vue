@@ -72,7 +72,7 @@ export default defineComponent({
         // if settings are the same as initial, mark dirty as false
         if (
           actionNew === (props.route?.inputType || 'input-number') &&
-          Number(distanceNew) === Number(props.route?.distance || 0) &&
+          distanceNew === (props.route?.distance || '0.00') &&
           transportNew === props.route?.transport
         ) {
           emit('update:route', false);

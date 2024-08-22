@@ -57,7 +57,7 @@ export const useRoutes = () => {
    * @return {string} The distance label.
    */
   const getRouteDistance = (route: RouteItem | null): string => {
-    if (!route?.distance) return '';
+    if (!route?.distance || route?.distance === '0.00') return '';
     return `${route.distance} ${i18n.global.t('global.routeLengthUnit')}`;
   };
 
@@ -104,7 +104,7 @@ export const useRoutes = () => {
                 id: `${date.formatDate(currentDate, routeDateFormat)}-${TransportDirection.fromWork}`,
                 date: date.formatDate(currentDate, routeDateFormat),
                 transport: TransportType.none,
-                distance: 0,
+                distance: '0.00',
                 direction: TransportDirection.fromWork,
                 dirty: false,
                 inputType: 'input-number',
@@ -115,7 +115,7 @@ export const useRoutes = () => {
                 id: `${date.formatDate(currentDate, routeDateFormat)}-${TransportDirection.toWork}`,
                 date: date.formatDate(currentDate, routeDateFormat),
                 transport: TransportType.none,
-                distance: 0,
+                distance: '0.00',
                 direction: TransportDirection.toWork,
                 dirty: false,
                 inputType: 'input-number',

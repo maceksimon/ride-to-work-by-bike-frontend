@@ -97,7 +97,11 @@ function coreTests() {
             .find(`[data-id="${loggedRoute.id}"]`)
             .should('contain', getTransportLabel(loggedRoute.transport));
           // has transport distance (value)
-          if (hasTransportDistance(loggedRoute) && loggedRoute.distance > 0) {
+          if (
+            hasTransportDistance(loggedRoute) &&
+            loggedRoute.distance &&
+            parseFloat(loggedRoute.distance) > 0
+          ) {
             cy.dataCy(selectorRouteListItemWrapper)
               .find(`[data-id="${loggedRoute.id}"]`)
               .find('[data-cy="label-distance"]')

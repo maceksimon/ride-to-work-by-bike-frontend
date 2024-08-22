@@ -26,7 +26,7 @@ export type RouteItem = {
   date: string;
   direction: TransportDirection;
   dirty?: boolean;
-  distance: number;
+  distance: string;
   transport: TransportType;
   inputType?: RouteInputType;
 };
@@ -47,6 +47,6 @@ export type RouteCalendarActive = {
 
 export type RouteLogData = {
   action: RouteInputType;
-  distance: number;
+  distance: string;
   transportType: TransportType;
 };

@@ -7,8 +7,8 @@
  * This component is used by `RouteItemEdit` and `RouteCalendarPanel`.
  *
  * @props
- * - `modelValue` (number, required): The route distance in km.
- *   It should be of type `number`.
+ * - `modelValue` (string, required): The route distance in km.
+ *   It should be of type `string`.
  * - `modelAction` (string, required): The selected distance input type.
  *   It should be of type `string`.
  * - `hasValidation` (boolean, default: true): Whether the input should
@@ -38,7 +38,7 @@ export default defineComponent({
   name: 'RouteInputDistance',
   props: {
     modelValue: {
-      type: Number,
+      type: String,
       required: true,
     },
     modelAction: {
@@ -64,10 +64,10 @@ export default defineComponent({
 
     // model value
     const distance = computed({
-      get(): number {
+      get(): string {
         return props.modelValue;
       },
-      set(value: number): void {
+      set(value: string): void {
         emit('update:modelValue', value);
       },
     });
