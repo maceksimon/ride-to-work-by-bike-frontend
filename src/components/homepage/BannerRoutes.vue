@@ -28,6 +28,9 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
 export default defineComponent({
   name: 'BannerRoutes',
   props: {
@@ -40,25 +43,33 @@ export default defineComponent({
       required: true,
     },
   },
+  setup() {
+    const { borderRadiusCard, colorSecondaryOpacity } = rideToWorkByBikeConfig;
+
+    return {
+      borderRadiusCard,
+      colorSecondaryOpacity,
+    };
+  },
 });
 </script>
 
 <template>
   <div
-    class="bg-grey-1"
+    class="text-grey-10"
     :class="[variant === 'default' ? 'q-py-sm' : 'q-py-lg']"
+    :style="`border-radius: ${borderRadiusCard}; background-color: ${colorSecondaryOpacity}`"
     data-cy="banner-routes-card"
   >
     <div class="row justify-between">
       <!-- Title -->
       <div
-        class="col-12 flex items-center q-py-sm q-px-md"
+        class="col-12 flex items-center q-py-sm q-px-xl"
         :class="[variant === 'default' ? 'col-md-8' : 'justify-center']"
         data-cy="banner-routes-section-title"
       >
         <h3
-          class="text-weight-bold q-my-none"
-          :class="[variant === 'default' ? 'text-subtitle2' : 'text-h6']"
+          class="text-h5 text-weight-bold q-my-none"
           data-cy="banner-routes-title"
         >
           <span v-if="variant === 'default'">
@@ -74,16 +85,17 @@ export default defineComponent({
       </div>
       <!-- Link to Route log -->
       <div
-        class="col-12 flex items-center justify-end q-py-sm q-px-md"
+        class="col-12 flex items-center justify-end q-py-sm q-px-xl"
         :class="[variant === 'default' ? 'col-md-4' : 'justify-center']"
         data-cy="banner-routes-section-button"
       >
         <q-btn
           rounded
           unelevated
-          color="grey-10"
+          color="primary"
+          size="16px"
           text-color="white"
-          class="q-pa-md q-pr-lg"
+          class="q-pa-md q-pl-lg q-pr-lg text-weight-bold"
           data-cy="banner-routes-button-add-routes"
         >
           <!-- Plus icon -->

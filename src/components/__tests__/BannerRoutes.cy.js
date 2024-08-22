@@ -1,13 +1,21 @@
 import { colors } from 'quasar';
-
 import BannerRoutes from '../homepage/BannerRoutes.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// colors
 const { getPaletteColor } = colors;
-const black = getPaletteColor('black');
+const grey10 = getPaletteColor('grey-10');
 const white = getPaletteColor('white');
-const grey1 = getPaletteColor('grey-1');
+const primary = getPaletteColor('primary');
 
+// selectors
+const selectorBannerRoutes = 'banner-routes-card';
+const selectorTitle = 'banner-routes-title';
+const selectorButton = 'banner-routes-button-add-routes';
+
+// variables
+const { borderRadiusCard, colorSecondaryOpacity } = rideToWorkByBikeConfig;
 const routesCount = 3;
 
 describe('<BannerRoutes>', () => {
@@ -30,31 +38,17 @@ describe('<BannerRoutes>', () => {
       cy.viewport('macbook-16');
     });
 
+    coreTests();
+
     it('renders title with the number of missing routes', () => {
       cy.window().then(() => {
         cy.dataCy('banner-routes-title').should('contain', routesCount);
       });
     });
 
-    it('renders title with correct styling', () => {
-      cy.dataCy('banner-routes-title')
-        .should('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', black);
-    });
-
-    it('renders button', () => {
+    it('renders "add routes" button', () => {
       cy.dataCy('banner-routes-button-add-routes')
         .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '500')
-        .and('have.css', 'text-transform', 'uppercase')
-        .and('have.color', white)
-        .and('have.css', 'border-radius', '28px')
-        .and('have.css', 'padding-top', '16px')
-        .and('have.css', 'padding-left', '16px')
-        .and('have.css', 'padding-bottom', '16px')
-        .and('have.css', 'padding-right', '24px')
         .and('contain', i18n.global.t('index.bannerRoutes.addRoutes'));
     });
 
@@ -70,22 +64,6 @@ describe('<BannerRoutes>', () => {
       cy.dataCy('banner-routes-button-icon')
         .invoke('width')
         .should('equal', 24);
-    });
-
-    it('has gray background', () => {
-      cy.window().then(() => {
-        cy.dataCy('banner-routes-card')
-          .should('be.visible')
-          .and('have.backgroundColor', grey1);
-      });
-    });
-
-    it('has sharp corners', () => {
-      cy.window().then(() => {
-        cy.dataCy('banner-routes-card')
-          .should('be.visible')
-          .and('have.css', 'border-radius', '0px');
-      });
     });
 
     it('renders title section and button section side to side', () => {
@@ -111,6 +89,8 @@ describe('<BannerRoutes>', () => {
       cy.viewport('macbook-16');
     });
 
+    coreTests();
+
     it('renders title width the "start" message', () => {
       cy.window().then(() => {
         cy.dataCy('banner-routes-title').should(
@@ -120,25 +100,9 @@ describe('<BannerRoutes>', () => {
       });
     });
 
-    it('renders title with correct styling', () => {
-      cy.dataCy('banner-routes-title')
-        .should('have.css', 'font-size', '20px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', black);
-    });
-
-    it('renders button', () => {
+    it('renders "first routes" button', () => {
       cy.dataCy('banner-routes-button-add-routes')
         .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '500')
-        .and('have.css', 'text-transform', 'uppercase')
-        .and('have.color', white)
-        .and('have.css', 'border-radius', '28px')
-        .and('have.css', 'padding-top', '16px')
-        .and('have.css', 'padding-left', '16px')
-        .and('have.css', 'padding-bottom', '16px')
-        .and('have.css', 'padding-right', '24px')
         .and('contain', i18n.global.t('index.bannerRoutes.addFirstRoutes'));
     });
 
@@ -154,22 +118,6 @@ describe('<BannerRoutes>', () => {
       cy.dataCy('banner-routes-button-icon')
         .invoke('width')
         .should('equal', 24);
-    });
-
-    it('has gray background', () => {
-      cy.window().then(() => {
-        cy.dataCy('banner-routes-card')
-          .should('be.visible')
-          .and('have.backgroundColor', grey1);
-      });
-    });
-
-    it('has sharp corners', () => {
-      cy.window().then(() => {
-        cy.dataCy('banner-routes-card')
-          .should('be.visible')
-          .and('have.css', 'border-radius', '0px');
-      });
     });
 
     it('renders title section and button section stacked', () => {
@@ -195,28 +143,17 @@ describe('<BannerRoutes>', () => {
       cy.viewport('iphone-6');
     });
 
+    coreTests();
+
     it('renders title with the number of missing routes', () => {
       cy.window().then(() => {
-        cy.dataCy('banner-routes-title')
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '700')
-          .and('have.color', black)
-          .and('contain', routesCount);
+        cy.dataCy('banner-routes-title').should('contain', routesCount);
       });
     });
 
-    it('renders button', () => {
+    it('renders "add routes" button', () => {
       cy.dataCy('banner-routes-button-add-routes')
         .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '500')
-        .and('have.css', 'text-transform', 'uppercase')
-        .and('have.color', white)
-        .and('have.css', 'border-radius', '28px')
-        .and('have.css', 'padding-top', '16px')
-        .and('have.css', 'padding-left', '16px')
-        .and('have.css', 'padding-bottom', '16px')
-        .and('have.css', 'padding-right', '24px')
         .and('contain', i18n.global.t('index.bannerRoutes.addRoutes'));
     });
 
@@ -234,22 +171,6 @@ describe('<BannerRoutes>', () => {
         .should('equal', 24);
     });
 
-    it('has gray background', () => {
-      cy.window().then(() => {
-        cy.dataCy('banner-routes-card')
-          .should('be.visible')
-          .and('have.backgroundColor', grey1);
-      });
-    });
-
-    it('has sharp corners', () => {
-      cy.window().then(() => {
-        cy.dataCy('banner-routes-card')
-          .should('be.visible')
-          .and('have.css', 'border-radius', '0px');
-      });
-    });
-
     it('renders title section and button section stacked', () => {
       cy.testElementPercentageWidth(
         cy.dataCy('banner-routes-section-title'),
@@ -262,3 +183,41 @@ describe('<BannerRoutes>', () => {
     });
   });
 });
+
+function coreTests() {
+  it('renders component', () => {
+    // component
+    cy.dataCy(selectorBannerRoutes)
+      .should('be.visible')
+      .and('have.css', 'border-radius', borderRadiusCard)
+      .and('have.backgroundColor', colorSecondaryOpacity);
+    // title
+    cy.dataCy(selectorTitle)
+      .should('have.css', 'font-size', '24px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', grey10);
+    // button
+    cy.dataCy(selectorButton)
+      .should('be.visible')
+      .and('have.css', 'font-size', '16px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.css', 'text-transform', 'uppercase')
+      .and('have.color', white)
+      .and('have.backgroundColor', primary)
+      .and('have.css', 'border-radius', '28px')
+      .and('have.css', 'padding-top', '16px')
+      .and('have.css', 'padding-left', '24px')
+      .and('have.css', 'padding-bottom', '16px')
+      .and('have.css', 'padding-right', '24px');
+  });
+
+  it('renders button icon with correct spacing', () => {
+    cy.dataCy('banner-routes-button-icon')
+      .should('be.visible')
+      .and('have.color', white)
+      .and('have.css', 'margin-right', '8px')
+      .and('contain', 'add');
+    cy.dataCy('banner-routes-button-icon').invoke('height').should('equal', 24);
+    cy.dataCy('banner-routes-button-icon').invoke('width').should('equal', 24);
+  });
+}
