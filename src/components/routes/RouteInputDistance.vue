@@ -131,11 +131,10 @@ export default defineComponent({
           <q-input
             dense
             outlined
-            type="number"
+            reverse-fill-mask
             v-model="distance"
-            min="0"
-            max="999"
-            data-cy="input-distance"
+            mask="#.##"
+            fill-mask="0"
             :rules="[
               (val) =>
                 isFilled(val) ||
@@ -148,6 +147,7 @@ export default defineComponent({
                 !hasValidation ||
                 $t('form.messageFieldAboveZero'),
             ]"
+            data-cy="input-distance"
           >
             <template v-slot:append>
               <span

@@ -23,6 +23,11 @@ const selectorUnitsDistance = 'units-distance';
 
 // variables
 const iconTraceMapSize = 24;
+const valueZero = '0.00';
+const valueMinusOne = '-1.00';
+const valueOne = '1.00';
+const valueHalf = '0.50';
+const valueEmpty = '';
 
 describe('<RouteInputDistance>', () => {
   it('has translation for all strings', () => {
@@ -45,13 +50,14 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: '0',
+          modelValue: valueZero,
         },
       });
       cy.viewport('macbook-16');
     });
 
     coreTests();
+    maskTests();
     inputTests();
     validateZeroTests();
 
@@ -74,7 +80,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-map',
-          modelValue: '0',
+          modelValue: valueZero,
         },
       });
       cy.viewport('macbook-16');
@@ -102,13 +108,14 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: '0',
+          modelValue: valueZero,
         },
       });
       cy.viewport('iphone-6');
     });
 
     coreTests();
+    maskTests();
     inputTests();
     validateZeroTests();
   });
@@ -118,7 +125,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-map',
-          modelValue: '0',
+          modelValue: valueZero,
         },
       });
       cy.viewport('iphone-6');
@@ -133,7 +140,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: '',
+          modelValue: valueEmpty,
         },
       });
       cy.viewport('iphone-6');
@@ -147,7 +154,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: '-1',
+          modelValue: valueMinusOne,
         },
       });
       cy.viewport('iphone-6');
@@ -161,7 +168,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: '0.5',
+          modelValue: valueHalf,
         },
       });
       cy.viewport('iphone-6');
@@ -175,7 +182,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-map',
-          modelValue: '0',
+          modelValue: valueZero,
         },
       });
       cy.viewport('iphone-6');
@@ -190,7 +197,7 @@ describe('<RouteInputDistance>', () => {
       cy.mount(RouteInputDistance, {
         props: {
           modelAction: 'input-number',
-          modelValue: '0',
+          modelValue: valueZero,
           hasValidation: false,
         },
       });
@@ -211,6 +218,22 @@ function coreTests() {
       .and('have.color', grey10);
     // select action
     cy.dataCy(selectorSelectAction).should('be.visible');
+  });
+}
+
+function maskTests() {
+  it('allows user to enter value using a mask', () => {
+    cy.dataCy(selectorInputDistance).type('1');
+    cy.dataCy(selectorInputDistance).should('have.value', '0.01');
+    cy.dataCy(selectorInputDistance).type('50');
+    cy.dataCy(selectorInputDistance).should('have.value', '1.50');
+    cy.dataCy(selectorInputDistance).type('{backspace}');
+    cy.dataCy(selectorInputDistance).should('have.value', '0.15');
+    cy.dataCy(selectorInputDistance).type('{backspace}');
+    cy.dataCy(selectorInputDistance).type('{backspace}');
+    cy.dataCy(selectorInputDistance).should('have.value', '0.00');
+    cy.dataCy(selectorInputDistance).type('a');
+    cy.dataCy(selectorInputDistance).should('have.value', '0.00');
   });
 }
 
@@ -251,7 +274,7 @@ function validateZeroTests() {
     cy.dataCy(selectorSectionInputNumber)
       .find('input')
       .should('be.visible')
-      .and('have.value', 0);
+      .and('have.value', valueZero);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
@@ -265,7 +288,7 @@ function valuePassingTests() {
     cy.dataCy(selectorSectionInputNumber)
       .find('input')
       .should('be.visible')
-      .and('have.value', 0.5);
+      .and('have.value', valueHalf);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
@@ -292,7 +315,7 @@ function validateEmptyTests() {
     cy.dataCy(selectorSectionInputNumber)
       .find('input')
       .should('be.visible')
-      .and('have.value', '');
+      .and('have.value', valueZero);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
@@ -307,11 +330,11 @@ function validateEmptyTests() {
 }
 
 function isValidatedNegativeTests() {
-  it('validates input when negative value', () => {
+  it('does not allow negative number', () => {
     cy.dataCy(selectorSectionInputNumber)
       .find('input')
       .should('be.visible')
-      .and('have.value', -1);
+      .and('have.value', valueOne);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
@@ -325,7 +348,7 @@ function isNotValidatedTests() {
     cy.dataCy(selectorSectionInputNumber)
       .find('input')
       .should('be.visible')
-      .and('have.value', 0);
+      .and('have.value', valueZero);
     cy.dataCy(selectorSectionInputNumber).find('input').focus();
     cy.dataCy(selectorSectionInputNumber).find('input').blur();
     cy.dataCy(selectorSectionInputNumber)
