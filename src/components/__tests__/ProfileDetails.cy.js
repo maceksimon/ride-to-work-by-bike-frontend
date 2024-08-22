@@ -14,6 +14,8 @@ const selectorGender = 'profile-details-gender';
 const selectorLanguage = 'profile-details-language';
 const selectorLanguageSwitcher = 'profile-details-language-switcher';
 const selectorNickname = 'profile-details-nickname';
+const selectorOrganizationType = 'profile-details-organization-type';
+const selectorOrganization = 'profile-details-organization';
 const selectorPersonalDetails = 'profile-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
@@ -81,31 +83,43 @@ describe('<ProfileDetails>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    // component
-    cy.dataCy(selectorPersonalDetails).should('be.visible');
-    // page title
-    cy.dataCy(selectorTitlePersonalDetails)
-      .should('be.visible')
-      .and('have.css', 'font-size', '20px')
-      .and('have.css', 'font-weight', '500')
-      .and('have.color', grey10)
-      .and('contain', i18n.global.t('profile.titlePersonalDetails'));
-    // row nickname
-    cy.dataCy(selectorNickname).should('be.visible');
-    // row email
-    cy.dataCy(selectorEmail).should('be.visible');
-    // row gender
-    cy.dataCy(selectorGender).should('be.visible');
-    // row language
-    cy.dataCy(selectorLanguage).should('be.visible');
-    cy.dataCy(selectorLanguageSwitcher).should('be.visible');
-    // title challenge details
-    cy.dataCy(selectorTitleChallengeDetails)
-      .should('be.visible')
-      .and('have.css', 'font-size', '20px')
-      .and('have.css', 'font-weight', '500')
-      .and('have.color', grey10)
-      .and('contain', i18n.global.t('profile.titleChallengeDetails'));
+    cy.fixture('formPersonalDetails').then((formPersonalDetails) => {
+      // component
+      cy.dataCy(selectorPersonalDetails).should('be.visible');
+      // page title
+      cy.dataCy(selectorTitlePersonalDetails)
+        .should('be.visible')
+        .and('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('have.color', grey10)
+        .and('contain', i18n.global.t('profile.titlePersonalDetails'));
+      // row nickname
+      cy.dataCy(selectorNickname).should('be.visible');
+      // row email
+      cy.dataCy(selectorEmail).should('be.visible');
+      // row gender
+      cy.dataCy(selectorGender).should('be.visible');
+      // row language
+      cy.dataCy(selectorLanguage).should('be.visible');
+      cy.dataCy(selectorLanguageSwitcher).should('be.visible');
+      // title challenge details
+      cy.dataCy(selectorTitleChallengeDetails)
+        .should('be.visible')
+        .and('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('have.color', grey10)
+        .and('contain', i18n.global.t('profile.titleChallengeDetails'));
+      // row organizationType
+      cy.dataCy(selectorOrganizationType)
+        .should('be.visible')
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.organizationType);
+      // row organization
+      cy.dataCy(selectorOrganization)
+        .should('be.visible')
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.organization);
+    });
   });
 
   it('allows to edit nickname', () => {
