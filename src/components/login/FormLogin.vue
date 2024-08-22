@@ -23,6 +23,7 @@
 
 // libraries
 import { defineComponent, ref, reactive } from 'vue';
+import { storeToRefs } from 'pinia';
 
 // components
 import BannerAppButtons from './BannerAppButtons.vue';
@@ -31,6 +32,9 @@ import LoginRegisterButtons from '../global/LoginRegisterButtons.vue';
 
 // composables
 import { useValidation } from '../../composables/useValidation';
+
+// stores
+import { useLoginStore } from '../../stores/login';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -44,6 +48,8 @@ export default defineComponent({
   },
   emits: ['formSubmit'],
   setup() {
+    const { user } = storeToRefs(useLoginStore());
+
     const formLogin = reactive({
       email: '',
       password: '',
@@ -83,6 +89,7 @@ export default defineComponent({
       formPasswordReset,
       formState,
       isPassword,
+      user,
       isEmail,
       isFilled,
       onClickFormPasswordResetBtn,
