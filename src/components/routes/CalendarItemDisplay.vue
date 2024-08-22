@@ -8,8 +8,8 @@
  * props. Each shows arrow pointing in a different direction.
  *
  * @props
- * - `day` (RouteCalendarDay, default - null): The object representing the associated route.
- *   It should be of type `RouteCalendarDay`.
+ * - `day` (RouteDay, default - null): The object representing the associated route.
+ *   It should be of type `RouteDay`.
  * - `toWork` (boolean, optional): Whether the route is to work.
  * - `fromWork` (boolean, optional): Whether the route is from work.
  * - `active` (boolean, optional): Whether the route is active (currently
@@ -43,13 +43,13 @@ import { TransportDirection } from '../types/Route';
 
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
-import type { RouteCalendarDay, RouteItem } from '../types/Route';
+import type { RouteDay, RouteItem } from '../types/Route';
 
 export default defineComponent({
   name: 'CalendarItemDisplay',
   props: {
     day: {
-      type: Object as () => RouteCalendarDay | null,
+      type: Object as () => RouteDay | null,
       default: null,
     },
     direction: {

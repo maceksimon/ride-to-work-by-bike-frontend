@@ -8,20 +8,20 @@ import { TransportDirection, TransportType } from '../components/types/Route';
 import type { Ref } from 'vue';
 import type {
   RouteCalendarActive,
-  RouteCalendarDay,
+  RouteDay,
   RouteItem,
 } from '../components/types/Route';
 
-export const useCalendarRoutes = (days: Ref<RouteCalendarDay[]>) => {
+export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
   /**
    * Map of days with logged routes by key for an easy lookup.
    * - key: date
-   * - value: RouteCalendarDay
+   * - value: RouteDay
    */
-  const routesMap = computed((): Record<string, RouteCalendarDay> => {
-    const routesObject = {} as Record<string, RouteCalendarDay>;
+  const routesMap = computed((): Record<string, RouteDay> => {
+    const routesObject = {} as Record<string, RouteDay>;
     if (days.value.length > 0) {
-      days.value.forEach((route: RouteCalendarDay) => {
+      days.value.forEach((route: RouteDay) => {
         routesObject[route.date] = route;
       });
     }
@@ -44,8 +44,7 @@ export const useCalendarRoutes = (days: Ref<RouteCalendarDay[]>) => {
     const routes = [] as RouteItem[];
     activeRoutes.value.forEach((activeRoute: RouteCalendarActive): void => {
       if (activeRoute.timestamp && activeRoute.direction) {
-        const day: RouteCalendarDay =
-          routesMap.value[activeRoute.timestamp.date];
+        const day: RouteDay = routesMap.value[activeRoute.timestamp.date];
         if (
           dayHasToWorkRoute(day) &&
           activeRoute.direction === TransportDirection.toWork
@@ -90,7 +89,7 @@ export const useCalendarRoutes = (days: Ref<RouteCalendarDay[]>) => {
    */
   function isCalendarRouteLogged(activeRoute: RouteCalendarActive): boolean {
     if (activeRoute.timestamp && activeRoute.direction) {
-      const day: RouteCalendarDay = routesMap.value[activeRoute.timestamp.date];
+      const day: RouteDay = routesMap.value[activeRoute.timestamp.date];
       const isLoggedToWork =
         activeRoute.direction === TransportDirection.toWork &&
         dayHasToWorkRoute(day);
@@ -105,19 +104,19 @@ export const useCalendarRoutes = (days: Ref<RouteCalendarDay[]>) => {
 
   /**
    * Checks if a given day has a logged to work route.
-   * @param {RouteCalendarDay | null} day - Day to check or null.
+   * @param {RouteDay | null} day - Day to check or null.
    * @return {boolean}
    */
-  function dayHasToWorkRoute(day: RouteCalendarDay | null): boolean {
+  function dayHasToWorkRoute(day: RouteDay | null): boolean {
     return !!day?.toWork;
   }
 
   /**
    * Checks if a given day has a logged from work route.
-   * @param {RouteCalendarDay | null} day - Day to check or null.
+   * @param {RouteDay | null} day - Day to check or null.
    * @return {boolean}
    */
-  function dayHasFromWorkRoute(day: RouteCalendarDay | null): boolean {
+  function dayHasFromWorkRoute(day: RouteDay | null): boolean {
     return !!day?.fromWork;
   }
 

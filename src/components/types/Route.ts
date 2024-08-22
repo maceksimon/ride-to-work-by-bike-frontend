@@ -33,18 +33,11 @@ export type RouteItem = {
 
 export type RouteInputType = 'input-number' | 'input-map';
 
-export type RouteListDay = {
+export type RouteDay = {
   id: string;
   date: string;
   fromWork: RouteItem;
   toWork: RouteItem;
-};
-
-export type RouteCalendarDay = {
-  id: string;
-  date: string;
-  toWork: RouteItem;
-  fromWork: RouteItem;
 };
 
 export type RouteCalendarActive = {

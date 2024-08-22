@@ -8,7 +8,7 @@ import { i18n } from 'src/boot/i18n';
 import { TransportDirection, TransportType } from 'src/components/types/Route';
 
 // types
-import type { RouteItem, RouteListDay } from 'src/components/types/Route';
+import type { RouteItem, RouteDay } from 'src/components/types/Route';
 
 export const useRoutes = () => {
   const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
@@ -62,22 +62,22 @@ export const useRoutes = () => {
   };
 
   /**
-   * Creates an array of RouteListDay objects for each day between specified
+   * Creates an array of RouteDay objects for each day between specified
    * dates. Including end date and excluding start date.
    * Fills in data from routes array based on date and direction.
    * If data is empty for given day/route, it will create an empty route.
    * @param {Date} startDate - The start date of the date range.
    * @param {Date} endDate - The end date of the date range.
    * @param {RouteItem[]} routes - The array logged routes.
-   * @return {RouteListDay[]} The array representing days with routes.
+   * @return {RouteDay[]} The array representing days with routes.
    */
   const createDaysArrayWithRoutes = (
     startDate: Date,
     endDate: Date,
     routes: RouteItem[],
-  ): RouteListDay[] => {
+  ): RouteDay[] => {
     const numberOfDays = date.getDateDiff(endDate, startDate, 'days');
-    const days = [] as RouteListDay[];
+    const days = [] as RouteDay[];
     const routeDateFormat = 'YYYY-MM-DD';
 
     if (routes) {

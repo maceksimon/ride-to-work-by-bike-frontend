@@ -48,7 +48,7 @@ import routesListCalendarFixture from '../../../test/cypress/fixtures/routeListC
 
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
-import type { RouteCalendarDay } from '../types/Route';
+import type { RouteDay } from '../types/Route';
 
 export default defineComponent({
   name: 'RoutesCalendar',
@@ -111,9 +111,7 @@ export default defineComponent({
     }
 
     // Get data
-    const days = ref<RouteCalendarDay[]>(
-      routesListCalendarFixture as RouteCalendarDay[],
-    );
+    const days = ref<RouteDay[]>(routesListCalendarFixture as RouteDay[]);
 
     const {
       activeRoutes,

@@ -33,7 +33,7 @@ import { useRoutes } from 'src/composables/useRoutes';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // types
-import type { RouteItem, RouteListDay } from '../types/Route';
+import type { RouteItem, RouteDay } from '../types/Route';
 
 export default defineComponent({
   name: 'RouteListEdit',
@@ -57,7 +57,7 @@ export default defineComponent({
     });
     const endDate = todayDate;
 
-    const days = ref<RouteListDay[]>(
+    const days = ref<RouteDay[]>(
       createDaysArrayWithRoutes(startDate, endDate, props.routes),
     );
 
