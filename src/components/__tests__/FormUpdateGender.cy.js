@@ -48,23 +48,39 @@ describe('<FormUpdateGender>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
     cy.dataCy(selectorFormUpdateGender).should('be.visible');
+    // label
     cy.dataCy(selectorFormLabel)
       .should('be.visible')
       .and('have.css', 'font-size', '12px')
       .and('have.css', 'font-weight', '700')
       .and('have.color', grey10)
       .and('contain', i18n.global.t('form.labelGender'));
+    // radio buttons
     cy.dataCy(selectorFormGender).should('be.visible');
+    // cancel
     cy.dataCy(selectorFormButtonCancel)
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.discardChanges'));
+    // save
     cy.dataCy(selectorFormButtonSave)
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.edit'));
+  });
+
+  it('renders buttons side by side', () => {
+    cy.testElementsSideBySide(selectorFormButtonCancel, selectorFormButtonSave);
+  });
+
+  it('validates form on submit', () => {
+    // save
+    cy.dataCy(selectorFormButtonSave).should('be.visible').click();
+    // validate gender required
     cy.dataCy(selectorFormGender)
       .find(classSelectorMessages)
       .should('contain', i18n.global.t('form.messageOptionRequired'));
+    // click first radio
     cy.dataCy(selectorFormGender).find('.q-radio__label').first().click();
     cy.get(classSelectorMessages).should('not.exist');
   });

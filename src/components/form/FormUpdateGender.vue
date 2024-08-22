@@ -93,6 +93,7 @@ export default defineComponent({
     >
       {{ $t('form.labelGender') }}
     </label>
+    <!-- Radio group -->
     <form-field-radio-required
       inline
       v-model="inputValue"
