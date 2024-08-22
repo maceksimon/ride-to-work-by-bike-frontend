@@ -94,7 +94,7 @@ describe('<RouteItemDisplay>', () => {
 
   context('to work - empty', () => {
     beforeEach(() => {
-      cy.fixture('routeEmpty').then((route) => {
+      cy.fixture('routeEmptyToWork').then((route) => {
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
@@ -111,24 +111,7 @@ describe('<RouteItemDisplay>', () => {
 
   context('from work - empty', () => {
     beforeEach(() => {
-      cy.fixture('routeEmpty').then((route) => {
-        cy.wrap(route).as('route');
-        cy.mount(RouteItemDisplay, {
-          props: {
-            route: route,
-          },
-        });
-        cy.viewport('macbook-16');
-      });
-    });
-
-    coreTests();
-    testLabelFromWork();
-  });
-
-  context('from work - no distance', () => {
-    beforeEach(() => {
-      cy.fixture('routeEmpty').then((route) => {
+      cy.fixture('routeEmptyFromWork').then((route) => {
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
@@ -245,7 +228,10 @@ function coreTests() {
 
   it('renders correct distance value', () => {
     cy.get('@route').then((route) => {
-      if (route.distance) {
+      if (!route.distance || route.distance === '0.00') {
+        // distance value empty
+        cy.dataCy(selectorLabelDistance).should('be.empty');
+      } else {
         // distance value including units
         cy.dataCy(selectorLabelDistance)
           .should('be.visible')
@@ -254,9 +240,6 @@ function coreTests() {
           .and('have.color', grey10)
           .and('contain', route.distance)
           .and('contain', i18n.global.t('global.routeLengthUnit'));
-      } else {
-        // distance value empty
-        cy.dataCy(selectorLabelDistance).should('not.exist');
       }
     });
   });
