@@ -23,7 +23,7 @@ describe('<FormUpdateNickname>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
-      ['edit', 'discardChanges'],
+      ['discardChanges', 'edit'],
       'navigation',
       i18n,
     );
