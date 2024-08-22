@@ -27,6 +27,12 @@ import { defineComponent, onMounted, ref } from 'vue';
 // components
 import FormFieldRadioRequired from './FormFieldRadioRequired.vue';
 
+// composables
+import { i18n } from '../../../src/boot/i18n';
+
+// enums
+import { Gender } from '../types/Profile';
+
 // types
 import { FormOption } from '../types/Form';
 
@@ -51,12 +57,12 @@ export default defineComponent({
 
     const genderOptions: FormOption[] = [
       {
-        label: 'Female',
-        value: 'female',
+        label: i18n.global.t('global.man'),
+        value: Gender.female,
       },
       {
-        label: 'Male',
-        value: 'male',
+        label: i18n.global.t('global.woman'),
+        value: Gender.male,
       },
     ];
 

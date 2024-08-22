@@ -1,11 +1,11 @@
 import { Locale } from 'vue-i18n';
 
-enum OrganizationType {
+export enum OrganizationType {
   school = 'school',
   company = 'company',
 }
 
-enum Gender {
+export enum Gender {
   male = 'male',
   female = 'female',
 }
