@@ -27,13 +27,14 @@ const props = {
   editable: true,
   label: 'Label',
   value: 'Value',
-  emptyLabel: 'EmptyLabel',
-  dialogTitle: 'DialogTitle',
+  emptyLabel: 'Empty Label',
+  dialogTitle: 'Dialog Title',
 };
 
 describe('<DetailsItem>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['edit'], 'navigation', i18n);
+    cy.testLanguageStringsInContext(['labelNoValue'], 'profile', i18n);
   });
 
   context('desktop', () => {
@@ -108,12 +109,12 @@ describe('<DetailsItem>', () => {
     beforeEach(() => {
       cy.mount(DetailsItem, {
         props: {
-          description: 'Description',
+          description: props.description,
           editable: true,
-          label: 'Label',
+          label: props.label,
           value: '',
-          emptyLabel: 'EmptyLabel',
-          dialogTitle: 'DialogTitle',
+          emptyLabel: props.emptyLabel,
+          dialogTitle: props.dialogTitle,
         },
         slots: {
           form: `<div>${slotForm}</div>`,
@@ -125,6 +126,39 @@ describe('<DetailsItem>', () => {
     coreTests();
     emptyTests();
     editableTests();
+
+    it('renders custom empty label', () => {
+      cy.dataCy(selectorDetailsItemEmpty).should('contain', props.emptyLabel);
+    });
+  });
+
+  context('desktop - empty (no label)', () => {
+    beforeEach(() => {
+      cy.mount(DetailsItem, {
+        props: {
+          description: props.description,
+          editable: true,
+          label: props.label,
+          value: '',
+          dialogTitle: props.dialogTitle,
+        },
+        slots: {
+          form: `<div>${slotForm}</div>`,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    coreTests();
+    emptyTests();
+    editableTests();
+
+    it('renders default empty label', () => {
+      cy.dataCy(selectorDetailsItemEmpty).should(
+        'contain',
+        i18n.global.t('profile.labelNoValue'),
+      );
+    });
   });
 
   context('mobile', () => {
@@ -161,18 +195,22 @@ function mobileTests() {
 
 function emptyTests() {
   it('renders component', () => {
+    // component
     cy.dataCy(selectorDetailsItem).should('be.visible');
+    // label
     cy.dataCy(selectorDetailsItemLabel)
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10);
+    // empty label
     cy.dataCy(selectorDetailsItemEmpty)
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
       .and('have.css', 'font-style', 'italic')
       .and('have.color', grey7);
+    // description
     cy.dataCy(selectorDetailsItemDescription)
       .should('be.visible')
       .and('have.css', 'font-size', '12px')
@@ -193,9 +231,11 @@ function propDescriptionTests() {
 
 function editableTests() {
   it('renders edit button and dialog', () => {
+    // click edit button
     cy.dataCy(selectorDetailsItemEdit).should('be.visible').click();
+    // dialog
     cy.dataCy(selectorDialogEdit).should('be.visible');
-    cy.dataCy(selectorDialogEdit).should('contain', 'DialogTitle');
+    cy.dataCy(selectorDialogEdit).should('contain', props.dialogTitle);
     cy.dataCy(selectorDialogEdit).should('contain', slotForm);
   });
 }
@@ -214,6 +254,7 @@ function propLabelTests() {
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10)
       .and('contain', props.label)
+      // max width
       .invoke('width')
       .then((width) => {
         expect(width).to.be.lessThan(maxWidthLabel + 1);

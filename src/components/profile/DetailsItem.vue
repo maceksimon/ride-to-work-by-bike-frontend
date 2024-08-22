@@ -5,17 +5,18 @@
  * @description * Use this component to render a details row in ProfileDetails
  * section of the profile page.
  * You can render label by passing the `label` prop, or use the `label` slot.
- * You can render values by passing the `value`, `description` and
- * 'emptyLabel' prop, or use the `value` slot to render custom content.
+ * You can render values by passing the `value`, and `description` prop, or use
+ * the `value` slot to render custom content.
+ * You can override the default empty label with `emptyLabel` prop.
  * You can override the default edit button using the `button` slot.
  * If you want to make the value editable, pass the `editable` prop.
  * Use the `form` slot to render the update form in the dialog.
  *
  * @props
  * - `description` (string, false): Description of the item.
+ * - `dialogTitle` (string, required): Title of the edit dialog.
  * - `editable` (boolean, default: false): Whether the value is editable.
  * - `emptyLabel` (string, required): Label used when value is empty.
- * - `dialogTitle` (string, required): Title of the edit dialog.
  * - `label` (string, required): Label of the item.
  * - `value` (string, required): Value of the item.
  *
@@ -56,14 +57,14 @@ export default defineComponent({
     description: {
       type: String,
     },
+    dialogTitle: {
+      type: String,
+    },
     editable: {
       type: Boolean,
       default: false,
     },
     emptyLabel: {
-      type: String,
-    },
-    dialogTitle: {
       type: String,
     },
     label: {
@@ -119,16 +120,19 @@ export default defineComponent({
       </template>
       <!-- Value + Description -->
       <template v-else>
+        <!-- Value -->
         <div v-if="value" class="text-weight-bold" data-cy="details-item-value">
           {{ value }}
         </div>
+        <!-- Empty value -->
         <div
           v-else
           class="text-grey-7 text-italic"
           data-cy="details-item-empty"
         >
-          {{ emptyLabel }}
+          {{ emptyLabel ? emptyLabel : $t('profile.labelNoValue') }}
         </div>
+        <!-- Description -->
         <div
           v-if="description"
           class="text-caption text-grey-7"
