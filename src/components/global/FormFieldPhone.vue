@@ -6,7 +6,7 @@
  *
  * @description * Use this component to render phone input in forms.
  *
- * Note: This component is commonly used in `FormRegistrationCoordinator`.
+ * Used in `FormRegistrationCoordinator`, `RegisterChallengePayment`.
  *
  * @props
  * - `value` (string, required): The object representing user input.

@@ -3,6 +3,7 @@
  * FormFieldDonation Component
  *
  * @description * Use this component to render donation form field.
+ *
  * Used in `RegisterChallengePayment` component.
  *
  * @events

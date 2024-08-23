@@ -7,7 +7,7 @@
  * @description * Use this component to allow user to select their company
  * and create a new company to register under.
  *
- * Note: This component is commonly used in `FormRegisterCoordinator`.
+ * Used in `FormRegisterCoordinator`, `RegisterChallengePayment`.
  *
  * @props
  * - `modelValue` (string, required): The object representing user input.
@@ -58,14 +58,16 @@ export default defineComponent({
     label: {
       type: String,
       default: '',
-    }
+    },
   },
   setup(props, { emit }) {
     const options = ref<string[]>([]);
     const isDialogOpen = ref<boolean>(false);
     const formRef = ref<typeof QForm | null>(null);
 
-    const formFieldLabel = computed(() => props.label || i18n.global.t('form.labelCompany'));
+    const formFieldLabel = computed(
+      () => props.label || i18n.global.t('form.labelCompany'),
+    );
 
     const company = computed({
       get: () => props.modelValue,
@@ -163,7 +165,11 @@ export default defineComponent({
 <template>
   <div data-cy="form-company">
     <!-- Label -->
-    <label for="form-company" class="text-caption text-bold" data-cy="form-field-company-label">
+    <label
+      for="form-company"
+      class="text-caption text-bold"
+      data-cy="form-field-company-label"
+    >
       {{ formFieldLabel }}
     </label>
     <div class="row">

@@ -6,7 +6,7 @@
  *
  * @description * Use this component to render text required input in forms.
  *
- * Note: This component is commonly used in `FormRegisterCoordinator`, `FormRegisterChallenge`.
+ * Note: This component is commonly used in `FormRegisterCoordinator`, `FormRegisterChallenge`, `RegisterChallengePayment`.
  *
  * @props
  * - `modelValue` (string, required): The object representing user input.

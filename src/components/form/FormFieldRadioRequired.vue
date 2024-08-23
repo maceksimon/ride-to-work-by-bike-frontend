@@ -6,7 +6,7 @@
  *
  * @description * Use this component to render email input in forms.
  *
- * Note: This component is commonly used in `FormRegister`, `FormLogin`.
+ * Used in `FormRegister`, `FormLogin`, `RegisterChallengePayment`.
  *
  * @props
  * - `modelValue` (string, required): The object representing user input.

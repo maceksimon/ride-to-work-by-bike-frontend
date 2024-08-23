@@ -6,6 +6,8 @@
  * It handles voucher submission and validation and emits
  * the data about the voucher.
  *
+ * Used in `RegisterChallengePayment` component.
+ *
  * @events
  * - `update:voucher`: Emitted after voucher is successfully applied.
  *
