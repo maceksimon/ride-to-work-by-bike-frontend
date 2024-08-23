@@ -2,6 +2,7 @@ import { colors } from 'quasar';
 import FormFieldTestWrapper from 'components/global/FormFieldTestWrapper.vue';
 import RouteInputTransportType from '../routes/RouteInputTransportType.vue';
 import { i18n } from '../../boot/i18n';
+import { TransportType } from '../types/Route';
 
 // composables
 const { getPaletteColor } = colors;
@@ -34,7 +35,7 @@ describe('<RouteInputTransportType>', () => {
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'RouteInputTransportType',
-          default: 'bike',
+          defaultValue: TransportType.bike,
         },
       });
       cy.viewport('macbook-16');
@@ -49,7 +50,7 @@ describe('<RouteInputTransportType>', () => {
       cy.mount(RouteInputTransportType, {
         props: {
           horizontal: true,
-          modelValue: 'bike',
+          modelValue: TransportType.bike,
         },
       });
       cy.viewport('macbook-16');
@@ -81,7 +82,7 @@ describe('<RouteInputTransportType>', () => {
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'RouteInputTransportType',
-          default: 'bike',
+          defaultValue: TransportType.bike,
         },
       });
       cy.viewport('iphone-6');

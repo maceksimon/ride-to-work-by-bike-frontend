@@ -64,6 +64,18 @@ import FormFieldBusinessId from '../form/FormFieldBusinessId.vue';
 import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
 import RouteInputTransportType from '../routes/RouteInputTransportType.vue';
 
+// types
+type DefaultValue =
+  | number
+  | boolean
+  | string
+  | object
+  | number[]
+  | boolean[]
+  | string[]
+  | object[];
+import { PropType } from 'vue';
+
 export default defineComponent({
   name: 'FormFieldTestWrapper',
   components: {
@@ -104,19 +116,16 @@ export default defineComponent({
     required: {
       type: Boolean,
     },
-    type: {
-      type: String as () => 'array' | 'boolean' | 'string',
-      default: 'string',
-    },
     validationMessage: {
       type: String,
     },
-    number: {
-      type: Number,
+    defaultValue: {
+      type: [Number, Boolean, String, Object, Array] as PropType<DefaultValue>,
+      default: '',
     },
   },
   setup(props) {
-    const inputValue = ref(props.type === 'array' ? [] : props.type === 'boolean' ? false : props.number ? props.number :'');
+    const inputValue = ref(props.defaultValue);
 
     return {
       inputValue,

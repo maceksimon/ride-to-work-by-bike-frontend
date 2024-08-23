@@ -42,7 +42,7 @@ describe('<FormFieldSliderNumber>', () => {
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'FormFieldSliderNumber',
-          number: 500,
+          defaultValue: 500,
         },
       });
       cy.viewport('iphone-6');

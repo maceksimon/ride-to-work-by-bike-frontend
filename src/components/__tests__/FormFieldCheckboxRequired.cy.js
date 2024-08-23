@@ -17,10 +17,11 @@ const checkboxSize = 16;
 
 describe('<FormFieldCheckboxRequired>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([
-      'labelResponsibility',
-      'messageResponsibilityRequired',
-    ], 'register.coordinator.form', i18n);
+    cy.testLanguageStringsInContext(
+      ['labelResponsibility', 'messageResponsibilityRequired'],
+      'register.coordinator.form',
+      i18n,
+    );
   });
 
   context('default', () => {
@@ -35,7 +36,7 @@ describe('<FormFieldCheckboxRequired>', () => {
         ).then((validationMessage) => {
           cy.mount(FormFieldTestWrapper, {
             props: {
-              type: 'boolean',
+              defaultValue: false,
               component: 'FormFieldCheckboxRequired',
               validationMessage,
             },
@@ -82,7 +83,7 @@ function coreTests() {
     cy.dataCy(selectorCheckboxRequired).click();
     cy.dataCy(selectorCheckboxRequired)
       .find(classSelectorMessages)
-      .should('not.exist')
+      .should('not.exist');
     cy.dataCy(selectorCheckboxRequired).click();
     cy.dataCy(selectorCheckboxRequired)
       .find(classSelectorMessages)
