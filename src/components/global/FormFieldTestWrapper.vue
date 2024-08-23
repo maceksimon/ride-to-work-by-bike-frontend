@@ -120,7 +120,7 @@ export default defineComponent({
       type: String,
     },
     defaultValue: {
-      type: [Number, Boolean, String, Object, Array] as PropType<DefaultValue>,
+      type: [Number, String, Boolean, Array, Object] as PropType<DefaultValue>,
       default: '',
     },
   },
