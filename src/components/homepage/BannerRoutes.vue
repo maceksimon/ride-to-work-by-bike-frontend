@@ -26,6 +26,7 @@
  */
 
 // libraries
+import { Screen } from 'quasar';
 import { defineComponent } from 'vue';
 
 // config
@@ -59,6 +60,7 @@ export default defineComponent({
       borderRadiusCard,
       colorSecondaryOpacity,
       routesConf,
+      Screen,
       Variants,
     };
   },
@@ -75,12 +77,16 @@ export default defineComponent({
     <div class="row justify-between">
       <!-- Section: title -->
       <div
-        class="col-12 flex gap-24 items-center q-py-sm q-px-xl"
-        :class="[variant === Variants.default ? 'col-md-6' : 'justify-center']"
+        class="col-12 flex gap-24 items-center q-py-sm q-px-lg"
+        :class="[
+          variant === Variants.default ? 'col-md-6' : 'justify-center',
+          Screen.lg ? 'no-wrap' : '',
+        ]"
         data-cy="banner-routes-section-title"
       >
         <!-- Image -->
         <q-img
+          class="col-12 col-sm-auto"
           src="~assets/image/banner-routes/routes.png"
           width="70px"
           height="102px"
@@ -90,7 +96,7 @@ export default defineComponent({
         />
         <!-- Title -->
         <h3
-          class="text-h5 text-weight-bold q-my-none"
+          class="col-12 col-sm text-h5 text-weight-bold q-my-none"
           data-cy="banner-routes-title"
         >
           <span v-if="variant === Variants.default">
@@ -117,7 +123,7 @@ export default defineComponent({
           size="16px"
           text-color="white"
           :to="routesConf['routes_list'].children.name"
-          class="q-pa-md q-pl-lg q-pr-lg text-weight-bold"
+          class="q-pa-md text-weight-bold"
           data-cy="banner-routes-button-add-routes"
         >
           <!-- Plus icon -->

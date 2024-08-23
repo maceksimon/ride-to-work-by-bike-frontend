@@ -166,9 +166,9 @@ function coreTests() {
       .and('have.backgroundColor', primary)
       .and('have.css', 'border-radius', '28px')
       .and('have.css', 'padding-top', '16px')
-      .and('have.css', 'padding-left', '24px')
+      .and('have.css', 'padding-left', '16px')
       .and('have.css', 'padding-bottom', '16px')
-      .and('have.css', 'padding-right', '24px');
+      .and('have.css', 'padding-right', '16px');
     // button icon
     cy.dataCy(selectorButtonIcon)
       .should('be.visible')
