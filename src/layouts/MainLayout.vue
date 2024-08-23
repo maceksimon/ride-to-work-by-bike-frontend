@@ -11,6 +11,9 @@ import FooterBar from 'components/global/FooterBar.vue';
 import MobileBottomPanel from 'components/global/MobileBottomPanel.vue';
 import UserSelect from 'components/global/UserSelect.vue';
 
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
 // set global i18n object (for test purposes)
 if (window.Cypress) {
   window.i18n = i18n;
@@ -18,7 +21,6 @@ if (window.Cypress) {
 
 export default defineComponent({
   name: 'MainLayout',
-
   components: {
     DrawerHeader,
     DrawerMenu,
@@ -26,6 +28,12 @@ export default defineComponent({
     FooterBar,
     MobileBottomPanel,
     UserSelect,
+  },
+  setup() {
+    const { containerContentWidth } = rideToWorkByBikeConfig;
+    return {
+      containerContentWidth,
+    };
   },
 });
 </script>
@@ -62,8 +70,8 @@ export default defineComponent({
       <drawer-menu class="q-pt-lg" data-cy="drawer-menu" />
     </q-drawer>
 
-    <q-page-container class="bg-info pb-footer">
-      <router-view />
+    <q-page-container class="bg-white pb-footer">
+      <router-view :style="{ 'max-width': containerContentWidth }" />
     </q-page-container>
     <q-footer class="position-static md-position-absolute bg-transparent">
       <!-- footer content -->

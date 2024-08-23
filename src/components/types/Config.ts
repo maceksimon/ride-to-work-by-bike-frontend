@@ -27,7 +27,8 @@ export interface ConfigGlobal {
   urlVideoLoggingRoutes: string;
   urlVideoOnboarding: string;
   challengeMonth: 'may' | 'october' | 'september';
-  containerWidth: string;
+  containerFormWidth: string;
+  containerContentWidth: string;
   challengeStartDate: string;
   challengeLoggingWindowDays: number;
 }

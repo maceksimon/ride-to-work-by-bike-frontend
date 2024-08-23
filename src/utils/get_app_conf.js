@@ -63,8 +63,10 @@ const getAppConfig = (process) => {
     config['challengeMonth'] = process.env.CHALLENGE_MONTH;
   } else if (process.env.CHALLENGE_START_DATE) {
     config['challengeStartDate'] = process.env.CHALLENGE_START_DATE;
-  } else if (process.env.CONTAINER_WIDTH) {
-    config['containerWidth'] = process.env.CONTAINER_WIDTH;
+  } else if (process.env.CONTAINER_FORM_WIDTH) {
+    config['containerFormWidth'] = process.env.CONTAINER_FORM_WIDTH;
+  } else if (process.env.CONTAINER_CONTENT_WIDTH) {
+    config['containerContentWidth'] = process.env.CONTAINER_CONTENT_WIDTH;
   } else if (process.env.CHALLENGE_LOGGING_WINDOW_DAYS) {
     config['challengeLoggingWindowDays'] =
       process.env.CHALLENGE_LOGGING_WINDOW_DAYS;

@@ -61,7 +61,7 @@ export default defineComponent({
   },
   setup() {
     const challengeMonth = rideToWorkByBikeConfig.challengeMonth;
-    const containerWidth = rideToWorkByBikeConfig.containerWidth;
+    const containerFormWidth = rideToWorkByBikeConfig.containerFormWidth;
     const doneIcon = `img:${
       new URL('../assets/svg/check.svg', import.meta.url).href
     }`;
@@ -199,7 +199,7 @@ export default defineComponent({
 
     return {
       challengeMonth,
-      containerWidth,
+      containerFormWidth,
       step,
       stepperRef,
       stepCompanyRef,
@@ -247,7 +247,10 @@ export default defineComponent({
       <!-- Page header -->
       <login-register-header data-cy="login-register-header" />
       <!-- Container -->
-      <div class="q-mx-auto q-mt-xl" :style="{ 'max-width': containerWidth }">
+      <div
+        class="q-mx-auto q-mt-xl"
+        :style="{ 'max-width': containerFormWidth }"
+      >
         <!-- Page title -->
         <h1
           class="text-h5 text-bold text-white q-my-none"

@@ -35,12 +35,12 @@ export default defineComponent({
   setup() {
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
     const challengeMonth = rideToWorkByBikeConfig.challengeMonth;
-    const containerWidth = rideToWorkByBikeConfig.containerWidth;
+    const containerFormWidth = rideToWorkByBikeConfig.containerFormWidth;
 
     return {
       borderRadius,
       challengeMonth,
-      containerWidth,
+      containerFormWidth,
     };
   },
 });
@@ -52,7 +52,10 @@ export default defineComponent({
     <login-register-header data-cy="login-register-header" />
 
     <!-- Container -->
-    <div class="q-mx-auto q-mt-xl row" :style="{ 'max-width': containerWidth }">
+    <div
+      class="q-mx-auto q-mt-xl row"
+      :style="{ 'max-width': containerFormWidth }"
+    >
       <!-- Page title -->
       <h1
         class="col-sm-6 text-h5 text-bold text-white q-my-none"
