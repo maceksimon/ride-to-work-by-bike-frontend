@@ -208,3 +208,19 @@ Cypress.Commands.add(
     });
   },
 );
+
+Cypress.Commands.add(
+  'testElementsStacked',
+  (elementSelector, siblingElementSelector) => {
+    cy.dataCy(elementSelector).then((element) => {
+      const offsetTop = element[0].offsetTop;
+      const offsetHeight = element[0].offsetHeight;
+      cy.dataCy(siblingElementSelector).then((sibling) => {
+        const siblingOffsetTop = sibling[0].offsetTop;
+        expect(Math.round(offsetTop + offsetHeight)).to.be.lte(
+          Math.round(siblingOffsetTop),
+        );
+      });
+    });
+  },
+);

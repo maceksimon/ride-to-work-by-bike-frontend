@@ -100,6 +100,11 @@ describe('<BannerRoutes>', () => {
     it('renders title section and button section stacked', () => {
       cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 100);
       cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 100);
+      cy.testElementsStacked(selectorSectionTitle, selectorSectionButton);
+    });
+
+    it('renders image and title side to side', () => {
+      cy.testElementsSideBySide(selectorImage, selectorTitle);
     });
   });
 
@@ -131,6 +136,10 @@ describe('<BannerRoutes>', () => {
     it('renders title section and button section stacked', () => {
       cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 100);
       cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 100);
+    });
+
+    it('renders image and title stacked', () => {
+      cy.testElementsStacked(selectorImage, selectorTitle);
     });
   });
 });
