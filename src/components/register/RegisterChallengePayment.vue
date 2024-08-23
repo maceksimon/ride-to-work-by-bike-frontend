@@ -332,7 +332,8 @@ export default defineComponent({
     <div
       v-if="
         (selectedPaymentSubject === PaymentSubject.voucher && isEntryFeeFree) ||
-        selectedPaymentSubject === PaymentSubject.company
+        selectedPaymentSubject === PaymentSubject.company ||
+        selectedPaymentSubject === PaymentSubject.school
       "
     >
       <form-field-donation class="q-mt-md" data-cy="form-field-donation" />

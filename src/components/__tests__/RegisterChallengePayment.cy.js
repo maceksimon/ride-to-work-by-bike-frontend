@@ -336,6 +336,9 @@ function coreTests() {
     cy.dataCy(selectorCompany).should('not.exist');
     cy.dataCy(getRadioOption(optionSchool)).should('be.visible').click();
     cy.dataCy(selectorCompany).should('be.visible');
+
+    // if coordinator user still has option to add donation
+    testDonation();
   });
 }
 
