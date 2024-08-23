@@ -30,7 +30,7 @@ describe('<FormFieldPassword>', () => {
       cy.viewport('macbook-16');
     });
 
-    showHintTests();
+    shownHintTests();
 
     it('renders password field', () => {
       // input label
@@ -119,7 +119,7 @@ describe('<FormFieldPassword>', () => {
   });
 });
 
-function showHintTests() {
+function shownHintTests() {
   it('renders hint', () => {
     cy.dataCy('form-password').should(
       'contain',
@@ -128,7 +128,7 @@ function showHintTests() {
   });
 }
 function hiddenHintTests() {
-  it('renders hint', () => {
+  it('does not render hint', () => {
     cy.dataCy('form-password').should(
       'not.contain',
       i18n.global.t('form.hintPassword'),
