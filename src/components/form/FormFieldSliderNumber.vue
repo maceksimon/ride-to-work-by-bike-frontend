@@ -5,7 +5,7 @@
  * @description * Use this component to render an input widget for a number
  * value with slider and manual input.
  *
- * Used in `RegisterChallengePayment` component.
+ * Used in `RegisterChallengePayment`, `FormFieldDonation`.
  *
  * @props
  * - `modelValue` (number, required): The number value.

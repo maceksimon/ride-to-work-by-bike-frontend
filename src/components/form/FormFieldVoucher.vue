@@ -15,7 +15,7 @@
  * - `FormFieldTextRequired`: Component to render required text field.
  *
  * @example
- * <form-field-voucher />
+ * <form-field-voucher @update:voucher="onUpdateVoucher" />
  *
  * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=6410-2305&t=gB7ERmDZorpD4TdE-1)
  */
