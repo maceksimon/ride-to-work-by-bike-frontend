@@ -273,6 +273,7 @@ export default defineComponent({
       "
       class="q-my-md"
     >
+      <!-- Label -->
       <label
         for="paymentAmount"
         class="text-caption text-weight-bold text-grey-10"
@@ -280,6 +281,7 @@ export default defineComponent({
       >
         {{ $t('register.challenge.labelPaymentAmount') }}
       </label>
+      <!-- Radio group: Amount -->
       <form-field-radio-required
         inline
         id="paymentAmount"
@@ -297,16 +299,23 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Company -->
-    <div v-if="selectedPaymentSubject === PaymentSubject.company">
+    <div
+      v-if="
+        selectedPaymentSubject === PaymentSubject.company ||
+        selectedPaymentSubject === PaymentSubject.school
+      "
+    >
       <q-separator class="q-my-lg" />
+      <!-- Input: Company -->
       <form-field-company
         v-model="selectedCompany"
         class="text-grey-10"
         :label="$t('register.challenge.labelCompanyOrSchool')"
         data-cy="form-field-company"
       />
+      <!-- Text: Company approval -->
       <p class="q-mt-lg text-grey-10" data-cy="payment-company-text">
-        {{ $t('register.challenge.textCompany') }}
+        {{ $t('register.challenge.textOrganization') }}
       </p>
     </div>
     <!-- Input: Custom amount -->
@@ -383,6 +392,7 @@ export default defineComponent({
                 $t('register.coordinator.form.messageResponsibilityRequired'),
             ]"
           >
+            <!-- Checkbox: responsibility -->
             <q-checkbox
               dense
               v-model="formRegisterCoordinator.responsibility"
@@ -409,6 +419,7 @@ export default defineComponent({
                 !!val || $t('register.coordinator.form.messageTermsRequired'),
             ]"
           >
+            <!-- Checkbox: terms -->
             <q-checkbox
               dense
               id="form-register-coordinator-terms"

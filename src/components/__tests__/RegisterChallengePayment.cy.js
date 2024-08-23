@@ -36,6 +36,7 @@ const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
 const optionCustom = 'custom';
 const optionVoucher = 'voucher';
 const optionCompany = 'company';
+const optionSchool = 'school';
 const sliderClickTolerance = 10;
 const testNumberValue = 500;
 
@@ -63,7 +64,7 @@ describe('<RegisterChallengePayment>', () => {
         'labelPaymentSubjectIndividual',
         'labelPaymentSubjectSchool',
         'labelPaymentSubjectVoucher',
-        'textCompany',
+        'textOrganization',
         'textPaymentMinimum',
         'textPaymentOrganizer',
       ],
@@ -273,13 +274,13 @@ function coreTests() {
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '400')
       .and('have.color', grey10)
-      .and('contain', i18n.global.t('register.challenge.textCompany'));
+      .and('contain', i18n.global.t('register.challenge.textOrganization'));
 
     // if company is paying the fee, user still has option to add donation
     testDonation();
   });
 
-  it.only('if selected company and no coordinator - allows to register as coordinator + donate option', () => {
+  it('if selected company and no coordinator - allows to register as coordinator + donate option', () => {
     /**
      * Scenario: Selected company has no company coordinator
      * Displays checkbox with coordinator option
@@ -329,6 +330,12 @@ function coreTests() {
 
     // if coordinator user still has option to add donation
     testDonation();
+  });
+
+  it.only('if selected school - renders school select + donate option', () => {
+    cy.dataCy(selectorCompany).should('not.exist');
+    cy.dataCy(getRadioOption(optionSchool)).should('be.visible').click();
+    cy.dataCy(selectorCompany).should('be.visible');
   });
 }
 
