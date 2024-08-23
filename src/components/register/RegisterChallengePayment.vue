@@ -47,6 +47,14 @@ import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// enums
+enum PaymentSubject {
+  individual = 'individual',
+  voucher = 'voucher',
+  company = 'company',
+  school = 'school',
+}
+
 // types
 import type { FormOption, FormPaymentVoucher } from '../types/Form';
 
@@ -79,19 +87,19 @@ export default defineComponent({
         label: i18n.global.t(
           'register.challenge.labelPaymentSubjectIndividual',
         ),
-        value: 'individual',
+        value: PaymentSubject.individual,
       },
       {
         label: i18n.global.t('register.challenge.labelPaymentSubjectVoucher'),
-        value: 'voucher',
+        value: PaymentSubject.voucher,
       },
       {
         label: i18n.global.t('register.challenge.labelPaymentSubjectCompany'),
-        value: 'company',
+        value: PaymentSubject.company,
       },
       {
         label: i18n.global.t('register.challenge.labelPaymentSubjectSchool'),
-        value: 'school',
+        value: PaymentSubject.school,
       },
     ]);
 
@@ -129,7 +137,7 @@ export default defineComponent({
       phone: '',
       responsibility: false,
       terms: false,
-    })
+    });
 
     /**
      * Returns the payment amount based on the selected payment amount
@@ -214,6 +222,7 @@ export default defineComponent({
       selectedPaymentAmount,
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
+      PaymentSubject,
       onRemoveVoucher,
       onUpdateVoucher,
     };
@@ -238,6 +247,7 @@ export default defineComponent({
     </q-banner>
     <!-- Input: Payment subject -->
     <div class="q-my-lg">
+      <!-- Label -->
       <label
         for="paymentType"
         class="text-caption text-weight-bold text-grey-10"
@@ -245,6 +255,7 @@ export default defineComponent({
       >
         {{ $t('register.challenge.labelPaymentSubject') }}
       </label>
+      <!-- Radio group: Subject -->
       <form-field-radio-required
         inline
         id="paymentType"
@@ -257,8 +268,8 @@ export default defineComponent({
     <!-- Input: Payment amount -->
     <div
       v-if="
-        selectedPaymentSubject === 'individual' ||
-        (selectedPaymentSubject === 'voucher' && !isEntryFeeFree)
+        selectedPaymentSubject === PaymentSubject.individual ||
+        (selectedPaymentSubject === PaymentSubject.voucher && !isEntryFeeFree)
       "
       class="q-my-md"
     >
@@ -279,21 +290,24 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Voucher -->
-    <div v-if="selectedPaymentSubject === 'voucher'">
+    <div v-if="selectedPaymentSubject === PaymentSubject.voucher">
       <form-field-voucher
         @update:voucher="onUpdateVoucher"
         @remove:voucher="onRemoveVoucher"
       />
     </div>
     <!-- Input: Company -->
-    <div v-if="selectedPaymentSubject === 'company'">
+    <div v-if="selectedPaymentSubject === PaymentSubject.company">
       <q-separator class="q-my-lg" />
-      <form-field-company v-model="selectedCompany"
+      <form-field-company
+        v-model="selectedCompany"
         class="text-grey-10"
         :label="$t('register.challenge.labelCompanyOrSchool')"
         data-cy="form-field-company"
       />
-      <p class="q-mt-lg text-grey-10" data-cy="payment-company-text">{{ $t('register.challenge.textCompany') }}</p>
+      <p class="q-mt-lg text-grey-10" data-cy="payment-company-text">
+        {{ $t('register.challenge.textCompany') }}
+      </p>
     </div>
     <!-- Input: Custom amount -->
     <div v-if="selectedPaymentAmount === 'custom' && !isEntryFeeFree">
@@ -306,12 +320,20 @@ export default defineComponent({
       />
     </div>
     <!-- Input: Donation -->
-    <div v-if="(selectedPaymentSubject === 'voucher' && isEntryFeeFree) || selectedPaymentSubject === 'company'">
+    <div
+      v-if="
+        (selectedPaymentSubject === PaymentSubject.voucher && isEntryFeeFree) ||
+        selectedPaymentSubject === PaymentSubject.company
+      "
+    >
       <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
     </div>
     <!-- Section: Register coordinator -->
-     <!-- TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY -->
-    <div v-if="selectedPaymentSubject === 'company'" class="q-mt-md">
+    <!-- TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY -->
+    <div
+      v-if="selectedPaymentSubject === PaymentSubject.company"
+      class="q-mt-md"
+    >
       <!-- Checkbox: Register coordinator -->
       <q-checkbox
         dense

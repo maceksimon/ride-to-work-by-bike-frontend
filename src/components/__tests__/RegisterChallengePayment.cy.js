@@ -71,10 +71,7 @@ describe('<RegisterChallengePayment>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
-      [
-        'labelRegisterCoordinator',
-        'textBecomeCoordinator',
-      ],
+      ['labelRegisterCoordinator', 'textBecomeCoordinator'],
       'companyCoordinator',
       i18n,
     );
@@ -116,7 +113,7 @@ describe('<RegisterChallengePayment>', () => {
 });
 
 function coreTests() {
-  it('renders component', () => {
+  it('renders component in default state (individual)', () => {
     // component
     cy.dataCy(selectorRegisterChallengePayment).should('be.visible');
     // text
@@ -164,7 +161,7 @@ function coreTests() {
           i18n.global.t(`register.challenge.${optionsPaymentSubject[index]}`),
         );
       });
-    // input amount
+    // input amount radios
     cy.dataCy(selectorPaymentAmountLabel)
       .should('be.visible')
       .and('have.color', grey10)
@@ -178,7 +175,7 @@ function coreTests() {
       .and('have.length', 4);
   });
 
-  it('renders custom payment amount if selected', () => {
+  it('if selected individual + custom amount - renders amount input with slider', () => {
     // enable custom payment amount
     cy.dataCy(getRadioOption(optionCustom)).should('be.visible').click();
     cy.dataCy(selectorPaymentAmountCustom).should('be.visible');
@@ -188,10 +185,13 @@ function coreTests() {
     // switch to custom payment amount
     cy.dataCy(getRadioOption(optionCustom)).should('be.visible').click();
     // custom amount is set to last selected
-    cy.dataCy(selectorSliderNumberInput).should('have.value', testNumberValue.toString());
+    cy.dataCy(selectorSliderNumberInput).should(
+      'have.value',
+      testNumberValue.toString(),
+    );
   });
 
-  it('allows to apply voucher (HALF)', () => {
+  it('if selected voucher - allows to apply voucher (HALF)', () => {
     cy.get('@voucherHalf').then((voucher) => {
       // option default amount is active
       cy.dataCy(getRadioOption(defaultPaymentAmountMin))
@@ -214,7 +214,7 @@ function coreTests() {
     });
   });
 
-  it('does not allow to apply invalid voucher', () => {
+  it('if selected voucher - does not allow to apply invalid voucher', () => {
     // option default amount is active
     cy.dataCy(getRadioOption(defaultPaymentAmountMin))
       .should('be.visible')
@@ -223,9 +223,7 @@ function coreTests() {
     cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
     cy.dataCy(selectorVoucherInput).type('ABCD');
     cy.dataCy(selectorVoucherSubmit).click();
-    cy.dataCy(selectorVoucherInput)
-      .find('input')
-      .should('have.value', 'ABCD');
+    cy.dataCy(selectorVoucherInput).find('input').should('have.value', 'ABCD');
     // option with default amount is available
     cy.dataCy(getRadioOption(defaultPaymentAmountMin)).click();
     cy.dataCy(getRadioOption(optionCustom)).click();
@@ -236,7 +234,7 @@ function coreTests() {
     );
   });
 
-  it('allows to apply voucher (FULL)', () => {
+  it('if selected voucher - allows to apply voucher (FULL) + donate option', () => {
     cy.get('@voucherFull').then((voucher) => {
       // option default amount is active
       cy.dataCy(getRadioOption(defaultPaymentAmountMin))
@@ -259,7 +257,7 @@ function coreTests() {
     });
   });
 
-  it.only('renders company select if company option is chosen', () => {
+  it('if selected company - renders company select + donate option', () => {
     cy.dataCy(selectorCompany).should('not.exist');
     cy.dataCy(getRadioOption(optionCompany)).should('be.visible').click();
     cy.dataCy(selectorCompany).should('be.visible');
@@ -279,18 +277,28 @@ function coreTests() {
 
     // if company is paying the fee, user still has option to add donation
     testDonation();
+  });
 
+  it.only('if selected company and no coordinator - allows to register as coordinator + donate option', () => {
     /**
      * Scenario: Selected company has no company coordinator
      * Displays checkbox with coordinator option
      * If option is checked, displays partial form for registration
+     * TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY
      */
+    cy.dataCy(selectorCompany).should('not.exist');
+    cy.dataCy(getRadioOption(optionCompany)).should('be.visible').click();
+    cy.dataCy(selectorCompany).should('be.visible');
+    // checkbox coordinator
     cy.dataCy(selectorCoordinatorCheckbox)
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '700')
       .and('have.color', primary)
-      .and('contain', i18n.global.t('companyCoordinator.labelRegisterCoordinator'));
+      .and(
+        'contain',
+        i18n.global.t('companyCoordinator.labelRegisterCoordinator'),
+      );
     // only show form when enabled
     cy.dataCy(selectorCoordinatorText).should('not.exist');
     cy.dataCy(selectorCoordinatorPhone).should('not.exist');
@@ -311,13 +319,16 @@ function coreTests() {
         });
       });
     // phone label
-    cy.dataCy(selectorCoordinatorPhone).should('be.visible')
+    cy.dataCy(selectorCoordinatorPhone).should('be.visible');
     // input label
     cy.dataCy(selectorCoordinatorJobTitle).should('be.visible');
     // checkbox responsibility
     cy.dataCy(selectorCoordinatorResponsibility).should('be.visible');
     // checkbox terms
     cy.dataCy(selectorCoordinatorTerms).should('be.visible');
+
+    // if coordinator user still has option to add donation
+    testDonation();
   });
 }
 
@@ -331,14 +342,21 @@ function testDonation() {
     .should('be.visible')
     .and('have.value', defaultPaymentAmountMin.toString());
   // click in the middle of slider
-  cy.dataCy(selectorSliderNumberSlider)
-    .should('be.visible')
-    .click();
+  cy.dataCy(selectorSliderNumberSlider).should('be.visible').click();
   cy.dataCy(selectorSliderNumberInput)
-    .invoke('val').then(value => {
+    .invoke('val')
+    .then((value) => {
       const intValue = parseInt(value);
-      const midValue = parseInt(Math.round((parseInt(defaultPaymentAmountMax) + parseInt(defaultPaymentAmountMin)) / 2))
+      const midValue = parseInt(
+        Math.round(
+          (parseInt(defaultPaymentAmountMax) +
+            parseInt(defaultPaymentAmountMin)) /
+            2,
+        ),
+      );
       // clicking on the slider is not entirely precise - we define tolerance
-      expect(Math.abs(intValue - midValue)).to.be.lessThan(sliderClickTolerance);
-    })
+      expect(Math.abs(intValue - midValue)).to.be.lessThan(
+        sliderClickTolerance,
+      );
+    });
 }
