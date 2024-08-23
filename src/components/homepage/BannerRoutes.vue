@@ -122,7 +122,7 @@ export default defineComponent({
           color="primary"
           size="16px"
           text-color="white"
-          :to="routesConf['routes_list'].children.name"
+          :to="routesConf['routes_list'].children.fullPath"
           class="q-pa-md text-weight-bold"
           data-cy="banner-routes-button-add-routes"
         >

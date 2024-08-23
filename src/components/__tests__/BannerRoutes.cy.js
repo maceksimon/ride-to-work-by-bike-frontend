@@ -165,10 +165,7 @@ function coreTests() {
       .and('have.color', white)
       .and('have.backgroundColor', primary)
       .and('have.css', 'border-radius', '28px')
-      .and('have.css', 'padding-top', '16px')
-      .and('have.css', 'padding-left', '16px')
-      .and('have.css', 'padding-bottom', '16px')
-      .and('have.css', 'padding-right', '16px');
+      .and('have.css', 'padding', '16px');
     // button icon
     cy.dataCy(selectorButtonIcon)
       .should('be.visible')
@@ -182,6 +179,6 @@ function coreTests() {
   it('renders correct button link', () => {
     cy.dataCy(selectorButton)
       .invoke('attr', 'href')
-      .should('contain', routesConf['routes_list'].children.name);
+      .should('contain', routesConf['routes_list'].children.fullPath);
   });
 }
