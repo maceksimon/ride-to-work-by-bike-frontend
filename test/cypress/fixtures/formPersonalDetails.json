@@ -3,10 +3,27 @@
   "firstName": "John",
   "lastName": "Doe",
   "email": "anonym@dopracenakole.cz",
+  "phone": "(+420) 123 456 789",
   "gender": "male",
   "language": "en",
   "organization": "Auto*Mat",
   "organizationType": "company",
   "division": "Vymyšlená 5, 130 00 Praha 3 - Praha",
-  "team": "Auto tým (M)"
+  "team": "Auto tým (M)",
+  "package": {
+    "title": "Tričko 2023",
+    "url": "#",
+    "size": "M dámské",
+    "state": "Na cestě",
+    "trackingNumber": "A 123 456 789",
+    "trackingUrl": "#"
+  },
+  "deliveryAddress": {
+    "street": "Testovací",
+    "houseNumber": "123",
+    "city": "Praha-Nebušice",
+    "zip": "164 00",
+    "cityChallenge": "Praha",
+    "department": "Testovací firma"
+  }
 }

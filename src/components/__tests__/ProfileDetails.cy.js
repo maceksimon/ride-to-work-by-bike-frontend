@@ -7,6 +7,7 @@ const grey10 = getPaletteColor('grey-10');
 
 // selectors
 const selectorAddressDivision = 'profile-details-address-division';
+const selectorDeliveryAddress = 'profile-details-delivery-address';
 const selectorEmail = 'profile-details-email';
 const selectorFormEmail = 'profile-details-form-email';
 const selectorFormGender = 'profile-details-form-gender';
@@ -17,10 +18,17 @@ const selectorLanguageSwitcher = 'profile-details-language-switcher';
 const selectorNickname = 'profile-details-nickname';
 const selectorOrganizationType = 'profile-details-organization-type';
 const selectorOrganization = 'profile-details-organization';
+const selectorPackage = 'profile-details-package';
+const selectorPackageLink = 'profile-details-package-link';
 const selectorPersonalDetails = 'profile-details';
+const selectorPhone = 'profile-details-phone';
+const selectorSize = 'profile-details-size';
+const selectorState = 'profile-details-state';
 const selectorTeam = 'profile-details-team';
-const selectorTitlePersonalDetails = 'profile-title-personal-details';
+const selectorTrackingNumber = 'profile-details-tracking-number';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
+const selectorTitlePersonalDetails = 'profile-title-personal-details';
+const selectorTitleStarterPackage = 'profile-title-starter-package';
 const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
 const dataSelectorButtonSave = '[data-cy="form-button-save"]';
 const dataSelectorEdit = '[data-cy="details-item-edit"]';
@@ -54,7 +62,11 @@ describe('<ProfileDetails>', () => {
         'labelNoValue',
         'labelOrganization',
         'labelOrganizationType',
+        'labelPackage',
+        'labelSize',
+        'labelState',
         'labelTeam',
+        'labelTrackingNumber',
         'titleChallengeDetails',
         'titlePersonalDetails',
         'titleUpdateEmail',
@@ -110,6 +122,7 @@ function coreTests() {
       // row language
       cy.dataCy(selectorLanguage).should('be.visible');
       cy.dataCy(selectorLanguageSwitcher).should('be.visible');
+
       // title challenge details
       cy.dataCy(selectorTitleChallengeDetails)
         .should('be.visible')
@@ -147,6 +160,64 @@ function coreTests() {
       cy.dataCy(selectorTeam)
         .find(dataSelectorValue)
         .should('contain', formPersonalDetails.team);
+
+      // title challenge details
+      cy.dataCy(selectorTitleStarterPackage)
+        .should('be.visible')
+        .and('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('have.color', grey10)
+        .and('contain', i18n.global.t('profile.titleStarterPackage'));
+      // row package
+      cy.dataCy(selectorPackage)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelPackage'));
+      cy.dataCy(selectorPackage)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.package.title);
+      cy.dataCy(selectorPackageLink)
+        .invoke('attr', 'href')
+        .should('eq', formPersonalDetails.package.url);
+      // row package
+      cy.dataCy(selectorSize)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelSize'));
+      cy.dataCy(selectorSize)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.package.size);
+      // row package
+      cy.dataCy(selectorState)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelState'));
+      cy.dataCy(selectorState)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.package.state);
+      // row tracking number
+      cy.dataCy(selectorTrackingNumber)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelTrackingNumber'));
+      cy.dataCy(selectorTrackingNumber)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.package.trackingNumber);
+      // delivery address
+      cy.dataCy(selectorDeliveryAddress)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelDeliveryAddress'));
+      cy.dataCy(selectorDeliveryAddress)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.deliveryAddress.department)
+        .should('contain', formPersonalDetails.deliveryAddress.street)
+        .should('contain', formPersonalDetails.deliveryAddress.houseNumber)
+        .should('contain', formPersonalDetails.deliveryAddress.zip)
+        .should('contain', formPersonalDetails.deliveryAddress.city)
+        .should('contain', formPersonalDetails.deliveryAddress.cityChallenge);
+      // phone
+      cy.dataCy(selectorPhone)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelPhone'));
+      cy.dataCy(selectorPhone)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.phone);
     });
   });
 

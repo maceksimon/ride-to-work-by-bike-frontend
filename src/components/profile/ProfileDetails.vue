@@ -186,5 +186,115 @@ export default defineComponent({
         />
       </div>
     </div>
+
+    <!-- Title -->
+    <h2
+      class="text-h6 text-grey-10 q-mb-none q-mt-xl"
+      data-cy="profile-title-starter-package"
+    >
+      {{ $t('profile.titleStarterPackage') }}
+    </h2>
+
+    <!-- Starter package -->
+    <div class="q-mt-lg">
+      <div class="row q-col-gutter-lg">
+        <!-- Package -->
+        <details-item
+          :label="$t('profile.labelPackage')"
+          :value="profile.package.title"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-package"
+        >
+          <template #value>
+            <a
+              :href="profile.package.url"
+              data-cy="profile-details-package-link"
+            >
+              {{ profile.package.title }}
+            </a>
+          </template>
+        </details-item>
+        <!-- Size -->
+        <details-item
+          :label="$t('profile.labelSize')"
+          :value="profile.package.size"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-size"
+        />
+        <!-- State -->
+        <details-item
+          :label="$t('profile.labelState')"
+          :value="profile.package.state"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-state"
+        />
+        <!-- Tracking number -->
+        <details-item
+          :label="$t('profile.labelTrackingNumber')"
+          :value="profile.package.trackingNumber"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-tracking-number"
+        />
+        <!-- Delivery address -->
+        <details-item
+          :label="$t('profile.labelDeliveryAddress')"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-delivery-address"
+        >
+          <template #value>
+            <div>
+              <div v-if="profile.deliveryAddress.department">
+                {{ profile.deliveryAddress.department }}
+              </div>
+              <div
+                v-if="
+                  profile.deliveryAddress.street ||
+                  profile.deliveryAddress.houseNumber
+                "
+              >
+                <template v-if="profile.deliveryAddress.street">
+                  {{ profile.deliveryAddress.street }},
+                </template>
+                <template v-if="profile.deliveryAddress.houseNumber">
+                  {{ profile.deliveryAddress.houseNumber }},
+                </template>
+              </div>
+              <div
+                v-if="
+                  profile.deliveryAddress.zip ||
+                  profile.deliveryAddress.city ||
+                  profile.deliveryAddress.cityChallenge
+                "
+              >
+                <template v-if="profile.deliveryAddress.zip">
+                  {{ profile.deliveryAddress.zip }},
+                </template>
+                <template v-if="profile.deliveryAddress.city">
+                  {{ profile.deliveryAddress.city }}
+                </template>
+                <template
+                  v-if="
+                    profile.deliveryAddress.city &&
+                    profile.deliveryAddress.cityChallenge
+                  "
+                >
+                  -
+                </template>
+                <template v-if="profile.deliveryAddress.cityChallenge">
+                  {{ profile.deliveryAddress.cityChallenge }}
+                </template>
+              </div>
+            </div>
+          </template>
+        </details-item>
+        <!-- Phone number -->
+        <details-item
+          :label="$t('profile.labelPhone')"
+          :value="profile.phone"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-phone"
+        />
+      </div>
+    </div>
   </div>
 </template>
