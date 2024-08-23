@@ -31,6 +31,15 @@ import { defineComponent } from 'vue';
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// enums
+enum Variants {
+  default = 'default',
+  start = 'start',
+}
+
+// routes
+import { routesConf } from '../../router/routes_conf';
+
 export default defineComponent({
   name: 'BannerRoutes',
   props: {
@@ -39,7 +48,7 @@ export default defineComponent({
       required: true,
     },
     variant: {
-      type: String as () => 'default' | 'start',
+      type: String as () => Variants,
       required: true,
     },
   },
@@ -49,6 +58,8 @@ export default defineComponent({
     return {
       borderRadiusCard,
       colorSecondaryOpacity,
+      routesConf,
+      Variants,
     };
   },
 });
@@ -57,28 +68,38 @@ export default defineComponent({
 <template>
   <div
     class="text-grey-10"
-    :class="[variant === 'default' ? 'q-py-sm' : 'q-py-lg']"
+    :class="[variant === Variants.default ? 'q-py-sm' : 'q-py-lg']"
     :style="`border-radius: ${borderRadiusCard}; background-color: ${colorSecondaryOpacity}`"
     data-cy="banner-routes-card"
   >
     <div class="row justify-between">
-      <!-- Title -->
+      <!-- Section: title -->
       <div
-        class="col-12 flex items-center q-py-sm q-px-xl"
-        :class="[variant === 'default' ? 'col-md-8' : 'justify-center']"
+        class="col-12 flex gap-24 items-center q-py-sm q-px-xl"
+        :class="[variant === Variants.default ? 'col-md-6' : 'justify-center']"
         data-cy="banner-routes-section-title"
       >
+        <!-- Image -->
+        <q-img
+          src="~assets/image/banner-routes/routes.png"
+          width="70px"
+          height="102px"
+          alt=""
+          aria-hidden="true"
+          data-cy="banner-routes-image"
+        />
+        <!-- Title -->
         <h3
           class="text-h5 text-weight-bold q-my-none"
           data-cy="banner-routes-title"
         >
-          <span v-if="variant === 'default'">
+          <span v-if="variant === Variants.default">
             <!-- TODO: fix conjugation in CZ and SK -->
             {{
               $tc('index.bannerRoutes.title', routesCount, { n: routesCount })
             }}
           </span>
-          <span v-else-if="variant === 'start'">
+          <span v-else-if="variant === Variants.start">
             {{ $t('index.bannerRoutes.titleStart') }}
           </span>
         </h3>
@@ -86,7 +107,7 @@ export default defineComponent({
       <!-- Link to Route log -->
       <div
         class="col-12 flex items-center justify-end q-py-sm q-px-xl"
-        :class="[variant === 'default' ? 'col-md-4' : 'justify-center']"
+        :class="[variant === 'default' ? 'col-md-6' : 'justify-center']"
         data-cy="banner-routes-section-button"
       >
         <q-btn
@@ -95,6 +116,7 @@ export default defineComponent({
           color="primary"
           size="16px"
           text-color="white"
+          :to="routesConf['routes_list'].children.name"
           class="q-pa-md q-pl-lg q-pr-lg text-weight-bold"
           data-cy="banner-routes-button-add-routes"
         >
@@ -107,10 +129,13 @@ export default defineComponent({
             data-cy="banner-routes-button-icon"
           />
           <!-- Button text -->
-          <span v-if="variant === 'default'" class="inline-block q-px-sm">
+          <span
+            v-if="variant === Variants.default"
+            class="inline-block q-px-sm"
+          >
             {{ $t('index.bannerRoutes.addRoutes') }}
           </span>
-          <span v-else-if="variant == 'start'">
+          <span v-else-if="variant == Variants.start">
             {{ $t('index.bannerRoutes.addFirstRoutes') }}
           </span>
         </q-btn>
@@ -118,9 +143,3 @@ export default defineComponent({
     </div>
   </div>
 </template>
-
-<style scoped>
-.flex-wrap {
-  flex-wrap: wrap;
-}
-</style>

@@ -2,6 +2,7 @@ import { colors } from 'quasar';
 import BannerRoutes from '../homepage/BannerRoutes.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { routesConf } from '../../router/routes_conf';
 
 // colors
 const { getPaletteColor } = colors;
@@ -11,6 +12,7 @@ const primary = getPaletteColor('primary');
 
 // selectors
 const selectorBannerRoutes = 'banner-routes-card';
+const selectorImage = 'banner-routes-image';
 const selectorTitle = 'banner-routes-title';
 const selectorButton = 'banner-routes-button-add-routes';
 const selectorButtonIcon = 'banner-routes-button-icon';
@@ -57,8 +59,13 @@ describe('<BannerRoutes>', () => {
     });
 
     it('renders title section and button section side to side', () => {
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 67);
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 33);
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 50);
+      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 50);
+      cy.testElementsSideBySide(selectorSectionTitle, selectorSectionButton);
+    });
+
+    it('renders image and title side to side', () => {
+      cy.testElementsSideBySide(selectorImage, selectorTitle);
     });
   });
 
@@ -161,5 +168,11 @@ function coreTests() {
       .and('contain', 'add');
     cy.dataCy(selectorButtonIcon).invoke('height').should('equal', iconSize);
     cy.dataCy(selectorButtonIcon).invoke('width').should('equal', iconSize);
+  });
+
+  it('renders correct button link', () => {
+    cy.dataCy(selectorButton)
+      .invoke('attr', 'href')
+      .should('contain', routesConf['routes_list'].children.name);
   });
 }
