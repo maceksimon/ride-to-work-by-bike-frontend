@@ -19,4 +19,6 @@ export interface Profile {
   language: Locale;
   organization: string;
   organizationType: OrganizationType;
+  division: string;
+  team: string;
 }

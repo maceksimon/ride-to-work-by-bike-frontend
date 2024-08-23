@@ -160,7 +160,6 @@ export default defineComponent({
         <details-item
           :label="$t('profile.labelOrganizationType')"
           :value="profile.organizationType"
-          :empty-label="$t('profile.labelOrganizationTypeEmpty')"
           class="col-12 col-sm-6"
           data-cy="profile-details-organization-type"
         />
@@ -168,9 +167,22 @@ export default defineComponent({
         <details-item
           :label="$t('profile.labelOrganization')"
           :value="profile.organization"
-          :empty-label="$t('profile.labelOrganizationEmpty')"
           class="col-12 col-sm-6"
           data-cy="profile-details-organization"
+        />
+        <!-- Address / Division -->
+        <details-item
+          :label="$t('profile.labelAddressDivision')"
+          :value="profile.division"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-address-division"
+        />
+        <!-- Team -->
+        <details-item
+          :label="$t('profile.labelTeam')"
+          :value="profile.team"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-team"
         />
       </div>
     </div>

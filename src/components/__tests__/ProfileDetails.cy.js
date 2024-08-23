@@ -6,6 +6,7 @@ const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 // selectors
+const selectorAddressDivision = 'profile-details-address-division';
 const selectorEmail = 'profile-details-email';
 const selectorFormEmail = 'profile-details-form-email';
 const selectorFormGender = 'profile-details-form-gender';
@@ -17,6 +18,7 @@ const selectorNickname = 'profile-details-nickname';
 const selectorOrganizationType = 'profile-details-organization-type';
 const selectorOrganization = 'profile-details-organization';
 const selectorPersonalDetails = 'profile-details';
+const selectorTeam = 'profile-details-team';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
 const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
@@ -26,6 +28,7 @@ const dataSelectorEmpty = '[data-cy="details-item-empty"]';
 const dataSelectorInput = '[data-cy="form-input"]';
 const dataSelectorInputEmail = '[data-cy="form-email"]';
 const dataSelectorInputPassword = '[data-cy="form-password"]';
+const dataSelectorLabel = '[data-cy="details-item-label"]';
 const dataSelectorValue = '[data-cy="details-item-value"]';
 
 // variables
@@ -39,6 +42,7 @@ describe('<ProfileDetails>', () => {
     cy.testLanguageStringsInContext(
       [
         'descriptionNickname',
+        'labelAddressDivision',
         'labelEmail',
         'labelEmailEmpty',
         'labelGender',
@@ -47,6 +51,10 @@ describe('<ProfileDetails>', () => {
         'labelLanguageEmpty',
         'labelNickname',
         'labelNicknameEmpty',
+        'labelNoValue',
+        'labelOrganization',
+        'labelOrganizationType',
+        'labelTeam',
         'titleChallengeDetails',
         'titlePersonalDetails',
         'titleUpdateEmail',
@@ -82,7 +90,7 @@ describe('<ProfileDetails>', () => {
 });
 
 function coreTests() {
-  it('renders component', () => {
+  it.only('renders component', () => {
     cy.fixture('formPersonalDetails').then((formPersonalDetails) => {
       // component
       cy.dataCy(selectorPersonalDetails).should('be.visible');
@@ -111,14 +119,34 @@ function coreTests() {
         .and('contain', i18n.global.t('profile.titleChallengeDetails'));
       // row organizationType
       cy.dataCy(selectorOrganizationType)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelOrganizationType'));
+      cy.dataCy(selectorOrganizationType)
         .should('be.visible')
         .find(dataSelectorValue)
         .should('contain', formPersonalDetails.organizationType);
       // row organization
       cy.dataCy(selectorOrganization)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelOrganization'));
+      cy.dataCy(selectorOrganization)
         .should('be.visible')
         .find(dataSelectorValue)
         .should('contain', formPersonalDetails.organization);
+      // row address/division
+      cy.dataCy(selectorAddressDivision)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelAddressDivision'));
+      cy.dataCy(selectorAddressDivision)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.division);
+      // row address/division
+      cy.dataCy(selectorTeam)
+        .find(dataSelectorLabel)
+        .should('contain', i18n.global.t('profile.labelTeam'));
+      cy.dataCy(selectorTeam)
+        .find(dataSelectorValue)
+        .should('contain', formPersonalDetails.team);
     });
   });
 
