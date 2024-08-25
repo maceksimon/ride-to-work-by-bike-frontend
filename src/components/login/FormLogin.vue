@@ -48,12 +48,9 @@ export default defineComponent({
   },
   emits: ['formSubmit'],
   setup() {
-    const { user } = storeToRefs(useLoginStore());
-
-    const formLogin = reactive({
-      email: '',
-      password: '',
-    });
+    // store
+    const { userEmail, userPassword } = storeToRefs(useLoginStore());
+    const { setUserPassword, setUserEmail } = useLoginStore();
 
     const formPasswordReset = reactive({
       email: '',
@@ -85,16 +82,18 @@ export default defineComponent({
     return {
       backgroundColor,
       contactEmail,
-      formLogin,
       formPasswordReset,
       formState,
       isPassword,
-      user,
       isEmail,
       isFilled,
+      userEmail,
+      userPassword,
       onClickFormPasswordResetBtn,
       onSubmitLogin,
       onSubmitPasswordReset,
+      setUserPassword,
+      setUserEmail,
     };
   },
 });
@@ -115,7 +114,8 @@ export default defineComponent({
     <q-form @submit.prevent="onSubmitLogin">
       <!-- Input: email -->
       <form-field-email
-        v-model="formLogin.email"
+        :model-value="userEmail"
+        @update:model-value="setUserEmail"
         bg-color="white"
         data-cy="form-login-email"
       />
@@ -131,7 +131,8 @@ export default defineComponent({
           outlined
           hide-bottom-space
           bg-color="grey-1"
-          v-model="formLogin.password"
+          :model-value="userPassword"
+          @update:model-value="setUserPassword"
           id="form-login-password"
           :type="isPassword ? 'password' : 'text'"
           :rules="[
