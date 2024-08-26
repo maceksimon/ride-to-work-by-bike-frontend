@@ -110,7 +110,7 @@ export default defineComponent({
           </span>
         </h3>
       </div>
-      <!-- Link to Route log -->
+      <!-- Link to Routes list -->
       <div
         class="col-12 flex items-center justify-end q-py-sm q-px-xl"
         :class="[variant === 'default' ? 'col-md-6' : 'justify-center']"
