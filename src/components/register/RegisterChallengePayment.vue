@@ -28,7 +28,7 @@
  */
 
 // libraries
-import { colors } from 'quasar';
+import { colors, Notify } from 'quasar';
 import { computed, defineComponent, reactive, ref, watch } from 'vue';
 
 // composables
@@ -48,11 +48,15 @@ import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
+import { Currency } from '../../composables/useFormatPrice';
 enum PaymentSubject {
   individual = 'individual',
   voucher = 'voucher',
   company = 'company',
   school = 'school',
+}
+enum PaymentAmount {
+  custom = 'custom',
 }
 
 // types
@@ -105,22 +109,36 @@ export default defineComponent({
 
     const { formatPriceCurrency } = useFormatPrice();
     const defaultPaymentOption = {
-      label: formatPriceCurrency(defaultPaymentAmountMin, 'CZK'),
+      label: formatPriceCurrency(defaultPaymentAmountMin, Currency.CZK),
       value: String(defaultPaymentAmountMin),
     };
+    // Build the optionsPaymentAmount array dynamically
+    let paymentOptions: FormOption[] = [];
+    try {
+      paymentOptions = rideToWorkByBikeConfig.entryFeePaymentOptions
+        .split(',')
+        .map((option) => {
+          if (isNaN(Number(option))) {
+            throw new Error(`Invalid number: ${option}`);
+          }
+          return {
+            label: formatPriceCurrency(Number(option), Currency.CZK),
+            value: String(option),
+          };
+        });
+    } catch (error) {
+      Notify.create({
+        message: `Error parsing entryFeePaymentOptions: ${error}`,
+        type: 'negative',
+      });
+    }
+
     const optionsPaymentAmount: FormOption[] = reactive([
       defaultPaymentOption,
-      {
-        label: '500 Kč',
-        value: '500',
-      },
-      {
-        label: '700 Kč',
-        value: '700',
-      },
+      ...paymentOptions,
       {
         label: 'Vlastní',
-        value: 'custom',
+        value: PaymentAmount.custom,
       },
     ]);
 
@@ -144,7 +162,7 @@ export default defineComponent({
      * or the custom value.
      */
     const paymentAmount = computed((): number => {
-      if (selectedPaymentAmount.value === 'custom') {
+      if (selectedPaymentAmount.value === PaymentAmount.custom) {
         return selectedPaymentAmountCustom.value;
       }
       return parseInt(selectedPaymentAmount.value);
@@ -155,7 +173,7 @@ export default defineComponent({
      * set it as the default value for custom payment amount.
      */
     watch(selectedPaymentAmount, (newValue) => {
-      if (newValue !== 'custom') {
+      if (newValue !== PaymentAmount.custom) {
         selectedPaymentAmountCustom.value = parseInt(
           selectedPaymentAmount.value,
         );
@@ -173,7 +191,7 @@ export default defineComponent({
         // discount the lowest price in the price options
         optionsPaymentAmount.shift();
         optionsPaymentAmount.unshift({
-          label: formatPriceCurrency(voucher.amount, 'CZK'),
+          label: formatPriceCurrency(voucher.amount, Currency.CZK),
           value: String(voucher.amount),
         });
         // set min amount for custom amount
@@ -225,6 +243,7 @@ export default defineComponent({
       PaymentSubject,
       onRemoveVoucher,
       onUpdateVoucher,
+      PaymentAmount,
     };
   },
 });
@@ -319,7 +338,9 @@ export default defineComponent({
       </p>
     </div>
     <!-- Input: Custom amount -->
-    <div v-if="selectedPaymentAmount === 'custom' && !isEntryFeeFree">
+    <div
+      v-if="selectedPaymentAmount === PaymentAmount.custom && !isEntryFeeFree"
+    >
       <form-field-slider-number
         v-model="selectedPaymentAmountCustom"
         :min="paymentAmountMin"

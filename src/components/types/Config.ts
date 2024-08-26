@@ -34,4 +34,5 @@ export interface ConfigGlobal {
   defaultDistanceZero: string;
   entryFeePaymentMin: string;
   entryFeePaymentMax: string;
+  entryFeePaymentOptions: string;
 }

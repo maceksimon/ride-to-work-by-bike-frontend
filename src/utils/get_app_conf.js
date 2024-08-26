@@ -76,6 +76,8 @@ const getAppConfig = (process) => {
     config['entryFeePaymentMin'] = process.env.ENTRY_FEE_PAYMENT_MIN;
   } else if (process.env.ENTRY_FEE_PAYMENT_MAX) {
     config['entryFeePaymentMax'] = process.env.ENTRY_FEE_PAYMENT_MAX;
+  } else if (process.env.ENTRY_FEE_PAYMENT_OPTIONS) {
+    config['entryFeePaymentOptions'] = process.env.ENTRY_FEE_PAYMENT_OPTIONS;
   }
 
   return config;

@@ -55,3 +55,4 @@ defaultDistanceZero = "0.00"
 # Challenge registration
 entryFeePaymentMin = "390"
 entryFeePaymentMax = "2000"
+entryFeePaymentOptions = "500,700"
