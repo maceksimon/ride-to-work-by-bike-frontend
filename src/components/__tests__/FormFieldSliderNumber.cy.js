@@ -78,19 +78,10 @@ function coreTests() {
       .and('contain', i18n.global.t('global.currencyUnitCzk'));
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
+    // snapshot of the slider
     cy.matchImageSnapshotNamed(
       selectorFormFieldSliderNumberSlider,
       `${Cypress.currentTest.titlePath}-slider-default`,
-    );
-    cy.dataCy(selectorFormFieldSliderNumberSlider).matchImageSnapshot(
-      `${Cypress.currentTest.titlePath}-slider-default`,
-      {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 4000,
-        customDiffConfig: { threshold: 0.4 },
-        retries: 2,
-      },
     );
   });
 
@@ -101,15 +92,10 @@ function coreTests() {
     cy.dataCy(selectorFormFieldSliderNumberInput).should('have.value', '1000');
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
-    cy.dataCy(selectorFormFieldSliderNumberSlider).matchImageSnapshot(
+    // snapshot of the slider
+    cy.matchImageSnapshotNamed(
+      selectorFormFieldSliderNumberSlider,
       `${Cypress.currentTest.titlePath}-slider-input`,
-      {
-        failureThreshold: 0.1,
-        failureThresholdType: 'percent',
-        timeout: 4000,
-        customDiffConfig: { threshold: 0.4 },
-        retries: 2,
-      },
     );
   });
 
