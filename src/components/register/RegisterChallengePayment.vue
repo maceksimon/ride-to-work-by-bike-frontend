@@ -137,7 +137,7 @@ export default defineComponent({
       defaultPaymentOption,
       ...paymentOptions,
       {
-        label: 'Vlastní',
+        label: i18n.global.t('global.custom'),
         value: PaymentAmount.custom,
       },
     ]);
