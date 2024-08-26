@@ -4,6 +4,9 @@ import { date } from 'quasar';
 // composables
 import { i18n } from 'src/boot/i18n';
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // enums
 import { TransportDirection, TransportType } from 'src/components/types/Route';
 
@@ -12,6 +15,7 @@ import type { RouteItem, RouteDay } from 'src/components/types/Route';
 
 export const useRoutes = () => {
   const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
+  const { defaultDistanceZero } = rideToWorkByBikeConfig;
 
   /**
    * Returns the icon name corresponding to the given route.
@@ -57,7 +61,7 @@ export const useRoutes = () => {
    * @return {string} The distance label.
    */
   const getRouteDistance = (route: RouteItem | null): string => {
-    if (!route?.distance || route?.distance === '0.00') return '';
+    if (!route?.distance || route?.distance === defaultDistanceZero) return '';
     return `${route.distance} ${i18n.global.t('global.routeLengthUnit')}`;
   };
 
@@ -104,7 +108,7 @@ export const useRoutes = () => {
                 id: `${date.formatDate(currentDate, routeDateFormat)}-${TransportDirection.fromWork}`,
                 date: date.formatDate(currentDate, routeDateFormat),
                 transport: TransportType.none,
-                distance: '0.00',
+                distance: defaultDistanceZero,
                 direction: TransportDirection.fromWork,
                 dirty: false,
                 inputType: 'input-number',
@@ -115,7 +119,7 @@ export const useRoutes = () => {
                 id: `${date.formatDate(currentDate, routeDateFormat)}-${TransportDirection.toWork}`,
                 date: date.formatDate(currentDate, routeDateFormat),
                 transport: TransportType.none,
-                distance: '0.00',
+                distance: defaultDistanceZero,
                 direction: TransportDirection.toWork,
                 dirty: false,
                 inputType: 'input-number',

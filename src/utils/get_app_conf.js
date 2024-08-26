@@ -70,6 +70,8 @@ const getAppConfig = (process) => {
   } else if (process.env.CHALLENGE_LOGGING_WINDOW_DAYS) {
     config['challengeLoggingWindowDays'] =
       process.env.CHALLENGE_LOGGING_WINDOW_DAYS;
+  } else if (process.env.DEFAULT_DISTANCE_ZERO) {
+    config['defaultDistanceZero'] = process.env.DEFAULT_DISTANCE_ZERO;
   }
 
   return config;

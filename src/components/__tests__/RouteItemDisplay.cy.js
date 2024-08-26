@@ -41,6 +41,7 @@ const snapshotParameters = {
   customDiffConfig: { threshold: 0.4 },
   retries: 2,
 };
+const { defaultDistanceZero } = rideToWorkByBikeConfig;
 
 describe('<RouteItemDisplay>', () => {
   it('has translation for all strings', () => {
@@ -228,7 +229,7 @@ function coreTests() {
 
   it('renders correct distance value', () => {
     cy.get('@route').then((route) => {
-      if (!route.distance || route.distance === '0.00') {
+      if (!route.distance || route.distance === defaultDistanceZero) {
         // distance value empty
         cy.dataCy(selectorLabelDistance).should('be.empty');
       } else {

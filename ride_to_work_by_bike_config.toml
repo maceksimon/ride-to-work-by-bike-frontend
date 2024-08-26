@@ -31,6 +31,7 @@ subtitle = "Subtitle"
 
 # CONTACT DETAILS
 
+# Emails
 contactEmail = "kontakt@dopracenakole.cz"
 
 # EXTERNAL URLS
@@ -49,3 +50,4 @@ urlVideoOnboarding = "https://www.youtube.com/embed/ItfTtrEutgo?rel=0"
 challengeMonth = "may"
 challengeStartDate = "2024-08-01T12:00:00"
 challengeLoggingWindowDays = 8
+defaultDistanceZero = "0.00"

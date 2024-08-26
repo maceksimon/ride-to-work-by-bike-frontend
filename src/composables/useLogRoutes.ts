@@ -1,6 +1,9 @@
 // libraries
 import { computed, ref, watch } from 'vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // enums
 import { TransportType } from 'src/components/types/Route';
 
@@ -9,10 +12,11 @@ import type { ComputedRef } from 'vue';
 import type { RouteInputType, RouteItem } from 'src/components/types/Route';
 
 export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
+  const { defaultDistanceZero } = rideToWorkByBikeConfig;
   const routesCount = computed((): number => routes.value.length);
 
   const action = ref<RouteInputType>('input-number');
-  const distance = ref<string>('0.00');
+  const distance = ref<string>(defaultDistanceZero);
   const transportType = ref<TransportType>(TransportType.bike);
 
   /**
@@ -23,11 +27,11 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
   const setInputsFromRoute = (routes: RouteItem[]): void => {
     if (routes.length === 1) {
       action.value = routes[0].inputType || 'input-number';
-      distance.value = routes[0].distance || '0.00';
+      distance.value = routes[0].distance || defaultDistanceZero;
       transportType.value = routes[0].transport || TransportType.bike;
     } else {
       action.value = 'input-number';
-      distance.value = '0.00';
+      distance.value = defaultDistanceZero;
       transportType.value = TransportType.bike;
     }
   };

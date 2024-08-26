@@ -31,4 +31,5 @@ export interface ConfigGlobal {
   containerContentWidth: string;
   challengeStartDate: string;
   challengeLoggingWindowDays: number;
+  defaultDistanceZero: string;
 }

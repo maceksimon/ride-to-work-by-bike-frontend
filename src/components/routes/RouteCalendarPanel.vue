@@ -37,6 +37,9 @@ import RouteInputTransportType from './RouteInputTransportType.vue';
 // composables
 import { useLogRoutes } from '../../composables/useLogRoutes';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
 import type { RouteItem } from '../types/Route';
 
@@ -61,6 +64,8 @@ export default defineComponent({
     // styles
     const minWidth = '65vw';
 
+    const { defaultDistanceZero } = rideToWorkByBikeConfig;
+
     const isOpen = computed({
       get: (): boolean => props.modelValue,
       set: (value: boolean): void => {
@@ -77,7 +82,8 @@ export default defineComponent({
     // Determines if save button should be disabled.
     const isSaveBtnDisabled = computed((): boolean => {
       const noRoutes = routesCount.value === 0;
-      const noDistance = isShownDistance.value && distance.value === '0.00';
+      const noDistance =
+        isShownDistance.value && distance.value === defaultDistanceZero;
       return noRoutes || noDistance;
     });
 

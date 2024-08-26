@@ -59,8 +59,11 @@ export default defineComponent({
   },
   emits: ['update:route'],
   setup(props, { emit }) {
-    const { borderRadiusCard: borderRadius, colorGray: borderColor } =
-      rideToWorkByBikeConfig;
+    const {
+      borderRadiusCard: borderRadius,
+      colorGray: borderColor,
+      defaultDistanceZero,
+    } = rideToWorkByBikeConfig;
     const routes = computed(() => [props.route]);
     const { action, distance, transportType, isShownDistance } =
       useLogRoutes(routes);
@@ -72,7 +75,7 @@ export default defineComponent({
         // if settings are the same as initial, mark dirty as false
         if (
           actionNew === (props.route?.inputType || 'input-number') &&
-          distanceNew === (props.route?.distance || '0.00') &&
+          distanceNew === (props.route?.distance || defaultDistanceZero) &&
           transportNew === props.route?.transport
         ) {
           emit('update:route', false);
@@ -90,6 +93,7 @@ export default defineComponent({
       action,
       borderRadius,
       borderColor,
+      defaultDistanceZero,
       distance,
       iconSize,
       isShownDistance,
