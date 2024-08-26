@@ -6,6 +6,9 @@ import { i18n } from '../../boot/i18n';
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
+// variables
+const defaultValue = 500;
+
 describe('<FormFieldSliderNumber>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['currencyUnitCzk'], 'global', i18n);
@@ -15,7 +18,7 @@ describe('<FormFieldSliderNumber>', () => {
     beforeEach(() => {
       cy.mount(FormFieldSliderNumber, {
         props: {
-          modelValue: 500,
+          modelValue: defaultValue,
         },
       });
       cy.viewport('macbook-16');
@@ -28,7 +31,7 @@ describe('<FormFieldSliderNumber>', () => {
     beforeEach(() => {
       cy.mount(FormFieldSliderNumber, {
         props: {
-          modelValue: 500,
+          modelValue: defaultValue,
         },
       });
       cy.viewport('iphone-6');
@@ -42,7 +45,7 @@ describe('<FormFieldSliderNumber>', () => {
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'FormFieldSliderNumber',
-          defaultValue: 500,
+          defaultValue: defaultValue,
         },
       });
       cy.viewport('iphone-6');
