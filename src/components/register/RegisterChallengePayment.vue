@@ -4,6 +4,8 @@
  *
  * @description * Use this component to render a payment widget for the
  * registration process.
+ * Payment values are set in the config file as `entryFeePaymentMin`,
+ * `entryFeePaymentMax` and `entryFeePaymentOptions`.
  *
  * @props
  * - `NAME` (TYPE, required): The object representing ... .
