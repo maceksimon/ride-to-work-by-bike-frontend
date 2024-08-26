@@ -178,12 +178,11 @@ Cypress.Commands.add(
   'matchImageSnapshotNamed',
   (dataCySelector, name, failureThreshold = 0.1) => {
     cy.dataCy(dataCySelector).matchImageSnapshot({
-      customDiffConfig: { threshold: 0.5 },
+      name,
       failureThreshold: failureThreshold,
       failureThresholdType: 'percent',
-      name,
+      customDiffConfig: { threshold: 0.4 },
       retries: 2,
-      screenshotsFolder: 'test/cypress/snapshots',
     });
   },
 );
