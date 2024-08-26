@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
@@ -48,7 +49,7 @@ module.exports = configure(function (ctx) {
       // 'line-awesome',
       // 'roboto-font-latin-ext', // this or either 'roboto-font', NEVER both!
 
-      'roboto-font', // optional, you are not bound to it
+      // 'roboto-font',
       'material-icons', // optional, you are not bound to it
     ],
 
