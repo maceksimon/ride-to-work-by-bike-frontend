@@ -4,15 +4,8 @@
  *
  * @description * Use this component to render a payment widget for the
  * registration process.
- * Payment values are set in the config file as `entryFeePaymentMin`,
- * `entryFeePaymentMax` and `entryFeePaymentOptions`.
- *
- * @props
- * - `NAME` (TYPE, required): The object representing ... .
- *   It should be of type `TYPE`.
- *
- * @events
- * - `update:modelValue`: Emitted as a part of v-model structure.
+ * Options for payment amount are set in the config file as
+ * `entryFeePaymentMin`, `entryFeePaymentMax` and `entryFeePaymentOptions`.
  *
  * @components
  * - `FormFieldCompany`: Component to render company select.
