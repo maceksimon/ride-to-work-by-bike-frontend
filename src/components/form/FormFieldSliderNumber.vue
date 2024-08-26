@@ -10,6 +10,8 @@
  * @props
  * - `modelValue` (number, required): The number value.
  *   It should be of type `number`.
+ * - `min` (number, required): The minimum value.
+ * - `max` (number, required): The maximum value.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -23,6 +25,13 @@
 // libraries
 import { computed, defineComponent } from 'vue';
 
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
+// variables
+const defaultMin = parseInt(rideToWorkByBikeConfig.entryFeePaymentMin);
+const defaultMax = parseInt(rideToWorkByBikeConfig.entryFeePaymentMax);
+
 export default defineComponent({
   name: 'FormFieldSliderNumber',
   emits: ['update:modelValue'],
@@ -30,17 +39,17 @@ export default defineComponent({
     modelValue: {
       type: Number,
       required: true,
-      default: 390,
+      default: defaultMin,
     },
     min: {
       type: Number,
       required: true,
-      default: 390,
+      default: defaultMin,
     },
     max: {
       type: Number,
       required: true,
-      default: 2000,
+      default: defaultMax,
     },
   },
   setup(props, { emit }) {

@@ -332,7 +332,7 @@ function coreTests() {
     testDonation();
   });
 
-  it.only('if selected school - renders school select + donate option', () => {
+  it('if selected school - renders school select + donate option', () => {
     cy.dataCy(selectorCompany).should('not.exist');
     cy.dataCy(getRadioOption(optionSchool)).should('be.visible').click();
     cy.dataCy(selectorCompany).should('be.visible');
