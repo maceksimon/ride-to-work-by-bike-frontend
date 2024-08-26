@@ -1,4 +1,5 @@
 /* eslint-env node */
+/* eslint-disable @typescript-eslint/no-require-imports */
 
 /*
  * This file runs in a Node context (it's NOT transpiled by Babel), so use only
@@ -110,7 +111,7 @@ module.exports = configure(function (ctx) {
     framework: {
       config: {
         notify: {
-          position: 'bottom-right',
+          position: 'top',
         },
       },
 

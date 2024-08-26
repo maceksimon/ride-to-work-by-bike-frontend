@@ -59,7 +59,17 @@ config.global.mocks = {
 // We do want transitions to show when doing visual testing :)
 config.global.stubs = {};
 
-installQuasarPlugin({ plugins: { Dialog, Notify } });
+installQuasarPlugin({
+  plugins: {
+    Dialog,
+    Notify,
+  },
+  config: {
+    notify: {
+      position: 'top',
+    },
+  },
+});
 
 import VueLogger from 'vuejs3-logger';
 import { register } from 'swiper/element/bundle';
