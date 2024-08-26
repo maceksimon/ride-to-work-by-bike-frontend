@@ -1,4 +1,6 @@
+// variables
 const failTestTitle = 'allows user to scroll to top using the footer button';
+const fontFamily = 'Poppins';
 
 describe('Home page', () => {
   Cypress.on('fail', (err, runnable) => {
@@ -348,6 +350,15 @@ describe('Home page', () => {
 });
 
 function coreTests() {
+  it('loads fonts', () => {
+    // check if font is loaded
+    cy.wrap(doc.fonts).invoke('check', `16px ${fontFamily}`).should('be.true');
+    // check if font is used
+    cy.dataCy('index-title')
+      .should('be.visible')
+      .and('have.css', 'font-family', fontFamily);
+  });
+
   it('renders all components', () => {
     cy.get('@i18n').then((i18n) => {
       cy.dataCy('q-main').should('be.visible');
