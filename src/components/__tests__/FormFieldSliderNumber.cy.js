@@ -6,6 +6,12 @@ import { i18n } from '../../boot/i18n';
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
+// selectors
+const selectorFormFieldSliderNumber = 'form-field-slider-number';
+const selectorFormFieldSliderNumberInput = 'form-field-slider-number-input';
+const selectorFormFieldSliderNumberUnit = 'form-field-slider-number-unit';
+const selectorFormFieldSliderNumberSlider = 'form-field-slider-number-slider';
+
 // variables
 const defaultValue = 500;
 
@@ -58,12 +64,12 @@ describe('<FormFieldSliderNumber>', () => {
 function coreTests() {
   it('renders component', () => {
     // component
-    cy.dataCy('form-field-slider-number').should('be.visible');
+    cy.dataCy(selectorFormFieldSliderNumber).should('be.visible');
     // input
-    cy.dataCy('form-field-slider-number-input')
+    cy.dataCy(selectorFormFieldSliderNumberInput)
       .should('be.visible')
       .and('have.value', '500');
-    cy.dataCy('form-field-slider-number-unit')
+    cy.dataCy(selectorFormFieldSliderNumberUnit)
       .should('be.visible')
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
@@ -71,8 +77,12 @@ function coreTests() {
       .and('have.color', grey10)
       .and('contain', i18n.global.t('global.currencyUnitCzk'));
     // slider
-    cy.dataCy('form-field-slider-number-slider').should('be.visible');
-    cy.dataCy('form-field-slider-number-slider').matchImageSnapshot(
+    cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
+    cy.matchImageSnapshotNamed(
+      selectorFormFieldSliderNumberSlider,
+      `${Cypress.currentTest.titlePath}-slider-default`,
+    );
+    cy.dataCy(selectorFormFieldSliderNumberSlider).matchImageSnapshot(
       `${Cypress.currentTest.titlePath}-slider-default`,
       {
         failureThreshold: 0.1,
@@ -85,13 +95,13 @@ function coreTests() {
   });
 
   it('reacts to user interaction', () => {
-    cy.dataCy('form-field-slider-number-input').clear();
-    cy.dataCy('form-field-slider-number-input').type('1000');
-    cy.dataCy('form-field-slider-number-input').blur();
-    cy.dataCy('form-field-slider-number-input').should('have.value', '1000');
+    cy.dataCy(selectorFormFieldSliderNumberInput).clear();
+    cy.dataCy(selectorFormFieldSliderNumberInput).type('1000');
+    cy.dataCy(selectorFormFieldSliderNumberInput).blur();
+    cy.dataCy(selectorFormFieldSliderNumberInput).should('have.value', '1000');
     // slider
-    cy.dataCy('form-field-slider-number-slider').should('be.visible');
-    cy.dataCy('form-field-slider-number-slider').matchImageSnapshot(
+    cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
+    cy.dataCy(selectorFormFieldSliderNumberSlider).matchImageSnapshot(
       `${Cypress.currentTest.titlePath}-slider-input`,
       {
         failureThreshold: 0.1,
@@ -105,8 +115,8 @@ function coreTests() {
 
   it('renders slider and input side by side', () => {
     cy.testElementsSideBySide(
-      'form-field-slider-number-slider',
-      'form-field-slider-number-input',
+      selectorFormFieldSliderNumberSlider,
+      selectorFormFieldSliderNumberInput,
     );
   });
 }
