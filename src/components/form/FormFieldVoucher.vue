@@ -30,6 +30,9 @@ import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 // composables
 import { i18n } from '../../boot/i18n';
 
+// enums
+import { TestPaymentVoucher } from '../types/Form';
+
 // types
 import type { FormPaymentVoucher } from '../types/Form';
 
@@ -54,10 +57,10 @@ export default defineComponent({
      */
     const onSubmitVoucher = (): void => {
       // TODO: Add API call and remove dummy data
-      if (code.value === 'FULL') {
+      if (code.value === TestPaymentVoucher.full) {
         voucher.value = voucherFull;
       }
-      if (code.value === 'HALF') {
+      if (code.value === TestPaymentVoucher.half) {
         voucher.value = voucherHalf;
       }
       if (voucher.value) {

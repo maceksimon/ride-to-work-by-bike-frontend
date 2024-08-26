@@ -1,5 +1,10 @@
 import type { Image } from './Image';
 
+export enum TestPaymentVoucher {
+  full = 'FULL',
+  half = 'HALF',
+}
+
 export type FormPersonalDetailsFields = {
   firstName: string;
   lastName: string;
