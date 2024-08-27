@@ -252,8 +252,8 @@ describe('<FormLogin>', () => {
     it('uses the login store', () => {
       const loginStore = useLoginStore();
       // initial state
-      expect(loginStore.user.email).to.equal('');
-      expect(loginStore.user.password).to.equal('');
+      expect(loginStore.user.email).to.equal(null);
+      expect(loginStore.user.password).to.equal(null);
       // type email
       cy.dataCy('form-login-email').find('input').type(email);
       // check email in store
