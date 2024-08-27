@@ -14,6 +14,7 @@ const selectorFormFieldSliderNumberSlider = 'form-field-slider-number-slider';
 
 // variables
 const defaultValue = 500;
+const valueThousand = '1000';
 
 describe('<FormFieldSliderNumber>', () => {
   it('has translation for all strings', () => {
@@ -27,7 +28,7 @@ describe('<FormFieldSliderNumber>', () => {
           modelValue: defaultValue,
         },
       });
-      cy.viewport('macbook-16');
+      cy.viewport(1280, 800);
     });
 
     coreTests();
@@ -79,46 +80,27 @@ function coreTests() {
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
     // snapshot of the slider
-    cy.dataCy(selectorFormFieldSliderNumberSlider)
-      .invoke('attr', 'style', 'overflow: hidden')
-      .then(() => {
-        cy.matchImageSnapshotNamed(
-          selectorFormFieldSliderNumberSlider,
-          `${Cypress.currentTest.titlePath}-slider-default`,
-        );
-      })
-      .then(() => {
-        cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
-          'attr',
-          'style',
-          'overflow: auto',
-        );
-      });
+    cy.matchImageSnapshotNamed(
+      selectorFormFieldSliderNumberSlider,
+      `${Cypress.currentTest.titlePath}-slider-default`,
+    );
   });
 
   it('reacts to user interaction', () => {
     cy.dataCy(selectorFormFieldSliderNumberInput).clear();
-    cy.dataCy(selectorFormFieldSliderNumberInput).type('1000');
+    cy.dataCy(selectorFormFieldSliderNumberInput).type(valueThousand);
     cy.dataCy(selectorFormFieldSliderNumberInput).blur();
-    cy.dataCy(selectorFormFieldSliderNumberInput).should('have.value', '1000');
+    cy.dataCy(selectorFormFieldSliderNumberInput).should(
+      'have.value',
+      valueThousand,
+    );
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
     // snapshot of the slider
-    cy.dataCy(selectorFormFieldSliderNumberSlider)
-      .invoke('attr', 'style', 'overflow: hidden')
-      .then(() => {
-        cy.matchImageSnapshotNamed(
-          selectorFormFieldSliderNumberSlider,
-          `${Cypress.currentTest.titlePath}-slider-input`,
-        );
-      })
-      .then(() => {
-        cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
-          'attr',
-          'style',
-          'overflow: auto',
-        );
-      });
+    cy.matchImageSnapshotNamed(
+      selectorFormFieldSliderNumberSlider,
+      `${Cypress.currentTest.titlePath}-slider-input`,
+    );
   });
 
   it('renders slider and input side by side', () => {
