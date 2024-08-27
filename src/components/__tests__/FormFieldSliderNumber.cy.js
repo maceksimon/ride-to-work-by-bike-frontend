@@ -28,7 +28,7 @@ describe('<FormFieldSliderNumber>', () => {
           modelValue: defaultValue,
         },
       });
-      cy.viewport(1280, 800);
+      cy.viewport(1024, 768);
     });
 
     coreTests();
