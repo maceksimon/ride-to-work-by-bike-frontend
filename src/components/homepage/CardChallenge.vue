@@ -63,18 +63,28 @@ export default defineComponent({
       :alt="card?.image?.alt"
       :ratio="7 / 8"
     >
+      <!-- Gradient overlay -->
+      <div
+        class="absolute-full gradient-overlay"
+        :style="{
+          borderBottomLeftRadius: borderRadius,
+          borderBottomRightRadius: borderRadius,
+        }"
+        data-cy="card-gradient-overlay"
+      ></div>
+
       <!-- Header -->
       <q-card-section
-        class="text-subtitle1 absolute-top flex items-center justify-center gap-8"
+        class="text-subtitle1 absolute-top flex items-center justify-center gap-8 bg-primary"
         data-cy="card-title"
       >
         <!-- Person icon -->
-        <q-icon class="q-py-md" name="person" size="xs" />
+        <q-icon class="q-py-sm" name="person" size="xs" />
         <!-- Title link -->
         <component
           :is="card?.url ? 'a' : 'div'"
           :href="card?.url"
-          class="text-white text-weight-bold q-py-md"
+          class="text-white text-weight-bold q-py-sm"
           data-cy="card-link"
         >
           {{ card?.title }}
@@ -89,15 +99,22 @@ export default defineComponent({
       data-cy="card-dates"
     >
       {{ $t('index.cardChallenge.dates') }}
-      <span class="text-weight-bold">{{ card?.dates }}</span>
+      <span class="text-weight-bold" data-cy="card-dates-date">{{
+        card?.dates
+      }}</span>
     </q-card-section>
 
     <!-- Company challenge label -->
-    <div class="badge-wrapper center" data-cy="card-company-wrapper">
+    <div
+      class="absolute-top flex justify-center"
+      style="top: -12px"
+      data-cy="card-company-wrapper"
+    >
       <q-badge
         v-if="card?.company"
-        class="text-caption q-px-sm bg-blue-grey-4"
-        text-color="white"
+        class="text-caption text-weight-bold q-px-sm"
+        text-color="primary"
+        color="secondary"
         rounded
         data-cy="card-company"
       >
@@ -112,13 +129,12 @@ a:hover {
   text-decoration: none;
 }
 
-.badge-wrapper {
-  position: absolute;
-  top: -12px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.gradient-overlay {
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 69%,
+    rgba(0, 0, 0, 0.5) 100%
+  );
+  pointer-events: none;
 }
 </style>
