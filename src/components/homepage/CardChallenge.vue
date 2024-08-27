@@ -42,8 +42,9 @@ export default defineComponent({
     },
   },
   setup() {
+    const badgeMargin = '-12px';
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
-    return { borderRadius };
+    return { badgeMargin, borderRadius };
   },
 });
 </script>
@@ -107,7 +108,7 @@ export default defineComponent({
     <!-- Company challenge label -->
     <div
       class="absolute-top flex justify-center"
-      style="top: -12px"
+      :style="{ top: badgeMargin }"
       data-cy="card-company-wrapper"
     >
       <q-badge
