@@ -9,6 +9,16 @@ const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
+// Selectors
+const selectorCard = 'card';
+const selectorCardTitle = 'card-title';
+const selectorCardLink = 'card-link';
+const selectorCardGradientOverlay = 'card-gradient-overlay';
+const selectorCardDates = 'card-dates';
+const selectorCardDatesDate = 'card-dates-date';
+const selectorCardCompanyWrapper = 'card-company-wrapper';
+const selectorCardCompany = 'card-company';
+
 describe('<CardChallenge>', () => {
   let cardData;
 
@@ -55,19 +65,19 @@ describe('<CardChallenge>', () => {
   function coreTests() {
     it('renders title with icon on gray background', () => {
       cy.window().then(() => {
-        cy.dataCy('card-title')
+        cy.dataCy(selectorCardTitle)
           .should('be.visible')
           .and('have.css', 'padding-top', '16px')
           .and('have.css', 'padding-bottom', '16px')
           .and('have.backgroundColor', primary)
           .and('contain', cardData.title);
-        cy.dataCy('card-title')
+        cy.dataCy(selectorCardTitle)
           .find('i')
           .should('be.visible')
           .and('have.css', 'padding-top', '8px')
           .and('have.css', 'padding-bottom', '8px')
           .and('contain', 'person');
-        cy.dataCy('card-title')
+        cy.dataCy(selectorCardTitle)
           .find('a')
           .should('have.css', 'font-size', '16px')
           .and('have.css', 'padding-top', '8px')
@@ -81,7 +91,7 @@ describe('<CardChallenge>', () => {
 
     it('renders title link', () => {
       cy.window().then(() => {
-        cy.dataCy('card-link')
+        cy.dataCy(selectorCardLink)
           .should('be.visible')
           .and('have.attr', 'href', cardData.url);
       });
@@ -89,7 +99,7 @@ describe('<CardChallenge>', () => {
 
     it('renders image', () => {
       cy.window().then(() => {
-        cy.dataCy('card')
+        cy.dataCy(selectorCard)
           .find('img')
           .should('be.visible')
           .then(($img) => {
@@ -102,7 +112,7 @@ describe('<CardChallenge>', () => {
 
     it('renders gradient overlay with correct properties', () => {
       cy.window().then(() => {
-        cy.dataCy('card-gradient-overlay')
+        cy.dataCy(selectorCardGradientOverlay)
           .should('be.visible')
           .and('have.css', 'position', 'absolute')
           .and('have.css', 'top', '0px')
@@ -129,13 +139,13 @@ describe('<CardChallenge>', () => {
 
     it('renders dates', () => {
       cy.window().then(() => {
-        cy.dataCy('card-dates')
+        cy.dataCy(selectorCardDates)
           .should('be.visible')
           .and('have.color', white)
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
           .and('contain', cardData.dates);
-        cy.dataCy('card-dates-date')
+        cy.dataCy(selectorCardDatesDate)
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '700');
@@ -144,11 +154,11 @@ describe('<CardChallenge>', () => {
 
     it('renders company badge', () => {
       cy.window().then(() => {
-        cy.dataCy('card-company-wrapper')
+        cy.dataCy(selectorCardCompanyWrapper)
           .should('be.visible')
           .and('have.css', 'position', 'absolute')
           .and('have.css', 'top', '-12px');
-        cy.dataCy('card-company')
+        cy.dataCy(selectorCardCompany)
           .should('be.visible')
           .and('have.css', 'border-radius', '12px')
           .and('have.css', 'font-size', '12px')
@@ -162,7 +172,7 @@ describe('<CardChallenge>', () => {
 
     it('has rounded corners', () => {
       cy.window().then(() => {
-        cy.dataCy('card')
+        cy.dataCy(selectorCard)
           .should('be.visible')
           .and('have.css', 'border-radius', borderRadiusCard);
       });
