@@ -79,20 +79,21 @@ function coreTests() {
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
     // snapshot of the slider
-    cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
-      'attr',
-      'style',
-      'overflow: hidden',
-    );
-    cy.matchImageSnapshotNamed(
-      selectorFormFieldSliderNumberSlider,
-      `${Cypress.currentTest.titlePath}-slider-default`,
-    );
-    cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
-      'attr',
-      'style',
-      'overflow: auto',
-    );
+    cy.dataCy(selectorFormFieldSliderNumberSlider)
+      .invoke('attr', 'style', 'overflow: hidden')
+      .then(() => {
+        cy.matchImageSnapshotNamed(
+          selectorFormFieldSliderNumberSlider,
+          `${Cypress.currentTest.titlePath}-slider-default`,
+        );
+      })
+      .then(() => {
+        cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
+          'attr',
+          'style',
+          'overflow: auto',
+        );
+      });
   });
 
   it('reacts to user interaction', () => {
@@ -103,20 +104,21 @@ function coreTests() {
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
     // snapshot of the slider
-    cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
-      'attr',
-      'style',
-      'overflow: hidden',
-    );
-    cy.matchImageSnapshotNamed(
-      selectorFormFieldSliderNumberSlider,
-      `${Cypress.currentTest.titlePath}-slider-input`,
-    );
-    cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
-      'attr',
-      'style',
-      'overflow: auto',
-    );
+    cy.dataCy(selectorFormFieldSliderNumberSlider)
+      .invoke('attr', 'style', 'overflow: hidden')
+      .then(() => {
+        cy.matchImageSnapshotNamed(
+          selectorFormFieldSliderNumberSlider,
+          `${Cypress.currentTest.titlePath}-slider-input`,
+        );
+      })
+      .then(() => {
+        cy.dataCy(selectorFormFieldSliderNumberSlider).invoke(
+          'attr',
+          'style',
+          'overflow: auto',
+        );
+      });
   });
 
   it('renders slider and input side by side', () => {
