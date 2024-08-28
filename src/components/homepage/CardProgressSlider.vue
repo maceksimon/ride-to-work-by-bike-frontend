@@ -53,12 +53,13 @@ export default defineComponent({
 
     const { circleSize } = useCircleSize();
 
-    const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+    const { borderRadiusCard, colorPrimary } = rideToWorkByBikeConfig;
 
     return {
-      timelineValue,
+      borderRadiusCard,
       circleSize,
-      borderRadius,
+      colorPrimary,
+      timelineValue,
     };
   },
 });
@@ -69,9 +70,11 @@ export default defineComponent({
     dark
     flat
     bordered
-    :style="{ 'border-radius': borderRadius }"
-    class="bg-blue-grey-3"
-    data-cy="card"
+    :style="{
+      'border-radius': borderRadiusCard,
+    }"
+    class="bg-primary"
+    data-cy="card-progress-slider"
   >
     <!-- Background image -->
     <q-img :src="card?.image" height="450px" fit="contain">
