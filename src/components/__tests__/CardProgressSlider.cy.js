@@ -8,20 +8,24 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
 const primary = getPaletteColor('primary');
-const blueGrey1 = getPaletteColor('blue-grey-1');
 
 const card = cardsProgressSlider[0];
 
 // Selectors
+
 const selectorCardProgressSlider = 'card-progress-slider';
+const selectorCardProgressTimelineLabel = 'card-progress-timeline-label';
+const selectorCardProgressTimelineNumbers = 'card-progress-timeline-numbers';
 const selectorCardProgressContent = 'card-progress-content';
 const selectorCardProgressTimeline = 'card-progress-timeline';
 const selectorCardProgressStats = 'card-progress-stats';
 const selectorCardProgressFooterMobile = 'card-progress-footer-mobile';
 const selectorCardProgressHeader = 'card-progress-header';
 const selectorCardProgressTitle = 'card-progress-title';
-const selectorCardProgressPercentage = 'card-progress-percentage';
-const selectorCardProgressCircular = 'card-progress-circular';
+const selectorCardProgressCircular = 'card-section-progress';
+const selectorCardProgressSectionStats = 'card-section-stats';
+const selectorCardProgressCircularCaption = 'card-progress-circular-caption';
+const selectorCardProgressCircularNumber = 'card-progress-circular-number';
 
 describe('<CardProgressSlider>', () => {
   it('has translation for all strings', () => {
@@ -44,7 +48,27 @@ describe('<CardProgressSlider>', () => {
 
     coreTests();
 
-    it('renders card content horizontally', () => {
+    it('renders title and linear progress side by side', () => {
+      cy.testElementsSideBySide(
+        selectorCardProgressTitle,
+        selectorCardProgressTimeline,
+      );
+      // wrapper classes
+      cy.dataCy(selectorCardProgressHeader)
+        .should('be.visible')
+        .and('have.css', 'display', 'flex')
+        .and('have.css', 'flex-direction', 'row')
+        .and('have.css', 'justify-content', 'space-between')
+        .and('have.css', 'align-items', 'center')
+        .and('have.css', 'gap', '16px');
+    });
+
+    it('renders circular progress and stats side by side', () => {
+      cy.testElementsSideBySide(
+        selectorCardProgressCircular,
+        selectorCardProgressSectionStats,
+      );
+      // wrapper classes
       cy.dataCy(selectorCardProgressContent)
         .should('be.visible')
         .and('have.css', 'display', 'flex')
@@ -52,11 +76,13 @@ describe('<CardProgressSlider>', () => {
         .and('have.css', 'align-items', 'center');
     });
 
-    it('renders timeline progress bar', () => {
+    it('renders desktop version of timeline progress bar', () => {
+      // desktop timeline
       cy.dataCy(selectorCardProgressTimeline)
         .find('.q-linear-progress')
         .first()
         .should('be.visible');
+      // mobile timeline
       cy.dataCy(selectorCardProgressTimeline)
         .find('.q-linear-progress')
         .last()
@@ -127,63 +153,67 @@ describe('<CardProgressSlider>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
     cy.dataCy(selectorCardProgressSlider)
       .should('be.visible')
       .and('have.css', 'border-radius', rideToWorkByBikeConfig.borderRadiusCard)
       .and('have.backgroundColor', primary);
-  });
-
-  it('renders title', () => {
-    cy.window().then(() => {
-      cy.dataCy(selectorCardProgressTitle)
-        .should('have.css', 'font-size', '16px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', white)
-        .and('contain', card.title)
-        .then(($title) => {
-          expect($title.text()).to.equal(card.title);
-        });
-    });
-  });
-
-  it('renders title icon', () => {
+    // header
+    cy.dataCy(selectorCardProgressHeader)
+      .should('be.visible')
+      .and('have.backgroundColor', primary);
+    // header icon
     cy.dataCy(selectorCardProgressHeader)
       .find('.q-icon')
       .should('contain', card.icon)
-      .and('have.color', blueGrey1)
+      .and('have.color', white)
       .and('have.css', 'width', '18px')
       .and('have.css', 'height', '18px');
-  });
-
-  it('renders timeline', () => {
+    // title
+    cy.dataCy(selectorCardProgressTitle)
+      .should('have.css', 'font-size', '16px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', white)
+      .and('contain', card.title)
+      .then(($title) => {
+        expect($title.text()).to.equal(card.title);
+      });
+    // timeline
     cy.dataCy(selectorCardProgressTimeline)
       .should('be.visible')
       .and('contain', card.duration.current)
       .and('contain', card.duration.total)
+      .and('contain', i18n.global.t('index.cardProgressSlider.timeline'));
+    // timeline label
+    cy.dataCy(selectorCardProgressTimelineLabel)
+      .should('be.visible')
       .and('contain', i18n.global.t('index.cardProgressSlider.timeline'))
-      .and('have.color', white)
       .and('have.css', 'font-size', '14px')
-      .and('have.css', 'font-weight', '400');
-  });
-
-  it('renders percentage', () => {
-    cy.dataCy(selectorCardProgressPercentage)
+      .and('have.css', 'font-weight', '400')
+      .and('have.color', white);
+    // timeline numbers
+    cy.dataCy(selectorCardProgressTimelineNumbers)
       .should('be.visible')
-      .and('contain', card.progress)
-      .and('contain', i18n.global.t('index.cardProgressSlider.toDate'));
+      .and('contain', card.duration.current)
+      .and('contain', card.duration.total)
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', white);
+    // circular progress
     cy.dataCy(selectorCardProgressCircular).should('be.visible');
-    cy.dataCy(selectorCardProgressPercentage)
-      .find('.circular-progress-number')
-      .should('be.visible');
-  });
-
-  it('renders card header horizontally', () => {
-    cy.dataCy(selectorCardProgressHeader)
+    // circular caption
+    cy.dataCy(selectorCardProgressCircularCaption)
       .should('be.visible')
-      .and('have.css', 'display', 'flex')
-      .and('have.css', 'flex-direction', 'row')
-      .and('have.css', 'justify-content', 'space-between')
-      .and('have.css', 'align-items', 'center')
-      .and('have.css', 'gap', '16px');
+      .and('have.css', 'font-size', '12px')
+      .and('have.css', 'font-weight', '400')
+      .and('have.color', white)
+      .and('contain', i18n.global.t('index.cardProgressSlider.toDate'));
+    // circular number
+    cy.dataCy(selectorCardProgressCircularNumber)
+      .should('be.visible')
+      .and('have.css', 'font-size', '48px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', white)
+      .and('contain', card.progress);
   });
 }

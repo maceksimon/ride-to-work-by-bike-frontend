@@ -51,15 +51,18 @@ export default defineComponent({
       return props.card.duration?.current / props.card.duration?.total;
     });
 
-    const { circleSize } = useCircleSize();
+    const { circleSize, trackWidth } = useCircleSize();
 
-    const { borderRadiusCard, colorPrimary } = rideToWorkByBikeConfig;
+    const { borderRadiusCard, colorPrimary, colorWhiteOpacityLight } =
+      rideToWorkByBikeConfig;
 
     return {
       borderRadiusCard,
       circleSize,
       colorPrimary,
+      colorWhiteOpacityLight,
       timelineValue,
+      trackWidth,
     };
   },
 });
@@ -81,12 +84,12 @@ export default defineComponent({
       <div class="q-pa-none" style="width: 100%; height: 100%">
         <!-- Card header -->
         <q-card-section
-          class="absolute-top flex items-center justify-between q-px-lg gap-16 z-1"
+          class="absolute-top flex items-center justify-between bg-primary q-px-lg gap-16 z-1"
           data-cy="card-progress-header"
         >
           <div class="flex items-center gap-16 text-body1">
             <!-- Card icon -->
-            <q-icon :name="card.icon" size="18px" color="blue-grey-1" />
+            <q-icon :name="card.icon" size="18px" color="white" />
             <!-- Card title -->
             <component
               :is="card.url ? 'a' : 'div'"
@@ -103,14 +106,24 @@ export default defineComponent({
           <!-- Timeline showing the progress of the challenge -->
           <div data-cy="card-progress-timeline" class="min-w-180 gt-xs">
             <!-- Timeline label -->
-            <div class="text-subtitle2 text-right">
-              {{ card.duration?.current }} / {{ card.duration?.total }}
+            <div
+              class="text-subtitle2 text-weight-regular text-right"
+              data-cy="card-progress-timeline-label"
+            >
+              <span
+                class="text-weight-bold"
+                data-cy="card-progress-timeline-numbers"
+              >
+                {{ card.duration?.current }} / {{ card.duration?.total }}
+              </span>
               {{ $t('index.cardProgressSlider.timeline') }}
             </div>
             <!-- Timeline progress bar -->
             <q-linear-progress
               :value="timelineValue"
-              color="white"
+              color="secondary"
+              track-color="secondary"
+              size="8px"
               rounded
               class="q-mt-xs"
             />
@@ -123,28 +136,33 @@ export default defineComponent({
             <!-- Section progress -->
             <div
               class="col-lg-4 flex justify-center justify-sm-start"
-              data-cy="card-progress-percentage"
+              data-cy="card-section-progress"
             >
               <div class="relative-position">
                 <!-- Progress bar -->
                 <q-circular-progress
                   rounded
-                  class="text-white"
                   :value="card.progress"
                   :size="circleSize"
-                  :thickness="0.05"
-                  color="white"
-                  track-color="blue-grey-10"
+                  :thickness="trackWidth"
+                  color="secondary"
+                  track-color="blue-grey-8"
                   data-cy="card-progress-circular"
                 />
                 <!-- Progress label -->
                 <div class="text-white absolute-center text-center">
                   <!-- Caption -->
-                  <div class="text-caption">
+                  <div
+                    class="text-caption"
+                    data-cy="card-progress-circular-caption"
+                  >
                     {{ $t('index.cardProgressSlider.toDate') }}
                   </div>
                   <!-- Number -->
-                  <div class="circular-progress-number q-mt-xs">
+                  <div
+                    class="circular-progress-number q-mt-xs text-weight-bold"
+                    data-cy="card-progress-circular-number"
+                  >
                     {{ card.progress }}%
                   </div>
                 </div>
@@ -152,7 +170,10 @@ export default defineComponent({
             </div>
 
             <!-- Section stats -->
-            <div class="col flex column gap-16 gt-xs q-pl-xl">
+            <div
+              class="col flex column gap-16 gt-xs q-pl-xl"
+              data-cy="card-section-stats"
+            >
               <div
                 v-for="stat in card.stats"
                 :key="stat.title"

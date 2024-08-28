@@ -17,7 +17,14 @@ export function useCircleSize() {
     return size;
   });
 
+  const trackWidth = computed((): number => {
+    let size = 0.1;
+    size = isLargeScreen.value ? 0.2 : size;
+    return size;
+  });
+
   return {
     circleSize,
+    trackWidth,
   };
 }
