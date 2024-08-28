@@ -1,4 +1,6 @@
-import { Locale } from 'vue-i18n';
+// types
+import type { Locale } from 'vue-i18n';
+import type { FormCompanyAddressFields } from './Form';
 
 export enum OrganizationType {
   school = 'school',
@@ -30,12 +32,5 @@ export interface Profile {
     trackingNumber: string;
     trackingUrl: string;
   };
-  deliveryAddress: {
-    street: string;
-    houseNumber: string;
-    city: string;
-    zip: string;
-    cityChallenge: string;
-    department: string;
-  };
+  deliveryAddress: FormCompanyAddressFields;
 }

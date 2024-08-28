@@ -7,6 +7,7 @@
  * Note: This component is used on `ProfilePage` in `ProfileTabs` component.
  *
  * @components
+ * - `AddressDisplay`: Component to display an address.
  * - `DetailsItem`: Component to display a row of data.
  * - `FormUpdateEmail`: Component to render a form for updating email.
  * - `FormUpdateGender`: Component to render a form for updating gender.
@@ -23,6 +24,7 @@
 import { defineComponent, reactive } from 'vue';
 
 // components
+import AddressDisplay from '../global/AddressDisplay.vue';
 import DetailsItem from '../profile/DetailsItem.vue';
 import FormUpdateEmail from '../form/FormUpdateEmail.vue';
 import FormUpdateGender from '../form/FormUpdateGender.vue';
@@ -38,6 +40,7 @@ import type { Profile } from '../types/Profile';
 export default defineComponent({
   name: 'ProfileDetails',
   components: {
+    AddressDisplay,
     DetailsItem,
     FormUpdateEmail,
     FormUpdateGender,
@@ -242,49 +245,7 @@ export default defineComponent({
           data-cy="profile-details-delivery-address"
         >
           <template #value>
-            <div>
-              <div v-if="profile.deliveryAddress.department">
-                {{ profile.deliveryAddress.department }}
-              </div>
-              <div
-                v-if="
-                  profile.deliveryAddress.street ||
-                  profile.deliveryAddress.houseNumber
-                "
-              >
-                <template v-if="profile.deliveryAddress.street">
-                  {{ profile.deliveryAddress.street }},
-                </template>
-                <template v-if="profile.deliveryAddress.houseNumber">
-                  {{ profile.deliveryAddress.houseNumber }},
-                </template>
-              </div>
-              <div
-                v-if="
-                  profile.deliveryAddress.zip ||
-                  profile.deliveryAddress.city ||
-                  profile.deliveryAddress.cityChallenge
-                "
-              >
-                <template v-if="profile.deliveryAddress.zip">
-                  {{ profile.deliveryAddress.zip }},
-                </template>
-                <template v-if="profile.deliveryAddress.city">
-                  {{ profile.deliveryAddress.city }}
-                </template>
-                <template
-                  v-if="
-                    profile.deliveryAddress.city &&
-                    profile.deliveryAddress.cityChallenge
-                  "
-                >
-                  -
-                </template>
-                <template v-if="profile.deliveryAddress.cityChallenge">
-                  {{ profile.deliveryAddress.cityChallenge }}
-                </template>
-              </div>
-            </div>
+            <address-display :address="profile.deliveryAddress" />
           </template>
         </details-item>
         <!-- Phone number -->
