@@ -9,6 +9,8 @@ const getAppConfig = (process) => {
 
   if (process.env.COLOR_PRIMARY) {
     config['primaryColor'] = process.env.COLOR_PRIMARY;
+  } else if (process.env.COLOR_PRIMARY_DARK) {
+    config['primaryColorDark'] = process.env.COLOR_PRIMARY_DARK;
   } else if (process.env.COLOR_SECONDARY) {
     config['secondaryColor'] = process.env.COLOR_SECONDARY;
   } else if (process.env.COLOR_SECONDARY_OPACITY) {
