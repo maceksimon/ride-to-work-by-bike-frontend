@@ -1,16 +1,15 @@
 import { colors } from 'quasar';
-
 import CardProgressSlider from '../homepage/CardProgressSlider.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// colors
 const { getPaletteColor } = colors;
 const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
 const white = getPaletteColor('white');
 
 // Selectors
-
 const dataSelectorCardProgressStatsTitle =
   '[data-cy="card-progress-stats-title"]';
 const selectorCardProgressSlider = 'card-progress-slider';
@@ -51,22 +50,22 @@ describe('<CardProgressSlider>', () => {
     desktopTests();
   });
 
-  // context('mobile', () => {
-  //   beforeEach(() => {
-  //     cy.fixture('cardProgressSlider').then((card) => {
-  //       cy.wrap(card).as('cardProgress');
-  //       cy.mount(CardProgressSlider, {
-  //         props: {
-  //           card,
-  //         },
-  //       });
-  //     });
-  //     cy.viewport('iphone-6');
-  //   });
+  context('mobile', () => {
+    beforeEach(() => {
+      cy.fixture('cardProgressSlider').then((card) => {
+        cy.wrap(card).as('cardProgress');
+        cy.mount(CardProgressSlider, {
+          props: {
+            card,
+          },
+        });
+      });
+      cy.viewport('iphone-6');
+    });
 
-  //   coreTests();
-  //   mobileTests();
-  // });
+    coreTests();
+    mobileTests();
+  });
 });
 
 function coreTests() {
@@ -193,34 +192,34 @@ function desktopTests() {
   });
 }
 
-// function mobileTests() {
-//   it('renders timeline progress bar', () => {
-//     cy.dataCy(selectorCardProgressTimeline)
-//       .find('.q-linear-progress')
-//       .first()
-//       .should('not.be.visible');
-//     cy.dataCy(selectorCardProgressTimeline)
-//       .find('.q-linear-progress')
-//       .last()
-//       .should('be.visible');
-//   });
+function mobileTests() {
+  it('renders timeline progress bar', () => {
+    cy.dataCy(selectorCardProgressTimeline)
+      .find('.q-linear-progress')
+      .first()
+      .should('not.be.visible');
+    cy.dataCy(selectorCardProgressTimeline)
+      .find('.q-linear-progress')
+      .last()
+      .should('be.visible');
+  });
 
-//   it('does not render stats', () => {
-//     cy.dataCy(selectorCardProgressStats).should('not.be.visible');
-//   });
+  it('does not render stats', () => {
+    cy.dataCy(selectorCardProgressStats).should('not.be.visible');
+  });
 
-//   it('renders smaller circular progress number', () => {
-//     cy.dataCy(selectorCardProgressCircularNumber)
-//       .should('be.visible')
-//       .and('have.css', 'font-size', '40px')
-//   });
+  it('renders smaller circular progress number', () => {
+    cy.dataCy(selectorCardProgressCircularNumber)
+      .should('be.visible')
+      .and('have.css', 'font-size', '40px');
+  });
 
-//   it('wraps items in card header', () => {
-//     cy.dataCy(selectorCardProgressHeader)
-//       .should('be.visible')
-//       .and('have.css', 'display', 'flex')
-//       .and('have.css', 'flex-direction', 'row')
-//       .and('have.css', 'flex-wrap', 'wrap')
-//       .and('have.css', 'gap', '16px');
-//   });
-// }
+  it('wraps items in card header', () => {
+    cy.dataCy(selectorCardProgressHeader)
+      .should('be.visible')
+      .and('have.css', 'display', 'flex')
+      .and('have.css', 'flex-direction', 'row')
+      .and('have.css', 'flex-wrap', 'wrap')
+      .and('have.css', 'gap', '16px');
+  });
+}
