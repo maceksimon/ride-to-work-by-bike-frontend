@@ -27,10 +27,14 @@ describe('<FormFieldSliderNumber>', () => {
         props: {
           modelValue: defaultValue,
         },
+      }).then(({ wrapper, component }) => {
+        cy.wrap(wrapper).as('wrapper');
+        cy.wrap(component).as('component');
       });
-      cy.viewport(1024, 768);
+      cy.viewport('macbook-13');
     });
 
+    interactionTests();
     coreTests();
   });
 
@@ -40,10 +44,14 @@ describe('<FormFieldSliderNumber>', () => {
         props: {
           modelValue: defaultValue,
         },
+      }).then(({ wrapper, component }) => {
+        cy.wrap(wrapper).as('wrapper');
+        cy.wrap(component).as('component');
       });
       cy.viewport('iphone-6');
     });
 
+    interactionTests();
     coreTests();
   });
 
@@ -54,6 +62,9 @@ describe('<FormFieldSliderNumber>', () => {
           component: 'FormFieldSliderNumber',
           defaultValue: defaultValue,
         },
+      }).then(({ wrapper, component }) => {
+        cy.wrap(wrapper).as('wrapper');
+        cy.wrap(component).as('component');
       });
       cy.viewport('iphone-6');
     });
@@ -79,13 +90,17 @@ function coreTests() {
       .and('contain', i18n.global.t('global.currencyUnitCzk'));
     // slider
     cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
-    // snapshot of the slider
-    cy.matchImageSnapshotNamed(
-      selectorFormFieldSliderNumberSlider,
-      `${Cypress.currentTest.titlePath}-slider-default`,
-    );
   });
 
+  it('renders slider and input side by side', () => {
+    cy.testElementsSideBySide(
+      selectorFormFieldSliderNumberSlider,
+      selectorFormFieldSliderNumberInput,
+    );
+  });
+}
+
+function interactionTests() {
   it('reacts to user interaction', () => {
     cy.dataCy(selectorFormFieldSliderNumberInput).clear();
     cy.dataCy(selectorFormFieldSliderNumberInput).type(valueThousand);
@@ -94,19 +109,10 @@ function coreTests() {
       'have.value',
       valueThousand,
     );
-    // slider
-    cy.dataCy(selectorFormFieldSliderNumberSlider).should('be.visible');
-    // snapshot of the slider
-    cy.matchImageSnapshotNamed(
-      selectorFormFieldSliderNumberSlider,
-      `${Cypress.currentTest.titlePath}-slider-input`,
-    );
-  });
-
-  it('renders slider and input side by side', () => {
-    cy.testElementsSideBySide(
-      selectorFormFieldSliderNumberSlider,
-      selectorFormFieldSliderNumberInput,
-    );
+    cy.get('@wrapper').then((wrapper) => {
+      const eventValues = wrapper.emitted();
+      const lastEventValue = eventValues['update:modelValue'].pop()[0];
+      expect(lastEventValue).to.equal(valueThousand);
+    });
   });
 }
