@@ -180,7 +180,10 @@ export default defineComponent({
                 data-cy="card-progress-stats"
               >
                 <!-- Title stats -->
-                <div class="stats-title text-uppercase text-caption">
+                <div
+                  class="text-uppercase text-caption text-secondary"
+                  data-cy="card-progress-stats-title"
+                >
                   {{ stat.title }}
                 </div>
                 <!-- List stats -->
@@ -191,7 +194,17 @@ export default defineComponent({
                     class="stats-value"
                     style="padding: 0"
                   >
-                    {{ item.text }}
+                    <q-item-section v-if="item.icon" avatar>
+                      <q-icon
+                        color="primary"
+                        :name="item.icon"
+                        data-cy="card-progress-stats-icon"
+                      />
+                    </q-item-section>
+
+                    <q-item-section data-cy="card-progress-stats-value">
+                      {{ item.text }}
+                    </q-item-section>
                   </q-item>
                 </q-list>
               </div>

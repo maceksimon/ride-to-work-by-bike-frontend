@@ -6,13 +6,16 @@ import { cardsProgressSlider } from '../../mocks/homepage';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 const { getPaletteColor } = colors;
-const white = getPaletteColor('white');
 const primary = getPaletteColor('primary');
+const secondary = getPaletteColor('secondary');
+const white = getPaletteColor('white');
 
 const card = cardsProgressSlider[0];
 
 // Selectors
 
+const dataSelectorCardProgressStatsTitle =
+  '[data-cy="card-progress-stats-title"]';
 const selectorCardProgressSlider = 'card-progress-slider';
 const selectorCardProgressTimelineLabel = 'card-progress-timeline-label';
 const selectorCardProgressTimelineNumbers = 'card-progress-timeline-numbers';
@@ -92,10 +95,10 @@ describe('<CardProgressSlider>', () => {
     it('renders stats', () => {
       cy.dataCy(selectorCardProgressStats)
         .should('be.visible')
-        .find('.stats-title')
+        .find(dataSelectorCardProgressStatsTitle)
         .first()
         .should('contain', card.stats[0].title)
-        .and('have.color', white)
+        .and('have.color', secondary)
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.css', 'font-size', '12px');
       cy.dataCy(selectorCardProgressStats)
