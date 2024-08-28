@@ -22,7 +22,9 @@ export interface Profile {
   language: Locale;
   organization: string;
   organizationType: OrganizationType;
-  division: string;
+  division: {
+    address: FormCompanyAddressFields;
+  };
   team: string;
   package: {
     title: string;

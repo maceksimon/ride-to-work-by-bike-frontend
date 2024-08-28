@@ -8,7 +8,16 @@
   "language": "en",
   "organization": "Auto*Mat",
   "organizationType": "company",
-  "division": "Vymyšlená 5, 130 00 Praha 3 - Praha",
+  "division": {
+    "address": {
+      "street": "Vymyšlená",
+      "houseNumber": "5",
+      "city": "Praha 3",
+      "zip": "130 00",
+      "cityChallenge": "Praha",
+      "department": "Auto*Mat"
+    }
+  },
   "team": "Auto tým (M)",
   "package": {
     "title": "Tričko 2023",

@@ -176,10 +176,13 @@ export default defineComponent({
         <!-- Address / Division -->
         <details-item
           :label="$t('profile.labelAddressDivision')"
-          :value="profile.division"
           class="col-12 col-sm-6"
           data-cy="profile-details-address-division"
-        />
+        >
+          <template #value>
+            <address-display :address="profile.division.address" />
+          </template>
+        </details-item>
         <!-- Team -->
         <details-item
           :label="$t('profile.labelTeam')"
