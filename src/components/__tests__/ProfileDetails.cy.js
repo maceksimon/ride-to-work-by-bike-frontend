@@ -29,6 +29,7 @@ const selectorTrackingNumber = 'profile-details-tracking-number';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
 const selectorTitleStarterPackage = 'profile-title-starter-package';
+const dataSelectorAddressDisplay = '[data-cy="address-display"]';
 const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
 const dataSelectorButtonSave = '[data-cy="form-button-save"]';
 const dataSelectorEdit = '[data-cy="details-item-edit"]';
@@ -102,7 +103,7 @@ describe('<ProfileDetails>', () => {
 });
 
 function coreTests() {
-  it.only('renders component', () => {
+  it('renders component', () => {
     cy.fixture('formPersonalDetails').then((formPersonalDetails) => {
       // component
       cy.dataCy(selectorPersonalDetails).should('be.visible');
@@ -151,8 +152,13 @@ function coreTests() {
         .find(dataSelectorLabel)
         .should('contain', i18n.global.t('profile.labelAddressDivision'));
       cy.dataCy(selectorAddressDivision)
-        .find(dataSelectorValue)
-        .should('contain', formPersonalDetails.division);
+        .find(dataSelectorAddressDisplay)
+        .should('be.visible')
+        .and('contain', formPersonalDetails.division.address.street)
+        .and('contain', formPersonalDetails.division.address.houseNumber)
+        .and('contain', formPersonalDetails.division.address.zip)
+        .and('contain', formPersonalDetails.division.address.city)
+        .and('contain', formPersonalDetails.division.address.cityChallenge);
       // row address/division
       cy.dataCy(selectorTeam)
         .find(dataSelectorLabel)
@@ -204,13 +210,14 @@ function coreTests() {
         .find(dataSelectorLabel)
         .should('contain', i18n.global.t('profile.labelDeliveryAddress'));
       cy.dataCy(selectorDeliveryAddress)
-        .find(dataSelectorValue)
-        .should('contain', formPersonalDetails.deliveryAddress.department)
-        .should('contain', formPersonalDetails.deliveryAddress.street)
-        .should('contain', formPersonalDetails.deliveryAddress.houseNumber)
-        .should('contain', formPersonalDetails.deliveryAddress.zip)
-        .should('contain', formPersonalDetails.deliveryAddress.city)
-        .should('contain', formPersonalDetails.deliveryAddress.cityChallenge);
+        .find(dataSelectorAddressDisplay)
+        .should('be.visible')
+        .and('contain', formPersonalDetails.deliveryAddress.department)
+        .and('contain', formPersonalDetails.deliveryAddress.street)
+        .and('contain', formPersonalDetails.deliveryAddress.houseNumber)
+        .and('contain', formPersonalDetails.deliveryAddress.zip)
+        .and('contain', formPersonalDetails.deliveryAddress.city)
+        .and('contain', formPersonalDetails.deliveryAddress.cityChallenge);
       // phone
       cy.dataCy(selectorPhone)
         .find(dataSelectorLabel)
