@@ -29,6 +29,8 @@ width = "850px"
 title = "Title"
 subtitle = "Subtitle"
 
+notifyMessagePosition = "top"
+
 # CONTACT DETAILS
 
 # Emails

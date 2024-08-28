@@ -35,4 +35,5 @@ export interface ConfigGlobal {
   entryFeePaymentMin: string;
   entryFeePaymentMax: string;
   entryFeePaymentOptions: string;
+  notifyMessagePosition: string;
 }

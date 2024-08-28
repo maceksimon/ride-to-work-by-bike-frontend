@@ -111,7 +111,7 @@ module.exports = configure(function (ctx) {
     framework: {
       config: {
         notify: {
-          position: 'top',
+          position: getAppConfig(process)['notifyMessagePosition'],
         },
       },
 
