@@ -14,10 +14,8 @@ const white = getPaletteColor('white');
 const dataSelectorCardProgressStatsTitle =
   '[data-cy="card-progress-stats-title"]';
 const selectorCardProgressSlider = 'card-progress-slider';
-const selectorCardProgressTimelineLabel = 'card-progress-timeline-label';
-const selectorCardProgressTimelineNumbers = 'card-progress-timeline-numbers';
 const selectorCardProgressContent = 'card-progress-content';
-const selectorCardProgressTimeline = 'card-progress-timeline';
+const selectorCardProgressTimeline = 'linear-progress-numbers';
 const selectorCardProgressStats = 'card-progress-stats';
 const selectorCardProgressFooterMobile = 'card-progress-footer-mobile';
 const selectorCardProgressHeader = 'card-progress-header';
@@ -50,72 +48,7 @@ describe('<CardProgressSlider>', () => {
     });
 
     coreTests();
-
-    it('renders title and linear progress side by side', () => {
-      cy.testElementsSideBySide(
-        selectorCardProgressTitle,
-        selectorCardProgressTimeline,
-      );
-      // wrapper classes
-      cy.dataCy(selectorCardProgressHeader)
-        .should('be.visible')
-        .and('have.css', 'display', 'flex')
-        .and('have.css', 'flex-direction', 'row')
-        .and('have.css', 'justify-content', 'space-between')
-        .and('have.css', 'align-items', 'center')
-        .and('have.css', 'gap', '16px');
-    });
-
-    it('renders circular progress and stats side by side', () => {
-      cy.testElementsSideBySide(
-        selectorCardProgressCircular,
-        selectorCardProgressSectionStats,
-      );
-      // wrapper classes
-      cy.dataCy(selectorCardProgressContent)
-        .should('be.visible')
-        .and('have.css', 'display', 'flex')
-        .and('have.css', 'flex-direction', 'row')
-        .and('have.css', 'align-items', 'center');
-    });
-
-    it('renders desktop version of timeline progress bar', () => {
-      // desktop timeline
-      cy.dataCy(selectorCardProgressTimeline)
-        .find('.q-linear-progress')
-        .first()
-        .should('be.visible');
-      // mobile timeline
-      cy.dataCy(selectorCardProgressTimeline)
-        .find('.q-linear-progress')
-        .last()
-        .should('not.be.visible');
-    });
-
-    it('renders stats', () => {
-      cy.get('@cardProgress').then((card) => {
-        cy.dataCy(selectorCardProgressStats)
-          .should('be.visible')
-          .find(dataSelectorCardProgressStatsTitle)
-          .first()
-          .should('contain', card.stats[0].title)
-          .and('have.color', secondary)
-          .and('have.css', 'text-transform', 'uppercase')
-          .and('have.css', 'font-size', '12px');
-        cy.dataCy(selectorCardProgressStats)
-          .should('be.visible')
-          .find('.stats-value')
-          .first()
-          .should('contain', card.stats[0].items[0].text)
-          .and('have.color', white)
-          .and('have.css', 'font-weight', '400')
-          .and('have.css', 'font-size', '14px');
-      });
-    });
-
-    it('does not render card footer with timeline', () => {
-      cy.dataCy(selectorCardProgressFooterMobile).should('not.be.visible');
-    });
+    desktopTests();
   });
 
   // context('mobile', () => {
@@ -132,36 +65,7 @@ describe('<CardProgressSlider>', () => {
   //   });
 
   //   coreTests();
-
-  //   it('renders timeline progress bar', () => {
-  //     cy.dataCy(selectorCardProgressTimeline)
-  //       .find('.q-linear-progress')
-  //       .first()
-  //       .should('not.be.visible');
-  //     cy.dataCy(selectorCardProgressTimeline)
-  //       .find('.q-linear-progress')
-  //       .last()
-  //       .should('be.visible');
-  //   });
-
-  //   it('does not render stats', () => {
-  //     cy.dataCy(selectorCardProgressStats).should('not.be.visible');
-  //   });
-
-  //   it('renders smaller circular progress number', () => {
-  //     cy.dataCy(selectorCardProgressCircularNumber)
-  //       .should('be.visible')
-  //       .and('have.css', 'font-size', '40px')
-  //   });
-
-  //   it('wraps items in card header', () => {
-  //     cy.dataCy(selectorCardProgressHeader)
-  //       .should('be.visible')
-  //       .and('have.css', 'display', 'flex')
-  //       .and('have.css', 'flex-direction', 'row')
-  //       .and('have.css', 'flex-wrap', 'wrap')
-  //       .and('have.css', 'gap', '16px');
-  //   });
+  //   mobileTests();
   // });
 });
 
@@ -203,21 +107,6 @@ function coreTests() {
         .and('contain', card.duration.current)
         .and('contain', card.duration.total)
         .and('contain', i18n.global.t('index.cardProgressSlider.timeline'));
-      // timeline label
-      cy.dataCy(selectorCardProgressTimelineLabel)
-        .should('be.visible')
-        .and('contain', i18n.global.t('index.cardProgressSlider.timeline'))
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '400')
-        .and('have.color', white);
-      // timeline numbers
-      cy.dataCy(selectorCardProgressTimelineNumbers)
-        .should('be.visible')
-        .and('contain', card.duration.current)
-        .and('contain', card.duration.total)
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', white);
       // circular progress
       cy.dataCy(selectorCardProgressCircular).should('be.visible');
       // circular caption
@@ -236,3 +125,102 @@ function coreTests() {
     });
   });
 }
+
+function desktopTests() {
+  it('renders title and linear progress side by side', () => {
+    cy.testElementsSideBySide(
+      selectorCardProgressTitle,
+      selectorCardProgressTimeline,
+    );
+    // wrapper classes
+    cy.dataCy(selectorCardProgressHeader)
+      .should('be.visible')
+      .and('have.css', 'display', 'flex')
+      .and('have.css', 'flex-direction', 'row')
+      .and('have.css', 'justify-content', 'space-between')
+      .and('have.css', 'align-items', 'center')
+      .and('have.css', 'gap', '16px');
+  });
+
+  it('renders circular progress and stats side by side', () => {
+    cy.testElementsSideBySide(
+      selectorCardProgressCircular,
+      selectorCardProgressSectionStats,
+    );
+    // wrapper classes
+    cy.dataCy(selectorCardProgressContent)
+      .should('be.visible')
+      .and('have.css', 'display', 'flex')
+      .and('have.css', 'flex-direction', 'row')
+      .and('have.css', 'align-items', 'center');
+  });
+
+  it('renders desktop version of timeline progress bar', () => {
+    // desktop timeline
+    cy.dataCy(selectorCardProgressTimeline)
+      .find('.q-linear-progress')
+      .first()
+      .should('be.visible');
+    // mobile timeline
+    cy.dataCy(selectorCardProgressTimeline)
+      .find('.q-linear-progress')
+      .should('have.length', 1);
+  });
+
+  it('renders stats', () => {
+    cy.get('@cardProgress').then((card) => {
+      cy.dataCy(selectorCardProgressStats)
+        .should('be.visible')
+        .find(dataSelectorCardProgressStatsTitle)
+        .first()
+        .should('contain', card.stats[0].title)
+        .and('have.color', secondary)
+        .and('have.css', 'text-transform', 'uppercase')
+        .and('have.css', 'font-size', '12px');
+      cy.dataCy(selectorCardProgressStats)
+        .should('be.visible')
+        .find('.stats-value')
+        .first()
+        .should('contain', card.stats[0].items[0].text)
+        .and('have.color', white)
+        .and('have.css', 'font-weight', '400')
+        .and('have.css', 'font-size', '14px');
+    });
+  });
+
+  it('does not render card footer with timeline', () => {
+    cy.dataCy(selectorCardProgressFooterMobile).should('not.exist');
+  });
+}
+
+// function mobileTests() {
+//   it('renders timeline progress bar', () => {
+//     cy.dataCy(selectorCardProgressTimeline)
+//       .find('.q-linear-progress')
+//       .first()
+//       .should('not.be.visible');
+//     cy.dataCy(selectorCardProgressTimeline)
+//       .find('.q-linear-progress')
+//       .last()
+//       .should('be.visible');
+//   });
+
+//   it('does not render stats', () => {
+//     cy.dataCy(selectorCardProgressStats).should('not.be.visible');
+//   });
+
+//   it('renders smaller circular progress number', () => {
+//     cy.dataCy(selectorCardProgressCircularNumber)
+//       .should('be.visible')
+//       .and('have.css', 'font-size', '40px')
+//   });
+
+//   it('wraps items in card header', () => {
+//     cy.dataCy(selectorCardProgressHeader)
+//       .should('be.visible')
+//       .and('have.css', 'display', 'flex')
+//       .and('have.css', 'flex-direction', 'row')
+//       .and('have.css', 'flex-wrap', 'wrap')
+//       .and('have.css', 'gap', '16px');
+//   });
+// }

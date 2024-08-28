@@ -13,6 +13,10 @@
  * Note: This component is commonly used within the `SliderProgress`
  * component.
  *
+ * @components
+ * - `LinearProgressNumbers` - Used to render a linear progress bar with
+ *   labels for numbers.
+ *
  * @props
  * - `card` (Object, required): The card object containing progress details.
  *   It should be of type `CardProgressType`.
@@ -26,30 +30,31 @@
  */
 
 // libraries
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import { useCircleSize } from '../../composables/useCircleSize';
 
 // types
 import { CardProgress as CardProgressType } from '../types';
+
+// components
+import LinearProgressNumbers from '../global/LinearProgressNumbers.vue';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 export default defineComponent({
   name: 'CardProgressSlider',
+  components: {
+    LinearProgressNumbers,
+  },
   props: {
     card: {
       type: Object as () => CardProgressType,
       required: true,
     },
   },
-  setup(props) {
-    const timelineValue = computed((): number => {
-      if (!props.card.duration?.current || !props.card.duration?.total) {
-        return 0;
-      }
-      return props.card.duration?.current / props.card.duration?.total;
-    });
+  setup() {
+    const imageMask = `url(${new URL('../../assets/svg/image-mask.svg', import.meta.url).href})`;
 
     const { circleSize, trackWidth } = useCircleSize();
 
@@ -61,7 +66,7 @@ export default defineComponent({
       circleSize,
       colorPrimary,
       colorPrimaryDark,
-      timelineValue,
+      imageMask,
       trackWidth,
     };
   },
@@ -81,7 +86,7 @@ export default defineComponent({
   >
     <!-- Card header -->
     <q-card-section
-      class="flex items-center justify-between bg-primary q-px-lg gap-16 z-1"
+      class="flex items-center justify-between bg-primary q-px-lg gap-16"
       data-cy="card-progress-header"
     >
       <!-- Title with icon -->
@@ -101,31 +106,13 @@ export default defineComponent({
         </component>
       </div>
 
-      <!-- Timeline showing the progress of the challenge -->
-      <div data-cy="card-progress-timeline" class="min-w-180 gt-xs">
-        <!-- Timeline label -->
-        <div
-          class="text-subtitle2 text-weight-regular text-right"
-          data-cy="card-progress-timeline-label"
-        >
-          <span
-            class="text-weight-bold"
-            data-cy="card-progress-timeline-numbers"
-          >
-            {{ card.duration?.current }} / {{ card.duration?.total }}
-          </span>
-          {{ $t('index.cardProgressSlider.timeline') }}
-        </div>
-        <!-- Timeline progress bar -->
-        <q-linear-progress
-          :value="timelineValue"
-          color="secondary"
-          track-color="secondary"
-          size="8px"
-          rounded
-          class="q-mt-xs"
-        />
-      </div>
+      <!-- Timeline (desktop) -->
+      <linear-progress-numbers
+        :value="card.duration?.current"
+        :max="card.duration?.total"
+        :label="$t('index.cardProgressSlider.timeline')"
+        class="gt-xs"
+      />
     </q-card-section>
     <!-- Card body -->
     <q-card-section
@@ -210,62 +197,41 @@ export default defineComponent({
             </q-list>
           </div>
         </div>
-        <div class="gt-sm">
+        <div v-if="$q.screen.gt.sm" class="absolute-right col-lg-4 full-height">
           <q-img
-            src="/image/card-progress-slider/bike.webp"
-            style="mask-image: url(/svg/image-mask.svg)"
+            fit="cover"
+            class="full-width full-height"
+            src="~assets/image/card-progress-slider/bike.webp"
+            :img-style="{
+              maskImage: imageMask,
+              maskRepeat: 'no-repeat',
+              maskSize: 'contain',
+            }"
           />
         </div>
       </div>
     </q-card-section>
     <!-- Card footer (mobile) -->
+    <q-separator v-if="$q.screen.lt.lg" color="blue-grey-8" />
     <q-card-section
-      v-if="$q.screen.lt.sm"
+      v-if="$q.screen.lt.lg"
       :style="{ backgroundColor: colorPrimaryDark }"
       data-cy="card-progress-footer-mobile"
     >
-      <!-- Timeline showing the progress of the challenge -->
-      <div class="min-w-180" data-cy="card-progress-timeline">
-        <!-- Timeline label -->
-        <div
-          class="text-subtitle2 text-weight-regular text-center"
-          data-cy="card-progress-timeline-label"
-        >
-          <span
-            class="text-weight-bold"
-            data-cy="card-progress-timeline-numbers"
-          >
-            {{ card.duration?.current }} / {{ card.duration?.total }}
-          </span>
-          {{ $t('index.cardProgressSlider.timeline') }}
-        </div>
-        <!-- Timeline progress bar -->
-        <q-linear-progress
-          class="q-mt-xs"
-          :value="timelineValue"
-          color="secondary"
-          track-color="secondary"
-          size="8px"
-          rounded
-        />
-      </div>
+      <!-- Timeline (mobile) -->
+      <linear-progress-numbers
+        :value="card.duration?.current"
+        :max="card.duration?.total"
+        :label="$t('index.cardProgressSlider.timeline')"
+      />
     </q-card-section>
   </q-card>
 </template>
 
 <style scoped lang="scss">
-.z-1 {
-  z-index: 1;
-}
-.gap-16 {
-  gap: 16px;
-}
 .justify-sm-start {
   @media (min-width: $breakpoint-sm-min) {
     justify-content: flex-start;
   }
-}
-.min-w-180 {
-  min-width: 180px;
 }
 </style>
