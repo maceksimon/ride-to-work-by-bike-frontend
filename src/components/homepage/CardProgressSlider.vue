@@ -212,9 +212,9 @@ export default defineComponent({
       </div>
     </q-card-section>
     <!-- Card footer (mobile) -->
-    <q-separator v-if="$q.screen.lt.lg" color="blue-grey-8" />
+    <q-separator v-if="$q.screen.lt.sm" color="blue-grey-8" />
     <q-card-section
-      v-if="$q.screen.lt.lg"
+      v-if="$q.screen.lt.sm"
       :style="{ backgroundColor: colorPrimaryDark }"
       data-cy="card-progress-footer-mobile"
     >
