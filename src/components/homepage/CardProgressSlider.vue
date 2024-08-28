@@ -115,14 +115,11 @@ export default defineComponent({
       />
     </q-card-section>
     <!-- Card body -->
-    <q-card-section
-      class="full-width"
-      :style="{ backgroundColor: colorPrimaryDark }"
-    >
+    <q-card-section :style="{ backgroundColor: colorPrimaryDark }">
       <div class="row items-center q-pa-xl" data-cy="card-progress-content">
         <!-- Section progress -->
         <div
-          class="col-12 col-lg-4 flex justify-center justify-sm-start"
+          class="col-12 col-sm-6 col-lg-4 flex justify-center justify-sm-start"
           data-cy="card-section-progress"
         >
           <div class="relative-position">
@@ -158,7 +155,7 @@ export default defineComponent({
 
         <!-- Section stats -->
         <div
-          class="col col-lg-4 flex column gap-16 gt-xs"
+          class="col col-sm-6 col-lg-4 flex column gap-16 gt-xs"
           data-cy="card-section-stats"
         >
           <div
@@ -197,9 +194,12 @@ export default defineComponent({
             </q-list>
           </div>
         </div>
-        <div v-if="$q.screen.gt.sm" class="absolute-right col-lg-4 full-height">
+
+        <!-- Section image -->
+        <div v-if="$q.screen.gt.md" class="absolute-right col-lg-4 full-height">
           <q-img
             fit="cover"
+            position="50% 100%"
             class="full-width full-height"
             src="~assets/image/card-progress-slider/bike.webp"
             :img-style="{
