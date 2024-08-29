@@ -21,6 +21,7 @@
  * @components
  * - `CardProgress`: Component to render individual progress cards.
  * - `SectionHeading`: Component to render a heading.
+ * - `StatsBar`: Component to render a stats bar.
  *
  * @example
  * <list-card-progress
@@ -46,6 +47,7 @@ import {
 // components
 import CardProgress from './CardProgress.vue';
 import SectionHeading from '../global/SectionHeading.vue';
+import StatsBar from '../global/StatsBar.vue';
 
 export default defineComponent({
   name: 'ListCardProgress',
@@ -69,6 +71,7 @@ export default defineComponent({
   components: {
     CardProgress,
     SectionHeading,
+    StatsBar,
   },
 });
 </script>
@@ -77,30 +80,22 @@ export default defineComponent({
   <!-- Component displaying challenge statistics with progress loaders -->
   <!-- Internal Figma link: https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A106399&mode=design&t=x3DpoanmIFk5i6MU-1 -->
   <div>
-    <div class="row q-col-gutter-lg" data-cy="card-list-progress">
+    <div class="row q-col-gutter-lg q-mb-lg" data-cy="card-list-progress">
       <!-- Title -->
-      <section-heading class="col-sm-5" data-cy="card-list-progress-title">
+      <section-heading
+        class="col-12 col-sm-auto"
+        data-cy="progress-slider-section-title"
+      >
         {{ title }}
       </section-heading>
       <!-- List of statistics -->
-      <q-list
-        class="col-sm-7 flex flex-wrap items-center justify-end q-pr-md gap-x-40"
-      >
-        <q-item
-          v-for="item in stats"
-          :key="item.icon"
-          data-cy="card-list-progress-stats-item"
-          class="text-grey-10 q-px-none"
-        >
-          <!-- Icon -->
-          <q-icon :name="item.icon" color="blue-grey-3" size="18px" />&nbsp;
-          <!-- Value -->
-          <strong>{{ item.value }}</strong
-          >&nbsp;
-          <!-- Label -->
-          <span>{{ item.label }}</span>
-        </q-item>
-      </q-list>
+      <div class="col-12 col-sm" data-cy="progress-slider-section-stats">
+        <stats-bar
+          v-if="stats"
+          :stats="stats"
+          data-cy="progress-slider-stats"
+        />
+      </div>
     </div>
     <!-- Result cards -->
     <div class="row q-col-gutter-lg" data-cy="card-list-progress-wrapper">

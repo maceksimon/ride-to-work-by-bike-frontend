@@ -1,20 +1,20 @@
 import { colors } from 'quasar';
-
 import ListCardProgress from '../homepage/ListCardProgress.vue';
 import { i18n } from '../../boot/i18n';
-import { progressStats } from '../../mocks/homepage';
 
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
-const grey10 = getPaletteColor('grey-10');
-const blueGrey3 = getPaletteColor('blue-grey-3');
 
 describe('<ListCardProgress>', () => {
-  let cardsProgress;
+  let cards;
+  let stats;
 
   before(() => {
     cy.fixture('cardsProgress').then((cardsData) => {
-      cardsProgress = cardsData;
+      cards = cardsData;
+    });
+    cy.fixture('statsBar').then((statsData) => {
+      stats = statsData;
     });
   });
 
@@ -31,8 +31,8 @@ describe('<ListCardProgress>', () => {
       cy.mount(ListCardProgress, {
         props: {
           title: i18n.global.t('index.cardListProgress.title'),
-          stats: progressStats,
-          cards: cardsProgress,
+          stats,
+          cards,
           button: { title: i18n.global.t('index.cardListProgress.button') },
         },
       });
@@ -56,28 +56,7 @@ describe('<ListCardProgress>', () => {
 
     it('renders list of stats', () => {
       cy.window().then(() => {
-        cy.dataCy('card-list-progress-stats-item').should('have.length', 3);
-        cy.dataCy('card-list-progress-stats-item').each(($item, index) => {
-          cy.wrap($item)
-            .should('have.css', 'font-size', '14px')
-            .and('have.css', 'font-weight', '400')
-            .and('have.color', grey10);
-          cy.wrap($item)
-            .find('.q-icon')
-            .should('be.visible')
-            .and('have.color', blueGrey3)
-            .and('have.css', 'width', '18px')
-            .and('have.css', 'height', '18px');
-          cy.wrap($item)
-            .find('span')
-            .should('contain', progressStats[index].label)
-            .and('have.color', grey10);
-          cy.wrap($item)
-            .find('strong')
-            .should('contain', progressStats[index].value)
-            .and('have.color', grey10)
-            .and('have.css', 'font-weight', '700');
-        });
+        cy.dataCy('progress-slider-stats').should('be.visible');
       });
     });
 
@@ -103,8 +82,8 @@ describe('<ListCardProgress>', () => {
       cy.mount(ListCardProgress, {
         props: {
           title: i18n.global.t('index.cardListProgress.title'),
-          stats: progressStats,
-          cards: cardsProgress,
+          stats,
+          cards,
           button: { title: i18n.global.t('index.cardListProgress.button') },
         },
       });
@@ -124,8 +103,8 @@ describe('<ListCardProgress>', () => {
       cy.mount(ListCardProgress, {
         props: {
           title: i18n.global.t('index.cardListProgress.title'),
-          stats: progressStats,
-          cards: cardsProgress,
+          stats,
+          cards,
           button: { title: i18n.global.t('index.cardListProgress.button') },
         },
       });
