@@ -318,6 +318,10 @@ export const cardsProgress: CardProgress[] = [
     icon: 'people',
     url: '#',
     progress: 95,
+    duration: {
+      current: 24,
+      total: 30,
+    },
     prizes: [
       {
         icon: 'emoji_events',
@@ -331,6 +335,10 @@ export const cardsProgress: CardProgress[] = [
     icon: 'person',
     url: '#',
     progress: 80,
+    duration: {
+      current: 24,
+      total: 30,
+    },
     prizes: [
       {
         icon: '',
@@ -344,6 +352,10 @@ export const cardsProgress: CardProgress[] = [
     icon: 'person',
     url: '#',
     progress: 48,
+    duration: {
+      current: 24,
+      total: 30,
+    },
     prizes: [
       {
         icon: '',
