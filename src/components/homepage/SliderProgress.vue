@@ -40,6 +40,9 @@ import { Screen } from 'quasar';
 import CardProgressSlider from './CardProgressSlider.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
 import { CardProgress, Link, ItemStatistics } from '../types';
 
@@ -75,8 +78,11 @@ export default defineComponent({
       return isLargeScreen.value ? 'auto' : '100%';
     });
 
+    const { borderRadiusCard } = rideToWorkByBikeConfig;
+
     return {
       buttonWidth,
+      borderRadiusCard,
     };
   },
 });
@@ -84,30 +90,40 @@ export default defineComponent({
 
 <template>
   <div class="progress-slider relative-position" data-cy="progress-slider">
-    <div class="row q-col-gutter-lg">
+    <div class="row q-col-gutter-lg q-mb-lg">
       <!-- Title -->
-      <section-heading class="col-sm-5">
+      <section-heading class="col-12 col-sm-auto">
         {{ title }}
       </section-heading>
       <!-- List of statistics -->
-      <q-list
-        class="col-sm-7 flex flex-wrap items-center justify-end q-pr-md gap-x-40"
-      >
-        <q-item
-          v-for="item in stats"
-          :key="item.icon"
-          data-cy="progress-slider-stats-item"
-          class="text-grey-10 q-p-none"
+      <div class="col-12 col-sm flex justify-end">
+        <q-list
+          class="flex flex-wrap items-center justify-sm-end q-pa-sm bg-grey-2"
+          :style="{ borderRadius: borderRadiusCard }"
+          data-cy="progress-slider-stats"
         >
-          <!-- Icon -->
-          <q-icon :name="item.icon" color="blue-grey-3" size="18px" />&nbsp;
-          <!-- Value -->
-          <strong>{{ item.value }}</strong
-          >&nbsp;
-          <!-- Label -->
-          <span>{{ item.label }}</span>
-        </q-item>
-      </q-list>
+          <q-item
+            dense
+            v-for="item in stats"
+            :key="item.icon"
+            data-cy="progress-slider-stats-item"
+            class="text-grey-10 q-p-none flex items-center"
+          >
+            <!-- Icon -->
+            <q-icon
+              :name="item.icon"
+              color="blue-grey-3"
+              size="18px"
+              class="q-mr-sm"
+            />
+            <!-- Value -->
+            <strong>{{ item.value }}</strong
+            >&nbsp;
+            <!-- Label -->
+            <span>{{ item.label }}</span>
+          </q-item>
+        </q-list>
+      </div>
     </div>
     <swiper-container
       :navigation="true"
@@ -147,9 +163,3 @@ export default defineComponent({
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-.gap-x-40 {
-  column-gap: 40px;
-}
-</style>

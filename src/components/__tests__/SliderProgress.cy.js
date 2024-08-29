@@ -3,9 +3,11 @@ import { colors } from 'quasar';
 import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
+const grey2 = getPaletteColor('grey-2');
 const grey10 = getPaletteColor('grey-10');
 const blueGrey3 = getPaletteColor('blue-grey-3');
 
@@ -55,6 +57,15 @@ describe('<SliderProgress>', () => {
 
     it('renders list of stats', () => {
       cy.window().then(() => {
+        cy.dataCy('progress-slider-stats')
+          .should('be.visible')
+          .and('have.backgroundColor', grey2)
+          .and(
+            'have.css',
+            'border-radius',
+            rideToWorkByBikeConfig.borderRadiusCard,
+          )
+          .and('have.css', 'padding', '8px');
         cy.dataCy('progress-slider-stats-item').should('have.length', 3);
         cy.dataCy('progress-slider-stats-item').each(($item, index) => {
           cy.wrap($item)
