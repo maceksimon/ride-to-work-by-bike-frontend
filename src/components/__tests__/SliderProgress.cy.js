@@ -8,7 +8,6 @@ import { progressStats, cardsProgress } from 'src/mocks/homepage';
 // colors
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
-const blueGrey3 = getPaletteColor('blue-grey-3');
 const grey2 = getPaletteColor('grey-2');
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
@@ -117,8 +116,8 @@ function coreTests() {
           .and('have.color', grey10);
         cy.wrap($item)
           .find('.q-icon')
-          .should('contain', progressStats[index].icon)
-          .and('have.color', blueGrey3)
+          .should('be.visible')
+          .and('have.color', primary)
           .and('have.css', 'width', '18px')
           .and('have.css', 'height', '18px');
         cy.wrap($item)

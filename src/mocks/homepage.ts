@@ -296,17 +296,17 @@ export const cardsProgressSlider: CardProgress[] = [
 
 export const progressStats: ItemStatistics[] = [
   {
-    icon: 'route',
+    icon: 'svguse:icons/slider_progress/lucide-route.svg#lucide-route',
     label: 'udržitelných cest',
     value: '18',
   },
   {
-    icon: 'open_in_full',
-    label: '312,25 km',
-    value: '',
+    icon: 'svguse:icons/slider_progress/jam-arrows-h.svg#jam-arrows-h',
+    label: '',
+    value: '312,25 km',
   },
   {
-    icon: 'eco',
+    icon: 'svguse:icons/slider_progress/tabler-leaf.svg#tabler-leaf',
     label: 'ušetřeno',
     value: '420 g CO2',
   },

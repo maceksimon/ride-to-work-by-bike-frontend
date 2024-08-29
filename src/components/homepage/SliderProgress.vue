@@ -118,12 +118,12 @@ export default defineComponent({
             <!-- Icon -->
             <q-icon
               :name="item.icon"
-              color="blue-grey-3"
+              color="primary"
               size="18px"
               class="q-mr-sm"
             />
             <!-- Value -->
-            <strong>{{ item.value }}</strong
+            <strong class="text-weight-bold">{{ item.value }}</strong
             >&nbsp;
             <!-- Label -->
             <span>{{ item.label }}</span>
