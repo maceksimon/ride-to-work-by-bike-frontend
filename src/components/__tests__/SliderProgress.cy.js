@@ -42,20 +42,6 @@ describe('<SliderProgress>', () => {
 
     coreTests();
 
-    it('renders list of stats with specific desktop styles', () => {
-      cy.window().then(() => {
-        cy.dataCy('progress-slider-stats')
-          .should('be.visible')
-          .and('have.backgroundColor', grey2)
-          .and(
-            'have.css',
-            'border-radius',
-            rideToWorkByBikeConfig.borderRadiusCard,
-          )
-          .and('have.css', 'padding', '8px');
-      });
-    });
-
     it('renders swiper navigation buttons', () => {
       cy.window().then(() => {
         cy.dataCy('swiper-container')
@@ -111,22 +97,6 @@ describe('<SliderProgress>', () => {
           .should('have.css', 'opacity', '1');
       });
     });
-
-    it('renders button with title', () => {
-      cy.dataCy('progress-slider-button')
-        .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '500')
-        .and('have.css', 'text-transform', 'uppercase')
-        .and('have.color', grey10)
-        .and('have.css', 'border-radius', '28px')
-        .and('contain', i18n.global.t('index.progressSlider.button'))
-        .then(($title) => {
-          expect($title.text()).to.equal(
-            i18n.global.t('index.progressSlider.button'),
-          );
-        });
-    });
   });
 
   context('mobile', () => {
@@ -147,13 +117,8 @@ describe('<SliderProgress>', () => {
 
     coreTests();
 
-    it('renders button', () => {
+    it('renders full-width button', () => {
       cy.window().then(() => {
-        cy.dataCy('progress-slider-button')
-          .should('be.visible')
-          .and('have.css', 'border-color', hexToRgb('#212121'))
-          .and('have.css', 'border-radius', '28px')
-          .and('contain', i18n.global.t('index.progressSlider.button'));
         cy.testElementPercentageWidth(cy.dataCy('progress-slider-button'), 100);
       });
     });
@@ -161,8 +126,9 @@ describe('<SliderProgress>', () => {
 });
 
 function coreTests() {
-  it('renders title', () => {
+  it('renders component', () => {
     cy.window().then(() => {
+      // title
       cy.dataCy('section-heading-title')
         .should('have.css', 'font-size', '20px')
         .and('have.css', 'font-weight', '500')
@@ -173,6 +139,16 @@ function coreTests() {
             i18n.global.t('index.progressSlider.title'),
           );
         });
+      // stats
+      cy.dataCy('progress-slider-stats')
+        .should('be.visible')
+        .and('have.backgroundColor', grey2)
+        .and(
+          'have.css',
+          'border-radius',
+          rideToWorkByBikeConfig.borderRadiusCard,
+        )
+        .and('have.css', 'padding', '8px');
     });
   });
 
@@ -207,5 +183,21 @@ function coreTests() {
     cy.window().then(() => {
       cy.dataCy('swiper-container').should('be.visible');
     });
+  });
+
+  it('renders button with title', () => {
+    cy.dataCy('progress-slider-button')
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '500')
+      .and('have.css', 'text-transform', 'uppercase')
+      .and('have.color', grey10)
+      .and('have.css', 'border-radius', '28px')
+      .and('contain', i18n.global.t('index.progressSlider.button'))
+      .then(($title) => {
+        expect($title.text()).to.equal(
+          i18n.global.t('index.progressSlider.button'),
+        );
+      });
   });
 }
