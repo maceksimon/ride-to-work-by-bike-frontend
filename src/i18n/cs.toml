@@ -222,6 +222,7 @@ labelTrackDelivery = "Chci dostat zprávu o stavu doručování mého startovní
 labelVariant = "Varianta"
 
 [form.personalDetails]
+hintGender = "Slouží pro rozřazení do výkonnostních kategorií"
 labelNewsletterAll = "O všech informacích od Do práce na kole"
 labelNewsletterChallenges = "O budoucích výzvách"
 labelNewsletterEvents = "Chci dostávat info o doprovodných akcích (cyklojízdách, snídaních...) a akčních nabídkách."

@@ -219,6 +219,7 @@ labelTrackDelivery = "I would like to receive a status report on the delivery of
 labelVariant = "Variant"
 
 [form.personalDetails]
+hintGender = "Used to determine the performance category"
 labelNewsletterAll = "About everything around Ride to Work by Bike"
 labelNewsletterChallenges = "About upcoming challenges"
 labelNewsletterEvents = "I want to receive info about accompanying events (bike rides, breakfasts...) and special offers."

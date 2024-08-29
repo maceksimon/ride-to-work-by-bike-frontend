@@ -16,6 +16,7 @@ describe('<FormPersonalDetails>', () => {
     );
     cy.testLanguageStringsInContext(
       [
+        'hintGender',
         'labelNewsletterAll',
         'labelNewsletterChallenges',
         'labelNewsletterEvents',
@@ -69,6 +70,10 @@ describe('<FormPersonalDetails>', () => {
         .should('be.visible')
         .and('have.color', grey10)
         .and('have.css', 'font-size', '12px');
+      cy.dataCy('form-personal-details-gender').should(
+        'contain',
+        i18n.global.t('form.personalDetails.hintGender'),
+      );
     });
 
     it('renders checkbox select newsletter', () => {

@@ -144,7 +144,7 @@ export default defineComponent({
             name="nickname"
             :hint="$t('form.hintNickname')"
             id="form-nickname"
-            class="q-mt-sm"
+            class="q-mt-sm hint-no-padding"
             @change="onUpdate"
             data-cy="form-nickname-input"
           />
@@ -161,6 +161,7 @@ export default defineComponent({
           inline
           v-model="personalDetails.gender"
           :options="genderOptions"
+          :hint="$t('form.personalDetails.hintGender')"
           @update:model-value="onUpdate"
           class="q-mt-sm"
         />
@@ -227,3 +228,11 @@ export default defineComponent({
     </div>
   </div>
 </template>
+
+<style>
+.hint-no-padding {
+  .q-field__bottom {
+    padding: 8px 0 0;
+  }
+}
+</style>
