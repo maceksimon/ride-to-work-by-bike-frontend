@@ -88,7 +88,7 @@ export default defineComponent({
       :options="options"
       :inline="inline"
       color="primary"
-      class="q-gutter-md"
+      class="text-grey-10 q-gutter-md"
       data-cy="form-field-radio"
     />
   </q-field>
