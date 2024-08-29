@@ -24,6 +24,9 @@ const selectorCardProgressSectionStats = 'card-section-stats';
 const selectorCardProgressCircularCaption = 'card-progress-circular-caption';
 const selectorCardProgressCircularNumber = 'card-progress-circular-number';
 
+// variables
+const iconSize = '18px';
+
 describe('<CardProgressSlider>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -89,8 +92,8 @@ function coreTests() {
         .find('.q-icon')
         .should('contain', card.icon)
         .and('have.color', white)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px');
+        .and('have.css', 'width', iconSize)
+        .and('have.css', 'height', iconSize);
       // title
       cy.dataCy(selectorCardProgressTitle)
         .should('have.css', 'font-size', '16px')

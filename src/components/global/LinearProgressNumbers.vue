@@ -13,7 +13,7 @@
  * - `label` (string, required): Label of the progress bar.
  *
  * @example
- * <linear-progress-numbers :value="10" :max="100" />
+ * <linear-progress-numbers :value="10" :max="100" :label="Days" />
  *
  * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=7102-35017&t=gDCwy7HgWG7zGSPV-1)
  */
