@@ -4,6 +4,7 @@ import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { progressStats, cardsProgress } from 'src/mocks/homepage';
 
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
@@ -11,9 +12,20 @@ const grey2 = getPaletteColor('grey-2');
 const grey10 = getPaletteColor('grey-10');
 const blueGrey3 = getPaletteColor('blue-grey-3');
 
-// mocks
-import { progressStats, cardsProgress } from 'src/mocks/homepage';
+// selectors
+const classSelectorSwiperButtonPrev = '.swiper-button-prev';
+const classSelectorSwiperButtonNext = '.swiper-button-next';
+const selectorSectionHeadingTitle = 'section-heading-title';
+const selectorProgressSliderStats = 'progress-slider-stats';
+const selectorProgressSliderStatsItem = 'progress-slider-stats-item';
+const selectorSwiperContainer = 'swiper-container';
+const selectorProgressSliderButton = 'progress-slider-button';
+
+// variables
 const cards = cardsProgress.slice(0, 5);
+const buttonSize = '38px';
+const opacityDisabled = '0.35';
+const opacityEnabled = '1';
 
 describe('<SliderProgress>', () => {
   it('has translation for all strings', () => {
@@ -41,62 +53,7 @@ describe('<SliderProgress>', () => {
     });
 
     coreTests();
-
-    it('renders swiper navigation buttons', () => {
-      cy.window().then(() => {
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-prev')
-          .should('be.visible')
-          .and('have.css', 'width', '38px')
-          .and('have.css', 'height', '38px')
-          .and('have.css', 'border', `1px solid ${hexToRgb('#212121')}`);
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-next')
-          .should('be.visible')
-          .and('have.css', 'width', '38px')
-          .and('have.css', 'height', '38px')
-          .and('have.css', 'border', `1px solid ${hexToRgb('#212121')}`);
-      });
-    });
-
-    it('changes button disabled state after navigation', () => {
-      cy.window().then(() => {
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-prev')
-          .should('have.css', 'opacity', '0.35');
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-next')
-          .should('have.css', 'opacity', '1');
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-next')
-          .click();
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-prev')
-          .should('have.css', 'opacity', '1');
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-next')
-          .should('have.css', 'opacity', '1');
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-prev')
-          .click();
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-prev')
-          .should('have.css', 'opacity', '0.35');
-        cy.dataCy('swiper-container')
-          .shadow()
-          .find('.swiper-button-next')
-          .should('have.css', 'opacity', '1');
-      });
-    });
+    desktopTests();
   });
 
   context('mobile', () => {
@@ -116,12 +73,7 @@ describe('<SliderProgress>', () => {
     });
 
     coreTests();
-
-    it('renders full-width button', () => {
-      cy.window().then(() => {
-        cy.testElementPercentageWidth(cy.dataCy('progress-slider-button'), 100);
-      });
-    });
+    mobileTests();
   });
 });
 
@@ -129,7 +81,7 @@ function coreTests() {
   it('renders component', () => {
     cy.window().then(() => {
       // title
-      cy.dataCy('section-heading-title')
+      cy.dataCy(selectorSectionHeadingTitle)
         .should('have.css', 'font-size', '20px')
         .and('have.css', 'font-weight', '500')
         .and('have.color', black)
@@ -140,7 +92,7 @@ function coreTests() {
           );
         });
       // stats
-      cy.dataCy('progress-slider-stats')
+      cy.dataCy(selectorProgressSliderStats)
         .should('be.visible')
         .and('have.backgroundColor', grey2)
         .and(
@@ -154,8 +106,8 @@ function coreTests() {
 
   it('renders list of stats', () => {
     cy.window().then(() => {
-      cy.dataCy('progress-slider-stats-item').should('have.length', 3);
-      cy.dataCy('progress-slider-stats-item').each(($item, index) => {
+      cy.dataCy(selectorProgressSliderStatsItem).should('have.length', 3);
+      cy.dataCy(selectorProgressSliderStatsItem).each(($item, index) => {
         cy.wrap($item)
           .should('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
@@ -181,12 +133,12 @@ function coreTests() {
 
   it('renders a slider with stat cards', () => {
     cy.window().then(() => {
-      cy.dataCy('swiper-container').should('be.visible');
+      cy.dataCy(selectorSwiperContainer).should('be.visible');
     });
   });
 
   it('renders button with title', () => {
-    cy.dataCy('progress-slider-button')
+    cy.dataCy(selectorProgressSliderButton)
       .should('be.visible')
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '500')
@@ -199,5 +151,74 @@ function coreTests() {
           i18n.global.t('index.progressSlider.button'),
         );
       });
+  });
+}
+
+function desktopTests() {
+  it('renders swiper navigation buttons', () => {
+    cy.window().then(() => {
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonPrev)
+        .should('be.visible')
+        .and('have.css', 'width', buttonSize)
+        .and('have.css', 'height', buttonSize)
+        .and('have.css', 'border', `1px solid ${hexToRgb(grey10)}`);
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonNext)
+        .should('be.visible')
+        .and('have.css', 'width', buttonSize)
+        .and('have.css', 'height', buttonSize)
+        .and('have.css', 'border', `1px solid ${hexToRgb(grey10)}`);
+    });
+  });
+
+  it('changes button disabled state after navigation', () => {
+    cy.window().then(() => {
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonPrev)
+        .should('have.css', 'opacity', opacityDisabled);
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonNext)
+        .should('have.css', 'opacity', opacityEnabled);
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonNext)
+        .click();
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonPrev)
+        .should('have.css', 'opacity', opacityEnabled);
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonNext)
+        .should('have.css', 'opacity', opacityEnabled);
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonPrev)
+        .click();
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonPrev)
+        .should('have.css', 'opacity', opacityDisabled);
+      cy.dataCy(selectorSwiperContainer)
+        .shadow()
+        .find(classSelectorSwiperButtonNext)
+        .should('have.css', 'opacity', opacityEnabled);
+    });
+  });
+}
+
+function mobileTests() {
+  it('renders full-width button', () => {
+    cy.window().then(() => {
+      cy.testElementPercentageWidth(
+        cy.dataCy(selectorProgressSliderButton),
+        100,
+      );
+    });
   });
 }
