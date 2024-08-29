@@ -43,7 +43,7 @@
       <slider-progress
         :title="$t('index.progressSlider.title')"
         :cards="cardsProgressSlider"
-        :stats="progressStats"
+        :stats="stasBar"
         class="q-pt-xl q-mb-md"
         :button="{ title: $t('index.progressSlider.button'), url: '/blog' }"
       >
@@ -51,7 +51,7 @@
       <list-card-progress
         :title="$t('index.cardListProgress.title')"
         :cards="cardsProgress"
-        :stats="progressStats"
+        :stats="stasBar"
         class="q-pt-xl q-pb-xl"
         data-cy="list-progress"
       ></list-card-progress>
@@ -147,7 +147,8 @@ import * as homepage from '../mocks/homepage';
 // fixtures
 import listCardsFollow from '../../test/cypress/fixtures/listCardsFollow.json';
 import listCardsPost from '../../test/cypress/fixtures/listCardsPost.json';
-import cardsProgress from '../../test/cypress/fixtures/cardsProgress.json';
+import stasBar from '../../test/cypress/fixtures/statsBar.json';
+import cardsProgressSlider from '../../test/cypress/fixtures/cardsProgress.json';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -186,12 +187,12 @@ export default defineComponent({
       cardsFollow,
       cardsOffer: homepage.cardsOffer,
       cardsPost,
-      cardsProgress,
-      cardsProgressSlider: homepage.cardsProgressSlider,
+      cardsProgress: homepage.cardsProgress,
+      cardsProgressSlider,
       cardsStats: homepage.cardsStats,
       headingBgTitle: homepage.headingBgTitle,
-      progressStats: homepage.progressStats,
       releaseDate: challengeStartDate,
+      stasBar,
     };
   },
 });

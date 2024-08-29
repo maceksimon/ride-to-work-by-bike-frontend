@@ -9,7 +9,6 @@ import {
   CardProgress,
   CardStats,
   ItemBadge,
-  ItemStatistics,
   NewsletterItem,
   CardOffer,
 } from 'components/types';
@@ -242,73 +241,6 @@ export const cardsOffer: CardOffer[] = [
     icon: 'pedal_bike',
     content:
       'Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.',
-  },
-];
-
-export const cardsProgressSlider: CardProgress[] = [
-  {
-    title: 'Týmová pravidelnost',
-    icon: 'person',
-    url: '#',
-    image: '',
-    progress: 60,
-    stats: [
-      {
-        title: 'Váš podíl na výsledku',
-        items: [{ id: '1', text: '80% pravidelnost' }],
-      },
-      {
-        title: 'Postavení v žebříčku',
-        items: [
-          { id: '1', text: '2. Automati a 1 další (80 %)' },
-          { id: '2', text: '3. Váš tým a 2 další (60 %)' },
-          { id: '3', text: '4. Tygři a 2 další (40 %)' },
-        ],
-      },
-    ],
-    duration: {
-      current: 14,
-      total: 30,
-    },
-  },
-  {
-    title: 'Žebříčky',
-    icon: 'person',
-    url: '#',
-    image: '',
-    progress: 60,
-    stats: [
-      {
-        title: '',
-        items: [{ id: '1', text: '' }],
-      },
-      {
-        title: '',
-        items: [{ id: '1', text: '' }],
-      },
-    ],
-    duration: {
-      current: 14,
-      total: 30,
-    },
-  },
-];
-
-export const progressStats: ItemStatistics[] = [
-  {
-    icon: 'svguse:icons/slider_progress/lucide-route.svg#lucide-route',
-    label: 'udržitelných cest',
-    value: '18',
-  },
-  {
-    icon: 'svguse:icons/slider_progress/jam-arrows-h.svg#jam-arrows-h',
-    label: '',
-    value: '312,25 km',
-  },
-  {
-    icon: 'svguse:icons/slider_progress/tabler-leaf.svg#tabler-leaf',
-    label: 'ušetřeno',
-    value: '420 g CO2',
   },
 ];
 

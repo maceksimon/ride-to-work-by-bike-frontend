@@ -34,12 +34,10 @@ import SectionColumns from '../homepage/SectionColumns.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 
 // mocks
-import {
-  badgeList,
-  cardsChallenge,
-  cardsProgressSlider,
-  cardsStats,
-} from '../../mocks/homepage';
+import { badgeList, cardsChallenge, cardsStats } from '../../mocks/homepage';
+
+// fixtures
+import cardsProgressSlider from '../../../test/cypress/fixtures/cardsProgress.json';
 
 export default defineComponent({
   name: 'ResultsChallengeOngoing',

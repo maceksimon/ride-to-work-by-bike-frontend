@@ -66,7 +66,7 @@ export interface CardPost {
 export interface CardProgress {
   title: string;
   icon: string;
-  url: string;
+  url?: string;
   image?: string;
   progress: number;
   prizes?: ItemPrize[];
