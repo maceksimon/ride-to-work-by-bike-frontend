@@ -16,11 +16,13 @@ const primary = getPaletteColor('primary');
 // selectors
 const classSelectorSwiperButtonPrev = '.swiper-button-prev';
 const classSelectorSwiperButtonNext = '.swiper-button-next';
-const selectorSectionHeadingTitle = 'section-heading-title';
+const selectorProgressSliderButton = 'progress-slider-button';
+const selectorProgressSliderSectionTitle = 'progress-slider-section-title';
+const selectorProgressSliderSectionStats = 'progress-slider-section-stats';
 const selectorProgressSliderStats = 'progress-slider-stats';
 const selectorProgressSliderStatsItem = 'progress-slider-stats-item';
+const selectorSectionHeadingTitle = 'section-heading-title';
 const selectorSwiperContainer = 'swiper-container';
-const selectorProgressSliderButton = 'progress-slider-button';
 
 // variables
 const cards = cardsProgress.slice(0, 5);
@@ -156,6 +158,13 @@ function coreTests() {
 }
 
 function desktopTests() {
+  it('renders title and stats side by side', () => {
+    cy.testElementsSideBySide(
+      selectorProgressSliderSectionTitle,
+      selectorProgressSliderSectionStats,
+    );
+  });
+
   it('renders swiper navigation buttons', () => {
     cy.window().then(() => {
       cy.dataCy(selectorSwiperContainer)

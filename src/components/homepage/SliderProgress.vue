@@ -92,11 +92,17 @@ export default defineComponent({
   <div class="progress-slider relative-position" data-cy="progress-slider">
     <div class="row q-col-gutter-lg q-mb-lg">
       <!-- Title -->
-      <section-heading class="col-12 col-sm-auto">
+      <section-heading
+        class="col-12 col-sm-auto"
+        data-cy="progress-slider-section-title"
+      >
         {{ title }}
       </section-heading>
       <!-- List of statistics -->
-      <div class="col-12 col-sm flex justify-end">
+      <div
+        class="col-12 col-sm flex justify-end"
+        data-cy="progress-slider-section-stats"
+      >
         <q-list
           class="flex flex-wrap items-center justify-sm-end q-pa-sm bg-grey-2"
           :style="{ borderRadius: borderRadiusCard }"
