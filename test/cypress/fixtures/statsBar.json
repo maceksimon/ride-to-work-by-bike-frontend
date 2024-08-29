@@ -1,0 +1,17 @@
+[
+  {
+    "icon": "svguse:icons/slider_progress/lucide-route.svg#lucide-route",
+    "label": "udržitelných cest",
+    "value": "18"
+  },
+  {
+    "icon": "svguse:icons/slider_progress/jam-arrows-h.svg#jam-arrows-h",
+    "label": "",
+    "value": "312,25 km"
+  },
+  {
+    "icon": "svguse:icons/slider_progress/tabler-leaf.svg#tabler-leaf",
+    "label": "ušetřeno",
+    "value": "420 g CO2"
+  }
+]
