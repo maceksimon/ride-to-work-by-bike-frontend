@@ -2,13 +2,11 @@ import { colors } from 'quasar';
 import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
-import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { progressStats } from 'src/mocks/homepage';
 
 // colors
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
-const grey2 = getPaletteColor('grey-2');
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
 
@@ -19,7 +17,6 @@ const selectorProgressSliderButton = 'progress-slider-button';
 const selectorProgressSliderSectionTitle = 'progress-slider-section-title';
 const selectorProgressSliderSectionStats = 'progress-slider-section-stats';
 const selectorProgressSliderStats = 'progress-slider-stats';
-const selectorProgressSliderStatsItem = 'progress-slider-stats-item';
 const selectorSectionHeadingTitle = 'section-heading-title';
 const selectorSwiperContainer = 'swiper-container';
 
@@ -101,42 +98,7 @@ function coreTests() {
           );
         });
       // stats
-      cy.dataCy(selectorProgressSliderStats)
-        .should('be.visible')
-        .and('have.backgroundColor', grey2)
-        .and(
-          'have.css',
-          'border-radius',
-          rideToWorkByBikeConfig.borderRadiusCard,
-        )
-        .and('have.css', 'padding', '8px');
-    });
-  });
-
-  it('renders list of stats', () => {
-    cy.window().then(() => {
-      cy.dataCy(selectorProgressSliderStatsItem).should('have.length', 3);
-      cy.dataCy(selectorProgressSliderStatsItem).each(($item, index) => {
-        cy.wrap($item)
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', grey10);
-        cy.wrap($item)
-          .find('.q-icon')
-          .should('be.visible')
-          .and('have.color', primary)
-          .and('have.css', 'width', '18px')
-          .and('have.css', 'height', '18px');
-        cy.wrap($item)
-          .find('span')
-          .should('contain', progressStats[index].label)
-          .and('have.color', grey10);
-        cy.wrap($item)
-          .find('strong')
-          .should('contain', progressStats[index].value)
-          .and('have.color', grey10)
-          .and('have.css', 'font-weight', '700');
-      });
+      cy.dataCy(selectorProgressSliderStats).should('be.visible');
     });
   });
 

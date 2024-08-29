@@ -20,6 +20,7 @@
  * @components
  * - `CardProgressSlider`: Component to render individual progress cards.
  * - `SectionHeading`: Component to render a heading.
+ * - `StatsBar`: Component to render stats.
  *
  * @example
  * <slider-progress
@@ -39,9 +40,7 @@ import { Screen } from 'quasar';
 // components
 import CardProgressSlider from './CardProgressSlider.vue';
 import SectionHeading from '../global/SectionHeading.vue';
-
-// config
-import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import StatsBar from '../global/StatsBar.vue';
 
 // types
 import { CardProgress, Link, ItemStatistics } from '../types';
@@ -51,6 +50,7 @@ export default defineComponent({
   components: {
     CardProgressSlider,
     SectionHeading,
+    StatsBar,
   },
   props: {
     title: {
@@ -78,11 +78,8 @@ export default defineComponent({
       return isLargeScreen.value ? 'auto' : '100%';
     });
 
-    const { borderRadiusCard } = rideToWorkByBikeConfig;
-
     return {
       buttonWidth,
-      borderRadiusCard,
     };
   },
 });
@@ -99,39 +96,16 @@ export default defineComponent({
         {{ title }}
       </section-heading>
       <!-- List of statistics -->
-      <div
-        class="col-12 col-sm flex justify-end"
-        data-cy="progress-slider-section-stats"
-      >
-        <q-list
-          class="flex flex-wrap items-center justify-sm-end q-pa-sm bg-grey-2"
-          :style="{ borderRadius: borderRadiusCard }"
+      <div class="col-12 col-sm" data-cy="progress-slider-section-stats">
+        <stats-bar
+          v-if="stats"
+          :stats="stats"
           data-cy="progress-slider-stats"
-        >
-          <q-item
-            dense
-            v-for="item in stats"
-            :key="item.icon"
-            data-cy="progress-slider-stats-item"
-            class="text-grey-10 q-p-none flex items-center"
-          >
-            <!-- Icon -->
-            <q-icon
-              :name="item.icon"
-              color="primary"
-              size="18px"
-              class="q-mr-sm"
-            />
-            <!-- Value -->
-            <strong class="text-weight-bold">{{ item.value }}</strong
-            >&nbsp;
-            <!-- Label -->
-            <span>{{ item.label }}</span>
-          </q-item>
-        </q-list>
+        />
       </div>
     </div>
     <swiper-container
+      v-if="cards.length > 0"
       :navigation="true"
       :slides-per-view="1"
       :space-between="24"
