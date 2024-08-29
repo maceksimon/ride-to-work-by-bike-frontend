@@ -3,7 +3,7 @@ import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
-import { progressStats, cardsProgress } from 'src/mocks/homepage';
+import { progressStats } from 'src/mocks/homepage';
 
 // colors
 const { getPaletteColor } = colors;
@@ -24,12 +24,19 @@ const selectorSectionHeadingTitle = 'section-heading-title';
 const selectorSwiperContainer = 'swiper-container';
 
 // variables
-const cards = cardsProgress.slice(0, 5);
 const buttonSize = '38px';
 const opacityDisabled = '0.35';
 const opacityEnabled = '1';
 
 describe('<SliderProgress>', () => {
+  let cards;
+
+  before(() => {
+    cy.fixture('cardsProgress').then((cardsData) => {
+      cards = cardsData.slice(0, 5);
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       ['title', 'button'],

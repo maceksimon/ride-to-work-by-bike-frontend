@@ -147,6 +147,7 @@ import * as homepage from '../mocks/homepage';
 // fixtures
 import listCardsFollow from '../../test/cypress/fixtures/listCardsFollow.json';
 import listCardsPost from '../../test/cypress/fixtures/listCardsPost.json';
+import cardsProgress from '../../test/cypress/fixtures/cardsProgress.json';
 
 export default defineComponent({
   name: 'IndexPage',
@@ -185,7 +186,7 @@ export default defineComponent({
       cardsFollow,
       cardsOffer: homepage.cardsOffer,
       cardsPost,
-      cardsProgress: homepage.cardsProgress,
+      cardsProgress,
       cardsProgressSlider: homepage.cardsProgressSlider,
       cardsStats: homepage.cardsStats,
       headingBgTitle: homepage.headingBgTitle,

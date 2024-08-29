@@ -1,0 +1,119 @@
+[
+  {
+    "title": "Týmová pravidelnost",
+    "icon": "ion-bicycle",
+    "progress": 80,
+    "duration": {
+      "current": 24,
+      "total": 30
+    },
+    "prizes": [
+      {
+        "icon": "",
+        "placement": 1,
+        "label": "místo"
+      }
+    ],
+    "stats": [
+      {
+        "title": "Statistiky",
+        "items": [
+          {
+            "icon": "lens",
+            "text": "80% pravidelnost"
+          },
+          {
+            "icon": "route",
+            "text": "18 cest"
+          },
+          {
+            "icon": "sync_alt",
+            "text": "312,25 km"
+          },
+          {
+            "icon": "eco",
+            "text": "420 g CO2 ušetřeno"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Vaše pravidelnost",
+    "icon": "ion-bicycle",
+    "progress": 60,
+    "duration": {
+      "current": 24,
+      "total": 30
+    },
+    "prizes": [
+      {
+        "icon": "",
+        "placement": 3,
+        "label": "místo"
+      }
+    ],
+    "stats": [
+      {
+        "title": "Statistiky",
+        "items": [
+          {
+            "icon": "lens",
+            "text": "60% pravidelnost"
+          },
+          {
+            "icon": "route",
+            "text": "15 cest"
+          },
+          {
+            "icon": "sync_alt",
+            "text": "250,5 km"
+          },
+          {
+            "icon": "eco",
+            "text": "350 g CO2 ušetřeno"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "title": "Vaše zelené kilometry",
+    "icon": "ion-bicycle",
+    "progress": 70,
+    "duration": {
+      "current": 24,
+      "total": 30
+    },
+    "prizes": [
+      {
+        "icon": "",
+        "placement": 5,
+        "label": "místo"
+      }
+    ],
+    "stats": [
+      {
+        "title": "Statistiky",
+        "items": [
+          {
+            "icon": "lens",
+            "text": "70% pravidelnost"
+          },
+          {
+            "icon": "route",
+            "text": "20 cest"
+          },
+          {
+            "icon": "sync_alt",
+            "text": "400 km"
+          },
+          {
+            "icon": "eco",
+            "text": "500 g CO2 ušetřeno"
+          }
+        ]
+      }
+    ]
+  }
+]

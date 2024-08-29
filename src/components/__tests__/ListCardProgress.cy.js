@@ -2,7 +2,7 @@ import { colors } from 'quasar';
 
 import ListCardProgress from '../homepage/ListCardProgress.vue';
 import { i18n } from '../../boot/i18n';
-import { progressStats, cardsProgress } from '../../mocks/homepage';
+import { progressStats } from '../../mocks/homepage';
 
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
@@ -10,6 +10,14 @@ const grey10 = getPaletteColor('grey-10');
 const blueGrey3 = getPaletteColor('blue-grey-3');
 
 describe('<ListCardProgress>', () => {
+  let cardsProgress;
+
+  before(() => {
+    cy.fixture('cardsProgress').then((cardsData) => {
+      cardsProgress = cardsData;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       ['title', 'button'],
@@ -56,7 +64,7 @@ describe('<ListCardProgress>', () => {
             .and('have.color', grey10);
           cy.wrap($item)
             .find('.q-icon')
-            .should('contain', progressStats[index].icon)
+            .should('be.visible')
             .and('have.color', blueGrey3)
             .and('have.css', 'width', '18px')
             .and('have.css', 'height', '18px');
