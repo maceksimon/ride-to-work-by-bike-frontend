@@ -16,23 +16,28 @@
     ],
     "stats": [
       {
-        "title": "Statistiky",
+        "title": "Váš podíl na výsledku",
         "items": [
           {
-            "icon": "lens",
+            "id": "1",
             "text": "80% pravidelnost"
+          }
+        ]
+      },
+      {
+        "title": "Postavení v žebříčku",
+        "items": [
+          {
+            "id": "1",
+            "text": "2. Automati a 1 další (80 %)"
           },
           {
-            "icon": "route",
-            "text": "18 cest"
+            "id": "2",
+            "text": "3. Váš tým a 2 další (60 %)"
           },
           {
-            "icon": "sync_alt",
-            "text": "312,25 km"
-          },
-          {
-            "icon": "eco",
-            "text": "420 g CO2 ušetřeno"
+            "id": "3",
+            "text": "4. Tygři a 2 další (40 %)"
           }
         ]
       }
@@ -55,23 +60,28 @@
     ],
     "stats": [
       {
-        "title": "Statistiky",
+        "title": "Váš podíl na výsledku",
         "items": [
           {
-            "icon": "lens",
-            "text": "60% pravidelnost"
+            "id": "1",
+            "text": "80% pravidelnost"
+          }
+        ]
+      },
+      {
+        "title": "Postavení v žebříčku",
+        "items": [
+          {
+            "id": "1",
+            "text": "2. Automati a 1 další (80 %)"
           },
           {
-            "icon": "route",
-            "text": "15 cest"
+            "id": "2",
+            "text": "3. Váš tým a 2 další (60 %)"
           },
           {
-            "icon": "sync_alt",
-            "text": "250,5 km"
-          },
-          {
-            "icon": "eco",
-            "text": "350 g CO2 ušetřeno"
+            "id": "3",
+            "text": "4. Tygři a 2 další (40 %)"
           }
         ]
       }
@@ -94,23 +104,28 @@
     ],
     "stats": [
       {
-        "title": "Statistiky",
+        "title": "Váš podíl na výsledku",
         "items": [
           {
-            "icon": "lens",
-            "text": "70% pravidelnost"
+            "id": "1",
+            "text": "80% pravidelnost"
+          }
+        ]
+      },
+      {
+        "title": "Postavení v žebříčku",
+        "items": [
+          {
+            "id": "1",
+            "text": "2. Automati a 1 další (80 %)"
           },
           {
-            "icon": "route",
-            "text": "20 cest"
+            "id": "2",
+            "text": "3. Váš tým a 2 další (60 %)"
           },
           {
-            "icon": "sync_alt",
-            "text": "400 km"
-          },
-          {
-            "icon": "eco",
-            "text": "500 g CO2 ušetřeno"
+            "id": "3",
+            "text": "4. Tygři a 2 další (40 %)"
           }
         ]
       }
