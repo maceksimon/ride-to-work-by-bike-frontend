@@ -40,22 +40,9 @@ describe('<SliderProgress>', () => {
       cy.viewport('macbook-16');
     });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('section-heading-title')
-          .should('have.css', 'font-size', '20px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.color', black)
-          .and('contain', i18n.global.t('index.progressSlider.title'))
-          .then(($title) => {
-            expect($title.text()).to.equal(
-              i18n.global.t('index.progressSlider.title'),
-            );
-          });
-      });
-    });
+    coreTests();
 
-    it('renders list of stats', () => {
+    it('renders list of stats with specific desktop styles', () => {
       cy.window().then(() => {
         cy.dataCy('progress-slider-stats')
           .should('be.visible')
@@ -66,34 +53,6 @@ describe('<SliderProgress>', () => {
             rideToWorkByBikeConfig.borderRadiusCard,
           )
           .and('have.css', 'padding', '8px');
-        cy.dataCy('progress-slider-stats-item').should('have.length', 3);
-        cy.dataCy('progress-slider-stats-item').each(($item, index) => {
-          cy.wrap($item)
-            .should('have.css', 'font-size', '14px')
-            .and('have.css', 'font-weight', '400')
-            .and('have.color', grey10);
-          cy.wrap($item)
-            .find('.q-icon')
-            .should('contain', progressStats[index].icon)
-            .and('have.color', blueGrey3)
-            .and('have.css', 'width', '18px')
-            .and('have.css', 'height', '18px');
-          cy.wrap($item)
-            .find('span')
-            .should('contain', progressStats[index].label)
-            .and('have.color', grey10);
-          cy.wrap($item)
-            .find('strong')
-            .should('contain', progressStats[index].value)
-            .and('have.color', grey10)
-            .and('have.css', 'font-weight', '700');
-        });
-      });
-    });
-
-    it('renders a slider with stat cards', () => {
-      cy.window().then(() => {
-        cy.dataCy('swiper-container').should('be.visible');
       });
     });
 
@@ -186,53 +145,7 @@ describe('<SliderProgress>', () => {
       cy.viewport('iphone-6');
     });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('section-heading-title')
-          .should('have.css', 'font-size', '20px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.color', black)
-          .and('contain', i18n.global.t('index.progressSlider.title'))
-          .then(($title) => {
-            expect($title.text()).to.equal(
-              i18n.global.t('index.progressSlider.title'),
-            );
-          });
-      });
-    });
-
-    it('renders list of stats', () => {
-      cy.window().then(() => {
-        cy.dataCy('progress-slider-stats-item').should('have.length', 3);
-        cy.dataCy('progress-slider-stats-item').each(($item, index) => {
-          cy.wrap($item)
-            .should('have.css', 'font-size', '14px')
-            .and('have.css', 'font-weight', '400')
-            .and('have.color', grey10);
-          cy.wrap($item)
-            .find('.q-icon')
-            .should('contain', progressStats[index].icon)
-            .and('have.color', blueGrey3)
-            .and('have.css', 'width', '18px')
-            .and('have.css', 'height', '18px');
-          cy.wrap($item)
-            .find('span')
-            .should('contain', progressStats[index].label)
-            .and('have.color', grey10);
-          cy.wrap($item)
-            .find('strong')
-            .should('contain', progressStats[index].value)
-            .and('have.color', grey10)
-            .and('have.css', 'font-weight', '700');
-        });
-      });
-    });
-
-    it('renders a slider with stat cards', () => {
-      cy.window().then(() => {
-        cy.dataCy('swiper-container').should('be.visible');
-      });
-    });
+    coreTests();
 
     it('renders button', () => {
       cy.window().then(() => {
@@ -246,3 +159,53 @@ describe('<SliderProgress>', () => {
     });
   });
 });
+
+function coreTests() {
+  it('renders title', () => {
+    cy.window().then(() => {
+      cy.dataCy('section-heading-title')
+        .should('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('have.color', black)
+        .and('contain', i18n.global.t('index.progressSlider.title'))
+        .then(($title) => {
+          expect($title.text()).to.equal(
+            i18n.global.t('index.progressSlider.title'),
+          );
+        });
+    });
+  });
+
+  it('renders list of stats', () => {
+    cy.window().then(() => {
+      cy.dataCy('progress-slider-stats-item').should('have.length', 3);
+      cy.dataCy('progress-slider-stats-item').each(($item, index) => {
+        cy.wrap($item)
+          .should('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '400')
+          .and('have.color', grey10);
+        cy.wrap($item)
+          .find('.q-icon')
+          .should('contain', progressStats[index].icon)
+          .and('have.color', blueGrey3)
+          .and('have.css', 'width', '18px')
+          .and('have.css', 'height', '18px');
+        cy.wrap($item)
+          .find('span')
+          .should('contain', progressStats[index].label)
+          .and('have.color', grey10);
+        cy.wrap($item)
+          .find('strong')
+          .should('contain', progressStats[index].value)
+          .and('have.color', grey10)
+          .and('have.css', 'font-weight', '700');
+      });
+    });
+  });
+
+  it('renders a slider with stat cards', () => {
+    cy.window().then(() => {
+      cy.dataCy('swiper-container').should('be.visible');
+    });
+  });
+}
