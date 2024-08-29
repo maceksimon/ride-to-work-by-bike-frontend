@@ -1,16 +1,17 @@
 import { colors } from 'quasar';
-
 import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { progressStats, cardsProgress } from 'src/mocks/homepage';
 
+// colors
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
+const blueGrey3 = getPaletteColor('blue-grey-3');
 const grey2 = getPaletteColor('grey-2');
 const grey10 = getPaletteColor('grey-10');
-const blueGrey3 = getPaletteColor('blue-grey-3');
+const primary = getPaletteColor('primary');
 
 // selectors
 const classSelectorSwiperButtonPrev = '.swiper-button-prev';
@@ -143,7 +144,7 @@ function coreTests() {
       .and('have.css', 'font-size', '14px')
       .and('have.css', 'font-weight', '500')
       .and('have.css', 'text-transform', 'uppercase')
-      .and('have.color', grey10)
+      .and('have.color', primary)
       .and('have.css', 'border-radius', '28px')
       .and('contain', i18n.global.t('index.progressSlider.button'))
       .then(($title) => {

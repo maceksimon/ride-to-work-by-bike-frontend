@@ -154,7 +154,7 @@ export default defineComponent({
         rounded
         unelevated
         outline
-        color="grey-10"
+        color="primary"
         :to="button.url"
         :label="button.title"
         :style="{ width: buttonWidth }"
