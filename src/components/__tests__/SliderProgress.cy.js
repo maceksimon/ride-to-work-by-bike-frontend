@@ -2,7 +2,6 @@ import { colors } from 'quasar';
 import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
-import { progressStats } from 'src/mocks/homepage';
 
 // colors
 const { getPaletteColor } = colors;
@@ -27,10 +26,14 @@ const opacityEnabled = '1';
 
 describe('<SliderProgress>', () => {
   let cards;
+  let stats;
 
   before(() => {
     cy.fixture('cardsProgress').then((cardsData) => {
       cards = cardsData.slice(0, 5);
+    });
+    cy.fixture('statsBar').then((statsData) => {
+      stats = statsData;
     });
   });
 
@@ -47,8 +50,8 @@ describe('<SliderProgress>', () => {
       cy.mount(SliderProgress, {
         props: {
           title: i18n.global.t('index.progressSlider.title'),
-          stats: progressStats,
-          cards: cards,
+          stats,
+          cards,
           button: {
             title: i18n.global.t('index.progressSlider.button'),
             url: '/vysledky',
@@ -67,8 +70,8 @@ describe('<SliderProgress>', () => {
       cy.mount(SliderProgress, {
         props: {
           title: i18n.global.t('index.progressSlider.title'),
-          stats: progressStats,
-          cards: cards,
+          stats,
+          cards,
           button: {
             title: i18n.global.t('index.progressSlider.button'),
             url: '/vysledky',
