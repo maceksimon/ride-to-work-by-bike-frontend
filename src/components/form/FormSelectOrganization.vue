@@ -18,20 +18,19 @@
  */
 
 // libraries
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent } from 'vue';
 
 // components
 import FormFieldSelectTable from '../form/FormFieldSelectTable.vue';
 import FormFieldCompanyAddress from '../form/FormFieldCompanyAddress.vue';
 
+// composables
+import { useSelectOrganization } from 'src/composables/useSelectOrganization';
+
 // fixtures
 import formOrganizationOptions from '../../../test/cypress/fixtures/formOrganizationOptions.json';
 
 // types
-import type {
-  FormCompanyAddressFields,
-  FormSelectTableOption,
-} from '../../components/types/Form';
 import { Organization } from '../types/Organization';
 
 export default defineComponent({
@@ -41,66 +40,16 @@ export default defineComponent({
     FormFieldCompanyAddress,
   },
   setup() {
-    const businessId = ref<string>('');
-    const companyAddress = ref<FormCompanyAddressFields | null>(null);
-
-    const onUpdateAddress = (val: FormCompanyAddressFields) => {
-      companyAddress.value = val;
-    };
-
-    const companyOptions: Organization[] =
+    const organizations: Organization[] =
       formOrganizationOptions as Organization[];
 
-    const selectTableOptions = computed<FormSelectTableOption[]>(() => {
-      return companyOptions.map((organization: Organization) => ({
-        label: organization.title,
-        value: organization.id,
-      }));
-    });
-
-    const addressOptions = computed<FormSelectTableOption[]>(() => {
-      if (!businessId.value) return [];
-
-      const selectedCompany = companyOptions.find(
-        (company) => company.id === businessId.value,
-      );
-      if (!selectedCompany) return [];
-
-      return selectedCompany.divisions.map((division) => ({
-        label: getAddressString(division.address),
-        value: division.id,
-      }));
-    });
-
-    /**
-     * Get a formatted address string from the provided address object.
-     * @param {FormCompanyAddressFields | undefined} address - The address object.
-     * @returns {string} - A formatted string representation of the address.
-     */
-    function getAddressString(
-      address: FormCompanyAddressFields | undefined,
-    ): string {
-      if (!address) return '';
-
-      const parts = [
-        address.street,
-        address.houseNumber,
-        address.city,
-        address.zip,
-        address.cityChallenge,
-        address.department,
-      ].filter(Boolean);
-
-      return parts.join(', ');
-    }
+    const { addressOptions, businessId, organizationOptions } =
+      useSelectOrganization(organizations);
 
     return {
       addressOptions,
       businessId,
-      companyAddress,
-      companyOptions,
-      selectTableOptions,
-      onUpdateAddress,
+      organizationOptions,
     };
   },
 });
@@ -111,16 +60,13 @@ export default defineComponent({
     <form-field-select-table
       variant="company"
       v-model="businessId"
-      :options="selectTableOptions"
+      :options="organizationOptions"
       :label="$t('form.company.labelCompany')"
       :label-button="$t('register.challenge.buttonAddCompany')"
       :label-button-dialog="$t('form.company.buttonAddCompany')"
       :title-dialog="$t('form.company.titleAddCompany')"
       data-cy="form-select-table-company"
     />
-    <form-field-company-address
-      :options="addressOptions"
-      @update:form-value="onUpdateAddress"
-    />
+    <form-field-company-address :options="addressOptions" />
   </div>
 </template>
