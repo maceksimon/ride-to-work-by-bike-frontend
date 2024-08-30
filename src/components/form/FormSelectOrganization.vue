@@ -57,7 +57,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <div>
+  <div data-cy="form-select-organization">
     <form-field-select-table
       variant="company"
       v-model="organizationId"
@@ -68,6 +68,10 @@ export default defineComponent({
       :title-dialog="$t('form.company.titleAddCompany')"
       data-cy="form-select-table-company"
     />
-    <form-field-company-address v-model="addressId" :options="addressOptions" />
+    <form-field-company-address
+      v-model="addressId"
+      :options="addressOptions"
+      data-cy="form-company-address"
+    />
   </div>
 </template>
