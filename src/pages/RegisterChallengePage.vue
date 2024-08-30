@@ -42,10 +42,7 @@ import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
 import { useStepperValidation } from 'src/composables/useStepperValidation';
 
 // types
-import type {
-  FormPersonalDetailsFields,
-  FormSelectTableOption,
-} from 'src/components/types/Form';
+import type { FormSelectTableOption } from 'src/components/types/Form';
 
 export default defineComponent({
   name: 'RegisterChallengePage',
@@ -113,16 +110,6 @@ export default defineComponent({
     }`;
     const doneIconImgSrcStepper6 = doneIcon;
 
-    const personalDetails = ref<FormPersonalDetailsFields>({
-      firstName: '',
-      lastName: '',
-      nickname: '',
-      gender: '',
-      email: '',
-      newsletter: [],
-      terms: false,
-    });
-
     const participation = ref<string>('');
 
     const teamOptions: FormSelectTableOption[] = [
@@ -188,7 +175,6 @@ export default defineComponent({
       activeIconImgSrcStepper6,
       doneIconImgSrcStepper6,
       participation,
-      personalDetails,
       team,
       teamOptions,
       onBack,
@@ -243,10 +229,7 @@ export default defineComponent({
             data-cy="step-1"
           >
             <q-form ref="stepPersonalDetailsRef">
-              <form-personal-details
-                :form-values="personalDetails"
-                @update:form-values="personalDetails = $event"
-              />
+              <form-personal-details />
             </q-form>
             <q-stepper-navigation class="flex justify-end">
               <q-btn

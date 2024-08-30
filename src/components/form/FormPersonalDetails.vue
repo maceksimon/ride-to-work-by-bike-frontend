@@ -8,12 +8,6 @@
  *
  * Note: This component is commonly used in `RegisterChallengePage`.
  *
- * @props
- * - `modelValue` (Object, required): Reactive object representing form state.
- *
- * @events
- * - `update:modelValue`: Emitted as a part of v-model structure.
- *
  * @components
  * - `FormFieldTextRequired`: Component to render name, surname, nickname...
  * - `FormFieldRadioRequired`: Component to render gender radio buttons.
@@ -24,7 +18,8 @@
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A102976&mode=dev)
  */
 
-import { defineComponent, nextTick } from 'vue';
+// libraries
+import { computed, defineComponent } from 'vue';
 
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
@@ -32,6 +27,9 @@ import FormFieldRadioRequired from './FormFieldRadioRequired.vue';
 
 // composables
 import { i18n } from 'src/boot/i18n';
+
+// stores
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
 import {
@@ -45,15 +43,17 @@ export default defineComponent({
     FormFieldTextRequired,
     FormFieldRadioRequired,
   },
-  props: {
-    formValues: {
-      type: Object as () => FormPersonalDetailsFields,
-      required: true,
-    },
-  },
-  emits: ['update:formValues'],
-  setup(props, { emit }) {
-    const personalDetails: FormPersonalDetailsFields = props.formValues;
+  setup() {
+    const store = useRegisterChallengeStore();
+
+    const personalDetails = computed<FormPersonalDetailsFields>({
+      get() {
+        return store.getPersonalDetails;
+      },
+      set(value) {
+        store.setPersonalDetails(value);
+      },
+    });
 
     const newsletterOptions: FormOption[] = [
       {
@@ -85,18 +85,10 @@ export default defineComponent({
       },
     ];
 
-    const onUpdate = (): void => {
-      // wait for next tick to emit the value after update
-      nextTick((): void => {
-        emit('update:formValues', personalDetails);
-      });
-    };
-
     return {
       genderOptions,
       newsletterOptions,
       personalDetails,
-      onUpdate,
     };
   },
 });
@@ -112,7 +104,6 @@ export default defineComponent({
           name="firstName"
           label="form.labelFirstName"
           autocomplete="given-name"
-          @update:model-value="onUpdate"
           data-cy="form-personal-details-first-name"
         />
       </div>
@@ -123,7 +114,6 @@ export default defineComponent({
           name="lastName"
           label="form.labelLastName"
           autocomplete="family-name"
-          @update:model-value="onUpdate"
           data-cy="form-personal-details-last-name"
         />
       </div>
@@ -145,7 +135,6 @@ export default defineComponent({
             :hint="$t('form.hintNickname')"
             id="form-nickname"
             class="q-mt-sm hint-no-padding"
-            @change="onUpdate"
             data-cy="form-nickname-input"
           />
         </div>
@@ -162,7 +151,6 @@ export default defineComponent({
           v-model="personalDetails.gender"
           :options="genderOptions"
           :hint="$t('form.personalDetails.hintGender')"
-          @update:model-value="onUpdate"
           class="q-mt-sm"
         />
       </div>
