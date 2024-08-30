@@ -6,43 +6,43 @@
     "identificationNumberVat": "CZ12345678",
     "organizationType": "company",
     "address": {
-      "street": "Innovation Avenue",
+      "street": "Inovační třída",
       "houseNumber": "42",
-      "city": "Prague",
+      "city": "Praha",
       "zip": "11000",
-      "cityChallenge": "Prague",
+      "cityChallenge": "Praha",
       "department": "IT"
     },
     "image": {
       "src": "https://example.com/techcorp-logo.png",
-      "alt": "TechCorp Solutions logo"
+      "alt": "Logo TechCorp Solutions"
     },
     "divisions": [
       {
         "id": "div-001",
         "address": {
-          "street": "Innovation Avenue",
+          "street": "Inovační třída",
           "houseNumber": "42",
-          "city": "Prague",
+          "city": "Praha",
           "zip": "11000",
-          "cityChallenge": "Prague",
+          "cityChallenge": "Praha",
           "department": "IT"
         },
-        "title": "Software Development",
+        "title": "Vývoj softwaru",
         "teams": [
           {
             "id": "team-001",
-            "title": "Frontend Team",
+            "title": "Frontend tým",
             "members": [
               {
                 "id": "mem-001",
-                "name": "Alice Smith",
+                "name": "Alice Nováková",
                 "team": "team-001",
                 "payment": { "amount": 399 }
               },
               {
                 "id": "mem-002",
-                "name": "Bob Johnson",
+                "name": "Bob Svoboda",
                 "team": "team-001",
                 "payment": { "amount": 399 }
               }
@@ -50,17 +50,17 @@
           },
           {
             "id": "team-002",
-            "title": "Backend Team",
+            "title": "Backend tým",
             "members": [
               {
                 "id": "mem-003",
-                "name": "Charlie Brown",
+                "name": "Karel Hnědý",
                 "team": "team-002",
                 "payment": { "amount": 399 }
               },
               {
                 "id": "mem-004",
-                "name": "Diana Lee",
+                "name": "Dana Malá",
                 "team": "team-002",
                 "payment": { "amount": 399 }
               }
@@ -69,7 +69,7 @@
         ]
       }
     ],
-    "description": "Leading software solutions provider"
+    "description": "Přední poskytovatel softwarových řešení"
   },
   {
     "id": "org-002",
@@ -79,34 +79,34 @@
     "organizationType": "company",
     "image": {
       "src": "https://example.com/greenleaf-logo.png",
-      "alt": "GreenLeaf Eco logo"
+      "alt": "Logo GreenLeaf Eco"
     },
     "divisions": [
       {
         "id": "div-002",
-        "title": "Recycling",
+        "title": "Recyklace",
         "address": {
-          "street": "Sustainability Road",
+          "street": "Udržitelná",
           "houseNumber": "100",
           "city": "Brno",
           "zip": "60200",
           "cityChallenge": "Brno",
-          "department": "Operations"
+          "department": "Provoz"
         },
         "teams": [
           {
             "id": "team-003",
-            "title": "Collection Team",
+            "title": "Sběrný tým",
             "members": [
               {
                 "id": "mem-005",
-                "name": "Eva Green",
+                "name": "Eva Zelená",
                 "team": "team-003",
                 "payment": { "amount": 399 }
               },
               {
                 "id": "mem-006",
-                "name": "Frank White",
+                "name": "František Bílý",
                 "team": "team-003",
                 "payment": { "amount": 399 }
               }
@@ -116,29 +116,29 @@
       },
       {
         "id": "div-003",
-        "title": "Renewable Energy",
+        "title": "Obnovitelná energie",
         "address": {
-          "street": "Knowledge Lane",
+          "street": "Vědomostní",
           "houseNumber": "1",
           "city": "Ostrava",
           "zip": "70200",
           "cityChallenge": "Ostrava",
-          "department": "Administration"
+          "department": "Administrativa"
         },
         "teams": [
           {
             "id": "team-004",
-            "title": "Solar Panel Team",
+            "title": "Tým solárních panelů",
             "members": [
               {
                 "id": "mem-007",
-                "name": "Grace Sun",
+                "name": "Gabriela Slunečná",
                 "team": "team-004",
                 "payment": { "amount": 399 }
               },
               {
                 "id": "mem-008",
-                "name": "Henry Wind",
+                "name": "Honza Větrný",
                 "team": "team-004",
                 "payment": { "amount": 399 }
               }
@@ -147,44 +147,44 @@
         ]
       }
     ],
-    "description": "Sustainable solutions for a greener future"
+    "description": "Udržitelná řešení pro zelenější budoucnost"
   },
   {
     "id": "org-003",
-    "title": "EduSmart Academy",
+    "title": "EduSmart Akademie",
     "identificationNumber": "98765432",
     "identificationNumberVat": "CZ98765432",
     "organizationType": "school",
     "image": {
       "src": "https://example.com/edusmart-logo.png",
-      "alt": "EduSmart Academy logo"
+      "alt": "Logo EduSmart Akademie"
     },
     "divisions": [
       {
         "id": "div-004",
-        "title": "Primary Education",
+        "title": "Základní vzdělávání",
         "address": {
-          "street": "Knowledge Lane",
+          "street": "Vědomostní",
           "houseNumber": "1",
           "city": "Ostrava",
           "zip": "70200",
           "cityChallenge": "Ostrava",
-          "department": "Administration"
+          "department": "Administrativa"
         },
         "teams": [
           {
             "id": "team-005",
-            "title": "Elementary Teachers",
+            "title": "Učitelé základní školy",
             "members": [
               {
                 "id": "mem-009",
-                "name": "Irene Wise",
+                "name": "Irena Moudrá",
                 "team": "team-005",
                 "payment": { "amount": 299 }
               },
               {
                 "id": "mem-010",
-                "name": "Jack Smart",
+                "name": "Jakub Chytrý",
                 "team": "team-005",
                 "payment": { "amount": 299 }
               }
@@ -194,29 +194,29 @@
       },
       {
         "id": "div-005",
-        "title": "Secondary Education",
+        "title": "Střední vzdělávání",
         "address": {
           "street": "Udržitelná",
           "houseNumber": "1",
           "city": "Ostrava",
           "zip": "70200",
           "cityChallenge": "Ostrava",
-          "department": "Administration"
+          "department": "Administrativa"
         },
         "teams": [
           {
             "id": "team-006",
-            "title": "High School Teachers",
+            "title": "Učitelé střední školy",
             "members": [
               {
                 "id": "mem-011",
-                "name": "Kate Bright",
+                "name": "Kateřina Bystrá",
                 "team": "team-006",
                 "payment": { "amount": 299 }
               },
               {
                 "id": "mem-012",
-                "name": "Liam Sharp",
+                "name": "Lukáš Ostrý",
                 "team": "team-006",
                 "payment": { "amount": 299 }
               }
@@ -225,6 +225,6 @@
         ]
       }
     ],
-    "description": "Empowering minds for a brighter tomorrow"
+    "description": "Posilujeme mysl pro jasnější zítřky"
   }
 ]
