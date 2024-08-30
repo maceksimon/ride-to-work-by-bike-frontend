@@ -4,11 +4,12 @@ import { FormCompanyAddressFields } from './Form';
 export enum OrganizationType {
   company = 'company',
   school = 'school',
+  family = 'family',
 }
 
 export interface Organization {
   address?: FormCompanyAddressFields;
-  branches: OrganizationBranch[];
+  divisions: OrganizationBranch[];
   description?: string;
   id: string;
   identificationNumber: string;

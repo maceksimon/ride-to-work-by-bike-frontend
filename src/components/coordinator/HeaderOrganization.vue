@@ -37,8 +37,8 @@ export default defineComponent({
   emits: ['export'],
   setup(props) {
     const countBranches = computed((): number => {
-      return props.organization?.branches?.length
-        ? props.organization.branches.length
+      return props.organization?.divisions?.length
+        ? props.organization.divisions.length
         : 0;
     });
 
