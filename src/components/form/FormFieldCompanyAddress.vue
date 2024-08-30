@@ -25,7 +25,7 @@
  */
 
 // libraries
-import { defineComponent, ref, watch } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 
 // components
 import DialogDefault from 'src/components/global/DialogDefault.vue';
@@ -46,41 +46,32 @@ export default defineComponent({
       type: Array as () => FormOption[],
       required: true,
     },
+    modelValue: {
+      type: String as () => string | null,
+      required: true,
+    },
   },
-  emits: ['update:formValue'],
+  emits: ['update:modelValue'],
   setup(props, { emit }) {
-    const { address } = useAddress();
-    const { isDialogOpen, onClose } = useDialog();
-    const { isFilled } = useValidation();
+    const address = computed<string | null>({
+      get: () => props.modelValue,
+      set: (value: string | null) => emit('update:modelValue', value),
+    });
 
-    const onUpdate = (value: string): void => {
-      emit('update:formValue', value);
-    };
+    watch(
+      () => props.options,
+      () => {
+        address.value = null;
+      },
+    );
+
+    const { isFilled } = useValidation();
+    const { isDialogOpen, onClose } = useDialog();
 
     const onSubmit = async (): Promise<void> => {
       // TODO: Add address via API
       isDialogOpen.value = false;
     };
-
-    /**
-     * Provides address behaviour
-     * @returns
-     * - `address` (string): The address.
-     */
-    function useAddress() {
-      const address = ref<string | null>(null);
-
-      watch(
-        () => props.options,
-        () => {
-          address.value = null;
-        },
-      );
-
-      return {
-        address,
-      };
-    }
 
     /**
      * Provides dialog behaviour
@@ -107,7 +98,6 @@ export default defineComponent({
       isFilled,
       onClose,
       onSubmit,
-      onUpdate,
     };
   },
 });
@@ -142,7 +132,6 @@ export default defineComponent({
               }),
           ]"
           data-cy="form-company-address-input"
-          @update:model-value="onUpdate"
         >
           <!-- Item: No option -->
           <template v-slot:no-option>

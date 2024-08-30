@@ -43,10 +43,11 @@ export default defineComponent({
     const organizations: Organization[] =
       formOrganizationOptions as Organization[];
 
-    const { addressOptions, businessId, organizationOptions } =
+    const { addressId, addressOptions, businessId, organizationOptions } =
       useSelectOrganization(organizations);
 
     return {
+      addressId,
       addressOptions,
       businessId,
       organizationOptions,
@@ -67,6 +68,6 @@ export default defineComponent({
       :title-dialog="$t('form.company.titleAddCompany')"
       data-cy="form-select-table-company"
     />
-    <form-field-company-address :options="addressOptions" />
+    <form-field-company-address v-model="addressId" :options="addressOptions" />
   </div>
 </template>

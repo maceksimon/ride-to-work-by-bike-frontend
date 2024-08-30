@@ -9,6 +9,7 @@ import type {
 
 export const useSelectOrganization = (organizations: Organization[]) => {
   const businessId = ref<string>('');
+  const addressId = ref<string | null>(null);
 
   /**
    * Computes the organization options for the select table.
@@ -63,6 +64,7 @@ export const useSelectOrganization = (organizations: Organization[]) => {
   }
 
   return {
+    addressId,
     addressOptions,
     businessId,
     organizationOptions,
