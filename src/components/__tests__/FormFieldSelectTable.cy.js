@@ -1,10 +1,27 @@
 import FormFieldSelectTable from 'components/form/FormFieldSelectTable.vue';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { i18n } from '../../boot/i18n';
+import { useSelectOrganization } from 'src/composables/useSelectOrganization';
+import { createPinia, setActivePinia } from 'pinia';
+// import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 const { contactEmail } = rideToWorkByBikeConfig;
 
 describe('<FormFieldSelectTable>', () => {
+  let options;
+
+  before(() => {
+    setActivePinia(createPinia());
+    // const store = useRegisterChallengeStore();
+
+    cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
+      const { organizationOptions } = useSelectOrganization(
+        formOrganizationOptions,
+      );
+      options = organizationOptions;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       [
@@ -44,17 +61,15 @@ describe('<FormFieldSelectTable>', () => {
 
   context('company desktop', () => {
     beforeEach(() => {
-      cy.fixture('companyOptions').then((options) => {
-        cy.mount(FormFieldSelectTable, {
-          props: {
-            options: options,
-            variant: 'company',
-            label: i18n.global.t('form.company.labelCompany'),
-            labelButton: i18n.global.t('register.challenge.buttonAddCompany'),
-            labelButtonDialog: i18n.global.t('form.company.buttonAddCompany'),
-            titleDialog: i18n.global.t('form.company.titleAddCompany'),
-          },
-        });
+      cy.mount(FormFieldSelectTable, {
+        props: {
+          options: options.value,
+          variant: 'company',
+          label: i18n.global.t('form.company.labelCompany'),
+          labelButton: i18n.global.t('register.challenge.buttonAddCompany'),
+          labelButtonDialog: i18n.global.t('form.company.buttonAddCompany'),
+          titleDialog: i18n.global.t('form.company.titleAddCompany'),
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -111,7 +126,9 @@ describe('<FormFieldSelectTable>', () => {
     it('allows to search through options', () => {
       // search for option
       cy.dataCy('form-select-table-search').find('input').focus();
-      cy.dataCy('form-select-table-search').find('input').type('2');
+      cy.dataCy('form-select-table-search')
+        .find('input')
+        .type(options.value[0].label.substring(0, 3));
       // show only one option
       cy.dataCy('form-select-table-option-group')
         .find('.q-radio__label')
@@ -120,7 +137,7 @@ describe('<FormFieldSelectTable>', () => {
       cy.dataCy('form-select-table-search').find('input').blur();
       cy.dataCy('form-select-table-option-group')
         .find('.q-radio__label')
-        .should('have.length', 7);
+        .should('have.length', options.value.length);
     });
 
     it('validates company field correctly', () => {
@@ -172,18 +189,16 @@ describe('<FormFieldSelectTable>', () => {
 
   context('company selected', () => {
     beforeEach(() => {
-      cy.fixture('companyOptions').then((options) => {
-        cy.mount(FormFieldSelectTable, {
-          props: {
-            options: options,
-            variant: 'company',
-            modelValue: options[0].value,
-            label: i18n.global.t('form.company.labelCompany'),
-            labelButton: i18n.global.t('register.challenge.buttonAddCompany'),
-            labelButtonDialog: i18n.global.t('form.company.buttonAddCompany'),
-            titleDialog: i18n.global.t('form.company.titleAddCompany'),
-          },
-        });
+      cy.mount(FormFieldSelectTable, {
+        props: {
+          options: options.value,
+          variant: 'company',
+          modelValue: options.value[0].value,
+          label: i18n.global.t('form.company.labelCompany'),
+          labelButton: i18n.global.t('register.challenge.buttonAddCompany'),
+          labelButtonDialog: i18n.global.t('form.company.buttonAddCompany'),
+          titleDialog: i18n.global.t('form.company.titleAddCompany'),
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -198,17 +213,15 @@ describe('<FormFieldSelectTable>', () => {
 
   context('team desktop', () => {
     beforeEach(() => {
-      cy.fixture('teamOptions').then((options) => {
-        cy.mount(FormFieldSelectTable, {
-          props: {
-            options: options,
-            variant: 'team',
-            label: i18n.global.t('form.team.labelTeam'),
-            labelButton: i18n.global.t('form.team.buttonAddTeam'),
-            labelButtonDialog: i18n.global.t('form.team.buttonAddTeam'),
-            titleDialog: i18n.global.t('form.team.titleAddTeam'),
-          },
-        });
+      cy.mount(FormFieldSelectTable, {
+        props: {
+          options: options.value,
+          variant: 'team',
+          label: i18n.global.t('form.team.labelTeam'),
+          labelButton: i18n.global.t('form.team.buttonAddTeam'),
+          labelButtonDialog: i18n.global.t('form.team.buttonAddTeam'),
+          titleDialog: i18n.global.t('form.team.titleAddTeam'),
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -246,7 +259,9 @@ describe('<FormFieldSelectTable>', () => {
     it('allows to search through options', () => {
       // search for option
       cy.dataCy('form-select-table-search').find('input').focus();
-      cy.dataCy('form-select-table-search').find('input').type('z');
+      cy.dataCy('form-select-table-search')
+        .find('input')
+        .type(options.value[0].label.substring(0, 3));
       // show only one option
       cy.dataCy('form-select-table-option-group')
         .find('.q-radio__label')
@@ -255,7 +270,7 @@ describe('<FormFieldSelectTable>', () => {
       cy.dataCy('form-select-table-search').find('input').blur();
       cy.dataCy('form-select-table-option-group')
         .find('.q-radio__label')
-        .should('have.length', 2);
+        .should('have.length', options.value.length);
     });
 
     it('validates company field correctly', () => {
