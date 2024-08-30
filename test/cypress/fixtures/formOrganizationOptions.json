@@ -1,0 +1,230 @@
+[
+  {
+    "id": "org-001",
+    "title": "TechCorp Solutions",
+    "identificationNumber": "12345678",
+    "identificationNumberVat": "CZ12345678",
+    "organizationType": "company",
+    "address": {
+      "street": "Innovation Avenue",
+      "houseNumber": "42",
+      "city": "Prague",
+      "zip": "11000",
+      "cityChallenge": "Prague",
+      "department": "IT"
+    },
+    "image": {
+      "src": "https://example.com/techcorp-logo.png",
+      "alt": "TechCorp Solutions logo"
+    },
+    "divisions": [
+      {
+        "id": "div-001",
+        "address": {
+          "street": "Innovation Avenue",
+          "houseNumber": "42",
+          "city": "Prague",
+          "zip": "11000",
+          "cityChallenge": "Prague",
+          "department": "IT"
+        },
+        "title": "Software Development",
+        "teams": [
+          {
+            "id": "team-001",
+            "title": "Frontend Team",
+            "members": [
+              {
+                "id": "mem-001",
+                "name": "Alice Smith",
+                "team": "team-001",
+                "payment": { "amount": 399 }
+              },
+              {
+                "id": "mem-002",
+                "name": "Bob Johnson",
+                "team": "team-001",
+                "payment": { "amount": 399 }
+              }
+            ]
+          },
+          {
+            "id": "team-002",
+            "title": "Backend Team",
+            "members": [
+              {
+                "id": "mem-003",
+                "name": "Charlie Brown",
+                "team": "team-002",
+                "payment": { "amount": 399 }
+              },
+              {
+                "id": "mem-004",
+                "name": "Diana Lee",
+                "team": "team-002",
+                "payment": { "amount": 399 }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "description": "Leading software solutions provider"
+  },
+  {
+    "id": "org-002",
+    "title": "GreenLeaf Eco",
+    "identificationNumber": "87654321",
+    "identificationNumberVat": "CZ87654321",
+    "organizationType": "company",
+    "image": {
+      "src": "https://example.com/greenleaf-logo.png",
+      "alt": "GreenLeaf Eco logo"
+    },
+    "divisions": [
+      {
+        "id": "div-002",
+        "title": "Recycling",
+        "address": {
+          "street": "Sustainability Road",
+          "houseNumber": "100",
+          "city": "Brno",
+          "zip": "60200",
+          "cityChallenge": "Brno",
+          "department": "Operations"
+        },
+        "teams": [
+          {
+            "id": "team-003",
+            "title": "Collection Team",
+            "members": [
+              {
+                "id": "mem-005",
+                "name": "Eva Green",
+                "team": "team-003",
+                "payment": { "amount": 399 }
+              },
+              {
+                "id": "mem-006",
+                "name": "Frank White",
+                "team": "team-003",
+                "payment": { "amount": 399 }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "div-003",
+        "title": "Renewable Energy",
+        "address": {
+          "street": "Knowledge Lane",
+          "houseNumber": "1",
+          "city": "Ostrava",
+          "zip": "70200",
+          "cityChallenge": "Ostrava",
+          "department": "Administration"
+        },
+        "teams": [
+          {
+            "id": "team-004",
+            "title": "Solar Panel Team",
+            "members": [
+              {
+                "id": "mem-007",
+                "name": "Grace Sun",
+                "team": "team-004",
+                "payment": { "amount": 399 }
+              },
+              {
+                "id": "mem-008",
+                "name": "Henry Wind",
+                "team": "team-004",
+                "payment": { "amount": 399 }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "description": "Sustainable solutions for a greener future"
+  },
+  {
+    "id": "org-003",
+    "title": "EduSmart Academy",
+    "identificationNumber": "98765432",
+    "identificationNumberVat": "CZ98765432",
+    "organizationType": "school",
+    "image": {
+      "src": "https://example.com/edusmart-logo.png",
+      "alt": "EduSmart Academy logo"
+    },
+    "divisions": [
+      {
+        "id": "div-004",
+        "title": "Primary Education",
+        "address": {
+          "street": "Knowledge Lane",
+          "houseNumber": "1",
+          "city": "Ostrava",
+          "zip": "70200",
+          "cityChallenge": "Ostrava",
+          "department": "Administration"
+        },
+        "teams": [
+          {
+            "id": "team-005",
+            "title": "Elementary Teachers",
+            "members": [
+              {
+                "id": "mem-009",
+                "name": "Irene Wise",
+                "team": "team-005",
+                "payment": { "amount": 299 }
+              },
+              {
+                "id": "mem-010",
+                "name": "Jack Smart",
+                "team": "team-005",
+                "payment": { "amount": 299 }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "div-005",
+        "title": "Secondary Education",
+        "address": {
+          "street": "Udržitelná",
+          "houseNumber": "1",
+          "city": "Ostrava",
+          "zip": "70200",
+          "cityChallenge": "Ostrava",
+          "department": "Administration"
+        },
+        "teams": [
+          {
+            "id": "team-006",
+            "title": "High School Teachers",
+            "members": [
+              {
+                "id": "mem-011",
+                "name": "Kate Bright",
+                "team": "team-006",
+                "payment": { "amount": 299 }
+              },
+              {
+                "id": "mem-012",
+                "name": "Liam Sharp",
+                "team": "team-006",
+                "payment": { "amount": 299 }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "description": "Empowering minds for a brighter tomorrow"
+  }
+]

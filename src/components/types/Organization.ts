@@ -8,7 +8,6 @@ export enum OrganizationType {
 }
 
 export interface Organization {
-  address?: FormCompanyAddressFields;
   divisions: OrganizationDivision[];
   description?: string;
   id: string;

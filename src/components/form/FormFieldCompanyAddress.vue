@@ -25,7 +25,7 @@
  */
 
 // libraries
-import { defineComponent, nextTick, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 
 // components
 import DialogDefault from 'src/components/global/DialogDefault.vue';
@@ -34,10 +34,7 @@ import DialogDefault from 'src/components/global/DialogDefault.vue';
 import { useValidation } from 'src/composables/useValidation';
 
 // types
-import type {
-  FormCompanyAddressFields,
-  FormOption,
-} from 'src/components/types/Form';
+import type { FormOption } from 'src/components/types/Form';
 
 export default defineComponent({
   name: 'FormFieldCompanyAddress',
@@ -45,71 +42,68 @@ export default defineComponent({
     DialogDefault,
   },
   props: {
-    BusinessId: {
-      type: String,
+    options: {
+      type: Array as () => FormOption[],
+      required: true,
     },
   },
   emits: ['update:formValue'],
   setup(props, { emit }) {
-    const address = ref<string | null>(null);
-    const isDialogOpen = ref<boolean>(false);
+    const { address } = useAddress();
+    const { isDialogOpen, onClose } = useDialog();
+    const { isFilled } = useValidation();
 
-    const options: FormOption[] = [
-      {
-        label: 'Address 1',
-        value: 'address-1',
-      },
-      {
-        label: 'Address 2',
-        value: 'address-2',
-      },
-    ];
-
-    // Lookup dictionary which provides the full values based on address ID.
-    // TODO: validate the possibility of using this method
-    const addresses: { [key: string]: FormCompanyAddressFields } = {
-      'address-1': {
-        street: 'Street 1',
-        houseNumber: '123',
-        city: 'City 1',
-        zip: '1234',
-        cityChallenge: 'Ref City 1',
-        department: 'Department 1',
-      },
-      'address-2': {
-        street: 'Street 2',
-        houseNumber: '123',
-        city: 'City 2',
-        zip: '1234',
-        cityChallenge: 'Ref City 2',
-        department: 'Department 2',
-      },
-    };
-
-    const onUpdate = (): void => {
-      // wait for next tick to emit the value after update
-      nextTick((): void => {
-        if (address.value) {
-          emit('update:formValue', addresses[address.value as string]);
-        }
-      });
-    };
-
-    const onClose = (): void => {
-      isDialogOpen.value = false;
+    const onUpdate = (value: string): void => {
+      emit('update:formValue', value);
     };
 
     const onSubmit = async (): Promise<void> => {
-      // noop
+      // TODO: Add address via API
       isDialogOpen.value = false;
     };
 
-    const { isFilled } = useValidation();
+    /**
+     * Provides address behaviour
+     * @returns
+     * - `address` (string): The address.
+     */
+    function useAddress() {
+      const address = ref<string | null>(null);
+
+      watch(
+        () => props.options,
+        () => {
+          address.value = null;
+        },
+      );
+
+      return {
+        address,
+      };
+    }
+
+    /**
+     * Provides dialog behaviour
+     * @returns
+     * - `isDialogOpen` (boolean): Whether the dialog is open.
+     * - `onClose` (function): Runs when the dialog is closed.
+     */
+    function useDialog() {
+      const isDialogOpen = ref<boolean>(false);
+
+      const onClose = (): void => {
+        isDialogOpen.value = false;
+      };
+
+      return {
+        isDialogOpen,
+        onClose,
+      };
+    }
 
     return {
       address,
       isDialogOpen,
-      options,
       isFilled,
       onClose,
       onSubmit,
