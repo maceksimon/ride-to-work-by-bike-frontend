@@ -6,6 +6,10 @@ const doneIcon = new URL(
   cy.config().baseUrl,
 ).href;
 // Stepper 1 imgs
+const iconImgSrcStepper1 = new URL(
+  '../../../src/assets/svg/numeric-1-outline.svg',
+  cy.config().baseUrl,
+).href;
 const activeIconImgSrcStepper1 = new URL(
   '../../../src/assets/svg/numeric-1-fill.svg',
   cy.config().baseUrl,
@@ -169,88 +173,60 @@ describe('Register Challenge page', () => {
       });
     });
 
-    it('does not change step if form is not valid', () => {
-      // click when form is empty
+    it('validates first step (personal details) and shows icons', () => {
+      cy.dataCy('form-personal-details').should('be.visible');
+      checkActiveIcon(1);
+      // click
       cy.dataCy('step-1-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('be.visible');
+      // not on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when last name is missing
+      // fill gender (optional)
+      cy.dataCy('form-gender-input').find('.q-radio__label').first().click();
+      // fill firstName
       cy.dataCy('form-firstName-input').type('John');
+      // click
       cy.dataCy('step-1-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('be.visible');
+      // not on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when terms are not checked
+      // fill lastName
       cy.dataCy('form-lastName-input').type('Doe');
+      // click
       cy.dataCy('step-1-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('be.visible');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when gender is not selected
-      cy.dataCy('form-terms-input').click();
-      cy.dataCy('step-1-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('be.visible');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // select gender
-      cy.dataCy('form-personal-details-gender')
-        .should('be.visible')
-        .find('.q-radio')
-        .first()
-        .click();
-      // click when form is valid
-      cy.dataCy('step-1-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
+      // on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('be.visible');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click to pass payment step
-      cy.dataCy('step-2-continue').should('be.visible').click();
-      // click when participation is not selected
+      checkActiveIcon(2);
+    });
+
+    it('validates third step (organization type)', () => {
+      passToStep3();
+      checkActiveIcon(3);
+
       cy.dataCy('step-3-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('be.visible');
+      // not on step 4
       cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when participation is selected
       cy.dataCy('form-field-option').first().click();
       cy.dataCy('step-3-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
+      // on step 4
       cy.dataCy('step-4').find('.q-stepper__step-content').should('be.visible');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when address is not selected
+    });
+
+    it('validates fourth step (organization and address)', () => {
+      passToStep4();
+      checkActiveIcon(4);
+
       cy.dataCy('step-4-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('be.visible');
+      // not on step 5
       cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // select company and address
+      // select company
       cy.dataCy('form-select-table-option-group')
         .find('.q-radio__label')
         .first()
         .click();
+      // click
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      // not on step 5
+      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
+      // select address
       cy.dataCy('form-company-address-input').click();
       // select option
       cy.get('.q-menu')
@@ -258,313 +234,202 @@ describe('Register Challenge page', () => {
         .within(() => {
           cy.get('.q-item').first().click();
         });
-      // click when address is selected
+      // click
       cy.dataCy('step-4-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
+      // on step 5
       cy.dataCy('step-5').find('.q-stepper__step-content').should('be.visible');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when team is not selected
-      cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('be.visible');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-      // click when team is selected
-      cy.dataCy('form-select-table-option-group')
-        .find('.q-radio')
-        .first()
-        .click();
-      cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-1').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-4').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
-      cy.dataCy('step-6').find('.q-stepper__step-content').should('be.visible');
     });
 
-    it('changes icons when step changes', () => {
-      // active icon 1
-      cy.dataCy('step-1')
-        .find('img')
-        .should('have.attr', 'src', activeIconImgSrcStepper1);
-      cy.dataCy('step-2')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper2);
-      cy.dataCy('step-3')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper3);
-      cy.dataCy('step-4')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper4);
-      cy.dataCy('step-5')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper5);
-      cy.dataCy('step-6')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper6);
-      // fill in form data
-      cy.dataCy('form-firstName-input').type('John');
-      cy.dataCy('form-lastName-input').type('Doe');
-      cy.dataCy('form-nickname-input').type('Johnny');
-      cy.dataCy('form-terms-input').click();
-      cy.dataCy('form-personal-details-gender')
-        .find('.q-radio')
-        .first()
-        .click();
-      // change step
-      cy.dataCy('step-1-continue').should('be.visible').click();
-      // active icon 2
-      cy.dataCy('step-1')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper1);
-      cy.dataCy('step-2')
-        .find('img')
-        .should('have.attr', 'src', activeIconImgSrcStepper2);
-      cy.dataCy('step-3')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper3);
-      cy.dataCy('step-4')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper4);
-      cy.dataCy('step-5')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper5);
-      cy.dataCy('step-6')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper6);
-      // change step
-      cy.dataCy('step-2-continue').should('be.visible').click();
-      // active icon 3
-      cy.dataCy('step-1')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper1);
-      cy.dataCy('step-2')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper2);
-      cy.dataCy('step-3')
-        .find('img')
-        .should('have.attr', 'src', activeIconImgSrcStepper3);
-      cy.dataCy('step-4')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper4);
-      cy.dataCy('step-5')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper5);
-      cy.dataCy('step-6')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper6);
-      // select participation option
-      cy.dataCy('form-field-option').first().click();
-      // change step
-      cy.dataCy('step-3-continue').should('be.visible').click();
-      // active icon 4
-      cy.dataCy('step-1')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper1);
-      cy.dataCy('step-2')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper2);
-      cy.dataCy('step-3')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper3);
-      cy.dataCy('step-4')
-        .find('img')
-        .should('have.attr', 'src', activeIconImgSrcStepper4);
-      cy.dataCy('step-5')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper5);
-      cy.dataCy('step-6')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper6);
-      // select company and address
-      cy.dataCy('form-select-table-company')
-        .should('be.visible')
-        .find('.q-radio')
-        .first()
-        .click();
-      cy.dataCy('form-company-address-input').click();
-      // select option
-      cy.get('.q-menu')
-        .should('be.visible')
-        .within(() => {
-          cy.get('.q-item').first().click();
-        });
-      // change step
-      cy.dataCy('step-4-continue').should('be.visible').click();
-      // active icon 5
-      cy.dataCy('step-1')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper1);
-      cy.dataCy('step-2')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper2);
-      cy.dataCy('step-3')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper3);
-      cy.dataCy('step-4')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper4);
-      cy.dataCy('step-5')
-        .find('img')
-        .should('have.attr', 'src', activeIconImgSrcStepper5);
-      cy.dataCy('step-6')
-        .find('img')
-        .should('have.attr', 'src', iconImgSrcStepper6);
-      // select option
+    it('validates fifth step (team)', () => {
+      passToStep5();
+      checkActiveIcon(5);
+
+      // Try to continue without selecting a team
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-5').find('.q-stepper__step-content').should('be.visible');
+      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
+      // Select a team
       cy.dataCy('form-select-table-team')
         .should('be.visible')
         .find('.q-radio')
         .first()
         .click();
-      // change step
+      // Continue to step 6
       cy.dataCy('step-5-continue').should('be.visible').click();
-      // active icon 7
-      cy.dataCy('step-1')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper1);
-      cy.dataCy('step-2')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper2);
-      cy.dataCy('step-3')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper3);
-      cy.dataCy('step-4')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper4);
-      cy.dataCy('step-5')
-        .find('img')
-        .should('have.attr', 'src', doneIconImgSrcStepper5);
-      cy.dataCy('step-6')
-        .find('img')
-        .should('have.attr', 'src', activeIconImgSrcStepper6);
+      cy.dataCy('step-5').find('.q-stepper__step-content').should('not.exist');
+      cy.dataCy('step-6').find('.q-stepper__step-content').should('be.visible');
+      checkActiveIcon(6);
     });
 
     it('allows user to pass back and forth through stepper', () => {
-      cy.get('@i18n').then((i18n) => {
-        // allows for a green route pass
-        // fill in form data
-        cy.dataCy('form-firstName-input').type('John');
-        cy.dataCy('form-lastName-input').type('Doe');
-        cy.dataCy('form-nickname-input').type('Johnny');
-        cy.dataCy('form-terms-input').click();
-        cy.dataCy('form-personal-details-gender')
-          .find('.q-radio')
-          .first()
-          .click();
-        cy.dataCy('step-1-continue').should('be.visible').click();
-        cy.dataCy('step-2-continue').should('be.visible').click();
-        // select participation option
-        cy.dataCy('form-field-option').first().click();
-        cy.dataCy('step-3-continue').should('be.visible').click();
-        // select company and address
-        cy.dataCy('form-select-table-company')
-          .should('be.visible')
-          .find('.q-radio')
-          .first()
-          .click();
-        cy.dataCy('step-4-info').should('be.visible');
-        cy.dataCy('step-4-info').find('i').invoke('width').should('eq', 18);
-        cy.dataCy('step-4-info').find('i').invoke('height').should('eq', 18);
-        cy.dataCy('step-4-info')
-          .find('p')
-          .should('be.visible')
-          .should('have.css', 'font-size', '12px')
-          .then(($el) => {
-            cy.wrap(i18n.global.t('form.company.textCoordinator')).then(
-              (translation) => {
-                expect($el.text()).to.equal(translation);
-              },
-            );
-          });
-        cy.dataCy('form-company-address-input').click();
-        // select option
-        cy.get('.q-menu')
-          .should('be.visible')
-          .within(() => {
-            cy.get('.q-item').first().click();
-          });
-        cy.dataCy('step-4-continue').should('be.visible').click();
-        // select option
-        cy.dataCy('form-select-table-team')
-          .should('be.visible')
-          .find('.q-radio')
-          .first()
-          .click();
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue')
-          .should('be.visible')
-          .then(($el) => {
-            cy.wrap(i18n.global.t('form.buttonCompleteRegistration')).then(
-              (translation) => {
-                expect($el.text()).to.equal(translation);
-              },
-            );
-          });
-        // test back navigation in the stepper
-        cy.dataCy('step-6-back').should('be.visible').click();
-        cy.dataCy('step-5-back').should('be.visible').click();
-        cy.dataCy('step-4-back').should('be.visible').click();
-        cy.dataCy('step-3-back').should('be.visible').click();
-        cy.dataCy('step-2-back').should('be.visible').click();
-        cy.dataCy('step-1-continue').should('be.visible');
-        // test using the step headers
-        // go to the last step
-        cy.dataCy('step-1-continue').should('be.visible').click();
-        cy.dataCy('step-2-continue').should('be.visible').click();
-        cy.dataCy('step-3-continue').should('be.visible').click();
-        cy.dataCy('step-4-continue').should('be.visible').click();
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-        // test goint to step 1
-        cy.dataCy('step-1').should('be.visible').click();
-        cy.dataCy('step-1-continue').should('be.visible');
-        // go to the last step
-        cy.dataCy('step-1-continue').should('be.visible').click();
-        cy.dataCy('step-2-continue').should('be.visible').click();
-        cy.dataCy('step-3-continue').should('be.visible').click();
-        cy.dataCy('step-4-continue').should('be.visible').click();
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-        // test goint to step 2
-        cy.dataCy('step-2').should('be.visible').click();
-        cy.dataCy('step-2-continue').should('be.visible');
-        // go to the last step
-        cy.dataCy('step-2-continue').should('be.visible').click();
-        cy.dataCy('step-3-continue').should('be.visible').click();
-        cy.dataCy('step-4-continue').should('be.visible').click();
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-        // test goint to step 3
-        cy.dataCy('step-3').should('be.visible').click();
-        cy.dataCy('step-3-continue').should('be.visible');
-        // go to the last step
-        cy.dataCy('step-3-continue').should('be.visible').click();
-        cy.dataCy('step-4-continue').should('be.visible').click();
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-        // test goint to step 4
-        cy.dataCy('step-4').should('be.visible').click();
-        cy.dataCy('step-4-continue').should('be.visible');
-        // go to the last step
-        cy.dataCy('step-4-continue').should('be.visible').click();
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-        // test goint to step 5
-        cy.dataCy('step-5').should('be.visible').click();
-        cy.dataCy('step-5-continue').should('be.visible');
-        // go to the last step
-        cy.dataCy('step-5-continue').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-        // test goint to step 7
-        cy.dataCy('step-6').should('be.visible').click();
-        cy.dataCy('step-6-continue').should('be.visible');
-      });
+      passToStep6();
+
+      // test back navigation in the stepper
+      cy.dataCy('step-6-back').should('be.visible').click();
+      cy.dataCy('step-5-back').should('be.visible').click();
+      cy.dataCy('step-4-back').should('be.visible').click();
+      cy.dataCy('step-3-back').should('be.visible').click();
+      cy.dataCy('step-2-back').should('be.visible').click();
+      cy.dataCy('step-1-continue').should('be.visible');
+      // test using the step headers
+      // go to the last step
+      cy.dataCy('step-1-continue').should('be.visible').click();
+      cy.dataCy('step-2-continue').should('be.visible').click();
+      cy.dataCy('step-3-continue').should('be.visible').click();
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
+      // test goint to step 1
+      cy.dataCy('step-1').should('be.visible').click();
+      cy.dataCy('step-1-continue').should('be.visible');
+      // go to the last step
+      cy.dataCy('step-1-continue').should('be.visible').click();
+      cy.dataCy('step-2-continue').should('be.visible').click();
+      cy.dataCy('step-3-continue').should('be.visible').click();
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
+      // test goint to step 2
+      cy.dataCy('step-2').should('be.visible').click();
+      cy.dataCy('step-2-continue').should('be.visible');
+      // go to the last step
+      cy.dataCy('step-2-continue').should('be.visible').click();
+      cy.dataCy('step-3-continue').should('be.visible').click();
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
+      // test goint to step 3
+      cy.dataCy('step-3').should('be.visible').click();
+      cy.dataCy('step-3-continue').should('be.visible');
+      // go to the last step
+      cy.dataCy('step-3-continue').should('be.visible').click();
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
+      // test goint to step 4
+      cy.dataCy('step-4').should('be.visible').click();
+      cy.dataCy('step-4-continue').should('be.visible');
+      // go to the last step
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
+      // test goint to step 5
+      cy.dataCy('step-5').should('be.visible').click();
+      cy.dataCy('step-5-continue').should('be.visible');
+      // go to the last step
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
+      // test goint to step 7
+      cy.dataCy('step-6').should('be.visible').click();
+      cy.dataCy('step-6-continue').should('be.visible');
     });
   });
 });
+
+function passToStep2() {
+  cy.dataCy('form-gender-input').find('.q-radio__label').first().click();
+  cy.dataCy('form-firstName-input').type('John');
+  cy.dataCy('form-lastName-input').type('Doe');
+  cy.dataCy('step-1-continue').should('be.visible').click();
+  // on step 2
+  cy.dataCy('step-2').find('.q-stepper__step-content').should('be.visible');
+}
+
+function passToStep3() {
+  passToStep2();
+  // payment - no validation
+  cy.dataCy('step-2-continue').should('be.visible').click();
+  // on step 3
+  cy.dataCy('step-3').find('.q-stepper__step-content').should('be.visible');
+}
+
+function passToStep4() {
+  passToStep3();
+  cy.dataCy('form-field-option').first().click();
+  cy.dataCy('step-3-continue').should('be.visible').click();
+  // on step 4
+  cy.dataCy('step-4').find('.q-stepper__step-content').should('be.visible');
+}
+
+function passToStep5() {
+  passToStep4();
+  // select company
+  cy.dataCy('form-select-table-company')
+    .should('be.visible')
+    .find('.q-radio')
+    .first()
+    .click();
+  // select address
+  cy.dataCy('form-company-address-input').click();
+  // select option
+  cy.get('.q-menu')
+    .should('be.visible')
+    .within(() => {
+      cy.get('.q-item').first().click();
+    });
+  cy.dataCy('step-4-continue').should('be.visible').click();
+  // on step 5
+  cy.dataCy('step-5').find('.q-stepper__step-content').should('be.visible');
+}
+
+function passToStep6() {
+  passToStep5();
+  // select a team
+  cy.dataCy('form-select-table-team')
+    .should('be.visible')
+    .find('.q-radio')
+    .first()
+    .click();
+  cy.dataCy('step-5-continue').should('be.visible').click();
+  // on step 6
+  cy.dataCy('step-6').find('.q-stepper__step-content').should('be.visible');
+}
+
+function checkActiveIcon(activeStep) {
+  const steps = [1, 2, 3, 4, 5, 6];
+  steps.forEach((step) => {
+    let expectedSrc;
+    if (step === activeStep) {
+      expectedSrc =
+        step === 1
+          ? activeIconImgSrcStepper1
+          : step === 2
+            ? activeIconImgSrcStepper2
+            : step === 3
+              ? activeIconImgSrcStepper3
+              : step === 4
+                ? activeIconImgSrcStepper4
+                : step === 5
+                  ? activeIconImgSrcStepper5
+                  : activeIconImgSrcStepper6; // for step 6
+    } else if (step < activeStep) {
+      expectedSrc =
+        step === 1
+          ? doneIconImgSrcStepper1
+          : step === 2
+            ? doneIconImgSrcStepper2
+            : step === 3
+              ? doneIconImgSrcStepper3
+              : step === 4
+                ? doneIconImgSrcStepper4
+                : doneIconImgSrcStepper5;
+    } else {
+      expectedSrc =
+        step === 1
+          ? iconImgSrcStepper1
+          : step === 2
+            ? iconImgSrcStepper2
+            : step === 3
+              ? iconImgSrcStepper3
+              : step === 4
+                ? iconImgSrcStepper4
+                : step === 5
+                  ? iconImgSrcStepper5
+                  : iconImgSrcStepper6; // for step 6
+    }
+
+    cy.dataCy(`step-${step}`)
+      .find('img')
+      .should('have.attr', 'src', expectedSrc);
+  });
+}

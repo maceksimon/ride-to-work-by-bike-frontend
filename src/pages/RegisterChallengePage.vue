@@ -229,7 +229,7 @@ export default defineComponent({
             data-cy="step-1"
           >
             <q-form ref="stepPersonalDetailsRef">
-              <form-personal-details />
+              <form-personal-details data-cy="form-personal-details" />
             </q-form>
             <q-stepper-navigation class="flex justify-end">
               <q-btn
