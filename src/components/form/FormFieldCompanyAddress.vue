@@ -70,18 +70,18 @@ export default defineComponent({
     const addresses: { [key: string]: FormCompanyAddressFields } = {
       'address-1': {
         street: 'Street 1',
-        streetNumber: '123',
+        houseNumber: '123',
         city: 'City 1',
         zip: '1234',
-        referenceCity: 'Ref City 1',
+        cityChallenge: 'Ref City 1',
         department: 'Department 1',
       },
       'address-2': {
         street: 'Street 2',
-        streetNumber: '123',
+        houseNumber: '123',
         city: 'City 2',
         zip: '1234',
-        referenceCity: 'Ref City 2',
+        cityChallenge: 'Ref City 2',
         department: 'Department 2',
       },
     };

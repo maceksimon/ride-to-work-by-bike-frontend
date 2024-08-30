@@ -23,8 +23,8 @@ export type FormOption = {
 };
 
 export interface FormSelectTableOption extends FormOption {
-  members: number;
-  maxMembers: number;
+  members?: number;
+  maxMembers?: number;
 }
 
 export type FormSelectOption = {
