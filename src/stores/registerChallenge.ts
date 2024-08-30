@@ -10,7 +10,7 @@ const emptyFormPersonalDetails: FormPersonalDetailsFields = {
   nickname: '',
   gender: '',
   newsletter: [],
-  terms: false,
+  terms: true,
 };
 
 /**
