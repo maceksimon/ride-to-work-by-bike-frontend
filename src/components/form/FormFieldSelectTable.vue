@@ -65,7 +65,7 @@ export default defineComponent({
   },
   props: {
     modelValue: {
-      type: String,
+      type: String as () => string | null,
       required: true,
     },
     options: {
@@ -132,10 +132,10 @@ export default defineComponent({
 
     // v-model value
     const inputValue = computed({
-      get(): string {
+      get(): string | null {
         return props.modelValue;
       },
-      set(value: string): void {
+      set(value: string | null): void {
         emit('update:modelValue', value);
       },
     });

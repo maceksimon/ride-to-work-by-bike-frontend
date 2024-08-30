@@ -1,15 +1,19 @@
-import { computed, ref } from 'vue';
+import { computed } from 'vue';
+import { storeToRefs } from 'pinia';
+
+// stores
+import { useRegisterChallengeStore } from '../stores/registerChallenge';
 
 // types
-import type { Organization } from 'src/components/types/Organization';
+import type { Organization } from '../components/types/Organization';
 import type {
   FormCompanyAddressFields,
   FormSelectTableOption,
 } from 'src/components/types/Form';
 
 export const useSelectOrganization = (organizations: Organization[]) => {
-  const businessId = ref<string>('');
-  const addressId = ref<string | null>(null);
+  const store = useRegisterChallengeStore();
+  const { organizationId, addressId } = storeToRefs(store);
 
   /**
    * Computes the organization options for the select table.
@@ -28,10 +32,10 @@ export const useSelectOrganization = (organizations: Organization[]) => {
    * @returns {FormSelectTableOption[]} - The address options.
    */
   const addressOptions = computed<FormSelectTableOption[]>(() => {
-    if (!businessId.value) return [];
+    if (!organizationId.value) return [];
 
     const selectedCompany = organizations.find(
-      (company) => company.id === businessId.value,
+      (company) => company.id === organizationId.value,
     );
     if (!selectedCompany) return [];
 
@@ -66,7 +70,7 @@ export const useSelectOrganization = (organizations: Organization[]) => {
   return {
     addressId,
     addressOptions,
-    businessId,
+    organizationId,
     organizationOptions,
   };
 };

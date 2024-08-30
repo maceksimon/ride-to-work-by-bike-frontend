@@ -43,13 +43,13 @@ export default defineComponent({
     const organizations: Organization[] =
       formOrganizationOptions as Organization[];
 
-    const { addressId, addressOptions, businessId, organizationOptions } =
+    const { addressId, addressOptions, organizationId, organizationOptions } =
       useSelectOrganization(organizations);
 
     return {
       addressId,
       addressOptions,
-      businessId,
+      organizationId,
       organizationOptions,
     };
   },
@@ -60,7 +60,7 @@ export default defineComponent({
   <div>
     <form-field-select-table
       variant="company"
-      v-model="businessId"
+      v-model="organizationId"
       :options="organizationOptions"
       :label="$t('form.company.labelCompany')"
       :label-button="$t('register.challenge.buttonAddCompany')"
