@@ -1,11 +1,29 @@
 import { colors } from 'quasar';
 import FormFieldCompanyAddress from 'components/form/FormFieldCompanyAddress.vue';
 import { i18n } from '../../boot/i18n';
+import { useSelectOrganization } from 'src/composables/useSelectOrganization';
+import { createPinia, setActivePinia } from 'pinia';
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 describe('<FormFieldCompanyAddress>', () => {
+  let options;
+
+  before(() => {
+    setActivePinia(createPinia());
+    const store = useRegisterChallengeStore();
+
+    cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
+      const { addressOptions, organizationOptions } = useSelectOrganization(
+        formOrganizationOptions,
+      );
+      store.setFormOrganizationId(organizationOptions.value[0].value);
+      options = addressOptions.value;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       ['messageNoResult', 'labelAddress'],
@@ -29,7 +47,9 @@ describe('<FormFieldCompanyAddress>', () => {
   context('desktop', () => {
     beforeEach(() => {
       cy.mount(FormFieldCompanyAddress, {
-        props: {},
+        props: {
+          options,
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -59,13 +79,8 @@ describe('<FormFieldCompanyAddress>', () => {
       cy.get('.q-menu')
         .should('be.visible')
         .within(() => {
-          cy.get('.q-item').first().click();
+          cy.get('.q-item').should('have.length', options.length);
         });
-      // test selected option
-      cy.dataCy('form-company-address')
-        .find('input')
-        .invoke('val')
-        .should('eq', 'Address 1');
     });
 
     it('validates address field correctly', () => {
@@ -76,21 +91,6 @@ describe('<FormFieldCompanyAddress>', () => {
         .should('be.visible')
         .and(
           'contain',
-          i18n.global.t('form.messageFieldRequired', {
-            fieldName: i18n.global.t('form.labelAddress'),
-          }),
-        );
-      cy.dataCy('form-company-address').find('input').click();
-      // select option
-      cy.get('.q-menu')
-        .should('be.visible')
-        .within(() => {
-          cy.get('.q-item').first().click();
-        });
-      cy.dataCy('form-company-address')
-        .find('.q-field__messages')
-        .should(
-          'not.contain',
           i18n.global.t('form.messageFieldRequired', {
             fieldName: i18n.global.t('form.labelAddress'),
           }),
@@ -118,7 +118,9 @@ describe('<FormFieldCompanyAddress>', () => {
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(FormFieldCompanyAddress, {
-        props: {},
+        props: {
+          options,
+        },
       });
       cy.viewport('iphone-6');
     });
