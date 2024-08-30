@@ -2,10 +2,8 @@
 import type { Locale } from 'vue-i18n';
 import type { FormCompanyAddressFields } from './Form';
 
-export enum OrganizationType {
-  school = 'school',
-  company = 'company',
-}
+// enums
+import { OrganizationType } from './Organization';
 
 export enum Gender {
   male = 'male',

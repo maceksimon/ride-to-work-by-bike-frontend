@@ -1,6 +1,11 @@
 import { Image } from './Image';
 import { FormCompanyAddressFields } from './Form';
 
+export enum OrganizationType {
+  company = 'company',
+  school = 'school',
+}
+
 export interface Organization {
   address?: FormCompanyAddressFields;
   branches: OrganizationBranch[];
@@ -9,6 +14,7 @@ export interface Organization {
   identificationNumber: string;
   identificationNumberVat?: string;
   image?: Image;
+  organizationType: OrganizationType;
   title: string;
 }
 
