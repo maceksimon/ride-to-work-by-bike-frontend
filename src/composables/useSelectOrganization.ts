@@ -1,5 +1,4 @@
 import { computed } from 'vue';
-import { storeToRefs } from 'pinia';
 
 // stores
 import { useRegisterChallengeStore } from '../stores/registerChallenge';
@@ -12,8 +11,18 @@ import type {
 } from 'src/components/types/Form';
 
 export const useSelectOrganization = (organizations: Organization[]) => {
+  // store
   const store = useRegisterChallengeStore();
-  const { organizationId, addressId } = storeToRefs(store);
+
+  const organizationId = computed({
+    get: (): string | null => store.getOrganizationId,
+    set: (value: string | null) => store.setFormOrganizationId(value),
+  });
+
+  const addressId = computed({
+    get: (): string | null => store.getAddressId,
+    set: (value: string | null) => store.setFormAddressId(value),
+  });
 
   /**
    * Computes the organization options for the select table.
