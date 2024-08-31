@@ -4,12 +4,11 @@ import CardEvent from '../homepage/CardEvent.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// colors
 const { getPaletteColor } = colors;
-const black = getPaletteColor('black');
 const white = getPaletteColor('white');
-const blueGrey2 = getPaletteColor('blue-grey-2');
-const blueGrey3 = getPaletteColor('blue-grey-3');
 const blueGrey7 = getPaletteColor('blue-grey-7');
+const primary = getPaletteColor('primary');
 
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
@@ -93,8 +92,7 @@ describe('<CardEvent>', () => {
           cy.dataCy('card-dates')
             .find('i')
             .should('be.visible')
-            .and('have.color', blueGrey2)
-            .and('contain', 'event');
+            .and('have.color', primary);
         });
       });
     });
@@ -110,8 +108,7 @@ describe('<CardEvent>', () => {
           cy.dataCy('card-location')
             .find('i')
             .should('be.visible')
-            .and('have.color', blueGrey2)
-            .and('contain', 'place');
+            .and('have.color', primary);
         });
       });
     });
@@ -125,7 +122,7 @@ describe('<CardEvent>', () => {
         cy.dataCy('calendar-button')
           .find('i')
           .should('be.visible')
-          .and('have.color', black);
+          .and('have.color', primary);
       });
     });
 
@@ -172,7 +169,7 @@ describe('<CardEvent>', () => {
                 if ($icon.length) {
                   cy.wrap($icon)
                     .should('be.visible')
-                    .and('have.color', blueGrey3)
+                    .and('have.color', primary)
                     .and('have.css', 'width', '18px')
                     .and('have.css', 'height', '18px');
                 }
@@ -183,7 +180,7 @@ describe('<CardEvent>', () => {
                 if ($icon.length) {
                   cy.wrap($icon)
                     .should('be.visible')
-                    .and('have.color', blueGrey3)
+                    .and('have.color', primary)
                     .and('have.css', 'width', '18px')
                     .and('have.css', 'height', '18px');
                 }

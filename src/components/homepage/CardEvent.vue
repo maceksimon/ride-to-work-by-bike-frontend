@@ -131,10 +131,10 @@ export default defineComponent({
               >
                 <!-- Event calendar icon -->
                 <q-icon
-                  name="event"
+                  name="svguse:icons/card_event/icons.svg#calendar"
                   size="sm"
                   class="q-pr-xs"
-                  color="blue-grey-2"
+                  color="primary"
                 />
                 {{ eventDateTime }}
               </div>
@@ -145,10 +145,10 @@ export default defineComponent({
               >
                 <!-- Event place icon -->
                 <q-icon
-                  name="place"
+                  name="svguse:icons/card_event/icons.svg#map-pin"
                   size="sm"
                   class="q-pr-xs"
-                  color="blue-grey-2"
+                  color="primary"
                 />
                 {{ card?.location }}
               </div>
@@ -157,8 +157,12 @@ export default defineComponent({
           <!-- Add to calendar btn -->
           <div class="overflow-hidden flex items-center q-mt-md">
             <div class="q-px-md">
-              <q-btn round outline data-cy="calendar-button">
-                <q-icon name="fa-solid fa-calendar-plus" size="xs"></q-icon>
+              <q-btn round outline color="primary" data-cy="calendar-button">
+                <q-icon
+                  name="svguse:icons/card_event/icons.svg#calendar-plus"
+                  size="xs"
+                  color="primary"
+                ></q-icon>
               </q-btn>
             </div>
           </div>
@@ -187,7 +191,7 @@ export default defineComponent({
                 name="event"
                 size="18px"
                 class="q-pr-xs"
-                color="blue-grey-3"
+                color="primary"
               />
               {{ eventDateTime }}
             </div>
@@ -200,7 +204,7 @@ export default defineComponent({
                 name="pedal_bike"
                 size="18px"
                 class="q-pr-xs"
-                color="blue-grey-3"
+                color="primary"
               />
               {{ card?.location }}
             </div>
