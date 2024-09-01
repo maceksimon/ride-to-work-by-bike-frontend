@@ -22,55 +22,53 @@ const iconSize = 18;
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
 describe('<CardEvent>', () => {
+  let cardEvent;
+
+  before(() => {
+    cy.fixture('cardEvent').then((cardEventFixture) => {
+      cardEvent = cardEventFixture;
+    });
+  });
+
+  it('has translation for all strings', () => {
+    cy.testLanguageStringsInContext(['addToCalendar'], 'index.cardEvent', i18n);
+  });
+
   context('desktop', () => {
     beforeEach(() => {
-      cy.fixture('cardEvent').then((cardEvent) => {
-        cy.mount(CardEvent, {
-          props: {
-            card: cardEvent,
-          },
-        });
+      cy.mount(CardEvent, {
+        props: {
+          card: cardEvent,
+        },
       });
       cy.viewport('macbook-16');
     });
 
-    it('has translation for all strings', () => {
-      cy.testLanguageStringsInContext(
-        ['addToCalendar'],
-        'index.cardEvent',
-        i18n,
-      );
-    });
-
     it('renders title with link', () => {
       cy.window().then(() => {
-        cy.fixture('cardEvent').then((cardEvent) => {
-          cy.dataCy('card-title')
-            .should('be.visible')
-            .and('have.css', 'font-size', '16px')
-            .and('have.css', 'font-weight', '700')
-            .and('contain', cardEvent.title)
-            .then(($title) => {
-              expect($title.text()).to.equal(cardEvent.title);
-            });
-          cy.dataCy('card-link')
-            .should('be.visible')
-            .and('have.attr', 'href', '#');
-        });
+        cy.dataCy('card-title')
+          .should('be.visible')
+          .and('have.css', 'font-size', '16px')
+          .and('have.css', 'font-weight', '700')
+          .and('contain', cardEvent.title)
+          .then(($title) => {
+            expect($title.text()).to.equal(cardEvent.title);
+          });
+        cy.dataCy('card-link')
+          .should('be.visible')
+          .and('have.attr', 'href', '#');
       });
     });
 
     it('renders image', () => {
-      cy.fixture('cardEvent').then((cardEvent) => {
-        cy.window().then(() => {
-          cy.dataCy('card')
-            .find('img')
-            .should('be.visible')
-            .then(($img) => {
-              cy.testImageHeight($img);
-              expect($img.attr('src')).to.equal(cardEvent.thumbnail.src);
-            });
-        });
+      cy.window().then(() => {
+        cy.dataCy('card')
+          .find('img')
+          .should('be.visible')
+          .then(($img) => {
+            cy.testImageHeight($img);
+            expect($img.attr('src')).to.equal(cardEvent.thumbnail.src);
+          });
       });
     });
 
@@ -84,39 +82,35 @@ describe('<CardEvent>', () => {
 
     it('renders date with icon', () => {
       cy.window().then(() => {
-        cy.fixture('cardEvent').then((cardEvent) => {
-          // get event date
-          const dateObject = new Date(cardEvent.dates);
-          const date = dateObject.getDate();
-          const year = dateObject.getFullYear();
-          const hour = dateObject.getHours();
-          // check event dates being displayed
-          cy.dataCy('card-dates')
-            .should('be.visible')
-            .and('have.css', 'font-size', '14px')
-            .and('have.css', 'font-weight', '400')
-            .and('contain', date)
-            .and('contain', year)
-            .and('contain', hour);
-          cy.dataCy(selectorCardDatesIcon)
-            .should('be.visible')
-            .and('have.color', primary);
-        });
+        // get event date
+        const dateObject = new Date(cardEvent.dates);
+        const date = dateObject.getDate();
+        const year = dateObject.getFullYear();
+        const hour = dateObject.getHours();
+        // check event dates being displayed
+        cy.dataCy('card-dates')
+          .should('be.visible')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '400')
+          .and('contain', date)
+          .and('contain', year)
+          .and('contain', hour);
+        cy.dataCy(selectorCardDatesIcon)
+          .should('be.visible')
+          .and('have.color', primary);
       });
     });
 
     it('renders location with icon', () => {
       cy.window().then(() => {
-        cy.fixture('cardEvent').then((cardEvent) => {
-          cy.dataCy('card-location')
-            .should('be.visible')
-            .and('have.css', 'font-size', '14px')
-            .and('have.css', 'font-weight', '400')
-            .and('contain', cardEvent.location);
-          cy.dataCy(selectorCardLocationIcon)
-            .should('be.visible')
-            .and('have.color', primary);
-        });
+        cy.dataCy('card-location')
+          .should('be.visible')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '400')
+          .and('contain', cardEvent.location);
+        cy.dataCy(selectorCardLocationIcon)
+          .should('be.visible')
+          .and('have.color', primary);
       });
     });
 
@@ -149,50 +143,48 @@ describe('<CardEvent>', () => {
 
     it('renders modal title, location and date', () => {
       cy.window().then(() => {
-        cy.fixture('cardEvent').then((cardEvent) => {
-          cy.dataCy('card-link').click();
-          cy.dataCy('dialog-header')
-            .find('h3')
-            .should('be.visible')
-            .and('have.css', 'font-size', '20px')
-            .and('have.css', 'font-weight', '500')
-            .and('contain', cardEvent.title)
-            .then(($title) => {
-              expect($title.text()).to.equal(cardEvent.title);
-            });
-          cy.dataCy('dialog-meta')
-            .should('be.visible')
-            .and('have.css', 'font-size', '14px')
-            .and('have.css', 'font-weight', '400')
-            .and('have.color', blueGrey7)
-            .each(($el, index) => {
-              if (index === 0) {
-                cy.wrap($el)
-                  .should('contain', '1.')
-                  .and('contain', '2023')
-                  .and('contain', '12:00');
-                cy.dataCy(selectorDialogMetaDateIcon)
-                  .should('be.visible')
-                  .and('have.color', primary)
-                  .invoke('width')
-                  .should('be.eq', iconSize);
-                cy.dataCy(selectorDialogMetaDateIcon)
-                  .invoke('height')
-                  .should('be.eq', iconSize);
-              }
-              if (index === 1) {
-                cy.wrap($el).should('contain', cardEvent.location);
-                cy.dataCy(selectorDialogMetaLocationIcon)
-                  .should('be.visible')
-                  .and('have.color', primary)
-                  .invoke('width')
-                  .should('be.eq', iconSize);
-                cy.dataCy(selectorDialogMetaLocationIcon)
-                  .invoke('height')
-                  .should('be.eq', iconSize);
-              }
-            });
-        });
+        cy.dataCy('card-link').click();
+        cy.dataCy('dialog-header')
+          .find('h3')
+          .should('be.visible')
+          .and('have.css', 'font-size', '20px')
+          .and('have.css', 'font-weight', '500')
+          .and('contain', cardEvent.title)
+          .then(($title) => {
+            expect($title.text()).to.equal(cardEvent.title);
+          });
+        cy.dataCy('dialog-meta')
+          .should('be.visible')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '400')
+          .and('have.color', blueGrey7)
+          .each(($el, index) => {
+            if (index === 0) {
+              cy.wrap($el)
+                .should('contain', '1.')
+                .and('contain', '2023')
+                .and('contain', '12:00');
+              cy.dataCy(selectorDialogMetaDateIcon)
+                .should('be.visible')
+                .and('have.color', primary)
+                .invoke('width')
+                .should('be.eq', iconSize);
+              cy.dataCy(selectorDialogMetaDateIcon)
+                .invoke('height')
+                .should('be.eq', iconSize);
+            }
+            if (index === 1) {
+              cy.wrap($el).should('contain', cardEvent.location);
+              cy.dataCy(selectorDialogMetaLocationIcon)
+                .should('be.visible')
+                .and('have.color', primary)
+                .invoke('width')
+                .should('be.eq', iconSize);
+              cy.dataCy(selectorDialogMetaLocationIcon)
+                .invoke('height')
+                .should('be.eq', iconSize);
+            }
+          });
       });
     });
 
@@ -222,17 +214,15 @@ describe('<CardEvent>', () => {
     });
 
     it('renders dialog image', () => {
-      cy.fixture('cardEvent').then((cardEvent) => {
-        cy.dataCy('card-link').click();
-        cy.dataCy('dialog-image')
-          .should('be.visible')
-          .find('img')
-          .then(($img) => {
-            // Updated version of the test valid for Firefox
-            cy.testImageHeight($img);
-            expect($img.attr('src')).to.equal(cardEvent.image.src);
-          });
-      });
+      cy.dataCy('card-link').click();
+      cy.dataCy('dialog-image')
+        .should('be.visible')
+        .find('img')
+        .then(($img) => {
+          // Updated version of the test valid for Firefox
+          cy.testImageHeight($img);
+          expect($img.attr('src')).to.equal(cardEvent.image.src);
+        });
     });
 
     it('shows modal with two columns', () => {
@@ -244,12 +234,10 @@ describe('<CardEvent>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.fixture('cardEvent').then((cardEvent) => {
-        cy.mount(CardEvent, {
-          props: {
-            card: cardEvent,
-          },
-        });
+      cy.mount(CardEvent, {
+        props: {
+          card: cardEvent,
+        },
       });
       cy.viewport('iphone-6');
     });
