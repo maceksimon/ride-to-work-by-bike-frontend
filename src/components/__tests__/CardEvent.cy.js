@@ -2,10 +2,12 @@ import { colors } from 'quasar';
 import CardEvent from '../homepage/CardEvent.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { hexToRgb } from 'app/test/cypress/utils';
 
 // colors
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
+const grey5 = getPaletteColor('grey-5');
 const grey8 = getPaletteColor('grey-8');
 const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
@@ -92,6 +94,16 @@ describe('<CardEvent>', () => {
   });
 
   function coreTests() {
+    it('renders card with correct styling', () => {
+      cy.window().then(() => {
+        cy.dataCy(selectorCard)
+          .should('be.visible')
+          .and('have.backgroundColor', white)
+          .and('have.css', 'border', `1px solid ${hexToRgb(grey5)}`)
+          .and('have.css', 'border-radius', borderRadiusCard);
+      });
+    });
+
     it('renders title with link', () => {
       cy.window().then(() => {
         cy.dataCy(selectorCardTitle)
@@ -121,14 +133,6 @@ describe('<CardEvent>', () => {
       });
     });
 
-    it('has correct background color', () => {
-      cy.window().then(() => {
-        cy.dataCy(selectorCard)
-          .should('be.visible')
-          .and('have.backgroundColor', white);
-      });
-    });
-
     it('renders date with icon', () => {
       cy.window().then(() => {
         // get event date
@@ -147,7 +151,12 @@ describe('<CardEvent>', () => {
           .and('contain', hour);
         cy.dataCy(selectorCardDatesIcon)
           .should('be.visible')
-          .and('have.color', primary);
+          .and('have.color', primary)
+          .invoke('width')
+          .should('be.eq', iconSize);
+        cy.dataCy(selectorCardDatesIcon)
+          .invoke('height')
+          .should('be.eq', iconSize);
       });
     });
 
@@ -161,7 +170,12 @@ describe('<CardEvent>', () => {
           .and('contain', cardEvent.location);
         cy.dataCy(selectorCardLocationIcon)
           .should('be.visible')
-          .and('have.color', primary);
+          .and('have.color', primary)
+          .invoke('width')
+          .should('be.eq', iconSize);
+        cy.dataCy(selectorCardLocationIcon)
+          .invoke('height')
+          .should('be.eq', iconSize);
       });
     });
 
@@ -174,14 +188,6 @@ describe('<CardEvent>', () => {
         cy.dataCy(selectorCalendarButtonIcon)
           .should('be.visible')
           .and('have.color', primary);
-      });
-    });
-
-    it('has rounded corners', () => {
-      cy.window().then(() => {
-        cy.dataCy(selectorCard)
-          .should('be.visible')
-          .and('have.css', 'border-radius', borderRadiusCard);
       });
     });
 

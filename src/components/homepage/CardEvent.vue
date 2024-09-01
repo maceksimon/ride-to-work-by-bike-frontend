@@ -78,9 +78,8 @@ export default defineComponent({
 
 <template>
   <div>
-    <q-card
-      flat
-      class="bg-white"
+    <div
+      class="overflow-hidden bg-white border-grey-5"
       :style="{ 'border-radius': borderRadius }"
       data-cy="card"
     >
@@ -91,7 +90,8 @@ export default defineComponent({
       >
         <!-- Bg image -->
         <q-img
-          :ratio="3 / 2"
+          fit="cover"
+          :ratio="2 / 1"
           :img-style="{
             borderRadius: setHorizontalPosition()
               ? `${borderRadius} 0 0 ${borderRadius}`
@@ -104,10 +104,10 @@ export default defineComponent({
         />
         <!-- Content -->
         <div
-          class="col-grow flex wrap items-center q-py-lg text-grey-10"
+          class="col-grow flex gap-16 gap-x-32 wrap items-center q-pa-lg text-grey-10"
           data-cy="card-content"
         >
-          <div class="col-grow q-px-md">
+          <div class="col-grow">
             <!-- Event name link for open modal dialog -->
             <div class="text-subtitle1 text-bold" data-cy="card-title">
               <a
@@ -132,7 +132,7 @@ export default defineComponent({
                 <!-- Event calendar icon -->
                 <q-icon
                   name="svguse:icons/card_event/icons.svg#calendar"
-                  size="sm"
+                  size="18px"
                   class="q-pr-xs"
                   color="primary"
                   data-cy="card-dates-icon"
@@ -147,7 +147,7 @@ export default defineComponent({
                 <!-- Event place icon -->
                 <q-icon
                   name="svguse:icons/card_event/icons.svg#map-pin"
-                  size="sm"
+                  size="18px"
                   class="q-pr-xs"
                   color="primary"
                   data-cy="card-location-icon"
@@ -157,8 +157,8 @@ export default defineComponent({
             </div>
           </div>
           <!-- Add to calendar btn -->
-          <div class="overflow-hidden flex items-center q-mt-md">
-            <div class="q-px-md">
+          <div class="overflow-hidden flex items-center">
+            <div>
               <q-btn round outline color="primary" data-cy="calendar-button">
                 <q-icon
                   name="svguse:icons/card_event/icons.svg#calendar-plus"
@@ -250,11 +250,15 @@ export default defineComponent({
           </div>
         </template>
       </dialog-default>
-    </q-card>
+    </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+.border-grey-5 {
+  border: 1px solid $grey-5;
+}
+
 .gap-y-8 {
   row-gap: 8px;
 }
@@ -263,21 +267,12 @@ export default defineComponent({
   column-gap: 32px;
 }
 
-.q-dialog__inner > div {
-  overflow: visible !important;
-}
-
 .card-link {
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
   }
-}
-
-.dialog-close-btn {
-  top: -21px;
-  right: -21px;
 }
 
 .q-card > div:first-child > .q-img {
