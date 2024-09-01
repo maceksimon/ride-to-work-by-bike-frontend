@@ -6,7 +6,8 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 // colors
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
-const blueGrey7 = getPaletteColor('blue-grey-7');
+const grey8 = getPaletteColor('grey-8');
+const grey10 = getPaletteColor('grey-10');
 const primary = getPaletteColor('primary');
 
 // selectors
@@ -97,6 +98,7 @@ describe('<CardEvent>', () => {
           .should('be.visible')
           .and('have.css', 'font-size', '16px')
           .and('have.css', 'font-weight', '700')
+          .and('have.color', grey10)
           .and('contain', cardEvent.title)
           .then(($title) => {
             expect($title.text()).to.equal(cardEvent.title);
@@ -139,6 +141,7 @@ describe('<CardEvent>', () => {
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
+          .and('have.color', grey8)
           .and('contain', date)
           .and('contain', year)
           .and('contain', hour);
@@ -154,6 +157,7 @@ describe('<CardEvent>', () => {
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
+          .and('have.color', grey8)
           .and('contain', cardEvent.location);
         cy.dataCy(selectorCardLocationIcon)
           .should('be.visible')
@@ -204,7 +208,7 @@ describe('<CardEvent>', () => {
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
-          .and('have.color', blueGrey7)
+          .and('have.color', grey8)
           .each(($el, index) => {
             if (index === 0) {
               cy.wrap($el)

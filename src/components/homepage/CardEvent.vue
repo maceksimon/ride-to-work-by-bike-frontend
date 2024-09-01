@@ -104,7 +104,7 @@ export default defineComponent({
         />
         <!-- Content -->
         <div
-          class="col-grow flex wrap items-center q-py-lg"
+          class="col-grow flex wrap items-center q-py-lg text-grey-10"
           data-cy="card-content"
         >
           <div class="col-grow q-px-md">
@@ -122,7 +122,7 @@ export default defineComponent({
             <!-- Event date and place description -->
             <div
               v-if="eventDateTime || card?.location"
-              class="meta flex items-center gap-8 q-mt-sm"
+              class="meta flex items-center gap-8 q-mt-sm text-grey-8"
             >
               <div
                 v-if="eventDateTime"
@@ -187,7 +187,7 @@ export default defineComponent({
           <div class="flex flex-wrap items-center gap-x-32 gap-y-8 q-mt-sm">
             <div
               v-if="eventDateTime"
-              class="flex items-center text-blue-grey-7"
+              class="flex items-center text-grey-8"
               data-cy="dialog-meta"
             >
               <q-icon
@@ -201,7 +201,7 @@ export default defineComponent({
             </div>
             <div
               v-if="card?.location"
-              class="flex items-center text-blue-grey-7"
+              class="flex items-center text-grey-8"
               data-cy="dialog-meta"
             >
               <q-icon
