@@ -80,10 +80,15 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-btn-dropdown color="black" unelevated rounded data-cy="dialog-button">
+  <q-btn-dropdown color="primary" unelevated rounded data-cy="dialog-button">
     <template v-slot:label>
       <div class="flex items-center no-wrap">
-        <q-icon left name="fa-solid fa-calendar-plus" size="xs" />
+        <q-icon
+          left
+          name="svguse:icons/card_event/icons.svg#calendar-plus"
+          color="white"
+          size="xs"
+        />
         <div class="text-center">
           {{ $t('index.cardEvent.addToCalendar') }}
         </div>

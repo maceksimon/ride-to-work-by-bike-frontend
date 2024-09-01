@@ -10,6 +10,15 @@ const white = getPaletteColor('white');
 const blueGrey7 = getPaletteColor('blue-grey-7');
 const primary = getPaletteColor('primary');
 
+// selectors
+const selectorCardDatesIcon = 'card-dates-icon';
+const selectorCardLocationIcon = 'card-location-icon';
+const selectorCalendarButtonIcon = 'calendar-button-icon';
+const selectorDialogMetaDateIcon = 'dialog-meta-date-icon';
+const selectorDialogMetaLocationIcon = 'dialog-meta-location-icon';
+
+// variables
+const iconSize = 18;
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
 describe('<CardEvent>', () => {
@@ -89,8 +98,7 @@ describe('<CardEvent>', () => {
             .and('contain', date)
             .and('contain', year)
             .and('contain', hour);
-          cy.dataCy('card-dates')
-            .find('i')
+          cy.dataCy(selectorCardDatesIcon)
             .should('be.visible')
             .and('have.color', primary);
         });
@@ -105,8 +113,7 @@ describe('<CardEvent>', () => {
             .and('have.css', 'font-size', '14px')
             .and('have.css', 'font-weight', '400')
             .and('contain', cardEvent.location);
-          cy.dataCy('card-location')
-            .find('i')
+          cy.dataCy(selectorCardLocationIcon)
             .should('be.visible')
             .and('have.color', primary);
         });
@@ -119,8 +126,7 @@ describe('<CardEvent>', () => {
           .should('be.visible')
           .and('have.css', 'height', '42px')
           .and('have.css', 'width', '42px');
-        cy.dataCy('calendar-button')
-          .find('i')
+        cy.dataCy(selectorCalendarButtonIcon)
           .should('be.visible')
           .and('have.color', primary);
       });
@@ -165,25 +171,25 @@ describe('<CardEvent>', () => {
                   .should('contain', '1.')
                   .and('contain', '2023')
                   .and('contain', '12:00');
-                const $icon = $el.find('i');
-                if ($icon.length) {
-                  cy.wrap($icon)
-                    .should('be.visible')
-                    .and('have.color', primary)
-                    .and('have.css', 'width', '18px')
-                    .and('have.css', 'height', '18px');
-                }
+                cy.dataCy(selectorDialogMetaDateIcon)
+                  .should('be.visible')
+                  .and('have.color', primary)
+                  .invoke('width')
+                  .should('be.eq', iconSize);
+                cy.dataCy(selectorDialogMetaDateIcon)
+                  .invoke('height')
+                  .should('be.eq', iconSize);
               }
               if (index === 1) {
                 cy.wrap($el).should('contain', cardEvent.location);
-                const $icon = $el.find('i');
-                if ($icon.length) {
-                  cy.wrap($icon)
-                    .should('be.visible')
-                    .and('have.color', primary)
-                    .and('have.css', 'width', '18px')
-                    .and('have.css', 'height', '18px');
-                }
+                cy.dataCy(selectorDialogMetaLocationIcon)
+                  .should('be.visible')
+                  .and('have.color', primary)
+                  .invoke('width')
+                  .should('be.eq', iconSize);
+                cy.dataCy(selectorDialogMetaLocationIcon)
+                  .invoke('height')
+                  .should('be.eq', iconSize);
               }
             });
         });
@@ -202,12 +208,12 @@ describe('<CardEvent>', () => {
         .find('i')
         .first()
         .invoke('width')
-        .should('be.eq', 18);
+        .should('be.eq', iconSize);
       cy.dataCy('button-add-to-calendar')
         .find('i')
         .first()
         .invoke('height')
-        .should('be.eq', 18);
+        .should('be.eq', iconSize);
       cy.dataCy('button-add-to-calendar').click();
       cy.get('.q-menu')
         .should('be.visible')

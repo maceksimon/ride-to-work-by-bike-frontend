@@ -135,6 +135,7 @@ export default defineComponent({
                   size="sm"
                   class="q-pr-xs"
                   color="primary"
+                  data-cy="card-dates-icon"
                 />
                 {{ eventDateTime }}
               </div>
@@ -149,6 +150,7 @@ export default defineComponent({
                   size="sm"
                   class="q-pr-xs"
                   color="primary"
+                  data-cy="card-location-icon"
                 />
                 {{ card?.location }}
               </div>
@@ -162,6 +164,7 @@ export default defineComponent({
                   name="svguse:icons/card_event/icons.svg#calendar-plus"
                   size="xs"
                   color="primary"
+                  data-cy="calendar-button-icon"
                 ></q-icon>
               </q-btn>
             </div>
@@ -192,6 +195,7 @@ export default defineComponent({
                 size="18px"
                 class="q-pr-xs"
                 color="primary"
+                data-cy="dialog-meta-date-icon"
               />
               {{ eventDateTime }}
             </div>
@@ -205,6 +209,7 @@ export default defineComponent({
                 size="18px"
                 class="q-pr-xs"
                 color="primary"
+                data-cy="dialog-meta-location-icon"
               />
               {{ card?.location }}
             </div>
