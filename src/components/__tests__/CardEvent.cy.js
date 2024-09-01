@@ -1,5 +1,4 @@
 import { colors } from 'quasar';
-
 import CardEvent from '../homepage/CardEvent.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
@@ -11,14 +10,30 @@ const blueGrey7 = getPaletteColor('blue-grey-7');
 const primary = getPaletteColor('primary');
 
 // selectors
+const selectorCard = 'card';
+const selectorCardTitle = 'card-title';
+const selectorCardLink = 'card-link';
+const selectorCardDates = 'card-dates';
+const selectorCardLocation = 'card-location';
 const selectorCardDatesIcon = 'card-dates-icon';
 const selectorCardLocationIcon = 'card-location-icon';
+const selectorCalendarButton = 'calendar-button';
 const selectorCalendarButtonIcon = 'calendar-button-icon';
+const selectorDialogCardEvent = 'dialog-card-event';
+const selectorDialogHeader = 'dialog-header';
+const selectorDialogMeta = 'dialog-meta';
 const selectorDialogMetaDateIcon = 'dialog-meta-date-icon';
 const selectorDialogMetaLocationIcon = 'dialog-meta-location-icon';
+const selectorDialogContent = 'dialog-content';
+const selectorButtonAddToCalendar = 'button-add-to-calendar';
+const selectorDialogImage = 'dialog-image';
+const selectorDialogColLeft = 'dialog-col-left';
+const selectorDialogColRight = 'dialog-col-right';
+const selectorDialogBody = 'dialog-body';
 
 // variables
 const iconSize = 18;
+const calendarButtonSize = '42px';
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
 describe('<CardEvent>', () => {
@@ -44,9 +59,41 @@ describe('<CardEvent>', () => {
       cy.viewport('macbook-16');
     });
 
+    coreTests();
+
+    it('shows modal with two columns', () => {
+      cy.dataCy(selectorCardLink).click();
+      cy.testElementPercentageWidth(cy.dataCy(selectorDialogColLeft), 50);
+      cy.testElementPercentageWidth(cy.dataCy(selectorDialogColRight), 50);
+    });
+  });
+
+  context('mobile', () => {
+    beforeEach(() => {
+      cy.mount(CardEvent, {
+        props: {
+          card: cardEvent,
+        },
+      });
+      cy.viewport('iphone-6');
+    });
+
+    coreTests();
+
+    it('shows modal with one column', () => {
+      cy.dataCy(selectorCardLink).click();
+      cy.dataCy(selectorDialogBody)
+        .should('be.visible')
+        .invoke('css', 'overflow', 'hidden');
+      cy.testElementPercentageWidth(cy.dataCy(selectorDialogColLeft), 100);
+      cy.testElementPercentageWidth(cy.dataCy(selectorDialogColRight), 100);
+    });
+  });
+
+  function coreTests() {
     it('renders title with link', () => {
       cy.window().then(() => {
-        cy.dataCy('card-title')
+        cy.dataCy(selectorCardTitle)
           .should('be.visible')
           .and('have.css', 'font-size', '16px')
           .and('have.css', 'font-weight', '700')
@@ -54,7 +101,7 @@ describe('<CardEvent>', () => {
           .then(($title) => {
             expect($title.text()).to.equal(cardEvent.title);
           });
-        cy.dataCy('card-link')
+        cy.dataCy(selectorCardLink)
           .should('be.visible')
           .and('have.attr', 'href', '#');
       });
@@ -62,7 +109,7 @@ describe('<CardEvent>', () => {
 
     it('renders image', () => {
       cy.window().then(() => {
-        cy.dataCy('card')
+        cy.dataCy(selectorCard)
           .find('img')
           .should('be.visible')
           .then(($img) => {
@@ -74,7 +121,7 @@ describe('<CardEvent>', () => {
 
     it('has correct background color', () => {
       cy.window().then(() => {
-        cy.dataCy('card')
+        cy.dataCy(selectorCard)
           .should('be.visible')
           .and('have.backgroundColor', white);
       });
@@ -88,7 +135,7 @@ describe('<CardEvent>', () => {
         const year = dateObject.getFullYear();
         const hour = dateObject.getHours();
         // check event dates being displayed
-        cy.dataCy('card-dates')
+        cy.dataCy(selectorCardDates)
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
@@ -103,7 +150,7 @@ describe('<CardEvent>', () => {
 
     it('renders location with icon', () => {
       cy.window().then(() => {
-        cy.dataCy('card-location')
+        cy.dataCy(selectorCardLocation)
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
@@ -116,10 +163,10 @@ describe('<CardEvent>', () => {
 
     it('renders calendar button with an icon', () => {
       cy.window().then(() => {
-        cy.dataCy('calendar-button')
+        cy.dataCy(selectorCalendarButton)
           .should('be.visible')
-          .and('have.css', 'height', '42px')
-          .and('have.css', 'width', '42px');
+          .and('have.css', 'height', calendarButtonSize)
+          .and('have.css', 'width', calendarButtonSize);
         cy.dataCy(selectorCalendarButtonIcon)
           .should('be.visible')
           .and('have.color', primary);
@@ -128,7 +175,7 @@ describe('<CardEvent>', () => {
 
     it('has rounded corners', () => {
       cy.window().then(() => {
-        cy.dataCy('card')
+        cy.dataCy(selectorCard)
           .should('be.visible')
           .and('have.css', 'border-radius', borderRadiusCard);
       });
@@ -136,15 +183,15 @@ describe('<CardEvent>', () => {
 
     it('renders modal dialog on click', () => {
       cy.window().then(() => {
-        cy.dataCy('card-link').click();
-        cy.dataCy('dialog-card-event').should('be.visible');
+        cy.dataCy(selectorCardLink).click();
+        cy.dataCy(selectorDialogCardEvent).should('be.visible');
       });
     });
 
     it('renders modal title, location and date', () => {
       cy.window().then(() => {
-        cy.dataCy('card-link').click();
-        cy.dataCy('dialog-header')
+        cy.dataCy(selectorCardLink).click();
+        cy.dataCy(selectorDialogHeader)
           .find('h3')
           .should('be.visible')
           .and('have.css', 'font-size', '20px')
@@ -153,7 +200,7 @@ describe('<CardEvent>', () => {
           .then(($title) => {
             expect($title.text()).to.equal(cardEvent.title);
           });
-        cy.dataCy('dialog-meta')
+        cy.dataCy(selectorDialogMeta)
           .should('be.visible')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
@@ -189,24 +236,24 @@ describe('<CardEvent>', () => {
     });
 
     it('renders dialog content', () => {
-      cy.dataCy('card-link').click();
-      cy.dataCy('dialog-content')
+      cy.dataCy(selectorCardLink).click();
+      cy.dataCy(selectorDialogContent)
         .should('be.visible')
         .and('contain', 'We want to reward you for your support')
         .and('have.css', 'font-size', '14px')
         .and('have.css', 'font-weight', '400');
-      cy.dataCy('button-add-to-calendar').should('be.visible');
-      cy.dataCy('button-add-to-calendar')
+      cy.dataCy(selectorButtonAddToCalendar).should('be.visible');
+      cy.dataCy(selectorButtonAddToCalendar)
         .find('i')
         .first()
         .invoke('width')
         .should('be.eq', iconSize);
-      cy.dataCy('button-add-to-calendar')
+      cy.dataCy(selectorButtonAddToCalendar)
         .find('i')
         .first()
         .invoke('height')
         .should('be.eq', iconSize);
-      cy.dataCy('button-add-to-calendar').click();
+      cy.dataCy(selectorButtonAddToCalendar).click();
       cy.get('.q-menu')
         .should('be.visible')
         .find('.q-item')
@@ -214,41 +261,17 @@ describe('<CardEvent>', () => {
     });
 
     it('renders dialog image', () => {
-      cy.dataCy('card-link').click();
-      cy.dataCy('dialog-image')
+      cy.dataCy(selectorCardLink).click();
+      cy.dataCy(selectorDialogBody).scrollTo('bottom', {
+        ensureScrollable: false,
+      });
+      cy.dataCy(selectorDialogImage)
         .should('be.visible')
         .find('img')
         .then(($img) => {
-          // Updated version of the test valid for Firefox
           cy.testImageHeight($img);
           expect($img.attr('src')).to.equal(cardEvent.image.src);
         });
     });
-
-    it('shows modal with two columns', () => {
-      cy.dataCy('card-link').click();
-      cy.testElementPercentageWidth(cy.dataCy('dialog-col-left'), 50);
-      cy.testElementPercentageWidth(cy.dataCy('dialog-col-right'), 50);
-    });
-  });
-
-  context('mobile', () => {
-    beforeEach(() => {
-      cy.mount(CardEvent, {
-        props: {
-          card: cardEvent,
-        },
-      });
-      cy.viewport('iphone-6');
-    });
-
-    it('shows modal with one column', () => {
-      cy.dataCy('card-link').click();
-      cy.dataCy('dialog-body')
-        .should('be.visible')
-        .invoke('css', 'overflow', 'hidden');
-      cy.testElementPercentageWidth(cy.dataCy('dialog-col-left'), 100);
-      cy.testElementPercentageWidth(cy.dataCy('dialog-col-right'), 100);
-    });
-  });
+  }
 });
