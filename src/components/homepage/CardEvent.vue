@@ -184,7 +184,7 @@ export default defineComponent({
         </template>
         <!-- Metadata -->
         <template v-if="eventDateTime || card?.location" #metadata>
-          <div class="flex flex-wrap items-center gap-x-32 gap-y-8 q-mt-sm">
+          <div class="flex flex-wrap items-center gap-8 gap-x-32 q-mt-sm">
             <div
               v-if="eventDateTime"
               class="flex items-center text-grey-8"
@@ -259,35 +259,11 @@ export default defineComponent({
   border: 1px solid $grey-5;
 }
 
-.gap-y-8 {
-  row-gap: 8px;
-}
-
-.gap-x-32 {
-  column-gap: 32px;
-}
-
 .card-link {
   text-decoration: none;
 
   &:hover {
     text-decoration: underline;
-  }
-}
-
-.q-card > div:first-child > .q-img {
-  border-top-left-radius: inherit;
-  border-top-right-radius: inherit;
-  border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0;
-}
-
-@media (min-width: $breakpoint-sm-min) {
-  .q-card > div:first-child > .q-img {
-    border-top-left-radius: inherit;
-    border-top-right-radius: 0;
-    border-bottom-left-radius: inherit;
-    border-bottom-right-radius: 0;
   }
 }
 </style>
