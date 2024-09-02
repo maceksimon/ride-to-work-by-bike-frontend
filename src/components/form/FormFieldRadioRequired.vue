@@ -39,7 +39,7 @@ export default defineComponent({
   name: 'FormFieldRadioRequired',
   props: {
     modelValue: {
-      type: String,
+      type: String as () => string | null,
       required: true,
     },
     options: {
@@ -54,10 +54,10 @@ export default defineComponent({
   emits: ['update:modelValue'],
   setup(props, { emit }) {
     const radioValue = computed({
-      get() {
+      get(): string | null {
         return props.modelValue;
       },
-      set(value: string) {
+      set(value: string | null) {
         emit('update:modelValue', value);
       },
     });

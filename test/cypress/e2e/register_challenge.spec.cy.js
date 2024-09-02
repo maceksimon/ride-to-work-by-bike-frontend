@@ -180,8 +180,6 @@ describe('Register Challenge page', () => {
       cy.dataCy('step-1-continue').should('be.visible').click();
       // not on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
-      // fill gender (optional)
-      cy.dataCy('form-gender-input').find('.q-radio__label').first().click();
       // fill firstName
       cy.dataCy('form-firstName-input').type('John');
       // click
@@ -190,6 +188,15 @@ describe('Register Challenge page', () => {
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
       // fill lastName
       cy.dataCy('form-lastName-input').type('Doe');
+      // click
+      cy.dataCy('step-1-continue').should('be.visible').click();
+      // not on step 2
+      cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
+      // fill gender
+      cy.dataCy('form-personal-details-gender')
+        .find('.q-radio__label')
+        .first()
+        .click();
       // click
       cy.dataCy('step-1-continue').should('be.visible').click();
       // on step 2
@@ -327,9 +334,12 @@ describe('Register Challenge page', () => {
 });
 
 function passToStep2() {
-  cy.dataCy('form-gender-input').find('.q-radio__label').first().click();
   cy.dataCy('form-firstName-input').type('John');
   cy.dataCy('form-lastName-input').type('Doe');
+  cy.dataCy('form-personal-details-gender')
+    .find('.q-radio__label')
+    .first()
+    .click();
   cy.dataCy('step-1-continue').should('be.visible').click();
   // on step 2
   cy.dataCy('step-2').find('.q-stepper__step-content').should('be.visible');
