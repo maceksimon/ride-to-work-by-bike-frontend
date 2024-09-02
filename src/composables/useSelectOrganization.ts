@@ -38,7 +38,7 @@ export const useSelectOrganization = (organizations: Organization[]) => {
   /**
    * Computes the address options for the address select
    * based on the selected business id.
-   * @returns {FormSelectTableOption[]} - The address options.
+   * @returns {FormSelectTableOption[]} - The address options or empty array.
    */
   const addressOptions = computed<FormSelectTableOption[]>(() => {
     if (!organizationId.value) return [];
@@ -57,7 +57,8 @@ export const useSelectOrganization = (organizations: Organization[]) => {
   /**
    * Get a formatted address string from the provided address object.
    * @param {FormCompanyAddressFields | undefined} address - The address object.
-   * @returns {string} - A formatted string representation of the address.
+   * @returns {string} - Formatted string representation of the address or
+   * empty string.
    */
   function getAddressString(
     address: FormCompanyAddressFields | undefined,
