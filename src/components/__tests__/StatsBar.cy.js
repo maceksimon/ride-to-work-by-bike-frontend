@@ -1,6 +1,7 @@
 import { colors } from 'quasar';
 import StatsBar from 'components/global/StatsBar.vue';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { i18n } from '../../boot/i18n';
 
 // colors
 const { getPaletteColor } = colors;
@@ -13,6 +14,8 @@ const selectorStatsBar = 'stats-bar';
 const selectorStatsBarList = 'stats-bar-list';
 const selectorStatsBarItem = 'stats-bar-item';
 const dataSelectorStatsBarItemIcon = '[data-cy="stats-bar-item-icon"]';
+const dataSelectorStatsBarItemLabelUnit =
+  '[data-cy="stats-bar-item-label-unit"]';
 const dataSelectorStatsBarItemValue = '[data-cy="stats-bar-item-value"]';
 const dataSelectorStatsBarItemLabel = '[data-cy="stats-bar-item-label"]';
 
@@ -95,6 +98,16 @@ function coreTests() {
             .should('contain', stats[index].value)
             .and('have.color', grey10)
             .and('have.css', 'font-weight', '700');
+        }
+        if (stats[index].id === 'co2') {
+          cy.wrap($item)
+            .find(dataSelectorStatsBarItemLabelUnit)
+            .should('contain', i18n.global.t('global.carbonDioxideWeightUnit'));
+        }
+        if (stats[index].id === 'distance') {
+          cy.wrap($item)
+            .find(dataSelectorStatsBarItemLabelUnit)
+            .should('contain', i18n.global.t('global.routeLengthUnit'));
         }
       });
     });

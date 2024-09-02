@@ -38,11 +38,8 @@
 import { defineComponent } from 'vue';
 
 // types
-import {
-  CardProgress as CardProgressType,
-  ItemStatistics,
-  Link,
-} from '../types';
+import { CardProgress as CardProgressType, Link } from '../types';
+import type { ItemStatistics } from '../types/Statistics';
 
 // components
 import CardProgress from './CardProgress.vue';

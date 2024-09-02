@@ -43,7 +43,8 @@ import SectionHeading from '../global/SectionHeading.vue';
 import StatsBar from '../global/StatsBar.vue';
 
 // types
-import { CardProgress, Link, ItemStatistics } from '../types';
+import { CardProgress, Link } from '../types';
+import type { ItemStatistics } from '../types/Statistics';
 
 export default defineComponent({
   name: 'SliderProgress',

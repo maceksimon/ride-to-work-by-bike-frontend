@@ -7,8 +7,8 @@
  * Used in `ListCardProgress`, `SliderProgress`.
  *
  * @props
- * - `stats` (ItemStatistics, required): The object representing stats.
- *   It should be of type `ItemStatistics`.
+ * - `stats` (StatsBarType, required): The object representing stats.
+ *   It should be of type `StatsBarType`.
  *
  * @example
  * <stats-bar :stats="stats" />
@@ -23,7 +23,7 @@ import { defineComponent } from 'vue';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { ItemStatistics } from '../types/Item';
+import type { ItemStatistics } from '../types/Statistics';
 
 export default defineComponent({
   name: 'StatsBar',
@@ -70,9 +70,20 @@ export default defineComponent({
           item.value
         }}</strong>
         <!-- Label -->
-        <span v-if="item.label" data-cy="stats-bar-item-label"
-          >&nbsp;{{ item.label }}</span
+        <span
+          v-if="item.id === 'co2' || item.id === 'distance'"
+          data-cy="stats-bar-item-label-unit"
         >
+          <template v-if="item.id === 'co2'"
+            >&nbsp;{{ $t('global.carbonDioxideWeightUnit') }}</template
+          >
+          <template v-if="item.id === 'distance'"
+            >&nbsp;{{ $t('global.routeLengthUnit') }}</template
+          >
+        </span>
+        <span v-if="item.label" data-cy="stats-bar-item-label">
+          <span>&nbsp;{{ item.label }}</span>
+        </span>
       </q-item>
     </q-list>
   </div>

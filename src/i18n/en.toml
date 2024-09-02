@@ -40,6 +40,7 @@ to = "to"
 woman = "Woman"
 routeLengthUnit = "km"
 weightUnitGram = "g"
+carbonDioxideWeightUnit = "g CO2"
 
 [calendar]
 calendarApple = "Apple"
