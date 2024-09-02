@@ -66,8 +66,11 @@ export default defineComponent({
     const setHorizontalPosition = (): boolean => (Screen.xs ? false : true);
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
+    const iconSize = '18px';
+
     return {
       borderRadius,
+      iconSize,
       modalOpened,
       eventDateTime,
       setHorizontalPosition,
@@ -132,7 +135,7 @@ export default defineComponent({
                 <!-- Event calendar icon -->
                 <q-icon
                   name="svguse:icons/card_event/icons.svg#calendar"
-                  size="18px"
+                  :size="iconSize"
                   class="q-pr-xs"
                   color="primary"
                   data-cy="card-dates-icon"
@@ -147,7 +150,7 @@ export default defineComponent({
                 <!-- Event place icon -->
                 <q-icon
                   name="svguse:icons/card_event/icons.svg#map-pin"
-                  size="18px"
+                  :size="iconSize"
                   class="q-pr-xs"
                   color="primary"
                   data-cy="card-location-icon"
@@ -192,7 +195,7 @@ export default defineComponent({
             >
               <q-icon
                 name="event"
-                size="18px"
+                :size="iconSize"
                 class="q-pr-xs"
                 color="primary"
                 data-cy="dialog-meta-date-icon"
@@ -206,7 +209,7 @@ export default defineComponent({
             >
               <q-icon
                 name="pedal_bike"
-                size="18px"
+                :size="iconSize"
                 class="q-pr-xs"
                 color="primary"
                 data-cy="dialog-meta-location-icon"
