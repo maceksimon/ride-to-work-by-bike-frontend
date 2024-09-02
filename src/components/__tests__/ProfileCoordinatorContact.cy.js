@@ -112,6 +112,10 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('be.visible')
         .and('have.css', 'width', avatarSize)
         .and('have.css', 'height', avatarSize);
+      cy.matchImageSnapshotNamed(
+        selectorAvatar,
+        `${Cypress.currentTest.titlePath[0]}-avatar`,
+      );
     });
 
     it('renders name of a coordinator', () => {

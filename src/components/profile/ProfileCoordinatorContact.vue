@@ -64,7 +64,7 @@ export default defineComponent({
       <q-avatar data-cy="coordinator-avatar" :size="avatarSize">
         <q-img
           ratio="1"
-          :src="coordinator.image"
+          :src="coordinator.image.src"
           placeholder-src="~assets/image/profile-coordinator-contact/profile-placeholder.webp"
           :alt="coordinator.name"
         />

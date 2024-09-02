@@ -1,6 +1,9 @@
 {
   "name": "John Doe",
-  "avatar": "https://example.com/avatar.jpg",
+  "image": {
+    "src": "https://picsum.photos/id/40/300/300",
+    "alt": "User Name"
+  },
   "phone": "+1234567890",
   "email": "john.doe@example.com"
 }
