@@ -1,6 +1,11 @@
+import { colors } from 'quasar';
 import ProfileCoordinatorContact from 'components/profile/ProfileCoordinatorContact.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
+// colors
+const { getPaletteColor } = colors;
+const grey10 = getPaletteColor('grey-10');
 
 // selectors
 const classSelectorIcon = '.q-icon';
@@ -21,7 +26,11 @@ const textFontWeight = '400';
 
 describe('<ProfileCoordinatorContact>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      ['textCoordinatorContact'],
+      'profile',
+      i18n,
+    );
   });
 
   let coordinator;
@@ -67,10 +76,17 @@ describe('<ProfileCoordinatorContact>', () => {
       );
     });
 
-    it('renders message saying you can contact your company coordinator', () => {
+    it('renders company coordinator contact message', () => {
       cy.dataCy(selectorContactMessage)
         .should('be.visible')
-        .and('contain', i18n.global.t('index.component.contactMessage'));
+        .then(($el) => {
+          const content = $el.text();
+          cy.stripHtmlTags(
+            i18n.global.t('profile.textCoordinatorContact'),
+          ).then((text) => {
+            expect(content).to.equal(text);
+          });
+        });
     });
 
     it('renders avatar of a company coordinator', () => {
@@ -85,6 +101,7 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('be.visible')
         .and('have.css', 'font-size', nameFontSize)
         .and('have.css', 'font-weight', nameFontWeight)
+        .and('have.color', grey10)
         .and('contain', coordinator.name);
     });
 
@@ -93,6 +110,7 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('be.visible')
         .and('have.css', 'font-size', textFontSize)
         .and('have.css', 'font-weight', textFontWeight)
+        .and('have.color', grey10)
         .and('contain', coordinator.phone)
         .find(classSelectorIcon)
         .should('have.css', 'width', iconSize)
@@ -104,6 +122,7 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('be.visible')
         .and('have.css', 'font-size', textFontSize)
         .and('have.css', 'font-weight', textFontWeight)
+        .and('have.color', grey10)
         .and('contain', coordinator.email)
         .find(classSelectorIcon)
         .should('have.css', 'width', iconSize)

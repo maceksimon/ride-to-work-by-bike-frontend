@@ -46,11 +46,16 @@ export default defineComponent({
 </script>
 
 <template>
-  <div data-cy="profile-coordinator-contact" :style="{ borderRadius }">
+  <div
+    class="text-grey-10"
+    data-cy="profile-coordinator-contact"
+    :style="{ borderRadius }"
+  >
     <div>
-      <div data-cy="contact-message">
-        {{ $t('index.component.contactMessage') }}
-      </div>
+      <div
+        data-cy="contact-message"
+        v-html="$t('profile.textCoordinatorContact')"
+      />
     </div>
     <div class="flex items-center gap-12 q-mt-md">
       <q-avatar data-cy="coordinator-avatar" :size="avatarSize">
