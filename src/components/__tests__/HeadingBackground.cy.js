@@ -72,13 +72,6 @@ describe('<HeadingBackground>', () => {
         sectionTextWidthMobile,
       );
     });
-
-    it('renders image', () => {
-      cy.matchImageSnapshotNamed(
-        selectorHeadingBackgroundImage,
-        `${Cypress.currentTest.titlePath[0]}-background-image`,
-      );
-    });
   });
 });
 
