@@ -12,7 +12,6 @@ describe('<FormFieldSelectTable>', () => {
 
   before(() => {
     setActivePinia(createPinia());
-    // const store = useRegisterChallengeStore();
 
     cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
       const { organizationOptions } = useSelectedOrganization(
