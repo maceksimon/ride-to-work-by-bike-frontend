@@ -25,7 +25,7 @@ import FormFieldSelectTable from '../form/FormFieldSelectTable.vue';
 import FormFieldCompanyAddress from '../form/FormFieldCompanyAddress.vue';
 
 // composables
-import { useSelectOrganization } from 'src/composables/useSelectOrganization';
+import { useSelectedOrganization } from 'src/composables/useSelectedOrganization';
 
 // fixtures
 import formOrganizationOptions from '../../../test/cypress/fixtures/formOrganizationOptions.json';
@@ -44,7 +44,7 @@ export default defineComponent({
       formOrganizationOptions as Organization[];
 
     const { addressId, addressOptions, organizationId, organizationOptions } =
-      useSelectOrganization(organizations);
+      useSelectedOrganization(organizations);
 
     return {
       addressId,

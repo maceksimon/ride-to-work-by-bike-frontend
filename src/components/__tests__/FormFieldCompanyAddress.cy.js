@@ -1,7 +1,7 @@
 import { colors } from 'quasar';
 import FormFieldCompanyAddress from 'components/form/FormFieldCompanyAddress.vue';
 import { i18n } from '../../boot/i18n';
-import { useSelectOrganization } from 'src/composables/useSelectOrganization';
+import { useSelectedOrganization } from 'src/composables/useSelectedOrganization';
 import { createPinia, setActivePinia } from 'pinia';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
@@ -16,7 +16,7 @@ describe('<FormFieldCompanyAddress>', () => {
     const store = useRegisterChallengeStore();
 
     cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
-      const { addressOptions, organizationOptions } = useSelectOrganization(
+      const { addressOptions, organizationOptions } = useSelectedOrganization(
         formOrganizationOptions,
       );
       store.setFormOrganizationId(organizationOptions.value[0].value);

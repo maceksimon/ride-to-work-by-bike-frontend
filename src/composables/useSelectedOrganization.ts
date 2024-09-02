@@ -10,7 +10,7 @@ import type {
   FormSelectTableOption,
 } from 'src/components/types/Form';
 
-export const useSelectOrganization = (organizations: Organization[]) => {
+export const useSelectedOrganization = (organizations: Organization[]) => {
   // store
   const store = useRegisterChallengeStore();
 

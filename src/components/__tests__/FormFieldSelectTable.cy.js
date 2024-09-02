@@ -1,7 +1,7 @@
 import FormFieldSelectTable from 'components/form/FormFieldSelectTable.vue';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { i18n } from '../../boot/i18n';
-import { useSelectOrganization } from 'src/composables/useSelectOrganization';
+import { useSelectedOrganization } from 'src/composables/useSelectedOrganization';
 import { createPinia, setActivePinia } from 'pinia';
 // import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
@@ -15,7 +15,7 @@ describe('<FormFieldSelectTable>', () => {
     // const store = useRegisterChallengeStore();
 
     cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
-      const { organizationOptions } = useSelectOrganization(
+      const { organizationOptions } = useSelectedOrganization(
         formOrganizationOptions,
       );
       options = organizationOptions;
