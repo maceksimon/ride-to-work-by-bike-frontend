@@ -9,7 +9,7 @@ const grey10 = getPaletteColor('grey-10');
 
 // selectors
 const classSelectorIcon = '.q-icon';
-const selectorRoot = 'profile-coordinator-contact';
+const selectorProfileCoordinatorContact = 'profile-coordinator-contact';
 const selectorContactMessage = 'contact-message';
 const selectorAvatar = 'coordinator-avatar';
 const selectorName = 'coordinator-name';
@@ -18,6 +18,8 @@ const selectorEmail = 'coordinator-email';
 
 // constants
 const avatarSize = '56px';
+const componentPaddingSm = '16px';
+const componentPaddingLg = '24px';
 const iconSize = '18px';
 const nameFontSize = '14px';
 const nameFontWeight = '700';
@@ -50,6 +52,14 @@ describe('<ProfileCoordinatorContact>', () => {
     });
 
     coreTests();
+
+    it('renders component padding', () => {
+      cy.dataCy(selectorProfileCoordinatorContact).should(
+        'have.css',
+        'padding',
+        componentPaddingLg,
+      );
+    });
   });
 
   context('mobile', () => {
@@ -61,15 +71,23 @@ describe('<ProfileCoordinatorContact>', () => {
     });
 
     coreTests();
+
+    it('renders component padding', () => {
+      cy.dataCy(selectorProfileCoordinatorContact).should(
+        'have.css',
+        'padding',
+        componentPaddingSm,
+      );
+    });
   });
 
   function coreTests() {
     it('renders component', () => {
-      cy.dataCy(selectorRoot).should('be.visible');
+      cy.dataCy(selectorProfileCoordinatorContact).should('be.visible');
     });
 
     it('root element has borderRadius', () => {
-      cy.dataCy(selectorRoot).should(
+      cy.dataCy(selectorProfileCoordinatorContact).should(
         'have.css',
         'border-radius',
         rideToWorkByBikeConfig.borderRadiusCard,

@@ -35,10 +35,12 @@ export default defineComponent({
     const iconSize = '18px';
 
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+    const borderColor = rideToWorkByBikeConfig.colorGray;
 
     return {
       avatarSize,
       iconSize,
+      borderColor,
       borderRadius,
     };
   },
@@ -48,8 +50,9 @@ export default defineComponent({
 <template>
   <div
     class="text-grey-10"
+    :class="[$q.screen.gt.sm ? 'q-pa-lg' : 'q-pa-md']"
     data-cy="profile-coordinator-contact"
-    :style="{ borderRadius }"
+    :style="{ border: `1px solid ${borderColor}`, borderRadius }"
   >
     <div>
       <div
@@ -74,14 +77,30 @@ export default defineComponent({
           class="flex items-center gap-8 gap-x-24 q-mt-sm"
           data-cy="coordinator-contact"
         >
-          <div data-cy="coordinator-phone">
-            <q-icon name="phone" :size="iconSize" />
+          <a
+            :href="`tel:${coordinator.phone}`"
+            class="text-grey-10"
+            data-cy="coordinator-phone"
+          >
+            <q-icon
+              name="svguse:icons/profile_coordinator_contact/icons.svg#phone"
+              color="primary"
+              :size="iconSize"
+            />
             {{ coordinator.phone }}
-          </div>
-          <div data-cy="coordinator-email">
-            <q-icon name="email" :size="iconSize" />
+          </a>
+          <a
+            :href="`mailto:${coordinator.email}`"
+            class="text-grey-10"
+            data-cy="coordinator-email"
+          >
+            <q-icon
+              name="svguse:icons/profile_coordinator_contact/icons.svg#email"
+              color="primary"
+              :size="iconSize"
+            />
             {{ coordinator.email }}
-          </div>
+          </a>
         </div>
       </div>
     </div>
