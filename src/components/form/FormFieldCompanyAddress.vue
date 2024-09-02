@@ -9,6 +9,8 @@
  * Note: This component is commonly used in `RegisterChallengePage`.
  *
  * @props
+ * - `options` (FormOption[], required): Object representing address options.
+ *   It should be of type `FormOption[]`.
  * - `modelValue` (object, required): The object representing address.
  *   It should be of type `FormAddressType`.
  *
