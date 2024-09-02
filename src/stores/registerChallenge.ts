@@ -1,14 +1,17 @@
 import { defineStore } from 'pinia';
 
 // types
-import { FormPersonalDetailsFields } from '../components/types/Form';
+import {
+  FormPersonalDetailsFields,
+  FormPersonalDetailsFieldsNullable,
+} from '../components/types/Form';
 
-const emptyFormPersonalDetails: FormPersonalDetailsFields = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  nickname: '',
-  gender: '',
+const emptyFormPersonalDetails: FormPersonalDetailsFieldsNullable = {
+  firstName: null,
+  lastName: null,
+  email: null,
+  nickname: null,
+  gender: null,
   newsletter: [],
   terms: true,
 };
@@ -27,9 +30,19 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
   }),
 
   getters: {
-    getAddressId: (state) => state.addressId,
-    getOrganizationId: (state) => state.organizationId,
-    getPersonalDetails: (state) => state.personalDetails,
+    getAddressId: (state): string | null => state.addressId,
+    getOrganizationId: (state): string | null => state.organizationId,
+    getPersonalDetails: (state): FormPersonalDetailsFieldsNullable =>
+      state.personalDetails,
+    getPersonalDetailsStringDefaults: (state): FormPersonalDetailsFields => ({
+      firstName: state.personalDetails.firstName || '',
+      lastName: state.personalDetails.lastName || '',
+      email: state.personalDetails.email || '',
+      nickname: state.personalDetails.nickname || '',
+      gender: state.personalDetails.gender,
+      newsletter: state.personalDetails.newsletter,
+      terms: state.personalDetails.terms,
+    }),
   },
 
   actions: {
@@ -39,8 +52,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setFormOrganizationId(organizationId: string | null) {
       this.organizationId = organizationId;
     },
-    setPersonalDetails(personalDetails: FormPersonalDetailsFields) {
-      this.personalDetails = personalDetails;
+    setPersonalDetails(personalDetails: FormPersonalDetailsFieldsNullable) {
+      Object.assign(this.personalDetails, personalDetails);
     },
   },
 

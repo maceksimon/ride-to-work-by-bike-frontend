@@ -10,7 +10,17 @@ export type FormPersonalDetailsFields = {
   lastName: string;
   email: string;
   nickname: string;
-  gender: string;
+  gender: string | null;
+  newsletter: string[];
+  terms: boolean;
+};
+
+export type FormPersonalDetailsFieldsNullable = {
+  firstName: string | null;
+  lastName: string | null;
+  email: string | null;
+  nickname: string | null;
+  gender: string | null;
   newsletter: string[];
   terms: boolean;
 };

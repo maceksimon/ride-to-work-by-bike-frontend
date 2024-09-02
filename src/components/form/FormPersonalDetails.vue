@@ -19,7 +19,7 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { defineComponent, reactive, watch } from 'vue';
 
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
@@ -32,10 +32,7 @@ import { i18n } from 'src/boot/i18n';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
-import {
-  FormOption,
-  FormPersonalDetailsFields,
-} from 'src/components/types/Form';
+import { FormOption } from 'src/components/types/Form';
 
 export default defineComponent({
   name: 'FormPersonalDetails',
@@ -45,15 +42,15 @@ export default defineComponent({
   },
   setup() {
     const store = useRegisterChallengeStore();
+    const personalDetails = reactive(store.getPersonalDetailsStringDefaults);
 
-    const personalDetails = computed<FormPersonalDetailsFields>({
-      get() {
-        return store.getPersonalDetails;
+    watch(
+      personalDetails,
+      (newVal) => {
+        store.setPersonalDetails(newVal);
       },
-      set(value) {
-        store.setPersonalDetails(value);
-      },
-    });
+      { deep: true },
+    );
 
     const newsletterOptions: FormOption[] = [
       {
