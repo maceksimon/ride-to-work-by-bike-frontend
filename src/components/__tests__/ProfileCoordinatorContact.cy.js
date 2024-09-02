@@ -46,7 +46,7 @@ describe('<ProfileCoordinatorContact>', () => {
   context('desktop', () => {
     beforeEach(() => {
       cy.mount(ProfileCoordinatorContact, {
-        props: { coordinator },
+        props: {},
       });
       cy.viewport('macbook-16');
     });
@@ -65,7 +65,7 @@ describe('<ProfileCoordinatorContact>', () => {
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(ProfileCoordinatorContact, {
-        props: { coordinator },
+        props: {},
       });
       cy.viewport('iphone-6');
     });

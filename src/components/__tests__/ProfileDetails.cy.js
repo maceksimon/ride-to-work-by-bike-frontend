@@ -27,6 +27,7 @@ const selectorPackageLink = 'profile-details-package-link';
 const selectorPaymentState = 'profile-details-payment-state';
 const selectorPersonalDetails = 'profile-details';
 const selectorPhone = 'profile-details-phone';
+const selectorProfileCoordinatorContact = 'profile-coordinator-contact';
 const selectorSize = 'profile-details-size';
 const selectorState = 'profile-details-state';
 const selectorTeam = 'profile-details-team';
@@ -238,6 +239,8 @@ function coreTests() {
       cy.dataCy(selectorPhone)
         .find(dataSelectorValue)
         .should('contain', formPersonalDetails.phone);
+      // coordinator contact
+      cy.dataCy(selectorProfileCoordinatorContact).should('be.visible');
     });
   });
 

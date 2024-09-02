@@ -7,30 +7,25 @@
  *
  * Used in `ProfileDetails` component.
  *
- * @props
- * - `coordinator` (ProfileCoordinator, required): Coordinator contact details.
- *   It should be of type `ProfileCoordinator`.
- *
  * @example
- * <profile-coordinator-contact :coordinator="coordinator">
+ * <profile-coordinator-contact />
  *
  * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=4858-104393&t=WcrxMvLONggUrjGt-1)
  */
 
 // libraries
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { ProfileCoordinator } from '../../types/Profile';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// fixtures
+import companyCoordinator from '../../../test/cypress/fixtures/companyCoordinator.json';
+
 export default defineComponent({
   name: 'ProfileCoordinatorContact',
-  props: {
-    coordinator: {
-      type: Object as PropType<ProfileCoordinator>,
-      required: true,
-    },
-  },
   setup() {
+    const coordinator = companyCoordinator as ProfileCoordinator;
+
     const avatarSize = '56px';
     const iconSize = '18px';
 
@@ -39,9 +34,10 @@ export default defineComponent({
 
     return {
       avatarSize,
-      iconSize,
+      coordinator,
       borderColor,
       borderRadius,
+      iconSize,
     };
   },
 });
@@ -49,6 +45,7 @@ export default defineComponent({
 
 <template>
   <div
+    v-if="coordinator"
     class="text-grey-10"
     :class="[$q.screen.gt.sm ? 'q-pa-lg' : 'q-pa-md']"
     data-cy="profile-coordinator-contact"

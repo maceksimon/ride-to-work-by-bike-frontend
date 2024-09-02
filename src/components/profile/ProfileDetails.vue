@@ -30,6 +30,7 @@ import FormUpdateEmail from '../form/FormUpdateEmail.vue';
 import FormUpdateGender from '../form/FormUpdateGender.vue';
 import FormUpdateNickname from '../form/FormUpdateNickname.vue';
 import LanguageSwitcher from '../global/LanguageSwitcher.vue';
+import ProfileCoordinatorContact from './ProfileCoordinatorContact.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
@@ -52,6 +53,7 @@ export default defineComponent({
     FormUpdateGender,
     FormUpdateNickname,
     LanguageSwitcher,
+    ProfileCoordinatorContact,
   },
   setup() {
     const iconSize = '18px';
@@ -353,5 +355,8 @@ export default defineComponent({
         </div>
       </div>
     </div>
+
+    <!-- Coordinator contact -->
+    <profile-coordinator-contact class="q-mt-xl" />
   </div>
 </template>
