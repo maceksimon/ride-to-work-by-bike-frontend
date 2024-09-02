@@ -41,3 +41,10 @@ export interface Profile {
   deliveryAddress: FormCompanyAddressFields;
   paymentState: PaymentState;
 }
+
+export interface ProfileCoordinator {
+  name: string;
+  avatar: string;
+  phone: string;
+  email: string;
+}
