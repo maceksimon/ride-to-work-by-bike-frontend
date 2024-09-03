@@ -5,7 +5,7 @@ interface User {
   password: string;
 }
 
-const emptyUser: User = {
+export const emptyUser: User = {
   email: '',
   password: '',
 };

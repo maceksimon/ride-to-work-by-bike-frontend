@@ -1,6 +1,6 @@
 import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
-import { useLoginStore } from 'src/stores/login';
+import { emptyUser, useLoginStore } from 'src/stores/login';
 
 import FormLogin from '../login/FormLogin.vue';
 import { i18n } from '../../boot/i18n';
@@ -252,15 +252,17 @@ describe('<FormLogin>', () => {
     it('uses the login store', () => {
       const loginStore = useLoginStore();
       // initial state
-      expect(loginStore.user.email).to.equal(null);
-      expect(loginStore.user.password).to.equal(null);
+      expect(loginStore.user.email).to.equal(emptyUser.email);
+      expect(loginStore.user.password).to.equal(emptyUser.password);
       // type email
+      cy.dataCy('form-login-email').find('input').clear();
       cy.dataCy('form-login-email').find('input').type(email);
       // check email in store
       cy.dataCy('form-login-email').then(() => {
         expect(loginStore.user.email).to.equal(email);
       });
       // type password
+      cy.dataCy('form-login-password').find('input').clear();
       cy.dataCy('form-login-password').find('input').type(password);
       // check password in store
       cy.dataCy('form-login-password').then(() => {
