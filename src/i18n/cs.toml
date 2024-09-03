@@ -374,13 +374,14 @@ title = "Vaše výsledky"
 button = "Všechny výsledky"
 
 [index.newsletterFeature]
-title = "Odebírejte od nás novinky, ať vám nic neuteče"
-description = "Newsletter vám budeme posílat na e-mail jana.anonymni[at]dopracenakole.cz."
 aboutChallenges = "O budoucích výzvách"
 aboutEvents = "O doprovodných akcích (cyklojízdách, snídaních...), Akcích na triko a slevách"
 aboutMobility = "O udržitelné mobilitě"
+description = "Newsletter vám budeme posílat na e-mail{email}."
 following = "Již sledujete"
 follow = "Začít sledovat"
+hint = "O čem chcete být informováni e-mailem?"
+title = "Odebírejte od nás novinky, ať vám nic neuteče"
 
 [index.newsletterSwitch]
 title = "Zůstaňte informováni o všem kolem Do práce na kole"

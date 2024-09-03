@@ -1,21 +1,35 @@
 import { colors } from 'quasar';
 import NewsletterFeature from '../homepage/NewsletterFeature.vue';
 import { i18n } from '../../boot/i18n';
+import { useLoginStore } from 'src/stores/login';
 
+// colors
 const { getPaletteColor } = colors;
-const black = getPaletteColor('black');
+const grey10 = getPaletteColor('grey-10');
+const primary = getPaletteColor('primary');
+
+// variables
+const fontSizeTitle = '24px';
+const fontWeightBold = '700';
+const fontSizePerex = '14px';
+const fontWeightRegular = '400';
+const props = {
+  title: 'Custom title',
+  description: 'Custom description',
+};
 
 describe('<NewsletterFeature>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       [
-        'title',
-        'description',
         'aboutChallenges',
         'aboutEvents',
         'aboutMobility',
+        'description',
         'following',
         'follow',
+        'hint',
+        'title',
       ],
       'index.newsletterFeature',
       i18n,
@@ -30,35 +44,7 @@ describe('<NewsletterFeature>', () => {
       cy.viewport('macbook-16');
     });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('section-heading-title')
-          .should('have.css', 'font-size', '20px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.color', black)
-          .and('contain', i18n.global.t('index.newsletterFeature.title'))
-          .then(($title) => {
-            expect($title.text()).to.contain(
-              i18n.global.t('index.newsletterFeature.title'),
-            );
-          });
-      });
-    });
-
-    it('renders description', () => {
-      cy.window().then(() => {
-        cy.dataCy('section-heading-perex')
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', black)
-          .and('contain', i18n.global.t('index.newsletterFeature.description'))
-          .then(($title) => {
-            expect($title.text()).to.contain(
-              i18n.global.t('index.newsletterFeature.description'),
-            );
-          });
-      });
-    });
+    coreTests();
 
     it('renders image', () => {
       cy.window().then(() => {
@@ -104,43 +90,34 @@ describe('<NewsletterFeature>', () => {
     });
   });
 
+  context('desktop override props', () => {
+    beforeEach(() => {
+      cy.mount(NewsletterFeature, {
+        props,
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('renders title', () => {
+      cy.dataCy('section-heading-title').should('contain', props.title);
+    });
+
+    it('renders description', () => {
+      cy.dataCy('section-heading-perex').should('contain', props.description);
+    });
+  });
+
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(NewsletterFeature, {
         props: {},
       });
       cy.viewport('iphone-6');
+      const loginStore = useLoginStore();
+      loginStore.setUserEmail('test@example.com');
     });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('section-heading-title')
-          .should('have.css', 'font-size', '20px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.color', black)
-          .and('contain', i18n.global.t('index.newsletterFeature.title'))
-          .then(($title) => {
-            expect($title.text()).to.contain(
-              i18n.global.t('index.newsletterFeature.title'),
-            );
-          });
-      });
-    });
-
-    it('renders description', () => {
-      cy.window().then(() => {
-        cy.dataCy('section-heading-perex')
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', black)
-          .and('contain', i18n.global.t('index.newsletterFeature.description'))
-          .then(($title) => {
-            expect($title.text()).to.contain(
-              i18n.global.t('index.newsletterFeature.description'),
-            );
-          });
-      });
-    });
+    coreTests();
 
     it('does not render image', () => {
       cy.window().then(() => {
@@ -155,3 +132,35 @@ describe('<NewsletterFeature>', () => {
     });
   });
 });
+
+function coreTests() {
+  it('renders title', () => {
+    cy.window().then(() => {
+      cy.dataCy('section-heading-title')
+        .should('have.css', 'font-size', fontSizeTitle)
+        .and('have.css', 'font-weight', fontWeightBold)
+        .and('have.color', primary)
+        .and('contain', i18n.global.t('index.newsletterFeature.title'))
+        .then(($title) => {
+          expect($title.text()).to.contain(
+            i18n.global.t('index.newsletterFeature.title'),
+          );
+        });
+    });
+  });
+
+  it('renders description', () => {
+    cy.window().then(() => {
+      cy.dataCy('section-heading-perex')
+        .should('have.css', 'font-size', fontSizePerex)
+        .and('have.css', 'font-weight', fontWeightRegular)
+        .and('have.color', grey10)
+        .and('contain', i18n.global.t('index.newsletterFeature.description'))
+        .then(($title) => {
+          expect($title.text()).to.contain(
+            i18n.global.t('index.newsletterFeature.description'),
+          );
+        });
+    });
+  });
+}

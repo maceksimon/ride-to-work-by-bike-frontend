@@ -2,43 +2,81 @@
 /**
  * NewsletterFeature Component
  *
- * The `NewsletterFeature` component displays a newsletter section,
- * with various newsletter option items.
- *
  * @description
- * This component provides a visually appealing section to promote newsletters.
- * It uses predefined mock data to display a list of newsletter items using the
- * `NewsletterItem` child component.
+ * Display a newsletter section with a title, description, and a list of
+ * newsletter items. You can subscribe to the different topics.
+ * You can use the title prop to override the default title.
+ * You can use the description prop to override the default description.
+ *
+ * @props
+ * - `title`: (string) Custom title for the newsletter section.
+ * - `description`: (string) Custom description for the newsletter section.
  *
  * @components
  * - `NewsletterItem`: Component to render individual newsletter details.
- * - `SectionHeading`: Component to render a heading.
  *
  * @example
- * <newsletter-feature />
+ * <newsletter-feature :title="customTitle" :description="customDescription" />
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A105656&mode=dev)
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { Screen } from 'quasar';
+import { computed, defineComponent } from 'vue';
+
+// components
+import NewsletterItem from './NewsletterItem.vue';
+
+// composables
+import { i18n } from '../../boot/i18n';
 
 // mocks
 import { newsletterItems } from '../../mocks/homepage';
 
-// components
-import NewsletterItem from './NewsletterItem.vue';
-import SectionHeading from '../global/SectionHeading.vue';
+// stores
+import { useLoginStore } from '../../stores/login';
 
 export default defineComponent({
   name: 'NewsletterFeature',
+  props: {
+    title: {
+      type: String,
+      required: false,
+    },
+    description: {
+      type: String,
+      required: false,
+    },
+  },
   components: {
     NewsletterItem,
-    SectionHeading,
   },
-  setup() {
+  setup(props) {
+    const loginStore = useLoginStore();
+    const userEmail = loginStore.userEmailString;
+
+    const newsletterTitle = computed(() => {
+      return props.title
+        ? props.title
+        : i18n.global.t('index.newsletterFeature.title');
+    });
+
+    const newsletterDescription = computed(() => {
+      return props.description
+        ? props.description
+        : i18n.global.t('index.newsletterFeature.description', {
+            email: userEmail ? ` <b>${userEmail}</b>` : '',
+          });
+    });
+
+    const headingMaxWidth = Screen.sizes.sm;
+
     return {
+      headingMaxWidth,
+      newsletterDescription,
       newsletterItems,
+      newsletterTitle,
     };
   },
 });
@@ -67,13 +105,29 @@ export default defineComponent({
     <!-- Section content -->
     <div class="col-12 col-md-9 col-lg-10" data-cy="newsletter-col-content">
       <!-- Title -->
-      <section-heading class="q-mb-md">
-        {{ $t('index.newsletterFeature.title') }}
-        <template #perex>
-          {{ $t('index.newsletterFeature.description') }}
-        </template>
-      </section-heading>
-      <div v-for="(item, index) in newsletterItems" :key="item.title">
+      <h2
+        class="text-h5 text-weight-bold text-primary text-balance q-my-none"
+        :style="{ maxWidth: `${headingMaxWidth}px` }"
+        data-cy="section-heading-title"
+      >
+        {{ newsletterTitle }}
+      </h2>
+      <div
+        class="q-mt-md text-subtitle2 text-weight-regular text-grey-10"
+        data-cy="section-heading-perex"
+        v-html="newsletterDescription"
+      />
+      <div
+        class="q-mt-md text-subtitle2 text-weight-regular text-grey-10"
+        data-cy="section-heading-perex"
+      >
+        {{ $t('index.newsletterFeature.hint') }}
+      </div>
+      <div
+        v-for="(item, index) in newsletterItems"
+        :key="item.title"
+        class="q-mt-lg"
+      >
         <!-- Item - subscription variant -->
         <newsletter-item :item="item" data-cy="newsletter-feature-item" />
         <!-- Separator -->
