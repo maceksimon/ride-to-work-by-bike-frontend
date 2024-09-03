@@ -7,6 +7,7 @@
  *
  * @components
  * - `ProfileDetails`: Component to display a ProfileDetails section.
+ * - `TableNotifications`: Component to display a table of notifications.
  *
  * @example
  * <profile-tabs />
@@ -19,6 +20,7 @@ import { defineComponent, ref } from 'vue';
 
 // components
 import ProfileDetails from './ProfileDetails.vue';
+import TableNotifications from './TableNotifications.vue';
 
 // routes
 import { routesConf } from '../../router/routes_conf';
@@ -35,6 +37,7 @@ export default defineComponent({
   name: 'ProfileTabs',
   components: {
     ProfileDetails,
+    TableNotifications,
   },
   setup() {
     const activeTab = ref(tabsProfile.none);
@@ -113,7 +116,7 @@ export default defineComponent({
         :name="tabsProfile.notifications"
         data-cy="profile-tabs-panel-notifications"
       >
-        <!-- <profile-notifications /> -->
+        <table-notifications />
       </q-tab-panel>
     </q-tab-panels>
   </div>

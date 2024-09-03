@@ -10,7 +10,7 @@
     "description": "You have a new message from your coordinator.",
     "timestamp": "2023-05-15T10:30:00Z",
     "data": {
-      "url": "/messages/1",
+      "url": "",
       "icon": "mail"
     }
   },
@@ -26,7 +26,7 @@
     "timestamp": "2023-05-14T18:45:00Z",
     "data": {
       "url": "/challenges/weekly",
-      "icon": "trophy"
+      "icon": "mdi-trophy"
     }
   },
   {

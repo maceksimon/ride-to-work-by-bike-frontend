@@ -7,6 +7,8 @@ const dataSelectorNotificationTitle = '[data-cy="notification-title"]';
 const dataSelectorNotificationTimestamp = '[data-cy="notification-timestamp"]';
 const dataSelectorNotificationState = '[data-cy="notification-state"]';
 const dataSelectorNotificationAction = '[data-cy="notification-action"]';
+const dataSelectorNotificationIcon = '[data-cy="notification-icon"]';
+const dataSelectorNotificationVerbal = '[data-cy="notification-verbal"]';
 const selectorTableNotifications = 'table-notifications';
 const selectorNotificationRow = 'notification-row';
 const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
@@ -61,6 +63,19 @@ describe('<TableNotifications>', () => {
           .find(dataSelectorNotificationTitle)
           .should('be.visible')
           .should('contain', notification.verb);
+        cy.wrap(row).find(dataSelectorNotificationIcon).should('be.visible');
+        if (notification.data.url) {
+          cy.wrap(row)
+            .find(dataSelectorNotificationVerbal)
+            .should('be.visible')
+            .and('have.prop', 'tagName', 'A')
+            .and('have.attr', 'href', notification.data.url)
+            .and('have.attr', 'target', '_blank');
+        } else {
+          cy.wrap(row)
+            .find(dataSelectorNotificationVerbal)
+            .and('have.prop', 'tagName', 'SPAN');
+        }
         cy.wrap(row)
           .find(dataSelectorNotificationTimestamp)
           .should('be.visible')
@@ -80,7 +95,6 @@ describe('<TableNotifications>', () => {
               ? i18n.global.t('notifications.labelUnread')
               : i18n.global.t('notifications.labelRead'),
           );
-
         cy.wrap(row).find(dataSelectorNotificationAction).should('be.visible');
       });
     });

@@ -118,7 +118,20 @@ export default defineComponent({
           data-cy="notification-row"
         >
           <q-td key="title" :props="props" data-cy="notification-title">
-            {{ props.row.verb }}
+            <q-icon
+              :name="props.row.data.icon"
+              size="18px"
+              color="primary"
+              class="q-mr-sm"
+              data-cy="notification-icon"
+            />
+            <component
+              :is="props.row.data.url ? 'a' : 'span'"
+              :href="props.row.data.url"
+              target="_blank"
+              data-cy="notification-verbal"
+              >{{ props.row.verb }}</component
+            >
           </q-td>
           <q-td key="timestamp" :props="props" data-cy="notification-timestamp">
             <template v-for="col in props.cols" :key="col.field">
@@ -141,7 +154,7 @@ export default defineComponent({
             <q-btn
               round
               unelevated
-              size="sm"
+              size="xs"
               :outline="!props.row.unread"
               :disabled="!props.row.unread"
               color="primary"
