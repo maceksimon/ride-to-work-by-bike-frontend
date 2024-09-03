@@ -122,7 +122,12 @@ export default defineComponent({
     <q-table flat bordered :rows="rows" :columns="columns" row-key="title">
       <template v-slot:body="props">
         <q-tr :props="props" data-cy="notification-row">
-          <q-td key="title" :props="props" data-cy="notification-title">
+          <q-td
+            key="title"
+            :props="props"
+            class="text-grey-10"
+            data-cy="notification-title"
+          >
             <q-icon
               :name="props.row.data.icon"
               size="18px"
@@ -133,6 +138,7 @@ export default defineComponent({
             <component
               :is="props.row.data.url ? 'a' : 'span'"
               :href="props.row.data.url"
+              :class="props.row.unread ? 'text-weight-bold' : ''"
               target="_blank"
               data-cy="notification-verbal"
               >{{ props.row.verb }}</component

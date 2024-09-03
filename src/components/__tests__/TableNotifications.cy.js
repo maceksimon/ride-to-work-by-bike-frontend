@@ -1,8 +1,13 @@
-import { date } from 'quasar';
+import { colors, date } from 'quasar';
 import TableNotifications from 'components/profile/TableNotifications.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
+const { getPaletteColor } = colors;
+const grey10 = getPaletteColor('grey-10');
+
 // selectors
+const classSelectorQBtn = '.q-btn';
 const dataSelectorNotificationTitle = '[data-cy="notification-title"]';
 const dataSelectorNotificationTimestamp = '[data-cy="notification-timestamp"]';
 const dataSelectorNotificationState = '[data-cy="notification-state"]';
@@ -12,6 +17,11 @@ const dataSelectorNotificationVerbal = '[data-cy="notification-verbal"]';
 const selectorTableNotifications = 'table-notifications';
 const selectorNotificationRow = 'notification-row';
 const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
+
+// variables
+const defaultTablePostsPerPage = 5;
+const fontWeightBold = '700';
+const fontWeightRegular = '400';
 
 describe('<TableNotifications>', () => {
   it('has translation for all strings', () => {
@@ -56,7 +66,7 @@ describe('<TableNotifications>', () => {
     it('renders notifications', () => {
       cy.dataCy(selectorNotificationRow)
         .should('be.visible')
-        .should('have.length', 5);
+        .should('have.length', defaultTablePostsPerPage);
       cy.dataCy(selectorNotificationRow).each((row, index) => {
         const notification = notifications[index];
         cy.wrap(row)
@@ -64,22 +74,32 @@ describe('<TableNotifications>', () => {
           .should('be.visible')
           .should('contain', notification.verb);
         cy.wrap(row).find(dataSelectorNotificationIcon).should('be.visible');
+        cy.wrap(row).find(dataSelectorNotificationVerbal).should('be.visible');
         if (notification.data.url) {
           cy.wrap(row)
             .find(dataSelectorNotificationVerbal)
-            .should('be.visible')
             .and('have.prop', 'tagName', 'A')
             .and('have.attr', 'href', notification.data.url)
             .and('have.attr', 'target', '_blank');
         } else {
           cy.wrap(row)
             .find(dataSelectorNotificationVerbal)
-            .and('have.prop', 'tagName', 'SPAN');
+            .should('have.prop', 'tagName', 'SPAN')
+            .and('have.color', grey10);
+        }
+        if (notification.unread) {
+          cy.wrap(row)
+            .find(dataSelectorNotificationVerbal)
+            .should('have.css', 'font-weight', fontWeightBold);
+        } else {
+          cy.wrap(row)
+            .find(dataSelectorNotificationVerbal)
+            .should('have.css', 'font-weight', fontWeightRegular);
         }
         cy.wrap(row)
           .find(dataSelectorNotificationTimestamp)
           .should('be.visible')
-          .should(
+          .and(
             'contain',
             date.formatDate(
               new Date(String(notification.timestamp)),
@@ -89,7 +109,7 @@ describe('<TableNotifications>', () => {
         cy.wrap(row)
           .find(dataSelectorNotificationState)
           .should('be.visible')
-          .should(
+          .and(
             'contain',
             notification.unread
               ? i18n.global.t('notifications.labelUnread')
@@ -107,7 +127,7 @@ describe('<TableNotifications>', () => {
       cy.dataCy(selectorNotificationRow)
         .first()
         .find(dataSelectorNotificationAction)
-        .find('.q-btn')
+        .find(classSelectorQBtn)
         .click();
       cy.dataCy(selectorNotificationRow)
         .first()
