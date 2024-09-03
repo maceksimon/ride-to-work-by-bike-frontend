@@ -17,7 +17,7 @@
 
 // libraries
 import { date } from 'quasar';
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
@@ -35,7 +35,7 @@ export default defineComponent({
         label: i18n.global.t('notifications.labelTitle'),
         align: 'left',
         field: 'verb',
-        format: (val) => `${val}`,
+        format: (val: string): string => `${val}`,
         sortable: false,
       },
       {
@@ -67,14 +67,26 @@ export default defineComponent({
 
     const rows = reactive<Notification[]>(tableNotificationsFixture);
 
-    const markAsRead = (row: Notification) => {
+    const markAsRead = (row: Notification): void => {
       row.unread = false;
     };
+
+    const markAllAsRead = (): void => {
+      rows.forEach((row) => {
+        markAsRead(row);
+      });
+    };
+
+    const unreadCount = computed(() => {
+      return rows.filter((row) => row.unread).length;
+    });
 
     return {
       columns,
       rows,
       markAsRead,
+      markAllAsRead,
+      unreadCount,
     };
   },
 });
@@ -82,7 +94,20 @@ export default defineComponent({
 
 <template>
   <div data-cy="table-notifications">
-    <div></div>
+    <div class="flex justify-end q-mb-lg">
+      <q-btn
+        unelevated
+        rounded
+        outline
+        color="primary"
+        :disabled="unreadCount === 0"
+        data-cy="button-mark-all-as-read"
+        @click.prevent="markAllAsRead"
+      >
+        <q-icon name="check" size="18px" class="q-mr-sm" />
+        {{ $t('notifications.labelMarkAllAsRead') }}
+      </q-btn>
+    </div>
 
     <!-- Table -->
     <q-table flat bordered :rows="rows" :columns="columns" row-key="title">
@@ -102,7 +127,7 @@ export default defineComponent({
               </span>
             </template>
           </q-td>
-          <q-td key="unread" :props="props" data-cy="notification-unread">
+          <q-td key="unread" :props="props" data-cy="notification-state">
             <template v-for="col in props.cols" :key="col.field">
               <q-badge
                 v-if="col.field === 'unread'"

@@ -440,6 +440,7 @@ labelRead = "Read"
 labelState = "State"
 labelTitle = "Notification"
 labelUnread = "Unread"
+labelMarkAllAsRead = "Mark all as read"
 
 [offer]
 titleOfferValidation = "To use it, just show proof of identity on the spot:"

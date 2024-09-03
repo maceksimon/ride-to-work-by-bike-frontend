@@ -443,6 +443,7 @@ labelRead = "Přečteno"
 labelState = "Stav"
 labelTitle = "Notifikace"
 labelUnread = "Nepřečteno"
+labelMarkAllAsRead = "Označit vše jako přečtené"
 
 [offer]
 titleOfferValidation = "Pro využití se stačí na místě prokázat:"

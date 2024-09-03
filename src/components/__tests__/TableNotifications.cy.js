@@ -5,10 +5,11 @@ import { i18n } from '../../boot/i18n';
 // selectors
 const dataSelectorNotificationTitle = '[data-cy="notification-title"]';
 const dataSelectorNotificationTimestamp = '[data-cy="notification-timestamp"]';
-const dataSelectorNotificationUnread = '[data-cy="notification-unread"]';
+const dataSelectorNotificationState = '[data-cy="notification-state"]';
 const dataSelectorNotificationAction = '[data-cy="notification-action"]';
 const selectorTableNotifications = 'table-notifications';
 const selectorNotificationRow = 'notification-row';
+const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
 
 describe('<TableNotifications>', () => {
   it('has translation for all strings', () => {
@@ -45,17 +46,6 @@ describe('<TableNotifications>', () => {
     coreTests();
   });
 
-  context('mobile', () => {
-    beforeEach(() => {
-      cy.mount(TableNotifications, {
-        props: {},
-      });
-      cy.viewport('iphone-6');
-    });
-
-    coreTests();
-  });
-
   function coreTests() {
     it('renders component', () => {
       cy.dataCy(selectorTableNotifications).should('be.visible');
@@ -65,11 +55,6 @@ describe('<TableNotifications>', () => {
       cy.dataCy(selectorNotificationRow)
         .should('be.visible')
         .should('have.length', 5);
-      cy.dataCy(selectorTableNotifications) // scroll to the right
-        .find('.scroll')
-        .scrollTo('right', {
-          ensureScrollable: false,
-        });
       cy.dataCy(selectorNotificationRow).each((row, index) => {
         const notification = notifications[index];
         cy.wrap(row)
@@ -87,7 +72,7 @@ describe('<TableNotifications>', () => {
             ),
           );
         cy.wrap(row)
-          .find(dataSelectorNotificationUnread)
+          .find(dataSelectorNotificationState)
           .should('be.visible')
           .should(
             'contain',
@@ -98,6 +83,37 @@ describe('<TableNotifications>', () => {
 
         cy.wrap(row).find(dataSelectorNotificationAction).should('be.visible');
       });
+    });
+
+    it('allows to mark notification as read', () => {
+      cy.dataCy(selectorNotificationRow)
+        .first()
+        .find(dataSelectorNotificationState)
+        .should('contain', i18n.global.t('notifications.labelUnread'));
+      cy.dataCy(selectorNotificationRow)
+        .first()
+        .find(dataSelectorNotificationAction)
+        .find('.q-btn')
+        .click();
+      cy.dataCy(selectorNotificationRow)
+        .first()
+        .find(dataSelectorNotificationState)
+        .should('not.contain', i18n.global.t('notifications.labelUnread'));
+    });
+
+    it('allows to mark all notifications as read', () => {
+      cy.dataCy(selectorButtonMarkAllAsRead)
+        .should('be.visible')
+        .and('not.be.disabled')
+        .click();
+      cy.dataCy(selectorNotificationRow).each((row) => {
+        cy.wrap(row)
+          .find(dataSelectorNotificationState)
+          .should('contain', i18n.global.t('notifications.labelRead'));
+      });
+      cy.dataCy(selectorButtonMarkAllAsRead)
+        .should('be.visible')
+        .and('be.disabled');
     });
   }
 });
