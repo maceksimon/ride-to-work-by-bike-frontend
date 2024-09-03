@@ -436,6 +436,14 @@ description = "Stáhněte si appku a zapisujte jízdy odkudkoliv."
 voucherApplySuccess = "Voucher byl úspěšně uplatněn"
 voucherApplyError = "Neplatný voucher"
 
+[notifications]
+labelAction = "Akce"
+labelDate = "Datum"
+labelRead = "Přečteno"
+labelState = "Stav"
+labelTitle = "Notifikace"
+labelUnread = "Nepřečteno"
+
 [offer]
 titleOfferValidation = "Pro využití se stačí na místě prokázat:"
 labelOfferValidationTshirt = "Trikem nebo nákrčníkem"

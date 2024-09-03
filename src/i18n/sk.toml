@@ -433,6 +433,14 @@ description = "Stiahnite si aplikáciu a prihlasujte jazdy odkiaľkoľvek."
 voucherApplySuccess = "Voucher bol úspešne uplatnený"
 voucherApplyError = "Neplatný voucher"
 
+[notifications]
+labelAction = "Akcia"
+labelDate = "Dátum"
+labelRead = "Prečité"
+labelState = "Stav"
+labelTitle = "Oznámenie"
+labelUnread = "Neprečité"
+
 [offer]
 titleOfferValidation = "Chcete-li ji použít, stačí se na místě prokázat dokladem totožnosti:"
 labelOfferValidationTshirt = "Tričko nebo nákrčník"
