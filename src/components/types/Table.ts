@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+// this rule is disabled because we are copying Quasar table column type.
 
 export type TableColumn = {
   name: string;
