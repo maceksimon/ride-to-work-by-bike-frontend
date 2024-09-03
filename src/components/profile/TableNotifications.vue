@@ -17,7 +17,7 @@
 
 // libraries
 import { date } from 'quasar';
-import { defineComponent } from 'vue';
+import { defineComponent, reactive } from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
@@ -65,11 +65,16 @@ export default defineComponent({
       },
     ];
 
-    const rows: Notification[] = tableNotificationsFixture;
+    const rows = reactive<Notification[]>(tableNotificationsFixture);
+
+    const markAsRead = (row: Notification) => {
+      row.unread = false;
+    };
 
     return {
       columns,
       rows,
+      markAsRead,
     };
   },
 });
@@ -80,27 +85,24 @@ export default defineComponent({
     <div></div>
 
     <!-- Table -->
-    <q-table
-      flat
-      bordered
-      title="Treats"
-      :rows="rows"
-      :columns="columns"
-      row-key="name"
-    >
+    <q-table flat bordered :rows="rows" :columns="columns" row-key="title">
       <template v-slot:body="props">
-        <q-tr :props="props" @click="onRowClick(props.row)">
-          <q-td key="title" :props="props">
+        <q-tr
+          :props="props"
+          @click="onRowClick(props.row)"
+          data-cy="notification-row"
+        >
+          <q-td key="title" :props="props" data-cy="notification-title">
             {{ props.row.verb }}
           </q-td>
-          <q-td key="timestamp" :props="props">
+          <q-td key="timestamp" :props="props" data-cy="notification-timestamp">
             <template v-for="col in props.cols" :key="col.field">
               <span v-if="col.field === 'timestamp'">
                 {{ col.value }}
               </span>
             </template>
           </q-td>
-          <q-td key="unread" :props="props">
+          <q-td key="unread" :props="props" data-cy="notification-unread">
             <template v-for="col in props.cols" :key="col.field">
               <q-badge
                 v-if="col.field === 'unread'"
@@ -110,14 +112,16 @@ export default defineComponent({
               </q-badge>
             </template>
           </q-td>
-          <q-td key="action" :props="props">
+          <q-td key="action" :props="props" data-cy="notification-action">
             <q-btn
               round
+              unelevated
               size="sm"
               :outline="!props.row.unread"
               :disabled="!props.row.unread"
               color="primary"
               :icon="props.row.unread ? 'check' : 'close'"
+              @click="markAsRead(props.row)"
             />
           </q-td>
         </q-tr>
