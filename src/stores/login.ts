@@ -1,26 +1,27 @@
 import { defineStore } from 'pinia';
 
+interface User {
+  email: string;
+  password: string;
+}
+
+const emptyUser: User = {
+  email: '',
+  password: '',
+};
+
 export const useLoginStore = defineStore('login', {
   state: () => ({
-    user: {
-      email: null as string | null,
-      password: null as string | number | null,
-    },
+    user: emptyUser,
   }),
 
   getters: {
-    userEmailString: (state): string =>
-      state.user.email ? state.user.email : '',
-    userPasswordString: (state): string =>
-      state.user.password ? state.user.password.toString() : '',
+    getUser: (state): User => state.user,
   },
 
   actions: {
-    setUserEmail(email: string | null): void {
-      this.user.email = email;
-    },
-    setUserPassword(password: string | number | null): void {
-      this.user.password = password;
+    setUser(user: User): void {
+      Object.assign(this.user, user);
     },
   },
 

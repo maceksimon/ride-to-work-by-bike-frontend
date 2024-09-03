@@ -22,8 +22,7 @@
  */
 
 // libraries
-import { defineComponent, ref, reactive } from 'vue';
-import { storeToRefs } from 'pinia';
+import { defineComponent, ref, reactive, watch } from 'vue';
 
 // components
 import BannerAppButtons from './BannerAppButtons.vue';
@@ -48,10 +47,16 @@ export default defineComponent({
   },
   emits: ['formSubmit'],
   setup() {
-    // store
-    const { userEmailString, userPasswordString } =
-      storeToRefs(useLoginStore());
-    const { setUserPassword, setUserEmail } = useLoginStore();
+    const loginStore = useLoginStore();
+    const user = reactive(loginStore.getUser);
+
+    watch(
+      user,
+      (newVal) => {
+        loginStore.setUser(newVal);
+      },
+      { deep: true },
+    );
 
     const formPasswordReset = reactive({
       email: '',
@@ -88,13 +93,10 @@ export default defineComponent({
       isPassword,
       isEmail,
       isFilled,
-      userEmailString,
-      userPasswordString,
+      user,
       onClickFormPasswordResetBtn,
       onSubmitLogin,
       onSubmitPasswordReset,
-      setUserPassword,
-      setUserEmail,
     };
   },
 });
@@ -115,8 +117,7 @@ export default defineComponent({
     <q-form @submit.prevent="onSubmitLogin">
       <!-- Input: email -->
       <form-field-email
-        :model-value="userEmailString"
-        @update:model-value="setUserEmail"
+        v-model="user.email"
         bg-color="white"
         data-cy="form-login-email"
       />
@@ -132,8 +133,7 @@ export default defineComponent({
           outlined
           hide-bottom-space
           bg-color="grey-1"
-          :model-value="userPasswordString"
-          @update:model-value="setUserPassword"
+          v-model="user.password"
           id="form-login-password"
           :type="isPassword ? 'password' : 'text'"
           :rules="[

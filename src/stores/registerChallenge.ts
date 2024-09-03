@@ -1,17 +1,14 @@
 import { defineStore } from 'pinia';
 
 // types
-import {
-  FormPersonalDetailsFields,
-  FormPersonalDetailsFieldsNullable,
-} from '../components/types/Form';
+import { FormPersonalDetailsFields } from '../components/types/Form';
 
-const emptyFormPersonalDetails: FormPersonalDetailsFieldsNullable = {
-  firstName: null,
-  lastName: null,
-  email: null,
-  nickname: null,
-  gender: null,
+const emptyFormPersonalDetails: FormPersonalDetailsFields = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  nickname: '',
+  gender: '',
   newsletter: [],
   terms: true,
 };
@@ -32,17 +29,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
   getters: {
     getAddressId: (state): string | null => state.addressId,
     getOrganizationId: (state): string | null => state.organizationId,
-    getPersonalDetails: (state): FormPersonalDetailsFieldsNullable =>
+    getPersonalDetails: (state): FormPersonalDetailsFields =>
       state.personalDetails,
-    getPersonalDetailsStringDefaults: (state): FormPersonalDetailsFields => ({
-      firstName: state.personalDetails.firstName || '',
-      lastName: state.personalDetails.lastName || '',
-      email: state.personalDetails.email || '',
-      nickname: state.personalDetails.nickname || '',
-      gender: state.personalDetails.gender,
-      newsletter: state.personalDetails.newsletter,
-      terms: state.personalDetails.terms,
-    }),
   },
 
   actions: {
@@ -52,7 +40,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setFormOrganizationId(organizationId: string | null) {
       this.organizationId = organizationId;
     },
-    setPersonalDetails(personalDetails: FormPersonalDetailsFieldsNullable) {
+    setPersonalDetails(personalDetails: FormPersonalDetailsFields) {
       Object.assign(this.personalDetails, personalDetails);
     },
   },
