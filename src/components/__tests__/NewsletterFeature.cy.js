@@ -1,7 +1,6 @@
 import { colors } from 'quasar';
 import NewsletterFeature from '../homepage/NewsletterFeature.vue';
 import { i18n } from '../../boot/i18n';
-import { useLoginStore } from 'src/stores/login';
 
 // colors
 const { getPaletteColor } = colors;
@@ -81,11 +80,8 @@ describe('<NewsletterFeature>', () => {
 
     it('renders grid', () => {
       cy.window().then(() => {
-        cy.testElementPercentageWidth(cy.dataCy('newsletter-col-image'), 16.6);
-        cy.testElementPercentageWidth(
-          cy.dataCy('newsletter-col-content'),
-          83.3,
-        );
+        cy.testElementPercentageWidth(cy.dataCy('newsletter-col-image'), 25);
+        cy.testElementPercentageWidth(cy.dataCy('newsletter-col-content'), 75);
       });
     });
   });
@@ -113,8 +109,6 @@ describe('<NewsletterFeature>', () => {
         props: {},
       });
       cy.viewport('iphone-6');
-      const loginStore = useLoginStore();
-      loginStore.setUserEmail('test@example.com');
     });
 
     coreTests();
