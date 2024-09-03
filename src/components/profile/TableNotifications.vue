@@ -25,18 +25,22 @@ import { i18n } from '../../boot/i18n';
 // fixtures
 import tableNotificationsFixture from '../../../test/cypress/fixtures/tableNotifications.json';
 
+// types
+import type { TableColumn } from '../types/Table';
+import type { Notification } from '../types/Notifications';
+
 export default defineComponent({
   name: 'TableNotifications',
   setup() {
-    const columns = [
+    const columns: TableColumn[] = [
       {
         name: 'title',
-        required: true,
-        label: i18n.global.t('notifications.labelTitle'),
         align: 'left',
+        label: i18n.global.t('notifications.labelTitle'),
         field: 'verb',
-        format: (val: string): string => `${val}`,
+        format: (val: string | number | null): string => `${val}`,
         sortable: false,
+        required: true,
       },
       {
         name: 'timestamp',
@@ -46,6 +50,7 @@ export default defineComponent({
         format: (val: number | string | null): string =>
           val ? date.formatDate(new Date(String(val)), 'D. MMM. YYYY') : '',
         sortable: true,
+        required: true,
       },
       {
         name: 'unread',
@@ -57,11 +62,15 @@ export default defineComponent({
             ? i18n.global.t('notifications.labelUnread')
             : i18n.global.t('notifications.labelRead'),
         sortable: true,
+        required: true,
       },
       {
         name: 'action',
+        align: 'right',
         label: i18n.global.t('notifications.labelAction'),
         field: 'action',
+        sortable: false,
+        required: false,
       },
     ];
 
@@ -112,11 +121,7 @@ export default defineComponent({
     <!-- Table -->
     <q-table flat bordered :rows="rows" :columns="columns" row-key="title">
       <template v-slot:body="props">
-        <q-tr
-          :props="props"
-          @click="onRowClick(props.row)"
-          data-cy="notification-row"
-        >
+        <q-tr :props="props" data-cy="notification-row">
           <q-td key="title" :props="props" data-cy="notification-title">
             <q-icon
               :name="props.row.data.icon"
@@ -158,7 +163,11 @@ export default defineComponent({
               :outline="!props.row.unread"
               :disabled="!props.row.unread"
               color="primary"
-              :icon="props.row.unread ? 'check' : 'close'"
+              :icon="
+                props.row.unread
+                  ? 'mdi-email-check-outline'
+                  : 'mdi-email-open-outline'
+              "
               @click="markAsRead(props.row)"
             />
           </q-td>

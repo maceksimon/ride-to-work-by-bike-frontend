@@ -1,11 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 export type TableColumn = {
-  align: string;
-  field: string;
-  format?: (val: number | string | null) => string;
-  label: string;
   name: string;
-  required: boolean;
-  sortable: boolean;
+  label: string;
+  field: string | ((row: any) => any);
+  required?: boolean;
+  align?: 'left' | 'right' | 'center';
+  sortable?: boolean;
+  sort?: (a: any, b: any, rowA: any, rowB: any) => number;
+  rawSort?: (a: any, b: any, rowA: any, rowB: any) => number;
+  sortOrder?: 'ad' | 'da';
+  format?: (val: any, row: any) => any;
+  style?: string | ((row: any) => string);
+  classes?: string | ((row: any) => string);
+  headerStyle?: string;
+  headerClasses?: string;
 };
 
 export type TableRow = {
