@@ -58,7 +58,7 @@ export default defineComponent({
 
     const labelPaymentState = computed(() => {
       switch (profile.paymentState) {
-        case PaymentState.paidByCompany:
+        case PaymentState.paidByOrganization:
           return i18n.global.t('profile.labelPaymentStatePaidByCompany');
         case PaymentState.paid:
           return i18n.global.t('profile.labelPaymentStatePaid');
@@ -69,14 +69,14 @@ export default defineComponent({
 
     const iconPaymentColor = computed(() => {
       return profile.paymentState === PaymentState.paid ||
-        profile.paymentState === PaymentState.paidByCompany
+        profile.paymentState === PaymentState.paidByOrganization
         ? 'green'
         : 'red';
     });
 
     const iconPaymentState = computed(() => {
       return profile.paymentState === PaymentState.paid ||
-        profile.paymentState === PaymentState.paidByCompany
+        profile.paymentState === PaymentState.paidByOrganization
         ? 'mdi-check-circle-outline'
         : 'mdi-close-circle-outline';
     });
