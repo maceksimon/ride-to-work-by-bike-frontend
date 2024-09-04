@@ -35,13 +35,29 @@ export default defineComponent({
     ];
 
     const optionsFastCard = [
-      { label: 'Platební karta Mastercard či VISA', value: 'card' },
+      {
+        label: 'Platební karta Mastercard či VISA',
+        value: 'card',
+        icon: 'svguse:icons/payment/icons.svg#mastercard|0 0 256 199',
+      },
     ];
 
     const optionsOther = [
-      { label: 'Apple Pay', value: 'apple-pay' },
-      { label: 'Google Pay', value: 'google-pay' },
-      { label: 'Běžný bankovní převod', value: 'transfer' },
+      {
+        label: 'Apple Pay',
+        value: 'apple-pay',
+        icon: 'svguse:icons/payment/icons.svg#apple-pay|0 0 512 211',
+      },
+      {
+        label: 'Google Pay',
+        value: 'google-pay',
+        icon: 'svguse:icons/payment/icons.svg#google-pay|0 0 512 204',
+      },
+      {
+        label: 'Běžný bankovní převod',
+        value: 'transfer',
+        icon: 'svguse:icons/payment/icons.svg#transfer',
+      },
     ];
 
     return {
@@ -75,9 +91,15 @@ export default defineComponent({
         :options="options"
       >
         <template v-slot:label="opt">
-          <span data-cy="form-select-payment-type-option-label">{{
-            opt.label
-          }}</span>
+          <q-icon
+            v-if="opt.icon"
+            :name="opt.icon"
+            size="32px"
+            class="q-mr-md"
+          />
+          <span data-cy="form-select-payment-type-option-label">
+            {{ opt.label }}
+          </span>
         </template>
       </q-option-group>
     </div>
@@ -90,6 +112,17 @@ export default defineComponent({
         type="radio"
         :options="optionsFastCard"
       >
+        <template v-slot:label="opt">
+          <q-icon
+            v-if="opt.icon"
+            :name="opt.icon"
+            size="32px"
+            class="q-mr-md"
+          />
+          <span data-cy="form-select-payment-type-option-label">
+            {{ opt.label }}
+          </span>
+        </template>
       </q-option-group>
     </div>
     <h4
@@ -104,6 +137,17 @@ export default defineComponent({
         type="radio"
         :options="optionsOther"
       >
+        <template v-slot:label="opt">
+          <q-icon
+            v-if="opt.icon"
+            :name="opt.icon"
+            size="32px"
+            class="q-mr-md"
+          />
+          <span data-cy="form-select-payment-type-option-label">
+            {{ opt.label }}
+          </span>
+        </template>
       </q-option-group>
     </div>
 
