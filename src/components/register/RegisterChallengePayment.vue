@@ -462,5 +462,9 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <!-- Section: Payment type -->
+    <div class="q-mt-md">
+      <!-- <form-select-payment-type /> -->
+    </div>
   </div>
 </template>

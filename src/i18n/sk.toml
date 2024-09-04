@@ -527,6 +527,12 @@ titleStepParticipation = "Účasť"
 titleStepCompany = "Spoločnosť / škola / skupina"
 titleStepMerch = "Štartovací balíček"
 titleStepTeam = "Tím"
+titlePaymentType = "Typ platby"
+titleFastTransfer = "Rýchly online prevod"
+titleFastCard = "Rýchla platba kartou"
+titleOtherPayments = "Ostatné platby"
+textPaymentInfo = "Údaje o príjemcovi potrebné na vykonanie platobného príkazu poskytne obchodník PayU CZ alebo budú predvyplnené systémom PayU. Vaša platba bude doručená obchodníkovi zadarmo. Banka zaúčtuje vašu platbu v prospech bankového účtu PayU najneskôr nasledujúci pracovný deň."
+textPaymentProvider = "Službu poskytuje PayU CZ, ďalšie informácie o prevádzkovateľovi, podstate služby PayU a zodpovednosti nájdete na www.payu.cz."
 
 [register.coordinator]
 title.may = "Registrácia koordinátora na&nbsp;Májovú výzvu"

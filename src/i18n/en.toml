@@ -527,6 +527,12 @@ titleStepParticipation = "Participation"
 titleStepCompany = "Company / school / group"
 titleStepMerch = "Starter package"
 titleStepTeam = "Team"
+titlePaymentType = "Payment type"
+titleFastTransfer = "Fast online transfer"
+titleFastCard = "Fast card payment"
+titleOtherPayments = "Other payments"
+textPaymentInfo = "The recipient's details required to make the payment order will be provided by the PayU CZ merchant or will be pre-filled by the PayU system. Your payment will be delivered to the merchant free of charge. The bank will debit your payment to the PayU account of the merchant by the next working day."
+textPaymentProvider = "The service is provided by PayU CZ, further information about the operator, the nature of the PayU service and responsibility can be found at www.payu.cz."
 
 [register.coordinator]
 title.may = "Coordinator registration for&nbsp;the&nbsp;May Challenge"
