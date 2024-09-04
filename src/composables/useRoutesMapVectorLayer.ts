@@ -20,7 +20,9 @@ export const useRoutesMapVectorLayer = (
    * @return {void}
    */
   const addMapRoute = (feature: Feature): void => {
-    source.value && source.value.addFeature(feature);
+    if (source.value) {
+      source.value.addFeature(feature);
+    }
   };
 
   /**
@@ -29,7 +31,9 @@ export const useRoutesMapVectorLayer = (
    */
   const clearMapRoutes = (): void => {
     const source = vectorLayer && vectorLayer.value?.vectorLayer.getSource();
-    source && source.clear();
+    if (source) {
+      source.clear();
+    }
   };
 
   /**
