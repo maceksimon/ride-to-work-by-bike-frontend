@@ -21,7 +21,7 @@
  */
 
 // libraries
-import { defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 
 // components
 import AddressDisplay from '../global/AddressDisplay.vue';
@@ -30,6 +30,12 @@ import FormUpdateEmail from '../form/FormUpdateEmail.vue';
 import FormUpdateGender from '../form/FormUpdateGender.vue';
 import FormUpdateNickname from '../form/FormUpdateNickname.vue';
 import LanguageSwitcher from '../global/LanguageSwitcher.vue';
+
+// composables
+import { i18n } from '../../boot/i18n';
+
+// enums
+import { PaymentState } from '../types/Profile';
 
 // fixtures
 import formPersonalDetails from '../../../test/cypress/fixtures/formPersonalDetails.json';
@@ -50,8 +56,41 @@ export default defineComponent({
   setup() {
     const profile: Profile = reactive(formPersonalDetails as Profile);
 
+    const labelPaymentState = computed(() => {
+      switch (profile.paymentState) {
+        case PaymentState.paidByCompany:
+          return i18n.global.t('profile.labelPaymentStatePaidByCompany');
+        case PaymentState.paid:
+          return i18n.global.t('profile.labelPaymentStatePaid');
+        default:
+          return i18n.global.t('profile.labelPaymentStateNotPaid');
+      }
+    });
+
+    const iconPaymentColor = computed(() => {
+      return profile.paymentState === PaymentState.paid ||
+        profile.paymentState === PaymentState.paidByCompany
+        ? 'green'
+        : 'red';
+    });
+
+    const iconPaymentState = computed(() => {
+      return profile.paymentState === PaymentState.paid ||
+        profile.paymentState === PaymentState.paidByCompany
+        ? 'mdi-check-circle-outline'
+        : 'mdi-close-circle-outline';
+    });
+
+    const onDownloadInvoice = () => {
+      // TODO: Implement download invoice
+    };
+
     return {
+      iconPaymentColor,
+      iconPaymentState,
+      labelPaymentState,
       profile,
+      onDownloadInvoice,
     };
   },
 });
@@ -155,7 +194,6 @@ export default defineComponent({
     >
       {{ $t('profile.titleChallengeDetails') }}
     </h2>
-
     <!-- Challenge details -->
     <div class="q-mt-lg">
       <div class="row q-col-gutter-lg">
@@ -200,7 +238,6 @@ export default defineComponent({
     >
       {{ $t('profile.titleStarterPackage') }}
     </h2>
-
     <!-- Starter package -->
     <div class="q-mt-lg">
       <div class="row q-col-gutter-lg">
@@ -258,6 +295,57 @@ export default defineComponent({
           class="col-12 col-sm-6"
           data-cy="profile-details-phone"
         />
+      </div>
+    </div>
+
+    <!-- Title -->
+    <h2
+      class="text-h6 text-grey-10 q-mb-none q-mt-xl"
+      data-cy="profile-title-registration-details"
+    >
+      {{ $t('profile.titleRegistrationDetails') }}
+    </h2>
+    <!-- Registration details -->
+    <div class="q-mt-lg">
+      <div class="row q-col-gutter-lg">
+        <!-- Package -->
+        <details-item
+          :label="$t('profile.labelPaymentState')"
+          :value="profile.package.title"
+          class="col-12 col-md-6 items-center"
+          data-cy="profile-details-payment-state"
+        >
+          <template #value>
+            <div class="row q-col-gutter-md justify-between">
+              <div class="col-12 col-sm-auto flex items-center gap-8">
+                <q-icon
+                  :name="iconPaymentState"
+                  size="18px"
+                  :color="iconPaymentColor"
+                  data-cy="profile-details-payment-state-icon"
+                />
+                <span>{{ labelPaymentState }}</span>
+              </div>
+            </div>
+          </template>
+        </details-item>
+        <div class="col-12 col-md-6">
+          <q-btn
+            unelevated
+            rounded
+            outline
+            color="primary"
+            data-cy="profile-details-download-invoice"
+          >
+            <q-icon
+              name="mdi-download"
+              size="18px"
+              class="q-mr-sm"
+              @click="onDownloadInvoice"
+            />
+            {{ $t('profile.buttonDownloadInvoice') }}
+          </q-btn>
+        </div>
       </div>
     </div>
   </div>

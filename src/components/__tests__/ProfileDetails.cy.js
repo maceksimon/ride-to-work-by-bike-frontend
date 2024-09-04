@@ -4,10 +4,13 @@ import { i18n } from '../../boot/i18n';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
+const green = getPaletteColor('green');
+const red = getPaletteColor('red');
 
 // selectors
 const selectorAddressDivision = 'profile-details-address-division';
 const selectorDeliveryAddress = 'profile-details-delivery-address';
+const selectorDownloadInvoice = 'profile-details-download-invoice';
 const selectorEmail = 'profile-details-email';
 const selectorFormEmail = 'profile-details-form-email';
 const selectorFormGender = 'profile-details-form-gender';
@@ -20,6 +23,7 @@ const selectorOrganizationType = 'profile-details-organization-type';
 const selectorOrganization = 'profile-details-organization';
 const selectorPackage = 'profile-details-package';
 const selectorPackageLink = 'profile-details-package-link';
+const selectorPaymentState = 'profile-details-payment-state';
 const selectorPersonalDetails = 'profile-details';
 const selectorPhone = 'profile-details-phone';
 const selectorSize = 'profile-details-size';
@@ -28,6 +32,7 @@ const selectorTeam = 'profile-details-team';
 const selectorTrackingNumber = 'profile-details-tracking-number';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
+const selectorTitleRegistrationDetails = 'profile-title-registration-details';
 const selectorTitleStarterPackage = 'profile-title-starter-package';
 const dataSelectorAddressDisplay = '[data-cy="address-display"]';
 const dataSelectorButtonCancel = '[data-cy="form-button-cancel"]';
@@ -37,6 +42,8 @@ const dataSelectorEmpty = '[data-cy="details-item-empty"]';
 const dataSelectorInput = '[data-cy="form-input"]';
 const dataSelectorInputEmail = '[data-cy="form-email"]';
 const dataSelectorInputPassword = '[data-cy="form-password"]';
+const dataSelectorIconPaymentState =
+  '[data-cy="profile-details-payment-state-icon"]';
 const dataSelectorLabel = '[data-cy="details-item-label"]';
 const dataSelectorValue = '[data-cy="details-item-value"]';
 
@@ -50,6 +57,7 @@ describe('<ProfileDetails>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       [
+        'buttonDownloadInvoice',
         'descriptionNickname',
         'labelAddressDivision',
         'labelEmail',
@@ -64,6 +72,9 @@ describe('<ProfileDetails>', () => {
         'labelOrganization',
         'labelOrganizationType',
         'labelPackage',
+        'labelPaymentStateNotPaid',
+        'labelPaymentStatePaid',
+        'labelPaymentStatePaidByCompany',
         'labelSize',
         'labelState',
         'labelTeam',
@@ -73,6 +84,7 @@ describe('<ProfileDetails>', () => {
         'titleUpdateEmail',
         'titleUpdateGender',
         'titleUpdateNickname',
+        'titleRegistrationDetails',
       ],
       'profile',
       i18n,
@@ -455,6 +467,54 @@ function coreTests() {
         .click();
       // save
       cy.dataCy(selectorFormGender).find(dataSelectorButtonSave).click();
+    });
+  });
+
+  it.only('renders registration details section', () => {
+    cy.fixture('formPersonalDetails').then((formPersonalDetails) => {
+      // title
+      cy.dataCy(selectorTitleRegistrationDetails)
+        .should('be.visible')
+        .and('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('have.color', grey10)
+        .and('contain', i18n.global.t('profile.titleRegistrationDetails'));
+      // payment state
+      cy.dataCy(selectorPaymentState)
+        .find(dataSelectorLabel)
+        .should('be.visible');
+      if (formPersonalDetails.paymentState === 'paid') {
+        cy.dataCy(selectorPaymentState)
+          .find(dataSelectorValue)
+          .should('contain', i18n.global.t('profile.labelPaymentStatePaid'));
+        cy.dataCy(selectorPaymentState)
+          .find(dataSelectorIconPaymentState)
+          .should('be.visible')
+          .and('have.color', green);
+      } else if (formPersonalDetails.paymentState === 'paidByCompany') {
+        cy.dataCy(selectorPaymentState)
+          .find(dataSelectorValue)
+          .should(
+            'contain',
+            i18n.global.t('profile.labelPaymentStatePaidByCompany'),
+          );
+        cy.dataCy(selectorPaymentState)
+          .find(dataSelectorIconPaymentState)
+          .should('be.visible')
+          .and('have.color', green);
+      } else {
+        cy.dataCy(selectorPaymentState)
+          .find(dataSelectorValue)
+          .should('contain', i18n.global.t('profile.labelPaymentStateNotPaid'));
+        cy.dataCy(selectorPaymentState)
+          .find(dataSelectorIconPaymentState)
+          .should('be.visible')
+          .and('have.color', red);
+      }
+      // download invoice button
+      cy.dataCy(selectorDownloadInvoice)
+        .should('be.visible')
+        .and('contain', i18n.global.t('profile.buttonDownloadInvoice'));
     });
   });
 }

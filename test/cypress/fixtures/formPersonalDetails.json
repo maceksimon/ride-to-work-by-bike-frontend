@@ -34,5 +34,6 @@
     "zip": "164 00",
     "cityChallenge": "Praha",
     "department": "Testovací firma"
-  }
+  },
+  "paymentState": "paid"
 }

@@ -10,6 +10,12 @@ export enum Gender {
   female = 'female',
 }
 
+export enum PaymentState {
+  paidByOrganization = 'paidByOrganization',
+  paid = 'paid',
+  notPaid = 'notPaid',
+}
+
 export interface Profile {
   nickname: string;
   firstName: string;
@@ -33,4 +39,5 @@ export interface Profile {
     trackingUrl: string;
   };
   deliveryAddress: FormCompanyAddressFields;
+  paymentState: PaymentState;
 }
