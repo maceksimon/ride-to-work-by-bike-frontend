@@ -132,7 +132,17 @@ describe('<TableNotifications>', () => {
       cy.dataCy(selectorNotificationRow)
         .first()
         .find(dataSelectorNotificationState)
-        .should('not.contain', i18n.global.t('notifications.labelUnread'));
+        .should('not.contain', i18n.global.t('notifications.labelUnread'))
+        .and('contain', i18n.global.t('notifications.labelRead'));
+    });
+
+    it('marks notification as read when row is clicked', () => {
+      cy.dataCy(selectorNotificationRow).last().click();
+      cy.dataCy(selectorNotificationRow)
+        .last()
+        .find(dataSelectorNotificationState)
+        .should('not.contain', i18n.global.t('notifications.labelUnread'))
+        .and('contain', i18n.global.t('notifications.labelRead'));
     });
 
     it('allows to mark all notifications as read', () => {

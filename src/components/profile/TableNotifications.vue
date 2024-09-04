@@ -3,6 +3,10 @@
  * TableNotifications Component
  *
  * @description * Use this component to display notifications in a table.
+ * Shows icon, notification title, date, state and action button.
+ * After clicking on a notification, it is moved to the "read" state.
+ * If the notification has a URL, it is opened.
+ * Action button click marks the notification as read, but does not open URL.
  *
  * Used in `ProfileTabs`
  *
@@ -22,6 +26,14 @@ import { computed, defineComponent, reactive } from 'vue';
 // composables
 import { i18n } from '../../boot/i18n';
 
+// enums
+enum NotificationTableColumn {
+  title = 'title',
+  timestamp = 'timestamp',
+  unread = 'unread',
+  action = 'action',
+}
+
 // fixtures
 import tableNotificationsFixture from '../../../test/cypress/fixtures/tableNotifications.json';
 
@@ -34,7 +46,7 @@ export default defineComponent({
   setup() {
     const columns: TableColumn[] = [
       {
-        name: 'title',
+        name: NotificationTableColumn.title,
         align: 'left',
         label: i18n.global.t('notifications.labelTitle'),
         field: 'verb',
@@ -43,7 +55,7 @@ export default defineComponent({
         required: true,
       },
       {
-        name: 'timestamp',
+        name: NotificationTableColumn.timestamp,
         align: 'left',
         label: i18n.global.t('notifications.labelDate'),
         field: 'timestamp',
@@ -53,7 +65,7 @@ export default defineComponent({
         required: true,
       },
       {
-        name: 'unread',
+        name: NotificationTableColumn.unread,
         align: 'left',
         label: i18n.global.t('notifications.labelState'),
         field: 'unread',
@@ -65,7 +77,7 @@ export default defineComponent({
         required: true,
       },
       {
-        name: 'action',
+        name: NotificationTableColumn.action,
         align: 'right',
         label: i18n.global.t('notifications.labelAction'),
         field: 'action',
@@ -75,6 +87,13 @@ export default defineComponent({
     ];
 
     const rows = reactive<Notification[]>(tableNotificationsFixture);
+
+    const onNotificationClick = (row: Notification): void => {
+      markAsRead(row);
+      if (row.data.url) {
+        window.location.href = row.data.url;
+      }
+    };
 
     const markAsRead = (row: Notification): void => {
       row.unread = false;
@@ -96,6 +115,7 @@ export default defineComponent({
       markAsRead,
       markAllAsRead,
       unreadCount,
+      onNotificationClick,
     };
   },
 });
@@ -119,11 +139,22 @@ export default defineComponent({
     </div>
 
     <!-- Table -->
-    <q-table flat bordered :rows="rows" :columns="columns" row-key="title">
+    <q-table
+      flat
+      bordered
+      :rows="rows"
+      :columns="columns"
+      :row-key="NotificationTableColumn.title"
+    >
       <template v-slot:body="props">
-        <q-tr :props="props" data-cy="notification-row">
+        <q-tr
+          :props="props"
+          class="cursor-pointer"
+          data-cy="notification-row"
+          @click="onNotificationClick(props.row)"
+        >
           <q-td
-            key="title"
+            :key="NotificationTableColumn.title"
             :props="props"
             class="text-grey-10"
             data-cy="notification-title"
@@ -141,27 +172,40 @@ export default defineComponent({
               :class="props.row.unread ? 'text-weight-bold' : ''"
               target="_blank"
               data-cy="notification-verbal"
+              @click.prevent
               >{{ props.row.verb }}</component
             >
           </q-td>
-          <q-td key="timestamp" :props="props" data-cy="notification-timestamp">
+          <q-td
+            :key="NotificationTableColumn.timestamp"
+            :props="props"
+            data-cy="notification-timestamp"
+          >
             <template v-for="col in props.cols" :key="col.field">
-              <span v-if="col.field === 'timestamp'">
+              <span v-if="col.field === NotificationTableColumn.timestamp">
                 {{ col.value }}
               </span>
             </template>
           </q-td>
-          <q-td key="unread" :props="props" data-cy="notification-state">
+          <q-td
+            :key="NotificationTableColumn.unread"
+            :props="props"
+            data-cy="notification-state"
+          >
             <template v-for="col in props.cols" :key="col.field">
               <q-badge
-                v-if="col.field === 'unread'"
+                v-if="col.field === NotificationTableColumn.unread"
                 :color="props.row.unread ? 'orange' : 'green'"
               >
                 {{ col.value }}
               </q-badge>
             </template>
           </q-td>
-          <q-td key="action" :props="props" data-cy="notification-action">
+          <q-td
+            :key="NotificationTableColumn.action"
+            :props="props"
+            data-cy="notification-action"
+          >
             <q-btn
               round
               unelevated
@@ -174,7 +218,7 @@ export default defineComponent({
                   ? 'mdi-email-check-outline'
                   : 'mdi-email-open-outline'
               "
-              @click="markAsRead(props.row)"
+              @click.stop="markAsRead(props.row)"
             />
           </q-td>
         </q-tr>

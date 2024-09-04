@@ -49,7 +49,7 @@
     "mark_as_unread": "Mark as unread",
     "id": 4,
     "level": "error",
-    "unread": true,
+    "unread": false,
     "deleted": false,
     "verb": "Payment failed",
     "description": "Your recent payment for the challenge registration has failed.",
@@ -64,13 +64,13 @@
     "mark_as_unread": "Mark as unread",
     "id": 5,
     "level": "info",
-    "unread": false,
+    "unread": true,
     "deleted": false,
     "verb": "New team member",
     "description": "A new member has joined your team.",
     "timestamp": "2023-05-11T11:00:00Z",
     "data": {
-      "url": "/team",
+      "url": "",
       "icon": "group_add"
     }
   }
