@@ -470,7 +470,7 @@ function coreTests() {
     });
   });
 
-  it.only('renders registration details section', () => {
+  it('renders registration details section', () => {
     cy.fixture('formPersonalDetails').then((formPersonalDetails) => {
       // title
       cy.dataCy(selectorTitleRegistrationDetails)
