@@ -22,22 +22,22 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     personalDetails: emptyFormPersonalDetails,
     payment: null, // TODO: add data type options
     participation: null, // TODO: add data type options
-    organizationId: null as string | null,
-    addressId: null as string | null,
+    organizationId: '',
+    addressId: '',
   }),
 
   getters: {
-    getAddressId: (state): string | null => state.addressId,
-    getOrganizationId: (state): string | null => state.organizationId,
+    getAddressId: (state): string => state.addressId,
+    getOrganizationId: (state): string => state.organizationId,
     getPersonalDetails: (state): FormPersonalDetailsFields =>
       state.personalDetails,
   },
 
   actions: {
-    setFormAddressId(addressId: string | null) {
+    setFormAddressId(addressId: string) {
       this.addressId = addressId;
     },
-    setFormOrganizationId(organizationId: string | null) {
+    setFormOrganizationId(organizationId: string) {
       this.organizationId = organizationId;
     },
     setPersonalDetails(personalDetails: FormPersonalDetailsFields) {
