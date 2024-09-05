@@ -54,7 +54,7 @@ export default defineComponent({
   },
   setup(props) {
     const loginStore = useLoginStore();
-    const userEmail = loginStore.userEmailString;
+    const userEmail = loginStore.getUser.email;
 
     const newsletterTitle = computed(() => {
       return props.title
