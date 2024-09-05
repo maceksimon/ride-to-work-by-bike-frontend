@@ -3,13 +3,33 @@ import { colors } from 'quasar';
 import CardFollow from '../homepage/CardFollow.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { hexToRgb } from 'app/test/cypress/utils';
 
+// colors
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
 const grey10 = getPaletteColor('grey-10');
-const blueGrey7 = getPaletteColor('blue-grey-7');
+const grey8 = getPaletteColor('grey-8');
+const primary = getPaletteColor('primary');
 
+// selectors
+const selectorCardFollow = 'card-follow';
+const selectorCardFollowTitle = 'card-follow-title';
+const selectorCardFollowHandle = 'card-follow-handle';
+const selectorCardFollowAvatar = 'card-follow-avatar';
+const selectorCardFollowImage = 'card-follow-image';
+const selectorCardFollowLinkIcon = 'card-follow-link-icon';
+
+// variables
 const { borderRadiusCard } = rideToWorkByBikeConfig;
+const borderColor = hexToRgb(rideToWorkByBikeConfig.colorGrayMiddle);
+const titleFontSize = '16px';
+const titleFontWeight = '700';
+const handleFontSize = '14px';
+const handleFontWeight = '400';
+const imageBorderRadius = '50%';
+const imageWidth = '56px';
+const iconSize = '18px';
 
 describe('<CardFollow>', () => {
   it('has translation for all strings', () => {
@@ -52,13 +72,13 @@ describe('<CardFollow>', () => {
 function coreTests() {
   it('has white background', () => {
     cy.window().then(() => {
-      cy.dataCy('card-follow').should('have.backgroundColor', white);
+      cy.dataCy(selectorCardFollow).should('have.backgroundColor', white);
     });
   });
 
   it('has rounded corners', () => {
     cy.window().then(() => {
-      cy.dataCy('card-follow').should(
+      cy.dataCy(selectorCardFollow).should(
         'have.css',
         'border-radius',
         borderRadiusCard,
@@ -68,42 +88,32 @@ function coreTests() {
 
   it('has border', () => {
     cy.window().then(() => {
-      cy.dataCy('card-follow').should(
+      cy.dataCy(selectorCardFollow).should(
         'have.css',
         'border',
-        '1px solid rgb(220, 225, 237)', // config colorGrayMiddle
+        `1px solid ${borderColor}`, // config colorGrayMiddle
       );
     });
   });
 
   it('has no shadow', () => {
     cy.window().then(() => {
-      cy.dataCy('card-follow').should('have.css', 'box-shadow', 'none');
+      cy.dataCy(selectorCardFollow).should('have.css', 'box-shadow', 'none');
     });
   });
 
   it('has padding 16px', () => {
     cy.window().then(() => {
-      cy.dataCy('card-follow').should('have.css', 'padding', '16px');
-    });
-  });
-
-  it('has wrapper with top padding', () => {
-    cy.window().then(() => {
-      cy.dataCy('card-follow-wrapper').should(
-        'have.css',
-        'padding-top',
-        '48px',
-      );
+      cy.dataCy(selectorCardFollow).should('have.css', 'padding', '16px');
     });
   });
 
   it('renders title', () => {
     cy.get('@card').then((card) => {
       cy.window().then(() => {
-        cy.dataCy('card-follow-title')
-          .should('have.css', 'font-size', '16px')
-          .and('have.css', 'font-weight', '500')
+        cy.dataCy(selectorCardFollowTitle)
+          .should('have.css', 'font-size', titleFontSize)
+          .and('have.css', 'font-weight', titleFontWeight)
           .and('have.color', grey10)
           .and('contain', card.title)
           .then(($title) => {
@@ -116,10 +126,10 @@ function coreTests() {
   it('renders handle', () => {
     cy.get('@card').then((card) => {
       cy.window().then(() => {
-        cy.dataCy('card-follow-handle')
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', blueGrey7)
+        cy.dataCy(selectorCardFollowHandle)
+          .should('have.css', 'font-size', handleFontSize)
+          .and('have.css', 'font-weight', handleFontWeight)
+          .and('have.color', grey8)
           .and('contain', card.handle)
           .then(($title) => {
             expect($title.text()).to.equal(card.handle);
@@ -131,25 +141,31 @@ function coreTests() {
   it('renders image', () => {
     cy.get('@card').then((card) => {
       cy.window().then(() => {
-        cy.dataCy('card-follow-avatar')
+        cy.dataCy(selectorCardFollowAvatar)
           .should('be.visible')
           .find('.q-avatar')
-          .should('have.css', 'border-radius', '50%')
-          .and('have.css', 'width', '96px')
-          .and('have.css', 'height', '96px')
-          .and('have.css', 'margin-top', '-64px');
-        cy.dataCy('card-follow-image')
+          .should('have.css', 'border-radius', imageBorderRadius)
+          .should('have.css', 'width', imageWidth);
+        cy.dataCy(selectorCardFollowImage)
           .find('img')
           .should('be.visible')
           .then(($img) => {
             cy.testImageHeight($img);
             expect($img.attr('src')).to.equal(card.image.src);
           });
-        cy.dataCy('card-follow-image').matchImageSnapshot({
-          failureThreshold: 0.5,
-          failureThresholdType: 'percent',
-        });
+        cy.matchImageSnapshotNamed(
+          selectorCardFollowImage,
+          `${Cypress.currentTest.titlePath[0]}-avatar`,
+        );
       });
     });
+  });
+
+  it('renders link icon', () => {
+    cy.dataCy(selectorCardFollowLinkIcon)
+      .should('be.visible')
+      .and('have.css', 'width', iconSize)
+      .and('have.css', 'height', iconSize)
+      .and('have.color', primary);
   });
 }
