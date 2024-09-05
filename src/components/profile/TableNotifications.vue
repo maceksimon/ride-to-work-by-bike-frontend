@@ -114,6 +114,7 @@ export default defineComponent({
       rows,
       markAsRead,
       markAllAsRead,
+      NotificationTableColumn,
       unreadCount,
       onNotificationClick,
     };
