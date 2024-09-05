@@ -70,15 +70,17 @@ export default defineComponent({
     });
 
     const iconPaymentColor = computed(() => {
-      return profile.paymentState === PaymentState.paid ||
-        profile.paymentState === PaymentState.paidByOrganization
+      return [PaymentState.paid, PaymentState.paidByOrganization].includes(
+        profile.paymentState,
+      )
         ? 'green'
         : 'red';
     });
 
     const iconPaymentState = computed(() => {
-      return profile.paymentState === PaymentState.paid ||
-        profile.paymentState === PaymentState.paidByOrganization
+      return [PaymentState.paid, PaymentState.paidByOrganization].includes(
+        profile.paymentState,
+      )
         ? 'mdi-check-circle-outline'
         : 'mdi-close-circle-outline';
     });
