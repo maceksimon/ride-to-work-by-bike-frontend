@@ -23,7 +23,7 @@
 
 // libraries
 import { Screen } from 'quasar';
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 
 // components
 import NewsletterItem from './NewsletterItem.vue';
@@ -54,7 +54,7 @@ export default defineComponent({
   },
   setup(props) {
     const loginStore = useLoginStore();
-    const userEmail = loginStore.getUser.email;
+    const user = reactive(loginStore.getUser);
 
     const newsletterTitle = computed(() => {
       return props.title
@@ -66,7 +66,7 @@ export default defineComponent({
       return props.description
         ? props.description
         : i18n.global.t('index.newsletterFeature.description', {
-            email: userEmail ? ` <b>${userEmail}</b>` : '',
+            email: user?.email ? ` <b>${user.email}</b>` : '',
           });
     });
 
