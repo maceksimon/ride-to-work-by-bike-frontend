@@ -2,8 +2,22 @@ import { colors } from 'quasar';
 import ListCardFollow from '../homepage/ListCardFollow.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
+
+// selectors
+const cardListFollow = 'card-list-follow';
+const cardListFollowColTitle = 'card-list-follow-col-title';
+const cardListFollowItem = 'card-list-follow-item';
+const cardListFollowItem1 = 'card-list-follow-item-1';
+const cardListFollowItem2 = 'card-list-follow-item-2';
+const sectionHeadingTitle = 'section-heading-title';
+
+// variables
+const cardsCount = 2;
+const widthFull = 100;
+const widthHalf = 50;
 
 describe('<ListCardFollow>', () => {
   it('has translation for all strings', () => {
@@ -22,13 +36,16 @@ describe('<ListCardFollow>', () => {
       cy.viewport('macbook-16');
     });
 
-    it('renders items in three columns', () => {
+    it('renders title stacked and cards side by side', () => {
       cy.window().then(() => {
+        // title full width
         cy.testElementPercentageWidth(
-          cy.dataCy('card-list-follow-col-title'),
-          33,
+          cy.dataCy(cardListFollowColTitle),
+          widthFull,
         );
-        cy.testElementPercentageWidth(cy.dataCy('card-list-follow-item'), 33);
+        // cards side by side 50% width
+        cy.testElementsSideBySide(cardListFollowItem1, cardListFollowItem2);
+        cy.testElementPercentageWidth(cy.dataCy(cardListFollowItem), widthHalf);
       });
     });
   });
@@ -50,10 +67,10 @@ describe('<ListCardFollow>', () => {
     it('renders items in one column', () => {
       cy.window().then(() => {
         cy.testElementPercentageWidth(
-          cy.dataCy('card-list-follow-col-title'),
-          100,
+          cy.dataCy(cardListFollowColTitle),
+          widthFull,
         );
-        cy.testElementPercentageWidth(cy.dataCy('card-list-follow-item'), 100);
+        cy.testElementPercentageWidth(cy.dataCy(cardListFollowItem), widthFull);
       });
     });
   });
@@ -62,7 +79,7 @@ describe('<ListCardFollow>', () => {
 function coreTests() {
   it('renders title', () => {
     cy.window().then(() => {
-      cy.dataCy('section-heading-title')
+      cy.dataCy(sectionHeadingTitle)
         .should('have.css', 'font-size', '20px')
         .and('have.css', 'font-weight', '500')
         .and('have.color', black)
@@ -77,13 +94,13 @@ function coreTests() {
 
   it('renders correct number of items', () => {
     cy.window().then(() => {
-      cy.dataCy('card-list-follow-item').should('have.length', 2);
+      cy.dataCy(cardListFollowItem).should('have.length', cardsCount);
     });
   });
 
   it('aligns items center', () => {
     cy.window().then(() => {
-      cy.dataCy('card-list-follow').should('have.css', 'align-items', 'center');
+      cy.dataCy(cardListFollow).should('have.css', 'align-items', 'center');
     });
   });
 }

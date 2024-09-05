@@ -49,21 +49,27 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row q-col-gutter-lg items-center" data-cy="card-list-follow">
-    <div class="col-12 col-lg-4" data-cy="card-list-follow-col-title">
-      <!-- Title -->
-      <section-heading>
-        {{ $t('index.cardListFollow.title') }}
-      </section-heading>
-    </div>
+  <!-- Title -->
+  <div data-cy="card-list-follow-col-title">
+    <section-heading>
+      {{ $t('index.cardListFollow.title') }}
+    </section-heading>
+  </div>
+  <div
+    class="row q-col-gutter-lg items-center q-mt-lg"
+    data-cy="card-list-follow"
+  >
     <!-- List of folow cards -->
     <div
-      v-for="card in cards"
+      v-for="(card, index) in cards"
       :key="card.title"
-      class="col-12 col-sm-6 col-lg-4"
+      class="col-12 col-sm-6"
       data-cy="card-list-follow-item"
     >
-      <card-follow :card="card" />
+      <card-follow
+        :card="card"
+        :data-cy="`card-list-follow-item-${index + 1}`"
+      />
     </div>
   </div>
 </template>
