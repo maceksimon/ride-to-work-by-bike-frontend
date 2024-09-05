@@ -54,6 +54,8 @@ export default defineComponent({
     LanguageSwitcher,
   },
   setup() {
+    const iconSize = '18px';
+
     const profile: Profile = reactive(formPersonalDetails as Profile);
 
     const labelPaymentState = computed(() => {
@@ -88,6 +90,7 @@ export default defineComponent({
     return {
       iconPaymentColor,
       iconPaymentState,
+      iconSize,
       labelPaymentState,
       profile,
       onDownloadInvoice,
@@ -320,7 +323,7 @@ export default defineComponent({
               <div class="col-12 col-sm-auto flex items-center gap-8">
                 <q-icon
                   :name="iconPaymentState"
-                  size="18px"
+                  :size="iconSize"
                   :color="iconPaymentColor"
                   data-cy="profile-details-payment-state-icon"
                 />
@@ -339,7 +342,7 @@ export default defineComponent({
           >
             <q-icon
               name="mdi-download"
-              size="18px"
+              :size="iconSize"
               class="q-mr-sm"
               @click="onDownloadInvoice"
             />

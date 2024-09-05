@@ -1,6 +1,7 @@
 import { colors } from 'quasar';
 import ProfileDetails from 'components/profile/ProfileDetails.vue';
 import { i18n } from '../../boot/i18n';
+import { PaymentState } from '../../../src/components/types/Profile';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -483,7 +484,7 @@ function coreTests() {
       cy.dataCy(selectorPaymentState)
         .find(dataSelectorLabel)
         .should('be.visible');
-      if (formPersonalDetails.paymentState === 'paid') {
+      if (formPersonalDetails.paymentState === PaymentState.paid) {
         cy.dataCy(selectorPaymentState)
           .find(dataSelectorValue)
           .should('contain', i18n.global.t('profile.labelPaymentStatePaid'));
@@ -491,7 +492,9 @@ function coreTests() {
           .find(dataSelectorIconPaymentState)
           .should('be.visible')
           .and('have.color', green);
-      } else if (formPersonalDetails.paymentState === 'paidByCompany') {
+      } else if (
+        formPersonalDetails.paymentState === PaymentState.paidByCompany
+      ) {
         cy.dataCy(selectorPaymentState)
           .find(dataSelectorValue)
           .should(
