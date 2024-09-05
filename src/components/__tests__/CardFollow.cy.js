@@ -1,9 +1,8 @@
 import { colors } from 'quasar';
-
 import CardFollow from '../homepage/CardFollow.vue';
+import { hexToRgb } from 'app/test/cypress/utils';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
-import { hexToRgb } from 'app/test/cypress/utils';
 
 // colors
 const { getPaletteColor } = colors;
@@ -13,6 +12,7 @@ const grey8 = getPaletteColor('grey-8');
 const primary = getPaletteColor('primary');
 
 // selectors
+const classSelectorAvatar = '.q-avatar';
 const selectorCardFollow = 'card-follow';
 const selectorCardFollowTitle = 'card-follow-title';
 const selectorCardFollowHandle = 'card-follow-handle';
@@ -143,7 +143,7 @@ function coreTests() {
       cy.window().then(() => {
         cy.dataCy(selectorCardFollowAvatar)
           .should('be.visible')
-          .find('.q-avatar')
+          .find(classSelectorAvatar)
           .should('have.css', 'border-radius', imageBorderRadius)
           .should('have.css', 'width', imageWidth);
         cy.dataCy(selectorCardFollowImage)
