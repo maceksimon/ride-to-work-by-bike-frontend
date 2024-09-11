@@ -87,7 +87,7 @@ export default defineComponent({
         <!-- Image -->
         <q-img
           class="col-12 col-sm-auto"
-          src="~assets/image/banner-routes/routes.png"
+          src="~assets/svg/banner-routes.svg"
           width="70px"
           height="102px"
           alt=""
