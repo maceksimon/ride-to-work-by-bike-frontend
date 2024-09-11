@@ -2,6 +2,7 @@ import { colors } from 'quasar';
 import SliderProgress from '../homepage/SliderProgress.vue';
 import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
+import { routesConf } from '../../router/routes_conf';
 
 // colors
 const { getPaletteColor } = colors;
@@ -54,7 +55,7 @@ describe('<SliderProgress>', () => {
           cards,
           button: {
             title: i18n.global.t('index.progressSlider.button'),
-            url: '/vysledky',
+            url: routesConf['results']['path'],
           },
         },
       });
@@ -74,7 +75,7 @@ describe('<SliderProgress>', () => {
           cards,
           button: {
             title: i18n.global.t('index.progressSlider.button'),
-            url: '/vysledky',
+            url: routesConf['results']['path'],
           },
         },
       });
