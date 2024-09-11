@@ -401,6 +401,10 @@ buttonAllPrizes = "All prizes"
 titleListPrizes = "Available prizes"
 textListPrizes = "Winners are drawn from those who were most successful in the challenge."
 
+[login]
+apiMessageSuccess = "Login was successful"
+apiMessageError = "Login failed, error code: {status}"
+
 [login.form]
 titleLogin = "Login"
 titlePasswordReset = "Forgotten password"

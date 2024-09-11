@@ -60,3 +60,6 @@ defaultDistanceZero = "0.00"
 entryFeePaymentMin = "390"
 entryFeePaymentMax = "2000"
 entryFeePaymentOptions = "500,700"
+
+# API Configuration
+apiBase = "https://dpnk.dopracenakole.cz/rest/"

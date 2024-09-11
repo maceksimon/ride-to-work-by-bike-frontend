@@ -84,6 +84,8 @@ const getAppConfig = (process) => {
     config['entryFeePaymentOptions'] = process.env.ENTRY_FEE_PAYMENT_OPTIONS;
   } else if (process.env.NOTIFY_MESSAGE_POSITION) {
     config['notifyMessagePosition'] = process.env.NOTIFY_MESSAGE_POSITION;
+  } else if (process.env.API_BASE) {
+    config['apiBase'] = process.env.API_BASE;
   }
 
   return config;

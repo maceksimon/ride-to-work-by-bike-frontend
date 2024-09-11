@@ -49,6 +49,7 @@ export default defineComponent({
   setup() {
     const loginStore = useLoginStore();
     const user = reactive(loginStore.getUser);
+    const loginLoading = ref(false);
 
     watch(
       user,
@@ -72,8 +73,11 @@ export default defineComponent({
 
     const { isEmail, isFilled } = useValidation();
 
-    const onSubmitLogin = () => {
-      // noop
+    const onSubmitLogin = async () => {
+      loginLoading.value = true;
+      await loginStore.login();
+      loginLoading.value = false;
+      // TODO: handle response action
     };
 
     const onSubmitPasswordReset = () => {
@@ -93,6 +97,7 @@ export default defineComponent({
       isPassword,
       isEmail,
       isFilled,
+      loginLoading,
       user,
       onClickFormPasswordResetBtn,
       onSubmitLogin,
@@ -173,6 +178,7 @@ export default defineComponent({
         class="full-width"
         type="submit"
         color="primary q-mt-lg"
+        :loading="loginLoading"
         :label="$t('login.form.submitLogin')"
         data-cy="form-login-submit-login"
       />
