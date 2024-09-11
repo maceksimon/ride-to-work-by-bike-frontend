@@ -22,6 +22,9 @@ import { defineComponent } from 'vue';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// enums
+import { StatisticsId } from '../types/Statistics';
+
 // types
 import type { ItemStatistics } from '../types/Statistics';
 
@@ -38,6 +41,7 @@ export default defineComponent({
 
     return {
       borderRadiusCard,
+      StatisticsId,
     };
   },
 });
@@ -71,13 +75,15 @@ export default defineComponent({
         }}</strong>
         <!-- Label -->
         <span
-          v-if="item.id === 'co2' || item.id === 'distance'"
+          v-if="
+            item.id === StatisticsId.co2 || item.id === StatisticsId.distance
+          "
           data-cy="stats-bar-item-label-unit"
         >
-          <template v-if="item.id === 'co2'"
-            >&nbsp;{{ $t('global.carbonDioxideWeightUnit') }}</template
-          >
-          <template v-if="item.id === 'distance'"
+          <template v-if="item.id === StatisticsId.co2"
+            >&nbsp;<span v-html="$t('global.carbonDioxideWeightUnit')"
+          /></template>
+          <template v-if="item.id === StatisticsId.distance"
             >&nbsp;{{ $t('global.routeLengthUnit') }}</template
           >
         </span>

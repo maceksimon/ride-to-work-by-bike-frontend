@@ -2,6 +2,7 @@ import { colors } from 'quasar';
 import StatsBar from 'components/global/StatsBar.vue';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { i18n } from '../../boot/i18n';
+import { StatisticsId } from 'components/types/Statistics';
 
 // colors
 const { getPaletteColor } = colors;
@@ -99,12 +100,19 @@ function coreTests() {
             .and('have.color', grey10)
             .and('have.css', 'font-weight', '700');
         }
-        if (stats[index].id === 'co2') {
+        if (stats[index].id === StatisticsId.co2) {
           cy.wrap($item)
             .find(dataSelectorStatsBarItemLabelUnit)
-            .should('contain', i18n.global.t('global.carbonDioxideWeightUnit'));
+            .then(($el) => {
+              const content = $el.text();
+              cy.stripHtmlTags(
+                i18n.global.t('global.carbonDioxideWeightUnit'),
+              ).then((text) => {
+                expect(content.trim()).to.equal(text.trim());
+              });
+            });
         }
-        if (stats[index].id === 'distance') {
+        if (stats[index].id === StatisticsId.distance) {
           cy.wrap($item)
             .find(dataSelectorStatsBarItemLabelUnit)
             .should('contain', i18n.global.t('global.routeLengthUnit'));
