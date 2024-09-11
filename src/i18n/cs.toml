@@ -406,7 +406,7 @@ titleListPrizes = "Možné výhry"
 
 [login]
 apiMessageSuccess = "Přihlášení bylo úspěšné"
-apiMessageError = "Přihlášení se nezdařilo, kód chyby: {status}"
+apiMessageError = "Přihlášení se nezdařilo. Prosím, zkuste to znovu později."
 
 [login.form]
 titleLogin = "Přihlášení"

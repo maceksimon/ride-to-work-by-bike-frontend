@@ -403,7 +403,7 @@ titleListPrizes = "Možné výhry"
 
 [login]
 apiMessageSuccess = "Prihlásenie bolo úspešné"
-apiMessageError = "Prihlásenie sa nepodarilo, kód chyby: {status}"
+apiMessageError = "Prihlásenie sa nepodarilo. Prosím, skúste to znovu později."
 
 [login.form]
 titleLogin = "Prihlásenie"

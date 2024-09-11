@@ -403,7 +403,7 @@ textListPrizes = "Winners are drawn from those who were most successful in the c
 
 [login]
 apiMessageSuccess = "Login was successful"
-apiMessageError = "Login failed, error code: {status}"
+apiMessageError = "Login failed. Please try again later."
 
 [login.form]
 titleLogin = "Login"

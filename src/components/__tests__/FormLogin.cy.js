@@ -1,24 +1,28 @@
 import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
 import { emptyUser, useLoginStore } from 'src/stores/login';
-
 import FormLogin from '../login/FormLogin.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { routesConf } from '../../router/routes_conf';
 
 // colors
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
 const grey10 = getPaletteColor('grey-10');
 
-const rideToWorkByBikeConfig = JSON.parse(
-  process.env.RIDE_TO_WORK_BY_BIKE_CONFIG,
-);
 const colorPrimary = rideToWorkByBikeConfig.colorPrimary;
 const contactEmail = rideToWorkByBikeConfig.contactEmail;
+
+// selectors
+const classSelectorQNotificationMessage = '.q-notification__message';
 
 // variables
 const email = 'test@example.com';
 const password = 'example123';
+const token = '1234567890';
+const apiBase = rideToWorkByBikeConfig.apiBase;
+const apiLoginUrl = `${apiBase}${routesConf.api_login.path}`;
 
 describe('<FormLogin>', () => {
   it('has translation for all strings', () => {
@@ -267,6 +271,70 @@ describe('<FormLogin>', () => {
       // check password in store
       cy.dataCy('form-login-password').then(() => {
         expect(loginStore.user.password).to.equal(password);
+      });
+    });
+
+    it('saves user into store after login', () => {
+      const store = useLoginStore();
+      const user = { email, password };
+      store.setUser(user);
+      expect(store.getUser).to.deep.equal(user);
+    });
+
+    it('saves token into store after login', () => {
+      const store = useLoginStore();
+      store.setToken(token);
+      expect(store.getToken).to.equal(token);
+    });
+
+    it('shows error if login is called and email is not set', () => {
+      const store = useLoginStore();
+      store.setUser({ email: '', password });
+      cy.wrap(store.login()).then((result) => {
+        expect(result).to.equal(null);
+        cy.get(classSelectorQNotificationMessage)
+          .should('be.visible')
+          .and('contain', i18n.global.t('login.form.messageEmailReqired'));
+      });
+    });
+
+    it('shows error if login is called and password is not set', () => {
+      const store = useLoginStore();
+      store.setUser({ email, password: '' });
+      cy.wrap(store.login()).then((result) => {
+        expect(result).to.equal(null);
+        cy.get(classSelectorQNotificationMessage)
+          .should('be.visible')
+          .and('contain', i18n.global.t('login.form.messagePasswordRequired'));
+      });
+    });
+
+    it('calls API and set token on successful login', () => {
+      const store = useLoginStore();
+      store.setUser({ email, password });
+      // intercept login API call
+      cy.intercept('POST', apiLoginUrl, {
+        statusCode: 200,
+        body: { key: token },
+      });
+      cy.wrap(store.login()).then((result) => {
+        expect(result).to.deep.equal({ key: token });
+        expect(store.getToken).to.equal(token);
+      });
+    });
+
+    it('calls API and shows error if login fails', () => {
+      const store = useLoginStore();
+      store.setUser({ email, password });
+      // intercept login API call
+      cy.intercept('POST', apiLoginUrl, {
+        statusCode: 500,
+      });
+      // call login with stubbed apiFetch
+      cy.wrap(store.login()).then(() => {
+        cy.get(classSelectorQNotificationMessage)
+          .should('be.visible')
+          .and('contain', i18n.global.t('login.apiMessageError'));
       });
     });
   });

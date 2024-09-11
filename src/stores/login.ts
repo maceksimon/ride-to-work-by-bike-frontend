@@ -22,6 +22,8 @@ export const emptyUser: User = {
   password: '',
 };
 
+const { apiFetch } = useApi();
+
 export const useLoginStore = defineStore('login', {
   state: () => ({
     user: emptyUser,
@@ -49,7 +51,6 @@ export const useLoginStore = defineStore('login', {
      * @returns Promise<LoginResponse | null>
      */
     async login(): Promise<LoginResponse | null> {
-      const { apiPost } = useApi();
       // check that email is set
       if (!this.user.email) {
         Notify.create({
@@ -67,7 +68,7 @@ export const useLoginStore = defineStore('login', {
         return null;
       }
       // login
-      const { data } = await apiPost<LoginResponse>({
+      const { data } = await apiFetch<LoginResponse>({
         endpoint: routesConf.api_login.path,
         method: 'post',
         payload: this.user,

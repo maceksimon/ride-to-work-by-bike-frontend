@@ -15,7 +15,7 @@ interface ApiResponse<T> {
 }
 
 export const useApi = () => {
-  const apiPost = async <T>({
+  const apiFetch = async <T>({
     endpoint,
     payload,
     translationKey,
@@ -44,9 +44,7 @@ export const useApi = () => {
         return { data: response.data };
       } else {
         Notify.create({
-          message: i18n.global.t(`${translationKey}.apiMessageError`, {
-            status: response.status,
-          }),
+          message: i18n.global.t(`${translationKey}.apiMessageError`),
           color: 'negative',
         });
         return { data: null };
@@ -61,5 +59,5 @@ export const useApi = () => {
     }
   };
 
-  return { apiPost };
+  return { apiFetch };
 };
