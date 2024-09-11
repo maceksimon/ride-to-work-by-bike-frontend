@@ -75,9 +75,10 @@ export default defineComponent({
 
     const onSubmitLogin = async () => {
       loginLoading.value = true;
+
       await loginStore.login();
+
       loginLoading.value = false;
-      // TODO: handle response action
     };
 
     const onSubmitPasswordReset = () => {
