@@ -62,7 +62,7 @@ export default defineComponent({
         <q-img
           ratio="1"
           :src="coordinator.image.src"
-          placeholder-src="~assets/image/profile-coordinator-contact/profile-placeholder.webp"
+          placeholder-src="~assets/svg/profile-placeholder.svg"
           :alt="coordinator.name"
         />
       </q-avatar>
