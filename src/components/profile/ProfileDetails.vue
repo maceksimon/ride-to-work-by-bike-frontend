@@ -357,6 +357,9 @@ export default defineComponent({
     </div>
 
     <!-- Coordinator contact -->
-    <profile-coordinator-contact class="q-mt-xl" />
+    <profile-coordinator-contact
+      class="q-mt-xl"
+      data-cy="profile-coordinator-contact"
+    />
   </div>
 </template>
