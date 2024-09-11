@@ -37,11 +37,15 @@ export const useLoginStore = defineStore('login', {
     },
     /**
      * Login user
-     * @returns LoginResponse | null
+     * Checks if email and password are set.
+     * If not, shows a notification.
+     * If yes, sends the login request to the API.
+     * If successful, sets the token.
+     * @returns Promise<LoginResponse | null>
      */
     async login(): Promise<LoginResponse | null> {
       const { apiPost } = useApiPost();
-      // check email
+      // check that email is set
       if (!this.user.email) {
         Notify.create({
           message: i18n.global.t('login.form.messageEmailReqired'),
@@ -49,7 +53,7 @@ export const useLoginStore = defineStore('login', {
         });
         return null;
       }
-      // check password
+      // check that password is set
       if (!this.user.password) {
         Notify.create({
           message: i18n.global.t('login.form.messagePasswordRequired'),
