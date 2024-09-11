@@ -9,6 +9,12 @@ type RoutesConf = {
 };
 
 const routesConf: RoutesConf = {
+  api_login: {
+    path: '/login',
+    children: {
+      name: 'api-login',
+    },
+  },
   community: {
     path: '/community',
     children: {

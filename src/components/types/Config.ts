@@ -39,6 +39,7 @@ export interface ConfigGlobal {
   entryFeePaymentOptions: string;
   notifyMessagePosition: string;
   apiBase: string;
+  apiVersion: string;
 }
 
 export interface ConfigAppVersion {

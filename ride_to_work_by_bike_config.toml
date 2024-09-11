@@ -62,4 +62,5 @@ entryFeePaymentMax = "2000"
 entryFeePaymentOptions = "500,700"
 
 # API Configuration
-apiBase = "https://dpnk.dopracenakole.cz/rest/"
+apiBase = "https://test.dopracenakole.cz/rest/"
+apiVersion = "1.0"

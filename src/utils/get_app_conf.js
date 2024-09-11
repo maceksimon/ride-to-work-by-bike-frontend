@@ -86,6 +86,8 @@ const getAppConfig = (process) => {
     config['notifyMessagePosition'] = process.env.NOTIFY_MESSAGE_POSITION;
   } else if (process.env.API_BASE) {
     config['apiBase'] = process.env.API_BASE;
+  } else if (process.env.API_VERSION) {
+    config['apiVersion'] = process.env.API_VERSION;
   }
 
   return config;

@@ -1,23 +1,40 @@
+// libraries
 import { Notify } from 'quasar';
 import { api } from '../boot/axios';
 import { i18n } from '../boot/i18n';
+
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+const { apiVersion } = rideToWorkByBikeConfig;
+
+// types
+import type { Method } from 'axios';
 
 interface ApiResponse<T> {
   data: T | null;
 }
 
-export const useApiPost = () => {
+export const useApi = () => {
   const apiPost = async <T>({
     endpoint,
     payload,
     translationKey,
+    method = 'get',
   }: {
     endpoint: string;
     payload: unknown;
     translationKey: string;
+    method: Method;
   }): Promise<ApiResponse<T>> => {
     try {
-      const response = await api.post<T>(endpoint, payload);
+      const response = await api<T>({
+        url: endpoint,
+        method: method,
+        data: payload,
+        headers: {
+          Accept: `application/json; version=${apiVersion}`,
+        },
+      });
 
       if (response.status >= 200 && response.status < 300) {
         Notify.create({

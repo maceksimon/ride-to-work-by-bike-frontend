@@ -1,8 +1,13 @@
+// libraries
 import { defineStore } from 'pinia';
-import { useApiPost } from '../composables/useApiPost';
 import { Notify } from 'quasar';
-import { i18n } from '../boot/i18n';
 
+// composables
+import { i18n } from '../boot/i18n';
+import { useApi } from '../composables/useApi';
+
+// config
+import { routesConf } from '../router/routes_conf';
 type LoginResponse = {
   key: string;
 };
@@ -44,7 +49,7 @@ export const useLoginStore = defineStore('login', {
      * @returns Promise<LoginResponse | null>
      */
     async login(): Promise<LoginResponse | null> {
-      const { apiPost } = useApiPost();
+      const { apiPost } = useApi();
       // check that email is set
       if (!this.user.email) {
         Notify.create({
@@ -63,7 +68,8 @@ export const useLoginStore = defineStore('login', {
       }
       // login
       const { data } = await apiPost<LoginResponse>({
-        endpoint: '/login',
+        endpoint: routesConf.api_login.path,
+        method: 'post',
         payload: this.user,
         translationKey: 'login',
       });
