@@ -20,11 +20,13 @@ export const useApi = () => {
     payload,
     translationKey,
     method = 'get',
+    acceptHeader = `application/json; version=${apiVersion}`,
   }: {
     endpoint: string;
     payload: unknown;
     translationKey: string;
     method: Method;
+    acceptHeader?: string;
   }): Promise<ApiResponse<T>> => {
     try {
       const response = await api<T>({
@@ -32,7 +34,7 @@ export const useApi = () => {
         method: method,
         data: payload,
         headers: {
-          Accept: `application/json; version=${apiVersion}`,
+          Accept: acceptHeader,
         },
       });
 
