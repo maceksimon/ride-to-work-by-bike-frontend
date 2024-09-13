@@ -5,7 +5,7 @@ import { i18n } from '../boot/i18n';
 
 // config
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
-const { apiVersion } = rideToWorkByBikeConfig;
+const { apiVersion: defaultApiVersion } = rideToWorkByBikeConfig;
 
 // types
 import type { Method } from 'axios';
@@ -20,13 +20,13 @@ export const useApi = () => {
     payload,
     translationKey,
     method = 'get',
-    acceptHeader = `application/json; version=${apiVersion}`,
+    apiVersion = defaultApiVersion,
   }: {
     endpoint: string;
     payload: unknown;
     translationKey: string;
     method: Method;
-    acceptHeader?: string;
+    apiVersion?: string;
   }): Promise<ApiResponse<T>> => {
     try {
       const response = await api<T>({
@@ -34,7 +34,7 @@ export const useApi = () => {
         method: method,
         data: payload,
         headers: {
-          Accept: acceptHeader,
+          Accept: `application/json; version=${apiVersion}`,
         },
       });
 
