@@ -1,4 +1,5 @@
 // libraries
+import { AxiosError } from 'axios';
 import { Notify } from 'quasar';
 import { api } from '../boot/axios';
 import { i18n } from '../boot/i18n';
@@ -51,12 +52,21 @@ export const useApi = () => {
         });
         return { data: null };
       }
-    } catch (e) {
-      console.error(e);
-      Notify.create({
-        message: i18n.global.t(`${translationKey}.apiMessageError`),
-        color: 'negative',
-      });
+    } catch (error) {
+      if (error instanceof AxiosError || error instanceof Error) {
+        Notify.create({
+          message: i18n.global.t(
+            `${translationKey}.apiMessageErrorWithMessage`,
+            { error: error.message },
+          ),
+          color: 'negative',
+        });
+      } else {
+        Notify.create({
+          message: i18n.global.t(`${translationKey}.apiMessageError`),
+          color: 'negative',
+        });
+      }
       return { data: null };
     }
   };

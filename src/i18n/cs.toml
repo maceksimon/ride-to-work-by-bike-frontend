@@ -406,7 +406,8 @@ titleListPrizes = "Možné výhry"
 
 [login]
 apiMessageSuccess = "Přihlášení bylo úspěšné"
-apiMessageError = "Přihlášení se nezdařilo. Prosím, zkuste to znovu později."
+apiMessageError = "Přihlášení se nezdařilo. Prosím, zkuste to znovu později. {error}"
+apiMessageErrorWithMessage = "Přihlášení se nezdařilo. Prosím, zkuste to znovu později. Chayba: {error}"
 
 [login.form]
 titleLogin = "Přihlášení"
