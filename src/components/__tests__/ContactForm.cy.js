@@ -2,8 +2,11 @@ import { colors } from 'quasar';
 import ContactForm from '../global/ContactForm.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
 const { getPaletteColor } = colors;
-const black = getPaletteColor('black');
+const grey8 = getPaletteColor('grey-8');
+const grey10 = getPaletteColor('grey-10');
+const primary = getPaletteColor('primary');
 
 describe('<ContactForm>', () => {
   it('has translation for all strings', () => {
@@ -48,12 +51,13 @@ describe('<ContactForm>', () => {
       cy.dataCy('contact-form-file')
         .find('i.q-icon')
         .should('be.visible')
+        .and('have.color', grey8)
         .and('contain', 'attachment');
       cy.dataCy('contact-form-file')
         .find('.q-field__label')
         .should('be.visible')
         .and('have.css', 'font-size', '14px')
-        .and('have.color', black)
+        .and('have.color', grey10)
         .and('have.text', i18n.global.t('index.contact.file'));
     });
 
@@ -65,7 +69,7 @@ describe('<ContactForm>', () => {
       cy.dataCy('contact-form-submit')
         .should('be.visible')
         .and('have.css', 'border-radius', '28px')
-        .and('have.backgroundColor', black)
+        .and('have.backgroundColor', primary)
         .and('have.text', i18n.global.t('index.contact.submit'));
     });
   });

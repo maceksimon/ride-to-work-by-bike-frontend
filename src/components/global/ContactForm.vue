@@ -97,12 +97,12 @@ export default defineComponent({
         borderless
         v-model="contactForm.file"
         :label="$t('index.contact.file')"
-        label-color="black"
+        label-color="grey-10"
         class="file-input text-body2 text-uppercase"
         data-cy="contact-form-file-input"
       >
         <template v-slot:prepend>
-          <q-icon name="attachment" color="black" size="xs" />
+          <q-icon name="attachment" color="grey-8" size="xs" />
         </template>
       </q-file>
     </div>
@@ -116,7 +116,7 @@ export default defineComponent({
       <q-btn
         :label="$t('index.contact.submit')"
         type="submit"
-        color="black"
+        color="primary"
         rounded
         unelevated
         data-cy="contact-form-submit"

@@ -125,7 +125,7 @@ export default defineComponent({
           class="q-mr-sm"
           @click.prevent="setState('default')"
         >
-          <q-icon name="west" size="xs" color="primary" />
+          <q-icon name="west" size="xs" color="grey-8" />
         </q-btn>
         <span v-if="activeState === 'default'">
           {{ $t('index.help.titleStateDefault') }}
