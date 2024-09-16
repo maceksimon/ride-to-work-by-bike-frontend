@@ -1,8 +1,8 @@
 import { colors } from 'quasar';
-
 import LoginRegisterHeader from 'components/global/LoginRegisterHeader.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
 const { getPaletteColor } = colors;
 const primary = getPaletteColor('primary');
 const white = getPaletteColor('white');

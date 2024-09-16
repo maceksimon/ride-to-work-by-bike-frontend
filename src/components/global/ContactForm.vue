@@ -102,7 +102,12 @@ export default defineComponent({
         data-cy="contact-form-file-input"
       >
         <template v-slot:prepend>
-          <q-icon name="attachment" color="grey-8" size="xs" />
+          <q-icon
+            name="attachment"
+            color="grey-8"
+            size="xs"
+            data-cy="contact-form-file-icon"
+          />
         </template>
       </q-file>
     </div>
