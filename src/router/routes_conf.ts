@@ -1,3 +1,7 @@
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
+const { urlApiLogin } = rideToWorkByBikeConfig;
+
 type RoutesConf = {
   [key: string]: {
     path: string;
@@ -10,7 +14,7 @@ type RoutesConf = {
 
 const routesConf: RoutesConf = {
   api_login: {
-    path: '/login',
+    path: urlApiLogin,
     children: {
       name: 'api-login',
     },

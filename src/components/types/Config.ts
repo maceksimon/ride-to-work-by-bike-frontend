@@ -40,6 +40,7 @@ export interface ConfigGlobal {
   notifyMessagePosition: string;
   apiBase: string;
   apiVersion: string;
+  urlApiLogin: string;
 }
 
 export interface ConfigAppVersion {
