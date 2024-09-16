@@ -6,10 +6,11 @@ import { i18n } from '../boot/i18n';
 
 // config
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
-const { apiVersion: defaultApiVersion } = rideToWorkByBikeConfig;
+const { apiVersion } = rideToWorkByBikeConfig;
 
 // types
-import type { Method } from 'axios';
+import type { AxiosRequestHeaders, Method } from 'axios';
+import type { Logger } from '../components/types/Logger';
 
 interface ApiResponse<T> {
   data: T | null;
@@ -21,22 +22,24 @@ export const useApi = () => {
     payload,
     translationKey,
     method = 'get',
-    apiVersion = defaultApiVersion,
+    headers = {
+      Accept: `application/json; version=${apiVersion}`,
+    } as AxiosRequestHeaders,
+    logger,
   }: {
     endpoint: string;
     payload: unknown;
     translationKey: string;
     method: Method;
-    apiVersion?: string;
+    headers?: AxiosRequestHeaders;
+    logger: Logger | null;
   }): Promise<ApiResponse<T>> => {
     try {
       const response = await api<T>({
         url: endpoint,
         method: method,
         data: payload,
-        headers: {
-          Accept: `application/json; version=${apiVersion}`,
-        },
+        headers,
       });
 
       if (response.status >= 200 && response.status < 300) {
@@ -53,6 +56,9 @@ export const useApi = () => {
         return { data: null };
       }
     } catch (error) {
+      if (logger) {
+        logger.error(error as string);
+      }
       if (error instanceof AxiosError || error instanceof Error) {
         Notify.create({
           message: i18n.global.t(

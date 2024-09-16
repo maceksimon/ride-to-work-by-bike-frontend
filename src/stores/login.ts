@@ -8,9 +8,13 @@ import { useApi } from '../composables/useApi';
 
 // config
 import { routesConf } from '../router/routes_conf';
-type LoginResponse = {
+
+// types
+import type { Logger } from '../components/types/Logger';
+
+interface LoginResponse {
   key: string;
-};
+}
 
 interface User {
   email: string;
@@ -27,6 +31,7 @@ const { apiFetch } = useApi();
 export const useLoginStore = defineStore('login', {
   state: () => ({
     user: emptyUser,
+    logger: null as Logger | null,
     token: '',
   }),
 
@@ -41,6 +46,9 @@ export const useLoginStore = defineStore('login', {
     },
     setToken(token: string): void {
       this.token = token;
+    },
+    setLogger(logger: Logger): void {
+      this.logger = logger;
     },
     /**
      * Login user
@@ -73,6 +81,7 @@ export const useLoginStore = defineStore('login', {
         method: 'post',
         payload: this.user,
         translationKey: 'login',
+        logger: this.logger,
       });
       // set token
       if (data && data.key) {

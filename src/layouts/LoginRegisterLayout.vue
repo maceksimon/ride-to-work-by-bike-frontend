@@ -27,8 +27,11 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { i18n } from '../boot/i18n';
+
+// stores
+import { useLoginStore } from '../stores/login';
 
 // set global i18n object (for test purposes)
 if (window.Cypress) {
@@ -37,6 +40,11 @@ if (window.Cypress) {
 
 export default defineComponent({
   name: 'LoginLayout',
+  setup() {
+    // initialize logger within store
+    const loginStore = useLoginStore();
+    loginStore.setLogger(inject('vuejs3-logger'));
+  },
 });
 </script>
 
