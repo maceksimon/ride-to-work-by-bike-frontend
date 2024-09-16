@@ -15,11 +15,11 @@ describe('<TaskListCoordinator>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      cy.clock(new Date('2024-01-01').getTime());
       cy.mount(TaskListCoordinator, {
         props: {},
       });
       cy.viewport('macbook-16');
-      cy.clock(new Date('2024-01-01').getTime());
     });
 
     coreTests();
@@ -27,11 +27,11 @@ describe('<TaskListCoordinator>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      cy.clock(new Date('2024-01-01').getTime());
       cy.mount(TaskListCoordinator, {
         props: {},
       });
       cy.viewport('iphone-6');
-      cy.clock(new Date('2024-01-01').getTime());
     });
 
     coreTests();
