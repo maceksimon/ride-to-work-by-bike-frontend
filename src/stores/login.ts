@@ -31,8 +31,9 @@ const { apiFetch } = useApi();
 
 export const useLoginStore = defineStore('login', {
   state: () => ({
+    // property set in pinia.js boot file
+    $log: null as Logger | null,
     user: emptyUser,
-    logger: null as Logger | null,
     accessToken: '',
     refreshToken: '',
   }),
@@ -52,9 +53,6 @@ export const useLoginStore = defineStore('login', {
     },
     setRefreshToken(token: string): void {
       this.refreshToken = token;
-    },
-    setLogger(logger: Logger): void {
-      this.logger = logger;
     },
     /**
      * Login user
@@ -87,7 +85,7 @@ export const useLoginStore = defineStore('login', {
         method: 'post',
         payload: this.user,
         translationKey: 'login',
-        logger: this.logger,
+        logger: this.$log,
       });
       // set tokens
       if (data && data.access && data.refresh) {

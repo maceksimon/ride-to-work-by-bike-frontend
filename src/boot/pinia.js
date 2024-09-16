@@ -1,5 +1,5 @@
+import { markRaw } from 'vue';
 import { boot } from 'quasar/wrappers';
-
 import { createPinia } from 'pinia';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
@@ -21,5 +21,9 @@ export default boot(({ app }) => {
   const pinia = createPinia();
   // plugins
   pinia.use(piniaPluginPersistedstate);
+  // make logger available in stores
+  pinia.use(({ store }) => {
+    store.$log = markRaw(app.config.globalProperties.$log);
+  });
   app.use(pinia);
 });
