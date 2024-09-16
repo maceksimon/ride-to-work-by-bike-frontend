@@ -2,26 +2,30 @@
 /**
  * HelpButton Component
  *
- * The `HelpButton`
- * You can adjust its appearance by passing in `color` and `size` props.
+ * The `HelpButton` component renders a help button with a help dialog.
+ * It provides a default slot for custom button rendering.
+ * It exposes an `openDialog` method that can be used as a click handler.
  *
- * @description * Use this component to render help icon with help dialog .
+ * @description * Use this component to render a custom help button with help dialog.
  *
- * Note: This component is commonly used in `DrawerHeader` and `PageHeader`.
+ * Note: This component is commonly used in `DrawerHeader` and `LoginRegisterHeader`.
  *
- * @props
- * - `color`: Color of the help button.
- * - `size`: Size of the help button.
+ * @slots
+ * - `button`: Slot for custom button rendering. Receives `openDialog` method.
  *
  * @components
- * - `ContactForm`: Component to display contact for inside the dialog.
+ * - `ContactForm`: Component to display contact form inside the dialog.
  * - `DialogDefault`: Component to render help dialog with slots.
  * - `ListFaq`: Component to display FAQ list inside the dialog.
  * - `MenuLinks`: Component to display social links and useful links inside
  *   the dialog.
  *
  * @example
- * <HelpButton />
+ * <HelpButton>
+ *   <template #button="{ openDialog }">
+ *     <q-btn @click="openDialog">Help</q-btn>
+ *   </template>
+ * </HelpButton>
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=6269%3A24768&mode=dev)
  */
@@ -42,20 +46,10 @@ import MenuLinks from './MenuLinks.vue';
 export default defineComponent({
   name: 'HelpButton',
   components: {
-    MenuLinks,
-    ListFaq,
     ContactForm,
     DialogDefault,
-  },
-  props: {
-    color: {
-      type: String as () => 'grey-10' | 'primary',
-      default: 'grey-10',
-    },
-    size: {
-      type: String,
-      default: '11px',
-    },
+    ListFaq,
+    MenuLinks,
   },
   setup() {
     const isDialogOpen = ref(false);
@@ -76,13 +70,18 @@ export default defineComponent({
       userEmail.value = email;
     };
 
+    const openDialog = (): void => {
+      isDialogOpen.value = true;
+    };
+
     return {
       activeState,
       isDialogOpen,
+      userEmail,
       reset,
       setState,
-      userEmail,
       onFormSubmit,
+      openDialog,
     };
   },
 });
@@ -90,16 +89,24 @@ export default defineComponent({
 
 <template>
   <div>
-    <q-btn
-      unelevated
-      round
-      :size="size"
-      :color="color"
-      @click.prevent="isDialogOpen = true"
-      data-cy="button-help"
-    >
-      <q-icon name="question_mark" color="white" data-cy="icon-help" />
-    </q-btn>
+    <slot name="button" :open-dialog="openDialog">
+      <!-- Default slot button -->
+      <q-btn
+        unelevated
+        round
+        size="15px"
+        color="white"
+        @click.prevent="openDialog"
+        data-cy="button-help"
+      >
+        <q-icon
+          name="svguse:/icons/custom.svg#question-mark"
+          size="38px"
+          color="primary"
+          data-cy="icon-help"
+        />
+      </q-btn>
+    </slot>
     <!-- Dialog -->
     <dialog-default
       no-padding
@@ -118,7 +125,7 @@ export default defineComponent({
           class="q-mr-sm"
           @click.prevent="setState('default')"
         >
-          <q-icon name="west" size="xs" color="black" />
+          <q-icon name="west" size="xs" color="primary" />
         </q-btn>
         <span v-if="activeState === 'default'">
           {{ $t('index.help.titleStateDefault') }}
@@ -151,7 +158,7 @@ export default defineComponent({
             <!-- Button: Replay guide -->
             <q-btn
               rounded
-              color="black"
+              color="primary"
               unelevated
               outline
               :label="$t('index.help.buttonGuide')"
@@ -170,7 +177,7 @@ export default defineComponent({
             <!-- Button: Switch to contact form -->
             <q-btn
               rounded
-              color="black"
+              color="primary"
               unelevated
               :label="$t('index.help.buttonContact')"
               class="q-mt-md"

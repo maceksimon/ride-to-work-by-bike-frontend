@@ -3,17 +3,45 @@ import { colors } from 'quasar';
 import HelpButton from '../global/HelpButton.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
-const grey10 = getPaletteColor('grey-10');
+const primary = getPaletteColor('primary');
 
-const rideToWorkByBikeConfig = JSON.parse(
-  process.env.RIDE_TO_WORK_BY_BIKE_CONFIG,
-);
-const colorPrimary = rideToWorkByBikeConfig.colorPrimary;
+// selectors
+const classSelectorQCard = '.q-card';
+const classSelectorQCardSection = '.q-card__section';
+const classSelectorQExpansionItem = '.q-expansion-item';
+const classSelectorQFieldControl = '.q-field__control';
+const classSelectorQFieldMessages = '.q-field__messages';
+const selectorButtonBackToHelp = 'button-back-to-help';
+const selectorButtonContact = 'button-contact';
+const selectorButtonGuide = 'button-guide';
+const selectorButtonHelp = 'button-help';
+const selectorContactFormEmail = 'contact-form-email';
+const selectorContactFormMessageInput = 'contact-form-message-input';
+const selectorContactFormMessage = 'contact-form-message';
+const selectorContactFormSubject = 'contact-form-subject';
+const selectorContactFormSubmit = 'contact-form-submit';
+const selectorCustomHelpButton = 'custom-help-button';
+const selectorDialogBody = 'dialog-body';
+const selectorDialogHeader = 'dialog-header';
+const selectorDialogHelp = 'dialog-help';
+const selectorIconHelp = 'icon-help';
+const selectorListFaqList = 'list-faq-list';
+const selectorTitleGuide = 'title-guide';
+const selectorTitleSent = 'title-sent';
+const selectorTextSent = 'text-sent';
 
+// variables
+const customButtonText = 'Custom help';
+const formContactEmail = 'test.user@example.com';
+const formContactMessage = 'what is the minimum distance to ride to work?';
+const helpButtonFontSize = '15px';
+const helpButtonSize = 45;
+const iconHelpSize = 38;
 const modalDialogWidth = 560;
-const userEmail = 'test.user@example.com';
+const paddingZero = '0px';
 
 describe('<HelpButton>', () => {
   it('has translation for all strings', () => {
@@ -23,334 +51,13 @@ describe('<HelpButton>', () => {
   context('button grey', () => {
     beforeEach(() => {
       cy.mount(HelpButton, {
-        props: {
-          color: 'grey-10',
-          size: '13px',
-        },
+        props: {},
       });
       cy.viewport('macbook-16');
     });
 
-    it('renders help button', () => {
-      cy.window().then(() => {
-        cy.dataCy('button-help')
-          .should('be.visible')
-          .and('have.css', 'font-size', '13px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.backgroundColor', grey10)
-          .and('have.css', 'border-radius', '50%') // round
-          .and('contain', 'question_mark');
-      });
-    });
-
-    it('renders help button with correct size', () => {
-      cy.dataCy('button-help').should('be.visible');
-      cy.dataCy('button-help').invoke('height').should('be.equal', 39);
-      cy.dataCy('button-help').invoke('width').should('be.equal', 39);
-    });
-
-    it('renders help icon', () => {
-      cy.dataCy('icon-help')
-        .should('contain', 'question_mark')
-        .and('have.color', white);
-      cy.dataCy('icon-help')
-        .invoke('height')
-        .should('be.gt', 22)
-        .and('be.lt', 24);
-      cy.dataCy('icon-help')
-        .invoke('width')
-        .should('be.gt', 22)
-        .and('be.lt', 24);
-    });
-  });
-
-  context('button primary', () => {
-    beforeEach(() => {
-      cy.mount(HelpButton, {
-        props: {
-          color: 'primary',
-          size: '13px',
-        },
-      });
-      cy.viewport('macbook-16');
-    });
-
-    it('renders help button', () => {
-      cy.window().then(() => {
-        cy.dataCy('button-help')
-          .should('be.visible')
-          .and('have.css', 'font-size', '13px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.backgroundColor', `${colorPrimary}`)
-          .and('have.css', 'border-radius', '50%'); // round
-        cy.dataCy('button-help').should('contain', 'question_mark');
-      });
-    });
-
-    it('renders help button with correct size', () => {
-      cy.dataCy('button-help').should('be.visible');
-      cy.dataCy('button-help').invoke('height').should('be.equal', 39);
-      cy.dataCy('button-help').invoke('width').should('be.equal', 39);
-    });
-
-    it('renders help icon', () => {
-      cy.dataCy('icon-help')
-        .should('contain', 'question_mark')
-        .and('have.color', white);
-      cy.dataCy('icon-help')
-        .invoke('height')
-        .should('be.gt', 22)
-        .and('be.lt', 24);
-      cy.dataCy('icon-help')
-        .invoke('width')
-        .should('be.gt', 22)
-        .and('be.lt', 24);
-    });
-  });
-
-  context('button small', () => {
-    beforeEach(() => {
-      cy.mount(HelpButton, {
-        props: {
-          color: 'grey-10',
-          size: '8px',
-        },
-      });
-      cy.viewport('macbook-16');
-    });
-
-    it('renders help button', () => {
-      cy.dataCy('button-help')
-        .should('be.visible')
-        .and('have.css', 'font-size', '8px')
-        .and('have.css', 'font-weight', '500')
-        .and('have.backgroundColor', grey10)
-        .and('have.css', 'border-radius', '50%'); // round
-      cy.dataCy('button-help').should('contain', 'question_mark');
-    });
-
-    it('renders help button with correct size', () => {
-      cy.dataCy('button-help').should('be.visible');
-      cy.dataCy('button-help').invoke('height').should('be.equal', 24);
-      cy.dataCy('button-help').invoke('width').should('be.equal', 24);
-    });
-
-    it('renders help icon', () => {
-      cy.dataCy('icon-help')
-        .should('contain', 'question_mark')
-        .and('have.color', white);
-      cy.dataCy('icon-help')
-        .invoke('height')
-        .should('be.gt', 12)
-        .and('be.lt', 14);
-      cy.dataCy('icon-help')
-        .invoke('width')
-        .should('be.gt', 12)
-        .and('be.lt', 14);
-    });
-  });
-
-  context('dialog', () => {
-    beforeEach(() => {
-      cy.mount(HelpButton, {
-        props: {
-          color: 'grey-10',
-          size: '13px',
-        },
-      });
-      cy.viewport('macbook-16');
-    });
-
-    it('shows modal dialog on click', () => {
-      cy.window().then(() => {
-        cy.dataCy('button-help').should('be.visible');
-        cy.dataCy('button-help').click();
-        cy.dataCy('dialog-help').should('be.visible');
-        cy.dataCy('dialog-body')
-          .should('be.visible')
-          .and('have.css', 'padding-left', '0px')
-          .and('have.css', 'padding-right', '0px')
-          .invoke('width')
-          .should('eq', modalDialogWidth);
-      });
-    });
-
-    it('renders modal title', () => {
-      cy.window().then(() => {
-        cy.dataCy('button-help').should('be.visible');
-        cy.dataCy('button-help').click();
-        cy.dataCy('dialog-header')
-          .find('h3')
-          .should('be.visible')
-          .and('have.css', 'font-size', '20px')
-          .and('have.css', 'font-weight', '500')
-          .and('contain', i18n.global.t('index.help.titleStateDefault'))
-          .then(($title) => {
-            expect($title.text()).to.equal(
-              i18n.global.t('index.help.titleStateDefault'),
-            );
-          });
-      });
-    });
-
-    it('renders guide section with title and button', () => {
-      cy.window().then(() => {
-        cy.dataCy('button-help').should('be.visible');
-        cy.dataCy('button-help').click();
-        // TODO: Find if you can calculate height exact height of the sections
-        cy.dataCy('dialog-body').scrollTo(0, 1060);
-        cy.dataCy('title-guide')
-          .should('be.visible')
-          .and('have.css', 'font-size', '24px')
-          .and('have.css', 'font-weight', '700')
-          .and('contain', i18n.global.t('index.help.titleGuide'))
-          .then(($title) => {
-            expect($title.text()).to.equal(
-              i18n.global.t('index.help.titleGuide'),
-            );
-          });
-        cy.dataCy('button-guide')
-          .should('be.visible')
-          .and('contain.text', i18n.global.t('index.help.buttonGuide'))
-          .then(($button) => {
-            expect($button.text()).to.equal(
-              i18n.global.t('index.help.buttonGuide'),
-            );
-          });
-      });
-    });
-
-    it('allows user to display help dialog and read all FAQ items', () => {
-      cy.dataCy('button-help').should('be.visible').click();
-      cy.dataCy('dialog-help').should('be.visible');
-      cy.dataCy('list-faq-list')
-        .find('.q-card')
-        .each(($element) => {
-          cy.wrap($element).should('not.be.visible');
-        });
-      cy.dataCy('list-faq-list')
-        .find('.q-expansion-item')
-        .each(($element) => {
-          cy.wrap($element).should('be.visible');
-          cy.wrap($element).click();
-          cy.wrap($element)
-            .find('.q-card__section')
-            .should('be.visible')
-            .and('not.be.empty');
-        });
-    });
-
-    it('allows user to display and submit contact form', () => {
-      cy.dataCy('button-help').should('be.visible').click();
-      cy.dataCy('dialog-help').should('be.visible');
-      cy.dataCy('dialog-body').scrollTo(0, 1200);
-      cy.dataCy('button-contact').should('be.visible').click();
-      // test width for contact form state
-      cy.dataCy('dialog-body')
-        .should('be.visible')
-        .and('have.css', 'padding-left', '0px')
-        .and('have.css', 'padding-right', '0px')
-        .invoke('width')
-        .should('eq', modalDialogWidth);
-      cy.dataCy('dialog-help').find('h3').should('be.visible');
-      cy.dataCy('contact-form-subject')
-        .find('input')
-        .should('be.visible')
-        .type('question');
-      cy.dataCy('contact-form-message-input')
-        .should('be.visible')
-        .type('what is the minimum distance to ride to work?');
-      cy.dataCy('contact-form-email')
-        .find('input')
-        .should('be.visible')
-        .type(userEmail);
-      cy.dataCy('contact-form-email').find('input').blur();
-      cy.dataCy('contact-form-submit').should('be.visible').click();
-      // should show success screen
-      cy.dataCy('title-sent')
-        .should('be.visible')
-        .and('have.css', 'font-size', '24px')
-        .and('have.css', 'font-weight', '700')
-        .and('contain', i18n.global.t('index.help.titleSent'));
-      cy.dataCy('text-sent')
-        .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '400')
-        .then(($el) => {
-          const textContent = $el.text();
-          cy.stripHtmlTags(
-            i18n.global.t('index.help.textSent', {
-              email: userEmail,
-            }),
-          ).then((text) => {
-            expect(textContent).to.contain(text);
-          });
-        });
-      cy.dataCy('button-back-to-help')
-        .should('be.visible')
-        .and('contain', i18n.global.t('index.help.buttonBackToHelp'));
-    });
-
-    it('validates contact form if there are errors', () => {
-      cy.dataCy('button-help').last().should('be.visible').click();
-      cy.dataCy('dialog-header').should('be.visible');
-      cy.dataCy('dialog-body').scrollTo(0, 1200);
-      cy.dataCy('button-contact').should('be.visible').click();
-      cy.dataCy('dialog-header').find('h3').should('be.visible');
-      cy.dataCy('dialog-body').scrollTo('bottom', { ensureScrollable: false });
-      cy.dataCy('contact-form-submit').should('be.visible').click();
-      cy.dataCy('contact-form-subject')
-        .find('.q-field__messages')
-        .should('be.visible')
-        .and(
-          'contain',
-          i18n.global.t('form.messageFieldRequired', {
-            fieldName: i18n.global.t('index.contact.subject'),
-          }),
-        );
-      cy.dataCy('contact-form-subject')
-        .find('.q-field__control')
-        .should('have.class', 'text-negative');
-      cy.dataCy('dialog-body').scrollTo('top', { ensureScrollable: false });
-      cy.dataCy('contact-form-subject')
-        .find('input')
-        .should('be.visible')
-        .type('question');
-      cy.dataCy('contact-form-subject').find('input').blur();
-      cy.dataCy('contact-form-subject')
-        .find('.q-field__messages')
-        .should('be.empty');
-      cy.dataCy('contact-form-subject')
-        .find('.q-field__control')
-        .should('not.have.class', 'text-negative');
-      cy.dataCy('dialog-body').scrollTo('bottom', { ensureScrollable: false });
-      cy.dataCy('contact-form-submit').should('be.visible').click();
-      cy.dataCy('dialog-body').scrollTo('top', { ensureScrollable: false });
-      cy.dataCy('contact-form-message')
-        .find('.q-field__messages')
-        .should('be.visible')
-        .and('contain', i18n.global.t('index.contact.messageRequired'));
-      cy.dataCy('contact-form-message')
-        .find('.q-field__control')
-        .should('have.class', 'text-negative');
-      cy.dataCy('contact-form-message-input')
-        .should('be.visible')
-        .type('what is the minimum distance to ride to work?');
-      cy.dataCy('dialog-body').scrollTo('bottom', { ensureScrollable: false });
-      cy.dataCy('contact-form-submit').should('be.visible').click();
-      cy.dataCy('contact-form-email')
-        .find('.q-field__messages')
-        .should('be.visible')
-        .and(
-          'contain',
-          i18n.global.t('form.messageFieldRequired', {
-            fieldName: i18n.global.t('form.labelEmail'),
-          }),
-        );
-      cy.dataCy('contact-form-email')
-        .find('.q-field__control')
-        .should('have.class', 'text-negative');
-    });
+    defaultButtonTests();
+    modalTests();
   });
 
   context('mobile', () => {
@@ -360,5 +67,263 @@ describe('<HelpButton>', () => {
       });
       cy.viewport('iphone-6');
     });
+
+    defaultButtonTests();
+    modalTests();
+  });
+
+  // Add this new context after the existing contexts
+  context('custom button slot', () => {
+    beforeEach(() => {
+      cy.mount(HelpButton, {
+        slots: {
+          button: `
+            <button @click.prevent="openDialog" data-cy="${selectorCustomHelpButton}">${customButtonText}</button>
+          `,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('renders and functions with a custom button in the slot', () => {
+      // custom button
+      cy.dataCy(selectorCustomHelpButton)
+        .should('be.visible')
+        .and('contain.text', customButtonText);
+      // default button not rendered
+      cy.dataCy(selectorButtonHelp).should('not.exist');
+      // opens dialog
+      cy.dataCy(selectorCustomHelpButton).click();
+      cy.dataCy(selectorDialogHelp).should('be.visible');
+      // dialog content
+      cy.dataCy(selectorDialogHeader)
+        .find('h3')
+        .should('be.visible')
+        .and('contain', i18n.global.t('index.help.titleStateDefault'));
+    });
   });
 });
+
+function defaultButtonTests() {
+  it('renders help button', () => {
+    cy.window().then(() => {
+      cy.dataCy(selectorButtonHelp)
+        .should('be.visible')
+        .and('have.css', 'font-size', helpButtonFontSize)
+        .and('have.css', 'font-weight', '500')
+        .and('have.backgroundColor', white)
+        .and('have.css', 'border-radius', '50%');
+      cy.dataCy(selectorButtonHelp)
+        .invoke('height')
+        .should('be.equal', helpButtonSize);
+      cy.dataCy(selectorButtonHelp)
+        .invoke('width')
+        .should('be.equal', helpButtonSize);
+    });
+  });
+
+  it('renders help icon', () => {
+    cy.dataCy(selectorIconHelp).and('have.color', primary);
+    cy.dataCy(selectorIconHelp).invoke('height').should('be.eq', iconHelpSize);
+    cy.dataCy(selectorIconHelp).invoke('width').should('be.eq', iconHelpSize);
+  });
+}
+
+function modalTests() {
+  it('shows modal dialog on click', () => {
+    cy.window().then(() => {
+      cy.dataCy(selectorButtonHelp).should('be.visible');
+      cy.dataCy(selectorButtonHelp).click();
+      cy.dataCy(selectorDialogHelp).should('be.visible');
+      cy.dataCy(selectorDialogBody)
+        .should('be.visible')
+        .and('have.css', 'padding-left', paddingZero)
+        .and('have.css', 'padding-right', paddingZero)
+        .invoke('width')
+        .should('be.lte', modalDialogWidth);
+    });
+  });
+
+  it('renders modal title', () => {
+    cy.window().then(() => {
+      cy.dataCy(selectorButtonHelp).should('be.visible');
+      cy.dataCy(selectorButtonHelp).click();
+      cy.dataCy(selectorDialogHeader)
+        .find('h3')
+        .should('be.visible')
+        .and('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('contain', i18n.global.t('index.help.titleStateDefault'))
+        .then(($title) => {
+          expect($title.text()).to.equal(
+            i18n.global.t('index.help.titleStateDefault'),
+          );
+        });
+    });
+  });
+
+  it('renders guide section with title and button', () => {
+    cy.window().then(() => {
+      cy.dataCy(selectorButtonHelp).should('be.visible');
+      cy.dataCy(selectorButtonHelp).click();
+      // TODO: Find if you can calculate height exact height of the sections
+      cy.dataCy(selectorDialogBody).scrollTo(0, 1060);
+      cy.dataCy(selectorTitleGuide)
+        .should('be.visible')
+        .and('have.css', 'font-size', '24px')
+        .and('have.css', 'font-weight', '700')
+        .and('contain', i18n.global.t('index.help.titleGuide'))
+        .then(($title) => {
+          expect($title.text()).to.equal(
+            i18n.global.t('index.help.titleGuide'),
+          );
+        });
+      cy.dataCy(selectorButtonGuide)
+        .should('be.visible')
+        .and('contain.text', i18n.global.t('index.help.buttonGuide'))
+        .then(($button) => {
+          expect($button.text()).to.equal(
+            i18n.global.t('index.help.buttonGuide'),
+          );
+        });
+    });
+  });
+
+  it('allows user to display help dialog and read all FAQ items', () => {
+    cy.dataCy(selectorButtonHelp).should('be.visible').click();
+    cy.dataCy(selectorDialogHelp).should('be.visible');
+    cy.dataCy(selectorListFaqList)
+      .find(classSelectorQCard)
+      .each(($element) => {
+        cy.wrap($element).should('not.be.visible');
+      });
+    cy.dataCy(selectorListFaqList)
+      .find(classSelectorQExpansionItem)
+      .each(($element) => {
+        cy.wrap($element).should('be.visible');
+        cy.wrap($element).click();
+        cy.wrap($element)
+          .find(classSelectorQCardSection)
+          .should('be.visible')
+          .and('not.be.empty');
+      });
+  });
+
+  it('allows user to display and submit contact form', () => {
+    cy.dataCy(selectorButtonHelp).should('be.visible').click();
+    cy.dataCy(selectorDialogHelp).should('be.visible');
+    cy.dataCy(selectorDialogBody).scrollTo(0, 1200);
+    cy.dataCy(selectorButtonContact).should('be.visible').click();
+    // test width for contact form state
+    cy.dataCy(selectorDialogBody)
+      .should('be.visible')
+      .and('have.css', 'padding-left', paddingZero)
+      .and('have.css', 'padding-right', paddingZero)
+      .invoke('width')
+      .should('be.lte', modalDialogWidth);
+    cy.dataCy(selectorDialogHelp).find('h3').should('be.visible');
+    cy.dataCy(selectorContactFormSubject)
+      .find('input')
+      .should('be.visible')
+      .type('question');
+    cy.dataCy(selectorContactFormMessageInput)
+      .should('be.visible')
+      .type(formContactMessage);
+    cy.dataCy(selectorContactFormEmail)
+      .find('input')
+      .should('be.visible')
+      .type(formContactEmail);
+    cy.dataCy(selectorContactFormEmail).find('input').blur();
+    cy.dataCy(selectorContactFormSubmit).should('be.visible').click();
+    // should show success screen
+    cy.dataCy(selectorTitleSent)
+      .should('be.visible')
+      .and('have.css', 'font-size', '24px')
+      .and('have.css', 'font-weight', '700')
+      .and('contain', i18n.global.t('index.help.titleSent'));
+    cy.dataCy(selectorTextSent)
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '400')
+      .then(($el) => {
+        const textContent = $el.text();
+        cy.stripHtmlTags(
+          i18n.global.t('index.help.textSent', {
+            email: formContactEmail,
+          }),
+        ).then((text) => {
+          expect(textContent).to.contain(text);
+        });
+      });
+    cy.dataCy(selectorButtonBackToHelp)
+      .should('be.visible')
+      .and('contain', i18n.global.t('index.help.buttonBackToHelp'));
+  });
+
+  it('validates contact form if there are errors', () => {
+    cy.dataCy(selectorButtonHelp).last().should('be.visible').click();
+    cy.dataCy(selectorDialogHeader).should('be.visible');
+    cy.dataCy(selectorDialogBody).scrollTo(0, 1200);
+    cy.dataCy(selectorButtonContact).should('be.visible').click();
+    cy.dataCy(selectorDialogHeader).find('h3').should('be.visible');
+    cy.dataCy(selectorDialogBody).scrollTo('bottom', {
+      ensureScrollable: false,
+    });
+    cy.dataCy(selectorContactFormSubmit).should('be.visible').click();
+    cy.dataCy(selectorContactFormSubject)
+      .find(classSelectorQFieldMessages)
+      .should('be.visible')
+      .and(
+        'contain',
+        i18n.global.t('form.messageFieldRequired', {
+          fieldName: i18n.global.t('index.contact.subject'),
+        }),
+      );
+    cy.dataCy(selectorContactFormSubject)
+      .find(classSelectorQFieldControl)
+      .should('have.class', 'text-negative');
+    cy.dataCy(selectorDialogBody).scrollTo('top', { ensureScrollable: false });
+    cy.dataCy(selectorContactFormSubject)
+      .find('input')
+      .should('be.visible')
+      .type('question');
+    cy.dataCy(selectorContactFormSubject).find('input').blur();
+    cy.dataCy(selectorContactFormSubject)
+      .find(classSelectorQFieldMessages)
+      .should('be.empty');
+    cy.dataCy(selectorContactFormSubject)
+      .find(classSelectorQFieldControl)
+      .should('not.have.class', 'text-negative');
+    cy.dataCy(selectorDialogBody).scrollTo('bottom', {
+      ensureScrollable: false,
+    });
+    cy.dataCy(selectorContactFormSubmit).should('be.visible').click();
+    cy.dataCy(selectorDialogBody).scrollTo('top', { ensureScrollable: false });
+    cy.dataCy(selectorContactFormMessage)
+      .find(classSelectorQFieldMessages)
+      .should('be.visible')
+      .and('contain', i18n.global.t('index.contact.messageRequired'));
+    cy.dataCy(selectorContactFormMessage)
+      .find(classSelectorQFieldControl)
+      .should('have.class', 'text-negative');
+    cy.dataCy(selectorContactFormMessageInput)
+      .should('be.visible')
+      .type(formContactMessage);
+    cy.dataCy(selectorDialogBody).scrollTo('bottom', {
+      ensureScrollable: false,
+    });
+    cy.dataCy(selectorContactFormSubmit).should('be.visible').click();
+    cy.dataCy(selectorContactFormEmail)
+      .find(classSelectorQFieldMessages)
+      .should('be.visible')
+      .and(
+        'contain',
+        i18n.global.t('form.messageFieldRequired', {
+          fieldName: i18n.global.t('form.labelEmail'),
+        }),
+      );
+    cy.dataCy(selectorContactFormEmail)
+      .find(classSelectorQFieldControl)
+      .should('have.class', 'text-negative');
+  });
+}

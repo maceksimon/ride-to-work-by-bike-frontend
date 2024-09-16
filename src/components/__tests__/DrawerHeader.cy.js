@@ -1,12 +1,21 @@
 import { colors } from 'quasar';
-
 import DrawerHeader from '../global/DrawerHeader.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
 const { getPaletteColor } = colors;
 const black = getPaletteColor('black');
 const white = getPaletteColor('white');
-const grey10 = getPaletteColor('grey-10');
+const primary = getPaletteColor('primary');
+
+// selectors
+const selectorButtonHelp = 'button-help';
+const selectorIconHelp = 'icon-help';
+const selectorIconNotification = 'icon-notification';
+
+// variables
+const buttonSize = 24;
+const iconSize = 18;
 
 describe('<DrawerHeader>', () => {
   beforeEach(() => {
@@ -55,39 +64,39 @@ describe('<DrawerHeader>', () => {
   });
 
   it('renders help button', () => {
-    cy.dataCy('button-help')
+    // button
+    cy.dataCy(selectorButtonHelp)
       .should('be.visible')
-      .and('have.css', 'font-size', '8px')
       .and('have.css', 'font-weight', '500')
-      .and('have.backgroundColor', grey10)
-      .and('have.css', 'border-radius', '50%'); // round
-    cy.dataCy('button-help').should('contain', 'question_mark');
-  });
-
-  it('renders help button with correct size', () => {
-    cy.dataCy('button-help').should('be.visible');
-    cy.dataCy('button-help').invoke('height').should('be.equal', 24);
-    cy.dataCy('button-help').invoke('width').should('be.equal', 24);
+      .and('have.backgroundColor', primary)
+      .and('have.css', 'border-radius', '50%');
+    // button size
+    cy.dataCy(selectorButtonHelp)
+      .invoke('height')
+      .should('be.equal', buttonSize);
+    cy.dataCy(selectorButtonHelp)
+      .invoke('width')
+      .should('be.equal', buttonSize);
   });
 
   it('renders help icon', () => {
-    cy.dataCy('icon-help')
-      .should('contain', 'question_mark')
-      .and('have.color', white);
-    cy.dataCy('icon-help')
-      .invoke('height')
-      .should('be.gt', 12)
-      .and('be.lt', 14);
-    cy.dataCy('icon-help').invoke('width').should('be.gt', 12).and('be.lt', 14);
+    cy.dataCy(selectorIconHelp).and('have.color', white);
+    cy.dataCy(selectorIconHelp).invoke('height').should('be.equal', iconSize);
+    cy.dataCy(selectorIconHelp).invoke('width').should('be.equal', iconSize);
   });
 
   it('renders notifications icon', () => {
     cy.window().then(() => {
-      cy.dataCy('icon-notification')
+      cy.dataCy(selectorIconNotification)
         .should('be.visible')
         .and('have.color', black)
-        .and('have.css', 'width', '24px')
         .and('contain.text', 'notifications');
+      cy.dataCy(selectorIconNotification)
+        .invoke('height')
+        .should('be.equal', iconSize);
+      cy.dataCy(selectorIconNotification)
+        .invoke('width')
+        .should('be.equal', iconSize);
     });
   });
 
