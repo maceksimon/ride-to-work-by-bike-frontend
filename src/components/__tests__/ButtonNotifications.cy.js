@@ -14,6 +14,7 @@ const selectorNotificationsDialog = 'notifications-dialog';
 const selectorNotificationsTitle = 'notifications-title';
 const selectorNotificationsCountBadgeDialog =
   'notifications-count-badge-dialog';
+const selectorNoUnreadNotifications = 'no-unread-notifications';
 const selectorNotificationsHistoryButton = 'notifications-history-button';
 const selectorMarkAllReadButton = 'mark-all-read-button';
 const selectorNotificationsList = 'notifications-list';
@@ -34,7 +35,16 @@ describe('<ButtonNotifications>', () => {
   });
 
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      [
+        'buttonMarkAllAsRead',
+        'buttonNotificationHistory',
+        'dialogTitle',
+        'textNoUnreadNotifications',
+      ],
+      'notifications',
+      i18n,
+    );
   });
 
   context('desktop', () => {
@@ -138,6 +148,15 @@ describe('<ButtonNotifications>', () => {
       // badges are not visible
       cy.dataCy(selectorNotificationsCountBadge).should('not.exist');
       cy.dataCy(selectorNotificationsCountBadgeDialog).should('not.exist');
+      // mark all as read button is not visible
+      cy.dataCy(selectorMarkAllReadButton).should('not.exist');
+      // empty state is visible
+      cy.dataCy(selectorNoUnreadNotifications)
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('notifications.textNoUnreadNotifications'),
+        );
     });
 
     it('renders notification history button with correct href', () => {

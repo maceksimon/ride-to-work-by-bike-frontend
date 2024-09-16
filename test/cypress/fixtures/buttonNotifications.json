@@ -19,7 +19,7 @@
     "mark_as_unread": "Mark as unread",
     "id": 2,
     "level": "success",
-    "unread": false,
+    "unread": true,
     "deleted": false,
     "verb": "Challenge completed",
     "description": "Congratulations! You've completed the weekly challenge.",

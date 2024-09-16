@@ -133,9 +133,9 @@ export default defineComponent({
     >
       <template #title>
         <div class="flex items-center justify-between gap-4">
-          <div>
+          <div class="flex items-center justify-between">
             <h3
-              class="text-h6 text-weight-normal text-grey-10"
+              class="text-h6 text-weight-normal text-grey-10 q-my-none"
               data-cy="notifications-title"
             >
               {{ $t('notifications.dialogTitle') }}
@@ -162,74 +162,80 @@ export default defineComponent({
         </div>
       </template>
       <template #content>
-        <div>
-          <div>
-            <q-btn
-              flat
-              color="primary"
-              @click="markAllAsRead"
-              data-cy="mark-all-read-button"
-            >
-              {{ $t('notifications.buttonMarkAllAsRead') }}
-            </q-btn>
-          </div>
-          <q-list bordered data-cy="notifications-list">
-            <q-item
-              v-for="notification in notificationsUnread"
-              :key="notification.id"
-              class="q-my-sm"
-              clickable
-              v-ripple
-              :data-cy="`notification-item-${notification.id}`"
-            >
-              <q-item-section avatar>
-                <q-avatar
-                  v-if="notification.data.icon"
-                  color="primary"
-                  text-color="white"
-                  :data-cy="`notification-icon-${notification.id}`"
-                >
-                  <q-icon :name="notification.data.icon" />
-                </q-avatar>
-              </q-item-section>
-
-              <q-item-section>
-                <q-item-label
-                  v-if="notification.verb"
-                  :data-cy="`notification-verb-${notification.id}`"
-                >
-                  {{ notification.verb }}
-                </q-item-label>
-                <q-item-label
-                  v-if="notification.description"
-                  caption
-                  lines="1"
-                  :data-cy="`notification-timestamp-${notification.id}`"
-                >
-                  {{ formatDateTimeLabel(notification.timestamp) }}
-                </q-item-label>
-              </q-item-section>
-
-              <q-item-section side>
-                <q-btn
-                  round
-                  flat
-                  size="sm"
-                  :outline="!notification.unread"
-                  :disabled="!notification.unread"
-                  color="primary"
-                  :icon="
-                    notification.unread
-                      ? 'mdi-email-check-outline'
-                      : 'mdi-email-open-outline'
-                  "
-                  @click.stop="markAsRead(notification)"
-                  :data-cy="`notification-state-icon-${notification.id}`"
-                />
-              </q-item-section>
-            </q-item>
-          </q-list>
+        <div
+          v-if="notificationsUnreadCount > 0"
+          class="flex items-center justify-end q-px-md"
+        >
+          <q-btn
+            flat
+            color="primary"
+            @click="markAllAsRead"
+            data-cy="mark-all-read-button"
+          >
+            {{ $t('notifications.buttonMarkAllAsRead') }}
+          </q-btn>
         </div>
+        <div v-else class="q-px-md" data-cy="no-unread-notifications">
+          <p class="text-grey-10 q-my-sm">
+            {{ $t('notifications.textNoUnreadNotifications') }}
+          </p>
+        </div>
+        <q-list data-cy="notifications-list">
+          <q-item
+            v-for="notification in notificationsUnread"
+            :key="notification.id"
+            class="q-my-sm"
+            clickable
+            v-ripple
+            :data-cy="`notification-item-${notification.id}`"
+          >
+            <q-item-section avatar>
+              <q-avatar
+                v-if="notification.data.icon"
+                color="primary"
+                text-color="white"
+                :data-cy="`notification-icon-${notification.id}`"
+              >
+                <q-icon :name="notification.data.icon" />
+              </q-avatar>
+            </q-item-section>
+
+            <q-item-section>
+              <q-item-label
+                v-if="notification.verb"
+                :data-cy="`notification-verb-${notification.id}`"
+              >
+                {{ notification.verb }}
+              </q-item-label>
+              <q-item-label
+                v-if="notification.description"
+                caption
+                lines="1"
+                :data-cy="`notification-timestamp-${notification.id}`"
+              >
+                {{ formatDateTimeLabel(notification.timestamp) }}
+              </q-item-label>
+            </q-item-section>
+
+            <q-item-section side>
+              <q-btn
+                round
+                flat
+                size="sm"
+                :outline="!notification.unread"
+                :disabled="!notification.unread"
+                color="primary"
+                :icon="
+                  notification.unread
+                    ? 'mdi-email-check-outline'
+                    : 'mdi-email-open-outline'
+                "
+                @click.stop="markAsRead(notification)"
+                :data-cy="`notification-state-icon-${notification.id}`"
+              />
+            </q-item-section>
+          </q-item>
+        </q-list>
       </template>
     </dialog-default>
   </div>

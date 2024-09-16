@@ -438,10 +438,6 @@ buttonFacebook = "Přihlásit přes Google"
 title = "Zaznamenávejte si jízdy z mobilu!"
 description = "Stáhněte si appku a zapisujte jízdy odkudkoliv."
 
-[notify]
-voucherApplySuccess = "Voucher byl úspěšně uplatněn"
-voucherApplyError = "Neplatný voucher"
-
 [notifications]
 buttonMarkAllAsRead = "Označit vše jako přečtené"
 buttonNotificationHistory = "Historie notifikací"
@@ -453,7 +449,11 @@ labelState = "Stav"
 labelTitle = "Notifikace"
 labelUnread = "Nepřečteno"
 labelMarkAllAsRead = "Označit vše jako přečtené"
+textNoUnreadNotifications = "Nemáte žádné nepřečtené notifikace"
 
+[notify]
+voucherApplySuccess = "Voucher byl úspěšně uplatněn"
+voucherApplyError = "Neplatný voucher"
 
 [offer]
 titleOfferValidation = "Pro využití se stačí na místě prokázat:"
