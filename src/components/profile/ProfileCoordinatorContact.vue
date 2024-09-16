@@ -46,8 +46,7 @@ export default defineComponent({
 <template>
   <div
     v-if="coordinator"
-    class="text-grey-10"
-    :class="[$q.screen.gt.sm ? 'q-pa-lg' : 'q-pa-md']"
+    class="text-grey-10 q-pa-lg"
     data-cy="profile-coordinator-contact"
     :style="{ border: `1px solid ${borderColor}`, borderRadius }"
   >
@@ -58,7 +57,7 @@ export default defineComponent({
       />
     </div>
     <div class="flex items-center gap-12 q-mt-md">
-      <q-avatar data-cy="coordinator-avatar" :size="avatarSize">
+      <q-avatar :size="avatarSize" data-cy="coordinator-avatar">
         <q-img
           ratio="1"
           :src="coordinator.image.src"
