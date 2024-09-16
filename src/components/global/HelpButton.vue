@@ -78,10 +78,10 @@ export default defineComponent({
       activeState,
       isDialogOpen,
       userEmail,
-      reset,
-      setState,
       onFormSubmit,
       openDialog,
+      reset,
+      setState,
     };
   },
 });
