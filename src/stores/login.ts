@@ -13,7 +13,8 @@ import { routesConf } from '../router/routes_conf';
 import type { Logger } from '../components/types/Logger';
 
 interface LoginResponse {
-  key: string;
+  access: string;
+  refresh: string;
 }
 
 interface User {
@@ -32,20 +33,25 @@ export const useLoginStore = defineStore('login', {
   state: () => ({
     user: emptyUser,
     logger: null as Logger | null,
-    token: '',
+    accessToken: '',
+    refreshToken: '',
   }),
 
   getters: {
     getUser: (state): User => state.user,
-    getToken: (state): string => state.token,
+    getAccessToken: (state): string => state.accessToken,
+    getRefreshToken: (state): string => state.refreshToken,
   },
 
   actions: {
     setUser(user: User): void {
       Object.assign(this.user, user);
     },
-    setToken(token: string): void {
-      this.token = token;
+    setAccessToken(token: string): void {
+      this.accessToken = token;
+    },
+    setRefreshToken(token: string): void {
+      this.refreshToken = token;
     },
     setLogger(logger: Logger): void {
       this.logger = logger;
@@ -83,12 +89,22 @@ export const useLoginStore = defineStore('login', {
         translationKey: 'login',
         logger: this.logger,
       });
-      // set token
-      if (data && data.key) {
-        this.setToken(data.key);
+      // set tokens
+      if (data && data.access && data.refresh) {
+        this.setAccessToken(data.access);
+        this.setRefreshToken(data.refresh);
       }
 
       return data;
+    },
+    /**
+     * Logout user
+     * Sets the access token, refresh token and user to empty values.
+     */
+    logout(): void {
+      this.setAccessToken('');
+      this.setRefreshToken('');
+      this.setUser(emptyUser);
     },
   },
 
