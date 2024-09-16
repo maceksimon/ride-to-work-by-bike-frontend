@@ -443,6 +443,9 @@ voucherApplySuccess = "Voucher byl úspěšně uplatněn"
 voucherApplyError = "Neplatný voucher"
 
 [notifications]
+buttonMarkAllAsRead = "Označit vše jako přečtené"
+buttonNotificationHistory = "Historie notifikací"
+dialogTitle = "Notifikace"
 labelAction = "Akce"
 labelDate = "Datum"
 labelRead = "Přečteno"
@@ -450,6 +453,7 @@ labelState = "Stav"
 labelTitle = "Notifikace"
 labelUnread = "Nepřečteno"
 labelMarkAllAsRead = "Označit vše jako přečtené"
+
 
 [offer]
 titleOfferValidation = "Pro využití se stačí na místě prokázat:"

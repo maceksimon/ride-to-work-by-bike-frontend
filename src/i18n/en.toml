@@ -440,6 +440,9 @@ voucherApplySuccess = "Voucher successfully redeemed"
 voucherApplyError = "Invalid voucher"
 
 [notifications]
+buttonMarkAllAsRead = "Mark all as read"
+buttonNotificationHistory = "Notification history"
+dialogTitle = "Notifications"
 labelAction = "Action"
 labelDate = "Date"
 labelRead = "Read"

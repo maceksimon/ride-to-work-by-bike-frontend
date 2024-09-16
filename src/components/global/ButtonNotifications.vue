@@ -28,7 +28,7 @@
  */
 
 // libraries
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 
 // components
 import DialogDefault from './DialogDefault.vue';
@@ -39,14 +39,26 @@ import { useFormatDate } from '../../composables/useFormatDate';
 // config
 import { routesConf } from '../../router/routes_conf';
 
+// fixtures
+import notificationFixture from '../../../test/cypress/fixtures/buttonNotifications.json';
+
+// types
+import type { Notification } from '../types/Notifications';
+
 export default defineComponent({
   name: 'ButtonNotifications',
   components: {
     DialogDefault,
   },
   setup() {
-    const notificationsCount = ref(2);
-    const isDialogOpen = ref(false);
+    const notifications = ref<Notification[]>(notificationFixture);
+    const notificationsUnread = computed<Notification[]>(() =>
+      notifications.value.filter((notification) => notification.unread),
+    );
+    const notificationsUnreadCount = computed<number>(
+      () => notificationsUnread.value.length,
+    );
+    const isDialogOpen = ref<boolean>(false);
 
     const { formatDateTimeLabel } = useFormatDate();
 
@@ -54,17 +66,30 @@ export default defineComponent({
       isDialogOpen.value = true;
     };
 
+    const markAsRead = (notification: Notification): void => {
+      notification.unread = false;
+    };
+
     const markAllAsRead = (): void => {
-      notificationsCount.value = 0;
+      notificationsUnread.value.forEach((notification) => {
+        notification.unread = false;
+      });
+    };
+
+    const openNotification = (): void => {
+      // implement
     };
 
     return {
       formatDateTimeLabel,
       isDialogOpen,
-      notificationsCount,
-      openDialog,
-      routesConf,
       markAllAsRead,
+      markAsRead,
+      notificationsUnread,
+      notificationsUnreadCount,
+      openDialog,
+      openNotification,
+      routesConf,
     };
   },
 });
@@ -80,22 +105,23 @@ export default defineComponent({
         color="primary"
         size="8px"
         @click.prevent="openDialog"
-        data-cy="button-help"
+        data-cy="button-notifications"
       >
         <q-badge
           floating
           rounded
-          v-if="notificationsCount > 0"
+          v-if="notificationsUnreadCount > 0"
           color="red"
           style="z-index: 1"
+          data-cy="notifications-count-badge"
         >
-          {{ notificationsCount }}
+          {{ notificationsUnreadCount }}
         </q-badge>
         <q-icon
           name="svguse:/icons/custom.svg#bell"
           size="18px"
           color="white"
-          data-cy="icon-help"
+          data-cy="notifications-icon"
         />
       </q-btn>
     </slot>
@@ -103,22 +129,32 @@ export default defineComponent({
       no-padding
       v-model="isDialogOpen"
       min-width="0"
-      data-cy="dialog-help"
+      data-cy="notifications-dialog"
     >
       <template #title>
         <div class="flex items-center justify-between gap-4">
           <div>
-            <h3 class="text-weight-bold text-grey-10">
-              {{ $t('notifications.title') }}
+            <h3
+              class="text-h6 text-weight-normal text-grey-10"
+              data-cy="notifications-title"
+            >
+              {{ $t('notifications.dialogTitle') }}
             </h3>
-            <q-badge v-if="notificationsCount > 0" color="red" class="q-ml-md">
-              {{ notificationsCount }}
+            <q-badge
+              v-if="notificationsUnreadCount > 0"
+              color="red"
+              class="q-ml-md"
+              data-cy="notifications-count-badge-dialog"
+            >
+              {{ notificationsUnreadCount }}
             </q-badge>
           </div>
           <div>
             <q-btn
               flat
+              color="primary"
               :to="routesConf['profile_notifications'].children.fullPath"
+              data-cy="notifications-history-button"
             >
               {{ $t('notifications.buttonNotificationHistory') }}
             </q-btn>
@@ -128,44 +164,68 @@ export default defineComponent({
       <template #content>
         <div>
           <div>
-            <q-btn flat color="primary" @click="markAllAsRead">
+            <q-btn
+              flat
+              color="primary"
+              @click="markAllAsRead"
+              data-cy="mark-all-read-button"
+            >
               {{ $t('notifications.buttonMarkAllAsRead') }}
             </q-btn>
           </div>
-          <q-list bordered>
+          <q-list bordered data-cy="notifications-list">
             <q-item
-              v-for="notification in notifications"
+              v-for="notification in notificationsUnread"
               :key="notification.id"
               class="q-my-sm"
               clickable
               v-ripple
+              :data-cy="`notification-item-${notification.id}`"
             >
               <q-item-section avatar>
                 <q-avatar
                   v-if="notification.data.icon"
                   color="primary"
                   text-color="white"
+                  :data-cy="`notification-icon-${notification.id}`"
                 >
                   <q-icon :name="notification.data.icon" />
                 </q-avatar>
               </q-item-section>
 
               <q-item-section>
-                <q-item-label v-if="notification.verb">{{
-                  notification.verb
-                }}</q-item-label>
+                <q-item-label
+                  v-if="notification.verb"
+                  :data-cy="`notification-verb-${notification.id}`"
+                >
+                  {{ notification.verb }}
+                </q-item-label>
                 <q-item-label
                   v-if="notification.description"
                   caption
                   lines="1"
-                  >{{
-                    formatDateTimeLabel(notification.timestamp)
-                  }}</q-item-label
+                  :data-cy="`notification-timestamp-${notification.id}`"
                 >
+                  {{ formatDateTimeLabel(notification.timestamp) }}
+                </q-item-label>
               </q-item-section>
 
               <q-item-section side>
-                <q-icon name="chat_bubble" color="green" />
+                <q-btn
+                  round
+                  flat
+                  size="sm"
+                  :outline="!notification.unread"
+                  :disabled="!notification.unread"
+                  color="primary"
+                  :icon="
+                    notification.unread
+                      ? 'mdi-email-check-outline'
+                      : 'mdi-email-open-outline'
+                  "
+                  @click.stop="markAsRead(notification)"
+                  :data-cy="`notification-state-icon-${notification.id}`"
+                />
               </q-item-section>
             </q-item>
           </q-list>

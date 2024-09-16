@@ -46,7 +46,7 @@ export const useFormatDate = () => {
       case TimeState.PAST7DAYS:
         return labelPast7Days({ timeStamp });
       case TimeState.PAST:
-        return date.formatDate(timeStamp, 'D. MMM., HH:mm');
+        return date.formatDate(timeStamp, 'D. MMM, HH:mm');
       default:
         return '';
     }
