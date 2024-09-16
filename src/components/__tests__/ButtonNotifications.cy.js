@@ -1,6 +1,9 @@
 import ButtonNotifications from 'components/global/ButtonNotifications.vue';
 import { i18n } from '../../boot/i18n';
 
+// selectors
+const selectorButtonNotifications = 'button-notifications';
+
 describe('<ButtonNotifications>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'index.component', i18n);
@@ -31,6 +34,6 @@ describe('<ButtonNotifications>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.dataCy('component').should('be.visible');
+    cy.dataCy(selectorButtonNotifications).should('be.visible');
   });
 }

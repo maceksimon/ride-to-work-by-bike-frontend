@@ -28,10 +28,16 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 // components
 import DialogDefault from './DialogDefault.vue';
+
+// composables
+import { useFormatDate } from '../../composables/useFormatDate';
+
+// config
+import { routesConf } from '../../router/routes_conf';
 
 export default defineComponent({
   name: 'ButtonNotifications',
@@ -39,17 +45,26 @@ export default defineComponent({
     DialogDefault,
   },
   setup() {
+    const notificationsCount = ref(2);
     const isDialogOpen = ref(false);
-    const hasNotifications = ref(true);
+
+    const { formatDateTimeLabel } = useFormatDate();
 
     const openDialog = (): void => {
       isDialogOpen.value = true;
     };
 
+    const markAllAsRead = (): void => {
+      notificationsCount.value = 0;
+    };
+
     return {
-      hasNotifications,
+      formatDateTimeLabel,
       isDialogOpen,
+      notificationsCount,
       openDialog,
+      routesConf,
+      markAllAsRead,
     };
   },
 });
@@ -67,6 +82,15 @@ export default defineComponent({
         @click.prevent="openDialog"
         data-cy="button-help"
       >
+        <q-badge
+          floating
+          rounded
+          v-if="notificationsCount > 0"
+          color="red"
+          style="z-index: 1"
+        >
+          {{ notificationsCount }}
+        </q-badge>
         <q-icon
           name="svguse:/icons/custom.svg#bell"
           size="18px"
@@ -81,8 +105,72 @@ export default defineComponent({
       min-width="0"
       data-cy="dialog-help"
     >
-      <template #title> </template>
-      <template #content> </template>
+      <template #title>
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <h3 class="text-weight-bold text-grey-10">
+              {{ $t('notifications.title') }}
+            </h3>
+            <q-badge v-if="notificationsCount > 0" color="red" class="q-ml-md">
+              {{ notificationsCount }}
+            </q-badge>
+          </div>
+          <div>
+            <q-btn
+              flat
+              :to="routesConf['profile_notifications'].children.fullPath"
+            >
+              {{ $t('notifications.buttonNotificationHistory') }}
+            </q-btn>
+          </div>
+        </div>
+      </template>
+      <template #content>
+        <div>
+          <div>
+            <q-btn flat color="primary" @click="markAllAsRead">
+              {{ $t('notifications.buttonMarkAllAsRead') }}
+            </q-btn>
+          </div>
+          <q-list bordered>
+            <q-item
+              v-for="notification in notifications"
+              :key="notification.id"
+              class="q-my-sm"
+              clickable
+              v-ripple
+            >
+              <q-item-section avatar>
+                <q-avatar
+                  v-if="notification.data.icon"
+                  color="primary"
+                  text-color="white"
+                >
+                  <q-icon :name="notification.data.icon" />
+                </q-avatar>
+              </q-item-section>
+
+              <q-item-section>
+                <q-item-label v-if="notification.verb">{{
+                  notification.verb
+                }}</q-item-label>
+                <q-item-label
+                  v-if="notification.description"
+                  caption
+                  lines="1"
+                  >{{
+                    formatDateTimeLabel(notification.timestamp)
+                  }}</q-item-label
+                >
+              </q-item-section>
+
+              <q-item-section side>
+                <q-icon name="chat_bubble" color="green" />
+              </q-item-section>
+            </q-item>
+          </q-list>
+        </div>
+      </template>
     </dialog-default>
   </div>
 </template>
