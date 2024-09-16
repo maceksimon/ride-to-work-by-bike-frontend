@@ -83,7 +83,7 @@ export default defineComponent({
             round
             color="primary"
             size="8px"
-            @click="openDialog"
+            @click.prevent="openDialog"
             data-cy="button-help"
           >
             <q-icon
