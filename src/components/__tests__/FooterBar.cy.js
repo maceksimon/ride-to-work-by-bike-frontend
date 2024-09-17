@@ -15,8 +15,33 @@ const { getPaletteColor } = colors;
 const grey8 = getPaletteColor('grey-8');
 const primary = getPaletteColor('primary');
 
+// selectors
+const selectorFooterLogo = 'footer-logo';
+const selectorFooterAutoMatLogoLink = 'footer-auto-mat-logo-link';
+const selectorFooterAutoMatLogo = 'footer-auto-mat-logo';
+const selectorFooterLogoSeparator = 'footer-logo-separator';
+const selectorFooterSocialMenu = 'footer-social-menu';
+const selectorFooterSocialMenuButton = 'footer-social-menu-button';
+const selectorFooterSocialMenuLinkFacebook = 'footer-social-menu-link-facebook';
+const selectorFooterSocialMenuLinkInstagram =
+  'footer-social-menu-link-instagram';
+const selectorFooterSocialMenuLinkTwitter = 'footer-social-menu-link-twitter';
+const selectorFooterSocialMenuLinkYoutube = 'footer-social-menu-link-youtube';
+const selectorFooterSocialMenuIcon = 'footer-social-menu-icon';
+const selectorLanguageSwitcherFooter = 'language-switcher-footer';
+const selectorFooterTopButton = 'footer-top-button';
+const selectorFooterTopButtonText = 'footer-top-button-text';
+const selectorFooterAutoMat = 'footer-auto-mat';
+const selectorFooterChallengeOrganizer = 'footer-challenge-organizer';
+const selectorFooterCopyrightListDesktop = 'footer-copyright-list-desktop';
+const selectorFooterCopyrightListMobile = 'footer-copyright-list-mobile';
+
 // variables
 const iconSize = 24;
+const displayFlex = 'flex';
+const flexWrap = 'wrap';
+const fontSize = '14px';
+const fontWeight = '400';
 
 // Fix make request user-agent header on the macOS with Google Chrome web browser
 const urlTwitterUserAgentHeader =
@@ -42,22 +67,22 @@ describe('<FooterBar>', () => {
     coreTests();
 
     it('renders Auto*Mat logo text', () => {
-      cy.dataCy('footer-challenge-organizer')
+      cy.dataCy(selectorFooterChallengeOrganizer)
         .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '400')
+        .and('have.css', 'font-size', fontSize)
+        .and('have.css', 'font-weight', fontWeight)
         .and('have.color', grey8)
         .and('contain', i18n.global.t('footer.textChallengeOrganizer'));
     });
 
     it('renders copyright list', () => {
       cy.window().then(() => {
-        cy.dataCy('footer-copyright-list-desktop')
+        cy.dataCy(selectorFooterCopyrightListDesktop)
           .should('be.visible')
-          .and('have.css', 'display', 'flex')
-          .and('have.css', 'flex-wrap', 'wrap')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
+          .and('have.css', 'display', displayFlex)
+          .and('have.css', 'flex-wrap', flexWrap)
+          .and('have.css', 'font-size', fontSize)
+          .and('have.css', 'font-weight', fontWeight)
           .and('have.color', grey8);
       });
     });
@@ -75,12 +100,12 @@ describe('<FooterBar>', () => {
 
     it('renders copyright list', () => {
       cy.window().then(() => {
-        cy.dataCy('footer-copyright-list-mobile')
+        cy.dataCy(selectorFooterCopyrightListMobile)
           .should('be.visible')
-          .and('have.css', 'display', 'flex')
-          .and('have.css', 'flex-wrap', 'wrap')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
+          .and('have.css', 'display', displayFlex)
+          .and('have.css', 'flex-wrap', flexWrap)
+          .and('have.css', 'font-size', fontSize)
+          .and('have.css', 'font-weight', fontWeight)
           .and('have.color', grey8);
       });
     });
@@ -90,7 +115,7 @@ describe('<FooterBar>', () => {
 function coreTests() {
   it('renders RTWBB logo', () => {
     cy.window().then(() => {
-      cy.dataCy('footer-logo')
+      cy.dataCy(selectorFooterLogo)
         .should('be.visible')
         .and('have.css', 'width', '142px')
         .and('have.css', 'height', '40px');
@@ -100,10 +125,10 @@ function coreTests() {
   it('renders Auto*Mat logo with separator and text', () => {
     cy.window().then(() => {
       // link
-      cy.dataCy('footer-auto-mat-logo-link')
+      cy.dataCy(selectorFooterAutoMatLogoLink)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlAutoMat);
-      cy.dataCy('footer-auto-mat-logo')
+      cy.dataCy(selectorFooterAutoMatLogo)
         .should('be.visible')
         .and('have.css', 'width', '74px')
         .and('have.css', 'height', '28px');
@@ -111,38 +136,37 @@ function coreTests() {
   });
 
   it('renders separator between logos', () => {
-    // separator
-    cy.dataCy('footer-logo-separator').should('be.visible');
+    cy.dataCy(selectorFooterLogoSeparator).should('be.visible');
   });
 
   it('renders social menu', () => {
     cy.window().then(() => {
-      cy.dataCy('footer-social-menu')
+      cy.dataCy(selectorFooterSocialMenu)
         .should('be.visible')
-        .and('have.css', 'display', 'flex')
+        .and('have.css', 'display', displayFlex)
         .and('have.css', 'align-items', 'center');
-      cy.dataCy('footer-social-menu-button')
+      cy.dataCy(selectorFooterSocialMenuButton)
         .should('be.visible')
         .and('have.css', 'border-radius', '50%');
-      cy.dataCy('footer-social-menu-link-facebook')
+      cy.dataCy(selectorFooterSocialMenuLinkFacebook)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlFacebook);
-      cy.dataCy('footer-social-menu-link-instagram')
+      cy.dataCy(selectorFooterSocialMenuLinkInstagram)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlInstagram);
-      cy.dataCy('footer-social-menu-link-twitter')
+      cy.dataCy(selectorFooterSocialMenuLinkTwitter)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlTwitter);
-      cy.dataCy('footer-social-menu-link-youtube')
+      cy.dataCy(selectorFooterSocialMenuLinkYoutube)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlYoutube);
-      cy.dataCy('footer-social-menu-icon')
+      cy.dataCy(selectorFooterSocialMenuIcon)
         .should('be.visible')
         .and('have.color', primary);
-      cy.dataCy('footer-social-menu-icon')
+      cy.dataCy(selectorFooterSocialMenuIcon)
         .invoke('height')
         .should('be.equal', iconSize);
-      cy.dataCy('footer-social-menu-icon')
+      cy.dataCy(selectorFooterSocialMenuIcon)
         .invoke('width')
         .should('be.equal', iconSize);
     });
@@ -150,16 +174,16 @@ function coreTests() {
 
   it('renders social menu items side by side', () => {
     cy.testElementsSideBySide(
-      'footer-social-menu-link-facebook',
-      'footer-social-menu-link-instagram',
+      selectorFooterSocialMenuLinkFacebook,
+      selectorFooterSocialMenuLinkInstagram,
     );
     cy.testElementsSideBySide(
-      'footer-social-menu-link-instagram',
-      'footer-social-menu-link-twitter',
+      selectorFooterSocialMenuLinkInstagram,
+      selectorFooterSocialMenuLinkTwitter,
     );
     cy.testElementsSideBySide(
-      'footer-social-menu-link-twitter',
-      'footer-social-menu-link-youtube',
+      selectorFooterSocialMenuLinkTwitter,
+      selectorFooterSocialMenuLinkYoutube,
     );
   });
 
@@ -209,30 +233,33 @@ function coreTests() {
 
   it('renders language switcher', () => {
     cy.window().then(() => {
-      cy.dataCy('language-switcher-footer').should('be.visible');
+      cy.dataCy(selectorLanguageSwitcherFooter).should('be.visible');
     });
   });
 
   it('renders a go to top button', () => {
     cy.window().then(() => {
       // button with icon
-      cy.dataCy('footer-top-button')
+      cy.dataCy(selectorFooterTopButton)
         .should('be.visible')
         .and('have.color', primary);
       // text
-      cy.dataCy('footer-top-button-text')
+      cy.dataCy(selectorFooterTopButtonText)
         .should('be.visible')
-        .and('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '400')
+        .and('have.css', 'font-size', fontSize)
+        .and('have.css', 'font-weight', fontWeight)
         .and('have.color', primary);
     });
   });
 
   it('renders button and text for scrolling to top side by side', () => {
-    cy.testElementsSideBySide('footer-top-button', 'footer-top-button-text');
+    cy.testElementsSideBySide(
+      selectorFooterTopButton,
+      selectorFooterTopButtonText,
+    );
   });
 
   it('renders RTWBB logo and Auto*Mat section side by side', () => {
-    cy.testElementsSideBySide('footer-logo', 'footer-auto-mat');
+    cy.testElementsSideBySide(selectorFooterLogo, selectorFooterAutoMat);
   });
 }
