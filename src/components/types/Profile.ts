@@ -44,7 +44,10 @@ export interface Profile {
 
 export interface ProfileCoordinator {
   name: string;
-  avatar: string;
+  image: {
+    src: string;
+    alt: string;
+  };
   phone: string;
   email: string;
 }

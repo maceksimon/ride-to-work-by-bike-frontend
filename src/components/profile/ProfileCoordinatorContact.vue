@@ -15,7 +15,7 @@
 
 // libraries
 import { defineComponent } from 'vue';
-import { ProfileCoordinator } from '../../types/Profile';
+import { ProfileCoordinator } from '../types/Profile';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // fixtures
@@ -24,7 +24,7 @@ import companyCoordinator from '../../../test/cypress/fixtures/companyCoordinato
 export default defineComponent({
   name: 'ProfileCoordinatorContact',
   setup() {
-    const coordinator = companyCoordinator as ProfileCoordinator;
+    const coordinator: ProfileCoordinator = companyCoordinator;
 
     const avatarSize = '56px';
     const iconSize = '18px';
