@@ -1,10 +1,9 @@
 import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
-import { emptyUser, useLoginStore } from 'src/stores/login';
+import { useLoginStore } from 'src/stores/login';
 import FormLogin from '../login/FormLogin.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
-import { routesConf } from '../../router/routes_conf';
 
 // colors
 const { getPaletteColor } = colors;
@@ -18,11 +17,20 @@ const contactEmail = rideToWorkByBikeConfig.contactEmail;
 const classSelectorQNotificationMessage = '.q-notification__message';
 
 // variables
-const email = 'test@example.com';
+const username = 'test@example.com';
 const password = 'example123';
-const token = '1234567890';
-const apiBase = rideToWorkByBikeConfig.apiBase;
-const apiLoginUrl = `${apiBase}${routesConf.api_login.path}`;
+const tokenAccess = '1234567890';
+const tokenRefresh = '0987654321';
+const user = {
+  pk: 1,
+  username: 'foobar',
+  email: 'foo@bar.org',
+  first_name: 'Foo',
+  last_name: 'Bar',
+};
+const { apiBase, urlApiLogin } = rideToWorkByBikeConfig;
+const apiLoginUrl = `${apiBase}${urlApiLogin}`;
+const errorStatusCode = 500;
 
 describe('<FormLogin>', () => {
   it('has translation for all strings', () => {
@@ -253,44 +261,19 @@ describe('<FormLogin>', () => {
       cy.viewport('macbook-16');
     });
 
-    it('uses the login store', () => {
-      const loginStore = useLoginStore();
-      // initial state
-      expect(loginStore.user.email).to.equal(emptyUser.email);
-      expect(loginStore.user.password).to.equal(emptyUser.password);
-      // type email
-      cy.dataCy('form-login-email').find('input').clear();
-      cy.dataCy('form-login-email').find('input').type(email);
-      // check email in store
-      cy.dataCy('form-login-email').then(() => {
-        expect(loginStore.user.email).to.equal(email);
-      });
-      // type password
-      cy.dataCy('form-login-password').find('input').clear();
-      cy.dataCy('form-login-password').find('input').type(password);
-      // check password in store
-      cy.dataCy('form-login-password').then(() => {
-        expect(loginStore.user.password).to.equal(password);
-      });
-    });
-
-    it('saves user into store after login', () => {
+    it('allows to save tokens and user into store', () => {
       const store = useLoginStore();
-      const user = { email, password };
+      store.setAccessToken(tokenAccess);
+      store.setRefreshToken(tokenRefresh);
       store.setUser(user);
+      expect(store.getAccessToken).to.equal(tokenAccess);
+      expect(store.getRefreshToken).to.equal(tokenRefresh);
       expect(store.getUser).to.deep.equal(user);
     });
 
-    it('saves token into store after login', () => {
+    it('shows error if login is called and username is not set', () => {
       const store = useLoginStore();
-      store.setToken(token);
-      expect(store.getToken).to.equal(token);
-    });
-
-    it('shows error if login is called and email is not set', () => {
-      const store = useLoginStore();
-      store.setUser({ email: '', password });
-      cy.wrap(store.login()).then((result) => {
+      cy.wrap(store.login({ username: '', password })).then((result) => {
         expect(result).to.equal(null);
         cy.get(classSelectorQNotificationMessage)
           .should('be.visible')
@@ -300,41 +283,61 @@ describe('<FormLogin>', () => {
 
     it('shows error if login is called and password is not set', () => {
       const store = useLoginStore();
-      store.setUser({ email, password: '' });
-      cy.wrap(store.login()).then((result) => {
+      cy.wrap(store.login({ username, password: '' })).then((result) => {
         expect(result).to.equal(null);
         cy.get(classSelectorQNotificationMessage)
           .should('be.visible')
-          .and('contain', i18n.global.t('login.form.messagePasswordRequired'));
+          .and('contain', i18n.global.t('login.form.messageEmailReqired'));
+      });
+    });
+
+    it('shows error if API call fails (error has message)', () => {
+      const store = useLoginStore();
+      cy.intercept('POST', apiLoginUrl, {
+        statusCode: errorStatusCode,
+      }).then(() => {
+        cy.wrap(store.login({ username, password })).then((result) => {
+          expect(result).to.equal(null);
+          cy.get(classSelectorQNotificationMessage)
+            .should('be.visible')
+            .and('contain', i18n.global.t('login.apiMessageErrorWithMessage'))
+            .and('contain', errorStatusCode);
+        });
       });
     });
 
     it('calls API and set token on successful login', () => {
-      const store = useLoginStore();
-      store.setUser({ email, password });
       // intercept login API call
       cy.intercept('POST', apiLoginUrl, {
         statusCode: 200,
-        body: { key: token },
-      });
-      cy.wrap(store.login()).then((result) => {
-        expect(result).to.deep.equal({ key: token });
-        expect(store.getToken).to.equal(token);
+        body: { access_token: tokenAccess, refresh_token: tokenRefresh, user },
+      }).then(() => {
+        const store = useLoginStore();
+        cy.wrap(store.login({ username, password })).then((response) => {
+          console.log(response);
+          expect(response).to.deep.equal({
+            access_token: tokenAccess,
+            refresh_token: tokenRefresh,
+            user,
+          });
+          expect(store.getAccessToken).to.equal(tokenAccess);
+          expect(store.getRefreshToken).to.equal(tokenRefresh);
+          expect(store.getUser).to.deep.equal(user);
+        });
       });
     });
 
     it('calls API and shows error if login fails', () => {
       const store = useLoginStore();
-      store.setUser({ email, password });
       // intercept login API call
       cy.intercept('POST', apiLoginUrl, {
         statusCode: 500,
-      });
-      // call login with stubbed apiFetch
-      cy.wrap(store.login()).then(() => {
-        cy.get(classSelectorQNotificationMessage)
-          .should('be.visible')
-          .and('contain', i18n.global.t('login.apiMessageError'));
+      }).then(() => {
+        cy.wrap(store.login({ username, password })).then(() => {
+          cy.get(classSelectorQNotificationMessage)
+            .should('be.visible')
+            .and('contain', i18n.global.t('login.apiMessageError'));
+        });
       });
     });
   });
