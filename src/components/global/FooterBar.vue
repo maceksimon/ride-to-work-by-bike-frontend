@@ -29,8 +29,11 @@ import LanguageSwitcher from '../global/LanguageSwitcher.vue';
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// types
+import { ConfigAppVersion } from '../types/Config';
+
 // Deployed app version
-const rideToWorkByBikeDeployedAppVersion: object = JSON.parse(
+const rideToWorkByBikeDeployedAppVersion: ConfigAppVersion = JSON.parse(
   process.env.RIDE_TO_WORK_BY_BIKE_DEPLOYED_VERSION,
 );
 

@@ -14,6 +14,12 @@ import UserSelect from 'components/global/UserSelect.vue';
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+declare global {
+  interface Window {
+    i18n: typeof i18n;
+  }
+}
+
 // set global i18n object (for test purposes)
 if (window.Cypress) {
   window.i18n = i18n;
