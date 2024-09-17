@@ -148,6 +148,21 @@ function coreTests() {
     });
   });
 
+  it('renders social menu items side by side', () => {
+    cy.testElementsSideBySide(
+      'footer-social-menu-link-facebook',
+      'footer-social-menu-link-instagram',
+    );
+    cy.testElementsSideBySide(
+      'footer-social-menu-link-instagram',
+      'footer-social-menu-link-twitter',
+    );
+    cy.testElementsSideBySide(
+      'footer-social-menu-link-twitter',
+      'footer-social-menu-link-youtube',
+    );
+  });
+
   it('provides valid URLs for social links', () => {
     cy.request({
       url: rideToWorkByBikeConfig.urlFacebook,
@@ -211,5 +226,13 @@ function coreTests() {
         .and('have.css', 'font-weight', '400')
         .and('have.color', primary);
     });
+  });
+
+  it('renders button and text for scrolling to top side by side', () => {
+    cy.testElementsSideBySide('footer-top-button', 'footer-top-button-text');
+  });
+
+  it('renders RTWBB logo and Auto*Mat section side by side', () => {
+    cy.testElementsSideBySide('footer-logo', 'footer-auto-mat');
   });
 }

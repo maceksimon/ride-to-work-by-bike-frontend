@@ -145,7 +145,7 @@ export default defineComponent({
               class="q-mx-lg"
               data-cy="footer-logo-separator"
             />
-            <div class="flex items-end gap-16">
+            <div class="flex items-end gap-16" data-cy="footer-auto-mat">
               <span
                 class="gt-sm text-grey-8"
                 data-cy="footer-challenge-organizer"
