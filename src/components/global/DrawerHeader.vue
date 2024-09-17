@@ -54,8 +54,11 @@ export default defineComponent({
       return props.showLogo ? 'justify-between' : 'justify-end';
     });
 
+    const iconSize = '18px';
+
     return {
       classes,
+      iconSize,
     };
   },
 });
@@ -88,7 +91,7 @@ export default defineComponent({
           >
             <q-icon
               name="svguse:/icons/custom.svg#question-mark"
-              size="18px"
+              :size="iconSize"
               color="white"
               data-cy="icon-help"
             />
@@ -99,7 +102,7 @@ export default defineComponent({
       <a href="#">
         <q-icon
           name="notifications"
-          size="18px"
+          :size="iconSize"
           color="black"
           data-cy="icon-notification"
         />
