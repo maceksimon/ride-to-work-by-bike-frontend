@@ -100,7 +100,7 @@ export default defineComponent({
         data-cy="button-help"
       >
         <q-icon
-          name="svguse:/icons/custom.svg#question-mark"
+          name="svguse:/icons/button_icons.svg#question-mark"
           size="38px"
           color="primary"
           data-cy="icon-help"
