@@ -131,8 +131,8 @@ export default defineComponent({
       <q-separator color="primary" class="q-my-lg" />
 
       <div class="footer-content">
-        <div class="col-grow row q-col-gutter-md items-start justify-between">
-          <div class="col-12 col-md-auto flex items-center">
+        <div class="col-grow row q-col-gutter-md items-center justify-between">
+          <div class="col-12 col-sm-auto flex items-center">
             <!-- Logo -->
             <q-img
               src="~assets/svg/logo.svg"
@@ -171,7 +171,7 @@ export default defineComponent({
 
           <!-- License + Owner information (mobile) -->
           <div
-            class="col-12 lt-md w-md-auto flex flex-wrap items-center text-grey-8 justify-center gap-12 text-center q-my-md"
+            class="col-12 lt-sm w-md-auto flex flex-wrap items-center text-grey-8 justify-center gap-12 text-center q-my-md"
             data-cy="footer-copyright-list-mobile"
           >
             <div
@@ -198,61 +198,60 @@ export default defineComponent({
             </div>
           </div>
 
-          <div class="col-12 col-md-auto">
-            <div class="row q-col-gutter-lg items-center">
-              <!-- List: Social links -->
-              <div class="col-12 col-md-auto flex">
-                <div class="q-mx-auto">
-                  <ul
-                    class="flex items-center gap-32 q-my-none q-px-none"
-                    data-cy="footer-social-menu"
-                    style="list-style: none"
+          <!-- List: Social links -->
+          <div
+            class="col-12 col-sm-auto col-lg flex justify-center justify-lg-end"
+          >
+            <div>
+              <ul
+                class="flex items-center gap-32 q-my-none q-px-none"
+                data-cy="footer-social-menu"
+                style="list-style: none"
+              >
+                <li>
+                  <q-btn
+                    flat
+                    round
+                    v-for="link in socialLinksList"
+                    :key="link.icon"
+                    :title="link.title"
+                    data-cy="footer-social-menu-button"
                   >
-                    <li>
-                      <q-btn
-                        flat
-                        round
-                        v-for="link in socialLinksList"
-                        :key="link.icon"
-                        :title="link.title"
-                        data-cy="footer-social-menu-button"
-                      >
-                        <a
-                          :href="link.url"
-                          class="flex column justify-center"
-                          target="_blank"
-                          style="text-decoration: none"
-                          :data-cy="`footer-social-menu-link-${link.id}`"
-                        >
-                          <q-icon
-                            :name="link.icon"
-                            size="24px"
-                            color="primary"
-                            data-cy="footer-social-menu-icon"
-                          />
-                        </a>
-                      </q-btn>
-                    </li>
-                  </ul>
-                </div>
-              </div>
-              <!-- Language switcher component -->
-              <div class="col-12 col-md-auto flex">
-                <div class="q-mx-auto">
-                  <language-switcher
-                    class="q-my-none"
-                    variant="light"
-                    data-cy="language-switcher-footer"
-                  />
-                </div>
-              </div>
+                    <a
+                      :href="link.url"
+                      class="flex column justify-center"
+                      target="_blank"
+                      style="text-decoration: none"
+                      :data-cy="`footer-social-menu-link-${link.id}`"
+                    >
+                      <q-icon
+                        :name="link.icon"
+                        size="24px"
+                        color="primary"
+                        data-cy="footer-social-menu-icon"
+                      />
+                    </a>
+                  </q-btn>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Language switcher component -->
+          <div class="col-12 col-sm-auto flex">
+            <div class="q-mx-auto q-py-sm">
+              <language-switcher
+                class="q-my-none"
+                variant="light"
+                data-cy="language-switcher-footer"
+              />
             </div>
           </div>
         </div>
 
         <!-- License + Owner information (desktop) -->
         <div
-          class="flex flex-wrap items-center text-grey-8 gap-12 gt-sm q-mt-lg"
+          class="flex flex-wrap items-center text-grey-8 gap-12 gt-xs q-mt-lg"
           data-cy="footer-copyright-list-desktop"
         >
           <div
@@ -294,6 +293,12 @@ export default defineComponent({
 
   @media (min-width: $breakpoint-md-min) {
     padding-bottom: 0;
+  }
+}
+
+.justify-lg-end {
+  @media (min-width: $breakpoint-lg-min) {
+    justify-content: flex-end;
   }
 }
 </style>
