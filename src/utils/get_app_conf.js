@@ -45,6 +45,8 @@ const getAppConfig = (process) => {
     config['borderRadiusCardSmall'] = process.env.BORDER_RADIUS_CARD_SMALL;
   } else if (process.env.MAX_WIDTH_BANNER) {
     config['maxWidthBanner'] = process.env.MAX_WIDTH_BANNER;
+  } else if (process.env.URL_AUTO_MAT) {
+    config['urlAutoMat'] = process.env.URL_AUTO_MAT;
   } else if (process.env.URL_FACEBOOK) {
     config['urlFacebook'] = process.env.URL_FACEBOOK;
   } else if (process.env.URL_INSTAGRAM) {

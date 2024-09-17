@@ -19,6 +19,7 @@ export interface ConfigGlobal {
   borderRadiusButtonSmall: string;
   maxWidthBanner: string;
   contactEmail: string;
+  urlAutoMat: string;
   urlFacebook: string;
   urlInstagram: string;
   urlTwitter: string;

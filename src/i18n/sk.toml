@@ -389,10 +389,11 @@ message = "Svoje preferencie môžete kedykoľvek spravovať vo svojom profile."
 [index.cardListFollow]
 title = "Sledujte nás na Facebooku"
 
-[index.footer]
-copyrightOpenSource = "Táto aplikácia je open source softvér."
-copyrightAuthor = "Výzvu Do práce na kole organizuje <a href='https://auto-mat.cz' target='_blank'>Auto*Mat, z.s.</a>"
+[footer]
+buttonBackToTop = "Späť nahor"
+copyrightOpenSource = "Táto aplikácia je slobodný softvér."
 deployedAppVersion = "Nasadená verzia aplikácie"
+textChallengeOrganizer = "Výzvu organizuje"
 
 [listCardSlider]
 buttonAllPrizes = "Všetky výhry"
