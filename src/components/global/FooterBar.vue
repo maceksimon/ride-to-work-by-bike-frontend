@@ -22,10 +22,12 @@
 // libraries
 import { defineComponent } from 'vue';
 import { i18n } from '../../boot/i18n';
-import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // components
 import LanguageSwitcher from '../global/LanguageSwitcher.vue';
+
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // Deployed app version
 const rideToWorkByBikeDeployedAppVersion: object = JSON.parse(
@@ -83,9 +85,12 @@ export default defineComponent({
       },
     ];
 
+    const { containerContentWidth } = rideToWorkByBikeConfig;
+
     return {
       socialLinksList,
       copyrightList,
+      containerContentWidth,
       scrollToTop,
       rideToWorkByBikeDeployedAppVersion,
     };
@@ -94,65 +99,71 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="absolute-bottom text-white overflow-hidden" data-cy="footer">
-    <!-- Background image (cityscape) -->
-    <q-img
-      class="absolute-top-left h-254"
-      src="~assets/svg/bg-footer.svg"
-      data-cy="footer-background"
-    />
+  <div
+    class="bg-info q-px-lg q-py-xl q-mt-xl"
+    :style="{ 'max-width': containerContentWidth }"
+    data-cy="footer"
+  >
     <!-- Footer content (leave space above for graphics) -->
-    <div class="relative-position pt-112">
-      <div
-        class="footer-wrapper h-lg-142 max-w-lg-90perc flex items-end q-px-md"
-      >
-        <!-- Scroll to top button (desktop) -->
-        <div class="footer-scroll-top shrink-0">
-          <q-btn
-            class="w-38 h-38 gt-sm"
-            color="white"
-            outline
-            round
-            data-cy="footer-top-button"
-            @click.prevent="scrollToTop"
-          >
-            <q-icon name="arrow_upward" size="18px" />
-          </q-btn>
-        </div>
+    <div>
+      <!-- Scroll to top button (desktop) -->
+      <div class="flex items-center gt-sm">
+        <q-btn
+          dense
+          round
+          outline
+          color="primary"
+          @click.prevent="scrollToTop"
+          data-cy="footer-top-button"
+        >
+          <q-icon name="arrow_upward" size="18px" />
+        </q-btn>
+        <a
+          href="#"
+          class="text-primary no-underline q-ml-sm"
+          @click.prevent="scrollToTop"
+          >Zpátky nahoru</a
+        >
+      </div>
 
-        <div class="footer-content h-full col-grow">
-          <div
-            class="col-grow flex flex-wrap items-start justify-between gap-8"
-          >
-            <!-- Logo -->
-            <q-img
-              src="~assets/svg/logo-white.svg"
-              width="142px"
-              height="40px"
-              data-cy="footer-logo"
-            />
+      <q-separator color="primary" class="q-my-lg" />
+
+      <div class="flex items-end">
+        <div class="footer-content full-height col-grow">
+          <div class="col-grow row q-col-gutter-md items-start justify-between">
+            <div class="col-auto">
+              <!-- Logo -->
+              <q-img
+                src="~assets/svg/logo.svg"
+                width="142px"
+                height="40px"
+                data-cy="footer-logo"
+              />
+            </div>
 
             <!-- Scroll to top button (mobile) -->
-            <q-btn
-              class="w-38 h-38 lt-md"
-              color="white"
-              outline
-              round
-              data-cy="footer-top-button-mobile"
-              @click.prevent="scrollToTop"
-            >
-              <q-icon name="arrow_upward" size="18px" />
-            </q-btn>
-
+            <div class="col-auto">
+              <q-btn
+                dense
+                class="lt-md"
+                color="primary"
+                outline
+                round
+                data-cy="footer-top-button-mobile"
+                @click.prevent="scrollToTop"
+              >
+                <q-icon name="arrow_upward" size="18px" />
+              </q-btn>
+            </div>
             <!-- License + Owner information (mobile) -->
             <div
-              class="w-full w-md-auto flex flex-wrap items-center justify-center gap-12 text-center q-py-md lt-md copyright"
+              class="col-12 lt-md w-md-auto flex flex-wrap items-center justify-center gap-12 text-center q-my-md"
               data-cy="footer-copyright-list-mobile"
             >
               <div
                 v-for="(message, index) in copyrightList"
                 :key="message"
-                class="text-white flex items-center gap-12"
+                class="flex items-center gap-12"
               >
                 <span
                   v-if="message !== 'deployedAppVersion'"
@@ -172,54 +183,68 @@ export default defineComponent({
                 >
               </div>
             </div>
-            <div class="flex column items-center row-md w-full w-md-auto">
-              <!-- List: Social links -->
-              <div>
-                <ul
-                  class="flex items-center gap-32"
-                  data-cy="footer-social-menu"
-                  style="list-style: none"
-                >
-                  <li>
-                    <q-btn
-                      flat
-                      round
-                      v-for="link in socialLinksList"
-                      :key="link.icon"
-                      :title="link.title"
-                      data-cy="footer-social-menu-button"
+
+            <div class="col-12 col-md-auto">
+              <div class="row q-col-gutter-lg items-center">
+                <!-- List: Social links -->
+                <div class="col-12 col-md-auto flex">
+                  <div class="q-mx-auto">
+                    <ul
+                      class="flex items-center gap-32 q-my-none q-px-none"
+                      data-cy="footer-social-menu"
+                      style="list-style: none"
                     >
-                      <a
-                        :href="link.url"
-                        class="flex column justify-center text-white"
-                        target="_blank"
-                        style="text-decoration: none"
-                        :data-cy="`footer-social-menu-link-${link.id}`"
-                      >
-                        <q-icon
-                          :name="link.icon"
-                          size="18px"
-                          data-cy="footer-social-menu-icon"
-                        />
-                      </a>
-                    </q-btn>
-                  </li>
-                </ul>
+                      <li>
+                        <q-btn
+                          flat
+                          round
+                          v-for="link in socialLinksList"
+                          :key="link.icon"
+                          :title="link.title"
+                          data-cy="footer-social-menu-button"
+                        >
+                          <a
+                            :href="link.url"
+                            class="flex column justify-center"
+                            target="_blank"
+                            style="text-decoration: none"
+                            :data-cy="`footer-social-menu-link-${link.id}`"
+                          >
+                            <q-icon
+                              :name="link.icon"
+                              size="24px"
+                              color="primary"
+                              data-cy="footer-social-menu-icon"
+                            />
+                          </a>
+                        </q-btn>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+                <span class="col-auto q-mx-lg gt-sm">|</span>
+                <!-- Language switcher component -->
+                <div class="col-12 col-md-auto flex">
+                  <div class="q-mx-auto">
+                    <language-switcher
+                      class="q-my-none"
+                      variant="light"
+                      data-cy="language-switcher-footer"
+                    />
+                  </div>
+                </div>
               </div>
-              <span class="q-mx-lg gt-sm">|</span>
-              <!-- Language switcher component -->
-              <language-switcher data-cy="language-switcher-footer" />
             </div>
           </div>
           <!-- License + Owner information (desktop) -->
           <div
-            class="flex flex-wrap items-center gap-12 copyright gt-sm"
+            class="flex flex-wrap items-center gap-12 copyright gt-sm q-mt-lg"
             data-cy="footer-copyright-list-desktop"
           >
             <div
               v-for="(message, index) in copyrightList"
               :key="message"
-              class="text-white flex items-center gap-12"
+              class="flex items-center gap-12"
             >
               <span
                 v-if="message !== 'deployedAppVersion'"
@@ -247,41 +272,9 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-.h-full {
-  height: 100%;
-}
-
-.h-lg-142 {
-  @media (min-width: $breakpoint-lg-min) {
-    height: 142px;
-  }
-}
-
-.h-254 {
-  height: 254px;
-}
-
-.w-38 {
-  width: 38px;
-  min-width: 0;
-}
-
-.h-38 {
-  height: 38px;
-  min-height: 0;
-}
-
-.pt-112 {
-  padding-top: 112px;
-}
-
-.w-full {
-  width: 100%;
-}
-
 .w-md-auto {
   @media (min-width: $breakpoint-md-min) {
-    width: auto;
+    width: auto !important;
   }
 }
 
@@ -294,14 +287,6 @@ export default defineComponent({
 .row-md {
   @media (min-width: $breakpoint-md-min) {
     flex-direction: row;
-  }
-}
-
-.footer-wrapper {
-  background-color: $grey-10;
-
-  @media (min-width: $breakpoint-md-min) {
-    background-color: transparent;
   }
 }
 
@@ -321,26 +306,10 @@ export default defineComponent({
 }
 
 .footer-content {
-  padding-top: 16px;
-  padding-bottom: 70px;
-
-  @media (min-width: $breakpoint-md-min) {
-    padding-top: 32px;
-  }
+  padding-bottom: 80px;
 
   @media (min-width: $breakpoint-md-min) {
     padding-bottom: 0;
   }
-}
-
-.language-list {
-  list-style: none;
-  font-size: 14px;
-  padding-left: 0;
-  padding-inline-start: 0;
-}
-
-.copyright :deep(a) {
-  color: #fff;
 }
 </style>
