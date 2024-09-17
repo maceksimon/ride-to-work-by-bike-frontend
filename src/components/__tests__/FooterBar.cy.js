@@ -10,8 +10,14 @@ import {
   httpTooManyRequestsStatusMessage,
 } from '../../../test/cypress/support/commonTests';
 
+// colors
 const { getPaletteColor } = colors;
-const white = getPaletteColor('white');
+const grey8 = getPaletteColor('grey-8');
+const primary = getPaletteColor('primary');
+
+// variables
+const iconSize = 24;
+
 // Fix make request user-agent header on the macOS with Google Chrome web browser
 const urlTwitterUserAgentHeader =
   'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) \
@@ -27,135 +33,21 @@ describe('<FooterBar>', () => {
     beforeEach(() => {
       cy.mount(FooterBar, {
         props: {
-          copyright: [
-            'Tato aplikace je svobodný software.',
-            'Výzvu Do práce na kole pořádá <a href="https://auto-mat.cz" target="_blank">Auto*Mat, z.s.</a>',
-          ],
+          copyright: ['Tato aplikace je svobodný software.'],
         },
       });
       cy.viewport('macbook-16');
     });
 
-    it('renders background', () => {
-      cy.window().then(() => {
-        cy.dataCy('footer-background')
-          .should('be.visible')
-          .and('have.css', 'position', 'absolute')
-          .and('have.css', 'top', '0px')
-          .and('have.css', 'left', '0px');
-      });
-    });
+    coreTests();
 
-    it('renders logo', () => {
-      cy.window().then(() => {
-        cy.dataCy('footer-logo')
-          .should('be.visible')
-          .and('have.css', 'height', '40px')
-          .and('have.color', white);
-      });
-    });
-
-    it('renders social menu', () => {
-      cy.window().then(() => {
-        cy.dataCy('footer-social-menu')
-          .should('be.visible')
-          .and('have.css', 'display', 'flex')
-          .and('have.css', 'align-items', 'center');
-        cy.dataCy('footer-social-menu-button')
-          .should('be.visible')
-          .and('have.css', 'border-radius', '50%');
-        cy.dataCy('footer-social-menu-button')
-          .invoke('height')
-          .should('be.equal', 42);
-        cy.dataCy('footer-social-menu-button')
-          .invoke('width')
-          .should('be.equal', 42);
-        cy.dataCy('footer-social-menu-link-facebook')
-          .should('be.visible')
-          .and('have.attr', 'href', rideToWorkByBikeConfig.urlFacebook);
-        cy.dataCy('footer-social-menu-link-instagram')
-          .should('be.visible')
-          .and('have.attr', 'href', rideToWorkByBikeConfig.urlInstagram);
-        cy.dataCy('footer-social-menu-link-twitter')
-          .should('be.visible')
-          .and('have.attr', 'href', rideToWorkByBikeConfig.urlTwitter);
-        cy.dataCy('footer-social-menu-link-youtube')
-          .should('be.visible')
-          .and('have.attr', 'href', rideToWorkByBikeConfig.urlYoutube);
-        cy.dataCy('footer-social-menu-icon')
-          .should('be.visible')
-          .and('have.color', white);
-        cy.dataCy('footer-social-menu-icon')
-          .invoke('height')
-          .should('be.equal', 18);
-        cy.dataCy('footer-social-menu-icon')
-          .invoke('width')
-          .should('be.equal', 18);
-      });
-    });
-
-    it('provides valid URLs for social links', () => {
-      cy.request({
-        url: rideToWorkByBikeConfig.urlFacebook,
-        failOnStatusCode: failOnStatusCode,
-      }).then((resp) => {
-        if (resp.status === httpTooManyRequestsStatus) {
-          cy.log(httpTooManyRequestsStatusMessage);
-          return;
-        }
-        expect(resp.status).to.eq(httpSuccessfullStatus);
-      });
-      cy.request({
-        url: rideToWorkByBikeConfig.urlInstagram,
-        failOnStatusCode: failOnStatusCode,
-      }).then((resp) => {
-        if (resp.status === httpTooManyRequestsStatus) {
-          cy.log(httpTooManyRequestsStatusMessage);
-          return;
-        }
-        expect(resp.status).to.eq(httpSuccessfullStatus);
-      });
-      cy.request({
-        url: rideToWorkByBikeConfig.urlTwitter,
-        headers: { 'user-agent': urlTwitterUserAgentHeader },
-        failOnStatusCode: failOnStatusCode,
-      }).then((resp) => {
-        if (resp.status === httpTooManyRequestsStatus) {
-          cy.log(httpTooManyRequestsStatusMessage);
-          return;
-        }
-        expect(resp.status).to.eq(httpSuccessfullStatus);
-      });
-      cy.request({
-        url: rideToWorkByBikeConfig.urlYoutube,
-        failOnStatusCode: failOnStatusCode,
-      }).then((resp) => {
-        if (resp.status === httpTooManyRequestsStatus) {
-          cy.log(httpTooManyRequestsStatusMessage);
-          return;
-        }
-        expect(resp.status).to.eq(httpSuccessfullStatus);
-      });
-    });
-
-    it('renders language switcher', () => {
-      cy.window().then(() => {
-        cy.dataCy('language-switcher-footer')
-          .should('be.visible')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', white);
-      });
-    });
-
-    it('renders a go to top button', () => {
-      cy.window().then(() => {
-        cy.dataCy('footer-top-button')
-          .should('be.visible')
-          .and('have.css', 'width', '38px')
-          .and('have.css', 'height', '38px')
-          .and('have.color', white);
-      });
+    it('renders Auto*Mat logo text', () => {
+      cy.dataCy('footer-challenge-organizer')
+        .should('be.visible')
+        .and('have.css', 'font-size', '14px')
+        .and('have.css', 'font-weight', '400')
+        .and('have.color', grey8)
+        .and('contain', i18n.global.t('footer.textChallengeOrganizer'));
     });
 
     it('renders copyright list', () => {
@@ -166,7 +58,7 @@ describe('<FooterBar>', () => {
           .and('have.css', 'flex-wrap', 'wrap')
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
-          .and('have.color', white);
+          .and('have.color', grey8);
       });
     });
   });
@@ -178,5 +70,146 @@ describe('<FooterBar>', () => {
       });
       cy.viewport('iphone-6');
     });
+
+    coreTests();
+
+    it('renders copyright list', () => {
+      cy.window().then(() => {
+        cy.dataCy('footer-copyright-list-mobile')
+          .should('be.visible')
+          .and('have.css', 'display', 'flex')
+          .and('have.css', 'flex-wrap', 'wrap')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '400')
+          .and('have.color', grey8);
+      });
+    });
   });
 });
+
+function coreTests() {
+  it('renders RTWBB logo', () => {
+    cy.window().then(() => {
+      cy.dataCy('footer-logo')
+        .should('be.visible')
+        .and('have.css', 'width', '142px')
+        .and('have.css', 'height', '40px');
+    });
+  });
+
+  it('renders Auto*Mat logo with separator and text', () => {
+    cy.window().then(() => {
+      // link
+      cy.dataCy('footer-auto-mat-logo-link')
+        .should('be.visible')
+        .and('have.attr', 'href', rideToWorkByBikeConfig.urlAutoMat);
+      cy.dataCy('footer-auto-mat-logo')
+        .should('be.visible')
+        .and('have.css', 'width', '74px')
+        .and('have.css', 'height', '28px');
+    });
+  });
+
+  it('renders separator between logos', () => {
+    // separator
+    cy.dataCy('footer-logo-separator').should('be.visible');
+  });
+
+  it('renders social menu', () => {
+    cy.window().then(() => {
+      cy.dataCy('footer-social-menu')
+        .should('be.visible')
+        .and('have.css', 'display', 'flex')
+        .and('have.css', 'align-items', 'center');
+      cy.dataCy('footer-social-menu-button')
+        .should('be.visible')
+        .and('have.css', 'border-radius', '50%');
+      cy.dataCy('footer-social-menu-link-facebook')
+        .should('be.visible')
+        .and('have.attr', 'href', rideToWorkByBikeConfig.urlFacebook);
+      cy.dataCy('footer-social-menu-link-instagram')
+        .should('be.visible')
+        .and('have.attr', 'href', rideToWorkByBikeConfig.urlInstagram);
+      cy.dataCy('footer-social-menu-link-twitter')
+        .should('be.visible')
+        .and('have.attr', 'href', rideToWorkByBikeConfig.urlTwitter);
+      cy.dataCy('footer-social-menu-link-youtube')
+        .should('be.visible')
+        .and('have.attr', 'href', rideToWorkByBikeConfig.urlYoutube);
+      cy.dataCy('footer-social-menu-icon')
+        .should('be.visible')
+        .and('have.color', primary);
+      cy.dataCy('footer-social-menu-icon')
+        .invoke('height')
+        .should('be.equal', iconSize);
+      cy.dataCy('footer-social-menu-icon')
+        .invoke('width')
+        .should('be.equal', iconSize);
+    });
+  });
+
+  it('provides valid URLs for social links', () => {
+    cy.request({
+      url: rideToWorkByBikeConfig.urlFacebook,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+    cy.request({
+      url: rideToWorkByBikeConfig.urlInstagram,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+    cy.request({
+      url: rideToWorkByBikeConfig.urlTwitter,
+      headers: { 'user-agent': urlTwitterUserAgentHeader },
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+    cy.request({
+      url: rideToWorkByBikeConfig.urlYoutube,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+  });
+
+  it('renders language switcher', () => {
+    cy.window().then(() => {
+      cy.dataCy('language-switcher-footer').should('be.visible');
+    });
+  });
+
+  it('renders a go to top button', () => {
+    cy.window().then(() => {
+      // button with icon
+      cy.dataCy('footer-top-button')
+        .should('be.visible')
+        .and('have.color', primary);
+      // text
+      cy.dataCy('footer-top-button-text')
+        .should('be.visible')
+        .and('have.css', 'font-size', '14px')
+        .and('have.css', 'font-weight', '400')
+        .and('have.color', primary);
+    });
+  });
+}

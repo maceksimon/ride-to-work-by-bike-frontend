@@ -122,15 +122,17 @@ export default defineComponent({
           href="#"
           class="text-primary no-underline q-ml-sm"
           @click.prevent="scrollToTop"
-          >{{ $t('footer.buttonBackToTop') }}</a
+          data-cy="footer-top-button-text"
         >
+          {{ $t('footer.buttonBackToTop') }}
+        </a>
       </div>
 
       <q-separator color="primary" class="q-my-lg" />
 
       <div class="footer-content">
         <div class="col-grow row q-col-gutter-md items-start justify-between">
-          <div class="col-12 col-md-auto flex items-center justify-between">
+          <div class="col-12 col-md-auto flex items-center">
             <!-- Logo -->
             <q-img
               src="~assets/svg/logo.svg"
@@ -138,21 +140,30 @@ export default defineComponent({
               height="40px"
               data-cy="footer-logo"
             />
-            <q-separator vertical class="gt-sm q-mx-lg" />
+            <q-separator
+              vertical
+              class="q-mx-lg"
+              data-cy="footer-logo-separator"
+            />
             <div class="flex items-end gap-16">
-              <span class="text-grey-8">{{
-                $t('footer.textChallengeOrganizer')
-              }}</span>
+              <span
+                class="gt-sm text-grey-8"
+                data-cy="footer-challenge-organizer"
+              >
+                {{ $t('footer.textChallengeOrganizer') }}
+              </span>
               <a
                 :href="rideToWorkByBikeConfig.urlAutoMat"
                 class="block"
                 target="_blank"
+                data-cy="footer-auto-mat-logo-link"
               >
                 <q-img
                   src="~assets/svg/logo-automat.svg"
                   width="74px"
                   height="28px"
                   class="q-mb-xs"
+                  data-cy="footer-auto-mat-logo"
                 />
               </a>
             </div>
