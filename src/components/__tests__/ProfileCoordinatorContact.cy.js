@@ -95,10 +95,21 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('be.visible')
         .and('have.css', 'width', avatarSize)
         .and('have.css', 'height', avatarSize);
-      cy.matchImageSnapshotNamed(
-        selectorAvatar,
-        `${Cypress.currentTest.titlePath[0]}-avatar`,
-      );
+      cy.dataCy(selectorAvatar)
+        .then(() => {
+          // wait for image loading (otherwise, we might snapshot the placeholder)
+          return new Cypress.Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+            }, 500);
+          });
+        })
+        .then(() => {
+          cy.matchImageSnapshotNamed(
+            selectorAvatar,
+            `${Cypress.currentTest.titlePath[0]}-avatar`,
+          );
+        });
     });
 
     it('renders name of a coordinator', () => {
