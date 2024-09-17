@@ -45,13 +45,9 @@ export default defineComponent({
   setup() {
     let copyrightList: string[];
     if (rideToWorkByBikeDeployedAppVersion.version) {
-      copyrightList = [
-        'copyrightOpenSource',
-        'deployedAppVersion',
-        'copyrightAuthor',
-      ];
+      copyrightList = ['copyrightOpenSource', 'deployedAppVersion'];
     } else {
-      copyrightList = ['copyrightOpenSource', 'copyrightAuthor'];
+      copyrightList = ['copyrightOpenSource'];
     }
 
     function scrollToTop(): void {
@@ -134,7 +130,7 @@ export default defineComponent({
       <div class="flex items-end">
         <div class="footer-content full-height col-grow">
           <div class="col-grow row q-col-gutter-md items-start justify-between">
-            <div class="col-auto">
+            <div class="col-auto flex items-center">
               <!-- Logo -->
               <q-img
                 src="~assets/svg/logo.svg"
@@ -142,6 +138,16 @@ export default defineComponent({
                 height="40px"
                 data-cy="footer-logo"
               />
+              <q-separator vertical class="q-mx-lg" />
+              <div class="flex items-end gap-16">
+                <span class="text-grey-8">Výzvu pořádá</span>
+                <q-img
+                  src="~assets/svg/logo-automat.svg"
+                  width="74px"
+                  height="28"
+                  class="q-mb-xs"
+                />
+              </div>
             </div>
 
             <!-- Scroll to top button (mobile) -->
@@ -241,7 +247,7 @@ export default defineComponent({
           </div>
           <!-- License + Owner information (desktop) -->
           <div
-            class="flex flex-wrap items-center gap-12 copyright gt-sm q-mt-lg"
+            class="flex flex-wrap items-center text-grey-8 gap-12 gt-sm q-mt-lg"
             data-cy="footer-copyright-list-desktop"
           >
             <div
