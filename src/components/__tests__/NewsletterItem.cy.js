@@ -3,14 +3,17 @@ import { colors } from 'quasar';
 import NewsletterItem from '../homepage/NewsletterItem.vue';
 import { i18n } from '../../boot/i18n';
 
+// colors
 const { getPaletteColor } = colors;
-const white = getPaletteColor('white');
 const grey10 = getPaletteColor('grey-10');
-const blueGrey6 = getPaletteColor('blue-grey-6');
+const primary = getPaletteColor('primary');
+const white = getPaletteColor('white');
 
+// variables
 const icon = 'people';
 const title = i18n.global.t('index.newsletterFeature.aboutEvents');
 const url = '#';
+const iconSize = 18;
 
 describe('<NewsletterItem>', () => {
   context('desktop', () => {
@@ -47,29 +50,7 @@ describe('<NewsletterItem>', () => {
       });
     });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('newsletter-item-title')
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', grey10)
-          .and('contain', title)
-          .then(($title) => {
-            expect($title.text()).to.equal(title);
-          });
-      });
-    });
-
-    it('renders icon', () => {
-      cy.window().then(() => {
-        cy.dataCy('newsletter-item-icon')
-          .should('be.visible')
-          .and('have.css', 'width', '32px')
-          .and('have.css', 'height', '32px')
-          .and('have.color', blueGrey6)
-          .and('contain', icon);
-      });
-    });
+    coreTests();
 
     it('renders button with icon', () => {
       cy.window().then(() => {
@@ -107,29 +88,7 @@ describe('<NewsletterItem>', () => {
       cy.viewport('iphone-6');
     });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('newsletter-item-title')
-          .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .and('have.color', grey10)
-          .and('contain', title)
-          .then(($title) => {
-            expect($title.text()).to.equal(title);
-          });
-      });
-    });
-
-    it('renders icon', () => {
-      cy.window().then(() => {
-        cy.dataCy('newsletter-item-icon')
-          .should('be.visible')
-          .and('have.css', 'width', '32px')
-          .and('have.css', 'height', '32px')
-          .and('have.color', blueGrey6)
-          .and('contain', icon);
-      });
-    });
+    coreTests();
 
     it('renders button with icon', () => {
       cy.window().then(() => {
@@ -188,11 +147,31 @@ describe('<NewsletterItem>', () => {
       cy.viewport('macbook-16');
     });
 
-    it('renders bold title', () => {
+    coreTests();
+
+    it('renders primary button', () => {
+      cy.window().then(() => {
+        cy.dataCy('newsletter-item-button')
+          .should('be.visible')
+          .and('have.css', 'font-size', '14px')
+          .and('have.css', 'font-weight', '500')
+          .and('have.css', 'text-transform', 'uppercase')
+          .and('have.color', white)
+          .and('have.backgroundColor', primary)
+          .and('contain', i18n.global.t('index.newsletterFeature.follow'))
+          .within(() => {
+            cy.dataCy('newsletter-follow-icon').should('not.be.visible');
+          });
+      });
+    });
+  });
+
+  function coreTests() {
+    it('renders title', () => {
       cy.window().then(() => {
         cy.dataCy('newsletter-item-title')
           .should('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '700')
+          .and('have.css', 'font-weight', '400')
           .and('have.color', grey10)
           .and('contain', title)
           .then(($title) => {
@@ -201,20 +180,18 @@ describe('<NewsletterItem>', () => {
       });
     });
 
-    it('renders black button', () => {
+    it('renders icon', () => {
       cy.window().then(() => {
-        cy.dataCy('newsletter-item-button')
+        cy.dataCy('newsletter-item-icon')
           .should('be.visible')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '500')
-          .and('have.css', 'text-transform', 'uppercase')
-          .and('have.color', white)
-          .and('have.backgroundColor', grey10)
-          .and('contain', i18n.global.t('index.newsletterFeature.follow'));
-        cy.dataCy('newsletter-item-button')
-          .find('.q-icon')
-          .should('not.be.visible');
+          .and('have.color', primary);
+        cy.dataCy('newsletter-item-icon')
+          .invoke('height')
+          .should('be.eq', iconSize);
+        cy.dataCy('newsletter-item-icon')
+          .invoke('width')
+          .should('be.eq', iconSize);
       });
     });
-  });
+  }
 });

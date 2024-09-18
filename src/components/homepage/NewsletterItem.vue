@@ -14,14 +14,20 @@
  * - `item` (NewsletterItemType, required): The newsletter item to be
  *   displayed. It includes properties like icon, title, and following status.
  *
+ * @emits
+ * - `follow` - Event indicating the user's choice to subscribe.
+ *
  * @example
- * <newsletter-item :item="singleNewsletter" />
+ * <newsletter-item :item="singleNewsletter" @follow="onFollow" />
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A105656&mode=dev)
  */
 
 // libraries
 import { defineComponent, computed } from 'vue';
+
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
 import { NewsletterItem as NewsletterItemType } from '../types';
@@ -34,13 +40,22 @@ export default defineComponent({
       required: true,
     },
   },
-  setup(props) {
-    const buttonTextColor = computed((): string => {
-      return props.item.following ? 'grey-10' : 'white';
+  emits: ['follow'],
+  setup(props, { emit }) {
+    const buttonColor = computed((): string => {
+      return props.item.following ? 'grey-10' : 'primary';
     });
 
+    const { colorPrimaryOpacity } = rideToWorkByBikeConfig;
+
+    const onFollow = (): void => {
+      emit('follow');
+    };
+
     return {
-      buttonTextColor,
+      buttonColor,
+      colorPrimaryOpacity,
+      onFollow,
     };
   },
 });
@@ -53,22 +68,20 @@ export default defineComponent({
   >
     <!-- Label section -->
     <div
-      class="flex no-wrap items-center gap-8"
+      class="flex no-wrap items-center gap-12"
       data-cy="newsletter-item-content"
     >
-      <!-- Icon -->
-      <q-icon
-        :name="item.icon"
-        size="32px"
-        color="blue-grey-6"
-        data-cy="newsletter-item-icon"
-      ></q-icon>
+      <q-avatar size="38px" :style="{ background: colorPrimaryOpacity }">
+        <!-- Icon -->
+        <q-icon
+          :name="item.icon"
+          size="18px"
+          color="primary"
+          data-cy="newsletter-item-icon"
+        ></q-icon>
+      </q-avatar>
       <!-- Title -->
-      <div
-        class="text-body2 text-grey-10"
-        :class="{ 'text-bold': !item.following }"
-        data-cy="newsletter-item-title"
-      >
+      <div class="text-body2 text-grey-10" data-cy="newsletter-item-title">
         {{ item.title }}
       </div>
     </div>
@@ -76,12 +89,13 @@ export default defineComponent({
     <!-- Button -->
     <q-btn
       rounded
-      color="grey-10"
-      :text-color="buttonTextColor"
       unelevated
+      :color="buttonColor"
       :outline="item.following"
-      data-cy="newsletter-item-button"
+      :disabled="item.following"
       class="min-w-200"
+      @click.prevent="onFollow"
+      data-cy="newsletter-item-button"
     >
       <!-- Icon -->
       <q-icon
@@ -90,6 +104,7 @@ export default defineComponent({
         size="18px"
         color="grey-10"
         class="q-mr-xs"
+        data-cy="newsletter-follow-icon"
       />
       <!-- Label -->
       <span v-if="item.following">

@@ -301,19 +301,19 @@ export const cardsProgress: CardProgress[] = [
 export const newsletterItems: NewsletterItem[] = [
   {
     title: i18n.global.t('index.newsletterFeature.aboutChallenges'),
-    icon: 'ion-bicycle',
+    icon: 'svguse:icons/newsletter_item/icons.svg#lucide-bike',
     url: '#',
     following: true,
   },
   {
     title: i18n.global.t('index.newsletterFeature.aboutEvents'),
-    icon: 'people',
+    icon: 'svguse:icons/newsletter_item/icons.svg#tabler-calendar',
     url: '#',
     following: true,
   },
   {
     title: i18n.global.t('index.newsletterFeature.aboutMobility'),
-    icon: 'mdi-leaf',
+    icon: 'svguse:icons/newsletter_item/icons.svg#tabler-leaf',
     url: '#',
     following: false,
   },

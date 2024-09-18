@@ -23,7 +23,7 @@
 
 // libraries
 import { Screen } from 'quasar';
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 
 // components
 import NewsletterItem from './NewsletterItem.vue';
@@ -32,10 +32,13 @@ import NewsletterItem from './NewsletterItem.vue';
 import { i18n } from '../../boot/i18n';
 
 // mocks
-import { newsletterItems } from '../../mocks/homepage';
+import { newsletterItems as newsletterItemsFixture } from '../../mocks/homepage';
 
 // stores
 import { useLoginStore } from '../../stores/login';
+
+// types
+import { NewsletterItem as NewsletterItemType } from '../types';
 
 export default defineComponent({
   name: 'NewsletterFeature',
@@ -70,6 +73,12 @@ export default defineComponent({
           });
     });
 
+    const newsletterItems = ref(newsletterItemsFixture as NewsletterItemType[]);
+
+    const onFollow = (index: number): void => {
+      newsletterItems.value[index].following = true;
+    };
+
     const headingMaxWidth = Screen.sizes.sm;
 
     return {
@@ -77,6 +86,7 @@ export default defineComponent({
       newsletterDescription,
       newsletterItems,
       newsletterTitle,
+      onFollow,
     };
   },
 });
@@ -127,7 +137,11 @@ export default defineComponent({
         class="q-mt-lg"
       >
         <!-- Item - subscription variant -->
-        <newsletter-item :item="item" data-cy="newsletter-feature-item" />
+        <newsletter-item
+          :item="item"
+          data-cy="newsletter-feature-item"
+          @follow="onFollow(index)"
+        />
         <!-- Separator -->
         <q-separator
           v-if="index < newsletterItems.length - 1"
