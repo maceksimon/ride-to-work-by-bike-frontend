@@ -31,7 +31,7 @@ const selectorProfileCoordinatorContact = 'profile-coordinator-contact';
 const selectorSize = 'profile-details-size';
 const selectorState = 'profile-details-state';
 const selectorTeam = 'profile-details-team';
-const selectorToggleContactParticipation = 'profile-allow-contact-phone';
+const selectorAllowContactPhone = 'profile-allow-contact-phone';
 const selectorTrackingNumber = 'profile-details-tracking-number';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
@@ -244,7 +244,7 @@ function coreTests() {
         .find(dataSelectorValue)
         .should('contain', formPersonalDetails.phone);
       // contact participation
-      cy.dataCy(selectorToggleContactParticipation)
+      cy.dataCy(selectorAllowContactPhone)
         .should('be.visible')
         .and('contain', i18n.global.t('profile.labelAllowContactPhone'));
       // coordinator contact
