@@ -60,7 +60,7 @@ export default defineComponent({
 
     const profile: Profile = reactive(formPersonalDetails as Profile);
 
-    const contactParticipation = ref(false);
+    const allowContactPhone = ref(false);
 
     const labelPaymentState = computed(() => {
       switch (profile.paymentState) {
@@ -94,7 +94,7 @@ export default defineComponent({
     };
 
     return {
-      contactParticipation,
+      allowContactPhone,
       iconPaymentColor,
       iconPaymentState,
       iconSize,
@@ -362,9 +362,9 @@ export default defineComponent({
     <!-- Contact participation -->
     <div class="q-mt-xl">
       <q-toggle
-        :label="$t('profile.labelContactParticipation')"
-        v-model="contactParticipation"
-        data-cy="profile-details-contact-participation"
+        :label="$t('profile.labelAllowContactPhone')"
+        v-model="allowContactPhone"
+        data-cy="profile-allow-contact-phone"
       />
     </div>
 

@@ -31,8 +31,7 @@ const selectorProfileCoordinatorContact = 'profile-coordinator-contact';
 const selectorSize = 'profile-details-size';
 const selectorState = 'profile-details-state';
 const selectorTeam = 'profile-details-team';
-const selectorToggleContactParticipation =
-  'profile-details-contact-participation';
+const selectorToggleContactParticipation = 'profile-allow-contact-phone';
 const selectorTrackingNumber = 'profile-details-tracking-number';
 const selectorTitleChallengeDetails = 'profile-title-challenge-details';
 const selectorTitlePersonalDetails = 'profile-title-personal-details';
@@ -64,7 +63,7 @@ describe('<ProfileDetails>', () => {
         'buttonDownloadInvoice',
         'descriptionNickname',
         'labelAddressDivision',
-        'labelContactParticipation',
+        'labelAllowContactPhone',
         'labelDeliveryAddress',
         'labelEmail',
         'labelEmailEmpty',
@@ -247,7 +246,7 @@ function coreTests() {
       // contact participation
       cy.dataCy(selectorToggleContactParticipation)
         .should('be.visible')
-        .and('contain', i18n.global.t('profile.labelContactParticipation'));
+        .and('contain', i18n.global.t('profile.labelAllowContactPhone'));
       // coordinator contact
       cy.dataCy(selectorProfileCoordinatorContact).should('be.visible');
     });
