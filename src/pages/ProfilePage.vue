@@ -25,7 +25,7 @@ export default {
 </script>
 
 <template>
-  <q-page class="overflow-hidden" data-cy="q-main">
+  <q-page class="overflow-hidden" data-cy="profile-page">
     <div class="q-px-lg bg-white q-pb-xl q-pt-lg">
       <!-- Page title -->
       <div>

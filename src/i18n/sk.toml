@@ -484,6 +484,7 @@ textCoordinatorContact = "V prípade otázok a pripomienok týkajúcich sa vstup
 textPasswordConfirm = "Musíte potvrdiť zmenu e-mailu s heslom do aplikácie Do práce na bicykli:"
 titleChallengeDetails = "Súťažné údaje"
 titlePersonalDetails = "Osobné údaje"
+titleProfile = "Profil"
 titleRegistrationDetails = "Registrácia"
 titleStarterPackage = "Súťažný balíček"
 titleUpdateEmail = "Upraviť e-mail"

@@ -484,6 +484,7 @@ textCoordinatorContact = "You can contact <b>your company coordinator</b> with q
 textPasswordConfirm = "You need to confirm the email change with the password to Ride to Work by Bike:"
 titleChallengeDetails = "Competition Details"
 titlePersonalDetails = "Personal Details"
+titleProfile = "Profile"
 titleRegistrationDetails = "Registration"
 titleStarterPackage = "Starter Package"
 titleUpdateEmail = "Edit e-mail"

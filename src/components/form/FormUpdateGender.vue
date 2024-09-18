@@ -57,11 +57,11 @@ export default defineComponent({
 
     const genderOptions: FormOption[] = [
       {
-        label: i18n.global.t('global.man'),
+        label: i18n.global.t('global.woman'),
         value: Gender.female,
       },
       {
-        label: i18n.global.t('global.woman'),
+        label: i18n.global.t('global.man'),
         value: Gender.male,
       },
     ];

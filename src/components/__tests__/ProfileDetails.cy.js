@@ -51,7 +51,10 @@ const dataSelectorValue = '[data-cy="details-item-value"]';
 
 // variables
 const newNickname = 'Cyklobaron';
-const newGender = 'female';
+const genderFemale = 'female';
+const genderFemaleKey = 'global.woman';
+const genderMale = 'male';
+const genderMaleKey = 'global.man';
 const newEmail = 'ride@dopracenakole.cz';
 const password = 'password';
 
@@ -423,15 +426,14 @@ function coreTests() {
         .click();
       // gender edit form
       cy.dataCy(selectorFormGender).should('be.visible');
-      // change gender
+      // change gender to woman
       cy.dataCy(selectorFormGender)
         .find('.q-radio__label')
-        // female
-        .first()
+        .contains(i18n.global.t(genderFemaleKey))
         .click();
       // cancel
       cy.dataCy(selectorFormGender).find(dataSelectorButtonCancel).click();
-      // gender is the same
+      // gender stays the same (male)
       cy.dataCy(selectorGender)
         .find(dataSelectorValue)
         .should('be.visible')
@@ -446,8 +448,7 @@ function coreTests() {
       // change gender
       cy.dataCy(selectorFormGender)
         .find('.q-radio__label')
-        // female
-        .first()
+        .contains(i18n.global.t(genderFemaleKey))
         .click();
       // save
       cy.dataCy(selectorFormGender).find(dataSelectorButtonSave).click();
@@ -455,7 +456,7 @@ function coreTests() {
       cy.dataCy(selectorGender)
         .find(dataSelectorValue)
         .should('be.visible')
-        .and('have.text', newGender);
+        .and('have.text', genderFemale);
       // reset gender
       cy.dataCy(selectorGender)
         .find(dataSelectorEdit)
@@ -466,11 +467,15 @@ function coreTests() {
       // change gender
       cy.dataCy(selectorFormGender)
         .find('.q-radio__label')
-        // male
-        .last()
+        .contains(i18n.global.t(genderMaleKey))
         .click();
       // save
       cy.dataCy(selectorFormGender).find(dataSelectorButtonSave).click();
+      // gender is male
+      cy.dataCy(selectorGender)
+        .find(dataSelectorValue)
+        .should('be.visible')
+        .and('have.text', genderMale);
     });
   });
 
