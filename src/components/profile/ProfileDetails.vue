@@ -21,7 +21,7 @@
  */
 
 // libraries
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 
 // components
 import AddressDisplay from '../global/AddressDisplay.vue';
@@ -60,6 +60,8 @@ export default defineComponent({
 
     const profile: Profile = reactive(formPersonalDetails as Profile);
 
+    const contactParticipation = ref(false);
+
     const labelPaymentState = computed(() => {
       switch (profile.paymentState) {
         case PaymentState.paidByOrganization:
@@ -92,6 +94,7 @@ export default defineComponent({
     };
 
     return {
+      contactParticipation,
       iconPaymentColor,
       iconPaymentState,
       iconSize,
@@ -354,6 +357,15 @@ export default defineComponent({
           </q-btn>
         </div>
       </div>
+    </div>
+
+    <!-- Contact participation -->
+    <div class="q-mt-xl">
+      <q-toggle
+        :label="$t('profile.labelContactParticipation')"
+        v-model="contactParticipation"
+        data-cy="profile-details-contact-participation"
+      />
     </div>
 
     <!-- Coordinator contact -->
