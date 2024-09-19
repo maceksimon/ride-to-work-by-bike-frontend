@@ -78,6 +78,7 @@ describe('DrawerMenu', () => {
           // inactive item
           cy.wrap($item)
             .should('have.color', white)
+            .should('have.css', 'font-weight', '400')
             .within(() => {
               cy.dataCy(selectorDrawerMenuItemIcon).should('have.color', grey4);
             });
