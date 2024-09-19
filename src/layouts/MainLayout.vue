@@ -85,11 +85,7 @@ export default defineComponent({
       <!-- Navigation menu -->
       <drawer-menu :items="menuTop" class="q-pt-lg" data-cy="drawer-menu-top" />
       <q-separator color="blue-grey-2 q-my-sm q-mx-lg" />
-      <drawer-menu
-        :items="menuBottom"
-        class="q-pt-lg"
-        data-cy="drawer-menu-bottom"
-      />
+      <drawer-menu :items="menuBottom" data-cy="drawer-menu-bottom" />
     </q-drawer>
 
     <q-page-container class="bg-white">
