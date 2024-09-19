@@ -13,43 +13,43 @@ export const user: User = {
 export const menuTop: Link[] = [
   {
     url: '',
-    icon: 'home',
+    icon: 'svguse:icons/drawer_menu/icons.svg#lucide-home',
     name: 'home',
     title: 'home',
   },
   {
     url: '',
-    icon: 'route',
+    icon: 'svguse:icons/drawer_menu/icons.svg#lucide-route',
     name: 'routes',
     title: 'routes',
   },
   {
     url: '',
-    icon: 'emoji_events',
+    icon: 'svguse:icons/drawer_menu/icons.svg#chart-graph',
     name: 'results',
     title: 'results',
   },
   {
     url: '',
-    icon: 'people',
+    icon: 'svguse:icons/drawer_menu/icons.svg#three-circles',
     name: 'community',
     title: 'community',
   },
   {
     url: '',
-    icon: 'verified',
+    icon: 'svguse:icons/drawer_menu/icons.svg#lucide-badge-percent',
     name: 'prizes',
     title: 'discounts',
   },
   {
     url: '',
-    icon: 'business',
+    icon: 'svguse:icons/drawer_menu/icons.svg#lucide-building',
     name: 'company-coordinator',
     title: 'coordinator',
   },
   {
     url: '',
-    icon: 'account_circle',
+    icon: 'svguse:icons/drawer_menu/icons.svg#ion-person-outline',
     name: 'profile',
     title: 'profile',
   },
@@ -58,13 +58,13 @@ export const menuTop: Link[] = [
 export const menuBottom: Link[] = [
   {
     url: '',
-    icon: 'email',
+    icon: 'svguse:icons/drawer_menu/icons.svg#email',
     name: 'invite',
     title: 'inviteFriends',
   },
   {
     url: '',
-    icon: 'volunteer_activism',
+    icon: 'svguse:icons/drawer_menu/icons.svg#lucide-gift',
     name: 'donate',
     title: 'donate',
   },

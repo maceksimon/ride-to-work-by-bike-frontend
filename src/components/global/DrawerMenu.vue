@@ -47,7 +47,7 @@ export default defineComponent({
       clickable
       :to="{ name: item.name }"
       active-class="menu-active-item"
-      class="flex items-center q-px-lg"
+      class="flex text-body1 items-center q-px-lg"
       data-cy="drawer-menu-item"
     >
       <!-- Link icon -->
@@ -55,7 +55,7 @@ export default defineComponent({
         :name="item.icon"
         size="18px"
         color="grey-4"
-        class="q-mr-sm"
+        class="q-mr-md"
         data-cy="drawer-menu-item-icon"
       />
       <!-- Link text -->
@@ -70,7 +70,7 @@ export default defineComponent({
       v-for="item in menuBottom"
       :key="item.name"
       :to="item.url"
-      class="flex items-center q-px-lg"
+      class="flex text-body1 items-center q-px-lg"
       clickable
       data-cy="drawer-menu-item"
     >
@@ -79,7 +79,7 @@ export default defineComponent({
         :name="item.icon"
         size="18px"
         color="grey-4"
-        class="q-mr-sm"
+        class="q-mr-md"
         data-cy="drawer-menu-item-icon"
       />
       <!-- Link text -->

@@ -10,6 +10,9 @@ const grey4 = getPaletteColor('grey-4');
 const selectorDrawerMenuItem = 'drawer-menu-item';
 const selectorDrawerMenuItemIcon = 'drawer-menu-item-icon';
 
+// variables
+const iconSize = 18;
+
 const menuItems = [
   { icon: 'home', name: 'home' },
   { icon: 'route', name: 'routes' },
@@ -47,40 +50,48 @@ describe('DrawerMenu', () => {
     });
   });
 
-  it('should render each item with the expected icon and text content', () => {
-    cy.window().then(() => {
-      menuItems.forEach((item, index) => {
-        cy.dataCy(selectorDrawerMenuItem)
-          .eq(index)
-          .within(() => {
-            cy.get('.q-icon')
-              .should('be.visible')
-              .and('contain.text', item.icon);
-          });
-      });
-    });
-  });
-
-  it.only('renders items with correct styling', () => {
+  it('renders items with correct styling', () => {
     cy.window().then(() => {
       // Assuming the first item is active by default
-      cy.dataCy(selectorDrawerMenuItem).each(($item) => {
+      cy.dataCy(selectorDrawerMenuItem).each(($item, index) => {
         // test if current route
         if ($item.hasClass('menu-active-item')) {
           // active item
           cy.wrap($item)
             .should('have.color', white)
-            .should('have.css', 'font-weight', '700')
+            .and('have.css', 'font-size', '16px')
+            .and('have.css', 'font-weight', '700')
+            .and(
+              'contain',
+              i18n.global.t(`drawerMenu.${menuItems[index].name}`),
+            )
             .within(() => {
               cy.dataCy(selectorDrawerMenuItemIcon).should('have.color', white);
+              cy.dataCy(selectorDrawerMenuItemIcon)
+                .invoke('width')
+                .should('be.eq', iconSize);
+              cy.dataCy(selectorDrawerMenuItemIcon)
+                .invoke('height')
+                .should('be.eq', iconSize);
             });
         } else {
           // inactive item
           cy.wrap($item)
             .should('have.color', white)
-            .should('have.css', 'font-weight', '400')
+            .and('have.css', 'font-size', '16px')
+            .and('have.css', 'font-weight', '400')
+            .and(
+              'contain',
+              i18n.global.t(`drawerMenu.${menuItems[index].name}`),
+            )
             .within(() => {
               cy.dataCy(selectorDrawerMenuItemIcon).should('have.color', grey4);
+              cy.dataCy(selectorDrawerMenuItemIcon)
+                .invoke('width')
+                .should('be.eq', iconSize);
+              cy.dataCy(selectorDrawerMenuItemIcon)
+                .invoke('height')
+                .should('be.eq', iconSize);
             });
         }
       });
