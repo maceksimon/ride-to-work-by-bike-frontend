@@ -138,7 +138,6 @@ function coreTests() {
         }
         expect(resp.status).to.eq(httpSuccessfullStatus);
       });
-
       cy.dataCy(selectorFooterAutoMatLogo)
         .should('be.visible')
         .and('have.css', 'width', '74px')
