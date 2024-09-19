@@ -11,6 +11,9 @@ import FooterBar from 'components/global/FooterBar.vue';
 import MobileBottomPanel from 'components/global/MobileBottomPanel.vue';
 import UserSelect from 'components/global/UserSelect.vue';
 
+// mocks
+import { menuBottom, menuTop } from '../mocks/layout';
+
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
@@ -39,6 +42,8 @@ export default defineComponent({
     const { containerContentWidth } = rideToWorkByBikeConfig;
     return {
       containerContentWidth,
+      menuBottom,
+      menuTop,
     };
   },
 });
@@ -78,7 +83,13 @@ export default defineComponent({
         />
       </div>
       <!-- Navigation menu -->
-      <drawer-menu class="q-pt-lg" data-cy="drawer-menu" />
+      <drawer-menu :items="menuTop" class="q-pt-lg" data-cy="drawer-menu-top" />
+      <q-separator color="blue-grey-2 q-my-sm q-mx-lg" />
+      <drawer-menu
+        :items="menuBottom"
+        class="q-pt-lg"
+        data-cy="drawer-menu-bottom"
+      />
     </q-drawer>
 
     <q-page-container class="bg-white">
