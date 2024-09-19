@@ -391,7 +391,7 @@ title = "Sledujte nás na Facebooku"
 
 [footer]
 buttonBackToTop = "Späť nahor"
-copyrightOpenSource = "Táto aplikácia je slobodný softvér."
+softwareLicence = "Táto aplikácia je slobodný softvér."
 deployedAppVersion = "Nasadená verzia aplikácie"
 textChallengeOrganizer = "Výzvu organizuje"
 

@@ -391,7 +391,7 @@ title = "Follow us on Facebook"
 
 [footer]
 buttonBackToTop = "Back to top"
-copyrightOpenSource = "This app is free software."
+softwareLicence = "This app is free software."
 deployedAppVersion = "Deployed app version"
 textChallengeOrganizer = "Challenge by"
 

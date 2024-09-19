@@ -45,9 +45,9 @@ export default defineComponent({
   setup() {
     let copyrightList: string[];
     if (rideToWorkByBikeDeployedAppVersion.version) {
-      copyrightList = ['copyrightOpenSource', 'deployedAppVersion'];
+      copyrightList = ['softwareLicence', 'deployedAppVersion'];
     } else {
-      copyrightList = ['copyrightOpenSource'];
+      copyrightList = ['softwareLicence'];
     }
 
     function scrollToTop(): void {
