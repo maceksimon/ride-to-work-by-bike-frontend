@@ -1,5 +1,14 @@
 import DrawerMenu from '../global/DrawerMenu.vue';
 import { i18n } from '../../boot/i18n';
+import { colors } from 'quasar';
+
+const { getPaletteColor } = colors;
+const white = getPaletteColor('white');
+const grey4 = getPaletteColor('grey-4');
+
+// selectors
+const selectorDrawerMenuItem = 'drawer-menu-item';
+const selectorDrawerMenuItemIcon = 'drawer-menu-item-icon';
 
 const menuItems = [
   { icon: 'home', name: 'home' },
@@ -34,20 +43,45 @@ describe('DrawerMenu', () => {
 
   it('should render the list with the correct number of items', () => {
     cy.window().then(() => {
-      cy.get('.q-item').should('have.length', 9);
+      cy.dataCy(selectorDrawerMenuItem).should('have.length', 9);
     });
   });
 
   it('should render each item with the expected icon and text content', () => {
     cy.window().then(() => {
       menuItems.forEach((item, index) => {
-        cy.get('.q-item')
+        cy.dataCy(selectorDrawerMenuItem)
           .eq(index)
           .within(() => {
             cy.get('.q-icon')
               .should('be.visible')
               .and('contain.text', item.icon);
           });
+      });
+    });
+  });
+
+  it.only('renders items with correct styling', () => {
+    cy.window().then(() => {
+      // Assuming the first item is active by default
+      cy.dataCy(selectorDrawerMenuItem).each(($item) => {
+        // test if current route
+        if ($item.hasClass('menu-active-item')) {
+          // active item
+          cy.wrap($item)
+            .should('have.color', white)
+            .should('have.css', 'font-weight', '700')
+            .within(() => {
+              cy.dataCy(selectorDrawerMenuItemIcon).should('have.color', white);
+            });
+        } else {
+          // inactive item
+          cy.wrap($item)
+            .should('have.color', white)
+            .within(() => {
+              cy.dataCy(selectorDrawerMenuItemIcon).should('have.color', grey4);
+            });
+        }
       });
     });
   });

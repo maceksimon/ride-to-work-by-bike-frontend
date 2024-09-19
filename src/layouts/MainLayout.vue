@@ -64,14 +64,19 @@ export default defineComponent({
       show-if-above
       side="left"
       :width="320"
-      class="gt-sm bg-primary q-py-lg q-px-lg"
+      class="gt-sm bg-primary q-py-lg"
       data-cy="q-drawer"
     >
-      <!-- Logo + Buttons (help, notification) -->
-      <drawer-header :mobile="false" data-cy="drawer-header" />
-      <!-- User options dropdown -->
-      <user-select class="q-pt-lg" data-cy="user-select" />
-      <drawer-toggle-buttons class="q-pt-lg" data-cy="drawer-toggle-buttons" />
+      <div class="q-px-lg">
+        <!-- Logo + Buttons (help, notification) -->
+        <drawer-header :mobile="false" data-cy="drawer-header" />
+        <!-- User options dropdown -->
+        <user-select class="q-pt-lg" data-cy="user-select" />
+        <drawer-toggle-buttons
+          class="q-pt-lg"
+          data-cy="drawer-toggle-buttons"
+        />
+      </div>
       <!-- Navigation menu -->
       <drawer-menu class="q-pt-lg" data-cy="drawer-menu" />
     </q-drawer>
