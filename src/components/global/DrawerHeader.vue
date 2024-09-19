@@ -72,7 +72,7 @@ export default defineComponent({
     <!-- RTWBB logo -->
     <img
       class="logo"
-      src="~assets/svg/logo.svg"
+      src="~assets/svg/logo-white.svg"
       :alt="$t('index.logoAltText')"
       data-cy="logo"
     />

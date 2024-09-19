@@ -64,7 +64,7 @@ export default defineComponent({
       show-if-above
       side="left"
       :width="320"
-      class="gt-sm bg-info q-py-lg q-px-lg pb-footer"
+      class="gt-sm bg-primary q-py-lg q-px-lg"
       data-cy="q-drawer"
     >
       <!-- Logo + Buttons (help, notification) -->
