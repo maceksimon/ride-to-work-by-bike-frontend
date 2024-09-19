@@ -122,12 +122,23 @@ function coreTests() {
     });
   });
 
-  it('renders Auto*Mat logo with separator and text', () => {
+  it('renders Auto*Mat logo with separator and text, validate URL link', () => {
     cy.window().then(() => {
       // link
       cy.dataCy(selectorFooterAutoMatLogoLink)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlAutoMat);
+      cy.request({
+        url: rideToWorkByBikeConfig.urlAutoMat,
+        failOnStatusCode: failOnStatusCode,
+      }).then((resp) => {
+        if (resp.status === httpTooManyRequestsStatus) {
+          cy.log(httpTooManyRequestsStatusMessage);
+          return;
+        }
+        expect(resp.status).to.eq(httpSuccessfullStatus);
+      });
+
       cy.dataCy(selectorFooterAutoMatLogo)
         .should('be.visible')
         .and('have.css', 'width', '74px')
