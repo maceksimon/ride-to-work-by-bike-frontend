@@ -108,7 +108,6 @@ describe('<ProfileCoordinatorContact>', () => {
           cy.matchImageSnapshotNamed(
             selectorAvatar,
             `${Cypress.currentTest.titlePath[0]}-avatar`,
-            0.2,
           );
         });
     });
