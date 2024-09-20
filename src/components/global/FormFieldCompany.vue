@@ -211,7 +211,6 @@ export default defineComponent({
       </div>
       <div
         class="col-12 col-sm-auto flex items-start justify-end q-pt-sm q-pl-md"
-        style="margin-top: 2px"
         data-cy="col-button"
       >
         <!-- Button: Add company -->
@@ -220,6 +219,7 @@ export default defineComponent({
           rounded
           icon="mdi-plus"
           color="primary"
+          style="margin-top: 2px"
           @click.prevent="isDialogOpen = true"
           data-cy="button-add-company"
         >

@@ -106,8 +106,7 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('renders input and button in a column layout', () => {
-      cy.testElementPercentageWidth(cy.dataCy('col-input'), 88);
-      cy.testElementPercentageWidth(cy.dataCy('col-button'), 12);
+      cy.testElementsSideBySide('col-input', 'col-button');
     });
 
     it('renders dialog when for adding a new company', () => {
