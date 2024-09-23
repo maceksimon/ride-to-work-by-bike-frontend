@@ -21,10 +21,11 @@
 
 // libraries
 import { date } from 'quasar';
-import { computed, defineComponent, reactive } from 'vue';
+import { defineComponent } from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
+import { useNotifications } from '../../composables/useNotifications';
 
 // enums
 enum NotificationTableColumn {
@@ -34,16 +35,20 @@ enum NotificationTableColumn {
   action = 'action',
 }
 
-// fixtures
-import tableNotificationsFixture from '../../../test/cypress/fixtures/tableNotifications.json';
-
 // types
 import type { TableColumn } from '../types/Table';
-import type { Notification } from '../types/Notifications';
 
 export default defineComponent({
   name: 'TableNotifications',
   setup() {
+    const {
+      notifications,
+      notificationsUnreadCount,
+      markAsRead,
+      markAllAsRead,
+      onNotificationClick,
+    } = useNotifications();
+
     const columns: TableColumn[] = [
       {
         name: NotificationTableColumn.title,
@@ -86,36 +91,13 @@ export default defineComponent({
       },
     ];
 
-    const rows = reactive<Notification[]>(tableNotificationsFixture);
-
-    const onNotificationClick = (row: Notification): void => {
-      markAsRead(row);
-      if (row.data.url) {
-        window.location.href = row.data.url;
-      }
-    };
-
-    const markAsRead = (row: Notification): void => {
-      row.unread = false;
-    };
-
-    const markAllAsRead = (): void => {
-      rows.forEach((row) => {
-        markAsRead(row);
-      });
-    };
-
-    const unreadCount = computed(() => {
-      return rows.filter((row) => row.unread).length;
-    });
-
     return {
       columns,
-      rows,
+      notifications,
       markAsRead,
       markAllAsRead,
       NotificationTableColumn,
-      unreadCount,
+      notificationsUnreadCount,
       onNotificationClick,
     };
   },
@@ -130,7 +112,7 @@ export default defineComponent({
         rounded
         outline
         color="primary"
-        :disabled="unreadCount === 0"
+        :disabled="notificationsUnreadCount === 0"
         data-cy="button-mark-all-as-read"
         @click.prevent="markAllAsRead"
       >
@@ -143,7 +125,7 @@ export default defineComponent({
     <q-table
       flat
       bordered
-      :rows="rows"
+      :rows="notifications"
       :columns="columns"
       :row-key="NotificationTableColumn.title"
     >

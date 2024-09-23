@@ -28,22 +28,17 @@
  */
 
 // libraries
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 
 // components
 import DialogDefault from './DialogDefault.vue';
 
 // composables
 import { useFormatDate } from '../../composables/useFormatDate';
+import { useNotifications } from '../../composables/useNotifications';
 
 // config
 import { routesConf } from '../../router/routes_conf';
-
-// fixtures
-import notificationFixture from '../../../test/cypress/fixtures/buttonNotifications.json';
-
-// types
-import type { Notification } from '../types/Notifications';
 
 export default defineComponent({
   name: 'ButtonNotifications',
@@ -51,37 +46,21 @@ export default defineComponent({
     DialogDefault,
   },
   setup() {
-    const notifications = ref<Notification[]>(notificationFixture);
-    const notificationsUnread = computed<Notification[]>(() =>
-      notifications.value.filter((notification) => notification.unread),
-    );
-    const notificationsUnreadCount = computed<number>(
-      () => notificationsUnread.value.length,
-    );
     const isDialogOpen = ref<boolean>(false);
-
-    const { formatDateTimeLabel } = useFormatDate();
 
     const openDialog = (): void => {
       isDialogOpen.value = true;
     };
 
-    const markAsRead = (notification: Notification): void => {
-      notification.unread = false;
-    };
+    const {
+      notificationsUnread,
+      notificationsUnreadCount,
+      markAsRead,
+      markAllAsRead,
+      onNotificationClick,
+    } = useNotifications();
 
-    const markAllAsRead = (): void => {
-      notificationsUnread.value.forEach((notification) => {
-        notification.unread = false;
-      });
-    };
-
-    const onNotificationClick = (notification: Notification): void => {
-      markAsRead(notification);
-      if (notification.data.url) {
-        window.location.href = notification.data.url;
-      }
-    };
+    const { formatDateTimeLabel } = useFormatDate();
 
     return {
       formatDateTimeLabel,
