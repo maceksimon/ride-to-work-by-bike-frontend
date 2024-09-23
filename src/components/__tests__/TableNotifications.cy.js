@@ -42,7 +42,7 @@ describe('<TableNotifications>', () => {
   let notifications;
 
   before(() => {
-    cy.fixture('tableNotifications').then((data) => {
+    cy.fixture('notifications').then((data) => {
       notifications = data;
     });
   });
