@@ -37,6 +37,10 @@ notifyMessagePosition = "top"
 # Emails
 contactEmail = "kontakt@dopracenakole.cz"
 
+# LOCAL URLS
+
+urlLoginRegisterBackgroundImage = "/image/login-register-layout.webp"
+
 # EXTERNAL URLS
 
 urlAutoMat = "https://auto-mat.cz"

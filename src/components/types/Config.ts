@@ -41,6 +41,7 @@ export interface ConfigGlobal {
   apiBase: string;
   apiVersion: string;
   urlApiLogin: string;
+  urlLoginRegisterBackgroundImage: string;
 }
 
 export interface ConfigAppVersion {

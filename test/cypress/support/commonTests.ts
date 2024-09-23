@@ -3,6 +3,9 @@ import { colors } from 'quasar';
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
+// selectors
+const layoutBackgroundImageSelector = 'layout-background-image';
+
 /**
  * Basic tests for Language Switcher
  *
@@ -44,6 +47,27 @@ export const testLanguageSwitcher = (): void => {
           }
         });
       });
+  });
+};
+
+/**
+ * Test the visibility of a background image
+ * Note that it is a `fixed` image, so we cannot test `be.visible`
+ */
+export const testBackgroundImage = (): void => {
+  it('should have a background image', () => {
+    cy.task('getAppConfig', process).then((config) => {
+      cy.dataCy(layoutBackgroundImageSelector)
+        .invoke('width')
+        .should('be.greaterThan', 0);
+      cy.dataCy(layoutBackgroundImageSelector)
+        .invoke('height')
+        .should('be.greaterThan', 0);
+      cy.dataCy(layoutBackgroundImageSelector).should('have.css', 'mask-image');
+      cy.dataCy(layoutBackgroundImageSelector)
+        .find('img')
+        .should('have.attr', 'src', config.urlLoginRegisterBackgroundImage);
+    });
   });
 };
 

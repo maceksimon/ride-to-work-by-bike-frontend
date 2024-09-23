@@ -1,4 +1,7 @@
-import { testLanguageSwitcher } from '../support/commonTests';
+import {
+  testLanguageSwitcher,
+  testBackgroundImage,
+} from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 
 describe('Login page', () => {
@@ -18,6 +21,8 @@ describe('Login page', () => {
         });
       });
     });
+
+    testBackgroundImage();
 
     it('renders page header', () => {
       cy.dataCy('login-register-header').should('be.visible');

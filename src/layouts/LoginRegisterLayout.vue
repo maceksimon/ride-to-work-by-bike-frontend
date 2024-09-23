@@ -29,6 +29,7 @@
 // libraries
 import { defineComponent } from 'vue';
 import { i18n } from '../boot/i18n';
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 // set global i18n object (for test purposes)
 if (window.Cypress) {
@@ -39,9 +40,11 @@ export default defineComponent({
   name: 'LoginLayout',
   setup() {
     const imageMask = `url(${new URL('../assets/svg/image-mask.svg', import.meta.url).href})`;
+    const imageUrl = rideToWorkByBikeConfig.urlLoginRegisterBackgroundImage;
 
     return {
       imageMask,
+      imageUrl,
     };
   },
 });
@@ -59,12 +62,13 @@ export default defineComponent({
         fit="cover"
         position="50% 100%"
         ratio="0.85"
-        src="~assets/image/login-register-layout/background.webp"
+        :src="imageUrl"
         :img-style="{
           maskImage: imageMask,
           maskRepeat: 'no-repeat',
           maskSize: 'cover',
         }"
+        data-cy="layout-background-image"
       />
     </div>
     <q-page-container style="isolation: isolate">

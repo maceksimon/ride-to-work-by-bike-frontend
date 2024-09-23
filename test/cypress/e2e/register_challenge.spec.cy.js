@@ -1,4 +1,7 @@
-import { testLanguageSwitcher } from '../support/commonTests';
+import {
+  testLanguageSwitcher,
+  testBackgroundImage,
+} from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 
 const doneIcon = new URL(
@@ -83,6 +86,8 @@ describe('Register Challenge page', () => {
         });
       });
     });
+
+    testBackgroundImage();
 
     it('renders login register header component', () => {
       cy.dataCy('login-register-header').should('be.visible');
