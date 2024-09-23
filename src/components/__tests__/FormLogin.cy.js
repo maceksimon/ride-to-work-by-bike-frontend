@@ -1,9 +1,14 @@
 import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
+
 import { useLoginStore } from 'src/stores/login';
 import FormLogin from '../login/FormLogin.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import {
+  httpSuccessfullStatus,
+  httpInternalServerErrorStatus,
+} from '../../../test/cypress/support/commonTests';
 
 // colors
 const { getPaletteColor } = colors;
@@ -30,7 +35,6 @@ const user = {
 };
 const { apiBase, urlApiLogin } = rideToWorkByBikeConfig;
 const apiLoginUrl = `${apiBase}${urlApiLogin}`;
-const errorStatusCode = 500;
 
 describe('<FormLogin>', () => {
   it('has translation for all strings', () => {
@@ -294,14 +298,14 @@ describe('<FormLogin>', () => {
     it('shows error if API call fails (error has message)', () => {
       const store = useLoginStore();
       cy.intercept('POST', apiLoginUrl, {
-        statusCode: errorStatusCode,
+        statusCode: httpInternalServerErrorStatus,
       }).then(() => {
         cy.wrap(store.login({ username, password })).then((result) => {
           expect(result).to.equal(null);
           cy.get(classSelectorQNotificationMessage)
             .should('be.visible')
             .and('contain', i18n.global.t('login.apiMessageErrorWithMessage'))
-            .and('contain', errorStatusCode);
+            .and('contain', httpInternalServerErrorStatus);
         });
       });
     });
@@ -309,7 +313,7 @@ describe('<FormLogin>', () => {
     it('calls API and set token on successful login', () => {
       // intercept login API call
       cy.intercept('POST', apiLoginUrl, {
-        statusCode: 200,
+        statusCode: httpSuccessfullStatus,
         body: { access_token: tokenAccess, refresh_token: tokenRefresh, user },
       }).then(() => {
         const store = useLoginStore();
@@ -331,7 +335,7 @@ describe('<FormLogin>', () => {
       const store = useLoginStore();
       // intercept login API call
       cy.intercept('POST', apiLoginUrl, {
-        statusCode: 500,
+        statusCode: httpInternalServerErrorStatus,
       }).then(() => {
         cy.wrap(store.login({ username, password })).then(() => {
           cy.get(classSelectorQNotificationMessage)

@@ -77,6 +77,7 @@ export const testRouteListDayDate = (): void => {
 };
 
 export const httpSuccessfullStatus = 200;
+export const httpInternalServerErrorStatus = 500;
 export const httpTooManyRequestsStatus = 429;
 export const httpTooManyRequestsStatusMessage = `HTTP status code ${httpTooManyRequestsStatus} Too Many Requests ("rate limiting").`;
 export const failOnStatusCode = false;
