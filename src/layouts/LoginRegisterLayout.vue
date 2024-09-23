@@ -49,25 +49,25 @@ export default defineComponent({
 
 <template>
   <q-layout class="bg-primary" view="hHh lpR fFf">
-    <q-page-container>
-      <!-- Background image -->
-      <div
-        v-if="$q.screen.gt.md"
-        class="fixed-top-right"
-        :style="{ width: `60vw`, height: `100vh` }"
-      >
-        <q-img
-          fit="cover"
-          position="50% 100%"
-          ratio="0.85"
-          src="~assets/image/login-register-layout/background.webp"
-          :img-style="{
-            maskImage: imageMask,
-            maskRepeat: 'no-repeat',
-            maskSize: 'cover',
-          }"
-        />
-      </div>
+    <!-- Background image -->
+    <div
+      v-if="$q.screen.gt.md"
+      class="fixed-top-right"
+      :style="{ width: `60vw`, height: `100vh`, isolation: 'isolate' }"
+    >
+      <q-img
+        fit="cover"
+        position="50% 100%"
+        ratio="0.85"
+        src="~assets/image/login-register-layout/background.webp"
+        :img-style="{
+          maskImage: imageMask,
+          maskRepeat: 'no-repeat',
+          maskSize: 'cover',
+        }"
+      />
+    </div>
+    <q-page-container style="isolation: isolate">
       <!-- Page content -->
       <router-view />
     </q-page-container>
