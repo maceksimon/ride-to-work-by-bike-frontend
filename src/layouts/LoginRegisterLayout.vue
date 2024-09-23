@@ -37,12 +37,38 @@ if (window.Cypress) {
 
 export default defineComponent({
   name: 'LoginLayout',
+  setup() {
+    const imageMask = `url(${new URL('../assets/svg/image-mask.svg', import.meta.url).href})`;
+
+    return {
+      imageMask,
+    };
+  },
 });
 </script>
 
 <template>
-  <q-layout view="hHh lpR fFf">
+  <q-layout class="bg-primary" view="hHh lpR fFf">
     <q-page-container>
+      <!-- Background image -->
+      <div
+        v-if="$q.screen.gt.md"
+        class="fixed-top-right"
+        :style="{ width: `60vw`, height: `100vh` }"
+      >
+        <q-img
+          fit="cover"
+          position="50% 100%"
+          ratio="0.85"
+          src="~assets/image/login-register-layout/background.webp"
+          :img-style="{
+            maskImage: imageMask,
+            maskRepeat: 'no-repeat',
+            maskSize: 'cover',
+          }"
+        />
+      </div>
+      <!-- Page content -->
       <router-view />
     </q-page-container>
   </q-layout>
