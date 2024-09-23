@@ -219,7 +219,7 @@ export default defineComponent({
   </div>
 </template>
 
-<style>
+<style scoped lang="scss">
 .hint-no-padding {
   .q-field__bottom {
     padding: 8px 0 0;
