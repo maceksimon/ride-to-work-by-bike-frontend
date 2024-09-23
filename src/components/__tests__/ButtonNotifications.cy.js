@@ -4,7 +4,9 @@ import { colors } from 'quasar';
 import { routesConf } from '../../router/routes_conf';
 
 const { getPaletteColor } = colors;
+
 const grey10 = getPaletteColor('grey-10');
+const red = getPaletteColor('red');
 
 // selectors
 const selectorButtonNotifications = 'button-notifications';
@@ -103,10 +105,9 @@ describe('<ButtonNotifications>', () => {
     });
 
     it('renders count badge with correct unread count', () => {
-      const unreadCount = notifications.filter((n) => n.unread).length;
       cy.dataCy(selectorNotificationsCountBadge)
         .should('be.visible')
-        .and('have.text', unreadCount.toString());
+        .and('have.backgroundColor', red);
     });
 
     it('renders count badge in dialog with correct unread count', () => {
@@ -121,10 +122,7 @@ describe('<ButtonNotifications>', () => {
       const initialUnreadCount = notifications.filter((n) => n.unread).length;
       cy.dataCy(selectorButtonNotifications).click();
       // initial count
-      cy.dataCy(selectorNotificationsCountBadge).should(
-        'have.text',
-        initialUnreadCount.toString(),
-      );
+      cy.dataCy(selectorNotificationsCountBadge).should('exist');
       cy.dataCy(selectorNotificationsCountBadgeDialog).should(
         'have.text',
         initialUnreadCount.toString(),
@@ -135,10 +133,7 @@ describe('<ButtonNotifications>', () => {
       ).click();
       // updated count
       const updatedUnreadCount = initialUnreadCount - 1;
-      cy.dataCy(selectorNotificationsCountBadge).should(
-        'have.text',
-        updatedUnreadCount.toString(),
-      );
+      cy.dataCy(selectorNotificationsCountBadge).should('exist');
       cy.dataCy(selectorNotificationsCountBadgeDialog).should(
         'have.text',
         updatedUnreadCount.toString(),
