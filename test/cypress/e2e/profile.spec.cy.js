@@ -47,7 +47,8 @@ describe('Profile page', () => {
       cy.dataCy('drawer-header').should('be.visible');
       cy.dataCy('user-select').should('be.visible');
       cy.dataCy('drawer-toggle-buttons').should('be.visible');
-      cy.dataCy('drawer-menu').should('be.visible');
+      cy.dataCy('drawer-menu-top').should('be.visible');
+      cy.dataCy('drawer-menu-bottom').should('be.visible');
     });
   });
 });
