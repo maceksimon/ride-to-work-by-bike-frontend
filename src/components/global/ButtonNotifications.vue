@@ -76,8 +76,11 @@ export default defineComponent({
       });
     };
 
-    const openNotification = (): void => {
-      // implement
+    const onNotificationClick = (notification: Notification): void => {
+      markAsRead(notification);
+      if (notification.data.url) {
+        window.location.href = notification.data.url;
+      }
     };
 
     return {
@@ -88,7 +91,7 @@ export default defineComponent({
       notificationsUnread,
       notificationsUnreadCount,
       openDialog,
-      openNotification,
+      onNotificationClick,
       routesConf,
     };
   },
@@ -188,6 +191,7 @@ export default defineComponent({
             clickable
             v-ripple
             :data-cy="`notification-item-${notification.id}`"
+            @click="onNotificationClick(notification)"
           >
             <q-item-section avatar>
               <q-avatar
