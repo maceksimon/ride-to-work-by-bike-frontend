@@ -16,6 +16,18 @@ const dataSelectorInputPassword = '[data-cy="form-password"]';
 const dataSelectorButtonSave = '[data-cy="form-button-save"]';
 const dataSelectorValue = '[data-cy="details-item-value"]';
 
+const selectorQDrawer = 'q-drawer';
+const selectorButtonNotifications = 'profile-tabs-button-notifications';
+const selectorPanelNotifications = 'profile-tabs-panel-notifications';
+const selectorDrawerButtonNotifications = 'button-notifications';
+const selectorNotificationsDialog = 'notifications-dialog';
+const selectorNotificationItem = 'notification-item-';
+const selectorNotificationIcon = 'notification-icon-';
+const selectorNotificationRow = 'notification-row-';
+const selectorNotificationState = 'notification-state';
+const selectorNotificationsCountBadge = 'notifications-count-badge';
+const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
+
 // variables
 const newNickname = 'Cyklobaron';
 const newEmail = 'ride@dopracenakole.cz';
@@ -103,6 +115,62 @@ function coreTests() {
       cy.dataCy(selectorGender)
         .find(dataSelectorValue)
         .should('have.text', genderFemale);
+    });
+  });
+
+  it('navigates to notifications tab and marks a notification as read', () => {
+    cy.fixture('notifications').then((notifications) => {
+      cy.get('@i18n').then((i18n) => {
+        // open notifications tab
+        cy.dataCy(selectorButtonNotifications).click();
+        cy.dataCy(selectorPanelNotifications).should('be.visible');
+        // open dialog (button selector is scoped in sidebar - repeats on mobile)
+        cy.dataCy(selectorQDrawer).within(() => {
+          cy.dataCy(selectorDrawerButtonNotifications).click();
+        });
+        cy.dataCy(selectorNotificationsDialog).should('be.visible');
+        // mark first dialog item as read
+        const firstUnreadNotificationId = notifications.filter(
+          (notification) => notification.unread === true,
+        )[0].id;
+        // same item has state "unread" in table
+        cy.dataCy(
+          `${selectorNotificationRow}${firstUnreadNotificationId}`,
+        ).within(() => {
+          cy.dataCy(selectorNotificationState).should(
+            'contain',
+            i18n.global.t('notifications.labelUnread'),
+          );
+        });
+        // click the notification icon
+        cy.dataCy(
+          `${selectorNotificationItem}${firstUnreadNotificationId}`,
+        ).within(() => {
+          cy.dataCy(
+            `${selectorNotificationIcon}${firstUnreadNotificationId}`,
+          ).click();
+        });
+        // item disappears from dialog
+        cy.dataCy(
+          `${selectorNotificationItem}${firstUnreadNotificationId}`,
+        ).should('not.exist');
+        // same item has state "read" in table
+        cy.dataCy(
+          `${selectorNotificationRow}${firstUnreadNotificationId}`,
+        ).within(() => {
+          cy.dataCy(selectorNotificationState).should(
+            'contain',
+            i18n.global.t('notifications.labelRead'),
+          );
+        });
+        cy.dataCy('dialog-close').click();
+        // mark all notifications as read
+        cy.dataCy(selectorButtonMarkAllAsRead).click();
+        // badge disappears
+        cy.dataCy(selectorQDrawer).within(() => {
+          cy.dataCy(selectorNotificationsCountBadge).should('not.exist');
+        });
+      });
     });
   });
 }

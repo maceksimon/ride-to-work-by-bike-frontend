@@ -68,7 +68,7 @@ describe('<DrawerHeader>', () => {
     cy.dataCy(selectorIconHelp).invoke('width').should('be.equal', iconSize);
   });
 
-  it.only('renders notifications icon', () => {
+  it('renders notifications icon', () => {
     cy.window().then(() => {
       cy.dataCy(selectorButtonNotifications).should('be.visible');
       cy.dataCy(selectorButtonNotifications)

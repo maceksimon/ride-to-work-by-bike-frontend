@@ -133,7 +133,7 @@ export default defineComponent({
         <q-tr
           :props="props"
           class="cursor-pointer"
-          data-cy="notification-row"
+          :data-cy="`notification-row-${props.row.id}`"
           @click="onNotificationClick(props.row)"
         >
           <q-td

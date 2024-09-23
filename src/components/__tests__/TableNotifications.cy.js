@@ -15,7 +15,7 @@ const dataSelectorNotificationAction = '[data-cy="notification-action"]';
 const dataSelectorNotificationIcon = '[data-cy="notification-icon"]';
 const dataSelectorNotificationVerbal = '[data-cy="notification-verbal"]';
 const selectorTableNotifications = 'table-notifications';
-const selectorNotificationRow = 'notification-row';
+const classSelectorNotificationRow = '.q-tr';
 const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
 
 // variables
@@ -64,10 +64,10 @@ describe('<TableNotifications>', () => {
     });
 
     it('renders notifications', () => {
-      cy.dataCy(selectorNotificationRow)
+      cy.get(classSelectorNotificationRow)
         .should('be.visible')
         .should('have.length', defaultTablePostsPerPage);
-      cy.dataCy(selectorNotificationRow).each((row, index) => {
+      cy.get(classSelectorNotificationRow).each((row, index) => {
         const notification = notifications[index];
         cy.wrap(row)
           .find(dataSelectorNotificationTitle)
@@ -120,16 +120,16 @@ describe('<TableNotifications>', () => {
     });
 
     it('allows to mark notification as read', () => {
-      cy.dataCy(selectorNotificationRow)
+      cy.get(classSelectorNotificationRow)
         .first()
         .find(dataSelectorNotificationState)
         .should('contain', i18n.global.t('notifications.labelUnread'));
-      cy.dataCy(selectorNotificationRow)
+      cy.get(classSelectorNotificationRow)
         .first()
         .find(dataSelectorNotificationAction)
         .find(classSelectorQBtn)
         .click();
-      cy.dataCy(selectorNotificationRow)
+      cy.get(classSelectorNotificationRow)
         .first()
         .find(dataSelectorNotificationState)
         .should('not.contain', i18n.global.t('notifications.labelUnread'))
@@ -137,8 +137,8 @@ describe('<TableNotifications>', () => {
     });
 
     it('marks notification as read when row is clicked', () => {
-      cy.dataCy(selectorNotificationRow).last().click();
-      cy.dataCy(selectorNotificationRow)
+      cy.get(classSelectorNotificationRow).last().click();
+      cy.get(classSelectorNotificationRow)
         .last()
         .find(dataSelectorNotificationState)
         .should('not.contain', i18n.global.t('notifications.labelUnread'))
@@ -150,7 +150,7 @@ describe('<TableNotifications>', () => {
         .should('be.visible')
         .and('not.be.disabled')
         .click();
-      cy.dataCy(selectorNotificationRow).each((row) => {
+      cy.get(classSelectorNotificationRow).each((row) => {
         cy.wrap(row)
           .find(dataSelectorNotificationState)
           .should('contain', i18n.global.t('notifications.labelRead'));
