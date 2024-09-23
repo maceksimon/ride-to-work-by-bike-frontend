@@ -29,7 +29,7 @@ describe('<ButtonNotifications>', () => {
   let notifications;
 
   before(() => {
-    cy.fixture('buttonNotifications').then((fixtureData) => {
+    cy.fixture('notifications').then((fixtureData) => {
       notifications = fixtureData;
     });
   });
