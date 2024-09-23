@@ -18,7 +18,7 @@ export const useNotifications = () => {
   };
 
   const markAllAsRead = (): void => {
-    notificationsUnread.value.forEach((notification) => {
+    notifications.forEach((notification: Notification) => {
       notification.unread = false;
     });
   };

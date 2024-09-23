@@ -13,11 +13,9 @@
  * - `showLogo` (Boolean, default: true): Determines if the logo should be displayed.
  *
  * @components
- * - `MenuLinks`: Component to display navigation links.
- * - `ListFaq`: Component to display a list of frequently asked questions.
- * - `ContactForm`: Component for a contact form.
- * - `UserSelect`: Component to allow user selection or user-related actions.
- * - `DialogStates`: Component for displaying dialogs with switchable states.
+ * - `ButtonNotifications` Component to render notifications.
+ * - `HelpButton` Component to render help button.
+ * - `UserSelect` Component to render user menu.
  *
  * @example
  * <drawer-header :showLogo="isLogoShown" />
@@ -29,12 +27,14 @@
 import { defineComponent, computed } from 'vue';
 
 // import components
+import ButtonNotifications from './ButtonNotifications.vue';
 import HelpButton from './HelpButton.vue';
 import UserSelect from './UserSelect.vue';
 
 export default defineComponent({
   name: 'DrawerHeader',
   components: {
+    ButtonNotifications,
     HelpButton,
     UserSelect,
   },
@@ -99,14 +99,7 @@ export default defineComponent({
         </template>
       </help-button>
       <!-- Notification icon link -->
-      <a href="#">
-        <q-icon
-          name="notifications"
-          :size="iconSize"
-          color="black"
-          data-cy="icon-notification"
-        />
-      </a>
+      <button-notifications />
       <!-- User menu dropdown -->
       <user-select variant="mobile" class="lt-md" />
     </div>

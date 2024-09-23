@@ -79,7 +79,11 @@ export default defineComponent({
 
 <template>
   <div>
-    <slot name="button" :open-dialog="openDialog">
+    <slot
+      name="button"
+      :open-dialog="openDialog"
+      :notifications-unread-count="notificationsUnreadCount"
+    >
       <!-- Default slot button -->
       <q-btn
         unelevated
@@ -96,9 +100,7 @@ export default defineComponent({
           color="red"
           style="z-index: 1"
           data-cy="notifications-count-badge"
-        >
-          {{ notificationsUnreadCount }}
-        </q-badge>
+        />
         <q-icon
           name="svguse:/icons/custom.svg#bell"
           size="18px"
