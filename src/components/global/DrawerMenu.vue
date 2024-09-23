@@ -70,6 +70,6 @@ export default defineComponent({
 }
 .menu-active-item,
 .menu-active-item .q-icon {
-  color: #fff !important;
+  color: $white !important;
 }
 </style>
