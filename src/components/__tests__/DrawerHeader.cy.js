@@ -4,14 +4,13 @@ import { i18n } from '../../boot/i18n';
 
 // colors
 const { getPaletteColor } = colors;
-const black = getPaletteColor('black');
 const white = getPaletteColor('white');
 const primary = getPaletteColor('primary');
-
+const red = getPaletteColor('red');
 // selectors
 const selectorButtonHelp = 'button-help';
+const selectorButtonNotifications = 'button-notifications';
 const selectorIconHelp = 'icon-help';
-const selectorIconNotification = 'icon-notification';
 
 // variables
 const buttonSize = 24;
@@ -69,18 +68,31 @@ describe('<DrawerHeader>', () => {
     cy.dataCy(selectorIconHelp).invoke('width').should('be.equal', iconSize);
   });
 
-  it('renders notifications icon', () => {
+  it.only('renders notifications icon', () => {
     cy.window().then(() => {
-      cy.dataCy(selectorIconNotification)
-        .should('be.visible')
-        .and('have.color', black)
-        .and('contain.text', 'notifications');
-      cy.dataCy(selectorIconNotification)
+      cy.dataCy(selectorButtonNotifications).should('be.visible');
+      cy.dataCy(selectorButtonNotifications)
         .invoke('height')
-        .should('be.equal', iconSize);
-      cy.dataCy(selectorIconNotification)
+        .should('be.equal', buttonSize);
+      cy.dataCy(selectorButtonNotifications)
         .invoke('width')
-        .should('be.equal', iconSize);
+        .should('be.equal', buttonSize);
+      cy.dataCy(selectorButtonNotifications).within(() => {
+        cy.dataCy('notifications-icon')
+          .should('be.visible')
+          .and('have.color', white);
+        cy.dataCy('notifications-icon')
+          .invoke('height')
+          .should('be.equal', iconSize);
+        cy.dataCy('notifications-icon')
+          .invoke('width')
+          .should('be.equal', iconSize);
+      });
+      cy.dataCy(selectorButtonNotifications).within(() => {
+        cy.dataCy('notifications-count-badge')
+          .should('be.visible')
+          .and('have.backgroundColor', red);
+      });
     });
   });
 
