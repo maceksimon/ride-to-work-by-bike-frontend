@@ -11,7 +11,7 @@
  * - `LoginRegisterHeader`: Header for login and registration pages.
  *
  * @layout
- * - `LoginRegisterLayout`: Layout for login and registration pages.
+ * - `LoginRegisterLayout`: Displayed in the `LoginRegisterLayout` template.
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=6356%3A25476&mode=dev)
  */
@@ -47,7 +47,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-page padding class="bg-grey-6 text-grey-10">
+  <q-page padding class="text-grey-10">
     <!-- Page header -->
     <login-register-header data-cy="login-register-header" />
 

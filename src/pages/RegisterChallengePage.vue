@@ -17,7 +17,7 @@
  * - `TopBarCountdown`: Component to display countdown.
  *
  * @layout
- * - `LoginRegisterLayout`: Displayed within the `LoginLayout` template.
+ * - `LoginRegisterLayout`: Displayed in the `LoginRegisterLayout` template.
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=6385%3A26514&mode=dev)
  */

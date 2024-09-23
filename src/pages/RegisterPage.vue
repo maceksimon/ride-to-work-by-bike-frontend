@@ -39,7 +39,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-page padding class="bg-secondary">
+  <q-page padding>
     <div class="q-px-lg">
       <!-- Page header -->
       <login-register-header data-cy="login-register-header" />
