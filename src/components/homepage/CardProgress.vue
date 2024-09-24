@@ -139,7 +139,7 @@ export default defineComponent({
           >
             <!-- Icon -->
             <q-icon
-              :name="prize.icon"
+              name="svguse:icons/card_progress/icons.svg#winners-cup"
               size="18px"
               color="white"
               class="q-mr-sm"
@@ -180,7 +180,7 @@ export default defineComponent({
         >
           <!-- Icon -->
           <q-icon
-            name="share"
+            name="svguse:icons/card_progress/icons.svg#share"
             size="18px"
             :color="isDark(card) ? 'white' : 'primary'"
             class="q-mr-xs"
