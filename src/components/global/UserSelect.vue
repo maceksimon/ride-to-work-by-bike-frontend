@@ -34,7 +34,7 @@ import { routesConf } from '../../router/routes_conf';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { Link } from '../types/link';
+import type { Link } from '../types/Link';
 
 export default defineComponent({
   name: 'UserSelect',
