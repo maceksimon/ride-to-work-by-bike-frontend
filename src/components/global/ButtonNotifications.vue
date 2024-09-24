@@ -93,6 +93,7 @@ export default defineComponent({
         @click.prevent="openDialog"
         data-cy="button-notifications"
       >
+        <!-- Badge -->
         <q-badge
           floating
           rounded
@@ -101,6 +102,7 @@ export default defineComponent({
           style="z-index: 1"
           data-cy="notifications-count-badge"
         />
+        <!-- Icon -->
         <q-icon
           name="svguse:/icons/custom.svg#bell"
           size="18px"
@@ -109,6 +111,7 @@ export default defineComponent({
         />
       </q-btn>
     </slot>
+    <!-- Dialog -->
     <dialog-default
       no-padding
       v-model="isDialogOpen"
@@ -118,12 +121,14 @@ export default defineComponent({
       <template #title>
         <div class="flex items-center justify-between gap-4">
           <div class="flex items-center justify-between">
+            <!-- Dialog title -->
             <h3
               class="text-h6 text-weight-normal text-grey-10 q-my-none"
               data-cy="notifications-title"
             >
               {{ $t('notifications.dialogTitle') }}
             </h3>
+            <!-- Badge: unread count -->
             <q-badge
               v-if="notificationsUnreadCount > 0"
               color="red"
@@ -134,6 +139,7 @@ export default defineComponent({
             </q-badge>
           </div>
           <div>
+            <!-- Button: notification history -->
             <q-btn
               flat
               color="primary"
@@ -146,6 +152,7 @@ export default defineComponent({
         </div>
       </template>
       <template #content>
+        <!-- Button: mark all as read -->
         <div
           v-if="notificationsUnreadCount > 0"
           class="flex items-center justify-end q-px-md"
@@ -159,12 +166,15 @@ export default defineComponent({
             {{ $t('notifications.buttonMarkAllAsRead') }}
           </q-btn>
         </div>
+        <!-- Empty state -->
         <div v-else class="q-px-md" data-cy="no-unread-notifications">
           <p class="text-grey-10 q-my-sm">
             {{ $t('notifications.textNoUnreadNotifications') }}
           </p>
         </div>
+        <!-- List -->
         <q-list data-cy="notifications-list">
+          <!-- Notification item -->
           <q-item
             v-for="notification in notificationsUnread"
             :key="notification.id"
@@ -174,6 +184,7 @@ export default defineComponent({
             :data-cy="`notification-item-${notification.id}`"
             @click="onNotificationClick(notification)"
           >
+            <!-- Avatar -->
             <q-item-section avatar>
               <q-avatar
                 v-if="notification.data.icon"
@@ -184,16 +195,18 @@ export default defineComponent({
                 <q-icon :name="notification.data.icon" />
               </q-avatar>
             </q-item-section>
-
+            <!-- Content -->
             <q-item-section>
+              <!-- Title -->
               <q-item-label
                 v-if="notification.verb"
                 :data-cy="`notification-verb-${notification.id}`"
               >
                 {{ notification.verb }}
               </q-item-label>
+              <!-- Description -->
               <q-item-label
-                v-if="notification.description"
+                v-if="notification.timestamp"
                 caption
                 lines="1"
                 :data-cy="`notification-timestamp-${notification.id}`"
@@ -201,8 +214,9 @@ export default defineComponent({
                 {{ formatDateTimeLabel(notification.timestamp) }}
               </q-item-label>
             </q-item-section>
-
+            <!-- Actions -->
             <q-item-section side>
+              <!-- Button: mark as read -->
               <q-btn
                 round
                 flat
