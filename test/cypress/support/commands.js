@@ -51,6 +51,8 @@ Cypress.Commands.add(
     );
 
     translationKeyList.forEach((translationKey) => {
+      // set global locale to English
+      i18n.global.locale = 'en';
       const defaultEnglishString = i18n.global.t(
         translationKey,
         {},
@@ -61,7 +63,7 @@ Cypress.Commands.add(
       locales
         .filter((locale) => locale !== 'en')
         .forEach((locale) => {
-          // required for E2E tests to work
+          // set to the tested locale
           i18n.global.locale = locale;
 
           const translatedString = i18n.global.t(
