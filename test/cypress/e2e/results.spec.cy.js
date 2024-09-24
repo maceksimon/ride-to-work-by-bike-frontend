@@ -1,4 +1,5 @@
 import { routesConf } from '../../../src/router/routes_conf';
+import { testDesktopSidebar, testMobileHeader } from '../support/commonTests';
 
 describe('Results page', () => {
   context('desktop', () => {
@@ -19,15 +20,7 @@ describe('Results page', () => {
     });
 
     coreTests();
-
-    it('renders left drawer', () => {
-      cy.dataCy('q-drawer').should('be.visible');
-      cy.dataCy('drawer-header').should('be.visible');
-      cy.dataCy('user-select').should('be.visible');
-      cy.dataCy('drawer-toggle-buttons').should('be.visible');
-      cy.dataCy('drawer-menu-top').should('be.visible');
-      cy.dataCy('drawer-menu-bottom').should('be.visible');
-    });
+    testDesktopSidebar();
   });
 
   context('mobile', () => {
@@ -48,6 +41,7 @@ describe('Results page', () => {
     });
 
     coreTests();
+    testMobileHeader();
   });
 });
 

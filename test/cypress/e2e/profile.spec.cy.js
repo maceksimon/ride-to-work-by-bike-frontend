@@ -1,4 +1,5 @@
 import { routesConf } from '../../../src/router/routes_conf';
+import { testDesktopSidebar } from '../support/commonTests';
 
 // selectors
 const selectorProfilePage = 'profile-page';
@@ -41,15 +42,7 @@ describe('Profile page', () => {
     });
 
     coreTests();
-
-    it('renders left drawer', () => {
-      cy.dataCy('q-drawer').should('be.visible');
-      cy.dataCy('drawer-header').should('be.visible');
-      cy.dataCy('user-select').should('be.visible');
-      cy.dataCy('drawer-toggle-buttons').should('be.visible');
-      cy.dataCy('drawer-menu-top').should('be.visible');
-      cy.dataCy('drawer-menu-bottom').should('be.visible');
-    });
+    testDesktopSidebar();
   });
 });
 

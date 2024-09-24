@@ -1,3 +1,5 @@
+import { testDesktopSidebar, testMobileHeader } from '../support/commonTests';
+
 // variables
 const failTestTitle = 'allows user to scroll to top using the footer button';
 const fontFamily = 'Poppins';
@@ -27,15 +29,7 @@ describe('Home page', () => {
     });
 
     coreTests();
-
-    it('renders left drawer', () => {
-      cy.dataCy('q-drawer').should('be.visible');
-      cy.dataCy('drawer-header').should('be.visible');
-      cy.dataCy('user-select').should('be.visible');
-      cy.dataCy('drawer-toggle-buttons').should('be.visible');
-      cy.dataCy('drawer-menu-top').should('be.visible');
-      cy.dataCy('drawer-menu-bottom').should('be.visible');
-    });
+    testDesktopSidebar();
 
     it('allows user to display and submit contact form', () => {
       // open help modal
@@ -201,6 +195,7 @@ describe('Home page', () => {
     });
 
     coreTests();
+    testMobileHeader();
 
     it('allows user to show and hide bottom panel on mobile', () => {
       cy.dataCy('footer-panel-menu').should('be.visible');

@@ -101,8 +101,11 @@ export default defineComponent({
       rounded
       outline
       color="white"
-      class="bg-primary q-px-sm q-py-sm"
-      :class="[variant === 'mobile' ? 'dropdown-arrow-hidden' : 'full-width']"
+      :class="[
+        variant === 'mobile'
+          ? 'dropdown-arrow-hidden transparent q-px-none q-py-none'
+          : 'bg-primary q-px-sm q-py-sm full-width',
+      ]"
       content-class="transparent"
       :content-style="[
         variant === 'mobile'
@@ -130,7 +133,13 @@ export default defineComponent({
         </div>
       </template>
       <!-- User menu: Top -->
-      <q-list dark bordered :style="{ borderRadius }" class="bg-primary">
+      <q-list
+        dark
+        bordered
+        :style="{ borderRadius }"
+        class="bg-primary"
+        data-cy="user-select-menu"
+      >
         <q-item
           dark
           v-for="option in menuTop"

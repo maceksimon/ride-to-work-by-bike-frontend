@@ -56,6 +56,7 @@ export default defineComponent({
       <q-toolbar>
         <!-- Logo + Buttons (help, notification) -->
         <drawer-header
+          mobile
           :show-logo="false"
           :show-drawer-open-button="true"
           data-cy="drawer-header-mobile"
@@ -74,9 +75,9 @@ export default defineComponent({
     >
       <div class="q-px-lg">
         <!-- Logo + Buttons (help, notification) -->
-        <drawer-header :mobile="false" data-cy="drawer-header" />
+        <drawer-header data-cy="drawer-header" />
         <!-- User options dropdown -->
-        <user-select class="q-pt-lg" data-cy="user-select" />
+        <user-select class="q-pt-lg" data-cy="user-select-desktop" />
         <drawer-toggle-buttons
           class="q-pt-lg"
           data-cy="drawer-toggle-buttons"

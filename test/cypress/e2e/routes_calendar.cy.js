@@ -1,4 +1,5 @@
 import { routesConf } from '../../../src/router/routes_conf';
+import { testDesktopSidebar } from '../support/commonTests';
 
 describe('Results page', () => {
   context('desktop', () => {
@@ -19,6 +20,7 @@ describe('Results page', () => {
     });
 
     coreTests();
+    testDesktopSidebar();
   });
 });
 
