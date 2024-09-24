@@ -31,6 +31,7 @@ import { i18n } from '../../boot/i18n';
 
 // config
 import { routesConf } from '../../router/routes_conf';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
 import type { Link } from '../../types/link';
@@ -71,13 +72,22 @@ export default defineComponent({
       },
     ];
 
-    const size = props.variant === 'mobile' ? '32px' : '56px';
+    const onLogout = () => {
+      // TODO: add logout logic
+    };
+
+    const size = props.variant === 'mobile' ? '32px' : '40px';
+    const { borderRadiusCard: borderRadius, colorWhite } =
+      rideToWorkByBikeConfig;
 
     return {
+      borderRadius,
+      colorWhite,
+      menuBottom,
+      menuTop,
+      onLogout,
       size,
       user,
-      menuTop,
-      menuBottom,
     };
   },
 });
@@ -87,12 +97,18 @@ export default defineComponent({
   <div class="user-select" data-cy="user-select">
     <!-- User dropdown -->
     <q-btn-dropdown
-      rounded
-      flat
-      class="bg-blue-grey-2 q-px-none q-py-none"
+      dark
+      outline
+      color="white"
+      class="bg-primary q-px-sm q-py-sm"
       :class="[
         variant === 'mobile' ? 'dropdown-arrow-hidden' : 'q-pr-md full-width',
       ]"
+      content-class="bg-primary"
+      :content-style="{ borderRadius, border: `1px solid ${colorWhite}` }"
+      dropdown-icon="svguse:icons/user_select/icons.svg#chevron-down|0 0 18 18"
+      :style="{ borderRadius }"
+      :menu-offset="[0, 8]"
       data-cy="user-select-input"
     >
       <template v-slot:label>
@@ -109,8 +125,9 @@ export default defineComponent({
         </span>
       </template>
       <!-- User menu: Top -->
-      <q-list bordered>
+      <q-list dark bordered :style="{ borderRadius }" class="bg-primary">
         <q-item
+          dark
           v-for="option in menuTop"
           :key="option.title"
           tag="a"
@@ -118,16 +135,12 @@ export default defineComponent({
           active-class="menu-active-item"
           clickable
           v-close-popup
-          class="text-grey-10"
         >
           <q-item-label class="flex items-center">{{
             option.title
           }}</q-item-label>
         </q-item>
-      </q-list>
-      <q-separator color="blue-grey-2" />
-      <!-- User menu: Bottom -->
-      <q-list>
+        <q-separator color="blue-grey-2" />
         <q-item
           v-for="option in menuBottom"
           :key="option.title"
@@ -136,7 +149,6 @@ export default defineComponent({
           clickable
           v-close-popup
           active-class="menu-active-item"
-          class="text-grey-10"
         >
           <q-item-label class="flex items-center">{{
             option.title
@@ -149,7 +161,6 @@ export default defineComponent({
           tag="a"
           clickable
           v-close-popup
-          class="text-grey-10"
           @click="onLogout"
         >
           <q-item-label class="flex items-center">
@@ -162,13 +173,13 @@ export default defineComponent({
 </template>
 
 <style scoped lang="scss">
-// hide button edges overlapping the avatar (when height = 32px)
-.q-btn-dropdown {
-  min-height: 0;
-}
 // hide dropdown arrow for mobile variant
 .dropdown-arrow-hidden :deep(.q-btn-dropdown__arrow) {
   display: none;
+}
+:deep(.q-btn-dropdown__arrow) {
+  width: 18px;
+  height: 18px;
 }
 .menu-active-item {
   font-weight: 700;
