@@ -26,6 +26,7 @@ const selectorNotificationIcon = 'notification-icon-';
 const selectorNotificationRow = 'notification-row-';
 const selectorNotificationState = 'notification-state';
 const selectorNotificationsCountBadge = 'notifications-count-badge';
+const selectorDialogCloseButton = 'dialog-close';
 const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
 
 // variables
@@ -163,7 +164,7 @@ function coreTests() {
             i18n.global.t('notifications.labelRead'),
           );
         });
-        cy.dataCy('dialog-close').click();
+        cy.dataCy(selectorDialogCloseButton).click();
         // mark all notifications as read
         cy.dataCy(selectorButtonMarkAllAsRead).click();
         // badge disappears
