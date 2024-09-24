@@ -650,3 +650,11 @@ none = "Žádná"
 walk = "Pěšky"
 bus = "Hromadnou dopravou"
 unknown = "Nevyplněno"
+
+[userSelect]
+companyCoordinator = "Stát se firemním koordinátorem"
+connectApps = "Propojit aplikace"
+logout = "Odhlásit se"
+newsletter = "Odebírat newsletter"
+notifications = "Historie notifikací"
+profileDetails = "Váš profil"

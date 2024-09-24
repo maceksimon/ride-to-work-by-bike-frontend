@@ -646,3 +646,11 @@ none = "Žiadna"
 walk = "Pešo"
 bus = "Verejnou dopravou"
 unknown = "Nevyplnené"
+
+[userSelect]
+companyCoordinator = "Stát sa firemným koordinátorom"
+connectApps = "Propojiť aplikácie"
+logout = "Odhlásiť sa"
+newsletter = "Odeberať newsletter"
+notifications = "História oznámení"
+profileDetails = "Váš profil"

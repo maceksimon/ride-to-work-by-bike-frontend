@@ -646,3 +646,11 @@ none = "None"
 walk = "On foot"
 bus = "By public transport"
 unknown = "Not logged"
+
+[userSelect]
+companyCoordinator = "Become a company coordinator"
+connectApps = "Connect apps"
+logout = "Logout"
+newsletter = "Subscribe to newsletter"
+notifications = "Notification history"
+profileDetails = "Your profile"

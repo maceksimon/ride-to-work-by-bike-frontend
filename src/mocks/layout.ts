@@ -70,36 +70,6 @@ export const menuBottom: Link[] = [
   },
 ];
 
-export const userMenuTop: Link[] = [
-  {
-    title: 'Vaše údaje',
-    url: '#',
-  },
-  {
-    title: 'Odebírat newsletter',
-    url: '#',
-  },
-  {
-    title: 'Propojit aplikace',
-    url: '#',
-  },
-  {
-    title: 'Historie notifikací',
-    url: '#',
-  },
-];
-
-export const userMenuBottom: Link[] = [
-  {
-    title: 'Stát se firemním koordinátorem',
-    url: '#',
-  },
-  {
-    title: 'Odhlásit se',
-    url: '#',
-  },
-];
-
 const dummyText =
   'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.';
 

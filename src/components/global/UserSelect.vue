@@ -24,7 +24,16 @@
 import { defineComponent } from 'vue';
 
 // mocks
-import { user, userMenuTop, userMenuBottom } from '../../mocks/layout';
+import { user } from '../../mocks/layout';
+
+// composables
+import { i18n } from '../../boot/i18n';
+
+// config
+import { routesConf } from '../../router/routes_conf';
+
+// types
+import type { Link } from '../../types/link';
 
 export default defineComponent({
   name: 'UserSelect',
@@ -36,13 +45,39 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const menuTop: Link[] = [
+      {
+        title: i18n.global.t('userSelect.profileDetails'),
+        url: routesConf['profile_details']['children']['fullPath'],
+      },
+      {
+        title: i18n.global.t('userSelect.newsletter'),
+        url: routesConf['profile_newsletter']['children']['fullPath'],
+      },
+      {
+        title: i18n.global.t('userSelect.connectApps'),
+        url: routesConf['routes_app']['children']['fullPath'],
+      },
+      {
+        title: i18n.global.t('userSelect.notifications'),
+        url: routesConf['profile_notifications']['children']['fullPath'],
+      },
+    ];
+
+    const menuBottom: Link[] = [
+      {
+        title: i18n.global.t('userSelect.companyCoordinator'),
+        url: routesConf['company_coordinator']['children']['fullPath'],
+      },
+    ];
+
     const size = props.variant === 'mobile' ? '32px' : '56px';
 
     return {
       size,
       user,
-      menuTop: userMenuTop,
-      menuBottom: userMenuBottom,
+      menuTop,
+      menuBottom,
     };
   },
 });
@@ -80,6 +115,7 @@ export default defineComponent({
           :key="option.title"
           tag="a"
           :to="option.url"
+          active-class="menu-active-item"
           clickable
           v-close-popup
           class="text-grey-10"
@@ -99,11 +135,26 @@ export default defineComponent({
           :to="option.url"
           clickable
           v-close-popup
+          active-class="menu-active-item"
           class="text-grey-10"
         >
           <q-item-label class="flex items-center">{{
             option.title
           }}</q-item-label>
+        </q-item>
+        <!-- Item logout -->
+        <!-- TODO: add conditional display -->
+        <q-item
+          key="user-logout"
+          tag="a"
+          clickable
+          v-close-popup
+          class="text-grey-10"
+          @click="onLogout"
+        >
+          <q-item-label class="flex items-center">
+            {{ $t('userSelect.logout') }}
+          </q-item-label>
         </q-item>
       </q-list>
     </q-btn-dropdown>
@@ -118,5 +169,8 @@ export default defineComponent({
 // hide dropdown arrow for mobile variant
 .dropdown-arrow-hidden :deep(.q-btn-dropdown__arrow) {
   display: none;
+}
+.menu-active-item {
+  font-weight: 700;
 }
 </style>
