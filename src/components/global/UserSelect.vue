@@ -34,7 +34,7 @@ import { routesConf } from '../../router/routes_conf';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
-import type { Link } from '../../types/link';
+import type { Link } from '../types/link';
 
 export default defineComponent({
   name: 'UserSelect',
@@ -98,23 +98,31 @@ export default defineComponent({
     <!-- User dropdown -->
     <q-btn-dropdown
       dark
+      rounded
       outline
       color="white"
       class="bg-primary q-px-sm q-py-sm"
-      :class="[
-        variant === 'mobile' ? 'dropdown-arrow-hidden' : 'q-pr-md full-width',
+      :class="[variant === 'mobile' ? 'dropdown-arrow-hidden' : 'full-width']"
+      content-class="transparent"
+      :content-style="[
+        variant === 'mobile'
+          ? { borderRadius }
+          : { borderRadius, border: `1px solid ${colorWhite}` },
       ]"
-      content-class="bg-primary"
-      :content-style="{ borderRadius, border: `1px solid ${colorWhite}` }"
-      dropdown-icon="svguse:icons/user_select/icons.svg#chevron-down|0 0 18 18"
-      :style="{ borderRadius }"
+      :style="[variant === 'mobile' ? {} : { borderRadius }]"
       :menu-offset="[0, 8]"
+      dropdown-icon="svguse:icons/user_select/icons.svg#chevron-down"
       data-cy="user-select-input"
     >
       <template v-slot:label>
         <!-- User image -->
         <q-avatar :size="size" data-cy="avatar">
-          <q-img :src="user.image.src" :alt="user.image.alt" :size="size" />
+          <q-img
+            :src="user.image.src"
+            :alt="user.image.alt"
+            :size="size"
+            data-cy="avatar-image"
+          />
         </q-avatar>
         <!-- User name -->
         <div v-if="variant !== 'mobile'" class="col text-left q-ml-md ellipsis">
@@ -132,6 +140,7 @@ export default defineComponent({
           active-class="menu-active-item"
           clickable
           v-close-popup
+          data-cy="menu-item"
         >
           <q-item-label class="flex items-center">{{
             option.title
@@ -146,6 +155,7 @@ export default defineComponent({
           clickable
           v-close-popup
           active-class="menu-active-item"
+          data-cy="menu-item"
         >
           <q-item-label class="flex items-center">{{
             option.title
@@ -159,6 +169,7 @@ export default defineComponent({
           clickable
           v-close-popup
           @click="onLogout"
+          data-cy="menu-item"
         >
           <q-item-label class="flex items-center">
             {{ $t('userSelect.logout') }}

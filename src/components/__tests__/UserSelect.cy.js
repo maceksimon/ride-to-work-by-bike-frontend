@@ -2,6 +2,17 @@ import UserSelect from '../global/UserSelect.vue';
 import { user } from '../../mocks/layout';
 import { i18n } from '../../boot/i18n';
 
+// selectors
+const selectorUserSelectInput = 'user-select-input';
+const selectorAvatar = 'avatar';
+const selectorAvatarImage = 'avatar-image';
+const selectorMenuItem = 'menu-item';
+
+// variables
+const avatarSizeLg = 40;
+const avatarSizeSm = 32;
+const menuItemCount = 6;
+
 describe('<UserSelect>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'index.component', i18n);
@@ -15,34 +26,15 @@ describe('<UserSelect>', () => {
       cy.viewport('macbook-16');
     });
 
-    it('renders select with default value', () => {
-      cy.dataCy('user-select-input')
-        .should('be.visible')
-        .and('have.css', 'height', '56px')
-        .and('contain', user.label);
+    coreTests();
+
+    it('shows user email', () => {
+      cy.dataCy(selectorUserSelectInput).should('contain', user.email);
     });
 
-    it('renders rounded avatar', () => {
-      cy.dataCy('avatar')
-        .should('be.visible')
-        .and('have.css', 'border-radius', '50%')
-        .find('img')
-        .should('be.visible')
-        .then(($img) => {
-          cy.testImageHeight($img);
-          expect($img.attr('src')).to.equal(user.image.src);
-        });
-      cy.dataCy('avatar')
-        .find('.q-img')
-        .should('be.visible')
-        .then(($img) => {
-          expect($img.attr('aria-label')).to.equal(user.image.alt);
-        });
-    });
-
-    it('shows dropdown on click', () => {
-      cy.dataCy('user-select-input').click();
-      cy.get('.q-item__label').should('be.visible').and('have.length', 6);
+    it('renders avatar with correct size', () => {
+      cy.dataCy(selectorAvatar).invoke('height').should('equal', avatarSizeLg);
+      cy.dataCy(selectorAvatar).invoke('width').should('equal', avatarSizeLg);
     });
   });
 
@@ -56,33 +48,38 @@ describe('<UserSelect>', () => {
       cy.viewport('iphone-6');
     });
 
-    it('renders select with default value', () => {
-      cy.dataCy('user-select-input')
-        .should('be.visible')
-        .and('have.css', 'width', '32px');
+    coreTests();
+
+    it('renders avatar with correct size', () => {
+      cy.dataCy(selectorAvatar).invoke('width').should('equal', avatarSizeSm);
+      cy.dataCy(selectorAvatar).invoke('height').should('equal', avatarSizeSm);
+    });
+  });
+
+  function coreTests() {
+    it('renders component', () => {
+      cy.dataCy(selectorUserSelectInput).should('be.visible');
     });
 
     it('renders rounded avatar with alt text', () => {
-      cy.dataCy('avatar')
+      // avatar
+      cy.dataCy(selectorAvatar)
         .should('be.visible')
-        .and('have.css', 'border-radius', '50%')
+        .and('have.css', 'border-radius', '50%');
+      // image
+      cy.dataCy(selectorAvatarImage)
+        .should('be.visible')
+        .and('have.attr', 'aria-label', user.image.alt);
+      cy.dataCy(selectorAvatarImage)
         .find('img')
-        .should('be.visible')
-        .then(($img) => {
-          cy.testImageHeight($img);
-          expect($img.attr('src')).to.equal(user.image.src);
-        });
-      cy.dataCy('avatar')
-        .find('.q-img')
-        .should('be.visible')
-        .then(($img) => {
-          expect($img.attr('aria-label')).to.equal(user.image.alt);
-        });
+        .should('have.attr', 'src', user.image.src);
     });
 
     it('shows dropdown on click', () => {
-      cy.dataCy('user-select-input').click();
-      cy.get('.q-item__label').should('be.visible').and('have.length', 6);
+      cy.dataCy(selectorUserSelectInput).click();
+      cy.dataCy(selectorMenuItem)
+        .should('be.visible')
+        .and('have.length', menuItemCount);
     });
-  });
+  }
 });
