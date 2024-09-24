@@ -1,18 +1,23 @@
 import { colors } from 'quasar';
-
 import CardProgress from '../homepage/CardProgress.vue';
 import { i18n } from '../../boot/i18n';
 import { cardsProgress } from '../../mocks/homepage';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// colors
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
-const grey10 = getPaletteColor('grey-10');
-const blueGrey1 = getPaletteColor('blue-grey-1');
-const blueGrey5 = getPaletteColor('blue-grey-5');
-const blueGrey7 = getPaletteColor('blue-grey-7');
+const primary = getPaletteColor('primary');
+const blueGrey4 = getPaletteColor('blue-grey-4');
 
 const cardFirst = cardsProgress[0];
 const card = cardsProgress[1];
+
+// variables
+const iconSizeSm = 18;
+const progressCircularSizeMobile = 128;
+const progressCircularSize = 180;
+const progressCircularFontSize = 36;
 
 describe('<CardProgress>', () => {
   it('has translation for all strings', () => {
@@ -28,6 +33,16 @@ describe('<CardProgress>', () => {
         },
       });
       cy.viewport('macbook-16');
+    });
+
+    it('renders rounded card with the correct background', () => {
+      cy.dataCy('card')
+        .should('have.backgroundColor', primary)
+        .and(
+          'have.css',
+          'border-radius',
+          rideToWorkByBikeConfig.borderRadiusCard,
+        );
     });
 
     it('renders white title', () => {
@@ -46,9 +61,13 @@ describe('<CardProgress>', () => {
     it('renders prize icon', () => {
       cy.dataCy('card-progress-prizes-icon')
         .should('contain', cardFirst.prizes[0].icon)
-        .and('have.color', white)
-        .and('have.css', 'width', '24px')
-        .and('have.css', 'height', '24px');
+        .and('have.color', white);
+      cy.dataCy('card-progress-prizes-icon')
+        .invoke('width')
+        .should('be.eq', iconSizeSm);
+      cy.dataCy('card-progress-prizes-icon')
+        .invoke('height')
+        .should('be.eq', iconSizeSm);
     });
 
     it('renders percentage', () => {
@@ -57,45 +76,43 @@ describe('<CardProgress>', () => {
         .and('contain', cardFirst.progress);
       cy.dataCy('card-progress-circular')
         .should('be.visible')
-        .and('have.css', 'width', '220px')
-        .and('have.css', 'height', '220px');
+        .and('have.css', 'width', `${progressCircularSize}px`)
+        .and('have.css', 'height', `${progressCircularSize}px`);
       cy.dataCy('circular-progress-number')
         .should('be.visible')
-        .and('have.css', 'font-size', '48px');
+        .and('have.css', 'font-size', `${progressCircularFontSize}px`);
     });
 
     it('renders larger placement number', () => {
-      cy.dataCy('card-progress-prize-placement')
-        .should('have.css', 'font-size', '24px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', white);
       cy.dataCy('card-progress-prize-label')
-        .should('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '400')
+        .should('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
         .and('have.color', white);
     });
 
-    it('renders dark separator', () => {
+    it('renders white separator', () => {
       cy.dataCy('card-progress-separator').should(
         'have.backgroundColor',
-        blueGrey7,
+        white,
       );
     });
 
     it('renders white share link', () => {
       cy.dataCy('card-progress-share')
         .should('have.color', white)
-        .and('have.css', 'font-size', '14px')
+        .and('have.css', 'font-size', '12px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.css', 'font-weight', '700');
     });
 
     it('renders white share link icon', () => {
+      cy.dataCy('card-progress-share-icon').should('have.color', white);
       cy.dataCy('card-progress-share-icon')
-        .should('have.color', white)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px')
-        .and('contain', 'share');
+        .invoke('width')
+        .should('be.eq', iconSizeSm);
+      cy.dataCy('card-progress-share-icon')
+        .invoke('height')
+        .should('be.eq', iconSizeSm);
     });
   });
 
@@ -114,7 +131,7 @@ describe('<CardProgress>', () => {
         cy.dataCy('card-progress-title')
           .should('have.css', 'font-size', '16px')
           .and('have.css', 'font-weight', '700')
-          .and('have.color', grey10)
+          .and('have.color', primary)
           .and('contain', card.title)
           .then(($title) => {
             expect($title.text()).to.equal(card.title);
@@ -123,12 +140,15 @@ describe('<CardProgress>', () => {
     });
 
     it('renders title icon', () => {
-      cy.dataCy('card-progress-header')
-        .find('.q-icon')
-        .should('contain', card.icon)
-        .and('have.color', blueGrey5)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px');
+      cy.dataCy('card-progress-title-icon')
+        .should('be.visible')
+        .and('have.color', primary);
+      cy.dataCy('card-progress-title-icon')
+        .invoke('width')
+        .should('be.eq', iconSizeSm);
+      cy.dataCy('card-progress-title-icon')
+        .invoke('height')
+        .should('be.eq', iconSizeSm);
     });
 
     it('renders percentage', () => {
@@ -137,45 +157,43 @@ describe('<CardProgress>', () => {
         .and('contain', card.progress);
       cy.dataCy('card-progress-circular')
         .should('be.visible')
-        .and('have.css', 'width', '220px')
-        .and('have.css', 'height', '220px');
+        .and('have.css', 'width', `${progressCircularSize}px`)
+        .and('have.css', 'height', `${progressCircularSize}px`);
       cy.dataCy('circular-progress-number')
         .should('be.visible')
-        .and('have.css', 'font-size', '48px');
+        .and('have.css', 'font-size', `${progressCircularFontSize}px`);
     });
 
     it('renders smaller placement number', () => {
-      cy.dataCy('card-progress-prize-placement')
-        .should('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '700')
-        .and('have.color', grey10);
       cy.dataCy('card-progress-prize-label')
-        .should('have.css', 'font-size', '14px')
-        .and('have.css', 'font-weight', '400')
-        .and('have.color', grey10);
+        .should('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('have.color', primary);
     });
 
     it('renders light separator', () => {
       cy.dataCy('card-progress-separator').should(
         'have.backgroundColor',
-        blueGrey1,
+        blueGrey4,
       );
     });
 
     it('renders dark share link', () => {
       cy.dataCy('card-progress-share')
-        .should('have.color', grey10)
-        .and('have.css', 'font-size', '14px')
+        .should('have.color', primary)
+        .and('have.css', 'font-size', '12px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.css', 'font-weight', '700');
     });
 
     it('renders dark share link icon', () => {
+      cy.dataCy('card-progress-share-icon').should('have.color', primary);
       cy.dataCy('card-progress-share-icon')
-        .should('have.color', grey10)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px')
-        .and('contain', 'share');
+        .invoke('width')
+        .should('be.eq', iconSizeSm);
+      cy.dataCy('card-progress-share-icon')
+        .invoke('height')
+        .should('be.eq', iconSizeSm);
     });
   });
 
@@ -194,7 +212,7 @@ describe('<CardProgress>', () => {
         cy.dataCy('card-progress-title')
           .should('have.css', 'font-size', '16px')
           .and('have.css', 'font-weight', '700')
-          .and('have.color', grey10)
+          .and('have.color', primary)
           .and('contain', card.title)
           .then(($title) => {
             expect($title.text()).to.equal(card.title);
@@ -203,12 +221,13 @@ describe('<CardProgress>', () => {
     });
 
     it('renders title icon', () => {
-      cy.dataCy('card-progress-header')
-        .find('.q-icon')
-        .should('contain', card.icon)
-        .and('have.color', blueGrey5)
-        .and('have.css', 'width', '18px')
-        .and('have.css', 'height', '18px');
+      cy.dataCy('card-progress-title-icon').and('have.color', primary);
+      cy.dataCy('card-progress-title-icon')
+        .invoke('width')
+        .should('be.eq', iconSizeSm);
+      cy.dataCy('card-progress-title-icon')
+        .invoke('height')
+        .should('be.eq', iconSizeSm);
     });
 
     it('renders percentage', () => {
@@ -217,11 +236,11 @@ describe('<CardProgress>', () => {
         .and('contain', card.progress);
       cy.dataCy('card-progress-circular')
         .should('be.visible')
-        .and('have.css', 'width', '128px')
-        .and('have.css', 'height', '128px');
+        .and('have.css', 'width', `${progressCircularSizeMobile}px`)
+        .and('have.css', 'height', `${progressCircularSizeMobile}px`);
       cy.dataCy('circular-progress-number')
         .should('be.visible')
-        .and('have.css', 'font-size', '40px');
+        .and('have.css', 'font-size', `${progressCircularFontSize}px`);
     });
   });
 });

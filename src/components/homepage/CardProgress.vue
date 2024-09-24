@@ -66,44 +66,39 @@ export default defineComponent({
 
 <template>
   <q-card
-    :flat="true"
+    flat
+    bordered
     :dark="isDark(card)"
-    :bordered="true"
     :style="{ 'border-radius': borderRadius }"
-    :class="
-      isDark(card) ? 'bg-blue-grey-6 text-white' : 'bg-white text-grey-10'
-    "
+    :class="isDark(card) ? 'bg-primary' : 'bg-white text-primary'"
     data-cy="card"
   >
-    <!-- Card header -->
-    <q-card-section
-      class="flex items-center justify-center gap-16 z-1"
-      data-cy="card-progress-header"
-    >
-      <div class="flex items-center gap-16 text-body1">
+    <!-- Card body -->
+    <q-card-section data-cy="card-progress-body">
+      <div class="flex items-center justify-center gap-16 q-pt-sm q-pb-lg">
         <!-- Card icon -->
         <q-icon
           :name="card.icon"
           size="18px"
-          :color="isDark(card) ? 'white' : 'blue-grey-5'"
+          :color="isDark(card) ? 'white' : 'primary'"
+          data-cy="card-progress-title-icon"
         />
         <!-- Card title -->
         <component
           :is="card.url ? 'a' : 'div'"
           :href="card.url"
-          class="text-weight-bold"
-          :class="isDark(card) ? 'text-white' : 'text-grey-10'"
+          class="text-weight-bold text-body1"
+          :class="isDark(card) ? 'text-white' : 'text-primary'"
           data-cy="card-progress-title"
         >
-          <h3 class="text-body1 text-weight-bold">{{ card.title }}</h3>
+          <h3 class="q-my-none text-body1 text-weight-bold">
+            {{ card.title }}
+          </h3>
         </component>
       </div>
-    </q-card-section>
 
-    <!-- Section progress -->
-    <q-card-section>
       <div
-        class="gap-16 justify-center items-center"
+        class="gap-16 justify-center items-center q-py-xs"
         data-cy="card-progress-content"
       >
         <div
@@ -113,12 +108,12 @@ export default defineComponent({
           <!-- Progress bar -->
           <q-circular-progress
             rounded
-            class="q-my-md q-mx-auto"
+            class="q-mx-auto"
             :value="card.progress"
             :size="circleSize"
             :thickness="0.08"
-            :color="isDark(card) ? 'white' : 'blue-grey-6'"
-            :track-color="isDark(card) ? 'blue-grey-4' : 'blue-grey-2'"
+            color="secondary"
+            :track-color="isDark(card) ? 'blue-grey-8' : 'blue-grey-1'"
             data-cy="card-progress-circular"
           >
           </q-circular-progress>
@@ -133,8 +128,8 @@ export default defineComponent({
             </div>
           </div>
         </div>
-        <!-- Prizes list -->
-        <q-list dense class="q-mb-sm">
+        <!-- Placement list -->
+        <q-list dense class="q-mt-lg">
           <q-item
             v-for="(prize, index) in card.prizes"
             :key="'prize' + index"
@@ -142,18 +137,20 @@ export default defineComponent({
             style="padding: 0"
             data-cy="card-progress-prizes"
           >
+            <!-- Icon -->
             <q-icon
               :name="prize.icon"
-              size="24px"
+              size="18px"
               color="white"
+              class="q-mr-sm"
               data-cy="card-progress-prizes-icon"
-            />&nbsp;
-            <div class="flex items-baseline">
-              <span
-                class="text-weight-bold"
-                :class="{ 'text-h5': isDark(card) }"
-                data-cy="card-progress-prize-placement"
-                >{{ prize.placement }}</span
+            />
+            <!-- Label -->
+            <div
+              class="flex items-baseline text-h6"
+              data-cy="card-progress-prize-label"
+            >
+              <span>{{ prize.placement }}</span
               >.&nbsp;
               <span data-cy="card-progress-prize-label">{{ prize.label }}</span
               >&nbsp;
@@ -161,20 +158,23 @@ export default defineComponent({
           </q-item>
         </q-list>
       </div>
-
-      <q-separator
-        :color="isDark(card) ? 'blue-grey-7' : 'blue-grey-1'"
-        data-cy="card-progress-separator"
-      />
-
-      <!-- Section share -->
-      <q-list dense class="q-mt-md">
+    </q-card-section>
+    <!-- Separator -->
+    <q-separator
+      :color="isDark(card) ? 'white' : 'blue-grey-3'"
+      style="opacity: 0.5"
+      class="q-my-sm"
+      data-cy="card-progress-separator"
+    />
+    <!-- Section share -->
+    <q-card-section class="q-pt-sm">
+      <q-list dense>
         <!-- Share button -->
         <q-item
           clickable
           :to="card.url"
-          class="justify-center items-center text-uppercase text-weight-bold q-py-sm"
-          :class="isDark(card) ? 'text-white' : 'text-grey-10'"
+          class="justify-center items-center text-uppercase text-caption text-weight-bold q-py-sm"
+          :class="isDark(card) ? 'text-white' : 'text-primary'"
           :style="{ 'border-radius': borderRadius }"
           data-cy="card-progress-share"
         >
@@ -182,14 +182,14 @@ export default defineComponent({
           <q-icon
             name="share"
             size="18px"
-            :color="isDark(card) ? 'white' : 'grey-10'"
+            :color="isDark(card) ? 'white' : 'primary'"
             class="q-mr-xs"
             data-cy="card-progress-share-icon"
           />
           <!-- Label -->
           <span
             class="leading-1"
-            :class="isDark(card) ? 'text-white' : 'text-grey-10'"
+            :class="isDark(card) ? 'text-white' : 'text-primary'"
             >{{ $t('global.buttonShare') }}</span
           >
         </q-item>
