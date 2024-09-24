@@ -2,7 +2,8 @@ import { Link, User } from 'src/components/types';
 import { i18n } from 'src/boot/i18n';
 
 export const user: User = {
-  label: 'User 1',
+  label: 'Jana Anonymní',
+  email: 'jana.anonymni@dopracenakole.cz',
   value: '1',
   image: {
     src: 'https://picsum.photos/id/40/300/300',

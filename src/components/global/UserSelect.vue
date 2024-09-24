@@ -117,12 +117,9 @@ export default defineComponent({
           <q-img :src="user.image.src" :alt="user.image.alt" :size="size" />
         </q-avatar>
         <!-- User name -->
-        <span
-          v-if="variant !== 'mobile'"
-          class="col-grow inline-block text-left q-ml-md"
-        >
-          {{ user.label }}
-        </span>
+        <div v-if="variant !== 'mobile'" class="col text-left q-ml-md ellipsis">
+          {{ user.email }}
+        </div>
       </template>
       <!-- User menu: Top -->
       <q-list dark bordered :style="{ borderRadius }" class="bg-primary">
@@ -140,7 +137,7 @@ export default defineComponent({
             option.title
           }}</q-item-label>
         </q-item>
-        <q-separator color="blue-grey-2" />
+        <q-separator color="blue-grey-2 q-my-sm" />
         <q-item
           v-for="option in menuBottom"
           :key="option.title"
