@@ -53,9 +53,12 @@ export default defineComponent({
       emit('follow');
     };
 
+    const iconSize = '18px';
+
     return {
       buttonColor,
       colorPrimaryOpacity,
+      iconSize,
       onFollow,
     };
   },
@@ -80,7 +83,7 @@ export default defineComponent({
         <!-- Icon -->
         <q-icon
           :name="item.icon"
-          size="18px"
+          :size="iconSize"
           color="primary"
           data-cy="newsletter-item-icon"
         ></q-icon>
@@ -107,7 +110,7 @@ export default defineComponent({
       <q-icon
         v-show="item.following"
         name="check"
-        size="18px"
+        :size="iconSize"
         color="grey-10"
         class="q-mr-xs"
         data-cy="newsletter-follow-icon"
