@@ -67,6 +67,15 @@ export const testBackgroundImage = (): void => {
       cy.dataCy(layoutBackgroundImageSelector)
         .find('img')
         .should('have.attr', 'src', config.urlLoginRegisterBackgroundImage);
+      // test background image on different screen sizes
+      cy.viewport('iphone-3');
+      cy.dataCy(layoutBackgroundImageSelector).should('not.exist');
+      cy.viewport('iphone-xr');
+      cy.dataCy(layoutBackgroundImageSelector).should('not.exist');
+      cy.viewport('macbook-11');
+      cy.dataCy(layoutBackgroundImageSelector).should('exist');
+      cy.viewport('macbook-16');
+      cy.dataCy(layoutBackgroundImageSelector).should('exist');
     });
   });
 };

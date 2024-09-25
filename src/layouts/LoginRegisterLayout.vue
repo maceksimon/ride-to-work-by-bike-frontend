@@ -54,7 +54,7 @@ export default defineComponent({
   <q-layout class="bg-primary" view="hHh lpR fFf">
     <!-- Background image -->
     <div
-      v-if="$q.screen.gt.md"
+      v-if="$q.screen.gt.sm"
       class="fixed-top-right"
       :style="{ width: `60vw`, height: `100vh`, isolation: 'isolate' }"
     >

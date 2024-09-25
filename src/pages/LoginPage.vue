@@ -45,7 +45,7 @@ export default defineComponent({
       <login-register-header data-cy="login-register-header" />
 
       <div class="row">
-        <div class="col-12 col-lg-4">
+        <div class="col-12 col-md-4">
           <form-login />
         </div>
       </div>
