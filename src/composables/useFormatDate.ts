@@ -14,6 +14,8 @@ enum TimeState {
   PAST = 'PAST',
 }
 
+export const defaultDateFormat = 'D. MMM, HH:mm';
+
 export const useFormatDate = () => {
   /**
    * Returns a label for a given date relative to the current date.
@@ -46,7 +48,7 @@ export const useFormatDate = () => {
       case TimeState.PAST7DAYS:
         return labelPast7Days({ timeStamp });
       case TimeState.PAST:
-        return date.formatDate(timeStamp, 'D. MMM, HH:mm');
+        return date.formatDate(timeStamp, defaultDateFormat);
       default:
         return '';
     }

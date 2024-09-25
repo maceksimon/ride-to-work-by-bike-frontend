@@ -1,6 +1,7 @@
 import { date } from 'quasar';
 import ForumPostItem from 'components/community/ForumPostItem.vue';
 import { i18n } from '../../boot/i18n';
+import { defaultDateFormat } from '../../composables/useFormatDate';
 
 describe('<ForumPostItem>', () => {
   it('has translation for all strings', () => {
@@ -134,7 +135,7 @@ describe('<ForumPostItem>', () => {
       cy.fixture('forumPostList').then((postList) => {
         cy.dataCy('forum-post-date').should(
           'contain',
-          date.formatDate(postList[0].date, 'D. MMM., HH:mm'),
+          date.formatDate(postList[0].date, defaultDateFormat),
         );
       });
     });
