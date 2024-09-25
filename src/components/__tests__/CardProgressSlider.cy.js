@@ -26,6 +26,7 @@ const selectorCardProgressCircularNumber = 'card-progress-circular-number';
 
 // variables
 const iconSize = '18px';
+const progressCircularFontSize = 36;
 
 describe('<CardProgressSlider>', () => {
   it('has translation for all strings', () => {
@@ -214,7 +215,7 @@ function mobileTests() {
   it('renders smaller circular progress number', () => {
     cy.dataCy(selectorCardProgressCircularNumber)
       .should('be.visible')
-      .and('have.css', 'font-size', '40px');
+      .and('have.css', 'font-size', `${progressCircularFontSize}px`);
   });
 
   it('wraps items in card header', () => {
