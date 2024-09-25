@@ -302,19 +302,19 @@ export const newsletterItems: NewsletterItem[] = [
   {
     title: i18n.global.t('index.newsletterFeature.aboutChallenges'),
     icon: 'svguse:icons/newsletter_item/icons.svg#lucide-bike',
-    url: 'https://ecomail.cz/#1',
+    url: 'https://ecomail.cz/',
     following: true,
   },
   {
     title: i18n.global.t('index.newsletterFeature.aboutEvents'),
     icon: 'svguse:icons/newsletter_item/icons.svg#tabler-calendar',
-    url: 'https://ecomail.cz/#2',
+    url: 'https://ecomail.cz/',
     following: true,
   },
   {
     title: i18n.global.t('index.newsletterFeature.aboutMobility'),
     icon: 'svguse:icons/newsletter_item/icons.svg#tabler-leaf',
-    url: 'https://ecomail.cz/#3',
+    url: 'https://ecomail.cz/',
     following: false,
   },
 ];
