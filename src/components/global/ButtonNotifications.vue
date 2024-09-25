@@ -104,7 +104,7 @@ export default defineComponent({
         />
         <!-- Icon -->
         <q-icon
-          name="svguse:/icons/custom.svg#bell"
+          name="svguse:/icons/button_notifications/icons.svg#bell"
           size="18px"
           color="white"
           data-cy="notifications-icon"
