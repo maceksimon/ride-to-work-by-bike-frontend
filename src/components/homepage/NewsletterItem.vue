@@ -85,15 +85,16 @@ export default defineComponent({
         {{ item.title }}
       </div>
     </div>
-
     <!-- Button -->
     <q-btn
       rounded
       unelevated
+      :href="item.url"
       :color="buttonColor"
       :outline="item.following"
-      :disabled="item.following"
+      :disable="item.following"
       class="min-w-200"
+      target="_blank"
       @click.prevent="onFollow"
       data-cy="newsletter-item-button"
     >
