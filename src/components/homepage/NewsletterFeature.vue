@@ -76,6 +76,7 @@ export default defineComponent({
     const newsletterItems = ref(newsletterItemsFixture as NewsletterItemType[]);
 
     const onFollow = (index: number): void => {
+      // TODO: Implement API call to save the follow status
       newsletterItems.value[index].following = true;
     };
 
