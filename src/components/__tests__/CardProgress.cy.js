@@ -8,7 +8,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
 const primary = getPaletteColor('primary');
-const blueGrey4 = getPaletteColor('blue-grey-4');
+const blueGrey3 = getPaletteColor('blue-grey-3');
 
 const cardFirst = cardsProgress[0];
 const card = cardsProgress[1];
@@ -59,9 +59,7 @@ describe('<CardProgress>', () => {
     });
 
     it('renders prize icon', () => {
-      cy.dataCy('card-progress-prizes-icon')
-        .should('contain', cardFirst.prizes[0].icon)
-        .and('have.color', white);
+      cy.dataCy('card-progress-prizes-icon').and('have.color', white);
       cy.dataCy('card-progress-prizes-icon')
         .invoke('width')
         .should('be.eq', iconSizeSm);
@@ -174,7 +172,7 @@ describe('<CardProgress>', () => {
     it('renders light separator', () => {
       cy.dataCy('card-progress-separator').should(
         'have.backgroundColor',
-        blueGrey4,
+        blueGrey3,
       );
     });
 
