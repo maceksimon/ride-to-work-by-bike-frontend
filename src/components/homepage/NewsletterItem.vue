@@ -53,9 +53,11 @@ export default defineComponent({
       emit('follow');
     };
 
+    const avatarSize = '38px';
     const iconSize = '18px';
 
     return {
+      avatarSize,
       buttonColor,
       colorPrimaryOpacity,
       iconSize,
@@ -76,7 +78,7 @@ export default defineComponent({
       data-cy="newsletter-item-content"
     >
       <q-avatar
-        size="38px"
+        :size="avatarSize"
         :style="{ background: colorPrimaryOpacity }"
         data-cy="newsletter-item-avatar"
       >
