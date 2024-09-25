@@ -9,6 +9,7 @@
  * This component takes in a newsletter item object as a prop and displays
  * details, including an icon, title, and a button indicating whether
  * the user is following the newsletter.
+ * If not subscribed, the button links to an Ecomail newsletter subscription.
  *
  * @props
  * - `item` (NewsletterItemType, required): The newsletter item to be
@@ -71,7 +72,11 @@ export default defineComponent({
       class="flex no-wrap items-center gap-12"
       data-cy="newsletter-item-content"
     >
-      <q-avatar size="38px" :style="{ background: colorPrimaryOpacity }">
+      <q-avatar
+        size="38px"
+        :style="{ background: colorPrimaryOpacity }"
+        data-cy="newsletter-item-avatar"
+      >
         <!-- Icon -->
         <q-icon
           :name="item.icon"
