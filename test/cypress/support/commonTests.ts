@@ -137,6 +137,8 @@ export const testUserSelect = (selector: string): void => {
   });
 
   it('checks navigation links in the menu', () => {
+    const selectorUserSelectInput = 'user-select-input';
+
     const menuItems = [
       { url: routesConf['profile_details']['children']['fullPath'] },
       { url: routesConf['profile_newsletter']['children']['fullPath'] },
@@ -145,7 +147,9 @@ export const testUserSelect = (selector: string): void => {
       { url: routesConf['company_coordinator']['children']['fullPath'] },
     ];
 
-    cy.dataCy(selector).click();
+    cy.dataCy(selector).within(() => {
+      cy.dataCy(selectorUserSelectInput).click();
+    });
     cy.get(classSelectorMenu)
       .should('be.visible')
       .within(() => {
