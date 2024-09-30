@@ -95,6 +95,7 @@ export default defineComponent({
 
     return {
       isGoogleLoginAvailable,
+      logger,
       onGoogleLogin,
       onGoogleLoginError,
     };
