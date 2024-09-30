@@ -21,7 +21,10 @@
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=6274%3A28817&mode=dev)
  */
 
-import { defineComponent } from 'vue';
+import { defineComponent, inject } from 'vue';
+
+// types
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'LoginRegisterButtons',
@@ -30,6 +33,13 @@ export default defineComponent({
       type: String as () => 'login' | 'register',
       required: true,
     },
+  },
+  setup() {
+    const logger: Logger | undefined = inject('vuejs3-logger');
+
+    return {
+      logger,
+    };
   },
 });
 </script>
