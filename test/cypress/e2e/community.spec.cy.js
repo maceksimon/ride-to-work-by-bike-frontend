@@ -26,7 +26,6 @@ describe('Community page', () => {
       cy.dataCy('q-drawer').should('be.visible');
       cy.dataCy('drawer-header').should('be.visible');
       cy.dataCy('user-select-desktop').should('be.visible');
-      cy.dataCy('drawer-toggle-buttons').should('be.visible');
       cy.dataCy('drawer-menu-top').should('be.visible');
       cy.dataCy('drawer-menu-bottom').should('be.visible');
     });

@@ -6,7 +6,6 @@ import { i18n } from '../boot/i18n';
 // import components
 import DrawerHeader from 'components/global/DrawerHeader.vue';
 import DrawerMenu from 'components/global/DrawerMenu.vue';
-import DrawerToggleButtons from 'src/components/global/DrawerToggleButtons.vue';
 import FooterBar from 'components/global/FooterBar.vue';
 import MobileBottomPanel from 'components/global/MobileBottomPanel.vue';
 import UserSelect from 'components/global/UserSelect.vue';
@@ -33,7 +32,6 @@ export default defineComponent({
   components: {
     DrawerHeader,
     DrawerMenu,
-    DrawerToggleButtons,
     FooterBar,
     MobileBottomPanel,
     UserSelect,
@@ -78,10 +76,6 @@ export default defineComponent({
         <drawer-header data-cy="drawer-header" />
         <!-- User options dropdown -->
         <user-select class="q-pt-lg" data-cy="user-select-desktop" />
-        <drawer-toggle-buttons
-          class="q-pt-lg"
-          data-cy="drawer-toggle-buttons"
-        />
       </div>
       <!-- Navigation menu -->
       <drawer-menu :items="menuTop" class="q-pt-lg" data-cy="drawer-menu-top" />

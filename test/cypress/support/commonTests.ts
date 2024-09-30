@@ -100,7 +100,6 @@ export const testDesktopSidebar = (): void => {
   const selectorDrawer = 'q-drawer';
   const selectorDrawerHeader = 'drawer-header';
   const selectorUserSelectDesktop = 'user-select-desktop';
-  const selectorDrawerToggleButtons = 'drawer-toggle-buttons';
   const selectorDrawerMenuTop = 'drawer-menu-top';
   const selectorDrawerMenuBottom = 'drawer-menu-bottom';
 
@@ -108,7 +107,6 @@ export const testDesktopSidebar = (): void => {
     cy.dataCy(selectorDrawer).should('be.visible');
     cy.dataCy(selectorDrawerHeader).should('be.visible');
     cy.dataCy(selectorUserSelectDesktop).should('be.visible');
-    cy.dataCy(selectorDrawerToggleButtons).should('be.visible');
     cy.dataCy(selectorDrawerMenuTop).should('be.visible');
     cy.dataCy(selectorDrawerMenuBottom).should('be.visible');
   });
