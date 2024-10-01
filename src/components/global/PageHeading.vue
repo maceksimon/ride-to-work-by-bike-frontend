@@ -47,6 +47,7 @@ export default defineComponent({
       'col-12 flex flex-wrap items-center justify-between gap-16': horizontal,
     }"
   >
+    <!-- Title -->
     <h1
       v-if="$slots.default"
       class="text-h4 text-weight-bold text-black q-my-none"
@@ -54,6 +55,8 @@ export default defineComponent({
     >
       <slot />
     </h1>
+
+    <!-- Secondary content -->
     <div
       v-if="$slots.secondary"
       class="text-subtitle2 text-weight-regular text-grey-10"
