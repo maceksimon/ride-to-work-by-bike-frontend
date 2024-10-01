@@ -4,7 +4,13 @@ import { i18n } from '../../boot/i18n';
 
 // colors
 const { getPaletteColor } = colors;
+const black = getPaletteColor('black');
 const primary = getPaletteColor('primary');
+
+// selectors
+const selectorBreadcrumbTitle = 'breadcrumb-title';
+const selectorBreadcrumbTitleEl = 'breadcrumb-title-el';
+const selectorBreadcrumbTitleCurrent = 'breadcrumb-title-current';
 
 describe('<BreadcrumbTitle>', () => {
   it('has translation for all strings', () => {
@@ -41,10 +47,11 @@ describe('<BreadcrumbTitle>', () => {
 function coreTests() {
   it('renders component', () => {
     // within the component test, the breadcrumb renders only current route
-    cy.dataCy('breadcrumb-title').should('be.visible');
-    cy.dataCy('breadcrumb-title-current')
+    cy.dataCy(selectorBreadcrumbTitle).should('be.visible');
+    cy.dataCy(selectorBreadcrumbTitleEl).should('have.color', primary);
+    cy.dataCy(selectorBreadcrumbTitleCurrent)
       .should('be.visible')
       .and('contain', i18n.global.t('results.titleResultsYou'))
-      .and('have.color', primary);
+      .and('have.color', black);
   });
 }

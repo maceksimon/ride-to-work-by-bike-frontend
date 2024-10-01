@@ -68,7 +68,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-breadcrumbs active-color="black" data-cy="breadcrumb-title">
+  <q-breadcrumbs
+    class="text-h4 text-weight-bold"
+    active-color="black"
+    data-cy="breadcrumb-title"
+  >
     <template v-slot:separator>
       <q-icon size="32px" color="primary" name="chevron_right" />
     </template>
