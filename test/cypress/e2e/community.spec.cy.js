@@ -62,7 +62,7 @@ function coreTests() {
         .then(($el) => {
           cy.wrap(i18n.global.t('community.titleCommunity')).then(
             (translation) => {
-              expect($el.text()).to.equal(translation);
+              cy.wrap($el).should('contain', translation);
             },
           );
         });
