@@ -17,7 +17,7 @@
  *     Page Title
  *   </template>
  *   <template #secondary>
- *     <q-btn>Action</q-btn>
+ *     Secondary content
  *   </template>
  * </page-heading>
  *
