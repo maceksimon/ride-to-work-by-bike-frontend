@@ -24,6 +24,7 @@ import ForumPostList from 'src/components/community/ForumPostList.vue';
 import ListCardFollow from '../components/homepage/ListCardFollow.vue';
 import ListCardPost from 'src/components/homepage/ListCardPost.vue';
 import ListCardSlider from '../components/global/ListCardSlider.vue';
+import PageHeading from 'src/components/global/PageHeading.vue';
 import SectionHeading from 'src/components/global/SectionHeading.vue';
 
 // composables
@@ -54,6 +55,7 @@ export default defineComponent({
     ListCardFollow,
     ListCardPost,
     ListCardSlider,
+    PageHeading,
     SectionHeading,
   },
   setup() {
@@ -83,21 +85,21 @@ export default defineComponent({
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
     <div class="q-px-lg bg-white q-pb-xl q-pt-lg">
-      <!-- Section title -->
-      <div class="col-12 flex flex-wrap items-center justify-between gap-16">
-        <!-- Page title -->
-        <div>
-          <h1
-            class="text-h5 q-my-none text-weight-bold"
-            data-cy="community-page-title"
-          >
-            {{ $t('community.titleCommunity') }}
-          </h1>
-        </div>
-
-        <!-- Select: City -->
-        <FormFieldSelectCity v-model="city" data-cy="form-field-select-city" />
-      </div>
+      <!-- Page title -->
+      <page-heading
+        horizontal
+        class="q-mt-none q-mb-none"
+        data-cy="community-page-title"
+      >
+        {{ $t('community.titleCommunity') }}
+        <template #secondary>
+          <!-- Select: City -->
+          <form-field-select-city
+            v-model="city"
+            data-cy="form-field-select-city"
+          />
+        </template>
+      </page-heading>
 
       <!-- Section: Local events -->
       <div class="q-mt-lg">

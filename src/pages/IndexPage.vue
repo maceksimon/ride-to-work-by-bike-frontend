@@ -1,6 +1,6 @@
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
-    <div class="q-px-lg bg-white">
+    <div class="q-px-lg q-pt-lg bg-white">
       <page-heading data-cy="index-title">
         {{ $t('index.title') }}
       </page-heading>

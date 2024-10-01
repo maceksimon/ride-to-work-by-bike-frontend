@@ -10,18 +10,18 @@ const grey10 = getPaletteColor('grey-10');
 // selectors
 const selectorPageHeading = 'page-heading';
 const selectorPageHeadingTitle = 'page-heading-title';
-const selectorPageHeadingPerex = 'page-heading-perex';
+const selectorPageHeadingSecondary = 'page-heading-secondary';
 
 // variables
 const title = 'Page Title';
-const perex = 'Page perex';
+const secondaryContent = 'Secondary Content';
 const titleFontSize = 34;
 const titleFontWeight = 700;
-const perexFontSize = 14;
-const perexFontWeight = 400;
-const perexMarginTop = 24;
+const secondaryFontSize = 14;
+const secondaryFontWeight = 400;
+const secondaryMarginTop = 24;
 const componentMarginBottom = 48;
-const componentMarginTop = 24;
+
 describe('<PageHeading>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext([], 'index.component', i18n);
@@ -33,7 +33,7 @@ describe('<PageHeading>', () => {
         props: {},
         slots: {
           default: title,
-          perex: perex,
+          secondary: secondaryContent,
         },
       });
       cy.viewport('macbook-16');
@@ -48,13 +48,43 @@ describe('<PageHeading>', () => {
         props: {},
         slots: {
           default: title,
-          perex: perex,
+          secondary: secondaryContent,
         },
       });
       cy.viewport('iphone-6');
     });
 
     coreTests();
+  });
+
+  context('horizontal layout', () => {
+    beforeEach(() => {
+      cy.mount(PageHeading, {
+        props: {
+          horizontal: true,
+        },
+        slots: {
+          default: title,
+          secondary: secondaryContent,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('applies horizontal layout classes', () => {
+      cy.testElementsSideBySide(
+        selectorPageHeadingTitle,
+        selectorPageHeadingSecondary,
+      );
+    });
+
+    it('removes top margin from secondary content in horizontal mode', () => {
+      cy.dataCy(selectorPageHeadingSecondary).should(
+        'have.css',
+        'margin-top',
+        '0px',
+      );
+    });
   });
 });
 
@@ -70,13 +100,13 @@ function coreTests() {
       .and('contain', title)
       .and('have.css', 'margin-bottom', '0px')
       .and('have.css', 'margin-top', '0px');
-    cy.dataCy(selectorPageHeadingPerex)
+    cy.dataCy(selectorPageHeadingSecondary)
       .should('be.visible')
-      .and('have.css', 'font-size', `${perexFontSize}px`)
-      .and('have.css', 'font-weight', `${perexFontWeight}`)
+      .and('have.css', 'font-size', `${secondaryFontSize}px`)
+      .and('have.css', 'font-weight', `${secondaryFontWeight}`)
       .and('have.color', grey10)
-      .and('contain', perex)
-      .and('have.css', 'margin-top', `${perexMarginTop}px`);
+      .and('contain', secondaryContent)
+      .and('have.css', 'margin-top', `${secondaryMarginTop}px`);
   });
 
   it('has correct margins', () => {
@@ -84,11 +114,6 @@ function coreTests() {
       'have.css',
       'margin-bottom',
       `${componentMarginBottom}px`,
-    );
-    cy.dataCy(selectorPageHeading).should(
-      'have.css',
-      'margin-top',
-      `${componentMarginTop}px`,
     );
   });
 }
