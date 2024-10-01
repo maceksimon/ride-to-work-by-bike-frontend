@@ -1,5 +1,10 @@
+import { colors } from 'quasar';
 import BreadcrumbTitle from 'components/global/BreadcrumbTitle.vue';
 import { i18n } from '../../boot/i18n';
+
+// colors
+const { getPaletteColor } = colors;
+const primary = getPaletteColor('primary');
 
 describe('<BreadcrumbTitle>', () => {
   it('has translation for all strings', () => {
@@ -39,6 +44,7 @@ function coreTests() {
     cy.dataCy('breadcrumb-title').should('be.visible');
     cy.dataCy('breadcrumb-title-current')
       .should('be.visible')
-      .and('contain', i18n.global.t('results.titleResultsYou'));
+      .and('contain', i18n.global.t('results.titleResultsYou'))
+      .and('have.color', primary);
   });
 }

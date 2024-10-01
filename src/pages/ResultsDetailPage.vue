@@ -17,6 +17,7 @@ import { defineComponent } from 'vue';
 // components
 import BreadcrumbTitle from 'src/components/global/BreadcrumbTitle.vue';
 import ListCardSlider from '../components/global/ListCardSlider.vue';
+import PageHeading from 'src/components/global/PageHeading.vue';
 import ResultsList from '../components/results/ResultsList.vue';
 import ResultsTabs from '../components/results/ResultsTabs.vue';
 
@@ -31,6 +32,7 @@ export default defineComponent({
   components: {
     BreadcrumbTitle,
     ListCardSlider,
+    PageHeading,
     ResultsList,
     ResultsTabs,
   },
@@ -51,10 +53,10 @@ export default defineComponent({
 
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
-    <div class="q-px-lg bg-white q-pb-xl">
-      <div class="q-pt-lg">
+    <div class="q-px-lg bg-white q-pt-lg q-pb-xl">
+      <page-heading data-cy="results-detail-page-title">
         <breadcrumb-title :title="$t('results.titleResultsYou')" />
-      </div>
+      </page-heading>
 
       <results-list data-cy="results-list" />
 
