@@ -21,7 +21,7 @@
  *   </template>
  * </page-heading>
  *
- * @see [Figma Design](...)
+ * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=7004-32012&t=IZOUj0U34mMeiIrt-1)
  */
 
 // libraries
