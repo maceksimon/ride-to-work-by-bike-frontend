@@ -21,6 +21,7 @@ import CardOffer from '../components/homepage/CardOffer.vue';
 import CardPrize from 'src/components/global/CardPrize.vue';
 import FormFieldSelectCity from 'src/components/form/FormFieldSelectCity.vue';
 import ListPartners from '../components/global/ListPartners.vue';
+import PageHeading from 'components/global/PageHeading.vue';
 import SectionColumns from '../components/homepage/SectionColumns.vue';
 import SectionHeading from '../components/global/SectionHeading.vue';
 
@@ -38,6 +39,7 @@ export default defineComponent({
     CardPrize,
     FormFieldSelectCity,
     ListPartners,
+    PageHeading,
     SectionColumns,
     SectionHeading,
   },
@@ -61,21 +63,17 @@ export default defineComponent({
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
     <div class="q-px-lg bg-white q-pb-xl q-pt-lg">
-      <!-- Section title -->
-      <div class="col-12 flex flex-wrap items-center justify-between gap-16">
-        <!-- Page title -->
-        <div>
-          <h1
-            class="text-h5 q-my-none text-weight-bold"
-            data-cy="prizes-page-title"
-          >
-            {{ $t('prizes.titlePrizes') }}
-          </h1>
-        </div>
-
-        <!-- Select: City -->
-        <FormFieldSelectCity v-model="city" data-cy="form-field-select-city" />
-      </div>
+      <!-- Page title -->
+      <page-heading horizontal data-cy="prizes-page-title">
+        {{ $t('prizes.titlePrizes') }}
+        <template #secondary>
+          <!-- Select: City -->
+          <form-field-select-city
+            v-model="city"
+            data-cy="form-field-select-city"
+          />
+        </template>
+      </page-heading>
 
       <!-- Section: Special offers -->
       <div class="q-mt-xl">

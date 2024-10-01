@@ -51,11 +51,7 @@ function coreTests() {
       // title
       cy.dataCy('prizes-page-title')
         .should('be.visible')
-        .then(($el) => {
-          cy.wrap(i18n.global.t('prizes.titlePrizes')).then((translation) => {
-            expect($el.text()).to.equal(translation);
-          });
-        });
+        .and('contain', i18n.global.t('prizes.titlePrizes'));
       cy.dataCy('form-field-select-city').should('be.visible');
     });
   });
