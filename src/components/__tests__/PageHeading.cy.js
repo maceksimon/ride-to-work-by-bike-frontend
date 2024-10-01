@@ -40,6 +40,7 @@ describe('<PageHeading>', () => {
     });
 
     coreTests();
+    verticalLayoutTests();
   });
 
   context('mobile', () => {
@@ -55,6 +56,7 @@ describe('<PageHeading>', () => {
     });
 
     coreTests();
+    verticalLayoutTests();
   });
 
   context('horizontal layout', () => {
@@ -70,6 +72,8 @@ describe('<PageHeading>', () => {
       });
       cy.viewport('macbook-16');
     });
+
+    coreTests();
 
     it('applies horizontal layout classes', () => {
       cy.testElementsSideBySide(
@@ -105,8 +109,7 @@ function coreTests() {
       .and('have.css', 'font-size', `${secondaryFontSize}px`)
       .and('have.css', 'font-weight', `${secondaryFontWeight}`)
       .and('have.color', grey10)
-      .and('contain', secondaryContent)
-      .and('have.css', 'margin-top', `${secondaryMarginTop}px`);
+      .and('contain', secondaryContent);
   });
 
   it('has correct margins', () => {
@@ -114,6 +117,16 @@ function coreTests() {
       'have.css',
       'margin-bottom',
       `${componentMarginBottom}px`,
+    );
+  });
+}
+
+function verticalLayoutTests() {
+  it('has margin top on secondary content', () => {
+    cy.dataCy(selectorPageHeadingSecondary).should(
+      'have.css',
+      'margin-top',
+      `${secondaryMarginTop}px`,
     );
   });
 }
