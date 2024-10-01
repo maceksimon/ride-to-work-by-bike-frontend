@@ -360,8 +360,6 @@ function coreTests() {
       cy.dataCy('q-main').should('be.visible');
       cy.dataCy('index-title')
         .should('be.visible')
-        .and('have.css', 'font-size', '24px')
-        .and('have.css', 'font-weight', '700')
         .then(($el) => {
           cy.wrap(i18n.global.t('index.title')).then((translation) => {
             expect($el.text()).to.equal(translation);

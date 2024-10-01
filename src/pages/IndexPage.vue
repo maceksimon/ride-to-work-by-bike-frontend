@@ -1,12 +1,9 @@
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
     <div class="q-px-lg bg-white">
-      <h1
-        class="text-h5 q-mt-none q-pt-lg text-weight-bold"
-        data-cy="index-title"
-      >
+      <page-heading data-cy="index-title">
         {{ $t('index.title') }}
-      </h1>
+      </page-heading>
       <countdown-event :release-date="releaseDate" data-cy="countdown-event" />
       <!-- Title -->
       <section-heading class="q-pt-xl q-mb-md" data-cy="card-list-title">
@@ -137,6 +134,7 @@ import ListCardOffer from 'components/homepage/ListCardOffer.vue';
 import ListCardPost from 'components/homepage/ListCardPost.vue';
 import ListCardProgress from 'components/homepage/ListCardProgress.vue';
 import NewsletterFeature from 'components/homepage/NewsletterFeature.vue';
+import PageHeading from 'src/components/global/PageHeading.vue';
 import SectionColumns from 'components/homepage/SectionColumns.vue';
 import SectionHeading from 'src/components/global/SectionHeading.vue';
 import SliderProgress from 'components/homepage/SliderProgress.vue';
@@ -171,6 +169,7 @@ export default defineComponent({
     ListCardPost,
     ListCardProgress,
     NewsletterFeature,
+    PageHeading,
     SectionColumns,
     SectionHeading,
     SliderProgress,
