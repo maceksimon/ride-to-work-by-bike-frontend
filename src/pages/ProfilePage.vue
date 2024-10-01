@@ -14,11 +14,13 @@
  */
 
 // components
+import PageHeading from 'components/global/PageHeading.vue';
 import ProfileTabs from '../components/profile/ProfileTabs.vue';
 
 export default {
   name: 'ProfilePage',
   components: {
+    PageHeading,
     ProfileTabs,
   },
 };
@@ -26,17 +28,12 @@ export default {
 
 <template>
   <q-page class="overflow-hidden" data-cy="profile-page">
-    <div class="q-px-lg bg-white q-pb-xl q-pt-lg">
+    <div class="q-px-lg bg-white q-pt-lg">
       <!-- Page title -->
-      <div>
-        <h1
-          class="text-h5 q-my-none text-weight-bold"
-          data-cy="profile-page-title"
-        >
-          {{ $t('profile.titleProfile') }}
-        </h1>
-      </div>
+      <page-heading data-cy="profile-page-title">
+        {{ $t('profile.titleProfile') }}
+      </page-heading>
     </div>
-    <profile-tabs class="bg-white" data-cy="profile-tabs" />
+    <profile-tabs class="bg-white q-pb-xl" data-cy="profile-tabs" />
   </q-page>
 </template>
