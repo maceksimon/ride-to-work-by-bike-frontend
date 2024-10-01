@@ -13,9 +13,14 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// components
+import PageHeading from 'components/global/PageHeading.vue';
+
 export default defineComponent({
   name: 'CompanyCoordinatorPage',
-  components: {},
+  components: {
+    PageHeading,
+  },
   setup() {
     return {};
   },
@@ -29,14 +34,9 @@ export default defineComponent({
       <!-- Section title -->
       <div class="col-12 flex flex-wrap items-center justify-between gap-16">
         <!-- Page title -->
-        <div>
-          <h1
-            class="text-h5 q-my-none text-weight-bold"
-            data-cy="company-coordinator-title"
-          >
-            {{ $t('companyCoordinator.titleBecomeCoordinator') }}
-          </h1>
-        </div>
+        <page-heading data-cy="company-coordinator-title">
+          {{ $t('companyCoordinator.titleBecomeCoordinator') }}
+        </page-heading>
       </div>
 
       <div class="row q-col-gutter-lg">
