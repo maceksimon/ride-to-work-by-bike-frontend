@@ -17,12 +17,14 @@
 import { defineComponent } from 'vue';
 
 // components
+import PageHeading from 'components/global/PageHeading.vue';
 import ResultsChallengeOngoing from 'components/results/ResultsChallengeOngoing.vue';
 import ResultsChallengeUpcoming from 'components/results/ResultsChallengeUpcoming.vue';
 
 export default defineComponent({
   name: 'ResultsPage',
   components: {
+    PageHeading,
     ResultsChallengeOngoing,
     ResultsChallengeUpcoming,
   },
@@ -36,14 +38,11 @@ export default defineComponent({
 
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
-    <div class="q-px-lg bg-white q-pb-xl">
+    <div class="q-px-lg q-pt-lg bg-white q-pb-xl">
       <!-- Heading -->
-      <h1
-        class="text-h5 q-mt-none q-pt-lg text-weight-bold"
-        data-cy="results-page-title"
-      >
+      <page-heading data-cy="results-page-title">
         {{ $t('results.titleResults') }}
-      </h1>
+      </page-heading>
 
       <results-challenge-upcoming
         v-if="state === 'challenge-upcoming'"
