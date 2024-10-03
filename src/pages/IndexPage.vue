@@ -48,7 +48,6 @@
       <list-card-progress
         :title="$t('index.cardListProgress.title')"
         :cards="cardsProgress"
-        :stats="stasBar"
         class="q-pt-xl q-pb-xl"
         data-cy="list-progress"
       ></list-card-progress>

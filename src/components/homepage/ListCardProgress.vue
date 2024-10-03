@@ -15,7 +15,6 @@
  *   progress cards.
  * - `cards` (Array of CardProgressType, required): An array of card items to
  *   be displayed, each representing progress statistics.
- * - `stats` (Array of ItemStatisticsType): An array of statistical items.
  * - `button` (Object of Link type): An object defining the button properties.
  *
  * @components
@@ -35,11 +34,18 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+
+// enums
+import { StatisticsId } from '../types/Statistics';
+
+// fixtures
+import memberResultsFixture from '../../../test/cypress/fixtures/memberResults.json';
 
 // types
-import { CardProgress as CardProgressType, Link } from '../types';
 import type { ItemStatistics } from '../types/Statistics';
+import type { MemberResults } from '../types/Results';
+import { CardProgress as CardProgressType, Link } from '../types';
 
 // components
 import CardProgress from './CardProgress.vue';
@@ -57,9 +63,6 @@ export default defineComponent({
       type: Array as () => CardProgressType[],
       required: true,
     },
-    stats: {
-      type: Array as () => ItemStatistics[],
-    },
     button: {
       type: Object as () => Link,
       required: false,
@@ -69,6 +72,25 @@ export default defineComponent({
     CardProgress,
     SectionHeading,
     StatsBar,
+  },
+  setup() {
+    const memberResults = memberResultsFixture as MemberResults;
+
+    const stats = computed<ItemStatistics[]>(() => {
+      if (!memberResults?.results) return [];
+
+      return memberResults.results
+        .map((member: TeamMember) => [
+          { id: StatisticsId.distance, value: member[StatisticsId.distance] },
+          { id: StatisticsId.routes, value: member[StatisticsId.routes] },
+          { id: StatisticsId.co2, value: member.emissions[StatisticsId.co2] },
+        ])
+        .flat();
+    });
+
+    return {
+      stats,
+    };
   },
 });
 </script>

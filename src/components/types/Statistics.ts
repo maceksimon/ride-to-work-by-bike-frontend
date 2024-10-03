@@ -1,7 +1,8 @@
 export enum StatisticsId {
   co2 = 'co2',
   distance = 'distance',
-  routes = 'routes',
+  routes = 'eco_trip_count',
+  frequency = 'frequency',
 }
 
 export interface ItemStatistics {

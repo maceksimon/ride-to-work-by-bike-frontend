@@ -19,6 +19,9 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// composables
+import { useStatsBar } from '../../composables/useStatsBar';
+
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
@@ -38,9 +41,13 @@ export default defineComponent({
   },
   setup() {
     const { borderRadiusCard } = rideToWorkByBikeConfig;
+    const { getStatIcon, getStatLabel, getStatUnit } = useStatsBar();
 
     return {
       borderRadiusCard,
+      getStatIcon,
+      getStatLabel,
+      getStatUnit,
       StatisticsId,
     };
   },
@@ -57,38 +64,31 @@ export default defineComponent({
       <q-item
         dense
         v-for="item in stats"
-        :key="item.icon"
+        :key="item.id"
         data-cy="stats-bar-item"
         class="text-grey-10 q-p-none flex items-center"
       >
         <!-- Icon -->
         <q-icon
-          :name="item.icon"
+          :name="getStatIcon(item.id)"
           color="primary"
           size="18px"
           class="q-mr-sm"
           data-cy="stats-bar-item-icon"
         />
         <!-- Value -->
-        <strong class="text-weight-bold" data-cy="stats-bar-item-value">{{
-          item.value
-        }}</strong>
+        <strong class="text-weight-bold" data-cy="stats-bar-item-value"
+          >{{ item.value }}&nbsp;</strong
+        >
         <!-- Label -->
         <span
-          v-if="
-            item.id === StatisticsId.co2 || item.id === StatisticsId.distance
-          "
+          v-if="getStatUnit(item.id)"
+          class="text-weight-bold"
           data-cy="stats-bar-item-label-unit"
-        >
-          <template v-if="item.id === StatisticsId.co2"
-            >&nbsp;<span v-html="$t('global.carbonDioxideWeightUnit')"
-          /></template>
-          <template v-if="item.id === StatisticsId.distance"
-            >&nbsp;{{ $t('global.routeLengthUnit') }}</template
-          >
-        </span>
-        <span v-if="item.label" data-cy="stats-bar-item-label">
-          <span>&nbsp;{{ item.label }}</span>
+          v-html="getStatUnit(item.id)"
+        />
+        <span v-if="getStatLabel(item.id)" data-cy="stats-bar-item-label">
+          <span>&nbsp;{{ getStatLabel(item.id) }}</span>
         </span>
       </q-item>
     </q-list>

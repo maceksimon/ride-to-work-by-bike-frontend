@@ -676,6 +676,10 @@ titleManualLogging = "Manuálne zadávanie"
 titleRoutes = "Cesty"
 titleTabApp = "Automatické nahrávanie"
 
+[statsBar]
+labelSustainableRoutes = "udržateľných trás"
+labelSaved = "ušetrených"
+
 [table]
 textEmptyTable = "Žiadne výsledky. Skúste zmeniť nastavenia filtra."
 

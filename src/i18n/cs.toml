@@ -679,6 +679,10 @@ titleManualLogging = "Ruční záznam"
 titleRoutes = "Cesty"
 titleTabApp = "Automatický záznam"
 
+[statsBar]
+labelSustainableRoutes = "udržitelných cest"
+labelSaved = "ušetřeno"
+
 [table]
 textEmptyTable = "Žádné výsledky. Zkuste změnit nastavení filtrů."
 

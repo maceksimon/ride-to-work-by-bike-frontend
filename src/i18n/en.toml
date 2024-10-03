@@ -676,6 +676,10 @@ titleManualLogging = "Manual logging"
 titleRoutes = "Routes"
 titleTabApp = "Automatic logging"
 
+[statsBar]
+labelSustainableRoutes = "sustainable routes"
+labelSaved = "saved"
+
 [table]
 textEmptyTable = "No results. Try changing the filter settings."
 
