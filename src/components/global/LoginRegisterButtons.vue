@@ -24,6 +24,8 @@
 import { defineComponent, inject } from 'vue';
 import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-component-next';
 
+import { facebookAppId } from '../../boot/global_vars';
+
 // types
 import type { Logger } from '../types/Logger';
 
@@ -39,8 +41,6 @@ export default defineComponent({
     },
   },
   setup() {
-    const facebookAppId = process.env.FACEBOOK_APP_ID;
-
     const logger: Logger | undefined = inject('vuejs3-logger');
 
     return {
