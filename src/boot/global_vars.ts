@@ -9,8 +9,6 @@ const rideToWorkByBikeConfig: ConfigGlobal = JSON.parse(
   process.env.RIDE_TO_WORK_BY_BIKE_CONFIG,
 );
 
-const facebookAppId = process.env.FACEBOOK_APP_ID;
-
 const initVars = (): void => {
   setCssVar('white', rideToWorkByBikeConfig.colorWhite);
   setCssVar('black', rideToWorkByBikeConfig.colorBlack);
@@ -20,7 +18,7 @@ const initVars = (): void => {
   setCssVar('red', rideToWorkByBikeConfig.colorRed);
 };
 
-export { facebookAppId, rideToWorkByBikeConfig, initVars };
+export { rideToWorkByBikeConfig, initVars };
 
 export default boot((): void => {
   initVars();
