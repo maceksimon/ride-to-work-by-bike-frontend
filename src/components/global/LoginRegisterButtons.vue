@@ -21,8 +21,11 @@
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=6274%3A28817&mode=dev)
  */
 
-import { defineComponent, inject } from 'vue';
+import { defineComponent, inject, computed } from 'vue';
 import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-component-next';
+
+// composables
+import { i18n } from '../../boot/i18n';
 
 // types
 import type { Logger } from '../types/Logger';
@@ -43,9 +46,26 @@ export default defineComponent({
 
     const logger: Logger | undefined = inject('vuejs3-logger');
 
+    const onFacebookLogin = (response: unknown) => {
+      console.log(response);
+    };
+
+    const facebookLanguage = computed(() => {
+      switch (i18n.global.locale) {
+        case 'cs':
+          return 'cs_CZ';
+        case 'sk':
+          return 'sk_SK';
+        default:
+          return 'en_US';
+      }
+    });
+
     return {
       facebookAppId,
+      facebookLanguage,
       logger,
+      onFacebookLogin,
     };
   },
 });
@@ -79,7 +99,14 @@ export default defineComponent({
       }}</span>
     </q-btn>
     <!-- Button: Login Facebook -->
-    <v-facebook-login-scope :app-id="facebookAppId" v-slot="scope">
+    <v-facebook-login-scope
+      :app-id="facebookAppId"
+      v-slot="scope"
+      version="v6.0"
+      :login-options="{ scope: 'email' }"
+      :sdk-locale="facebookLanguage"
+      @login="onFacebookLogin"
+    >
       <q-btn
         unelevated
         rounded
