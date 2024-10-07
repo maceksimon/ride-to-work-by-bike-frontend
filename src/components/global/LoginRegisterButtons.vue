@@ -22,12 +22,16 @@
  */
 
 import { defineComponent, inject } from 'vue';
+import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-component-next';
 
 // types
 import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'LoginRegisterButtons',
+  components: {
+    VFacebookLoginScope,
+  },
   props: {
     variant: {
       type: String as () => 'login' | 'register',
@@ -35,9 +39,12 @@ export default defineComponent({
     },
   },
   setup() {
+    const facebookAppId = process.env.FACEBOOK_APP_ID;
+
     const logger: Logger | undefined = inject('vuejs3-logger');
 
     return {
+      facebookAppId,
       logger,
     };
   },
@@ -72,29 +79,32 @@ export default defineComponent({
       }}</span>
     </q-btn>
     <!-- Button: Login Facebook -->
-    <q-btn
-      unelevated
-      rounded
-      outline
-      color="primary"
-      class="full-width q-mt-md"
-      data-cy="login-register-button-facebook"
-    >
-      <!-- Icon -->
-      <q-icon
-        name="facebook"
-        size="24px"
-        color="primary"
-        class="q-mr-sm"
-        data-cy="login-register-button-facebook-icon"
-      />
-      <!-- Label -->
-      <span v-if="variant === 'login'">{{
-        $t('login.buttons.buttonFacebook')
-      }}</span>
-      <span v-else-if="variant === 'register'">{{
-        $t('register.buttons.buttonFacebook')
-      }}</span>
-    </q-btn>
+    <v-facebook-login-scope :app-id="facebookAppId" v-slot="scope">
+      <q-btn
+        unelevated
+        rounded
+        outline
+        color="white"
+        class="full-width q-mt-md"
+        data-cy="login-register-button-facebook"
+        @click="scope.login"
+      >
+        <!-- Icon -->
+        <q-icon
+          name="facebook"
+          size="24px"
+          color="white"
+          class="q-mr-sm"
+          data-cy="login-register-button-facebook-icon"
+        />
+        <!-- Label -->
+        <span v-if="variant === 'login'">{{
+          $t('login.buttons.buttonFacebook')
+        }}</span>
+        <span v-else-if="variant === 'register'">{{
+          $t('register.buttons.buttonFacebook')
+        }}</span>
+      </q-btn>
+    </v-facebook-login-scope>
   </div>
 </template>
