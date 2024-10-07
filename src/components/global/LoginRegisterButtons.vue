@@ -25,6 +25,9 @@ import { Notify } from 'quasar';
 import { defineComponent, inject } from 'vue';
 import { CallbackTypes } from 'vue3-google-login';
 
+// components
+import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-component-next';
+
 // composables
 import { i18n } from '../../boot/i18n';
 
@@ -39,6 +42,9 @@ import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'LoginRegisterButtons',
+  components: {
+    VFacebookLoginScope,
+  },
   props: {
     variant: {
       type: String as () => 'login' | 'register',
@@ -46,6 +52,8 @@ export default defineComponent({
     },
   },
   setup() {
+    const facebookAppId = process.env.FACEBOOK_APP_ID;
+
     const logger: Logger | undefined = inject('vuejs3-logger');
     const loginStore = useLoginStore();
 
@@ -95,6 +103,7 @@ export default defineComponent({
 
     return {
       isGoogleLoginAvailable,
+      facebookAppId,
       logger,
       onGoogleLogin,
       onGoogleLoginError,
@@ -138,29 +147,32 @@ export default defineComponent({
       </q-btn>
     </GoogleLogin>
     <!-- Button: Login Facebook -->
-    <q-btn
-      unelevated
-      rounded
-      outline
-      color="primary"
-      class="full-width"
-      data-cy="login-register-button-facebook"
-    >
-      <!-- Icon -->
-      <q-icon
-        name="facebook"
-        size="24px"
-        color="primary"
-        class="q-mr-sm"
-        data-cy="login-register-button-facebook-icon"
-      />
-      <!-- Label -->
-      <span v-if="variant === 'login'">{{
-        $t('login.buttons.buttonFacebook')
-      }}</span>
-      <span v-else-if="variant === 'register'">{{
-        $t('register.buttons.buttonFacebook')
-      }}</span>
-    </q-btn>
+    <v-facebook-login-scope :app-id="facebookAppId" v-slot="scope">
+      <q-btn
+        unelevated
+        rounded
+        outline
+        color="white"
+        class="full-width q-mt-md"
+        data-cy="login-register-button-facebook"
+        @click="scope.login"
+      >
+        <!-- Icon -->
+        <q-icon
+          name="facebook"
+          size="24px"
+          color="white"
+          class="q-mr-sm"
+          data-cy="login-register-button-facebook-icon"
+        />
+        <!-- Label -->
+        <span v-if="variant === 'login'">{{
+          $t('login.buttons.buttonFacebook')
+        }}</span>
+        <span v-else-if="variant === 'register'">{{
+          $t('register.buttons.buttonFacebook')
+        }}</span>
+      </q-btn>
+    </v-facebook-login-scope>
   </div>
 </template>
