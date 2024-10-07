@@ -22,7 +22,7 @@
  */
 
 import { Notify } from 'quasar';
-import { defineComponent, inject } from 'vue';
+import { computed, defineComponent, inject } from 'vue';
 import { CallbackTypes } from 'vue3-google-login';
 
 // components
@@ -101,12 +101,29 @@ export default defineComponent({
         ` <${isGoogleLoginAvailable}>.`,
     );
 
+    const onFacebookLogin = (response: unknown) => {
+      console.log(response);
+    };
+
+    const facebookLanguage = computed(() => {
+      switch (i18n.global.locale) {
+        case 'cs':
+          return 'cs_CZ';
+        case 'sk':
+          return 'sk_SK';
+        default:
+          return 'en_US';
+      }
+    });
+
     return {
       isGoogleLoginAvailable,
       facebookAppId,
+      facebookLanguage,
       logger,
       onGoogleLogin,
       onGoogleLoginError,
+      onFacebookLogin,
     };
   },
 });
@@ -147,7 +164,14 @@ export default defineComponent({
       </q-btn>
     </GoogleLogin>
     <!-- Button: Login Facebook -->
-    <v-facebook-login-scope :app-id="facebookAppId" v-slot="scope">
+    <v-facebook-login-scope
+      :app-id="facebookAppId"
+      v-slot="scope"
+      version="v6.0"
+      :login-options="{ scope: 'email' }"
+      :sdk-locale="facebookLanguage"
+      @login="onFacebookLogin"
+    >
       <q-btn
         unelevated
         rounded
