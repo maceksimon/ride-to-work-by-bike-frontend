@@ -32,7 +32,7 @@ import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-compone
 import { i18n } from '../../boot/i18n';
 
 // config
-import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { facebookAppId, rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // stores
 import { useLoginStore } from '../../stores/login';
@@ -52,8 +52,6 @@ export default defineComponent({
     },
   },
   setup() {
-    const facebookAppId = process.env.FACEBOOK_APP_ID;
-
     const logger: Logger | undefined = inject('vuejs3-logger');
     const loginStore = useLoginStore();
 
