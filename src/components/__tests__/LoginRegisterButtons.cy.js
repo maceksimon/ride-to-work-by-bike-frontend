@@ -5,6 +5,7 @@ import LoginRegisterButtons from 'components/global/LoginRegisterButtons.vue';
 import { i18n } from '../../boot/i18n';
 
 const primary = getPaletteColor('primary');
+const white = getPaletteColor('white');
 
 describe('<LoginRegisterButtons>', () => {
   it('has translation for all strings', () => {
@@ -61,14 +62,14 @@ describe('<LoginRegisterButtons>', () => {
         .and('have.css', 'font-weight', '500')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.css', 'border-radius', '28px')
-        .and('have.color', primary)
+        .and('have.color', white)
         .and('contain', i18n.global.t('login.buttons.buttonFacebook'));
     });
 
     it('renders facebook button icon', () => {
       cy.dataCy('login-register-button-facebook-icon')
         .should('contain', 'facebook')
-        .and('have.color', primary);
+        .and('have.color', white);
       cy.dataCy('login-register-button-facebook-icon')
         .invoke('height')
         .should('be.equal', 24);
