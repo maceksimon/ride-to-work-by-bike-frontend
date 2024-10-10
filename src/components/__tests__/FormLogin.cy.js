@@ -24,8 +24,17 @@ const selectorLoginPromptNoAccount = 'login-prompt-no-account';
 const selectorLoginLinkRegister = 'login-link-register';
 
 // variables
-const { apiBase, apiDefaultLang, urlApiLogin, urlApiRefresh } =
-  rideToWorkByBikeConfig;
+const {
+  apiBase,
+  apiDefaultLang,
+  urlApiLogin,
+  urlApiRefresh,
+  urlApiResetPassword,
+} = rideToWorkByBikeConfig;
+const resetPasswordResponse = {
+  detail: 'Request to reset password was successful.',
+};
+const resetPasswordEmail = 'qw123@qw.com';
 
 const username = 'test@example.com';
 const password = 'example123';
@@ -76,17 +85,24 @@ describe('<FormLogin>', () => {
         props: {},
       });
       cy.viewport('macbook-16');
-      // intercept login API call
+      // get API base URL
       const apiBaseUrl = getApiBaseUrlWithLang(
         null,
         apiBase,
         apiDefaultLang,
         i18n,
       );
+      // intercept login API call
       const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
       cy.intercept('POST', apiLoginUrl, {
         statusCode: httpInternalServerErrorStatus,
       }).as('loginRequest');
+      // intercept reset password API call
+      const apiResetPasswordUrl = `${apiBaseUrl}${urlApiResetPassword}`;
+      cy.intercept('POST', apiResetPasswordUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: resetPasswordResponse,
+      }).as('resetPasswordRequest');
     });
 
     it('renders title', () => {
@@ -240,13 +256,25 @@ describe('<FormLogin>', () => {
         .and('have.text', i18n.global.t('login.form.submitPasswordReset'));
     });
 
-    it('renders final screen on password reset', () => {
+    it.only('renders final screen on password reset', () => {
+      // click on forgotten password
       cy.dataCy('form-login-forgotten-password').should('be.visible').click();
+      // type email
       cy.dataCy('form-password-reset-email')
         .find('input')
         .should('be.visible')
-        .type('qw123@qw.com');
+        .type(resetPasswordEmail);
+      // click on submit
       cy.dataCy('form-password-reset-submit').should('be.visible').click();
+      // wait for reset password API call
+      cy.wait('@resetPasswordRequest').then((interception) => {
+        expect(interception.request.body.email).to.equal(resetPasswordEmail);
+        expect(interception.response.statusCode).to.equal(
+          httpSuccessfullStatus,
+        );
+        expect(interception.response.body).to.deep.equal(resetPasswordResponse);
+      });
+      // final screen
       cy.dataCy('form-reset-finished').should('be.visible');
       // icon wrapper
       cy.dataCy('form-reset-finished-icon-wrapper')
@@ -270,8 +298,6 @@ describe('<FormLogin>', () => {
         .and('have.css', 'margin-top', '24px')
         .and('contain', i18n.global.t('login.form.titleResetFinished'));
       // description
-      const loginStore = useLoginStore();
-      const contactEmail = loginStore.getPasswordResetEmail;
       cy.dataCy('form-reset-finished-description')
         .should('be.visible')
         .and('have.color', white)
@@ -280,23 +306,25 @@ describe('<FormLogin>', () => {
         .and(
           'contain',
           i18n.global.t('login.form.descriptionResetFinished', {
-            contactEmail,
+            contactEmail: resetPasswordEmail,
           }),
         );
-      // prompt
+      // final screen prompt
       cy.dataCy('form-reset-finished-prompt')
         .should('be.visible')
         .and('have.color', white)
         .and('have.css', 'font-size', '16px')
         .and('have.css', 'font-weight', '400')
         .and('contain', i18n.global.t('login.form.promptWrongEmail'));
-      // button
+      // final screen button
       cy.dataCy('form-reset-finished-submit')
         .should('be.visible')
         .and('have.color', white)
         .and('have.css', 'border-radius', '28px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.text', i18n.global.t('login.form.submitNewPassword'));
+      cy.dataCy('form-reset-finished-submit').click();
+      cy.dataCy('form-password-reset-email').should('be.visible');
     });
 
     it('validates login form user inputs', () => {

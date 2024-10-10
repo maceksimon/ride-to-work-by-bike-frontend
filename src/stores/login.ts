@@ -361,7 +361,7 @@ export const useLoginStore = defineStore('login', {
      * @param {string} email - Email
      * @return {Promise<void>}
      */
-    async resetPassword(email: string): Promise<void> {
+    async resetPassword(email: string): Promise<PasswordResetResponse | null> {
       const payload = { email };
       this.$log?.debug(`Reset password email <${payload.email}>.`);
       const { data } = await apiFetch<PasswordResetResponse>({
@@ -372,7 +372,8 @@ export const useLoginStore = defineStore('login', {
         translationKey: 'resetPassword',
         logger: this.$log,
       });
-      if (data && data.detail) {
+
+      if (data) {
         this.$log?.info(`Reset password response <${data.detail}>.`);
         // set password reset email
         this.$log?.info(`Set password reset email to <${payload.email}>.`);
@@ -388,7 +389,12 @@ export const useLoginStore = defineStore('login', {
         this.$log?.debug(
           `Login store login form state <${this.getLoginFormState}>.`,
         );
+        console.log(
+          `Login store login form state <${this.getLoginFormState}>.`,
+        );
       }
+
+      return data;
     },
   },
 

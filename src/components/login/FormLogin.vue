@@ -63,7 +63,10 @@ export default defineComponent({
     });
 
     const isPassword = ref(true);
-    const formState = ref<LoginFormState>(LoginFormState.login);
+    const formState = computed(() => loginStore.getLoginFormState);
+    const setFormState = (state: LoginFormState) => {
+      loginStore.setLoginFormState(state);
+    };
 
     const backgroundColor = rideToWorkByBikeConfig.colorWhiteOpacity;
     const contactEmail = computed(() => loginStore.getPasswordResetEmail);
@@ -79,12 +82,7 @@ export default defineComponent({
     };
 
     const onSubmitPasswordReset = () => {
-      // noop
-    };
-
-    const onClickFormPasswordResetBtn = (): void => {
-      if (isFilled(formPasswordReset.email) && isEmail(formPasswordReset.email))
-        formState.value = LoginFormState.resetFinished;
+      loginStore.resetPassword(formPasswordReset.email);
     };
 
     // colors
@@ -104,9 +102,9 @@ export default defineComponent({
       whiteOpacity20,
       isEmail,
       isFilled,
-      onClickFormPasswordResetBtn,
       onSubmitLogin,
       onSubmitPasswordReset,
+      setFormState,
     };
   },
 });
@@ -174,7 +172,7 @@ export default defineComponent({
           <a
             href="#"
             class="text-white text-caption"
-            @click.prevent="formState = LoginFormState.passwordReset"
+            @click.prevent="setFormState(LoginFormState.passwordReset)"
             data-cy="form-login-forgotten-password"
           >
             {{ $t('login.form.forgottenPassword') }}
@@ -228,7 +226,7 @@ export default defineComponent({
         outline
         color="white"
         size="13px"
-        @click.prevent="formState = LoginFormState.login"
+        @click.prevent="setFormState(LoginFormState.login)"
         data-cy="form-password-reset-button-back"
       >
         <q-icon name="arrow_back" size="24px" />
@@ -267,7 +265,6 @@ export default defineComponent({
         color="secondary"
         text-color="primary"
         :label="$t('login.form.submitPasswordReset')"
-        @click="onClickFormPasswordResetBtn"
         data-cy="form-password-reset-submit"
       />
     </q-form>
@@ -324,7 +321,7 @@ export default defineComponent({
         color="white"
         text-color="white"
         :label="$t('login.form.submitNewPassword')"
-        @click="formState = LoginFormState.passwordReset"
+        @click="setFormState(LoginFormState.passwordReset)"
         data-cy="form-reset-finished-submit"
       />
     </div>
