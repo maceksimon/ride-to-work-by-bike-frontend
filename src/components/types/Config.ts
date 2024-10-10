@@ -48,6 +48,7 @@ export interface ConfigGlobal {
   urlApiRegister: string;
   urlApiResetPassword: string;
   urlApiRegister: string;
+  urlApiResetPassword: string;
   urlLoginRegisterBackgroundImage: string;
 }
 
