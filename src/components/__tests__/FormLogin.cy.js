@@ -298,8 +298,6 @@ describe('<FormLogin>', () => {
         .and('have.css', 'margin-top', '24px')
         .and('contain', i18n.global.t('login.form.titleResetFinished'));
       // description
-      const loginStore = useLoginStore();
-      const contactEmail = loginStore.getPasswordResetEmail;
       cy.dataCy('form-reset-finished-description')
         .should('be.visible')
         .and('have.color', white)
