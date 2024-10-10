@@ -679,6 +679,11 @@ titleTabApp = "Automatic logging"
 [table]
 textEmptyTable = "No results. Try changing the filter settings."
 
+[resetPassword]
+apiMessageError = "Request to reset password failed."
+apiMessageErrorWithMessage = "Request to reset password failed. Error: {error}"
+apiMessageSuccess = "Request to reset password was successful."
+
 [routes.transport]
 bike = "By bike"
 car = "By car"

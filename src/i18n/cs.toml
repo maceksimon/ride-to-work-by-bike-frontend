@@ -682,6 +682,11 @@ titleTabApp = "Automatický záznam"
 [table]
 textEmptyTable = "Žádné výsledky. Zkuste změnit nastavení filtrů."
 
+[resetPassword]
+apiMessageError = "Požadavek na obnovení hesla se nezdařil."
+apiMessageErrorWithMessage = "Požadavek na obnovení hesla se nezdařil. Chyba: {error}"
+apiMessageSuccess = "Požadavek na obnovení hesla byl úspěšně odeslán."
+
 [routes.transport]
 bike = "Na kole"
 car = "Autem"
