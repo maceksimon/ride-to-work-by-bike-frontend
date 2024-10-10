@@ -1,11 +1,17 @@
 import { colors } from 'quasar';
 import { routesConf } from '../../../src/router/routes_conf';
+import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 
+// colors
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
 // selectors
 const layoutBackgroundImageSelector = 'layout-background-image';
+
+// types
+import type { I18n } from 'vue-i18n';
+import type { ConfigGlobal } from '../../../src/components/types/Config';
 
 /**
  * Basic tests for Language Switcher
@@ -14,7 +20,7 @@ const layoutBackgroundImageSelector = 'layout-background-image';
  */
 export const testLanguageSwitcher = (): void => {
   it('allows user to switch language', () => {
-    let i18n;
+    let i18n: unknown;
     cy.window().should('have.property', 'i18n');
     cy.window()
       .then((win) => {
@@ -96,6 +102,8 @@ export const testPasswordInputReveal = (identifier: string): void => {
   });
 };
 
+const selectorUserSelectInput = 'user-select-input';
+
 export const testDesktopSidebar = (): void => {
   const selectorDrawer = 'q-drawer';
   const selectorDrawerHeader = 'drawer-header';
@@ -112,6 +120,62 @@ export const testDesktopSidebar = (): void => {
   });
 
   testUserSelect(selectorUserSelectDesktop);
+
+  it('renders user email in UserSelect after login', () => {
+    cy.fixture('loginResponse.json').then((loginResponse) => {
+      cy.fixture('refreshTokensResponse.json').then((refreshTokensResponse) => {
+        cy.get('@config').then((config: unknown) => {
+          cy.clock().then((clock) => {
+            clock.setSystemTime(systemTime);
+            let i18n: unknown;
+            cy.window().should('have.property', 'i18n');
+            cy.window()
+              .then((win) => {
+                i18n = win.i18n;
+              })
+              .then(() => {
+                cy.visit('#' + routesConf['login']['path']);
+                const { apiBase, apiDefaultLang, urlApiLogin, urlApiRefresh } =
+                  config as ConfigGlobal;
+                const apiBaseUrl = getApiBaseUrlWithLang(
+                  null,
+                  apiBase,
+                  apiDefaultLang,
+                  i18n as I18n,
+                );
+                const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
+                const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
+                // intercept API login request
+                cy.intercept('POST', apiLoginUrl, {
+                  statusCode: httpSuccessfullStatus,
+                  body: loginResponse,
+                }).as('loginRequest');
+                // intercept API refresh token request
+                cy.intercept('POST', apiRefreshUrl, {
+                  statusCode: httpSuccessfullStatus,
+                  body: refreshTokensResponse,
+                }).as('refreshTokens');
+                cy.dataCy('form-login-email')
+                  .find('input')
+                  .type('test@example.com');
+                cy.dataCy('form-login-password')
+                  .find('input')
+                  .type('password123');
+                // submit form
+                cy.dataCy('form-login-submit-login').click();
+                // check if user is redirected to the home page
+                cy.url().should('include', routesConf['home']['path']);
+                cy.dataCy(selectorUserSelectDesktop).within(() => {
+                  cy.dataCy(selectorUserSelectInput)
+                    .should('be.visible')
+                    .and('contain', loginResponse.user.email);
+                });
+              });
+          });
+        });
+      });
+    });
+  });
 };
 
 export const testMobileHeader = (): void => {
@@ -135,13 +199,13 @@ export const testUserSelect = (selector: string): void => {
   });
 
   it('checks navigation links in the menu', () => {
-    const selectorUserSelectInput = 'user-select-input';
-
     const menuItems = [
       { url: routesConf['profile_details']['children']['fullPath'] },
       { url: routesConf['profile_newsletter']['children']['fullPath'] },
       { url: routesConf['routes_app']['children']['fullPath'] },
-      { url: routesConf['profile_notifications']['children']['fullPath'] },
+      {
+        url: routesConf['profile_notifications']['children']['fullPath'],
+      },
       { url: routesConf['company_coordinator']['children']['fullPath'] },
     ];
 
