@@ -40,6 +40,10 @@ interface RefreshTokenResponse {
   access_expiration: string;
 }
 
+interface PasswordResetResponse {
+  detail: string;
+}
+
 export const emptyUser: UserLogin = {
   email: '',
   first_name: '',
@@ -47,6 +51,12 @@ export const emptyUser: UserLogin = {
   pk: 0,
   username: '',
 };
+
+export enum LoginFormState {
+  login = 'login',
+  passwordReset = 'password-reset',
+  resetFinished = 'reset-finished',
+}
 
 const { apiFetch } = useApi();
 
@@ -60,6 +70,8 @@ export const useLoginStore = defineStore('login', {
     refreshToken: '', // persisted
     jwtExpiration: null as number | null, // persisted, unit: seconds, https://www.rfc-editor.org/rfc/rfc7519#section-2
     refreshTokenTimeout: null as NodeJS.Timeout | null, // unit: seconds
+    loginFormState: LoginFormState.login,
+    passwordResetEmail: '',
   }),
 
   getters: {
@@ -67,6 +79,8 @@ export const useLoginStore = defineStore('login', {
     getAccessToken: (state): string => state.accessToken,
     getRefreshToken: (state): string => state.refreshToken,
     getJwtExpiration: (state): number | null => state.jwtExpiration,
+    getLoginFormState: (state): LoginFormState => state.loginFormState,
+    getPasswordResetEmail: (state): string => state.passwordResetEmail,
     getRefreshTokenTimeout: (state): NodeJS.Timeout | null =>
       state.refreshTokenTimeout,
   },
@@ -83,6 +97,12 @@ export const useLoginStore = defineStore('login', {
     },
     setJwtExpiration(expiration: number): void {
       this.jwtExpiration = expiration;
+    },
+    setLoginFormState(state: LoginFormState): void {
+      this.loginFormState = state;
+    },
+    setPasswordResetEmail(email: string): void {
+      this.passwordResetEmail = email;
     },
     setRefreshTokenTimeout(timeout: NodeJS.Timeout | null): void {
       this.refreshTokenTimeout = timeout;
@@ -334,6 +354,41 @@ export const useLoginStore = defineStore('login', {
         `Current date time <${timestampToDatetimeString(currentTimeSeconds)}, JWT expiration date time <${expiration ? timestampToDatetimeString(expiration) : null}>.`,
       );
       return !expiration || currentTimeSeconds > expiration;
+    },
+    /**
+     * Reset password
+     * Sends a request to reset the password using the email.
+     * @param {string} email - Email
+     * @return {Promise<void>}
+     */
+    async resetPassword(email: string): Promise<void> {
+      const payload = { email };
+      this.$log?.debug(`Reset password email <${payload.email}>.`);
+      const { data } = await apiFetch<PasswordResetResponse>({
+        endpoint: rideToWorkByBikeConfig.urlApiResetPassword,
+        method: 'post',
+        payload,
+        showSuccessMessage: false,
+        translationKey: 'resetPassword',
+        logger: this.$log,
+      });
+      if (data && data.detail) {
+        this.$log?.info(`Reset password response <${data.detail}>.`);
+        // set password reset email
+        this.$log?.info(`Set password reset email to <${payload.email}>.`);
+        this.setPasswordResetEmail(payload.email);
+        this.$log?.debug(
+          `Login store password reset email <${this.getPasswordResetEmail}>.`,
+        );
+        // set login form state
+        this.$log?.info(
+          `Set login form state to <${LoginFormState.resetFinished}>.`,
+        );
+        this.setLoginFormState(LoginFormState.resetFinished);
+        this.$log?.debug(
+          `Login store login form state <${this.getLoginFormState}>.`,
+        );
+      }
     },
   },
 

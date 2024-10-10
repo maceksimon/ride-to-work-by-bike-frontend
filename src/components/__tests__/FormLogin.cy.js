@@ -12,12 +12,11 @@ import {
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 
 // colors
-const { getPaletteColor } = colors;
+const { getPaletteColor, changeAlpha } = colors;
 const white = getPaletteColor('white');
-const grey10 = getPaletteColor('grey-10');
-
-const colorPrimary = rideToWorkByBikeConfig.colorPrimary;
-const contactEmail = rideToWorkByBikeConfig.contactEmail;
+const primary = getPaletteColor('primary');
+const secondary = getPaletteColor('secondary');
+const whiteOpacity20 = changeAlpha(white, 0.2);
 
 // selectors
 const classSelectorQNotificationMessage = '.q-notification__message';
@@ -88,7 +87,7 @@ describe('<FormLogin>', () => {
     it('renders title', () => {
       cy.dataCy('form-title-login')
         .should('be.visible')
-        .and('have.color', grey10)
+        .and('have.color', white)
         .and('have.css', 'font-size', '24px')
         .and('have.css', 'font-weight', '700')
         .and('contain', i18n.global.t('login.form.titleLogin'));
@@ -117,7 +116,7 @@ describe('<FormLogin>', () => {
     it('renders password show/hide icon', () => {
       cy.dataCy('form-login-password-icon')
         .should('contain', 'visibility')
-        .and('have.color', `${colorPrimary}`);
+        .and('have.color', white);
       cy.dataCy('form-login-password-icon')
         .invoke('height')
         .should('be.equal', 18);
@@ -143,7 +142,7 @@ describe('<FormLogin>', () => {
     it('renders forgotten password link', () => {
       cy.dataCy('form-login-forgotten-password')
         .should('be.visible')
-        .and('have.color', `${colorPrimary}`)
+        .and('have.color', white)
         .and('have.css', 'text-decoration-line', 'underline')
         .and('have.css', 'font-size', '12px')
         .and('have.css', 'font-weight', '400')
@@ -153,8 +152,8 @@ describe('<FormLogin>', () => {
     it('renders a submit button', () => {
       cy.dataCy('form-login-submit-login')
         .should('be.visible')
-        .and('have.color', white)
-        .and('have.backgroundColor', `${colorPrimary}`)
+        .and('have.color', primary)
+        .and('have.backgroundColor', secondary)
         .and('have.css', 'border-radius', '28px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.text', i18n.global.t('login.form.submitLogin'));
@@ -202,7 +201,7 @@ describe('<FormLogin>', () => {
       cy.dataCy('form-password-reset').should('be.visible');
       cy.dataCy('form-password-reset-title')
         .should('be.visible')
-        .and('have.color', grey10)
+        .and('have.color', white)
         .and('have.css', 'font-size', '24px')
         .and('have.css', 'font-weight', '700')
         .and('contain', i18n.global.t('login.form.titlePasswordReset'));
@@ -213,7 +212,7 @@ describe('<FormLogin>', () => {
       cy.dataCy('form-password-reset').should('be.visible');
       cy.dataCy('form-password-reset-description')
         .should('be.visible')
-        .and('have.color', grey10)
+        .and('have.color', white)
         .and('have.css', 'font-size', '14px')
         .and('have.css', 'font-weight', '400')
         .and('contain', i18n.global.t('login.form.descriptionPasswordReset'));
@@ -229,8 +228,8 @@ describe('<FormLogin>', () => {
       cy.dataCy('form-password-reset').should('be.visible');
       cy.dataCy('form-password-reset-submit')
         .should('be.visible')
-        .and('have.color', white)
-        .and('have.backgroundColor', `${colorPrimary}`)
+        .and('have.color', primary)
+        .and('have.backgroundColor', secondary)
         .and('have.css', 'border-radius', '28px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.text', i18n.global.t('login.form.submitPasswordReset'));
@@ -247,8 +246,8 @@ describe('<FormLogin>', () => {
       // icon wrapper
       cy.dataCy('form-reset-finished-icon-wrapper')
         .should('be.visible')
-        .and('have.backgroundColor', 'rgba(255, 255, 255, 0.5)')
-        .and('have.css', 'border-radius', '9999px');
+        .and('have.backgroundColor', whiteOpacity20)
+        .and('have.css', 'border-radius', '50%');
       // icon
       cy.dataCy('form-reset-finished-icon')
         .invoke('height')
@@ -256,19 +255,21 @@ describe('<FormLogin>', () => {
       cy.dataCy('form-reset-finished-icon')
         .invoke('width')
         .should('be.equal', 40);
-      cy.dataCy('form-reset-finished-icon').should('have.color', colorPrimary);
+      cy.dataCy('form-reset-finished-icon').should('have.color', white);
       // title
       cy.dataCy('form-reset-finished-title')
         .should('be.visible')
-        .and('have.color', grey10)
+        .and('have.color', white)
         .and('have.css', 'font-size', '24px')
         .and('have.css', 'font-weight', '700')
         .and('have.css', 'margin-top', '24px')
         .and('contain', i18n.global.t('login.form.titleResetFinished'));
       // description
+      const loginStore = useLoginStore();
+      const contactEmail = loginStore.getPasswordResetEmail;
       cy.dataCy('form-reset-finished-description')
         .should('be.visible')
-        .and('have.color', grey10)
+        .and('have.color', white)
         .and('have.css', 'font-size', '16px')
         .and('have.css', 'font-weight', '400')
         .and(
@@ -280,14 +281,14 @@ describe('<FormLogin>', () => {
       // prompt
       cy.dataCy('form-reset-finished-prompt')
         .should('be.visible')
-        .and('have.color', grey10)
+        .and('have.color', white)
         .and('have.css', 'font-size', '16px')
         .and('have.css', 'font-weight', '400')
         .and('contain', i18n.global.t('login.form.promptWrongEmail'));
       // button
       cy.dataCy('form-reset-finished-submit')
         .should('be.visible')
-        .and('have.color', colorPrimary)
+        .and('have.color', white)
         .and('have.css', 'border-radius', '28px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.text', i18n.global.t('login.form.submitNewPassword'));
