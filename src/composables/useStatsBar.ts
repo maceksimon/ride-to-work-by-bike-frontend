@@ -13,11 +13,11 @@ export const useStatsBar = () => {
   const getStatIcon = (id: StatisticsId) => {
     switch (id) {
       case StatisticsId.distance:
-        return 'svguse:icons/slider_progress/icons.svg#jam-arrows-h';
+        return 'svguse:icons/stats_bar/icons.svg#jam-arrows-h';
       case StatisticsId.routes:
-        return 'svguse:icons/slider_progress/icons.svg#lucide-route';
+        return 'svguse:icons/stats_bar/icons.svg#lucide-route';
       case StatisticsId.co2:
-        return 'svguse:icons/slider_progress/icons.svg#tabler-leaf';
+        return 'svguse:icons/stats_bar/icons.svg#tabler-leaf';
       default:
         return '';
     }
