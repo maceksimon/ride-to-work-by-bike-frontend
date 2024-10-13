@@ -25,7 +25,6 @@
  * @example
  * <slider-progress
  *   title="sliderProgressTitle"
- *   :stats="itemStats"
  *   :cards="progressCards"
  *   :button="viewAllButton"
  * />
