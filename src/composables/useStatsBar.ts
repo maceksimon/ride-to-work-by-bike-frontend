@@ -2,9 +2,39 @@
 import { i18n } from '../boot/i18n';
 
 // enums
-import { StatisticsId } from '../components/types/Statistics';
+import { ItemStatistics, StatisticsId } from '../components/types/Statistics';
+
+// types
+import { MemberResults, TeamMember } from '../components/types/Results';
 
 export const useStatsBar = () => {
+  /**
+   * Parse API data structure to a one-dimensional array of statistics.
+   * @param {MemberResults} memberResults - The API data structure.
+   * @return {ItemStatistics[]} The statistics.
+   */
+  const getMemberResultStats = (
+    memberResults: MemberResults,
+  ): ItemStatistics[] => {
+    if (!memberResults?.results) return [];
+    // return id-value pairs of statistics
+    return memberResults.results
+      .map((member: TeamMember) => [
+        {
+          id: StatisticsId.distance,
+          value: member[StatisticsId.distance].toString(),
+        },
+        {
+          id: StatisticsId.routes,
+          value: member[StatisticsId.routes].toString(),
+        },
+        {
+          id: StatisticsId.co2,
+          value: member.emissions[StatisticsId.co2].toString(),
+        },
+      ])
+      .flat();
+  };
   /**
    * Get the icon of the statistic.
    * @param id - The id of the statistic.
@@ -56,6 +86,7 @@ export const useStatsBar = () => {
   };
 
   return {
+    getMemberResultStats,
     getStatIcon,
     getStatLabel,
     getStatUnit,

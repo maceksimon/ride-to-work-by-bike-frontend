@@ -6,8 +6,7 @@ export enum StatisticsId {
 }
 
 export interface ItemStatistics {
-  id?: StatisticsId;
-  icon: string;
-  label: string;
+  id: StatisticsId;
+  icon?: string;
   value: string;
 }

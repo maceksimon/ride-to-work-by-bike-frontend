@@ -36,21 +36,21 @@
 // libraries
 import { computed, defineComponent } from 'vue';
 
-// enums
-import { StatisticsId } from '../types/Statistics';
-
 // fixtures
 import memberResultsFixture from '../../../test/cypress/fixtures/memberResults.json';
-
-// types
-import type { ItemStatistics } from '../types/Statistics';
-import type { MemberResults } from '../types/Results';
-import { CardProgress as CardProgressType, Link } from '../types';
 
 // components
 import CardProgress from './CardProgress.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 import StatsBar from '../global/StatsBar.vue';
+
+// composables
+import { useStatsBar } from 'src/composables/useStatsBar';
+
+// types
+import type { ItemStatistics } from '../types/Statistics';
+import type { MemberResults } from '../types/Results';
+import { CardProgress as CardProgressType, Link } from '../types';
 
 export default defineComponent({
   name: 'ListCardProgress',
@@ -75,18 +75,10 @@ export default defineComponent({
   },
   setup() {
     const memberResults = memberResultsFixture as MemberResults;
-
-    const stats = computed<ItemStatistics[]>(() => {
-      if (!memberResults?.results) return [];
-
-      return memberResults.results
-        .map((member: TeamMember) => [
-          { id: StatisticsId.distance, value: member[StatisticsId.distance] },
-          { id: StatisticsId.routes, value: member[StatisticsId.routes] },
-          { id: StatisticsId.co2, value: member.emissions[StatisticsId.co2] },
-        ])
-        .flat();
-    });
+    const { getMemberResultStats } = useStatsBar();
+    const stats = computed<ItemStatistics[]>(() =>
+      getMemberResultStats(memberResults),
+    );
 
     return {
       stats,

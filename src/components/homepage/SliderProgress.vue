@@ -42,7 +42,14 @@ import CardProgressSlider from './CardProgressSlider.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 import StatsBar from '../global/StatsBar.vue';
 
+// composables
+import { useStatsBar } from 'src/composables/useStatsBar';
+
+// fixtures
+import memberResultsFixture from '../../../test/cypress/fixtures/memberResults.json';
+
 // types
+import type { MemberResults } from '../types/Results';
 import { CardProgress, Link } from '../types';
 import type { ItemStatistics } from '../types/Statistics';
 
@@ -58,9 +65,6 @@ export default defineComponent({
       type: String,
       required: true,
     },
-    stats: {
-      type: Array as () => ItemStatistics[],
-    },
     cards: {
       type: Array as () => CardProgress[],
       required: true,
@@ -71,6 +75,12 @@ export default defineComponent({
     },
   },
   setup() {
+    const memberResults = memberResultsFixture as MemberResults;
+    const { getMemberResultStats } = useStatsBar();
+    const stats = computed<ItemStatistics[]>(() =>
+      getMemberResultStats(memberResults),
+    );
+
     const isLargeScreen = computed((): boolean => {
       return Screen.gt.sm;
     });
@@ -81,6 +91,7 @@ export default defineComponent({
 
     return {
       buttonWidth,
+      stats,
     };
   },
 });

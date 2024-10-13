@@ -19,8 +19,17 @@ export interface TeamMember {
   frequency: number;
   avatar_url: string;
   eco_trip_count: number;
-  rest_url: string;
-  is_me: boolean;
+  rest_url?: string;
+  is_me?: boolean;
+  remaining_rides_count: number;
+  sesame_token: string;
+  is_coordinator: boolean;
+  registration_complete: boolean;
+  gallery: string;
+  unread_notification_count: number;
+  points: number;
+  points_display: string;
+  team: string;
 }
 
 export interface Team {
