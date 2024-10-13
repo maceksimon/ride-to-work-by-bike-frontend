@@ -10,14 +10,14 @@ import { TeamMember } from '../components/types/Results';
 export const useStatsBar = () => {
   /**
    * Parse API data structure to a one-dimensional array of statistics.
-   * @param {TeamMember[]} membersResults - The API data structure.
+   * @param {TeamMember[]} memberResults - The API data structure.
    * @return {ItemStatistics[]} The statistics.
    */
   const getMemberResultStats = (
-    membersResults: TeamMember[],
+    memberResults: TeamMember[],
   ): ItemStatistics[] => {
     // return id-value pairs of statistics
-    return membersResults
+    return memberResults
       .map((member: TeamMember) => [
         {
           id: StatisticsId.distance,
