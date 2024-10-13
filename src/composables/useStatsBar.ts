@@ -5,20 +5,19 @@ import { i18n } from '../boot/i18n';
 import { ItemStatistics, StatisticsId } from '../components/types/Statistics';
 
 // types
-import { MemberResults, TeamMember } from '../components/types/Results';
+import { TeamMember } from '../components/types/Results';
 
 export const useStatsBar = () => {
   /**
    * Parse API data structure to a one-dimensional array of statistics.
-   * @param {MemberResults} memberResults - The API data structure.
+   * @param {TeamMember[]} membersResults - The API data structure.
    * @return {ItemStatistics[]} The statistics.
    */
   const getMemberResultStats = (
-    memberResults: MemberResults,
+    membersResults: TeamMember[],
   ): ItemStatistics[] => {
-    if (!memberResults?.results) return [];
     // return id-value pairs of statistics
-    return memberResults.results
+    return membersResults
       .map((member: TeamMember) => [
         {
           id: StatisticsId.distance,

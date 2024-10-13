@@ -77,7 +77,7 @@ export default defineComponent({
     const memberResults = memberResultsFixture as MemberResults;
     const { getMemberResultStats } = useStatsBar();
     const stats = computed<ItemStatistics[]>(() =>
-      getMemberResultStats(memberResults),
+      getMemberResultStats(memberResults.results),
     );
 
     const isLargeScreen = computed((): boolean => {
