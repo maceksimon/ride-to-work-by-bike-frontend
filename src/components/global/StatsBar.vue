@@ -68,28 +68,30 @@ export default defineComponent({
         data-cy="stats-bar-item"
         class="text-grey-10 q-p-none flex items-center"
       >
-        <!-- Icon -->
-        <q-icon
-          :name="getStatIcon(item.id)"
-          color="primary"
-          size="18px"
-          class="q-mr-sm"
-          data-cy="stats-bar-item-icon"
-        />
-        <!-- Value -->
-        <strong class="text-weight-bold" data-cy="stats-bar-item-value"
-          >{{ item.value }}&nbsp;</strong
-        >
-        <!-- Label -->
-        <span
-          v-if="getStatUnit(item.id)"
-          class="text-weight-bold"
-          data-cy="stats-bar-item-label-unit"
-          v-html="getStatUnit(item.id)"
-        />
-        <span v-if="getStatLabel(item.id)" data-cy="stats-bar-item-label">
-          <span>&nbsp;{{ getStatLabel(item.id) }}</span>
-        </span>
+        <template v-if="item.id">
+          <!-- Icon -->
+          <q-icon
+            :name="getStatIcon(item.id)"
+            color="primary"
+            size="18px"
+            class="q-mr-sm"
+            data-cy="stats-bar-item-icon"
+          />
+          <!-- Value -->
+          <strong class="text-weight-bold" data-cy="stats-bar-item-value"
+            >{{ item.value }}&nbsp;</strong
+          >
+          <!-- Label -->
+          <span
+            v-if="getStatUnit(item.id)"
+            class="text-weight-bold"
+            data-cy="stats-bar-item-label-unit"
+            v-html="getStatUnit(item.id)"
+          />
+          <span v-if="getStatLabel(item.id)" data-cy="stats-bar-item-label">
+            <span>&nbsp;{{ getStatLabel(item.id) }}</span>
+          </span>
+        </template>
       </q-item>
     </q-list>
   </div>

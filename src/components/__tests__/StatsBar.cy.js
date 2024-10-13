@@ -24,6 +24,14 @@ const dataSelectorStatsBarItemLabel = '[data-cy="stats-bar-item-label"]';
 const iconSize = '18px';
 
 describe('<StatsBar>', () => {
+  it('has translation for all strings', () => {
+    cy.testLanguageStringsInContext(
+      ['labelSaved', 'labelSustainableRoutes'],
+      'statsBar',
+      i18n,
+    );
+  });
+
   context('desktop', () => {
     beforeEach(() => {
       cy.fixture('statsBar').then((stats) => {

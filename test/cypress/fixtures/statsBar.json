@@ -1,20 +1,17 @@
 [
   {
-    "id": "routes",
+    "id": "eco_trip_count",
     "icon": "svguse:icons/slider_progress/lucide-route.svg#lucide-route",
-    "label": "udržitelných cest",
     "value": "18"
   },
   {
     "id": "distance",
     "icon": "svguse:icons/slider_progress/jam-arrows-h.svg#jam-arrows-h",
-    "label": "",
     "value": "312,25"
   },
   {
     "id": "co2",
     "icon": "svguse:icons/slider_progress/tabler-leaf.svg#tabler-leaf",
-    "label": "ušetřeno",
     "value": "420"
   }
 ]
