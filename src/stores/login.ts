@@ -95,7 +95,7 @@ export const useLoginStore = defineStore('login', {
     setRefreshToken(token: string): void {
       this.refreshToken = token;
     },
-    setJwtExpiration(expiration: number): void {
+    setJwtExpiration(expiration: number | null): void {
       this.jwtExpiration = expiration;
     },
     setLoginFormState(state: LoginFormState): void {
@@ -186,10 +186,12 @@ export const useLoginStore = defineStore('login', {
       this.$log?.info('Logout user.');
       this.setAccessToken('');
       this.setRefreshToken('');
+      this.setJwtExpiration(null);
       this.setUser(emptyUser);
       this.clearRefreshTokenTimeout();
       this.$log?.info(`Login store access token <${this.getAccessToken}>.`);
       this.$log?.info(`Login store refresh token <${this.getRefreshToken}>.`);
+      this.$log?.info(`Login store JWT expiration <${this.getJwtExpiration}>.`);
       this.$log?.info(
         `Login store user <${JSON.stringify(this.getUser, null, 2)}>.`,
       );

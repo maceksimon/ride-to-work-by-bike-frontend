@@ -76,7 +76,7 @@ export default defineComponent({
     ];
 
     const onLogout = () => {
-      // TODO: add logout logic
+      loginStore.logout();
     };
 
     const size = computed(() => (props.variant === 'mobile' ? '32px' : '40px'));
