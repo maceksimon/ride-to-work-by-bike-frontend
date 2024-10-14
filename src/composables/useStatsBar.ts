@@ -40,13 +40,14 @@ export const useStatsBar = () => {
    * @returns The icon of the statistic or an empty string.
    */
   const getStatIcon = (id: StatisticsId) => {
+    const baseSvgImgPath = 'svguse:icons/stats_bar/icons.svg#';
     switch (id) {
       case StatisticsId.distance:
-        return 'svguse:icons/stats_bar/icons.svg#jam-arrows-h';
+        return `${baseSvgImgPath}jam-arrows-h`;
       case StatisticsId.routes:
-        return 'svguse:icons/stats_bar/icons.svg#lucide-route';
+        return `${baseSvgImgPath}lucide-route`;
       case StatisticsId.co2:
-        return 'svguse:icons/stats_bar/icons.svg#tabler-leaf';
+        return `${baseSvgImgPath}tabler-leaf`;
       default:
         return '';
     }
