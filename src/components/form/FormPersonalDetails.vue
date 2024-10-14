@@ -31,6 +31,9 @@ import { i18n } from 'src/boot/i18n';
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
+// enums
+import { NewsletterType } from 'src/components/types/Newsletter';
+
 // types
 import {
   FormOption,
@@ -60,19 +63,23 @@ export default defineComponent({
     const newsletterOptions: FormOption[] = [
       {
         label: 'form.personalDetails.labelNewsletterAll',
-        value: 'all',
+        value: [
+          NewsletterType.challenges,
+          NewsletterType.events,
+          NewsletterType.mobility,
+        ],
       },
       {
         label: 'form.personalDetails.labelNewsletterChallenges',
-        value: 'challenges',
+        value: [NewsletterType.challenges],
       },
       {
         label: 'form.personalDetails.labelNewsletterEvents',
-        value: 'events',
+        value: [NewsletterType.events],
       },
       {
         label: 'form.personalDetails.labelNewsletterMobility',
-        value: 'mobility',
+        value: [NewsletterType.mobility],
       },
     ];
 
