@@ -164,6 +164,7 @@ labelConfirmBillingDetails = "Potvrdzujem, že uvedené fakturačné údaje sú 
 labelCoordinatorResponsibility = "Zabezpečím, aby spoločnosť zaplatila štartovné alebo časť štartovného za tím(y) našich zamestnancov."
 labelDonorEntryFee = "Moja organizácia si želá podporiť AutoMat a zaplatiť charitatívny vstupný poplatok 500 Kč bez DPH na osobu"
 labelEmail = "E-mail"
+labelFamily = "Rodina"
 labelFirstName = "Méno"
 labelGender = "Pohlavie"
 labelHouseNumber = "Opisné číslo"
