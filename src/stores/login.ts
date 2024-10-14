@@ -389,9 +389,6 @@ export const useLoginStore = defineStore('login', {
         this.$log?.debug(
           `Login store login form state <${this.getLoginFormState}>.`,
         );
-        console.log(
-          `Login store login form state <${this.getLoginFormState}>.`,
-        );
       }
 
       return data;
