@@ -6,8 +6,11 @@ import FormLogin from '../login/FormLogin.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import {
+  fixtureTokenExpirationTime,
   httpSuccessfullStatus,
   httpInternalServerErrorStatus,
+  systemTime,
+  timeUntilExpiration,
 } from '../../../test/cypress/support/commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 
@@ -40,18 +43,12 @@ const username = 'test@example.com';
 const password = 'example123';
 
 // access token expiration time: Tuesday 24. September 2024 22:36:03
-const fixtureTokenExpiration = new Date('2024-09-24T20:36:03Z');
-const fixtureTokenExpirationTime = fixtureTokenExpiration.getTime();
 const fixtureTokenExpirationTimeSeconds = fixtureTokenExpirationTime / 1000;
 // refresh token expiration time: Tuesday 24. September 2024 22:37:41
 const fixtureTokenRefreshExpiration = new Date('2024-09-24T20:37:41Z');
 const fixtureTokenRefreshExpirationTime =
   fixtureTokenRefreshExpiration.getTime() / 1000;
-const timeUntilRefresh = 60 * 1000; // miliseconds (because used in cy.tick)
-const timeUntilExpiration = timeUntilRefresh * 2;
 const timeUntilExpirationSeconds = timeUntilExpiration / 1000;
-// 2 min before JWT expires - this needs to be miliseconds!
-const systemTime = fixtureTokenExpirationTime - timeUntilExpiration;
 
 describe('<FormLogin>', () => {
   it('has translation for all strings', () => {
@@ -256,7 +253,7 @@ describe('<FormLogin>', () => {
         .and('have.text', i18n.global.t('login.form.submitPasswordReset'));
     });
 
-    it.only('renders final screen on password reset', () => {
+    it('renders final screen on password reset', () => {
       // click on forgotten password
       cy.dataCy('form-login-forgotten-password').should('be.visible').click();
       // type email
@@ -323,7 +320,9 @@ describe('<FormLogin>', () => {
         .and('have.css', 'border-radius', '28px')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.text', i18n.global.t('login.form.submitNewPassword'));
+      // click on submit new password button
       cy.dataCy('form-reset-finished-submit').click();
+      // moves back to "reset password" form
       cy.dataCy('form-password-reset-email').should('be.visible');
     });
 
