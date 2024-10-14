@@ -33,6 +33,9 @@ import { i18n } from '../../boot/i18n';
 // stores
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
+// enums
+import { NewsletterType } from 'src/components/types/Newsletter';
+
 // types
 import {
   FormOption,

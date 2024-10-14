@@ -1,5 +1,5 @@
 // enums
-import { NewsletterType } from '../types/Newsletter';
+import { NewsletterType } from './Newsletter';
 
 // types
 import type { Image } from './Image';
@@ -9,12 +9,16 @@ export enum TestPaymentVoucher {
   half = 'HALF',
 }
 
+export enum Gender {
+  male = 'male',
+  female = 'female',
+}
+
 export type FormPersonalDetailsFields = {
   firstName: string;
   lastName: string;
-  email: string;
   nickname: string;
-  gender: string;
+  gender: Gender | null;
   newsletter: NewsletterType[];
   terms: boolean;
 };
