@@ -198,6 +198,13 @@ export const useLoginStore = defineStore('login', {
       this.$log?.info(
         `Login store refresh token timeout <${this.getRefreshTokenTimeout}>.`,
       );
+      // redirect to login page
+      if (this.$router) {
+        this.$log?.debug(
+          `Logout was successfull, redirect to <${routesConf['login']['path']}> URL.`,
+        );
+        this.$router.push(routesConf['login']['path']);
+      }
     },
     /**
      * Schedule token refresh (on page load, if logged in)
@@ -244,7 +251,6 @@ export const useLoginStore = defineStore('login', {
         this.$log?.info(
           'No access token expiration set, user is not logged in.',
         );
-        this.logout();
         return false;
       } else {
         // token is set - check if it is expired

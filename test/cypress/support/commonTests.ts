@@ -170,6 +170,22 @@ export const testDesktopSidebar = (): void => {
                     .should('be.visible')
                     .and('contain', loginResponse.user.email);
                 });
+                // click on user select
+                cy.dataCy(selectorUserSelectDesktop).within(() => {
+                  cy.dataCy(selectorUserSelectInput)
+                    .should('be.visible')
+                    .click();
+                });
+                // tick to render animated component
+                cy.tick(1000).then(() => {
+                  // logout
+                  cy.dataCy('menu-item')
+                    .contains(i18n.global.t('userSelect.logout'))
+                    .click();
+                  cy.dataCy(selectorUserSelectDesktop).should('not.exist');
+                  // redirected to login page
+                  cy.url().should('include', routesConf['login']['path']);
+                });
               });
           });
         });

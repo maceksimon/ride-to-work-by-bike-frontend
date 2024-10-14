@@ -94,6 +94,7 @@ export default route(function (/* { store, ssrContext } */) {
             record.path === routesConf['verify_email']['path'],
         )
       ) {
+        console.log('redirecting to login page');
         next({ path: routesConf['login']['path'] });
       }
       // pass

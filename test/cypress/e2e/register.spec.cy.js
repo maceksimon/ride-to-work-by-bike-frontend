@@ -15,6 +15,8 @@ const selectorFormRegisterPasswordInput = 'form-register-password-input';
 const selectorFormRegisterPasswordConfirmInput =
   'form-register-password-confirm-input';
 const selectorFormRegisterSubmit = 'form-register-submit';
+const selectorUserSelectDesktop = 'user-select-desktop';
+const selectorUserSelectInput = 'user-select-input';
 
 // variables
 const testEmail = 'test@example.com';
@@ -229,87 +231,101 @@ describe('Register page', () => {
       });
     });
 
-    it('redirects to login page after registering and verifying email', () => {
+    it('redirects to home page after registering and verifying email and allows logout', () => {
       cy.get('@i18n').then((i18n) => {
         cy.get('@config').then((config) => {
-          // variables
-          const {
-            apiBase,
-            apiDefaultLang,
-            urlApiHasUserVerifiedEmail,
-            urlApiRegister,
-          } = config;
-          const apiBaseUrl = getApiBaseUrlWithLang(
-            null,
-            apiBase,
-            apiDefaultLang,
-            i18n,
-          );
-          const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-          const apiEmailVerificationUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
-          cy.fixture('registerResponse.json').then((registerResponse) => {
-            // intercept register request
-            cy.intercept('POST', apiRegisterUrl, {
-              statusCode: httpSuccessfullStatus,
-              body: registerResponse,
-            }).as('registerRequest');
-            // intercept email verification request
-            cy.intercept('GET', apiEmailVerificationUrl, {
-              statusCode: httpSuccessfullStatus,
-              body: { has_user_verified_email_address: false },
-            }).as('emailVerificationRequest');
-            // fill form
-            cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
-            cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
-            cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
-              testPassword,
-            );
-            // accept privacy policy
-            cy.dataCy(selectorFormRegisterPrivacyConsent)
-              .should('be.visible')
-              .click('topLeft');
-            cy.dataCy(selectorFormRegisterSubmit).click();
-            // wait for request to complete
-            cy.wait('@registerRequest').then((interception) => {
-              expect(interception.request.body).to.deep.equal(
-                registerRequestBody,
-              );
-              expect(interception.response.body).to.deep.equal(
-                registerResponse,
-              );
-            });
-          });
-          // check success message
-          cy.get('@i18n').then((i18n) => {
-            cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-              'be.visible',
-            );
-          });
           cy.clock().then((clock) => {
             clock.setSystemTime(systemTime);
-            // redirect to verify email page
-            cy.url().should('contain', routesConf['verify_email']['path']);
-            // wait for email verification request to complete
-            cy.wait('@emailVerificationRequest').then((interception) => {
-              expect(interception.response.body).to.deep.equal({
-                has_user_verified_email_address: false,
+            // variables
+            const {
+              apiBase,
+              apiDefaultLang,
+              urlApiHasUserVerifiedEmail,
+              urlApiRegister,
+            } = config;
+            const apiBaseUrl = getApiBaseUrlWithLang(
+              null,
+              apiBase,
+              apiDefaultLang,
+              i18n,
+            );
+            const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
+            const apiEmailVerificationUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
+            cy.fixture('registerResponse.json').then((registerResponse) => {
+              // intercept register request
+              cy.intercept('POST', apiRegisterUrl, {
+                statusCode: httpSuccessfullStatus,
+                body: registerResponse,
+              }).as('registerRequest');
+              // intercept email verification request
+              cy.intercept('GET', apiEmailVerificationUrl, {
+                statusCode: httpSuccessfullStatus,
+                body: { has_user_verified_email_address: false },
+              }).as('emailVerificationRequest');
+              // fill form
+              cy.dataCy(selectorFormRegisterEmail)
+                .find('input')
+                .type(testEmail);
+              cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
+              cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
+                testPassword,
+              );
+              // accept privacy policy
+              cy.dataCy(selectorFormRegisterPrivacyConsent)
+                .should('be.visible')
+                .click('topLeft');
+              cy.dataCy(selectorFormRegisterSubmit).click();
+              cy.tick(1000);
+              // check success message
+              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                'be.visible',
+              );
+              // wait for request to complete
+              cy.wait('@registerRequest').then((interception) => {
+                expect(interception.request.body).to.deep.equal(
+                  registerRequestBody,
+                );
+                expect(interception.response.body).to.deep.equal(
+                  registerResponse,
+                );
               });
-            });
-            cy.url().should('contain', routesConf['verify_email']['path']);
-            // update email verification request
-            // intercept email verification request
-            cy.intercept('GET', apiEmailVerificationUrl, {
-              statusCode: httpSuccessfullStatus,
-              body: { has_user_verified_email_address: true },
-            }).as('emailVerificationRequest');
-            cy.reload();
-            cy.wait('@emailVerificationRequest').then((interception) => {
-              expect(interception.response.body).to.deep.equal({
-                has_user_verified_email_address: true,
+              // redirect to verify email page
+              cy.url().should('contain', routesConf['verify_email']['path']);
+              // wait for email verification request to complete
+              cy.wait('@emailVerificationRequest').then((interception) => {
+                expect(interception.response.body).to.deep.equal({
+                  has_user_verified_email_address: false,
+                });
               });
+              cy.url().should('contain', routesConf['verify_email']['path']);
+              // update email verification request
+              // intercept email verification request
+              cy.intercept('GET', apiEmailVerificationUrl, {
+                statusCode: httpSuccessfullStatus,
+                body: { has_user_verified_email_address: true },
+              }).as('emailVerificationRequest');
+              cy.reload();
+              cy.wait('@emailVerificationRequest').then((interception) => {
+                expect(interception.response.body).to.deep.equal({
+                  has_user_verified_email_address: true,
+                });
+              });
+              // redirected to home page
+              cy.url().should('contain', routesConf['home']['path']);
+
+              // click user select
+              cy.dataCy(selectorUserSelectDesktop).within(() => {
+                cy.dataCy(selectorUserSelectInput).should('be.visible').click();
+              });
+              // tick to render animated component
+              cy.tick(1000);
+              // logout
+              cy.dataCy('menu-item')
+                .contains(i18n.global.t('userSelect.logout'))
+                .click();
+              // redirected to login page
+              cy.url().should('include', routesConf['login']['path']);
             });
-            // redirected to home page
-            cy.url().should('contain', routesConf['home']['path']);
           });
         });
       });
