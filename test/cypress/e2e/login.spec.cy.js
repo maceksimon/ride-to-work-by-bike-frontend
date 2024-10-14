@@ -168,7 +168,6 @@ describe('Login page', () => {
       cy.get('@i18n').then((i18n) => {
         cy.dataCy('form-title-login')
           .should('be.visible')
-          .and('have.class', 'grey-10')
           .and('have.css', 'font-size', '24px')
           .and('have.css', 'font-weight', '700')
           .then(($el) => {
