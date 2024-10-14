@@ -278,7 +278,7 @@ export const useLoginStore = defineStore('login', {
       // check that refresh token is set
       this.$log?.info('Call refresh token.');
       if (!this.refreshToken) {
-        this.$log?.info(`No refresh token <${this.refreshToken}>.`);
+        this.$log?.debug(`No refresh token <${this.refreshToken}>.`);
         Notify.create({
           message: i18n.global.t('refreshTokens.messageRefreshTokenRequired'),
           color: 'negative',
@@ -374,15 +374,15 @@ export const useLoginStore = defineStore('login', {
       });
 
       if (data) {
-        this.$log?.info(`Reset password response <${data.detail}>.`);
+        this.$log?.debug(`Reset password response <${data.detail}>.`);
         // set password reset email
-        this.$log?.info(`Set password reset email to <${payload.email}>.`);
+        this.$log?.debug(`Set password reset email to <${payload.email}>.`);
         this.setPasswordResetEmail(payload.email);
         this.$log?.debug(
           `Login store password reset email <${this.getPasswordResetEmail}>.`,
         );
         // set login form state
-        this.$log?.info(
+        this.$log?.debug(
           `Set login form state to <${LoginFormState.resetFinished}>.`,
         );
         this.setLoginFormState(LoginFormState.resetFinished);
