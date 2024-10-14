@@ -37,6 +37,9 @@ import FormFieldPasswordConfirm from '../global/FormFieldPasswordConfirm.vue';
 import FormFieldPhone from './../global/FormFieldPhone.vue';
 import FormFieldTextRequired from './../global/FormFieldTextRequired.vue';
 
+// enums
+import { OrganizationType } from '../types/Organization';
+
 // types
 import type { FormOption } from 'src/components/types/Form';
 
@@ -55,8 +58,8 @@ export default defineComponent({
     const formRegisterCoordinator = reactive({
       firstName: '',
       lastName: '',
-      institutionType: 'company',
-      company: '',
+      organizationType: OrganizationType.company,
+      organizationId: null as null | number,
       jobTitle: '',
       email: '',
       phone: '',
@@ -69,11 +72,15 @@ export default defineComponent({
     const optionsInstitutionType: FormOption[] = [
       {
         label: i18n.global.t('form.labelCompanyShort'),
-        value: 'company',
+        value: OrganizationType.company,
       },
       {
         label: i18n.global.t('form.labelSchool'),
-        value: 'school',
+        value: OrganizationType.school,
+      },
+      {
+        label: i18n.global.t('form.labelFamily'),
+        value: OrganizationType.family,
       },
     ];
 
@@ -145,15 +152,15 @@ export default defineComponent({
               inline
               dense
               id="form-institution-type"
-              v-model="formRegisterCoordinator.institutionType"
+              v-model="formRegisterCoordinator.organizationType"
               :options="optionsInstitutionType"
               color="primary"
               class="q-mt-sm q-gutter-x-lg"
             />
           </div>
-          <!-- Input: company -->
+          <!-- Input: organization ID -->
           <form-field-company
-            v-model="formRegisterCoordinator.company"
+            v-model="formRegisterCoordinator.organizationId"
             class="col-12"
             data-cy="form-register-coordinator-company"
           />
