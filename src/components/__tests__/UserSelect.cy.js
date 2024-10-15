@@ -129,6 +129,7 @@ describe('<UserSelect>', () => {
       cy.fixture('loggedUser').then((user) => {
         const loginStore = useLoginStore();
         loginStore.setUser(user);
+        expect(loginStore.getUser).to.deep.equal(user);
         // avatar
         cy.dataCy(selectorAvatar)
           .should('be.visible')

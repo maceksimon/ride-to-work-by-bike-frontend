@@ -47,7 +47,7 @@ export default defineComponent({
   },
   setup(props) {
     const loginStore = useLoginStore();
-    const user = loginStore.getUser;
+    const user = computed(() => loginStore.getUser);
 
     const menuTop: Link[] = [
       {
