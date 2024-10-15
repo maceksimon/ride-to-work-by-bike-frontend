@@ -142,10 +142,16 @@ describe('<UserSelect>', () => {
             'aria-label',
             `${user.first_name} ${user.last_name}`,
           );
+        // test src
         cy.dataCy(selectorAvatarImage)
           .find('img')
           .invoke('attr', 'src')
           .should('contain', 'profile-placeholder');
+        // test alt text
+        cy.dataCy(selectorAvatarImage)
+          .find('img')
+          .invoke('attr', 'alt')
+          .should('contain', `${user.first_name} ${user.last_name}`);
       });
     });
 
