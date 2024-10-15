@@ -15,8 +15,6 @@ const getAppConfig = (process) => {
     config['colorPrimaryOpacity'] = process.env.COLOR_PRIMARY_OPACITY;
   } else if (process.env.COLOR_SECONDARY) {
     config['secondaryColor'] = process.env.COLOR_SECONDARY;
-  } else if (process.env.COLOR_SECONDARY_OPACITY) {
-    config['colorSecondaryOpacity'] = process.env.COLOR_SECONDARY_OPACITY;
   } else if (process.env.COLOR_GRAY) {
     config['colorGray'] = process.env.COLOR_GRAY;
   } else if (process.env.COLOR_GRAY_LIGHT) {

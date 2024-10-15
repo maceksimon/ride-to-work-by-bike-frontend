@@ -5,10 +5,12 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { routesConf } from '../../router/routes_conf';
 
 // colors
-const { getPaletteColor } = colors;
+const { getPaletteColor, changeAlpha } = colors;
 const grey10 = getPaletteColor('grey-10');
 const white = getPaletteColor('white');
 const primary = getPaletteColor('primary');
+const secondary = getPaletteColor('secondary');
+const secondaryOpacity = changeAlpha(secondary, 0.4);
 
 // selectors
 const selectorBannerRoutes = 'banner-routes-card';
@@ -20,7 +22,7 @@ const selectorSectionTitle = 'banner-routes-section-title';
 const selectorSectionButton = 'banner-routes-section-button';
 
 // variables
-const { borderRadiusCard, colorSecondaryOpacity } = rideToWorkByBikeConfig;
+const { borderRadiusCard } = rideToWorkByBikeConfig;
 const routesCount = 3;
 const iconSize = 24;
 
@@ -150,7 +152,7 @@ function coreTests() {
     cy.dataCy(selectorBannerRoutes)
       .should('be.visible')
       .and('have.css', 'border-radius', borderRadiusCard)
-      .and('have.backgroundColor', colorSecondaryOpacity);
+      .and('have.backgroundColor', secondaryOpacity);
     // title
     cy.dataCy(selectorTitle)
       .should('have.css', 'font-size', '24px')

@@ -26,7 +26,7 @@
  */
 
 // libraries
-import { Screen } from 'quasar';
+import { colors, Screen } from 'quasar';
 import { defineComponent } from 'vue';
 
 // config
@@ -54,11 +54,16 @@ export default defineComponent({
     },
   },
   setup() {
-    const { borderRadiusCard, colorSecondaryOpacity } = rideToWorkByBikeConfig;
+    // colors
+    const { getPaletteColor, changeAlpha } = colors;
+    const secondary = getPaletteColor('secondary');
+    const secondaryOpacity = changeAlpha(secondary, 0.4);
+
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
     return {
-      borderRadiusCard,
-      colorSecondaryOpacity,
+      borderRadius,
+      secondaryOpacity,
       routesConf,
       Screen,
       Variants,
@@ -71,7 +76,10 @@ export default defineComponent({
   <div
     class="text-grey-10"
     :class="[variant === Variants.default ? 'q-py-sm' : 'q-py-lg']"
-    :style="`border-radius: ${borderRadiusCard}; background-color: ${colorSecondaryOpacity}`"
+    :style="{
+      borderRadius,
+      backgroundColor: secondaryOpacity,
+    }"
     data-cy="banner-routes-card"
   >
     <div class="row justify-between">
