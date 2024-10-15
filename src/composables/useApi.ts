@@ -94,7 +94,7 @@ export const useApi = () => {
     showSuccessMessage?: boolean;
   }): Promise<ApiResponse<T>> => {
     try {
-      logger?.debug('Call <api()> function with parmeters arguments.');
+      logger?.info('Call <api()> function with parmeters arguments.');
       logger?.debug(`<api()> function url parameter argument <${endpoint}>.`);
       logger?.debug(`<api()> function method parameter argument <${method}>.`);
       logger?.debug(
