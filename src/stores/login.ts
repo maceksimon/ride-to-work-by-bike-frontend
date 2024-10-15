@@ -87,7 +87,7 @@ export const useLoginStore = defineStore('login', {
 
   actions: {
     setUser(user: UserLogin): void {
-      Object.assign(this.user, user);
+      this.user = user;
     },
     setAccessToken(token: string): void {
       this.accessToken = token;
