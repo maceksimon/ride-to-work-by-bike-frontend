@@ -183,19 +183,21 @@ export const useLoginStore = defineStore('login', {
      * Sets the access token, refresh token and user to empty values.
      */
     logout(): void {
-      this.$log?.info('Logout user.');
+      this.$log?.debug(`Logout user <${this.getUser.email}>.`);
       this.setAccessToken('');
       this.setRefreshToken('');
       this.setJwtExpiration(null);
       this.setUser(emptyUser);
       this.clearRefreshTokenTimeout();
-      this.$log?.info(`Login store access token <${this.getAccessToken}>.`);
-      this.$log?.info(`Login store refresh token <${this.getRefreshToken}>.`);
-      this.$log?.info(`Login store JWT expiration <${this.getJwtExpiration}>.`);
-      this.$log?.info(
+      this.$log?.debug(`Login store access token <${this.getAccessToken}>.`);
+      this.$log?.debug(`Login store refresh token <${this.getRefreshToken}>.`);
+      this.$log?.debug(
+        `Login store JWT expiration <${this.getJwtExpiration}>.`,
+      );
+      this.$log?.debug(
         `Login store user <${JSON.stringify(this.getUser, null, 2)}>.`,
       );
-      this.$log?.info(
+      this.$log?.debug(
         `Login store refresh token timeout <${this.getRefreshTokenTimeout}>.`,
       );
       // redirect to login page
