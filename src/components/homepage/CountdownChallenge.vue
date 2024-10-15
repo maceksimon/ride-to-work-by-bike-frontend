@@ -20,10 +20,14 @@
  */
 
 // libraries
+import { colors } from 'quasar';
 import { defineComponent } from 'vue';
 
 // composables
 import { useCountdown } from '../../composables/useCountdown';
+
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 export default defineComponent({
   name: 'CountdownChallenge',
@@ -36,20 +40,36 @@ export default defineComponent({
   setup(props) {
     const { countdown } = useCountdown(props.dateEnd);
 
+    // colors
+    const { getPaletteColor, changeAlpha } = colors;
+    const secondary = getPaletteColor('secondary');
+    const secondaryOpacity = changeAlpha(secondary, 0.4);
+
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+
     return {
+      borderRadius,
       countdown,
+      secondaryOpacity,
     };
   },
 });
 </script>
 
 <template>
-  <div class="q-pa-lg bg-info" data-cy="countdown-challenge">
+  <div
+    class="q-pa-lg text-grey-10"
+    :style="{
+      backgroundColor: secondaryOpacity,
+      borderRadius,
+    }"
+    data-cy="countdown-challenge"
+  >
     <h2
       class="q-my-md text-center text-h6 text-bold"
       data-cy="countdown-challenge-title"
     >
-      {{ $tc('index.countdownChallenge.title', countdown.days) }}
+      {{ $t('index.countdownChallenge.title', countdown.days) }}
       <span data-cy="countdown-days">{{ countdown.days }}</span>
       {{ $tc('time.day', countdown.days) }}
       <span data-cy="countdown-hours">{{ countdown.hours }}</span>
@@ -61,5 +81,3 @@ export default defineComponent({
     </h2>
   </div>
 </template>
-
-<style scoped lang="scss"></style>

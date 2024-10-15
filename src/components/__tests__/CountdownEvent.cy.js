@@ -1,14 +1,16 @@
 import { colors } from 'quasar';
-
 import CountdownEvent from '../homepage/CountdownEvent.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
-const { getPaletteColor } = colors;
+// colors
+const { getPaletteColor, changeAlpha } = colors;
 const grey10 = getPaletteColor('grey-10');
 const grey8 = getPaletteColor('grey-8');
-const { colorPrimary, borderRadiusCard, colorSecondaryOpacity } =
-  rideToWorkByBikeConfig;
+const primary = getPaletteColor('primary');
+const secondary = getPaletteColor('secondary');
+const secondaryOpacity = changeAlpha(secondary, 0.4);
+const { borderRadiusCard } = rideToWorkByBikeConfig;
 
 describe('<CountdownEvent>', () => {
   const releaseDate = new Date('2023-10-01T12:00:00');
@@ -75,22 +77,22 @@ describe('<CountdownEvent>', () => {
           .should('be.visible')
           .and('have.css', 'font-size', fontSize)
           .and('have.css', 'font-weight', fontWeight)
-          .and('have.color', colorPrimary);
+          .and('have.color', primary);
         cy.dataCy('countdown-hours')
           .should('be.visible')
           .and('have.css', 'font-size', fontSize)
           .and('have.css', 'font-weight', fontWeight)
-          .and('have.color', colorPrimary);
+          .and('have.color', primary);
         cy.dataCy('countdown-minutes')
           .should('be.visible')
           .and('have.css', 'font-size', fontSize)
           .and('have.css', 'font-weight', fontWeight)
-          .and('have.color', colorPrimary);
+          .and('have.color', primary);
         cy.dataCy('countdown-seconds')
           .should('be.visible')
           .and('have.css', 'font-size', fontSize)
           .and('have.css', 'font-weight', fontWeight)
-          .and('have.color', colorPrimary);
+          .and('have.color', primary);
       });
   });
 
@@ -124,7 +126,7 @@ describe('<CountdownEvent>', () => {
       cy.dataCy('card')
         .should('be.visible')
         .and('have.css', 'border-radius', borderRadiusCard)
-        .and('have.backgroundColor', colorSecondaryOpacity);
+        .and('have.backgroundColor', secondaryOpacity);
     });
   });
 

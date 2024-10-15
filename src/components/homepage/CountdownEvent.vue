@@ -21,7 +21,7 @@
  * <countdown-event :releaseDate="targetDate" />
  */
 
-import { date } from 'quasar';
+import { colors, date } from 'quasar';
 import { defineComponent } from 'vue';
 // import { useI18n } from 'vue-i18n'
 
@@ -45,7 +45,12 @@ export default defineComponent({
     const fontSize = '48px';
     const { countdown } = useCountdown(props.releaseDate);
 
-    const { borderRadiusCard, colorSecondaryOpacity } = rideToWorkByBikeConfig;
+    // colors
+    const { getPaletteColor, changeAlpha } = colors;
+    const secondary = getPaletteColor('secondary');
+    const secondaryOpacity = changeAlpha(secondary, 0.4);
+
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
     // currently not working see https://github.com/intlify/vue-i18n-next/issues/1193
     // const { locale } = useI18n({ useScope: 'global' })
@@ -60,8 +65,8 @@ export default defineComponent({
     }
 
     return {
-      borderRadiusCard,
-      colorSecondaryOpacity,
+      borderRadius,
+      secondaryOpacity,
       countdown,
       formattedDate,
       fontSize,
@@ -74,7 +79,10 @@ export default defineComponent({
   <q-card
     flat
     class="row items-center justify-evenly q-py-xl"
-    :style="`border-radius: ${borderRadiusCard}; background-color: ${colorSecondaryOpacity}`"
+    :style="{
+      borderRadius,
+      backgroundColor: secondaryOpacity,
+    }"
     data-cy="card"
   >
     <div class="text-center">
