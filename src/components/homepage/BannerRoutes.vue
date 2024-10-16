@@ -49,7 +49,7 @@ export default defineComponent({
       required: true,
     },
     variant: {
-      type: String as () => Variants,
+      type: String as () => BannerRoutesVariants,
       required: true,
     },
   },
@@ -61,7 +61,7 @@ export default defineComponent({
       colorSecondaryOpacity,
       routesConf,
       Screen,
-      Variants,
+      BannerRoutesVariants,
     };
   },
 });
@@ -70,7 +70,7 @@ export default defineComponent({
 <template>
   <div
     class="text-grey-10"
-    :class="[variant === Variants.default ? 'q-py-sm' : 'q-py-lg']"
+    :class="[variant === BannerRoutesVariants.default ? 'q-py-sm' : 'q-py-lg']"
     :style="`border-radius: ${borderRadiusCard}; background-color: ${colorSecondaryOpacity}`"
     data-cy="banner-routes-card"
   >
@@ -79,7 +79,9 @@ export default defineComponent({
       <div
         class="col-12 flex gap-24 items-center q-py-sm q-px-lg"
         :class="[
-          variant === Variants.default ? 'col-md-6' : 'justify-center',
+          variant === BannerRoutesVariants.default
+            ? 'col-md-6'
+            : 'justify-center',
           Screen.lg ? 'no-wrap' : '',
         ]"
         data-cy="banner-routes-section-title"
@@ -99,13 +101,13 @@ export default defineComponent({
           class="col-12 col-sm text-h5 text-weight-bold q-my-none"
           data-cy="banner-routes-title"
         >
-          <span v-if="variant === Variants.default">
+          <span v-if="variant === BannerRoutesVariants.default">
             <!-- TODO: fix conjugation in CZ and SK -->
             {{
               $tc('index.bannerRoutes.title', routesCount, { n: routesCount })
             }}
           </span>
-          <span v-else-if="variant === Variants.start">
+          <span v-else-if="variant === BannerRoutesVariants.start">
             {{ $t('index.bannerRoutes.titleStart') }}
           </span>
         </h3>
@@ -136,12 +138,12 @@ export default defineComponent({
           />
           <!-- Button text -->
           <span
-            v-if="variant === Variants.default"
+            v-if="variant === BannerRoutesVariants.default"
             class="inline-block q-px-sm"
           >
             {{ $t('index.bannerRoutes.addRoutes') }}
           </span>
-          <span v-else-if="variant == Variants.start">
+          <span v-else-if="variant == BannerRoutesVariants.start">
             {{ $t('index.bannerRoutes.addFirstRoutes') }}
           </span>
         </q-btn>
