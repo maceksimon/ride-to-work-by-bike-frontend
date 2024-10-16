@@ -13,9 +13,6 @@ import UserSelect from 'components/global/UserSelect.vue';
 // mocks
 import { menuBottom, menuTop } from '../mocks/layout';
 
-// config
-import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
-
 declare global {
   interface Window {
     i18n: typeof i18n;
@@ -37,9 +34,7 @@ export default defineComponent({
     UserSelect,
   },
   setup() {
-    const { containerContentWidth } = rideToWorkByBikeConfig;
     return {
-      containerContentWidth,
       menuBottom,
       menuTop,
     };
@@ -84,7 +79,7 @@ export default defineComponent({
     </q-drawer>
 
     <q-page-container class="bg-white">
-      <router-view :style="{ 'max-width': containerContentWidth }" />
+      <router-view />
       <!-- Footer content (desktop) -->
       <footer-bar />
     </q-page-container>
