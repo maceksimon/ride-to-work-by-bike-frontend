@@ -116,10 +116,7 @@
 import { colors } from 'quasar';
 import { computed, defineComponent } from 'vue';
 
-// composables
-import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
-
-// import components
+// components
 import BannerApp from 'components/homepage/BannerApp.vue';
 import BannerImage from 'components/homepage/BannerImage.vue';
 import BannerRoutes from 'components/homepage/BannerRoutes.vue';
@@ -139,9 +136,7 @@ import SliderProgress from 'components/homepage/SliderProgress.vue';
 
 // config
 import { routesConf } from '../router/routes_conf';
-
-// mocks
-import * as homepage from '../mocks/homepage';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // enums
 import { ChallengeStatus as ChallengeStatusEnum } from 'src/stores/challenge';
@@ -151,6 +146,9 @@ import { BannerRoutesVariants as BannerRoutesVariantsEnum } from 'src/components
 import listCardsFollow from '../../test/cypress/fixtures/listCardsFollow.json';
 import listCardsPost from '../../test/cypress/fixtures/listCardsPost.json';
 import cardsProgressSlider from '../../test/cypress/fixtures/cardsProgress.json';
+
+// mocks
+import * as homepage from '../mocks/homepage';
 
 // stores
 import { useChallengeStore } from 'src/stores/challenge';
