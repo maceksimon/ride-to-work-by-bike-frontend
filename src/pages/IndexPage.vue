@@ -1,16 +1,14 @@
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
     <div class="bg-white">
-      <div
-        class="q-px-lg q-pt-lg q-pb-xl"
-        :style="{ 'max-width': containerContentWidth }"
-      >
+      <div class="q-px-lg q-pt-lg q-pb-xl" :style="{ maxWidth }">
         <page-heading data-cy="index-title">
           {{ $t('index.title') }}
         </page-heading>
         <!-- Countdown: Event -->
         <countdown-event
           :release-date="releaseDate"
+          class="q-mb-xl"
           data-cy="countdown-event"
         />
         <!-- Banner: Routes -->
@@ -18,26 +16,26 @@
           <banner-routes
             :routes-count="14"
             variant="default"
-            class="q-mt-xl q-mb-xl"
+            class="q-my-xl"
             data-cy="banner-routes"
           />
         </template>
         <!-- Banner: App link -->
         <banner-app
           :banner="bannerAppData"
-          class="q-mt-xl"
+          class="q-my-xl"
           data-cy="banner-app"
         />
         <!-- Section: Future challenges -->
         <template v-if="challengeStatus === ChallengeStatusEnum.before">
           <!-- Title -->
-          <section-heading class="q-pt-xl q-mb-md" data-cy="card-list-title">
+          <section-heading class="q-mt-xl q-mb-md" data-cy="card-list-title">
             {{ $t('index.cardListChallenge.title') }}
           </section-heading>
           <!-- Cards -->
           <section-columns
             :columns="3"
-            class="q-col-gutter-lg q-pb-xl"
+            class="q-col-gutter-lg"
             data-cy="list-challenge"
           >
             <card-challenge
@@ -51,7 +49,7 @@
         <!-- Banner: Questionnaire -->
         <banner-image
           :banner="bannerImageData"
-          class="q-pt-xl q-pb-xl"
+          class="q-mt-xl"
           data-cy="banner-image"
         />
         <!-- Slider: Progress -->
@@ -59,7 +57,7 @@
           <slider-progress
             :title="$t('index.progressSlider.title')"
             :cards="cardsProgressSlider"
-            class="q-pt-xl q-mb-md"
+            class="q-mt-xl"
             :button="{
               title: $t('index.progressSlider.button'),
               url: urlResults,
@@ -72,23 +70,20 @@
           <list-card-progress
             :title="$t('index.cardListProgress.title')"
             :cards="cardsProgress"
-            class="q-pt-xl q-pb-xl"
+            class="q-mt-xl"
             data-cy="list-progress"
           ></list-card-progress>
         </template>
       </div>
     </div>
     <div :style="{ backgroundColor: primaryOpacity }">
-      <div
-        class="q-px-lg q-pb-xl"
-        :style="{ 'max-width': containerContentWidth }"
-      >
+      <div class="q-px-lg q-py-xl" :style="{ maxWidth }">
         <heading-background
           :title="headingBgTitle"
-          class="q-pt-xl"
+          class="q-mb-xl"
           data-cy="heading-background"
         />
-        <div class="q-pt-xl" data-cy="list-event">
+        <div class="q-my-xl" data-cy="list-event">
           <card-event
             v-for="card in cardsEvent"
             :key="card.title"
@@ -100,7 +95,7 @@
         <list-card-offer
           :title="$t('index.cardListOffer.title')"
           :cards="cardsOffer"
-          class="q-pt-xl"
+          class="q-my-xl"
           data-cy="list-offer"
         >
         </list-card-offer>
@@ -111,11 +106,11 @@
             title: $t('index.cardListPost.button'),
             url: urlCommunity,
           }"
-          class="q-mt-xl"
+          class="q-my-xl"
           data-cy="list-post"
         >
         </list-card-post>
-        <newsletter-feature class="q-mt-xl" data-cy="newsletter-feature" />
+        <newsletter-feature class="q-my-xl" data-cy="newsletter-feature" />
         <list-card-follow :cards="cardsFollow" class="q-mt-xl" />
       </div>
     </div>
@@ -202,7 +197,7 @@ export default defineComponent({
     const primary = getPaletteColor('primary');
     const primaryOpacity = changeAlpha(primary, 0.1);
 
-    const { containerContentWidth } = rideToWorkByBikeConfig;
+    const maxWidth = rideToWorkByBikeConfig.containerContentWidth;
 
     return {
       badgeList: homepage.badgeList,
@@ -218,7 +213,7 @@ export default defineComponent({
       cardsStats: homepage.cardsStats,
       challengeStatus,
       ChallengeStatusEnum,
-      containerContentWidth,
+      maxWidth,
       headingBgTitle: homepage.headingBgTitle,
       primaryOpacity,
       releaseDate: challengeStartDate,
