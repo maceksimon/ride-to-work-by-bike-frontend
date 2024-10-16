@@ -85,7 +85,7 @@ export default defineComponent({
       },
     ];
 
-    const { containerContentWidth } = rideToWorkByBikeConfig;
+    const maxWidth = rideToWorkByBikeConfig.containerContentWidth;
 
     // colors
     const { getPaletteColor, changeAlpha } = colors;
@@ -94,7 +94,7 @@ export default defineComponent({
 
     return {
       copyrightList,
-      containerContentWidth,
+      maxWidth,
       primaryOpacity,
       rideToWorkByBikeDeployedAppVersion,
       rideToWorkByBikeConfig,
@@ -107,11 +107,7 @@ export default defineComponent({
 
 <template>
   <div :style="{ backgroundColor: primaryOpacity }">
-    <div
-      class="q-px-lg q-pb-xl"
-      :style="{ 'max-width': containerContentWidth }"
-      data-cy="footer"
-    >
+    <div class="q-px-lg q-pb-xl" :style="{ maxWidth }" data-cy="footer">
       <!-- Footer content (leave space above for graphics) -->
       <div>
         <!-- Scroll to top button (desktop) -->
