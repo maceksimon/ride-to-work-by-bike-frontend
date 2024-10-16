@@ -1,7 +1,10 @@
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
     <div class="bg-white">
-      <div class="q-px-lg q-pt-lg q-pb-xl" :style="{ maxWidth }">
+      <div
+        class="q-px-lg q-pt-lg q-pb-xl overflow-hidden"
+        :style="{ maxWidth }"
+      >
         <page-heading data-cy="index-title">
           {{ $t('index.title') }}
         </page-heading>
@@ -73,7 +76,7 @@
       </div>
     </div>
     <div :style="{ backgroundColor: primaryOpacity }">
-      <div class="q-px-lg q-py-xl" :style="{ maxWidth }">
+      <div class="q-px-lg q-py-xl overflow-hidden" :style="{ maxWidth }">
         <heading-background
           :title="headingBgTitle"
           class="q-mb-xl"
