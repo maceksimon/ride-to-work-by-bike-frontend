@@ -397,7 +397,7 @@ export const useLoginStore = defineStore('login', {
       }
 
       return data;
-    }
+    },
     /**
      * Login with Facebook
      * @returns Promise<void>
