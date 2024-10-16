@@ -15,7 +15,7 @@
         <template v-if="challengeStatus === ChallengeStatusEnum.during">
           <banner-routes
             :routes-count="14"
-            variant="default"
+            :variant="BannerRoutesVariantsEnum.default"
             class="q-my-xl"
             data-cy="banner-routes"
           />
@@ -151,6 +151,7 @@ import * as homepage from '../mocks/homepage';
 
 // enums
 import { ChallengeStatus as ChallengeStatusEnum } from 'src/stores/challenge';
+import { BannerRoutesVariants as BannerRoutesVariantsEnum } from 'src/components/homepage/BannerRoutes.vue';
 
 // fixtures
 import listCardsFollow from '../../test/cypress/fixtures/listCardsFollow.json';
@@ -201,8 +202,9 @@ export default defineComponent({
 
     return {
       badgeList: homepage.badgeList,
-      bannerImageData: homepage.bannerImage,
       bannerAppData: homepage.bannerApp,
+      bannerImageData: homepage.bannerImage,
+      BannerRoutesVariantsEnum,
       cardsChallenge: homepage.cardsChallenge,
       cardsEvent: homepage.cardsEvent,
       cardsFollow,
