@@ -151,7 +151,7 @@ describe('<UserSelect>', () => {
         cy.dataCy(selectorAvatarImage)
           .find('img')
           .invoke('attr', 'alt')
-          .should('contain', `${user.first_name} ${user.last_name}`);
+          .should('eq', `${user.first_name} ${user.last_name}`);
       });
     });
 
