@@ -12,14 +12,13 @@
           data-cy="countdown-event"
         />
         <!-- Banner: Routes -->
-        <template v-if="challengeStatus === ChallengeStatusEnum.during">
-          <banner-routes
-            :routes-count="14"
-            :variant="BannerRoutesVariantsEnum.default"
-            class="q-my-xl"
-            data-cy="banner-routes"
-          />
-        </template>
+        <banner-routes
+          v-if="challengeStatus === ChallengeStatusEnum.during"
+          :routes-count="14"
+          :variant="BannerRoutesVariantsEnum.default"
+          class="q-my-xl"
+          data-cy="banner-routes"
+        />
         <!-- Banner: App link -->
         <banner-app
           :banner="bannerAppData"
@@ -53,27 +52,24 @@
           data-cy="banner-image"
         />
         <!-- Slider: Progress -->
-        <template v-if="challengeStatus === ChallengeStatusEnum.during">
-          <slider-progress
-            :title="$t('index.progressSlider.title')"
-            :cards="cardsProgressSlider"
-            class="q-mt-xl"
-            :button="{
-              title: $t('index.progressSlider.button'),
-              url: urlResults,
-            }"
-          >
-          </slider-progress>
-        </template>
+        <slider-progress
+          v-if="challengeStatus === ChallengeStatusEnum.during"
+          :title="$t('index.progressSlider.title')"
+          :cards="cardsProgressSlider"
+          class="q-mt-xl"
+          :button="{
+            title: $t('index.progressSlider.button'),
+            url: urlResults,
+          }"
+        />
         <!-- List: Progress -->
-        <template v-if="challengeStatus === ChallengeStatusEnum.after">
-          <list-card-progress
-            :title="$t('index.cardListProgress.title')"
-            :cards="cardsProgress"
-            class="q-mt-xl"
-            data-cy="list-progress"
-          ></list-card-progress>
-        </template>
+        <list-card-progress
+          v-if="challengeStatus === ChallengeStatusEnum.after"
+          :title="$t('index.cardListProgress.title')"
+          :cards="cardsProgress"
+          class="q-mt-xl"
+          data-cy="list-progress"
+        />
       </div>
     </div>
     <div :style="{ backgroundColor: primaryOpacity }">
@@ -97,8 +93,7 @@
           :cards="cardsOffer"
           class="q-my-xl"
           data-cy="list-offer"
-        >
-        </list-card-offer>
+        />
         <list-card-post
           :title="$t('index.cardListPost.title')"
           :cards="cardsPost"
@@ -108,8 +103,7 @@
           }"
           class="q-my-xl"
           data-cy="list-post"
-        >
-        </list-card-post>
+        />
         <newsletter-feature class="q-my-xl" data-cy="newsletter-feature" />
         <list-card-follow :cards="cardsFollow" class="q-mt-xl" />
       </div>
