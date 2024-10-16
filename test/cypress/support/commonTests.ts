@@ -13,6 +13,12 @@ const layoutBackgroundImageSelector = 'layout-background-image';
 import type { I18n } from 'vue-i18n';
 import type { ConfigGlobal } from '../../../src/components/types/Config';
 
+type AUTWindow = Window & typeof globalThis & ApplicationWindow;
+
+interface ApplicationWindow {
+  i18n?: I18n;
+}
+
 /**
  * Basic tests for Language Switcher
  *
@@ -20,22 +26,22 @@ import type { ConfigGlobal } from '../../../src/components/types/Config';
  */
 export const testLanguageSwitcher = (): void => {
   it('allows user to switch language', () => {
-    let i18n: unknown;
+    let i18n: I18n | undefined;
     cy.window().should('have.property', 'i18n');
     cy.window()
-      .then((win) => {
+      .then((win: AUTWindow): void => {
         i18n = win.i18n;
       })
       .then(() => {
-        const locales = i18n.global.availableLocales;
-        const initialActiveLocale = i18n.global.locale;
+        const locales = i18n?.global.availableLocales;
+        const initialActiveLocale = i18n?.global.locale;
 
         // active language has active class
         cy.dataCy('switcher-' + initialActiveLocale)
           .find('.q-btn')
           .should('have.class', 'bg-secondary');
 
-        locales.forEach((locale) => {
+        locales?.forEach((locale) => {
           if (locale !== initialActiveLocale) {
             // changing the language
             cy.dataCy('switcher-' + locale)
@@ -127,10 +133,10 @@ export const testDesktopSidebar = (): void => {
         cy.get('@config').then((config: unknown) => {
           cy.clock().then((clock) => {
             clock.setSystemTime(systemTime);
-            let i18n: unknown;
+            let i18n: I18n | undefined;
             cy.window().should('have.property', 'i18n');
             cy.window()
-              .then((win) => {
+              .then((win: AUTWindow) => {
                 i18n = win.i18n;
               })
               .then(() => {
@@ -180,7 +186,7 @@ export const testDesktopSidebar = (): void => {
                 cy.tick(1000).then(() => {
                   // logout
                   cy.dataCy('menu-item')
-                    .contains(i18n.global.t('userSelect.logout'))
+                    .contains(i18n?.global.t('userSelect.logout'))
                     .click();
                   cy.dataCy(selectorUserSelectDesktop).should('not.exist');
                   // redirected to login page
