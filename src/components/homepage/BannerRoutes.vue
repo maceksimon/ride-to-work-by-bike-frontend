@@ -33,7 +33,7 @@ import { defineComponent } from 'vue';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // enums
-enum Variants {
+export enum BannerRoutesVariants {
   default = 'default',
   start = 'start',
 }
