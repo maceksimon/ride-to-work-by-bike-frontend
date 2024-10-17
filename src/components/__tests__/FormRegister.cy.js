@@ -14,8 +14,12 @@ import {
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 
 // colors
-const { getPaletteColor } = colors;
+const { getPaletteColor, changeAlpha } = colors;
 const white = getPaletteColor('white');
+const whiteOpacity = changeAlpha(
+  white,
+  rideToWorkByBikeConfig.opacityWhiteBackground,
+);
 
 // selectors
 const selectorFormRegisterTitle = 'form-register-title';
@@ -50,13 +54,8 @@ const fontWeightText = 400;
 const router = route();
 const testEmail = 'test@test.com';
 const testPassword = '12345a';
-const {
-  apiBase,
-  apiDefaultLang,
-  colorWhiteOpacity,
-  borderRadiusCardSmall,
-  urlApiRegister,
-} = rideToWorkByBikeConfig;
+const { apiBase, apiDefaultLang, borderRadiusCardSmall, urlApiRegister } =
+  rideToWorkByBikeConfig;
 
 describe('<FormRegister>', () => {
   it('has translation for all strings', () => {
@@ -248,7 +247,7 @@ describe('<FormRegister>', () => {
       // wrapper
       cy.dataCy(selectorFormRegisterCoordinator)
         .should('have.css', 'padding', '16px')
-        .and('have.backgroundColor', colorWhiteOpacity)
+        .and('have.backgroundColor', whiteOpacity)
         .and('have.css', 'border-radius', borderRadiusCardSmall);
       // description
       cy.dataCy(selectorFormRegisterCoordinatorDescription)
