@@ -357,9 +357,10 @@ function coreTests() {
       .and('have.css', 'font-family', fontFamily);
   });
 
-  it('renders all components', () => {
+  it('renders all components (before challenge state)', () => {
     cy.get('@i18n').then((i18n) => {
       cy.dataCy('q-main').should('be.visible');
+      // title
       cy.dataCy('index-title')
         .should('be.visible')
         .then(($el) => {
@@ -367,11 +368,34 @@ function coreTests() {
             expect($el.text()).to.equal(translation);
           });
         });
+      // countdown
       cy.dataCy('countdown-event').should('be.visible');
+      // NOT banner routes
+      cy.dataCy('banner-routes').should('not.exist');
+      // banner app
+      cy.dataCy('banner-app').should('be.visible');
+      // future challenges
+      cy.dataCy('card-list-title').should('be.visible');
       cy.dataCy('list-challenge').should('be.visible');
+      // NOT progress slider
+      cy.dataCy('progress-slider').should('not.exist');
+      // NOT list progress
+      cy.dataCy('list-progress').should('not.exist');
+      // banner questionnaire
       cy.dataCy('banner-image').should('be.visible');
+      // heading with background image
       cy.dataCy('heading-background').should('be.visible');
+      // list of events
       cy.dataCy('list-event').should('be.visible');
+      cy.dataCy('card-list-item').should('be.visible');
+      // list of offers
+      cy.dataCy('list-offer').should('be.visible');
+      // list of posts
+      cy.dataCy('list-post').should('be.visible');
+      // newsletter
+      cy.dataCy('newsletter-feature').should('be.visible');
+      // list of follow
+      cy.dataCy('card-list-follow').should('be.visible');
     });
   });
 
