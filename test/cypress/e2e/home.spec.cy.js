@@ -378,7 +378,7 @@ function coreTests() {
       cy.dataCy('card-list-title').should('be.visible');
       cy.dataCy('list-challenge').should('be.visible');
       // NOT progress slider
-      cy.dataCy('progress-slider').should('not.exist');
+      cy.dataCy('slider-progress').should('not.exist');
       // NOT list progress
       cy.dataCy('list-progress').should('not.exist');
       // banner questionnaire
@@ -395,7 +395,7 @@ function coreTests() {
       // newsletter
       cy.dataCy('newsletter-feature').should('be.visible');
       // list of follow
-      cy.dataCy('card-list-follow').should('be.visible');
+      cy.dataCy('list-card-follow').should('be.visible');
     });
   });
 
