@@ -1,0 +1,26 @@
+[
+  {
+    "id": "instagram",
+    "title": "index.menuLinks.instagram",
+    "icon": "mdi-instagram",
+    "url": "rideToWorkByBikeConfig.urlInstagram"
+  },
+  {
+    "id": "facebook",
+    "title": "index.menuLinks.facebook",
+    "icon": "mdi-facebook",
+    "url": "rideToWorkByBikeConfig.urlFacebook"
+  },
+  {
+    "id": "twitter",
+    "title": "index.menuLinks.twitter",
+    "icon": "mdi-twitter",
+    "url": "rideToWorkByBikeConfig.urlTwitter"
+  },
+  {
+    "id": "youtube",
+    "title": "index.menuLinks.youtube",
+    "icon": "mdi-youtube",
+    "url": "rideToWorkByBikeConfig.urlYoutube"
+  }
+]
