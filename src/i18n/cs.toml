@@ -12,7 +12,6 @@ transportType = "Způsoby dopravy"
 results = "Výsledky"
 
 [challengeInactive]
-buttonBlog = "Navštívit blog"
 text = "<p>Jsme rádi, že s námi chcete jezdit na kole, koloběžce, chodit či běhat (nejen) do práce!</p><p>Další výzvu připravujeme.</p><p>Zatím se můžete podívat na novinky v oblasti městské cyklistiky a udržitelné dopravy.</p>"
 title = "Dáme vám vědět, jakmile vypíšeme další výzvu"
 
