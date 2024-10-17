@@ -10,6 +10,7 @@ const selectorButtonHelp = 'button-help';
 const selectorLanguageSwitcher = 'language-switcher';
 const selectorChallengeInactiveInfo = 'challenge-inactive-info';
 const selectorListCardPost = 'list-card-post';
+const selectorSocialBar = 'social-bar';
 
 describe('Challenge Inactive page', () => {
   context('desktop', () => {
@@ -64,6 +65,10 @@ describe('Challenge Inactive page', () => {
 
     it('renders list card post component', () => {
       cy.dataCy(selectorListCardPost).should('be.visible');
+    });
+
+    it('renders social bar component', () => {
+      cy.dataCy(selectorSocialBar).should('be.visible');
     });
   }
 });
