@@ -9,7 +9,10 @@ const grey10 = getPaletteColor('grey-10');
 const grey8 = getPaletteColor('grey-8');
 const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
-const secondaryOpacity = changeAlpha(secondary, 0.4);
+const secondaryOpacity = changeAlpha(
+  secondary,
+  rideToWorkByBikeConfig.opacitySecondaryBackground,
+);
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 
 describe('<CountdownEvent>', () => {

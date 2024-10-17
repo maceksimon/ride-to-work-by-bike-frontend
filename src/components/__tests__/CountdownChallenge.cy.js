@@ -7,7 +7,10 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 const { getPaletteColor, changeAlpha } = colors;
 const grey10 = getPaletteColor('grey-10');
 const secondary = getPaletteColor('secondary');
-const secondaryOpacity = changeAlpha(secondary, 0.4);
+const secondaryOpacity = changeAlpha(
+  secondary,
+  rideToWorkByBikeConfig.opacitySecondaryBackground,
+);
 
 // variables
 const { borderRadiusCard } = rideToWorkByBikeConfig;

@@ -10,7 +10,10 @@ const grey10 = getPaletteColor('grey-10');
 const white = getPaletteColor('white');
 const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
-const secondaryOpacity = changeAlpha(secondary, 0.4);
+const secondaryOpacity = changeAlpha(
+  secondary,
+  rideToWorkByBikeConfig.opacitySecondaryBackground,
+);
 
 // selectors
 const selectorBannerRoutes = 'banner-routes-card';

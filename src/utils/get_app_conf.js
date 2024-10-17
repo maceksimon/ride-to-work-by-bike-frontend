@@ -29,6 +29,9 @@ const getAppConfig = (process) => {
     config['colorBlack'] = process.env.COLOR_BLACK;
   } else if (process.env.COLOR_RED) {
     config['colorRed'] = process.env.COLOR_RED;
+  } else if (process.env.OPACITY_SECONDARY_BACKGROUND) {
+    config['opacitySecondaryBackground'] =
+      process.env.OPACITY_SECONDARY_BACKGROUND;
   } else if (process.env.IMAGE) {
     config['image'] = process.env.IMAGE;
   } else if (process.env.WIDTH) {
