@@ -15,8 +15,8 @@ export const useChallengeStore = defineStore('challenge', {
   state: () => ({
     // property set in pinia.js boot file
     $log: null as Logger | null,
-    isChallengeActive: false,
     challengeStatus: ChallengeStatus.before,
+    isChallengeActive: true,
   }),
 
   getters: {
