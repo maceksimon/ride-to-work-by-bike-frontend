@@ -60,7 +60,7 @@ export default defineComponent({
     </div>
     <div>
       <ul
-        class="flex items-center gap-32 q-my-none q-px-none"
+        class="flex items-center gap-16 q-my-none q-px-none"
         data-cy="social-bar-menu"
         style="list-style: none"
       >

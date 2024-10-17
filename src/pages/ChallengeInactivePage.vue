@@ -26,6 +26,7 @@ import { defineComponent } from 'vue';
 import ChallengeInactiveInfo from '../components/homepage/ChallengeInactiveInfo.vue';
 import ListCardPost from '../components/homepage/ListCardPost.vue';
 import LoginRegisterHeader from '../components/global/LoginRegisterHeader.vue';
+import SocialBar from '../components/homepage/SocialBar.vue';
 
 // fixtures
 import listCardsPostFixture from '../../test/cypress/fixtures/listCardsPost.json';
@@ -39,6 +40,7 @@ export default defineComponent({
     ChallengeInactiveInfo,
     ListCardPost,
     LoginRegisterHeader,
+    SocialBar,
   },
   setup() {
     const cards: CardPost[] = listCardsPostFixture;
@@ -51,20 +53,23 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-page padding>
-    <div class="q-px-lg q-pb-xl overflow-hidden">
+  <q-page padding class="overflow-hidden">
+    <div class="q-px-lg q-pb-xl">
       <!-- Page header -->
       <login-register-header data-cy="login-register-header" />
-
       <div class="row q-mt-xl">
         <div class="col-12 col-md-4">
           <challenge-inactive-info />
         </div>
       </div>
-
-      <list-card-post dark title="" :cards="cards" class="q-mt-xl" />
-
-      <!-- <social-bar /> -->
+      <list-card-post
+        dark
+        title=""
+        :cards="cards"
+        class="q-mt-xl"
+        data-cy="list-card-post"
+      />
+      <social-bar class="q-mt-xl" data-cy="social-bar" />
     </div>
   </q-page>
 </template>
