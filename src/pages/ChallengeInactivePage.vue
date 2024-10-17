@@ -63,6 +63,8 @@ export default defineComponent({
       </div>
 
       <list-card-post dark title="" :cards="cards" class="q-mt-xl" />
+
+      <!-- <social-bar /> -->
     </div>
   </q-page>
 </template>

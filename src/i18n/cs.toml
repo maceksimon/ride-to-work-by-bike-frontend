@@ -703,6 +703,9 @@ walk = "Pěšky"
 bus = "Hromadnou dopravou"
 unknown = "Nevyplněno"
 
+[socialBar]
+title = "Sledujte nás na sociálních sítích"
+
 [userSelect]
 companyCoordinator = "Stát se firemním koordinátorem"
 connectApps = "Propojit aplikace"
