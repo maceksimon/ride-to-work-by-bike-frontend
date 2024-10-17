@@ -6,6 +6,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // colors
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
+const white = getPaletteColor('white');
 
 // selectors
 const selectorSocialBar = 'social-bar';
@@ -23,6 +24,8 @@ const buttonSize = 42;
 const iconSize = 18;
 const fontSize = 24;
 const fontWeight = 700;
+const padding = 24;
+const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
 describe('<SocialBar>', () => {
   it('has translation for all strings', () => {
@@ -54,7 +57,11 @@ describe('<SocialBar>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.dataCy(selectorSocialBar).should('be.visible');
+    cy.dataCy(selectorSocialBar)
+      .should('be.visible')
+      .and('have.backgroundColor', white)
+      .and('have.css', 'padding', `${padding}px`)
+      .and('have.css', 'border-radius', borderRadius);
   });
 
   it('renders title with correct styling', () => {
@@ -71,7 +78,7 @@ function coreTests() {
       .should('be.visible')
       .and('have.css', 'display', 'flex')
       .and('have.css', 'align-items', 'center');
-
+    // buttons
     cy.dataCy(selectorSocialBarButton)
       .should('be.visible')
       .and('have.css', 'border-radius', '50%');
@@ -81,39 +88,34 @@ function coreTests() {
     cy.dataCy(selectorSocialBarButton)
       .invoke('height')
       .should('be.equal', buttonSize);
-
+    // social links href
     cy.dataCy(selectorItemFacebook).within(() => {
       cy.dataCy(selectorSocialBarButton)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlFacebook);
     });
-
     cy.dataCy(selectorItemInstagram).within(() => {
       cy.dataCy(selectorSocialBarButton)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlInstagram);
     });
-
     cy.dataCy(selectorItemTwitter).within(() => {
       cy.dataCy(selectorSocialBarButton)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlTwitter);
     });
-
     cy.dataCy(selectorItemYoutube).within(() => {
       cy.dataCy(selectorSocialBarButton)
         .should('be.visible')
         .and('have.attr', 'href', rideToWorkByBikeConfig.urlYoutube);
     });
-
+    // icon
     cy.dataCy(selectorSocialBarIcon)
       .should('be.visible')
       .and('have.color', grey10);
-
     cy.dataCy(selectorSocialBarIcon)
       .invoke('height')
       .should('be.equal', iconSize);
-
     cy.dataCy(selectorSocialBarIcon)
       .invoke('width')
       .should('be.equal', iconSize);
