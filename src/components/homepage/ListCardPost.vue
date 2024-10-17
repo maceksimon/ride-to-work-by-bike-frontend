@@ -10,6 +10,7 @@
  * the `CardPost` component inside a carousel slider. Shows 4 slides per view.
  *
  * @props
+ * - `dark` (Boolean): If true, the component will use a dark theme.
  * - `title` (String): The heading or title for the list of offer cards.
  * - `cards` (Array of CardOfferType, required): An array of card items to be
  *   displayed. Each item is of type `CardOfferType`.
@@ -21,6 +22,7 @@
  *
  * @example
  * <list-card-post
+ *  dark
  *  :cards="postList"
  *  :title="postsTitle"
  *  :button="buttonDetails"
@@ -47,6 +49,10 @@ export default defineComponent({
     SectionHeading,
   },
   props: {
+    dark: {
+      type: Boolean,
+      default: false,
+    },
     title: {
       type: String,
       required: true,
@@ -121,7 +127,7 @@ export default defineComponent({
       <q-btn
         rounded
         unelevated
-        outline
+        :outline="!dark"
         color="grey-10"
         :to="button.url"
         :label="button.title"
