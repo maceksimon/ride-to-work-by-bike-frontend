@@ -64,6 +64,7 @@
             title: $t('index.progressSlider.button'),
             url: urlResults,
           }"
+          data-cy="slider-progress"
         />
         <!-- List: Progress -->
         <list-card-progress
@@ -108,7 +109,11 @@
           data-cy="list-post"
         />
         <newsletter-feature class="q-my-xl" data-cy="newsletter-feature" />
-        <list-card-follow :cards="cardsFollow" class="q-mt-xl" />
+        <list-card-follow
+          :cards="cardsFollow"
+          class="q-mt-xl"
+          data-cy="list-card-follow"
+        />
       </div>
     </div>
   </q-page>
