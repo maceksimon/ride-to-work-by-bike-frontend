@@ -700,6 +700,9 @@ walk = "On foot"
 bus = "By public transport"
 unknown = "Not logged"
 
+[socialBar]
+title = "Follow us on social media"
+
 [userSelect]
 companyCoordinator = "Become a company coordinator"
 connectApps = "Connect apps"
