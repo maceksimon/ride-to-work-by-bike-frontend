@@ -27,15 +27,11 @@ import ChallengeInactiveInfo from '../components/homepage/ChallengeInactiveInfo.
 import ListCardPost from '../components/homepage/ListCardPost.vue';
 import LoginRegisterHeader from '../components/global/LoginRegisterHeader.vue';
 
-// config
-import { rideToWorkByBikeConfig } from '../boot/global_vars';
-
 // fixtures
 import listCardsPostFixture from '../../test/cypress/fixtures/listCardsPost.json';
 
 // types
 import type { CardPost } from '../components/types/Card';
-import type { Link } from '../components/types/Link';
 
 export default defineComponent({
   name: 'ChallengeInactivePage',
@@ -45,15 +41,9 @@ export default defineComponent({
     LoginRegisterHeader,
   },
   setup() {
-    const button: Link = {
-      title: 'challengeInactive.buttonBlog',
-      url: rideToWorkByBikeConfig.urlBlog,
-    };
-
     const cards: CardPost[] = listCardsPostFixture;
 
     return {
-      button,
       cards,
     };
   },
@@ -72,13 +62,7 @@ export default defineComponent({
         </div>
       </div>
 
-      <list-card-post
-        dark
-        title=""
-        :button="button"
-        :cards="cards"
-        class="q-mt-xl"
-      />
+      <list-card-post dark title="" :cards="cards" class="q-mt-xl" />
     </div>
   </q-page>
 </template>

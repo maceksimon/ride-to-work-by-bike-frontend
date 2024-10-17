@@ -39,8 +39,11 @@ import { Screen } from 'quasar';
 import CardPost from './CardPost.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
-import { CardPost as CardPostType, Link } from '../types';
+import { CardPost as CardPostType } from '../types';
 
 export default defineComponent({
   name: 'ListCardPost',
@@ -61,21 +64,20 @@ export default defineComponent({
       type: Array as () => CardPostType[],
       required: true,
     },
-    button: {
-      type: Object as () => Link,
-      required: false,
-    },
   },
   setup() {
     const isLargeScreen = computed((): boolean => {
       return Screen.gt.sm;
     });
 
+    const buttonUrl = rideToWorkByBikeConfig.urlBlog;
+
     const buttonWidth = computed((): string => {
       return isLargeScreen.value ? 'auto' : '100%';
     });
 
     return {
+      buttonUrl,
       buttonWidth,
     };
   },
@@ -119,18 +121,15 @@ export default defineComponent({
       </swiper-slide>
     </swiper-container>
     <!-- Link to more news -->
-    <div
-      v-if="button"
-      class="text-center q-pt-md"
-      data-cy="card-list-post-buttons"
-    >
+    <div class="text-center q-pt-md" data-cy="card-list-post-buttons">
       <q-btn
         rounded
         unelevated
         :outline="!dark"
         color="grey-10"
-        :to="button.url"
-        :label="button.title"
+        :href="buttonUrl"
+        target="_blank"
+        :label="$t('index.cardListPost.button')"
         :style="{ width: buttonWidth }"
         data-cy="card-list-post-button"
       />
