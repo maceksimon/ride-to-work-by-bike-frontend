@@ -11,7 +11,7 @@ const primary = getPaletteColor('primary');
 const secondary = getPaletteColor('secondary');
 const secondaryOpacity = changeAlpha(
   secondary,
-  rideToWorkByBikeConfig.opacitySecondaryBackground,
+  rideToWorkByBikeConfig.colorSecondaryBackgroundOpacity,
 );
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 

@@ -9,7 +9,7 @@ const grey10 = getPaletteColor('grey-10');
 const secondary = getPaletteColor('secondary');
 const secondaryOpacity = changeAlpha(
   secondary,
-  rideToWorkByBikeConfig.opacitySecondaryBackground,
+  rideToWorkByBikeConfig.colorSecondaryBackgroundOpacity,
 );
 
 // variables

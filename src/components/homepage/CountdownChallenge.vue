@@ -45,7 +45,7 @@ export default defineComponent({
     const secondary = getPaletteColor('secondary');
     const secondaryOpacity = changeAlpha(
       secondary,
-      rideToWorkByBikeConfig.opacitySecondaryBackground,
+      rideToWorkByBikeConfig.colorSecondaryBackgroundOpacity,
     );
 
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
