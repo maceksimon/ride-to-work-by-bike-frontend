@@ -81,6 +81,11 @@ labelOrganizationId = "ID"
 labelShowPastTasks = "Zobraziť minulé úlohy"
 textBannerReminder = "Oznámili ste spoločnosti, že ste koordinátor?"
 
+[getOrganizations]
+apiMessageError = "Načítanie organizácií zlyhalo."
+apiMessageErrorWithMessage = "Načítanie organizácií zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Organizácie boli úspešne načítané."
+
 [language]
 cs = "Čeština"
 sk = "Slovenčina"

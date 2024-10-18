@@ -27,7 +27,7 @@
  */
 
 // libraries
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, inject, ref } from 'vue';
 import { QForm } from 'quasar';
 
 // components
@@ -36,13 +36,33 @@ import FormAddCompany from 'src/components/form/FormAddCompany.vue';
 
 // composables
 import { i18n } from 'src/boot/i18n';
+import { useApi } from 'src/composables/useApi';
 import { useValidation } from 'src/composables/useValidation';
 
-// types
-import type { FormCompanyFields } from 'src/components/types/Form';
+// config
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
-// constants
-const stringOptions: string[] = ['Company 1', 'Company 2'];
+// stores
+import { useLoginStore } from 'src/stores/login';
+
+// types
+import type {
+  FormCompanyFields,
+  FormSelectOption,
+} from 'src/components/types/Form';
+import type { Logger } from 'src/components/types/Logger';
+
+interface CompanyOption {
+  id: string;
+  name: string;
+}
+
+interface GetOrganizationsResponse {
+  results: CompanyOption[];
+}
+
+// utils
+import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
 
 export default defineComponent({
   name: 'FormFieldCompany',
@@ -61,7 +81,47 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const options = ref<string[]>([]);
+    const logger = inject('vuejs3-logger') as Logger | null;
+    const options = ref<FormSelectOption[]>([]);
+    const optionsDefault = ref<FormSelectOption[]>([]);
+    const loginStore = useLoginStore();
+    const { apiFetch } = useApi();
+    /**
+     * Load options
+     * Fetches organizations and saves them into default options
+     * @returns {Promise<void>}
+     */
+    const loadOptions = async (): Promise<void> => {
+      logger?.info('Get API organizations.');
+      // Append access token into HTTP header
+      const requestTokenHeader_ = { ...requestTokenHeader };
+      requestTokenHeader_.Authorization += loginStore.getAccessToken;
+      // Fetch organizations
+      const { data } = await apiFetch<GetOrganizationsResponse>({
+        endpoint: rideToWorkByBikeConfig.urlApiHasUserVerifiedEmail,
+        method: 'get',
+        translationKey: 'getOrganizations',
+        showSuccessMessage: false,
+        headers: Object.assign(requestDefaultHeader, requestTokenHeader_),
+        logger,
+      });
+
+      // Save default option array
+      if (data?.results?.length) {
+        logger?.info('Organizations fetched. Saving to default options.');
+        logger?.debug(`Setting default options to <${data.results}>`);
+        optionsDefault.value = data.results.map((option) => {
+          return {
+            label: option.name,
+            value: option.id,
+          };
+        });
+        logger?.debug(`Default options set to <${optionsDefault.value}>`);
+      }
+    };
+    // Load options on component mount
+    loadOptions();
+
     const isDialogOpen = ref<boolean>(false);
     const formRef = ref<typeof QForm | null>(null);
 
@@ -111,8 +171,9 @@ export default defineComponent({
     const onFilter = (val: string, update: (fn: () => void) => void) => {
       update(() => {
         const valLowerCase = val.toLocaleLowerCase();
-        options.value = stringOptions.filter(
-          (option) => option.toLocaleLowerCase().indexOf(valLowerCase) > -1,
+        options.value = optionsDefault.value.filter(
+          (option) =>
+            option.label.toLocaleLowerCase().indexOf(valLowerCase) > -1,
         );
       });
     };

@@ -81,6 +81,11 @@ labelOrganizationId = "ID"
 labelShowPastTasks = "Show past tasks"
 textBannerReminder = "Have you notified the company that you are a coordinator?"
 
+[getOrganizations]
+apiMessageError = "Organizations fetching failed."
+apiMessageErrorWithMessage = "Organizations fetching failed. Error: {error}"
+apiMessageSuccess = "Organizations fetched successfully."
+
 [language]
 cs = "Czech"
 sk = "Slovak"
