@@ -170,10 +170,15 @@ export default defineComponent({
       });
     };
 
-    // dialog
+    /**
+     * New company logic
+     * Renders dialog for adding a new company
+     * and handles form submission.
+     */
     const isDialogOpen = ref<boolean>(false);
+    // form ref
     const formRef = ref<typeof QForm | null>(null);
-    // form new company
+    // default form state
     const companyNew: FormCompanyFields = {
       name: '',
       vatId: '',
@@ -188,17 +193,20 @@ export default defineComponent({
         },
       ],
     };
-
+    /**
+     * Close dialog
+     * Resets form and closes dialog
+     * @returns {void}
+     */
     const onClose = (): void => {
       if (formRef.value) {
         formRef.value.reset();
       }
       isDialogOpen.value = false;
     };
-
     /**
-     * Called when create company form is submitted
-     * Submits data if form is valid
+     * Submit new company form
+     * Validates form and calls createOrganization API if valid
      * @returns {Promise<void>}
      */
     const onSubmit = async (): Promise<void> => {
@@ -214,6 +222,11 @@ export default defineComponent({
         }
       }
     };
+    /**
+     * Create organization
+     * Creates a new organization in database
+     * @returns {Promise<void>}
+     */
     const createOrganization = async (): Promise<void> => {
       logger?.info('Post API new organization.');
       // append access token into HTTP header
@@ -242,7 +255,10 @@ export default defineComponent({
         isDialogOpen.value = false;
         // refetch organizations
         logger?.debug('Refetching organizations.');
-        loadOptions();
+        await loadOptions();
+        // set company to new organization
+        logger?.debug(`Setting organization to ID <${data.id}>`);
+        company.value = data.id;
       }
     };
 

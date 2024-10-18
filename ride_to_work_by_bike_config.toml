@@ -77,6 +77,7 @@ apiDefaultLang = "cs"
 
 urlApiHasUserVerifiedEmail = "auth/registration/has-user-verified-email-address/"
 urlApiLogin = "auth/login/"
+urlApiOrganizations = "organizations/"
 urlApiRefresh = "auth/token/refresh/"
 urlApiRegister = "auth/registration/"
 urlApiResetPassword = "auth/password/reset/"
