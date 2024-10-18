@@ -61,6 +61,16 @@ interface GetOrganizationsResponse {
   results: CompanyOption[];
 }
 
+interface PostOrganizationsBody {
+  name: string;
+  vatId: string;
+}
+
+interface PostOrganizationsResponse {
+  id: string;
+  name: string;
+}
+
 // utils
 import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
 
@@ -84,6 +94,7 @@ export default defineComponent({
     const logger = inject('vuejs3-logger') as Logger | null;
     const options = ref<FormSelectOption[]>([]);
     const optionsDefault = ref<FormSelectOption[]>([]);
+    const isOptionsLoading = ref<boolean>(false);
     const loginStore = useLoginStore();
     const { apiFetch } = useApi();
     /**
@@ -93,20 +104,20 @@ export default defineComponent({
      */
     const loadOptions = async (): Promise<void> => {
       logger?.info('Get API organizations.');
-      // Append access token into HTTP header
+      isOptionsLoading.value = true;
+      // append access token into HTTP header
       const requestTokenHeader_ = { ...requestTokenHeader };
       requestTokenHeader_.Authorization += loginStore.getAccessToken;
-      // Fetch organizations
+      // fetch organizations
       const { data } = await apiFetch<GetOrganizationsResponse>({
-        endpoint: rideToWorkByBikeConfig.urlApiHasUserVerifiedEmail,
+        endpoint: rideToWorkByBikeConfig.urlApiOrganizations,
         method: 'get',
         translationKey: 'getOrganizations',
         showSuccessMessage: false,
         headers: Object.assign(requestDefaultHeader, requestTokenHeader_),
         logger,
       });
-
-      // Save default option array
+      // save default option array
       if (data?.results?.length) {
         logger?.info('Organizations fetched. Saving to default options.');
         logger?.debug(`Setting default options to <${data.results}>`);
@@ -118,17 +129,12 @@ export default defineComponent({
         });
         logger?.debug(`Default options set to <${optionsDefault.value}>`);
       }
+      isOptionsLoading.value = false;
     };
-    // Load options on component mount
+    // load options on component mount
     loadOptions();
 
-    const isDialogOpen = ref<boolean>(false);
-    const formRef = ref<typeof QForm | null>(null);
-
-    const formFieldLabel = computed(
-      () => props.label || i18n.global.t('form.labelCompany'),
-    );
-
+    // company v-model
     const company = computed({
       get: () => props.modelValue,
       set: (value: string) => {
@@ -136,28 +142,14 @@ export default defineComponent({
       },
     });
 
-    const companyNew: FormCompanyFields = {
-      name: '',
-      vatId: '',
-      address: [
-        {
-          street: '',
-          houseNumber: '',
-          city: '',
-          zip: '',
-          cityChallenge: '',
-          department: '',
-        },
-      ],
-    };
-
-    // handles select input
+    // handles company select input
     const onInputValue = (val: string) => {
       company.value = val;
+      logger?.debug(`Company set to <${company.value}>`);
     };
 
     /**
-     * Provides autocomplete functionality
+     * Autocomplete functionality for company select
      * Upon typing, find strings which contain query entered into the select
      *
      * Limitation: does not support fuzzy search
@@ -178,6 +170,25 @@ export default defineComponent({
       });
     };
 
+    // dialog
+    const isDialogOpen = ref<boolean>(false);
+    const formRef = ref<typeof QForm | null>(null);
+    // form new company
+    const companyNew: FormCompanyFields = {
+      name: '',
+      vatId: '',
+      address: [
+        {
+          street: '',
+          houseNumber: '',
+          city: '',
+          zip: '',
+          cityChallenge: '',
+          department: '',
+        },
+      ],
+    };
+
     const onClose = (): void => {
       if (formRef.value) {
         formRef.value.reset();
@@ -186,16 +197,16 @@ export default defineComponent({
     };
 
     /**
-     * Validates the form.
-     * If form is valid it submits the data.
+     * Called when create company form is submitted
+     * Submits data if form is valid
+     * @returns {Promise<void>}
      */
     const onSubmit = async (): Promise<void> => {
       if (formRef.value) {
         const isFormValid: boolean = await formRef.value.validate();
 
         if (isFormValid) {
-          // TODO: Submit through API
-          isDialogOpen.value = false;
+          createOrganization();
         } else {
           formRef.value.$el.scrollIntoView({
             behavior: 'smooth',
@@ -203,8 +214,43 @@ export default defineComponent({
         }
       }
     };
+    const createOrganization = async (): Promise<void> => {
+      logger?.info('Post API new organization.');
+      // append access token into HTTP header
+      const requestTokenHeader_ = { ...requestTokenHeader };
+      requestTokenHeader_.Authorization += loginStore.getAccessToken;
+      // body
+      logger?.debug(`Create organization name <${companyNew.name}>`);
+      logger?.debug(`Create organization vatId <${companyNew.vatId}>`);
+      const body: PostOrganizationsBody = {
+        name: companyNew.name,
+        vatId: companyNew.vatId,
+      };
+      // fetch organizations
+      const { data } = await apiFetch<PostOrganizationsResponse>({
+        endpoint: rideToWorkByBikeConfig.urlApiOrganizations,
+        method: 'post',
+        translationKey: 'createOrganization',
+        headers: Object.assign(requestDefaultHeader, requestTokenHeader_),
+        payload: body,
+        logger,
+      });
+      if (data?.id) {
+        logger?.info(`Organization created with ID <${data.id}>`);
+        logger?.info(`Organization created with name <${data.name}>`);
+        // close dialog
+        isDialogOpen.value = false;
+        // refetch organizations
+        logger?.debug('Refetching organizations.');
+        loadOptions();
+      }
+    };
 
     const { isFilled } = useValidation();
+
+    const formFieldLabel = computed(
+      () => props.label || i18n.global.t('form.labelCompany'),
+    );
 
     return {
       company,
@@ -212,8 +258,9 @@ export default defineComponent({
       formFieldLabel,
       formRef,
       isDialogOpen,
-      options,
       isFilled,
+      isOptionsLoading,
+      options,
       onClose,
       onFilter,
       onInputValue,
@@ -240,12 +287,14 @@ export default defineComponent({
           dense
           outlined
           use-input
+          emit-value
           hide-selected
           fill-input
           hide-bottom-space
           input-debounce="0"
           :model-value="company"
           :options="options"
+          :loading="isOptionsLoading"
           class="q-mt-sm"
           id="form-company"
           name="company"
