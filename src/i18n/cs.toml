@@ -81,6 +81,11 @@ labelOrganizationId = "IČO"
 labelShowPastTasks = "Zobrazit uplynulé úkoly"
 textBannerReminder = "Oznámil jste již firmě, že jste kooridnátorem?"
 
+[createOrganization]
+apiMessageError = "Vytvoření organizace selhalo."
+apiMessageErrorWithMessage = "Vytvoření organizace selhalo. Chyba: {error}"
+apiMessageSuccess = "Organizace byla úspěšně vytvořena."
+
 [getOrganizations]
 apiMessageError = "Načítání organizací selhalo."
 apiMessageErrorWithMessage = "Načítání organizací selhalo. Chyba: {error}"

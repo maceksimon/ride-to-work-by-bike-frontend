@@ -81,6 +81,11 @@ labelOrganizationId = "ID"
 labelShowPastTasks = "Zobraziť minulé úlohy"
 textBannerReminder = "Oznámili ste spoločnosti, že ste koordinátor?"
 
+[createOrganization]
+apiMessageError = "Vytvorenie organizácie zlyhalo."
+apiMessageErrorWithMessage = "Vytvorenie organizácie zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Organizácia bola úspešně vytvorená."
+
 [getOrganizations]
 apiMessageError = "Načítanie organizácií zlyhalo."
 apiMessageErrorWithMessage = "Načítanie organizácií zlyhalo. Chyba: {error}"

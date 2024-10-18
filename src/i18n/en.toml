@@ -81,6 +81,11 @@ labelOrganizationId = "ID"
 labelShowPastTasks = "Show past tasks"
 textBannerReminder = "Have you notified the company that you are a coordinator?"
 
+[createOrganization]
+apiMessageError = "Organization creation failed."
+apiMessageErrorWithMessage = "Organization creation failed. Error: {error}"
+apiMessageSuccess = "Organization was successfully created."
+
 [getOrganizations]
 apiMessageError = "Organizations fetching failed."
 apiMessageErrorWithMessage = "Organizations fetching failed. Error: {error}"
