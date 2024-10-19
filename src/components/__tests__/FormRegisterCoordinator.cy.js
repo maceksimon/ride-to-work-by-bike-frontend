@@ -1,7 +1,12 @@
 import { colors } from 'quasar';
-
 import FormRegisterCoordinator from 'components/register/FormRegisterCoordinator.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
+import { httpSuccessfullStatus } from '../../../test/cypress/support/commonTests';
+
+// variables
+const { apiBase, apiDefaultLang, urlApiOrganizations } = rideToWorkByBikeConfig;
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -42,6 +47,30 @@ describe('<FormRegisterCoordinator>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      // get API base URL
+      const apiBaseUrl = getApiBaseUrlWithLang(
+        null,
+        apiBase,
+        apiDefaultLang,
+        i18n,
+      );
+      const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
+      // intercept organizations API call (before mounting component)
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        cy.intercept('GET', apiOrganizationsUrl, {
+          statusCode: httpSuccessfullStatus,
+          body: formFieldCompanyResponse,
+        }).as('getOrganizations');
+      });
+      // intercept create organization API call (before mounting component)
+      cy.fixture('formFieldCompanyCreate').then(
+        (formFieldCompanyCreateResponse) => {
+          cy.intercept('POST', apiOrganizationsUrl, {
+            statusCode: httpSuccessfullStatus,
+            body: formFieldCompanyCreateResponse,
+          }).as('createOrganization');
+        },
+      );
       cy.mount(FormRegisterCoordinator, {
         props: {},
       });
