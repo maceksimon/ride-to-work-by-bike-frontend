@@ -24,9 +24,7 @@
  */
 
 // libraries
-import { defineComponent, reactive } from 'vue';
-
-import { i18n } from 'src/boot/i18n';
+import { defineComponent, inject, reactive } from 'vue';
 
 // components
 import FormFieldCheckboxRequired from './../form/FormFieldCheckboxRequired.vue';
@@ -37,11 +35,20 @@ import FormFieldPasswordConfirm from '../global/FormFieldPasswordConfirm.vue';
 import FormFieldPhone from './../global/FormFieldPhone.vue';
 import FormFieldTextRequired from './../global/FormFieldTextRequired.vue';
 
+// composables
+import { i18n } from 'src/boot/i18n';
+
 // enums
 import { OrganizationType } from '../types/Organization';
+import { NewsletterType } from '../types/Newsletter';
+
+// stores
+import { useRegisterStore } from 'src/stores/register';
 
 // types
-import type { FormOption } from 'src/components/types/Form';
+import type { FormOption } from '../types/Form';
+import type { Logger } from '../types/Logger';
+import type { RegisterCoordinatorRequest } from '../types/Register';
 
 export default defineComponent({
   name: 'FormRegisterCoordinator',
@@ -55,13 +62,17 @@ export default defineComponent({
     FormFieldPhone,
   },
   setup() {
+    const logger = inject('vuejs3-logger') as Logger | null;
+    const registerStore = useRegisterStore();
+
     const formRegisterCoordinator = reactive({
       firstName: '',
       lastName: '',
       organizationType: OrganizationType.company,
-      organizationId: null as null | number,
+      organizationId: '',
       jobTitle: '',
       email: '',
+      newsletter: [] as NewsletterType[],
       phone: '',
       password: '',
       passwordConfirm: '',
@@ -84,8 +95,26 @@ export default defineComponent({
       },
     ];
 
-    const onSubmit = (): void => {
-      // noop
+    const onSubmit = async (): Promise<void> => {
+      // build payload
+      const payload: RegisterCoordinatorRequest = {
+        firstName: formRegisterCoordinator.firstName,
+        lastName: formRegisterCoordinator.lastName,
+        organizationType: formRegisterCoordinator.organizationType,
+        organizationId: formRegisterCoordinator.organizationId,
+        jobTitle: formRegisterCoordinator.jobTitle,
+        email: formRegisterCoordinator.email,
+        newsletter: formRegisterCoordinator.newsletter,
+        phone: formRegisterCoordinator.phone,
+        password: formRegisterCoordinator.password,
+        responsibility: formRegisterCoordinator.responsibility,
+        terms: formRegisterCoordinator.terms,
+      };
+      // register coordinator
+      const data = await registerStore.registerCoordinator(payload);
+      if (data) {
+        logger?.debug(JSON.stringify(data));
+      }
     };
 
     const onReset = (): void => {

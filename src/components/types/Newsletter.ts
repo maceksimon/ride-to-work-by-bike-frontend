@@ -4,3 +4,9 @@ export interface NewsletterItem {
   url: string;
   following: boolean;
 }
+
+export enum NewsletterType {
+  challenge = 'challenge',
+  event = 'event',
+  mobility = 'mobility',
+}
