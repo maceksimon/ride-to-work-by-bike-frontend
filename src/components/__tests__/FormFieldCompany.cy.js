@@ -225,6 +225,15 @@ describe('<FormFieldCompany>', () => {
           body: formFieldCompanyResponse,
         }).as('getOrganizations');
       });
+      // intercept create organization API call (before mounting component)
+      cy.fixture('formFieldCompanyCreate').then(
+        (formFieldCompanyCreateResponse) => {
+          cy.intercept('POST', apiOrganizationsUrl, {
+            statusCode: httpSuccessfullStatus,
+            body: formFieldCompanyCreateResponse,
+          }).as('createOrganization');
+        },
+      );
       // mount component
       cy.mount(FormFieldTestWrapper, {
         props: {
