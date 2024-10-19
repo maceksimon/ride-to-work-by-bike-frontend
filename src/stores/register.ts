@@ -6,19 +6,20 @@ import { Router } from 'vue-router';
 import { useApi } from 'src/composables/useApi';
 import { setAccessRefreshTokens } from '../utils/set_access_refresh_tokens';
 
-// stores
-import { useLoginStore } from './login';
-
-// utils
-import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
-
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { routesConf } from '../router/routes_conf';
 
+// stores
+import { useLoginStore } from './login';
+
 // types
 import type { Logger } from '../components/types/Logger';
-import type { LoginResponse as RegisterResponse } from 'src/components/types/Login';
+import type { LoginResponse as RegisterResponse } from '../components/types/Login';
+import type { RegisterCoordinatorRequest } from '../components/types/Register';
+
+// utils
+import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
 
 declare module 'pinia' {
   export interface PiniaCustomProperties {
@@ -149,6 +150,75 @@ export const useRegisterStore = defineStore('register', {
       } else {
         this.$log?.warn('Email verification check failed or returned no data.');
       }
+    },
+    /**
+     * Register coordinator
+     * Sends the coordinator registration request to the API.
+     * If successful:
+     *   - sets auth tokens from the response
+     *   - sets user data in login store
+     *   - redirects to email verification page
+     * If not successful, returns response data.
+     * @param {RegisterCoordinatorRequest} payload - Register coordinator request payload
+     * @returns {Promise<RegisterResponse | null>} - Register coordinator response or null
+     */
+    async registerCoordinator(
+      payload: RegisterCoordinatorRequest,
+    ): Promise<RegisterResponse | null> {
+      const { apiFetch } = useApi();
+      this.$log?.debug(
+        `Register coordinator payload <${JSON.stringify(payload, null, 2)}>.`,
+      );
+      // register
+      this.$log?.info('Post API coordinator registration details.');
+      const { data } = await apiFetch<RegisterResponse>({
+        endpoint: rideToWorkByBikeConfig.urlApiRegisterCoordinator,
+        method: 'post',
+        payload,
+        translationKey: 'registerCoordinator',
+        logger: this.$log,
+      });
+
+      if (data?.user?.email) {
+        // set email in store
+        this.$log?.info(
+          'Coordinator registration successful. Saving email to store.',
+        );
+        this.setEmail(data.user.email);
+        this.$log?.debug(`Register store saved email <${this.getEmail}>.`);
+        // set isEmailVerified in store
+        this.$log?.info('Setting isEmailVerified flag.');
+        this.setIsEmailVerified(false);
+        this.$log?.debug(
+          `Register store set isEmailVerified to <${this.getIsEmailVerified}>.`,
+        );
+
+        // redirect to confirm email page
+        if (this.$router) {
+          this.$log?.debug(
+            `Coordinator registration was succcesfull, redirect to <${routesConf['verify_email']['path']}> URL.`,
+          );
+          this.$router.push(routesConf['verify_email']['path']);
+        }
+      }
+
+      // set user and tokens
+      if (data && data.access && data.refresh) {
+        const loginStore = useLoginStore();
+        this.$log?.info('Save user data into login store.');
+        loginStore.setUser(data.user);
+        this.$log?.debug(
+          `Login store saved user data <${JSON.stringify(loginStore.getUser, null, 2)}>.`,
+        );
+        setAccessRefreshTokens({
+          access: data.access,
+          refresh: data.refresh,
+          loginStore,
+          $log: this.$log as Logger,
+        });
+      }
+
+      return data;
     },
   },
 

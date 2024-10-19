@@ -43,6 +43,11 @@ describe('<FormRegisterCoordinator>', () => {
       'form',
       i18n,
     );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'registerCoordinator',
+      i18n,
+    );
   });
 
   context('desktop', () => {

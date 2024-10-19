@@ -108,6 +108,9 @@ const getAppConfig = (process) => {
     config['urlApiRefresh'] = process.env.URL_API_REFRESH;
   } else if (process.env.URL_API_REGISTER) {
     config['urlApiRegister'] = process.env.URL_API_REGISTER;
+  } else if (process.env.URL_API_REGISTER_COORDINATOR) {
+    config['urlApiRegisterCoordinator'] =
+      process.env.URL_API_REGISTER_COORDINATOR;
   } else if (process.env.URL_API_RESET_PASSWORD) {
     config['urlApiResetPassword'] = process.env.URL_API_RESET_PASSWORD;
   } else if (process.env.URL_LOGIN_REGISTER_BACKGROUND_IMAGE) {

@@ -556,6 +556,11 @@ apiMessageError = "Registrace se nezdařila. Prosím, zkuste to znovu později."
 apiMessageErrorWithMessage = "Registrace se nezdařila. Prosím, zkuste to znovu později. Chyba: {error}"
 apiMessageSuccess = "Registrace byla úspěšná"
 
+[registerCoordinator]
+apiMessageError = "Registrace koordinátora se nezdařila. Prosím, zkuste to znovu později."
+apiMessageErrorWithMessage = "Registrace koordinátora se nezdařila. Prosím, zkuste to znovu později. Chyba: {error}"
+apiMessageSuccess = "Registrace koordinátora byla úspěšná"
+
 [register.form]
 hintLogin = "Již máte účet?"
 hintPassword = "Musí obsahovat alespoň 6 znaků a alespoň 1 písmeno."

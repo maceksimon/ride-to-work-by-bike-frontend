@@ -49,6 +49,7 @@ export interface ConfigGlobal {
   urlApiOrganizations: string;
   urlApiRefresh: string;
   urlApiRegister: string;
+  urlApiRegisterCoordinator: string;
   urlApiResetPassword: string;
   urlLoginRegisterBackgroundImage: string;
   urlRTWBBLogo: string;

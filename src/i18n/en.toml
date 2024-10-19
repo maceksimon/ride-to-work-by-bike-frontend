@@ -553,6 +553,11 @@ apiMessageError = "Registration failed. Please try again later."
 apiMessageErrorWithMessage = "Registration failed. Please try again later. Error: {error}"
 apiMessageSuccess = "Registration was successful"
 
+[registerCoordinator]
+apiMessageError = "Coordinator registration failed. Please try again later."
+apiMessageErrorWithMessage = "Coordinator registration failed. Please try again later. Error: {error}"
+apiMessageSuccess = "Coordinator registration was successful"
+
 [register.form]
 hintLogin = "Already have an account?"
 hintPassword = "It must contain at least 6 characters and at least 1 letter."

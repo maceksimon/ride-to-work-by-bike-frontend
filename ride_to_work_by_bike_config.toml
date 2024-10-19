@@ -80,6 +80,7 @@ urlApiLogin = "auth/login/"
 urlApiOrganizations = "organizations/"
 urlApiRefresh = "auth/token/refresh/"
 urlApiRegister = "auth/registration/"
+urlApiRegisterCoordinator = "auth/registration/coordinator/"
 urlApiResetPassword = "auth/password/reset/"
 
 checkIsEmailVerifiedInterval = 20 # seconds
