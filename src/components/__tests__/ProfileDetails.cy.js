@@ -9,7 +9,7 @@ const green = getPaletteColor('green');
 const red = getPaletteColor('red');
 
 // selectors
-const selectorAddressDivision = 'profile-details-address-division';
+const selectorAddressSubsidiary = 'profile-details-address-subsidiary';
 const selectorDeliveryAddress = 'profile-details-delivery-address';
 const selectorDownloadInvoice = 'profile-details-download-invoice';
 const selectorEmail = 'profile-details-email';
@@ -65,7 +65,7 @@ describe('<ProfileDetails>', () => {
       [
         'buttonDownloadInvoice',
         'descriptionNickname',
-        'labelAddressDivision',
+        'labelAddressSubsidiary',
         'labelAllowContactPhone',
         'labelDeliveryAddress',
         'labelEmail',
@@ -170,19 +170,19 @@ function coreTests() {
         .should('be.visible')
         .find(dataSelectorValue)
         .should('contain', formPersonalDetails.organization);
-      // row address/division
-      cy.dataCy(selectorAddressDivision)
+      // row address/subsidiary
+      cy.dataCy(selectorAddressSubsidiary)
         .find(dataSelectorLabel)
-        .should('contain', i18n.global.t('profile.labelAddressDivision'));
-      cy.dataCy(selectorAddressDivision)
+        .should('contain', i18n.global.t('profile.labelAddressSubsidiary'));
+      cy.dataCy(selectorAddressSubsidiary)
         .find(dataSelectorAddressDisplay)
         .should('be.visible')
-        .and('contain', formPersonalDetails.division.address.street)
-        .and('contain', formPersonalDetails.division.address.houseNumber)
-        .and('contain', formPersonalDetails.division.address.zip)
-        .and('contain', formPersonalDetails.division.address.city)
-        .and('contain', formPersonalDetails.division.address.cityChallenge);
-      // row address/division
+        .and('contain', formPersonalDetails.subsidiary.address.street)
+        .and('contain', formPersonalDetails.subsidiary.address.houseNumber)
+        .and('contain', formPersonalDetails.subsidiary.address.zip)
+        .and('contain', formPersonalDetails.subsidiary.address.city)
+        .and('contain', formPersonalDetails.subsidiary.address.cityChallenge);
+      // row address/subsidiary
       cy.dataCy(selectorTeam)
         .find(dataSelectorLabel)
         .should('contain', i18n.global.t('profile.labelTeam'));

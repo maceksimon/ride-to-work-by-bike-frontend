@@ -1,5 +1,11 @@
 import FormFieldTestWrapper from 'components/global/FormFieldTestWrapper.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
+import { httpSuccessfullStatus } from '../../../test/cypress/support/commonTests';
+
+// variables
+const { apiBase, apiDefaultLang, urlApiOrganizations } = rideToWorkByBikeConfig;
 
 describe('<FormFieldCompany>', () => {
   it('has translation for all strings', () => {
@@ -28,6 +34,22 @@ describe('<FormFieldCompany>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      // get API base URL
+      const apiBaseUrl = getApiBaseUrlWithLang(
+        null,
+        apiBase,
+        apiDefaultLang,
+        i18n,
+      );
+      const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
+      // intercept organizations API call (before mounting component)
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        cy.intercept('GET', apiOrganizationsUrl, {
+          statusCode: httpSuccessfullStatus,
+          body: formFieldCompanyResponse,
+        }).as('getOrganizations');
+      });
+      // mount component
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'FormFieldCompany',
@@ -52,6 +74,17 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('allows user to select option', () => {
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        cy.wait('@getOrganizations').then((interception) => {
+          expect(interception.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(interception.response.body).to.deep.equal(
+            formFieldCompanyResponse,
+          );
+        });
+      });
+
       cy.dataCy('form-company').find('input').click();
       // select option
       cy.get('.q-menu')
@@ -67,6 +100,17 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('allows to search through options', () => {
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        cy.wait('@getOrganizations').then((interception) => {
+          expect(interception.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(interception.response.body).to.deep.equal(
+            formFieldCompanyResponse,
+          );
+        });
+      });
+
       // search for option
       cy.dataCy('form-company').find('input').focus();
       cy.dataCy('form-company').find('input').type('2');
@@ -129,6 +173,22 @@ describe('<FormFieldCompany>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      // get API base URL
+      const apiBaseUrl = getApiBaseUrlWithLang(
+        null,
+        apiBase,
+        apiDefaultLang,
+        i18n,
+      );
+      const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
+      // intercept organizations API call (before mounting component)
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        cy.intercept('GET', apiOrganizationsUrl, {
+          statusCode: httpSuccessfullStatus,
+          body: formFieldCompanyResponse,
+        }).as('getOrganizations');
+      });
+      // mount component
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'FormFieldCompany',

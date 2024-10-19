@@ -26,7 +26,7 @@ export interface Profile {
   language: Locale;
   organization: string;
   organizationType: OrganizationType;
-  division: {
+  subsidiary: {
     address: FormCompanyAddressFields;
   };
   team: string;

@@ -7,7 +7,7 @@
     "zip": "12000",
     "city": "Praha"
   },
-  "divisions": [
+  "subsidiaries": [
     {
       "id": "001",
       "title": "Pobočka 1"

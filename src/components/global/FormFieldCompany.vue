@@ -73,6 +73,7 @@ interface PostOrganizationsResponse {
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
+import { getApiBaseUrlWithLang } from 'src/utils/get_api_base_url_with_lang';
 
 export default defineComponent({
   name: 'FormFieldCompany',
@@ -97,6 +98,16 @@ export default defineComponent({
     const isOptionsLoading = ref<boolean>(false);
     const loginStore = useLoginStore();
     const { apiFetch } = useApi();
+    // get API base URL
+    const { apiBase, apiDefaultLang, urlApiOrganizations } =
+      rideToWorkByBikeConfig;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
     /**
      * Load options
      * Fetches organizations and saves them into default options
@@ -110,7 +121,7 @@ export default defineComponent({
       requestTokenHeader_.Authorization += loginStore.getAccessToken;
       // fetch organizations
       const { data } = await apiFetch<GetOrganizationsResponse>({
-        endpoint: rideToWorkByBikeConfig.urlApiOrganizations,
+        endpoint: urlApiOrganizationsLocalized,
         method: 'get',
         translationKey: 'getOrganizations',
         showSuccessMessage: false,
@@ -120,14 +131,18 @@ export default defineComponent({
       // save default option array
       if (data?.results?.length) {
         logger?.info('Organizations fetched. Saving to default options.');
-        logger?.debug(`Setting default options to <${data.results}>`);
+        logger?.debug(
+          `Setting default options to <${JSON.stringify(data.results)}>`,
+        );
         optionsDefault.value = data.results.map((option) => {
           return {
             label: option.name,
             value: option.id,
           };
         });
-        logger?.debug(`Default options set to <${optionsDefault.value}>`);
+        logger?.debug(
+          `Default options set to <${JSON.stringify(optionsDefault.value)}>`,
+        );
       }
       isOptionsLoading.value = false;
     };
@@ -241,7 +256,7 @@ export default defineComponent({
       };
       // fetch organizations
       const { data } = await apiFetch<PostOrganizationsResponse>({
-        endpoint: rideToWorkByBikeConfig.urlApiOrganizations,
+        endpoint: urlApiOrganizationsLocalized,
         method: 'post',
         translationKey: 'createOrganization',
         headers: Object.assign(requestDefaultHeader, requestTokenHeader_),

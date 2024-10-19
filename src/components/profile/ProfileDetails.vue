@@ -218,14 +218,14 @@ export default defineComponent({
           class="col-12 col-sm-6"
           data-cy="profile-details-organization"
         />
-        <!-- Address / Division -->
+        <!-- Address / Subsidiary -->
         <details-item
-          :label="$t('profile.labelAddressDivision')"
+          :label="$t('profile.labelAddressSubsidiary')"
           class="col-12 col-sm-6"
-          data-cy="profile-details-address-division"
+          data-cy="profile-details-address-subsidiary"
         >
           <template #value>
-            <address-display :address="profile.division.address" />
+            <address-display :address="profile.subsidiary.address" />
           </template>
         </details-item>
         <!-- Team -->

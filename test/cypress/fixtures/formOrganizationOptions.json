@@ -17,7 +17,7 @@
       "src": "https://example.com/techcorp-logo.png",
       "alt": "TechCorp Solutions logo"
     },
-    "divisions": [
+    "subsidiaries": [
       {
         "id": "div-001",
         "address": {
@@ -81,7 +81,7 @@
       "src": "https://example.com/greenleaf-logo.png",
       "alt": "GreenLeaf Eco logo"
     },
-    "divisions": [
+    "subsidiaries": [
       {
         "id": "div-002",
         "title": "Recycling",
@@ -159,7 +159,7 @@
       "src": "https://example.com/edusmart-logo.png",
       "alt": "EduSmart Academy logo"
     },
-    "divisions": [
+    "subsidiaries": [
       {
         "id": "div-004",
         "title": "Primary Education",

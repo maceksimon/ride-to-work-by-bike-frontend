@@ -196,7 +196,7 @@ export default defineComponent({
             data-cy="dialog-button-submit"
             @click="onSubmit"
           >
-            {{ $t('form.company.buttonAddSubdivision') }}
+            {{ $t('form.company.buttonAddSubsidiary') }}
           </q-btn>
         </div>
       </div>
