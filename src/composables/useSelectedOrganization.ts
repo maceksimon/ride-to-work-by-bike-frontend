@@ -48,9 +48,9 @@ export const useSelectedOrganization = (organizations: Organization[]) => {
     );
     if (!selectedCompany) return [];
 
-    return selectedCompany.divisions.map((division) => ({
-      label: getAddressString(division.address),
-      value: division.id,
+    return selectedCompany.subsidiaries.map((subsidiary) => ({
+      label: getAddressString(subsidiary.address),
+      value: subsidiary.id,
     }));
   });
 

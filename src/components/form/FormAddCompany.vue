@@ -139,10 +139,10 @@ export default defineComponent({
     <div v-if="variant === 'default'" class="q-mt-lg">
       <div class="q-mb-md">
         <h3 class="text-body1 text-bold text-black q-my-none">
-          {{ $t('form.company.titleSubdivisionAddress') }}
+          {{ $t('form.company.titleSubsidiaryAddress') }}
         </h3>
         <p>
-          {{ $t('form.company.textSubdivisionAddress') }}
+          {{ $t('form.company.textSubsidiaryAddress') }}
         </p>
       </div>
       <div class="row q-col-gutter-lg">
