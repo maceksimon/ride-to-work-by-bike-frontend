@@ -273,7 +273,12 @@ export default defineComponent({
         await loadOptions();
         // set company to new organization
         logger?.debug(`Setting organization to ID <${data.id}>`);
-        company.value = data.id;
+        const newCompanyOption: FormSelectOption = {
+          label: data.name,
+          value: data.id,
+        };
+        options.value.push(newCompanyOption);
+        company.value = newCompanyOption.value;
       }
     };
 
@@ -319,6 +324,7 @@ export default defineComponent({
           outlined
           use-input
           emit-value
+          map-options
           hide-selected
           fill-input
           hide-bottom-space
