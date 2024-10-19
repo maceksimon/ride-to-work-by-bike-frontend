@@ -42,13 +42,22 @@ describe('<FormFieldCompany>', () => {
         i18n,
       );
       const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
-      // intercept organizations API call (before mounting component)
+      // intercept get organizations API call (before mounting component)
       cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
         cy.intercept('GET', apiOrganizationsUrl, {
           statusCode: httpSuccessfullStatus,
           body: formFieldCompanyResponse,
         }).as('getOrganizations');
       });
+      // intercept create organization API call (before mounting component)
+      cy.fixture('formFieldCompanyCreate').then(
+        (formFieldCompanyCreateResponse) => {
+          cy.intercept('POST', apiOrganizationsUrl, {
+            statusCode: httpSuccessfullStatus,
+            body: formFieldCompanyCreateResponse,
+          }).as('createOrganization');
+        },
+      );
       // mount component
       cy.mount(FormFieldTestWrapper, {
         props: {
@@ -76,6 +85,9 @@ describe('<FormFieldCompany>', () => {
     it('allows user to select option', () => {
       cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
         cy.wait('@getOrganizations').then((interception) => {
+          expect(interception.request.headers.authorization).to.include(
+            'Bearer',
+          );
           expect(interception.response.statusCode).to.equal(
             httpSuccessfullStatus,
           );
@@ -102,6 +114,9 @@ describe('<FormFieldCompany>', () => {
     it('allows to search through options', () => {
       cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
         cy.wait('@getOrganizations').then((interception) => {
+          expect(interception.request.headers.authorization).to.include(
+            'Bearer',
+          );
           expect(interception.response.statusCode).to.equal(
             httpSuccessfullStatus,
           );
@@ -153,8 +168,9 @@ describe('<FormFieldCompany>', () => {
       cy.testElementsSideBySide('col-input', 'col-button');
     });
 
-    it('renders dialog when for adding a new company', () => {
+    it.only('allows to add a new company', () => {
       cy.dataCy('button-add-company').click();
+      // dialog
       cy.dataCy('dialog-add-company').should('be.visible');
       cy.dataCy('dialog-add-company')
         .find('h3')
@@ -168,6 +184,27 @@ describe('<FormFieldCompany>', () => {
       cy.dataCy('dialog-button-submit')
         .should('be.visible')
         .and('have.text', i18n.global.t('form.company.buttonAddCompany'));
+      // fill form
+      cy.dataCy('form-add-company-name').find('input').type('Test Company');
+      cy.dataCy('form-add-company-vat-id').find('input').type('12345673');
+      // submit form
+      cy.dataCy('dialog-button-submit').click();
+      // test response
+      cy.wait('@createOrganization').then((interception) => {
+        expect(interception.request.headers.authorization).to.include('Bearer');
+        expect(interception.response.statusCode).to.equal(
+          httpSuccessfullStatus,
+        );
+        expect(interception.request.body).to.deep.equal({
+          name: 'Test Company',
+          vatId: '12345673',
+        });
+      });
+      // test selected option
+      cy.dataCy('form-company')
+        .find('input')
+        .invoke('val')
+        .should('eq', 'Test Company');
     });
   });
 
