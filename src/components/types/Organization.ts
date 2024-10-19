@@ -8,7 +8,7 @@ export enum OrganizationType {
 }
 
 export interface Organization {
-  divisions: OrganizationDivision[];
+  subsidiaries: OrganizationSubsidiary[];
   description?: string;
   id: string;
   identificationNumber: string;
@@ -18,7 +18,7 @@ export interface Organization {
   title: string;
 }
 
-export interface OrganizationDivision {
+export interface OrganizationSubsidiary {
   id: string;
   title: string;
   address?: FormCompanyAddressFields;

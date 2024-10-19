@@ -58,12 +58,12 @@ function coreTests() {
       // branch count
       cy.dataCy('header-organization-branch-count')
         .should('be.visible')
-        .and('contain', organization.divisions.length)
+        .and('contain', organization.subsidiaries.length)
         .and(
           'contain',
           i18n.global.tc(
             'coordinator.labelBranches',
-            organization.divisions.length,
+            organization.subsidiaries.length,
           ),
         );
       // member count
