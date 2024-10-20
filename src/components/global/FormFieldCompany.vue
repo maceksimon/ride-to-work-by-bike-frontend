@@ -153,15 +153,10 @@ export default defineComponent({
     const company = computed({
       get: () => props.modelValue,
       set: (value: string) => {
+        logger?.debug(`Company set to <${value}>`);
         emit('update:modelValue', value);
       },
     });
-
-    // handles company select input
-    const onInputValue = (val: string) => {
-      company.value = val;
-      logger?.debug(`Company set to <${company.value}>`);
-    };
 
     /**
      * Autocomplete functionality for company select
@@ -299,7 +294,6 @@ export default defineComponent({
       options,
       onClose,
       onFilter,
-      onInputValue,
       onSubmit,
     };
   },
@@ -343,7 +337,7 @@ export default defineComponent({
               }),
           ]"
           @filter="onFilter"
-          @input-value="onInputValue"
+          @update:model-value="company = $event"
           data-cy="form-company-input"
         >
           <!-- Item: No option -->
