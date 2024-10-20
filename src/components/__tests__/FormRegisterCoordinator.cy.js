@@ -275,7 +275,7 @@ describe('<FormRegisterCoordinator>', () => {
       ).should('not.exist');
     });
 
-    it.only('submits form correctly', () => {
+    it('submits form correctly', () => {
       cy.fixture('registerResponse').then(() => {
         // fill in the form
         fillForm();
