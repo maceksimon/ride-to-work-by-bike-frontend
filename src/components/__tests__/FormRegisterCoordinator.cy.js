@@ -1,9 +1,12 @@
 import { colors } from 'quasar';
+import { createPinia, setActivePinia } from 'pinia';
 import FormRegisterCoordinator from 'components/register/FormRegisterCoordinator.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 import { httpSuccessfullStatus } from '../../../test/cypress/support/commonTests';
+import { useRegisterStore } from '../../stores/register';
+import { useLoginStore } from '../../stores/login';
 
 // variables
 const {
@@ -25,6 +28,17 @@ const phone = '+420 736 456 789';
 const password = '12345a';
 const organizationType = 'company';
 const newsletter = [];
+
+const compareRegisterResponseWithStore = (registerResponse) => {
+  cy.contains(i18n.global.t('registerCoordinator.apiMessageSuccess')).should(
+    'be.visible',
+  );
+  const registerStore = useRegisterStore();
+  expect(registerStore.getEmail).to.equal(registerResponse.user.email);
+  expect(registerStore.getIsEmailVerified).to.equal(false);
+  const loginStore = useLoginStore();
+  expect(loginStore.getUser).to.eql(registerResponse.user);
+};
 
 describe('<FormRegisterCoordinator>', () => {
   it('has translation for all strings', () => {
@@ -67,6 +81,7 @@ describe('<FormRegisterCoordinator>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       // get API base URL
       const apiBaseUrl = getApiBaseUrlWithLang(
         null,
@@ -303,6 +318,7 @@ describe('<FormRegisterCoordinator>', () => {
           // response body
           cy.fixture('registerResponse').then((registerResponse) => {
             expect(interception.response.body).to.deep.equal(registerResponse);
+            compareRegisterResponseWithStore(registerResponse);
           });
         });
       });
@@ -311,6 +327,7 @@ describe('<FormRegisterCoordinator>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormRegisterCoordinator, {
         props: {},
       });
