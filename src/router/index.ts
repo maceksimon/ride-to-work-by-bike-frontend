@@ -43,7 +43,6 @@ export default route(function (/* { store, ssrContext } */) {
   // turn off auth check if in Cypress tests (except for register tests)
   if (!window.Cypress || window.Cypress.spec.name === 'register.spec.cy.js') {
     Router.beforeEach(async (to, from, next) => {
-      const logger = inject('vuejs3-logger') as Logger | null;
       const challengeStore = useChallengeStore();
       const loginStore = useLoginStore();
       const registerStore = useRegisterStore();
