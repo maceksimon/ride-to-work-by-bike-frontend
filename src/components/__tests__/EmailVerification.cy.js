@@ -75,9 +75,9 @@ describe('<EmailVerification>', () => {
         props: {},
       }).then(() => {
         // set store var
-        cy.fixture('registerResponse.json').then((registerResponse) => {
+        cy.fixture('loginResponse.json').then((loginResponse) => {
           const loginStore = useLoginStore();
-          loginStore.setUser(registerResponse.user);
+          loginStore.setUser(loginResponse.user);
         });
       });
     });
@@ -109,9 +109,9 @@ describe('<EmailVerification>', () => {
         props: {},
       }).then(() => {
         // set store var
-        cy.fixture('registerResponse.json').then((registerResponse) => {
+        cy.fixture('loginResponse.json').then((loginResponse) => {
           const loginStore = useLoginStore();
-          loginStore.setUser(registerResponse.user);
+          loginStore.setUser(loginResponse.user);
         });
       });
     });
@@ -122,7 +122,7 @@ describe('<EmailVerification>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.fixture('registerResponse.json').then((registerResponse) => {
+    cy.fixture('loginResponse.json').then((loginResponse) => {
       cy.dataCy(selectorEmailVerification).should('be.visible');
       // title
       cy.dataCy(selectorEmailVerificationTitle)
@@ -134,7 +134,7 @@ function coreTests() {
       // text
       cy.dataCy(selectorEmailVerificationText)
         .should('be.visible')
-        .and('contain', registerResponse.user.email);
+        .and('contain', loginResponse.user.email);
       // check inner html
       cy.dataCy(selectorEmailVerificationText)
         .should('be.visible')
@@ -144,7 +144,7 @@ function coreTests() {
           const content = $el.text();
           cy.stripHtmlTags(
             i18n.global.t('register.form.textEmailVerification', {
-              email: registerResponse.user.email,
+              email: loginResponse.user.email,
             }),
           ).then((text) => {
             expect(content).to.equal(text);
