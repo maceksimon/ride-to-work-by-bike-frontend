@@ -278,3 +278,6 @@ const timeUntilRefresh = 60 * 1000; // miliseconds (because used in cy.tick)
 export const fixtureTokenExpirationTime = fixtureTokenExpiration.getTime();
 export const timeUntilExpiration = timeUntilRefresh * 2;
 export const systemTime = fixtureTokenExpirationTime - timeUntilExpiration; // 2 min before JWT expires
+// challenge start date
+export const systemTimeChallenge = new Date('2024-09-16T00:00:00.000Z');
+export const systemTimeChallengeInactive = new Date('2024-06-15T00:00:00.000Z');

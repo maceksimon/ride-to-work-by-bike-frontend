@@ -11,6 +11,8 @@ import { useLoginStore } from '../../stores/login';
 import {
   httpSuccessfullStatus,
   httpInternalServerErrorStatus,
+  systemTimeChallenge,
+  systemTimeChallengeInactive,
 } from '../../../test/cypress/support/commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 
@@ -346,6 +348,10 @@ describe('<FormRegister>', () => {
           cy.contains(
             i18n.global.t('register.apiMessageErrorWithMessage'),
           ).should('be.visible');
+          // wait for error to disappear
+          cy.contains(
+            i18n.global.t('register.apiMessageErrorWithMessage'),
+          ).should('not.exist');
         },
       );
     });
@@ -373,6 +379,13 @@ describe('<FormRegister>', () => {
           // register
           cy.wrap(registerStore.register(testEmail, testPassword)).then(
             (response) => {
+              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                'be.visible',
+              );
+              // wait for success message to disappear
+              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                'not.exist',
+              );
               // test function return value
               expect(response).to.deep.equal(registerResponse);
               // store state
@@ -390,6 +403,11 @@ describe('<FormRegister>', () => {
   context('no active challenge', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      cy.clock()
+        .as('clock')
+        .then((clock) => {
+          clock.setSystemTime(systemTimeChallengeInactive);
+        });
       cy.mount(FormRegister, {
         props: {},
       });
@@ -398,7 +416,6 @@ describe('<FormRegister>', () => {
 
     it('shows a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
-      challengeStore.setIsChallengeActive(false);
       expect(challengeStore.getIsChallengeActive).to.equal(false);
       cy.dataCy(selectorFormRegisterTextNoActiveChallenge)
         .should('be.visible')
@@ -469,6 +486,11 @@ describe('<FormRegister>', () => {
   context('active challenge', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      cy.clock()
+        .as('clock')
+        .then((clock) => {
+          clock.setSystemTime(systemTimeChallenge);
+        });
       cy.mount(FormRegister, {
         props: {},
       });
@@ -477,14 +499,12 @@ describe('<FormRegister>', () => {
 
     it('does not show a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
-      challengeStore.setIsChallengeActive(true);
       expect(challengeStore.getIsChallengeActive).to.equal(true);
       cy.dataCy(selectorFormRegisterTextNoActiveChallenge).should('not.exist');
     });
 
     it('does not show checkboxes for privacy policy and newsletter subscription', () => {
       const challengeStore = useChallengeStore();
-      challengeStore.setIsChallengeActive(true);
       expect(challengeStore.getIsChallengeActive).to.equal(true);
       cy.dataCy(selectorFormRegisterPrivacyConsent).should('not.exist');
       cy.dataCy(selectorFormRegisterNewsletterSubscription).should('not.exist');
@@ -492,7 +512,6 @@ describe('<FormRegister>', () => {
 
     it('allows to submit form after filling fields and accepting privacy policy', () => {
       const challengeStore = useChallengeStore();
-      challengeStore.setIsChallengeActive(true);
       expect(challengeStore.getIsChallengeActive).to.equal(true);
       // variables
       const apiBaseUrl = getApiBaseUrlWithLang(
