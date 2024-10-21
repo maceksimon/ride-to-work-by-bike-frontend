@@ -262,6 +262,97 @@ export const testRouteListDayDate = (): void => {
   });
 };
 
+export const loginChallengeInactive = (
+  config: ConfigGlobal,
+  i18n: I18n,
+): void => {
+  const {
+    apiBase,
+    apiDefaultLang,
+    urlApiLogin,
+    urlApiRefresh,
+    urlApiHasUserVerifiedEmail,
+  } = config;
+  // intercept login API call
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
+  cy.fixture('loginResponse.json').then((loginResponse) => {
+    cy.intercept('POST', apiLoginUrl, {
+      statusCode: httpSuccessfullStatus,
+      body: loginResponse,
+    }).as('loginRequest');
+  });
+  // intercept refresh token API call
+  const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
+  cy.fixture('refreshTokensResponse.json').then((refreshTokensResponse) => {
+    cy.intercept('POST', apiRefreshUrl, {
+      statusCode: httpSuccessfullStatus,
+      body: refreshTokensResponse,
+    }).as('refreshTokens');
+  });
+  // intercept verify email API call
+  const apiHasUserVerifiedEmailUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
+  cy.intercept('GET', apiHasUserVerifiedEmailUrl, {
+    statusCode: httpSuccessfullStatus,
+    body: { has_user_verified_email_address: true },
+  }).as('verifyEmail');
+  cy.clock().then((clock) => {
+    clock.setSystemTime(systemTime);
+  });
+  // visit login page
+  cy.visit('#' + routesConf['login']['path']);
+  cy.dataCy('form-email-input').type('test@test.com');
+  cy.dataCy('form-login-password-input').type('test1234');
+  cy.dataCy('form-login-submit-login').click();
+};
+
+export const loginChallengeActive = (
+  config: ConfigGlobal,
+  i18n: I18n,
+): void => {
+  const {
+    apiBase,
+    apiDefaultLang,
+    urlApiLogin,
+    urlApiRefresh,
+    urlApiHasUserVerifiedEmail,
+  } = config;
+  // intercept login API call
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
+  cy.fixture('loginResponseChallengeActive.json').then((loginResponse) => {
+    cy.intercept('POST', apiLoginUrl, {
+      statusCode: httpSuccessfullStatus,
+      body: loginResponse,
+    }).as('loginRequest');
+  });
+
+  // intercept refresh token API call
+  const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
+  cy.fixture('refreshTokensResponseChallengeActive.json').then(
+    (refreshTokensResponse) => {
+      cy.intercept('POST', apiRefreshUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: refreshTokensResponse,
+      }).as('refreshTokens');
+    },
+  );
+  // intercept verify email API call
+  const apiHasUserVerifiedEmailUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
+  cy.intercept('GET', apiHasUserVerifiedEmailUrl, {
+    statusCode: httpSuccessfullStatus,
+    body: { has_user_verified_email_address: true },
+  }).as('verifyEmail');
+  cy.clock().then((clock) => {
+    clock.setSystemTime(systemTimeChallenge);
+  });
+  // visit login page
+  cy.visit('#' + routesConf['login']['path']);
+  cy.dataCy('form-email-input').type('test@test.com');
+  cy.dataCy('form-login-password-input').type('test1234');
+  cy.dataCy('form-login-submit-login').click();
+};
+
 export const httpSuccessfullStatus = 200;
 export const httpInternalServerErrorStatus = 500;
 export const httpTooManyRequestsStatus = 429;
@@ -279,5 +370,5 @@ export const fixtureTokenExpirationTime = fixtureTokenExpiration.getTime();
 export const timeUntilExpiration = timeUntilRefresh * 2;
 export const systemTime = fixtureTokenExpirationTime - timeUntilExpiration; // 2 min before JWT expires
 // challenge start date
-export const systemTimeChallenge = new Date('2024-09-16T00:00:00.000Z');
+export const systemTimeChallenge = new Date('2024-09-16T00:01:00.000Z');
 export const systemTimeChallengeInactive = new Date('2024-06-15T00:00:00.000Z');

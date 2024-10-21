@@ -51,9 +51,14 @@ export const useChallengeStore = defineStore('challenge', {
           competitionPhase.date_from,
         ).getTime();
         const endDate: number = new Date(competitionPhase.date_to).getTime();
-        const now: number = new Date().getTime();
+        store.$log?.debug(`Competition phase date from: ${startDate}`);
+        store.$log?.debug(`Competition phase date to: ${endDate}`);
+        const date = new Date();
+        const now: number = date.getTime();
+        store.$log?.debug(`Competition phase now date: ${now}`);
         return now >= startDate && now <= endDate;
       }
+      store.$log?.debug('No competition phase found.');
       return false;
     },
     setChallengeStatus(status: ChallengeStatus): void {
@@ -64,6 +69,6 @@ export const useChallengeStore = defineStore('challenge', {
   actions: {},
 
   persist: {
-    pick: ['phaseSet', 'isChallengeActive'],
+    pick: ['phaseSet'],
   },
 });
