@@ -122,8 +122,10 @@ export const useRegisterStore = defineStore('register', {
      */
     async checkEmailVerification(): Promise<void> {
       const { apiFetch } = useApi();
-      this.$log?.debug(`Checking email verification for <${this.email}>.`);
       const loginStore = useLoginStore();
+      this.$log?.debug(
+        `Checking email verification for <${loginStore.getUserEmail}>.`,
+      );
       // Append access token into HTTP header
       const requestTokenHeader_ = { ...requestTokenHeader };
       requestTokenHeader_.Authorization += loginStore.getAccessToken;
