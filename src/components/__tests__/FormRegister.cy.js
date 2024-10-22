@@ -370,33 +370,35 @@ describe('<FormRegister>', () => {
         i18n,
       );
       const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('registerResponse.json').then((registerResponse) => {
-        // intercept registration API call
-        cy.intercept('POST', apiRegisterUrl, {
-          statusCode: httpSuccessfullStatus,
-          body: registerResponse,
-        }).then(() => {
-          // register
-          cy.wrap(registerStore.register(testEmail, testPassword)).then(
-            (response) => {
-              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-                'be.visible',
-              );
-              // wait for success message to disappear
-              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-                'not.exist',
-              );
-              // test function return value
-              expect(response).to.deep.equal(registerResponse);
-              // store state
-              expect(loginStore.getUserEmail).to.equal(
-                registerResponse.user.email,
-              );
-              expect(registerStore.getIsEmailVerified).to.equal(false);
-            },
-          );
-        });
-      });
+      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+        (registerResponse) => {
+          // intercept registration API call
+          cy.intercept('POST', apiRegisterUrl, {
+            statusCode: httpSuccessfullStatus,
+            body: registerResponse,
+          }).then(() => {
+            // register
+            cy.wrap(registerStore.register(testEmail, testPassword)).then(
+              (response) => {
+                cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                  'be.visible',
+                );
+                // wait for success message to disappear
+                cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                  'not.exist',
+                );
+                // test function return value
+                expect(response).to.deep.equal(registerResponse);
+                // store state
+                expect(registerStore.getEmail).to.equal(
+                  registerResponse.user.email,
+                );
+                expect(registerStore.getIsEmailVerified).to.equal(false);
+              },
+            );
+          });
+        },
+      );
     });
   });
 
@@ -456,30 +458,34 @@ describe('<FormRegister>', () => {
         i18n,
       );
       const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('registerResponse.json').then((registerResponse) => {
-        // intercept registration API call
-        cy.intercept('POST', apiRegisterUrl, {
-          statusCode: httpSuccessfullStatus,
-          body: registerResponse,
-        }).as('registerRequest');
-        // fill in form
-        cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
-        cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
-        cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(testPassword);
-        // accept privacy policy
-        cy.dataCy(selectorFormRegisterPrivacyConsent)
-          .should('be.visible')
-          .click('topLeft');
-        // submit form
-        cy.dataCy(selectorFormRegisterSubmit).should('be.visible').click();
-        // check that form is submitted
-        cy.wait('@registerRequest')
-          .its('response.statusCode')
-          .should('be.equal', httpSuccessfullStatus)
-          .then(() => {
-            compareRegisterResponseWithStore(registerResponse);
-          });
-      });
+      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+        (registerResponse) => {
+          // intercept registration API call
+          cy.intercept('POST', apiRegisterUrl, {
+            statusCode: httpSuccessfullStatus,
+            body: registerResponse,
+          }).as('registerRequest');
+          // fill in form
+          cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
+          cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
+          cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
+            testPassword,
+          );
+          // accept privacy policy
+          cy.dataCy(selectorFormRegisterPrivacyConsent)
+            .should('be.visible')
+            .click('topLeft');
+          // submit form
+          cy.dataCy(selectorFormRegisterSubmit).should('be.visible').click();
+          // check that form is submitted
+          cy.wait('@registerRequest')
+            .its('response.statusCode')
+            .should('be.equal', httpSuccessfullStatus)
+            .then(() => {
+              compareRegisterResponseWithStore(registerResponse);
+            });
+        },
+      );
     });
   });
 
@@ -521,26 +527,30 @@ describe('<FormRegister>', () => {
         i18n,
       );
       const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('registerResponse.json').then((registerResponse) => {
-        // intercept registration API call
-        cy.intercept('POST', apiRegisterUrl, {
-          statusCode: httpSuccessfullStatus,
-          body: registerResponse,
-        }).as('registerRequest');
-        // fill in form
-        cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
-        cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
-        cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(testPassword);
-        // submit form
-        cy.dataCy(selectorFormRegisterSubmit).should('be.visible').click();
-        // check that form is submitted
-        cy.wait('@registerRequest')
-          .its('response.statusCode')
-          .should('be.equal', httpSuccessfullStatus)
-          .then(() => {
-            compareRegisterResponseWithStore(registerResponse);
-          });
-      });
+      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+        (registerResponse) => {
+          // intercept registration API call
+          cy.intercept('POST', apiRegisterUrl, {
+            statusCode: httpSuccessfullStatus,
+            body: registerResponse,
+          }).as('registerRequest');
+          // fill in form
+          cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
+          cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
+          cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
+            testPassword,
+          );
+          // submit form
+          cy.dataCy(selectorFormRegisterSubmit).should('be.visible').click();
+          // check that form is submitted
+          cy.wait('@registerRequest')
+            .its('response.statusCode')
+            .should('be.equal', httpSuccessfullStatus)
+            .then(() => {
+              compareRegisterResponseWithStore(registerResponse);
+            });
+        },
+      );
     });
   });
 });
