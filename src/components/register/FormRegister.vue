@@ -49,10 +49,11 @@ export default defineComponent({
   },
   emits: ['formSubmit'],
   setup() {
+    const defaultFormRegisterValue = '';
     const formRegister = reactive({
-      email: '',
-      password1: '',
-      password2: '',
+      email: defaultFormRegisterValue,
+      password1: defaultFormRegisterValue,
+      password2: defaultFormRegisterValue,
     });
 
     const registerStore = useRegisterStore();
@@ -74,9 +75,9 @@ export default defineComponent({
     };
 
     const onReset = (): void => {
-      formRegister.email = '';
-      formRegister.password1 = '';
-      formRegister.password2 = '';
+      formRegister.email = defaultFormRegisterValue;
+      formRegister.password1 = defaultFormRegisterValue;
+      formRegister.password2 = defaultFormRegisterValue;
     };
 
     const { getPaletteColor, changeAlpha } = colors;
