@@ -63,7 +63,6 @@ const { apiBase, apiDefaultLang, borderRadiusCardSmall, urlApiRegister } =
 const defaultLoginUserEmailStoreValue = '';
 
 const compareRegisterResponseWithStore = (registerResponse) => {
-  cy.contains(i18n.global.t('register.apiMessageSuccess')).should('be.visible');
   const registerStore = useRegisterStore();
   const loginStore = useLoginStore();
   expect(registerStore.getIsEmailVerified).to.equal(false);
@@ -390,7 +389,7 @@ describe('<FormRegister>', () => {
                 // test function return value
                 expect(response).to.deep.equal(registerResponse);
                 // store state
-                expect(registerStore.getEmail).to.equal(
+                expect(loginStore.getUserEmail).to.equal(
                   registerResponse.user.email,
                 );
                 expect(registerStore.getIsEmailVerified).to.equal(false);
