@@ -222,7 +222,7 @@ export default defineComponent({
                     <q-btn
                       flat
                       round
-                      v-for="link in socialLinksList"
+                      v-for="link in socialLinks"
                       :key="link.icon"
                       :title="link.title"
                       data-cy="footer-social-menu-button"
