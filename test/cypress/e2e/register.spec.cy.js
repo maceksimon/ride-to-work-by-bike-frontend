@@ -3,8 +3,8 @@ import {
   testBackgroundImage,
   httpSuccessfullStatus,
   httpInternalServerErrorStatus,
-  systemTime,
-  systemTimeChallenge,
+  systemTimeLoggedIn,
+  systemTimeChallengeActive,
   setupApiChallengeActive,
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
@@ -160,7 +160,7 @@ describe('Register page', () => {
             }).as('emailVerificationRequest');
 
             cy.clock().then((clock) => {
-              clock.setSystemTime(systemTime);
+              clock.setSystemTime(systemTimeLoggedIn);
               // fill form
               cy.dataCy(selectorFormRegisterEmail)
                 .find('input')
@@ -236,7 +236,7 @@ describe('Register page', () => {
 
   context('active challenge', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallenge);
+      cy.clock(systemTimeChallengeActive);
       cy.visit('#' + routesConf['register']['path']);
       cy.viewport('macbook-16');
 

@@ -11,7 +11,7 @@ import { useLoginStore } from '../../stores/login';
 import {
   httpSuccessfullStatus,
   httpInternalServerErrorStatus,
-  systemTimeChallenge,
+  systemTimeChallengeActive,
   systemTimeChallengeInactive,
 } from '../../../test/cypress/support/commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
@@ -489,7 +489,7 @@ describe('<FormRegister>', () => {
       cy.clock()
         .as('clock')
         .then((clock) => {
-          clock.setSystemTime(systemTimeChallenge);
+          clock.setSystemTime(systemTimeChallengeActive);
         });
       cy.mount(FormRegister, {
         props: {},

@@ -3,7 +3,7 @@ import {
   setupApiChallengeInactive,
   setupApiChallengeActive,
   loginWithUI,
-  systemTimeChallenge,
+  systemTimeChallengeActive,
   systemTimeChallengeInactive,
 } from '../support/commonTests';
 
@@ -43,7 +43,7 @@ describe('Router rules', () => {
 
   context('challenge active', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallenge);
+      cy.clock(systemTimeChallengeActive);
       cy.visit('#' + routesConf['login']['path']);
       cy.viewport('macbook-16');
 
