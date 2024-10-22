@@ -368,8 +368,9 @@ export const setupApiChallengeInactive = (
     statusCode: httpSuccessfullStatus,
     body: { has_user_verified_email_address: verifiedEmail },
   }).as('verifyEmail');
+  // set system time to "before challenge"
   cy.clock().then((clock) => {
-    clock.setSystemTime(systemTime);
+    clock.setSystemTime(systemTimeChallengeInactive);
   });
 };
 
