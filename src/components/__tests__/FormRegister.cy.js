@@ -58,6 +58,7 @@ const testEmail = 'test@test.com';
 const testPassword = '12345a';
 const { apiBase, apiDefaultLang, borderRadiusCardSmall, urlApiRegister } =
   rideToWorkByBikeConfig;
+const defaultLoginUserEmailStoreValue = '';
 
 const compareRegisterResponseWithStore = (registerResponse) => {
   cy.contains(i18n.global.t('register.apiMessageSuccess')).should('be.visible');
@@ -318,7 +319,7 @@ describe('<FormRegister>', () => {
       const registerStore = useRegisterStore();
       const loginStore = useLoginStore();
       // default store state
-      expect(loginStore.getUserEmail).to.equal('');
+      expect(loginStore.getUserEmail).to.equal(defaultLoginUserEmailStoreValue);
       expect(registerStore.getIsEmailVerified).to.equal(false);
       // variables
       const apiBaseUrl = getApiBaseUrlWithLang(
@@ -337,7 +338,9 @@ describe('<FormRegister>', () => {
         (response) => {
           expect(response).to.deep.equal(null);
           // state does not change
-          expect(loginStore.getUserEmail).to.equal('');
+          expect(loginStore.getUserEmail).to.equal(
+            defaultLoginUserEmailStoreValue,
+          );
           expect(registerStore.getIsEmailVerified).to.equal(false);
           // error is shown
           cy.contains(
@@ -351,7 +354,7 @@ describe('<FormRegister>', () => {
       const registerStore = useRegisterStore();
       const loginStore = useLoginStore();
       // default store state
-      expect(loginStore.getUserEmail).to.equal('');
+      expect(loginStore.getUserEmail).to.equal(defaultLoginUserEmailStoreValue);
       expect(registerStore.getIsEmailVerified).to.equal(false);
       // variables
       const apiBaseUrl = getApiBaseUrlWithLang(
