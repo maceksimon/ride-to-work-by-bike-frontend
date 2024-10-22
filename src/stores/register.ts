@@ -81,7 +81,7 @@ export const useRegisterStore = defineStore('register', {
 
       if (data?.user?.email) {
         // set isEmailVerified in store
-        this.$log?.info('Setting isEmailVerified flag.');
+        this.$log?.info('Setting isEmailVerified state.');
         this.setIsEmailVerified(false);
         this.$log?.debug(
           `Register store set isEmailVerified to <${this.getIsEmailVerified}>.`,
