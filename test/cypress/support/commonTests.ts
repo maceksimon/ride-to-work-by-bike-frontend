@@ -262,19 +262,91 @@ export const testRouteListDayDate = (): void => {
   });
 };
 
-export const loginChallengeInactive = (
+export const loginWithUI = (): void => {
+  cy.dataCy('form-email-input').type('test@test.com');
+  cy.dataCy('form-login-password-input').type('test1234');
+  cy.dataCy('form-login-submit-login').click();
+};
+
+export const setupApiChallengeActive = (
   config: ConfigGlobal,
   i18n: I18n,
+  verifiedEmail: boolean,
 ): void => {
   const {
     apiBase,
     apiDefaultLang,
     urlApiLogin,
     urlApiRefresh,
+    urlApiRegister,
     urlApiHasUserVerifiedEmail,
   } = config;
-  // intercept login API call
   const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  // intercept register API call
+  const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
+  cy.fixture('loginRegisterResponseChallengeActive.json').then(
+    (registerResponse) => {
+      cy.intercept('POST', apiRegisterUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: registerResponse,
+      }).as('registerRequest');
+    },
+  );
+  // intercept login API call
+  const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
+  cy.fixture('loginRegisterResponseChallengeActive.json').then(
+    (loginResponse) => {
+      cy.intercept('POST', apiLoginUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: loginResponse,
+      }).as('loginRequest');
+    },
+  );
+  // intercept refresh token API call
+  const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
+  cy.fixture('refreshTokensResponseChallengeActive.json').then(
+    (refreshTokensResponse) => {
+      cy.intercept('POST', apiRefreshUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: refreshTokensResponse,
+      }).as('refreshTokens');
+    },
+  );
+  // intercept verify email API call
+  const apiHasUserVerifiedEmailUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
+  cy.intercept('GET', apiHasUserVerifiedEmailUrl, {
+    statusCode: httpSuccessfullStatus,
+    body: { has_user_verified_email_address: verifiedEmail },
+  }).as('verifyEmail');
+  // set system time to "during challenge"
+  cy.clock().then((clock) => {
+    clock.setSystemTime(systemTimeChallenge);
+  });
+};
+
+export const setupApiChallengeInactive = (
+  config: ConfigGlobal,
+  i18n: I18n,
+  verifiedEmail: boolean,
+): void => {
+  const {
+    apiBase,
+    apiDefaultLang,
+    urlApiLogin,
+    urlApiRefresh,
+    urlApiRegister,
+    urlApiHasUserVerifiedEmail,
+  } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  // intercept register API call
+  const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
+  cy.fixture('loginResponse.json').then((registerResponse) => {
+    cy.intercept('POST', apiRegisterUrl, {
+      statusCode: httpSuccessfullStatus,
+      body: registerResponse,
+    }).as('registerRequest');
+  });
+  // intercept login API call
   const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
   cy.fixture('loginResponse.json').then((loginResponse) => {
     cy.intercept('POST', apiLoginUrl, {
@@ -294,63 +366,11 @@ export const loginChallengeInactive = (
   const apiHasUserVerifiedEmailUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
   cy.intercept('GET', apiHasUserVerifiedEmailUrl, {
     statusCode: httpSuccessfullStatus,
-    body: { has_user_verified_email_address: true },
+    body: { has_user_verified_email_address: verifiedEmail },
   }).as('verifyEmail');
   cy.clock().then((clock) => {
     clock.setSystemTime(systemTime);
   });
-  // visit login page
-  cy.visit('#' + routesConf['login']['path']);
-  cy.dataCy('form-email-input').type('test@test.com');
-  cy.dataCy('form-login-password-input').type('test1234');
-  cy.dataCy('form-login-submit-login').click();
-};
-
-export const loginChallengeActive = (
-  config: ConfigGlobal,
-  i18n: I18n,
-): void => {
-  const {
-    apiBase,
-    apiDefaultLang,
-    urlApiLogin,
-    urlApiRefresh,
-    urlApiHasUserVerifiedEmail,
-  } = config;
-  // intercept login API call
-  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
-  const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
-  cy.fixture('loginResponseChallengeActive.json').then((loginResponse) => {
-    cy.intercept('POST', apiLoginUrl, {
-      statusCode: httpSuccessfullStatus,
-      body: loginResponse,
-    }).as('loginRequest');
-  });
-
-  // intercept refresh token API call
-  const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
-  cy.fixture('refreshTokensResponseChallengeActive.json').then(
-    (refreshTokensResponse) => {
-      cy.intercept('POST', apiRefreshUrl, {
-        statusCode: httpSuccessfullStatus,
-        body: refreshTokensResponse,
-      }).as('refreshTokens');
-    },
-  );
-  // intercept verify email API call
-  const apiHasUserVerifiedEmailUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
-  cy.intercept('GET', apiHasUserVerifiedEmailUrl, {
-    statusCode: httpSuccessfullStatus,
-    body: { has_user_verified_email_address: true },
-  }).as('verifyEmail');
-  cy.clock().then((clock) => {
-    clock.setSystemTime(systemTimeChallenge);
-  });
-  // visit login page
-  cy.visit('#' + routesConf['login']['path']);
-  cy.dataCy('form-email-input').type('test@test.com');
-  cy.dataCy('form-login-password-input').type('test1234');
-  cy.dataCy('form-login-submit-login').click();
 };
 
 export const httpSuccessfullStatus = 200;

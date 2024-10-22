@@ -1,7 +1,8 @@
 import { routesConf } from '../../../src/router/routes_conf';
 import {
-  loginChallengeInactive,
-  loginChallengeActive,
+  setupApiChallengeInactive,
+  setupApiChallengeActive,
+  loginWithUI,
   systemTimeChallenge,
   systemTimeChallengeInactive,
 } from '../support/commonTests';
@@ -28,7 +29,8 @@ describe('Router rules', () => {
     it('after login, redirects to challenge inactive page', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          loginChallengeInactive(config, i18n);
+          setupApiChallengeInactive(config, i18n, true);
+          loginWithUI();
           cy.url().should('include', routesConf['challenge_inactive']['path']);
           // try to access other pages
           cy.visit('#' + routesConf['prizes']['path']);
@@ -60,7 +62,8 @@ describe('Router rules', () => {
     it('after login, redirects to home page', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          loginChallengeActive(config, i18n);
+          setupApiChallengeActive(config, i18n, true);
+          loginWithUI();
           cy.clock().then((clock) => {
             clock.tick(1000);
             cy.url().should('not.include', routesConf['login']['path']);
