@@ -253,7 +253,7 @@ describe('Register page', () => {
       });
     });
 
-    it.only('redirects to home page after registering and verifying email and allows logout', () => {
+    it('redirects to home page after registering and verifying email and allows logout', () => {
       cy.get('@i18n').then((i18n) => {
         cy.get('@config').then((config) => {
           // fill form
