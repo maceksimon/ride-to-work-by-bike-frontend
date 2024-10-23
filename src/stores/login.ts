@@ -20,17 +20,16 @@ import { useRegisterStore } from './register';
 // types
 import type { Logger } from '../components/types/Logger';
 import type { UserLogin } from '../components/types/User';
-import type { LoginResponse } from 'src/components/types/Login';
+import type {
+  FacebookAuthResponse,
+  LoginPayload,
+  LoginResponse,
+} from 'src/components/types/Login';
 
 declare module 'pinia' {
   export interface PiniaCustomProperties {
     $router: Router;
   }
-}
-
-interface LoginPayload {
-  username: string;
-  password: string;
 }
 
 interface RefreshTokenResponse {
@@ -150,7 +149,45 @@ export const useLoginStore = defineStore('login', {
         translationKey: 'login',
         logger: this.$log,
       });
-      // set user
+
+      this.processLoginResponse(data);
+
+      return data;
+    },
+    /**
+     * Login with Facebook
+     * @returns Promise<void>
+     */
+    async loginWithFacebook(
+      authResponse: FacebookAuthResponse,
+    ): Promise<LoginResponse | null> {
+      if (!authResponse) {
+        Notify.create({
+          message: i18n.global.t('login.form.messageGoogleAuthNotAvailable'),
+          color: 'negative',
+        });
+        return null;
+      }
+      this.$log?.debug(
+        `Facebook login access token <${authResponse.accessToken}>.`,
+      );
+      // login
+      this.$log?.info('Get API access/refresh token.');
+      const { data } = await apiFetch<LoginResponse>({
+        endpoint: rideToWorkByBikeConfig.urlApiLoginFacebook,
+        method: 'post',
+        payload: {
+          token: authResponse.accessToken,
+        },
+        translationKey: 'login',
+        logger: this.$log,
+      });
+
+      this.processLoginResponse(data);
+
+      return data;
+    },
+    async processLoginResponse(data: LoginResponse | null): Promise<void> {
       if (data && data.user) {
         this.$log?.info('Save user data into login store.');
         this.setUser(data.user);
@@ -181,8 +218,6 @@ export const useLoginStore = defineStore('login', {
           });
         }
       }
-
-      return data;
     },
     /**
      * Logout user
@@ -408,37 +443,6 @@ export const useLoginStore = defineStore('login', {
       }
 
       return data;
-    },
-    /**
-     * Login with Facebook
-     * @returns Promise<void>
-     */
-    async loginWithFacebook() {
-      // @ts-expect-error: FB is not typed
-      const { authResponse } = await new Promise(FB.login);
-
-      if (!authResponse) {
-        Notify.create({
-          message: i18n.global.t('login.form.messageGoogleAuthNotAvailable'),
-          color: 'negative',
-        });
-        return;
-      }
-
-      const token = authResponse.accessToken;
-
-      const { data } = await apiFetch<LoginResponse>({
-        endpoint: rideToWorkByBikeConfig.urlApiLogin,
-        method: 'post',
-        payload: {
-          token,
-        },
-        translationKey: 'login',
-        logger: this.$log,
-      });
-
-      // TODO: continue with implementation based on https://jasonwatmore.com/post/2020/10/06/vue-3-facebook-login-tutorial-example?ref=morioh.com&utm_source=morioh.com
-      console.log(data);
     },
   },
 

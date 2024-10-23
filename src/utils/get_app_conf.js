@@ -31,7 +31,8 @@ const getAppConfig = (process) => {
     config['colorSecondaryBackgroundOpacity'] =
       process.env.COLOR_SECONDARY_BACKGROUND_OPACITY;
   } else if (process.env.COLOR_WHITE_BACKGROUND_OPACITY) {
-    config['colorWhiteBackgroundOpacity'] = process.env.COLOR_WHITE_BACKGROUND_OPACITY;
+    config['colorWhiteBackgroundOpacity'] =
+      process.env.COLOR_WHITE_BACKGROUND_OPACITY;
   } else if (process.env.IMAGE) {
     config['image'] = process.env.IMAGE;
   } else if (process.env.WIDTH) {
@@ -48,6 +49,8 @@ const getAppConfig = (process) => {
     config['borderRadiusCardSmall'] = process.env.BORDER_RADIUS_CARD_SMALL;
   } else if (process.env.MAX_WIDTH_BANNER) {
     config['maxWidthBanner'] = process.env.MAX_WIDTH_BANNER;
+  } else if (process.env.FACEBOOK_LOGIN_APP_ID) {
+    config['facebookLoginAppId'] = process.env.FACEBOOK_LOGIN_APP_ID;
   } else if (process.env.URL_AUTO_MAT) {
     config['urlAutoMat'] = process.env.URL_AUTO_MAT;
   } else if (process.env.URL_FACEBOOK) {
@@ -100,6 +103,8 @@ const getAppConfig = (process) => {
       process.env.URL_API_HAS_USER_VERIFIED_EMAIL;
   } else if (process.env.URL_API_LOGIN) {
     config['urlApiLogin'] = process.env.URL_API_LOGIN;
+  } else if (process.env.URL_API_LOGIN_FACEBOOK) {
+    config['urlApiLoginFacebook'] = process.env.URL_API_LOGIN_FACEBOOK;
   } else if (process.env.URL_API_REFRESH) {
     config['urlApiRefresh'] = process.env.URL_API_REFRESH;
   } else if (process.env.URL_API_REGISTER) {
