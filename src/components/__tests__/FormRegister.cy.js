@@ -417,7 +417,7 @@ describe('<FormRegister>', () => {
 
     it('shows a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeActive).to.equal(false);
+      expect(challengeStore.getIsChallengeInActivePhase).to.equal(false);
       cy.dataCy(selectorFormRegisterTextNoActiveChallenge)
         .should('be.visible')
         .and('have.css', 'font-size', `${fontSizeText}px`)
@@ -504,20 +504,20 @@ describe('<FormRegister>', () => {
 
     it('does not show a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeActive).to.equal(true);
+      expect(challengeStore.getIsChallengeInActivePhase).to.equal(true);
       cy.dataCy(selectorFormRegisterTextNoActiveChallenge).should('not.exist');
     });
 
     it('does not show checkboxes for privacy policy and newsletter subscription', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeActive).to.equal(true);
+      expect(challengeStore.getIsChallengeInActivePhase).to.equal(true);
       cy.dataCy(selectorFormRegisterPrivacyConsent).should('not.exist');
       cy.dataCy(selectorFormRegisterNewsletterSubscription).should('not.exist');
     });
 
     it('allows to submit form after filling fields and accepting privacy policy', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeActive).to.equal(true);
+      expect(challengeStore.getIsChallengeInActivePhase).to.equal(true);
       // variables
       const apiBaseUrl = getApiBaseUrlWithLang(
         null,

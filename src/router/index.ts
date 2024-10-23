@@ -54,7 +54,7 @@ export default route(function (/* { store, ssrContext } */) {
       const isAuthenticated: boolean = await loginStore.validateAccessToken();
       const isEmailVerified: boolean = registerStore.getIsEmailVerified;
       const isChallengeActive: boolean =
-        useChallengeStore().getIsChallengeActive;
+        useChallengeStore().getIsChallengeInActivePhase;
 
       logger?.debug(`Router path <${to.path}>.`);
       logger?.debug(`Router from path <${from.path}>.`);
