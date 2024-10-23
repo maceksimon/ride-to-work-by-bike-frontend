@@ -66,7 +66,6 @@ module.exports = configure(function (ctx) {
         RIDE_TO_WORK_BY_BIKE_DEPLOYED_VERSION: JSON.stringify(
           getDeployedAppVersion(),
         ),
-        FACEBOOK_APP_ID: process.env.FACEBOOK_APP_ID,
       },
 
       vueRouterMode: 'hash', // available values: 'hash', 'history'
@@ -116,7 +115,7 @@ module.exports = configure(function (ctx) {
 
     // Full list of options: https://v2.quasar.dev/quasar-cli-vite/quasar-config-js#devServer
     devServer: {
-      // https: true
+      https: true,
       open: true, // opens browser window automatically
     },
 

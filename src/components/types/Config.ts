@@ -15,6 +15,7 @@ export interface ConfigGlobal {
   width: string;
   title: string;
   subtitle: string;
+  facebookLoginAppId: string;
   borderRadiusCard: string;
   borderRadiusCardSmall: string;
   borderRadiusButtonSmall: string;
@@ -49,6 +50,7 @@ export interface ConfigGlobal {
   urlApiLogin: string;
   urlApiLoginGoogle: string;
   urlApiOrganizations: string;
+  urlApiLoginFacebook: string;
   urlApiRefresh: string;
   urlApiRegister: string;
   urlApiRegisterCoordinator: string;

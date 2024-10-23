@@ -32,13 +32,17 @@ import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-compone
 import { i18n } from '../../boot/i18n';
 
 // config
-import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+
+// enums
+import { FacebookLoginStatus } from '../types/Login';
 
 // stores
-import { useLoginStore } from '../../stores/login';
+import { useLoginStore } from 'src/stores/login';
 
 // types
 import type { Logger } from '../types/Logger';
+import type { FacebookLoginResponse } from '../types/Login';
 
 export default defineComponent({
   name: 'LoginRegisterButtons',
@@ -52,7 +56,8 @@ export default defineComponent({
     },
   },
   setup() {
-    const facebookAppId = process.env.FACEBOOK_APP_ID;
+    const loginStore = useLoginStore();
+    const facebookLoginAppId = rideToWorkByBikeConfig.facebookLoginAppId;
 
     const logger: Logger | undefined = inject('vuejs3-logger');
     const loginStore = useLoginStore();
@@ -101,8 +106,32 @@ export default defineComponent({
         ` <${isGoogleLoginAvailable}>.`,
     );
 
-    const onFacebookLogin = (response: unknown) => {
-      console.log(response);
+    const onFacebookLogin = (response: FacebookLoginResponse) => {
+      logger?.debug(
+        `Facebook login response <${JSON.stringify(response, null, 2)}>.`,
+      );
+      logger?.debug(`Facebook login response status <${response.status}>.`);
+      if (
+        response.status === FacebookLoginStatus.connected &&
+        response.authResponse
+      ) {
+        loginStore.loginWithFacebook(response.authResponse);
+      } else if (response.status === FacebookLoginStatus.notAuthorized) {
+        Notify.create({
+          message: i18n.global.t('login.form.messageFacebookAuthNotAuthorized'),
+          color: 'negative',
+        });
+      } else {
+        Notify.create({
+          message: i18n.global.t('login.form.messageFacebookAuthNotAvailable'),
+          color: 'negative',
+        });
+      }
+    };
+
+    const onFacebookLogout = () => {
+      logger?.info('Facebook logout.');
+      loginStore.logout();
     };
 
     const facebookLanguage = computed(() => {
@@ -118,12 +147,13 @@ export default defineComponent({
 
     return {
       isGoogleLoginAvailable,
-      facebookAppId,
+      facebookLoginAppId,
       facebookLanguage,
       logger,
       onGoogleLogin,
       onGoogleLoginError,
       onFacebookLogin,
+      onFacebookLogout,
     };
   },
 });
@@ -165,12 +195,13 @@ export default defineComponent({
     </GoogleLogin>
     <!-- Button: Login Facebook -->
     <v-facebook-login-scope
-      :app-id="facebookAppId"
+      :app-id="facebookLoginAppId"
       v-slot="scope"
       version="v6.0"
       :login-options="{ scope: 'email' }"
       :sdk-locale="facebookLanguage"
       @login="onFacebookLogin"
+      @logout="onFacebookLogout"
     >
       <q-btn
         unelevated

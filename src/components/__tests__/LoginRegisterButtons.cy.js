@@ -16,6 +16,11 @@ const white = getPaletteColor('white');
 describe('<LoginRegisterButtons>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
+      ['messageFacebookAuthNotAuthorized', 'messageFacebookAuthNotAvailable'],
+      'login.form',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
       ['buttonGoogle', 'buttonFacebook'],
       'login.buttons',
       i18n,
