@@ -22,7 +22,6 @@ export const useChallengeStore = defineStore('challenge', {
   state: () => ({
     // property set in pinia.js boot file
     $log: null as Logger | null,
-    challengeStatus: ChallengeStatus.before,
     isChallengeActive: true,
     /**
      * Phase set for the current campaign
@@ -36,13 +35,21 @@ export const useChallengeStore = defineStore('challenge', {
   }),
 
   getters: {
-    getChallengeStatus: (state): ChallengeStatus => state.challengeStatus,
+    getChallengeStatus: (): ChallengeStatus => {
+      const thisStore = useChallengeStore();
+      if (thisStore.getIsChallengeInActivePhase) {
+        return ChallengeStatus.during;
+      } else if (thisStore.getIsChallengeInRegistrationPhase) {
+        return ChallengeStatus.before;
+      }
+      return ChallengeStatus.after;
+    },
     /**
      * Gets active challenge status
      * Status is based on phase_set array variable.
      * @returns {boolean}
      */
-    getIsChallengeActive: (store): boolean => {
+    getIsChallengeInActivePhase: (store): boolean => {
       const competitionPhase = store.phaseSet.find(
         (phase: Phase) => phase.phase_type === PhaseType.competition,
       );
@@ -61,8 +68,23 @@ export const useChallengeStore = defineStore('challenge', {
       store.$log?.debug('No competition phase found.');
       return false;
     },
-    setChallengeStatus(status: ChallengeStatus): void {
-      this.challengeStatus = status;
+    getIsChallengeInRegistrationPhase: (store): boolean => {
+      const registrationPhase = store.phaseSet.find(
+        (phase: Phase) => phase.phase_type === PhaseType.registration,
+      );
+      if (registrationPhase) {
+        const startDate: number = new Date(
+          registrationPhase.date_from,
+        ).getTime();
+        const endDate: number = new Date(registrationPhase.date_to).getTime();
+        store.$log?.debug(`Registration phase date from: ${startDate}`);
+        store.$log?.debug(`Registration phase date to: ${endDate}`);
+        const date = new Date();
+        const now: number = date.getTime();
+        return now >= startDate && now <= endDate;
+      }
+      store.$log?.debug('No before phase found.');
+      return false;
     },
   },
 

@@ -59,7 +59,7 @@ export default defineComponent({
     const registerStore = useRegisterStore();
     const challengeStore = useChallengeStore();
     const isActiveChallenge = computed(
-      (): boolean => challengeStore.getIsChallengeActive,
+      (): boolean => challengeStore.getIsChallengeInActivePhase,
     );
     const isPassword = ref<boolean>(true);
     const isPasswordConfirm = ref<boolean>(true);
