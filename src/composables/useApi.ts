@@ -18,6 +18,7 @@ import type { Logger } from '../components/types/Logger';
 
 interface ApiResponse<T> {
   data: T | null;
+  success: boolean;
 }
 
 interface apiData {
@@ -94,7 +95,7 @@ export const useApi = () => {
     showSuccessMessage?: boolean;
   }): Promise<ApiResponse<T>> => {
     try {
-      logger?.info('Call <api()> function with parmeters arguments.');
+      logger?.info('Call <api()> function with parameters arguments.');
       logger?.debug(`<api()> function url parameter argument <${endpoint}>.`);
       logger?.debug(`<api()> function method parameter argument <${method}>.`);
       logger?.debug(
@@ -123,6 +124,7 @@ export const useApi = () => {
       logger?.debug(
         `Response data <${response.data ? JSON.stringify(response.data, null, 2) : null}>.`,
       );
+
       if (response.status >= 200 && response.status < 300) {
         if (showSuccessMessage) {
           Notify.create({
@@ -130,13 +132,15 @@ export const useApi = () => {
             color: 'positive',
           });
         }
-        return { data: response.data };
+        // Check if response data is undefined or null, indicating no body
+        const responseData = response.data !== undefined ? response.data : null;
+        return { data: responseData, success: true };
       } else {
         Notify.create({
           message: i18n.global.t(`${translationKey}.apiMessageError`),
           color: 'negative',
         });
-        return { data: null };
+        return { data: null, success: false };
       }
     } catch (error) {
       logger?.error(`Call to <api()> function raise error <${error}>.`);
@@ -157,7 +161,7 @@ export const useApi = () => {
           color: 'negative',
         });
       }
-      return { data: null };
+      return { data: null, success: false };
     }
   };
 

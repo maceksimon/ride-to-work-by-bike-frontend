@@ -11,9 +11,6 @@
  * @components
  * - `FormFieldCheckboxRequired`: Component to render checkbox input.
  * - `FormFieldCompany`: Component to render company input.
- * - `FormFieldEmail`: Component to render email input.
- * - `FormFieldPassword`: Component to render password input.
- * - `FormFieldPasswordConfirm`: Component to render password confirm input.
  * - `FormFieldPhone`: Component to render phone input.
  * - `FormFieldTextRequired`: Component to render required field.
  *
@@ -29,9 +26,6 @@ import { defineComponent, inject, reactive } from 'vue';
 // components
 import FormFieldCheckboxRequired from './../form/FormFieldCheckboxRequired.vue';
 import FormFieldCompany from '../global/FormFieldCompany.vue';
-import FormFieldEmail from './../global/FormFieldEmail.vue';
-import FormFieldPassword from '../global/FormFieldPassword.vue';
-import FormFieldPasswordConfirm from '../global/FormFieldPasswordConfirm.vue';
 import FormFieldPhone from './../global/FormFieldPhone.vue';
 import FormFieldTextRequired from './../global/FormFieldTextRequired.vue';
 
@@ -55,10 +49,7 @@ export default defineComponent({
   components: {
     FormFieldCheckboxRequired,
     FormFieldCompany,
-    FormFieldEmail,
     FormFieldTextRequired,
-    FormFieldPassword,
-    FormFieldPasswordConfirm,
     FormFieldPhone,
   },
   setup() {
@@ -71,11 +62,8 @@ export default defineComponent({
       organizationType: OrganizationType.company,
       organizationId: '',
       jobTitle: '',
-      email: '',
       newsletter: [] as NewsletterType[],
       phone: '',
-      password: '',
-      passwordConfirm: '',
       responsibility: false,
       terms: false,
     });
@@ -99,14 +87,12 @@ export default defineComponent({
       // build payload
       const payload: RegisterCoordinatorRequest = {
         firstName: formRegisterCoordinator.firstName,
-        lastName: formRegisterCoordinator.lastName,
-        organizationType: formRegisterCoordinator.organizationType,
-        organizationId: formRegisterCoordinator.organizationId,
         jobTitle: formRegisterCoordinator.jobTitle,
-        email: formRegisterCoordinator.email,
+        lastName: formRegisterCoordinator.lastName,
         newsletter: formRegisterCoordinator.newsletter,
+        organizationId:
+          Number(formRegisterCoordinator.organizationId) ?? undefined,
         phone: formRegisterCoordinator.phone,
-        password: formRegisterCoordinator.password,
         responsibility: formRegisterCoordinator.responsibility,
         terms: formRegisterCoordinator.terms,
       };
@@ -199,31 +185,14 @@ export default defineComponent({
             name="form-job-title"
             label="form.labelJobTitle"
             label-short="form.labelJobTitleShort"
-            class="col-12"
+            class="col-sm-6"
             data-cy="form-register-coordinator-job-title"
-          />
-          <!-- Input: email -->
-          <form-field-email
-            v-model="formRegisterCoordinator.email"
-            data-cy="form-register-coordinator-email"
           />
           <!-- Input: phone-->
           <form-field-phone
             v-model="formRegisterCoordinator.phone"
+            class="col-sm-6"
             data-cy="form-register-coordinator-phone"
-          />
-          <!-- Input: password -->
-          <form-field-password
-            v-model="formRegisterCoordinator.password"
-            class="col-12 col-sm-6"
-            data-cy="form-register-coordinator-password"
-          />
-          <!-- Input: password confirm -->
-          <form-field-password-confirm
-            v-model="formRegisterCoordinator.passwordConfirm"
-            :compare-value="formRegisterCoordinator.password"
-            class="col-12 col-sm-6"
-            data-cy="form-register-coordinator-password-confirm"
           />
           <!-- Input: confirm responsibility -->
           <div

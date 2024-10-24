@@ -36,15 +36,21 @@ export const useRegisterStore = defineStore('register', {
     // property set in pinia.js boot file
     $log: null as Logger | null,
     isEmailVerified: false,
+    isRegistrationCompleted: false,
   }),
 
   getters: {
     getIsEmailVerified: (state): boolean => state.isEmailVerified,
+    getIsRegistrationCompleted: (state): boolean =>
+      state.isRegistrationCompleted,
   },
 
   actions: {
     setIsEmailVerified(awaiting: boolean): void {
       this.isEmailVerified = awaiting;
+    },
+    setIsRegistrationCompleted(isCompleted: boolean): void {
+      this.isRegistrationCompleted = isCompleted;
     },
     /**
      * Register user
@@ -164,14 +170,14 @@ export const useRegisterStore = defineStore('register', {
      */
     async registerCoordinator(
       payload: RegisterCoordinatorRequest,
-    ): Promise<RegisterResponse | null> {
+    ): Promise<null> {
       const { apiFetch } = useApi();
       this.$log?.debug(
         `Register coordinator payload <${JSON.stringify(payload, null, 2)}>.`,
       );
       // register
       this.$log?.info('Post API coordinator registration details.');
-      const { data } = await apiFetch<RegisterResponse>({
+      const { data, success } = await apiFetch<null>({
         endpoint: rideToWorkByBikeConfig.urlApiRegisterCoordinator,
         method: 'post',
         payload,
@@ -179,43 +185,24 @@ export const useRegisterStore = defineStore('register', {
         logger: this.$log,
       });
 
-      if (data?.user?.email) {
-        // set email in store
-        this.$log?.info(
-          'Coordinator registration successful. Saving email to store.',
-        );
-        this.setEmail(data.user.email);
-        this.$log?.debug(`Register store saved email <${this.getEmail}>.`);
-        // set isEmailVerified in store
-        this.$log?.info('Setting isEmailVerified flag.');
-        this.setIsEmailVerified(false);
+      if (success) {
+        this.$log?.info('Coordinator registration successful.');
+        // set isRegistrationCompleted in store
         this.$log?.debug(
-          `Register store set isEmailVerified to <${this.getIsEmailVerified}>.`,
+          `Register store setting isRegistrationCompleted to <${true}>.`,
+        );
+        this.setIsRegistrationCompleted(true);
+        this.$log?.debug(
+          `Register store isRegistrationCompleted set to <${this.getIsRegistrationCompleted}>.`,
         );
 
-        // redirect to confirm email page
+        // redirect to home page
         if (this.$router) {
           this.$log?.debug(
-            `Coordinator registration was succcesfull, redirect to <${routesConf['verify_email']['path']}> URL.`,
+            `Coordinator registration succcesfull, redirect to <${routesConf['home']['path']}> URL.`,
           );
-          this.$router.push(routesConf['verify_email']['path']);
+          this.$router.push(routesConf['home']['path']);
         }
-      }
-
-      // set user and tokens
-      if (data && data.access && data.refresh) {
-        const loginStore = useLoginStore();
-        this.$log?.info('Save user data into login store.');
-        loginStore.setUser(data.user);
-        this.$log?.debug(
-          `Login store saved user data <${JSON.stringify(loginStore.getUser, null, 2)}>.`,
-        );
-        setAccessRefreshTokens({
-          access: data.access,
-          refresh: data.refresh,
-          loginStore,
-          $log: this.$log as Logger,
-        });
       }
 
       return data;
