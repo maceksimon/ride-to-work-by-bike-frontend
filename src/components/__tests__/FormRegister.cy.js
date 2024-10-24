@@ -37,12 +37,6 @@ const selectorFormRegisterPasswordConfirmInput =
 const selectorFormRegisterPasswordConfirmIcon =
   'form-register-password-confirm-icon';
 const selectorFormRegisterSubmit = 'form-register-submit';
-const selectorFormRegisterCoordinator = 'form-register-coordinator';
-const selectorFormRegisterCoordinatorDescription =
-  'form-register-coordinator-description';
-const selectorFormRegisterCoordinatorLinkWrapper =
-  'form-register-coordinator-link-wrapper';
-const selectorFormRegisterCoordinatorLink = 'form-register-coordinator-link';
 const selectorFormRegisterLogin = 'form-register-login';
 const selectorFormRegisterLoginLink = 'form-register-login-link';
 const selectorFormRegisterTextNoActiveChallenge =
@@ -59,8 +53,7 @@ const fontWeightText = 400;
 const router = route();
 const testEmail = 'test@test.com';
 const testPassword = '12345a';
-const { apiBase, apiDefaultLang, borderRadiusCardSmall, urlApiRegister } =
-  rideToWorkByBikeConfig;
+const { apiBase, apiDefaultLang, urlApiRegister } = rideToWorkByBikeConfig;
 const defaultLoginUserEmailStoreValue = '';
 
 const compareRegisterResponseWithStore = (registerResponse) => {
@@ -258,45 +251,6 @@ describe('<FormRegister>', () => {
           i18n.global.t('register.form.messagePrivacyConsentRequired'),
         ).should('be.visible');
       });
-    });
-
-    it('renders box with coordinator registration link', () => {
-      const urlRegisterCoordinator = router.resolve({
-        name: 'register-coordinator',
-      }).href;
-      // wrapper
-      cy.dataCy(selectorFormRegisterCoordinator)
-        .should('have.css', 'padding', '16px')
-        .and('have.backgroundColor', whiteOpacity)
-        .and('have.css', 'border-radius', borderRadiusCardSmall);
-      // description
-      cy.dataCy(selectorFormRegisterCoordinatorDescription)
-        .should('have.css', 'font-size', `${fontSizeText}px`)
-        .and('have.css', 'font-weight', `${fontWeightText}`)
-        .and('have.css', 'margin-top', '0px')
-        .and('have.css', 'margin-bottom', '16px')
-        .and('have.color', white)
-        .and(
-          'contain',
-          i18n.global.t('register.form.hintRegisterAsCoordinator'),
-        )
-        .then(($description) => {
-          expect($description.text()).to.equal(
-            i18n.global.t('register.form.hintRegisterAsCoordinator'),
-          );
-        });
-      // spacing
-      cy.dataCy(selectorFormRegisterCoordinatorLinkWrapper)
-        .should('have.css', 'margin-top', '16px')
-        .and('have.css', 'margin-bottom', '0px');
-      // link
-      cy.dataCy(selectorFormRegisterCoordinatorLink)
-        .should('have.color', white)
-        .and('have.attr', 'href', urlRegisterCoordinator)
-        .and(
-          'contain',
-          i18n.global.t('register.form.linkRegisterAsCoordinator'),
-        );
     });
 
     it('renders link to login page', () => {

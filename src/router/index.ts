@@ -144,14 +144,13 @@ export default route(function (/* { store, ssrContext } */) {
         );
         next({ path: routesConf['challenge_inactive']['path'] });
       }
-      // if not authenticated and not on pages: login, register, register_coordinator, redirect to login page.
+      // if not authenticated and not on pages: login, register, redirect to login page.
       else if (
         !isAuthenticated &&
         !to.matched.some(
           (record) =>
             record.path === routesConf['login']['path'] ||
-            record.path === routesConf['register']['path'] ||
-            record.path === routesConf['register_coordinator']['path'],
+            record.path === routesConf['register']['path'],
         )
       ) {
         logger?.debug(
@@ -160,12 +159,10 @@ export default route(function (/* { store, ssrContext } */) {
         logger?.debug(
           `Router path <${routesConf['login']['path']}>,` +
             ` <${routesConf['register']['path']}>` +
-            ` <${routesConf['register_coordinator']['path']}>` +
             ` is not matched <${!to.matched.some(
               (record) =>
                 record.path === routesConf['login']['path'] ||
-                record.path === routesConf['register']['path'] ||
-                record.path === routesConf['register_coordinator']['path'],
+                record.path === routesConf['register']['path'],
             )}>.`,
         );
         logger?.debug(

@@ -88,11 +88,9 @@ export default defineComponent({
       getPaletteColor('white'),
       rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
     );
-    const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
     return {
       whiteOpacity,
-      borderRadius,
       formRegister,
       isActiveChallenge,
       isPassword,
@@ -299,36 +297,6 @@ export default defineComponent({
       />
       <!-- Buttons: Register with 3rd party -->
       <login-register-buttons variant="register" />
-      <!-- Link: Register Coordinator -->
-      <div class="q-mt-xl">
-        <div
-          class="q-pa-md text-body2 text-white"
-          :style="{
-            'background-color': whiteOpacity,
-            'border-radius': borderRadius,
-          }"
-          data-cy="form-register-coordinator"
-        >
-          <p
-            class="q-mt-none q-mb-md"
-            data-cy="form-register-coordinator-description"
-          >
-            {{ $t('register.form.hintRegisterAsCoordinator') }}
-          </p>
-          <p
-            class="q-mt-md q-mb-none"
-            data-cy="form-register-coordinator-link-wrapper"
-          >
-            <router-link
-              :to="{ name: 'register-coordinator' }"
-              class="text-white"
-              data-cy="form-register-coordinator-link"
-            >
-              {{ $t('register.form.linkRegisterAsCoordinator') }}
-            </router-link>
-          </p>
-        </div>
-      </div>
       <!-- Link: Login -->
       <div class="q-mt-lg text-body2 text-white" data-cy="form-register-login">
         <p class="q-my-none">
