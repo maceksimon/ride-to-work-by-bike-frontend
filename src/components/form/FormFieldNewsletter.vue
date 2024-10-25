@@ -4,6 +4,7 @@
  *
  * @description Use this component to render a newsletter subscription form
  * with options.
+ * Note: Used in `FormRegisterCoordinator` and `ProfileDetails` components.
  *
  * @props
  * - `modelValue` (NewsletterType[], required): The array of selected
