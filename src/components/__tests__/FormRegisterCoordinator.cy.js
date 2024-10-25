@@ -29,7 +29,7 @@ const compareRegisterResponseWithStore = () => {
     'be.visible',
   );
   const registerStore = useRegisterStore();
-  expect(registerStore.getIsRegistrationCompleted).to.equal(true);
+  expect(registerStore.getIsRegistrationComplete).to.equal(true);
 };
 
 describe('<FormRegisterCoordinator>', () => {
