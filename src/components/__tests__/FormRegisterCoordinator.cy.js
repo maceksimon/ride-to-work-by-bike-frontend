@@ -4,16 +4,15 @@ import FormRegisterCoordinator from 'components/register/FormRegisterCoordinator
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
-import { httpSuccessfullStatus } from '../../../test/cypress/support/commonTests';
+import {
+  httpSuccessfullStatus,
+  interceptOrganizationsApi,
+} from '../../../test/cypress/support/commonTests';
 import { useRegisterStore } from '../../stores/register';
 
 // variables
-const {
-  apiBase,
-  apiDefaultLang,
-  urlApiOrganizations,
-  urlApiRegisterCoordinator,
-} = rideToWorkByBikeConfig;
+const { apiBase, apiDefaultLang, urlApiRegisterCoordinator } =
+  rideToWorkByBikeConfig;
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -75,6 +74,8 @@ describe('<FormRegisterCoordinator>', () => {
   context('desktop', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      // intercept organizations API call (before mounting component)
+      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
       // get API base URL
       const apiBaseUrl = getApiBaseUrlWithLang(
         null,
@@ -82,38 +83,19 @@ describe('<FormRegisterCoordinator>', () => {
         apiDefaultLang,
         i18n,
       );
-      const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
-      // intercept organizations API call (before mounting component)
-      cy.fixture('formFieldCompany')
-        .as('getCompaniesResponse')
-        .then((formFieldCompanyResponse) => {
-          cy.intercept('GET', urlApiOrganizationsLocalized, {
-            statusCode: httpSuccessfullStatus,
-            body: formFieldCompanyResponse,
-          }).as('getOrganizations');
-        });
-      // intercept create organization API call (before mounting component)
-      cy.fixture('formFieldCompanyCreate').then(
-        (formFieldCompanyCreateResponse) => {
-          cy.intercept('POST', urlApiOrganizationsLocalized, {
-            statusCode: httpSuccessfullStatus,
-            body: formFieldCompanyCreateResponse,
-          }).as('createOrganization');
-        },
-      );
       const urlApiRegisterCoordinatorLocalized = `${apiBaseUrl}${urlApiRegisterCoordinator}`;
       // intercept register coordinator API call (before mounting component)
       cy.intercept('POST', urlApiRegisterCoordinatorLocalized, {
         statusCode: httpSuccessfullStatus,
       }).as('registerCoordinator');
-      cy.get('@getCompaniesResponse').then((getCompaniesResponse) => {
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
         // Register request body
         cy.wrap({
           firstName,
           jobTitle,
           lastName,
           newsletter,
-          organizationId: getCompaniesResponse.results[0].id,
+          organizationId: formFieldCompanyResponse.results[0].id,
           phone,
           responsibility: true,
           terms: true,

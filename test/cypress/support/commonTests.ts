@@ -383,6 +383,29 @@ export const setupApiChallengeInactive = (
   });
 };
 
+export const interceptOrganizationsApi = (config: ConfigGlobal, i18n: I18n) => {
+  const { apiBase, apiDefaultLang, urlApiOrganizations } = config;
+  // get API base URL
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
+  // intercept organizations API call (before mounting component)
+  cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+    cy.intercept('GET', urlApiOrganizationsLocalized, {
+      statusCode: httpSuccessfullStatus,
+      body: formFieldCompanyResponse,
+    }).as('getOrganizations');
+  });
+  // intercept create organization API call (before mounting component)
+  cy.fixture('formFieldCompanyCreate').then(
+    (formFieldCompanyCreateResponse) => {
+      cy.intercept('POST', urlApiOrganizationsLocalized, {
+        statusCode: httpSuccessfullStatus,
+        body: formFieldCompanyCreateResponse,
+      }).as('createOrganization');
+    },
+  );
+};
+
 export const httpSuccessfullStatus = 200;
 export const httpInternalServerErrorStatus = 500;
 export const httpTooManyRequestsStatus = 429;
