@@ -34,30 +34,7 @@ describe('<FormFieldCompany>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      // get API base URL
-      const apiBaseUrl = getApiBaseUrlWithLang(
-        null,
-        apiBase,
-        apiDefaultLang,
-        i18n,
-      );
-      const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
-      // intercept get organizations API call (before mounting component)
-      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-        cy.intercept('GET', apiOrganizationsUrl, {
-          statusCode: httpSuccessfullStatus,
-          body: formFieldCompanyResponse,
-        }).as('getOrganizations');
-      });
-      // intercept create organization API call (before mounting component)
-      cy.fixture('formFieldCompanyCreate').then(
-        (formFieldCompanyCreateResponse) => {
-          cy.intercept('POST', apiOrganizationsUrl, {
-            statusCode: httpSuccessfullStatus,
-            body: formFieldCompanyCreateResponse,
-          }).as('createOrganization');
-        },
-      );
+      interceptOrganizationsApi();
       // mount component
       cy.mount(FormFieldTestWrapper, {
         props: {
@@ -206,30 +183,7 @@ describe('<FormFieldCompany>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      // get API base URL
-      const apiBaseUrl = getApiBaseUrlWithLang(
-        null,
-        apiBase,
-        apiDefaultLang,
-        i18n,
-      );
-      const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
-      // intercept organizations API call (before mounting component)
-      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-        cy.intercept('GET', apiOrganizationsUrl, {
-          statusCode: httpSuccessfullStatus,
-          body: formFieldCompanyResponse,
-        }).as('getOrganizations');
-      });
-      // intercept create organization API call (before mounting component)
-      cy.fixture('formFieldCompanyCreate').then(
-        (formFieldCompanyCreateResponse) => {
-          cy.intercept('POST', apiOrganizationsUrl, {
-            statusCode: httpSuccessfullStatus,
-            body: formFieldCompanyCreateResponse,
-          }).as('createOrganization');
-        },
-      );
+      interceptOrganizationsApi();
       // mount component
       cy.mount(FormFieldTestWrapper, {
         props: {
@@ -244,6 +198,33 @@ describe('<FormFieldCompany>', () => {
       cy.testElementPercentageWidth(cy.dataCy('col-button'), 100);
     });
   });
+
+  function interceptOrganizationsApi() {
+    // get API base URL
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const apiOrganizationsUrl = `${apiBaseUrl}${urlApiOrganizations}`;
+    // intercept organizations API call (before mounting component)
+    cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+      cy.intercept('GET', apiOrganizationsUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: formFieldCompanyResponse,
+      }).as('getOrganizations');
+    });
+    // intercept create organization API call (before mounting component)
+    cy.fixture('formFieldCompanyCreate').then(
+      (formFieldCompanyCreateResponse) => {
+        cy.intercept('POST', apiOrganizationsUrl, {
+          statusCode: httpSuccessfullStatus,
+          body: formFieldCompanyCreateResponse,
+        }).as('createOrganization');
+      },
+    );
+  }
 
   function testCompanyApiResponse() {
     cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
