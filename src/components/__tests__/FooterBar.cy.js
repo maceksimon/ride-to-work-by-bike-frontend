@@ -8,6 +8,7 @@ import {
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
   httpTooManyRequestsStatusMessage,
+  userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
 
 // colors
@@ -238,6 +239,7 @@ function coreTests() {
     cy.request({
       url: rideToWorkByBikeConfig.urlFacebook,
       failOnStatusCode: failOnStatusCode,
+      headers: { ...userAgentHeader },
     }).then((resp) => {
       if (resp.status === httpTooManyRequestsStatus) {
         cy.log(httpTooManyRequestsStatusMessage);
