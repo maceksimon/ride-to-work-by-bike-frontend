@@ -167,7 +167,7 @@ export default defineComponent({
     };
 
     /**
-     * New company logic
+     * Logic for "Create company" action
      * Renders dialog for adding a new company
      * and handles form submission.
      */

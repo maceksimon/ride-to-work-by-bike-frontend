@@ -39,3 +39,24 @@ export interface OrganizationMember {
     amount: number;
   };
 }
+
+// API
+
+export interface OrganizationOption {
+  id: string;
+  name: string;
+}
+
+export interface GetOrganizationsResponse {
+  results: OrganizationOption[];
+}
+
+export interface PostOrganizationsBody {
+  name: string;
+  vatId: string;
+}
+
+export interface PostOrganizationsResponse {
+  id: string;
+  name: string;
+}
