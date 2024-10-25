@@ -36,6 +36,7 @@ export const useRegisterStore = defineStore('register', {
     // property set in pinia.js boot file
     $log: null as Logger | null,
     isEmailVerified: false,
+    // TODO: Get this state from the API
     isRegistrationCompleted: false,
   }),
 
@@ -170,14 +171,14 @@ export const useRegisterStore = defineStore('register', {
      */
     async registerCoordinator(
       payload: RegisterCoordinatorRequest,
-    ): Promise<null> {
+    ): Promise<void> {
       const { apiFetch } = useApi();
       this.$log?.debug(
         `Register coordinator payload <${JSON.stringify(payload, null, 2)}>.`,
       );
       // register
       this.$log?.info('Post API coordinator registration details.');
-      const { data, success } = await apiFetch<null>({
+      const { success } = await apiFetch<null>({
         endpoint: rideToWorkByBikeConfig.urlApiRegisterCoordinator,
         method: 'post',
         payload,
@@ -204,8 +205,6 @@ export const useRegisterStore = defineStore('register', {
           this.$router.push(routesConf['home']['path']);
         }
       }
-
-      return data;
     },
   },
 
