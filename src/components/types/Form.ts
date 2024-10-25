@@ -1,3 +1,7 @@
+// enums
+import { NewsletterType } from '../types/Newsletter';
+
+// types
 import type { Image } from './Image';
 
 export enum TestPaymentVoucher {
@@ -11,13 +15,13 @@ export type FormPersonalDetailsFields = {
   email: string;
   nickname: string;
   gender: string;
-  newsletter: string[];
+  newsletter: NewsletterType[];
   terms: boolean;
 };
 
 export type FormOption = {
   label: string;
-  value: string | FormCompanyAddressFields;
+  value: string | string[] | FormCompanyAddressFields;
   icon?: string;
   description?: string;
 };

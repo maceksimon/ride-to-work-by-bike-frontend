@@ -13,6 +13,7 @@
  * - `FormFieldCompany`: Component to render company input.
  * - `FormFieldPhone`: Component to render phone input.
  * - `FormFieldTextRequired`: Component to render required field.
+ * - `FormFieldNewsletter`: Component to render newsletter input.
  *
  * @example
  * <form-register-coordinator />
@@ -28,16 +29,17 @@ import FormFieldCheckboxRequired from './../form/FormFieldCheckboxRequired.vue';
 import FormFieldCompany from '../global/FormFieldCompany.vue';
 import FormFieldPhone from './../global/FormFieldPhone.vue';
 import FormFieldTextRequired from './../global/FormFieldTextRequired.vue';
+import FormFieldNewsletter from '../form/FormFieldNewsletter.vue';
 
 // composables
-import { i18n } from 'src/boot/i18n';
+import { i18n } from '../../boot/i18n';
 
 // enums
 import { OrganizationType } from '../types/Organization';
 import { NewsletterType } from '../types/Newsletter';
 
 // stores
-import { useRegisterStore } from 'src/stores/register';
+import { useRegisterStore } from '../../stores/register';
 
 // types
 import type { FormOption } from '../types/Form';
@@ -51,6 +53,7 @@ export default defineComponent({
     FormFieldCompany,
     FormFieldTextRequired,
     FormFieldPhone,
+    FormFieldNewsletter,
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
@@ -194,6 +197,12 @@ export default defineComponent({
             class="col-sm-6"
             data-cy="form-register-coordinator-phone"
           />
+          <!-- Input: Newsletter -->
+          <div class="col-12" data-cy="form-personal-details-newsletter">
+            <form-field-newsletter
+              v-model="formRegisterCoordinator.newsletter"
+            />
+          </div>
           <!-- Input: confirm responsibility -->
           <div
             class="col-12"
@@ -204,6 +213,7 @@ export default defineComponent({
               :validation-message="
                 $t('register.coordinator.form.messageResponsibilityRequired')
               "
+              class="q-pt-sm"
             >
               {{ $t('register.coordinator.form.labelResponsibility') }}
             </form-field-checkbox-required>

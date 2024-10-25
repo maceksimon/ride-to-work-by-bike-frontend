@@ -11,6 +11,7 @@
  * @components
  * - `FormFieldTextRequired`: Component to render name, surname, nickname...
  * - `FormFieldRadioRequired`: Component to render gender radio buttons.
+ * - `FormFieldNewsletter`: Component to render newsletter subscription form with options.
  *
  * @example
  * <form-personal-details />
@@ -24,12 +25,14 @@ import { defineComponent, reactive, watch } from 'vue';
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 import FormFieldRadioRequired from './FormFieldRadioRequired.vue';
+import FormFieldNewsletter from './FormFieldNewsletter.vue';
 
 // composables
-import { i18n } from 'src/boot/i18n';
+import { i18n } from '../../boot/i18n';
+import { useNewsletter } from '../../composables/useNewsletter';
 
 // stores
-import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 // types
 import {
@@ -42,6 +45,7 @@ export default defineComponent({
   components: {
     FormFieldTextRequired,
     FormFieldRadioRequired,
+    FormFieldNewsletter,
   },
   setup() {
     const store = useRegisterChallengeStore();
@@ -57,24 +61,9 @@ export default defineComponent({
       { deep: true },
     );
 
-    const newsletterOptions: FormOption[] = [
-      {
-        label: 'form.personalDetails.labelNewsletterAll',
-        value: 'all',
-      },
-      {
-        label: 'form.personalDetails.labelNewsletterChallenges',
-        value: 'challenges',
-      },
-      {
-        label: 'form.personalDetails.labelNewsletterEvents',
-        value: 'events',
-      },
-      {
-        label: 'form.personalDetails.labelNewsletterMobility',
-        value: 'mobility',
-      },
-    ];
+    const { newsletter, isNewsletterAll, getNewsletterFormOptions } =
+      useNewsletter();
+    const newsletterOptions: FormOption[] = getNewsletterFormOptions();
 
     const genderOptions: FormOption[] = [
       {
@@ -89,6 +78,8 @@ export default defineComponent({
 
     return {
       genderOptions,
+      isNewsletterAll,
+      newsletter,
       newsletterOptions,
       personalDetails,
     };
@@ -157,26 +148,8 @@ export default defineComponent({
         />
       </div>
       <!-- Input: Newsletter -->
-      <div class="col-12" data-cy="form-personal-details-newsletter">
-        <!-- Label -->
-        <label for="form-gender" class="text-grey-10 text-caption text-bold">
-          {{ $t('form.personalDetails.titleNewsletter') }}
-        </label>
-        <!-- Checkbox group -->
-        <q-option-group
-          dense
-          v-model="personalDetails.newsletter"
-          :options="newsletterOptions"
-          color="primary"
-          type="checkbox"
-          class="q-gutter-md q-mt-xs"
-          data-cy="form-newsletter-input"
-        >
-          <!-- Default slot: label (used so that label is translated dynamically) -->
-          <template v-slot:label="option">
-            {{ $t(option.label) }}
-          </template>
-        </q-option-group>
+      <div class="col-12">
+        <form-field-newsletter v-model="personalDetails.newsletter" />
       </div>
       <!-- Input: confirm consent -->
       <div class="col-12" data-cy="form-personal-details-terms">
