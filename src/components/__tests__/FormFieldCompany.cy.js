@@ -145,42 +145,62 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('allows to add a new company', () => {
-      cy.dataCy('button-add-company').click();
-      // dialog
-      cy.dataCy('dialog-add-company').should('be.visible');
-      cy.dataCy('dialog-add-company')
-        .find('h3')
-        .should('be.visible')
-        .and('have.css', 'font-size', '20px')
-        .and('have.css', 'font-weight', '500')
-        .and('contain', i18n.global.t('form.company.titleAddCompany'));
-      cy.dataCy('dialog-button-cancel')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('navigation.discard'));
-      cy.dataCy('dialog-button-submit')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('form.company.buttonAddCompany'));
-      // fill form
-      cy.dataCy('form-add-company-name').find('input').type('Test Company');
-      cy.dataCy('form-add-company-vat-id').find('input').type('12345673');
-      // submit form
-      cy.dataCy('dialog-button-submit').click();
-      // test response
-      cy.wait('@createOrganization').then((interception) => {
-        expect(interception.request.headers.authorization).to.include('Bearer');
-        expect(interception.response.statusCode).to.equal(
-          httpSuccessfullStatus,
-        );
-        expect(interception.request.body).to.deep.equal({
-          name: 'Test Company',
-          vatId: '12345673',
-        });
-      });
-      // test selected option
-      cy.dataCy('form-company')
-        .find('input')
-        .invoke('val')
-        .should('eq', 'Test Company');
+      cy.fixture('formFieldCompanyCreateRequest').then(
+        (formFieldCompanyCreateRequest) => {
+          cy.fixture('formFieldCompanyCreate').then(
+            (formFieldCompanyCreateResponse) => {
+              cy.dataCy('button-add-company').click();
+              // dialog
+              cy.dataCy('dialog-add-company').should('be.visible');
+              cy.dataCy('dialog-add-company')
+                .find('h3')
+                .should('be.visible')
+                .and('have.css', 'font-size', '20px')
+                .and('have.css', 'font-weight', '500')
+                .and('contain', i18n.global.t('form.company.titleAddCompany'));
+              cy.dataCy('dialog-button-cancel')
+                .should('be.visible')
+                .and('have.text', i18n.global.t('navigation.discard'));
+              cy.dataCy('dialog-button-submit')
+                .should('be.visible')
+                .and(
+                  'have.text',
+                  i18n.global.t('form.company.buttonAddCompany'),
+                );
+              // fill form
+              cy.dataCy('form-add-company-name')
+                .find('input')
+                .type(formFieldCompanyCreateRequest.name);
+              cy.dataCy('form-add-company-vat-id')
+                .find('input')
+                .type(formFieldCompanyCreateRequest.vatId);
+              // submit form
+              cy.dataCy('dialog-button-submit').click();
+              // test response
+              cy.wait('@createOrganization').then((interception) => {
+                expect(interception.request.headers.authorization).to.include(
+                  'Bearer',
+                );
+                expect(interception.response.statusCode).to.equal(
+                  httpSuccessfullStatus,
+                );
+                expect(interception.request.body).to.deep.equal({
+                  name: formFieldCompanyCreateRequest.name,
+                  vatId: formFieldCompanyCreateRequest.vatId,
+                });
+                expect(interception.response.body).to.deep.equal(
+                  formFieldCompanyCreateResponse,
+                );
+              });
+              // test selected option
+              cy.dataCy('form-company')
+                .find('input')
+                .invoke('val')
+                .should('eq', formFieldCompanyCreateRequest.name);
+            },
+          );
+        },
+      );
     });
   });
 
