@@ -406,6 +406,39 @@ export const interceptOrganizationsApi = (config: ConfigGlobal, i18n: I18n) => {
   );
 };
 
+export const interceptRegisterCoordinatorApi = (
+  config: ConfigGlobal,
+  i18n: I18n,
+) => {
+  const { apiBase, apiDefaultLang, urlApiRegisterCoordinator } = config;
+  // get API base URL
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiRegisterCoordinatorLocalized = `${apiBaseUrl}${urlApiRegisterCoordinator}`;
+  // intercept register coordinator API call (before mounting component)
+  cy.intercept('POST', urlApiRegisterCoordinatorLocalized, {
+    statusCode: httpSuccessfullStatus,
+  }).as('registerCoordinator');
+};
+
+export const fillFormRegisterCoordinator = (): void => {
+  cy.fixture('formRegisterCoordinator').then((formRegisterCoordinatorData) => {
+    cy.dataCy('form-register-coordinator-first-name')
+      .find('input')
+      .type(formRegisterCoordinatorData.firstName);
+    cy.dataCy('form-register-coordinator-last-name')
+      .find('input')
+      .type(formRegisterCoordinatorData.lastName);
+    cy.dataCy('form-register-coordinator-company').find('input').click();
+    cy.get('.q-menu .q-item').first().click();
+    cy.dataCy('form-register-coordinator-job-title')
+      .find('input')
+      .type(formRegisterCoordinatorData.jobTitle);
+    cy.dataCy('form-register-coordinator-phone')
+      .find('input')
+      .type(formRegisterCoordinatorData.phone);
+  });
+};
+
 export const httpSuccessfullStatus = 200;
 export const httpInternalServerErrorStatus = 500;
 export const httpTooManyRequestsStatus = 429;

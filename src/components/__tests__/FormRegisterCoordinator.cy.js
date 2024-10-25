@@ -3,26 +3,16 @@ import { createPinia, setActivePinia } from 'pinia';
 import FormRegisterCoordinator from 'components/register/FormRegisterCoordinator.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
-import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 import {
+  fillFormRegisterCoordinator,
   httpSuccessfullStatus,
   interceptOrganizationsApi,
+  interceptRegisterCoordinatorApi,
 } from '../../../test/cypress/support/commonTests';
 import { useRegisterStore } from '../../stores/register';
 
-// variables
-const { apiBase, apiDefaultLang, urlApiRegisterCoordinator } =
-  rideToWorkByBikeConfig;
-
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
-
-// Form data variables
-const firstName = 'John';
-const lastName = 'Doe';
-const jobTitle = 'IT';
-const phone = '+420 736 456 789';
-const newsletter = [];
 
 const compareRegisterResponseWithStore = () => {
   cy.contains(i18n.global.t('registerCoordinator.apiMessageSuccess')).should(
@@ -76,31 +66,25 @@ describe('<FormRegisterCoordinator>', () => {
       setActivePinia(createPinia());
       // intercept organizations API call (before mounting component)
       interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
-      // get API base URL
-      const apiBaseUrl = getApiBaseUrlWithLang(
-        null,
-        apiBase,
-        apiDefaultLang,
-        i18n,
-      );
-      const urlApiRegisterCoordinatorLocalized = `${apiBaseUrl}${urlApiRegisterCoordinator}`;
       // intercept register coordinator API call (before mounting component)
-      cy.intercept('POST', urlApiRegisterCoordinatorLocalized, {
-        statusCode: httpSuccessfullStatus,
-      }).as('registerCoordinator');
-      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-        // Register request body
-        cy.wrap({
-          firstName,
-          jobTitle,
-          lastName,
-          newsletter,
-          organizationId: formFieldCompanyResponse.results[0].id,
-          phone,
-          responsibility: true,
-          terms: true,
-        }).as('registerRequestBody');
-      });
+      interceptRegisterCoordinatorApi(rideToWorkByBikeConfig, i18n);
+      // specify data for register coordinator request body
+      cy.fixture('formRegisterCoordinator').then(
+        (formRegisterCoordinatorData) => {
+          cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+            cy.wrap({
+              firstName: formRegisterCoordinatorData.firstName,
+              jobTitle: formRegisterCoordinatorData.jobTitle,
+              lastName: formRegisterCoordinatorData.lastName,
+              newsletter: formRegisterCoordinatorData.newsletter,
+              organizationId: formFieldCompanyResponse.results[0].id,
+              phone: formRegisterCoordinatorData.phone,
+              responsibility: true,
+              terms: true,
+            }).as('registerRequestBody');
+          });
+        },
+      );
       cy.mount(FormRegisterCoordinator, {
         props: {},
       });
@@ -188,7 +172,7 @@ describe('<FormRegisterCoordinator>', () => {
 
     it('validates checkboxes correctly', () => {
       // fill in other parts of the form to be able to test password
-      fillForm();
+      fillFormRegisterCoordinator();
       // test responsibility checkbox unchecked
       cy.dataCy('form-register-coordinator-submit')
         .should('be.visible')
@@ -230,7 +214,7 @@ describe('<FormRegisterCoordinator>', () => {
     it('submits form correctly', () => {
       cy.fixture('registerResponse').then(() => {
         // fill in the form
-        fillForm();
+        fillFormRegisterCoordinator();
         // check responsibility checkbox
         cy.dataCy('form-register-coordinator-responsibility')
           .find('.q-checkbox')
@@ -268,19 +252,4 @@ describe('<FormRegisterCoordinator>', () => {
       cy.viewport('iphone-6');
     });
   });
-
-  function fillForm() {
-    cy.dataCy('form-register-coordinator-first-name')
-      .find('input')
-      .type(firstName);
-    cy.dataCy('form-register-coordinator-last-name')
-      .find('input')
-      .type(lastName);
-    cy.dataCy('form-register-coordinator-company').find('input').click();
-    cy.get('.q-menu .q-item').first().click();
-    cy.dataCy('form-register-coordinator-job-title')
-      .find('input')
-      .type(jobTitle);
-    cy.dataCy('form-register-coordinator-phone').find('input').type(phone);
-  }
 });
