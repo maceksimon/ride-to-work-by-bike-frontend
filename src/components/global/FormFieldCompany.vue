@@ -51,25 +51,11 @@ import type {
   FormSelectOption,
 } from 'src/components/types/Form';
 import type { Logger } from 'src/components/types/Logger';
-
-interface CompanyOption {
-  id: string;
-  name: string;
-}
-
-interface GetOrganizationsResponse {
-  results: CompanyOption[];
-}
-
-interface PostOrganizationsBody {
-  name: string;
-  vatId: string;
-}
-
-interface PostOrganizationsResponse {
-  id: string;
-  name: string;
-}
+import type {
+  GetOrganizationsResponse,
+  PostOrganizationsBody,
+  PostOrganizationsResponse,
+} from 'src/components/types/Organization';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
