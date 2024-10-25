@@ -160,10 +160,10 @@ export const useRegisterStore = defineStore('register', {
     /**
      * Register coordinator
      * Sends the coordinator registration request to the API.
+     * This is done AFTER the user is registered.
      * If successful:
-     *   - sets auth tokens from the response
-     *   - sets user data in login store
-     *   - redirects to email verification page
+     *   - sets isRegistrationCompleted flag to true
+     *   - redirects to home page
      * If not successful, returns response data.
      * @param {RegisterCoordinatorRequest} payload - Register coordinator request payload
      * @returns {Promise<RegisterResponse | null>} - Register coordinator response or null

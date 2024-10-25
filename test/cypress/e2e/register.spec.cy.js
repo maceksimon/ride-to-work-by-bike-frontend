@@ -75,13 +75,6 @@ describe('Register page', () => {
       });
     });
 
-    it('renders coordinator registration link', () => {
-      cy.dataCy('form-register-coordinator-link')
-        .should('be.visible')
-        .invoke('attr', 'href')
-        .should('contain', routesConf['register_coordinator']['path']);
-    });
-
     it('renders login link', () => {
       cy.dataCy('form-register-login-link')
         .should('be.visible')
