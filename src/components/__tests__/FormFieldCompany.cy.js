@@ -83,19 +83,7 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('allows user to select option', () => {
-      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-        cy.wait('@getOrganizations').then((interception) => {
-          expect(interception.request.headers.authorization).to.include(
-            'Bearer',
-          );
-          expect(interception.response.statusCode).to.equal(
-            httpSuccessfullStatus,
-          );
-          expect(interception.response.body).to.deep.equal(
-            formFieldCompanyResponse,
-          );
-        });
-      });
+      testCompanyApiResponse();
 
       cy.dataCy('form-company').find('input').click();
       // select option
@@ -112,19 +100,7 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('allows to search through options', () => {
-      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-        cy.wait('@getOrganizations').then((interception) => {
-          expect(interception.request.headers.authorization).to.include(
-            'Bearer',
-          );
-          expect(interception.response.statusCode).to.equal(
-            httpSuccessfullStatus,
-          );
-          expect(interception.response.body).to.deep.equal(
-            formFieldCompanyResponse,
-          );
-        });
-      });
+      testCompanyApiResponse();
 
       // search for option
       cy.dataCy('form-company').find('input').focus();
@@ -168,7 +144,7 @@ describe('<FormFieldCompany>', () => {
       cy.testElementsSideBySide('col-input', 'col-button');
     });
 
-    it.only('allows to add a new company', () => {
+    it('allows to add a new company', () => {
       cy.dataCy('button-add-company').click();
       // dialog
       cy.dataCy('dialog-add-company').should('be.visible');
@@ -248,4 +224,18 @@ describe('<FormFieldCompany>', () => {
       cy.testElementPercentageWidth(cy.dataCy('col-button'), 100);
     });
   });
+
+  function testCompanyApiResponse() {
+    cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+      cy.wait('@getOrganizations').then((interception) => {
+        expect(interception.request.headers.authorization).to.include('Bearer');
+        expect(interception.response.statusCode).to.equal(
+          httpSuccessfullStatus,
+        );
+        expect(interception.response.body).to.deep.equal(
+          formFieldCompanyResponse,
+        );
+      });
+    });
+  }
 });
