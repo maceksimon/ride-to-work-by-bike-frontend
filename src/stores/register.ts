@@ -37,21 +37,20 @@ export const useRegisterStore = defineStore('register', {
     $log: null as Logger | null,
     isEmailVerified: false,
     // TODO: Get this state from the API
-    isRegistrationCompleted: false,
+    isRegistrationComplete: false,
   }),
 
   getters: {
     getIsEmailVerified: (state): boolean => state.isEmailVerified,
-    getIsRegistrationCompleted: (state): boolean =>
-      state.isRegistrationCompleted,
+    getIsRegistrationComplete: (state): boolean => state.isRegistrationComplete,
   },
 
   actions: {
     setIsEmailVerified(awaiting: boolean): void {
       this.isEmailVerified = awaiting;
     },
-    setIsRegistrationCompleted(isCompleted: boolean): void {
-      this.isRegistrationCompleted = isCompleted;
+    setIsRegistrationComplete(isComplete: boolean): void {
+      this.isRegistrationComplete = isComplete;
     },
     /**
      * Register user
@@ -163,7 +162,7 @@ export const useRegisterStore = defineStore('register', {
      * Sends the coordinator registration request to the API.
      * This is done AFTER the user is registered.
      * If successful:
-     *   - sets isRegistrationCompleted flag to true
+     *   - sets isRegistrationComplete flag to true
      *   - redirects to home page
      * If not successful, returns response data.
      * @param {RegisterCoordinatorRequest} payload - Register coordinator request payload
@@ -188,13 +187,13 @@ export const useRegisterStore = defineStore('register', {
 
       if (success) {
         this.$log?.info('Coordinator registration successful.');
-        // set isRegistrationCompleted in store
+        // set isRegistrationComplete in store
         this.$log?.debug(
-          `Register store setting isRegistrationCompleted to <${true}>.`,
+          `Register store setting isRegistrationComplete to <${true}>.`,
         );
-        this.setIsRegistrationCompleted(true);
+        this.setIsRegistrationComplete(true);
         this.$log?.debug(
-          `Register store isRegistrationCompleted set to <${this.getIsRegistrationCompleted}>.`,
+          `Register store isRegistrationComplete set to <${this.getIsRegistrationComplete}>.`,
         );
 
         // redirect to home page

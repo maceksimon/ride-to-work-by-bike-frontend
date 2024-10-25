@@ -96,11 +96,11 @@ export default defineComponent({
         responsibility: formRegisterCoordinator.responsibility,
         terms: formRegisterCoordinator.terms,
       };
+      logger?.debug(
+        `Register coordinator payload <${JSON.stringify(payload)}>`,
+      );
       // register coordinator
-      const data = await registerStore.registerCoordinator(payload);
-      if (data) {
-        logger?.debug(JSON.stringify(data));
-      }
+      await registerStore.registerCoordinator(payload);
     };
 
     const onReset = (): void => {

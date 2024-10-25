@@ -62,6 +62,7 @@ export default route(function (/* { store, ssrContext } */) {
       logger?.debug(`Router is authenticated <${isAuthenticated}>.`);
       logger?.debug(`Router is email verified <${isEmailVerified}>.`);
       logger?.debug(`Router is challenge active <${isChallengeActive}>.`);
+      // TODO: Add condition isRegistrationComplete
 
       // if authenticated and not verified email, redirect to confirm email page
       if (
