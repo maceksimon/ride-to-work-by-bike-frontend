@@ -196,7 +196,7 @@ describe('<FormFieldCompany>', () => {
               cy.dataCy('form-company')
                 .find('input')
                 .invoke('val')
-                .should('eq', formFieldCompanyCreateRequest.name);
+                .should('eq', formFieldCompanyCreateResponse.name);
             },
           );
         },
