@@ -14,11 +14,8 @@ export enum Gender {
   female = 'female',
 }
 
-export type FormPersonalDetailsFields = {
-  firstName?: string;
-  lastName?: string;
+export type FormPersonalDetails = {
   nickname?: string;
-  gender?: Gender | null;
   newsletter?: NewsletterType[];
   phone?: string;
   phonePermit?: boolean;
@@ -27,6 +24,18 @@ export type FormPersonalDetailsFields = {
   ageGroup?: number;
   terms?: boolean;
 };
+
+export interface FormPersonalDetailsFields extends FormPersonalDetails {
+  firstName: string;
+  lastName: string;
+  gender: Gender | null;
+}
+
+export interface FormPersonalDetailsApi extends FormPersonalDetails {
+  firstName?: string;
+  lastName?: string;
+  gender?: Gender | null;
+}
 
 export type FormOption = {
   label: string;

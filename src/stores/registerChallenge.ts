@@ -4,7 +4,10 @@ import { defineStore } from 'pinia';
 import { OrganizationType } from '../components/types/Organization';
 
 // types
-import type { FormPersonalDetailsFields } from '../components/types/Form';
+import type {
+  FormPersonalDetailsApi,
+  FormPersonalDetailsFields,
+} from '../components/types/Form';
 import type { Logger } from '../components/types/Logger';
 
 // composables
@@ -22,13 +25,13 @@ const emptyFormPersonalDetails: FormPersonalDetailsFields = {
   terms: true,
 };
 
-type RegisterChallengeValues = {
-  personalDetails: FormPersonalDetailsFields;
+interface RegisterChallengeValuesApi {
+  personalDetails: FormPersonalDetailsApi;
   organizationId?: number | null;
   subsidiaryId?: number | null;
   teamId?: number | null;
   merchId?: number | null;
-};
+}
 
 /**
  * Store for the register challenge page.
@@ -80,13 +83,13 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     /**
      * Get register challenge values
      * Used on load to check if user has an ongoing registration.
-     * @returns {Promise<RegisterChallengeValues | null>}
+     * @returns {Promise<RegisterChallengeValuesApi | null>}
      */
-    async getRegisterChallengeValues(): Promise<RegisterChallengeValues | null> {
+    async getRegisterChallengeValues(): Promise<RegisterChallengeValuesApi | null> {
       const { apiFetch } = useApi();
       this.$log?.info('Fetching register challenge values from API.');
 
-      const { data } = await apiFetch<RegisterChallengeValues>({
+      const { data } = await apiFetch<RegisterChallengeValuesApi>({
         endpoint: rideToWorkByBikeConfig.urlApiChallengeRegistrationUser,
         method: 'get',
         translationKey: 'registerChallengeGet',
