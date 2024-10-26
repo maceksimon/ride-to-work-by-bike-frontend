@@ -15,12 +15,17 @@ export enum Gender {
 }
 
 export type FormPersonalDetailsFields = {
-  firstName: string;
-  lastName: string;
-  nickname: string;
-  gender: Gender | null;
-  newsletter: NewsletterType[];
-  terms: boolean;
+  firstName?: string;
+  lastName?: string;
+  nickname?: string;
+  gender?: Gender | null;
+  newsletter?: NewsletterType[];
+  phone?: string;
+  phonePermit?: boolean;
+  language?: string;
+  jobTitle?: string;
+  ageGroup?: number;
+  terms?: boolean;
 };
 
 export type FormOption = {

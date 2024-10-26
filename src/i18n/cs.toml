@@ -576,6 +576,11 @@ apiMessageError = "Registrace se nezdařila. Prosím, zkuste to znovu později."
 apiMessageErrorWithMessage = "Registrace se nezdařila. Prosím, zkuste to znovu později. Chyba: {error}"
 apiMessageSuccess = "Registrace byla úspěšná"
 
+[registerChallengeGet]
+apiMessageError = "Chyba při načítání registrace do výzvy"
+apiMessageErrorWithMessage = "Chyba při načítání registrace do výzvy. Chyba: {error}"
+apiMessageSuccess = "Registrace do výzvy byla načtena"
+
 [registerCoordinator]
 apiMessageError = "Registrace koordinátora se nezdařila. Prosím, zkuste to znovu později."
 apiMessageErrorWithMessage = "Registrace koordinátora se nezdařila. Prosím, zkuste to znovu později. Chyba: {error}"

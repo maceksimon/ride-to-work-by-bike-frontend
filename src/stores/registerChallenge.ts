@@ -5,6 +5,13 @@ import { OrganizationType } from '../components/types/Organization';
 
 // types
 import type { FormPersonalDetailsFields } from '../components/types/Form';
+import type { Logger } from '../components/types/Logger';
+
+// composables
+import { useApi } from '../composables/useApi';
+
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 const emptyFormPersonalDetails: FormPersonalDetailsFields = {
   firstName: '',
@@ -15,12 +22,22 @@ const emptyFormPersonalDetails: FormPersonalDetailsFields = {
   terms: true,
 };
 
+type RegisterChallengeValues = {
+  personalDetails: FormPersonalDetailsFields;
+  organizationId?: number | null;
+  subsidiaryId?: number | null;
+  teamId?: number | null;
+  merchId?: number | null;
+};
+
 /**
  * Store for the register challenge page.
  * Holds form values and selected options.
  */
 export const useRegisterChallengeStore = defineStore('registerChallenge', {
   state: () => ({
+    // property set in pinia.js boot file
+    $log: null as Logger | null,
     personalDetails: emptyFormPersonalDetails,
     payment: null, // TODO: add data type options
     organizationType: null as OrganizationType | null,
@@ -59,6 +76,54 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setMerchId(merchId: number | null) {
       this.merchId = merchId;
+    },
+    /**
+     * Get register challenge values
+     * Used on load to check if user has an ongoing registration.
+     * @returns {Promise<RegisterChallengeValues | null>}
+     */
+    async getRegisterChallengeValues(): Promise<RegisterChallengeValues | null> {
+      const { apiFetch } = useApi();
+      this.$log?.info('Fetching register challenge values from API.');
+
+      const { data } = await apiFetch<RegisterChallengeValues>({
+        endpoint: rideToWorkByBikeConfig.urlApiChallengeRegistrationUser,
+        method: 'get',
+        translationKey: 'registerChallengeGet',
+        showSuccessMessage: false,
+        logger: this.$log,
+      });
+
+      if (data) {
+        this.$log?.debug('Register challenge values fetched successfully.');
+        this.$log?.debug(`Fetched data: ${JSON.stringify(data, null, 2)}`);
+
+        // Update store with fetched data
+        if (data.personalDetails) {
+          this.setPersonalDetails({
+            ...this.personalDetails,
+            ...data.personalDetails,
+          });
+        }
+        if (data.organizationId) {
+          this.setOrganizationId(data.organizationId);
+          // TODO: derive organization type from organizationId
+        }
+        if (data.subsidiaryId) {
+          this.setSubsidiaryId(data.subsidiaryId);
+        }
+        if (data.teamId) {
+          this.setTeamId(data.teamId);
+        }
+        if (data.merchId) {
+          this.setMerchId(data.merchId);
+        }
+
+        return data;
+      } else {
+        this.$log?.warn('No data received from register challenge values API.');
+        return null;
+      }
     },
   },
 
