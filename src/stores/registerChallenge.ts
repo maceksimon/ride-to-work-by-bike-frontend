@@ -3,6 +3,18 @@ import { defineStore } from 'pinia';
 // enums
 import { OrganizationType } from '../components/types/Organization';
 
+// composables
+import { useApi } from '../composables/useApi';
+
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
+// utils
+import { requestDefaultHeader, requestTokenHeader } from 'src/utils';
+
+// stores
+import { useLoginStore } from './login';
+
 // types
 import type {
   FormPersonalDetailsApi,
@@ -10,13 +22,7 @@ import type {
 } from '../components/types/Form';
 import type { Logger } from '../components/types/Logger';
 
-// composables
-import { useApi } from '../composables/useApi';
-
-// config
-import { rideToWorkByBikeConfig } from '../boot/global_vars';
-
-const emptyFormPersonalDetails: FormPersonalDetailsFields = {
+export const emptyFormPersonalDetails: FormPersonalDetailsFields = {
   firstName: '',
   lastName: '',
   nickname: '',
@@ -87,14 +93,18 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
      */
     async getRegisterChallengeValues(): Promise<RegisterChallengeValuesApi | null> {
       const { apiFetch } = useApi();
+      const loginStore = useLoginStore();
       this.$log?.info('Fetching register challenge values from API.');
-
+      // Append access token into HTTP header
+      const requestTokenHeader_ = { ...requestTokenHeader };
+      requestTokenHeader_.Authorization += loginStore.getAccessToken;
       const { data } = await apiFetch<RegisterChallengeValuesApi>({
         endpoint: rideToWorkByBikeConfig.urlApiChallengeRegistrationUser,
         method: 'get',
         translationKey: 'registerChallengeGet',
         showSuccessMessage: false,
         logger: this.$log,
+        headers: Object.assign(requestDefaultHeader, requestTokenHeader_),
       });
 
       if (data) {

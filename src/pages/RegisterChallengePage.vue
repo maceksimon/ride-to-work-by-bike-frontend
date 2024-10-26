@@ -23,7 +23,7 @@
  */
 
 // libraries
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { QForm, QStepper } from 'quasar';
 
 // config
@@ -40,6 +40,9 @@ import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
 
 // composables
 import { useStepperValidation } from 'src/composables/useStepperValidation';
+
+// stores
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
 import type { FormSelectTableOption } from 'src/components/types/Form';
@@ -135,6 +138,11 @@ export default defineComponent({
     const stepPaymentRef = ref<typeof QForm | null>(null);
     const stepPersonalDetailsRef = ref<typeof QForm | null>(null);
     const stepTeamRef = ref<typeof QForm | null>(null);
+
+    onMounted(async () => {
+      const store = useRegisterChallengeStore();
+      await store.getRegisterChallengeValues();
+    });
 
     const { onBack, onContinue } = useStepperValidation({
       step,

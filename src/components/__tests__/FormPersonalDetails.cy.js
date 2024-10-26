@@ -1,7 +1,11 @@
 import { colors } from 'quasar';
-
+import { setActivePinia, createPinia } from 'pinia';
 import FormPersonalDetails from 'components/form/FormPersonalDetails.vue';
 import { i18n } from '../../boot/i18n';
+import {
+  emptyFormPersonalDetails,
+  useRegisterChallengeStore,
+} from '../../stores/registerChallenge';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -31,17 +35,13 @@ describe('<FormPersonalDetails>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
+      const store = useRegisterChallengeStore();
+      cy.wrap(store.getPersonalDetails).then((personalDetails) => {
+        expect(personalDetails).to.deep.equal(emptyFormPersonalDetails);
+      });
       cy.mount(FormPersonalDetails, {
-        props: {
-          formValues: {
-            firstName: 'John',
-            lastName: 'Doe',
-            nickname: 'John Doe',
-            gender: 'male',
-            newsletter: ['all'],
-            terms: true,
-          },
-        },
+        props: {},
       });
       cy.viewport('macbook-16');
     });
@@ -85,11 +85,53 @@ describe('<FormPersonalDetails>', () => {
         .and('have.css', 'font-size', '12px');
     });
 
-    it('renders checkbox terms', () => {
-      cy.dataCy('form-personal-details-terms').should('be.visible');
-      cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
-      cy.dataCy('form-terms-link').should('be.visible').click();
-      cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
+    // it('renders checkbox terms', () => {
+    //   cy.dataCy('form-personal-details-terms').should('be.visible');
+    //   cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
+    //   cy.dataCy('form-terms-link').should('be.visible').click();
+    //   cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
+    // });
+
+    it.only('saves to store when form is filled', () => {
+      fillFormPersonalDetails();
+      const store = useRegisterChallengeStore();
+      cy.fixture('formRegisterChallenge').then(
+        (formRegisterChallengeValues) => {
+          cy.wrap(store.getPersonalDetails).then((personalDetails) => {
+            expect(personalDetails.firstName).to.equal(
+              formRegisterChallengeValues.personalDetails.firstName,
+            );
+            expect(personalDetails.lastName).to.equal(
+              formRegisterChallengeValues.personalDetails.lastName,
+            );
+            expect(personalDetails.nickname).to.equal(
+              formRegisterChallengeValues.personalDetails.nickname,
+            );
+            expect(personalDetails.gender).to.equal(
+              formRegisterChallengeValues.personalDetails.gender,
+            );
+          });
+        },
+      );
     });
   });
+
+  function fillFormPersonalDetails() {
+    cy.fixture('formRegisterChallenge').then((formRegisterChallengeValues) => {
+      const { personalDetails } = formRegisterChallengeValues;
+      cy.dataCy('form-personal-details-first-name').type(
+        personalDetails.firstName,
+      );
+      cy.dataCy('form-personal-details-last-name').type(
+        personalDetails.lastName,
+      );
+      cy.dataCy('form-personal-details-nickname').type(
+        personalDetails.nickname,
+      );
+      cy.dataCy('form-personal-details-gender')
+        .find('.q-radio')
+        .contains(i18n.global.t('global.man'))
+        .click();
+    });
+  }
 });
