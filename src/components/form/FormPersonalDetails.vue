@@ -29,7 +29,6 @@ import FormFieldNewsletter from './FormFieldNewsletter.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
-import { useNewsletter } from '../../composables/useNewsletter';
 
 // stores
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
@@ -61,10 +60,6 @@ export default defineComponent({
       { deep: true },
     );
 
-    const { newsletter, isNewsletterAll, getNewsletterFormOptions } =
-      useNewsletter();
-    const newsletterOptions: FormOption[] = getNewsletterFormOptions();
-
     const genderOptions: FormOption[] = [
       {
         label: i18n.global.t('global.man'),
@@ -78,9 +73,6 @@ export default defineComponent({
 
     return {
       genderOptions,
-      isNewsletterAll,
-      newsletter,
-      newsletterOptions,
       personalDetails,
     };
   },
