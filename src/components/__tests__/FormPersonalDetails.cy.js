@@ -95,7 +95,11 @@ describe('<FormPersonalDetails>', () => {
         });
         cy.dataCy('form-terms-link').should('be.visible').click();
         // correctly does NOT check the box when clicking on the link
-        cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
+        cy.dataCy('form-terms-input').should(
+          'have.attr',
+          'aria-checked',
+          'true',
+        );
         // restore standard link behaviour
         $el[0].removeEventListener('click', (e) => {
           e.preventDefault();
@@ -146,12 +150,12 @@ describe('<FormPersonalDetails>', () => {
         personalDetails.nickname,
       );
       // Select gender "Male"
-      cy.get('.q-radio')
-        .contains(i18n.global.t('global.man'))
-        .click();
+      cy.get('.q-radio').contains(i18n.global.t('global.man')).click();
       // Select newsletter "Challenges"
       cy.get('.q-checkbox')
-        .contains(i18n.global.t('form.personalDetails.labelNewsletterChallenges'))
+        .contains(
+          i18n.global.t('form.personalDetails.labelNewsletterChallenges'),
+        )
         .click();
     });
   }
