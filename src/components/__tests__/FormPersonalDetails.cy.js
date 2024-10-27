@@ -85,14 +85,25 @@ describe('<FormPersonalDetails>', () => {
         .and('have.css', 'font-size', '12px');
     });
 
-    // it('renders checkbox terms', () => {
-    //   cy.dataCy('form-personal-details-terms').should('be.visible');
-    //   cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
-    //   cy.dataCy('form-terms-link').should('be.visible').click();
-    //   cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
-    // });
+    it('renders checkbox terms', () => {
+      cy.dataCy('form-personal-details-terms').should('be.visible');
+      cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
+      cy.dataCy('form-terms-link').then(($el) => {
+        // prevent standard link behaviour
+        $el[0].addEventListener('click', (e) => {
+          e.preventDefault();
+        });
+        cy.dataCy('form-terms-link').should('be.visible').click();
+        // correctly does NOT check the box when clicking on the link
+        cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
+        // restore standard link behaviour
+        $el[0].removeEventListener('click', (e) => {
+          e.preventDefault();
+        });
+      });
+    });
 
-    it.only('saves to store when form is filled', () => {
+    it('saves to store when form is filled', () => {
       fillFormPersonalDetails();
       const store = useRegisterChallengeStore();
       cy.fixture('formRegisterChallenge').then(
@@ -110,6 +121,9 @@ describe('<FormPersonalDetails>', () => {
             expect(personalDetails.gender).to.equal(
               formRegisterChallengeValues.personalDetails.gender,
             );
+            expect(personalDetails.newsletter).to.deep.equal(
+              formRegisterChallengeValues.personalDetails.newsletter,
+            );
           });
         },
       );
@@ -119,18 +133,25 @@ describe('<FormPersonalDetails>', () => {
   function fillFormPersonalDetails() {
     cy.fixture('formRegisterChallenge').then((formRegisterChallengeValues) => {
       const { personalDetails } = formRegisterChallengeValues;
+      // Fill first name
       cy.dataCy('form-personal-details-first-name').type(
         personalDetails.firstName,
       );
+      // Fill last name
       cy.dataCy('form-personal-details-last-name').type(
         personalDetails.lastName,
       );
+      // Fill nickname
       cy.dataCy('form-personal-details-nickname').type(
         personalDetails.nickname,
       );
-      cy.dataCy('form-personal-details-gender')
-        .find('.q-radio')
+      // Select gender "Male"
+      cy.get('.q-radio')
         .contains(i18n.global.t('global.man'))
+        .click();
+      // Select newsletter "Challenges"
+      cy.get('.q-checkbox')
+        .contains(i18n.global.t('form.personalDetails.labelNewsletterChallenges'))
         .click();
     });
   }

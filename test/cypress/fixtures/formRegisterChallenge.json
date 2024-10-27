@@ -4,7 +4,7 @@
     "lastName": "Doe",
     "nickname": "John Doe",
     "gender": "male",
-    "newsletter": [],
+    "newsletter": ["challenges"],
     "phone": "1234567890",
     "phonePermit": true,
     "language": "cs",
