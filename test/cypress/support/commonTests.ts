@@ -41,7 +41,8 @@ export const testLanguageSwitcher = (): void => {
             // changing the language
             cy.dataCy('switcher-' + locale)
               .should('exist')
-              .and('be.visible')
+              .and('be.visible');
+            cy.dataCy('switcher-' + locale)
               .find('.q-btn')
               .click();
             // old language becomes inactive
