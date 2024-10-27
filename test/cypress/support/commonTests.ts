@@ -44,15 +44,12 @@ export const testLanguageSwitcher = (): void => {
               .and('be.visible');
             cy.dataCy('switcher-' + locale)
               .find('.q-btn')
+              .as('switcher-button')
               .click();
             // old language becomes inactive
-            cy.dataCy('switcher-' + initialActiveLocale)
-              .find('.q-btn')
-              .should('have.class', 'bg-white');
+            cy.get('@switcher-button').should('have.class', 'bg-white');
             // new language becomes active
-            cy.dataCy('switcher-' + locale)
-              .find('.q-btn')
-              .should('have.class', 'bg-secondary');
+            cy.get('@switcher-button').should('have.class', 'bg-secondary');
           }
         });
       });
