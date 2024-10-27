@@ -1,4 +1,6 @@
 import {
+  httpSuccessfullCreatedStatus,
+  interceptRegisterChallenge,
   testLanguageSwitcher,
   testBackgroundImage,
 } from '../support/commonTests';
@@ -334,6 +336,35 @@ describe('Register Challenge page', () => {
       // test goint to step 7
       cy.dataCy('step-6').should('be.visible').click();
       cy.dataCy('step-6-continue').should('be.visible');
+    });
+  });
+
+  context('ongoing registration', () => {
+    beforeEach(() => {
+      // visit login to setup initial intercepts
+      cy.visit('#' + routesConf['login']['path']);
+      // load config an i18n objects as aliases
+      cy.task('getAppConfig', process).then((config) => {
+        // alias config
+        cy.wrap(config).as('config');
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          // alias i18n
+          cy.wrap(win.i18n).as('i18n');
+          interceptRegisterChallenge(config, win.i18n);
+        });
+      });
+      // config is defined without hash in the URL
+      cy.visit('#' + routesConf['register_challenge']['path']);
+      cy.viewport('macbook-16');
+    });
+
+    it.only('loads the initial values from API', () => {
+      cy.wait('@registerChallengeGet').then((interception) => {
+        expect(interception.response.statusCode).to.equal(
+          httpSuccessfullCreatedStatus,
+        );
+      });
     });
   });
 });

@@ -445,7 +445,25 @@ export const fillFormRegisterCoordinator = (): void => {
   });
 };
 
+export const interceptRegisterChallenge = (
+  config: ConfigGlobal,
+  i18n: I18n,
+): void => {
+  const { apiBase, apiDefaultLang, urlApiChallengeRegistrationUser } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(
+    null,
+    apiBase,
+    apiDefaultLang,
+    i18n as I18n,
+  );
+  const urlApiChallengeRegistrationUserLocalized = `${apiBaseUrl}${urlApiChallengeRegistrationUser}`;
+  cy.intercept('GET', urlApiChallengeRegistrationUserLocalized, {
+    statusCode: httpSuccessfullCreatedStatus,
+  }).as('registerChallengeGet');
+};
+
 export const httpSuccessfullStatus = 200;
+export const httpSuccessfullCreatedStatus = 201;
 export const httpInternalServerErrorStatus = 500;
 export const httpTooManyRequestsStatus = 429;
 export const httpTooManyRequestsStatusMessage = `HTTP status code ${httpTooManyRequestsStatus} Too Many Requests ("rate limiting").`;
