@@ -1,5 +1,5 @@
 import {
-  httpSuccessfullCreatedStatus,
+  httpSuccessfullStatus,
   interceptRegisterChallenge,
   testLanguageSwitcher,
   testBackgroundImage,
@@ -69,6 +69,17 @@ const activeIconImgSrcStepper6 = new URL(
   '../../../src/assets/svg/numeric-6-fill.svg',
   cy.config().baseUrl,
 ).href;
+
+const selectorPersonalDetails = {
+  selectorFirstName: 'form-personal-details-first-name',
+  selectorLastName: 'form-personal-details-last-name',
+  selectorNickname: 'form-personal-details-nickname',
+  selectorGender: 'form-personal-details-gender',
+  selectorNewsletter: 'form-personal-details-newsletter',
+  selectorTerms: 'form-personal-details-terms',
+  selectorTermsInput: 'form-terms-input',
+  selectorTermsLink: 'form-terms-link',
+};
 
 describe('Register Challenge page', () => {
   context('desktop', () => {
@@ -188,19 +199,19 @@ describe('Register Challenge page', () => {
       // not on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
       // fill firstName
-      cy.dataCy('form-firstName-input').type('John');
+      cy.dataCy(selectorPersonalDetails.selectorFirstName).type('John');
       // click
       cy.dataCy('step-1-continue').should('be.visible').click();
       // not on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
       // fill lastName
-      cy.dataCy('form-lastName-input').type('Doe');
+      cy.dataCy(selectorPersonalDetails.selectorLastName).type('Doe');
       // click
       cy.dataCy('step-1-continue').should('be.visible').click();
       // not on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('not.exist');
       // fill gender
-      cy.dataCy('form-personal-details-gender')
+      cy.dataCy(selectorPersonalDetails.selectorGender)
         .find('.q-radio__label')
         .first()
         .click();
@@ -340,6 +351,12 @@ describe('Register Challenge page', () => {
   });
 
   context('ongoing registration', () => {
+    /**
+     * Simulate path:
+     * User filled in personal details and stopped.
+     * Then opened the registration page again.
+     * We need to load the initial values from the API.
+     */
     beforeEach(() => {
       // visit login to setup initial intercepts
       cy.visit('#' + routesConf['login']['path']);
@@ -360,9 +377,49 @@ describe('Register Challenge page', () => {
     });
 
     it.only('loads the initial values from API', () => {
-      cy.wait('@registerChallengeGet').then((interception) => {
-        expect(interception.response.statusCode).to.equal(
-          httpSuccessfullCreatedStatus,
+      cy.get('@i18n').then((i18n) => {
+        cy.fixture('formRegisterChallenge.json').then(
+          (formRegisterChallengeValues) => {
+            cy.wait('@registerChallengeGet').then((interception) => {
+              expect(interception.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(interception.response.body).to.deep.equal(
+                formRegisterChallengeValues,
+              );
+              cy.dataCy(selectorPersonalDetails.selectorFirstName)
+                .find('input')
+                .should(
+                  'have.value',
+                  formRegisterChallengeValues.personalDetails.firstName,
+                );
+              cy.dataCy(selectorPersonalDetails.selectorLastName)
+                .find('input')
+                .should(
+                  'have.value',
+                  formRegisterChallengeValues.personalDetails.lastName,
+                );
+              cy.dataCy(selectorPersonalDetails.selectorNickname)
+                .find('input')
+                .should(
+                  'have.value',
+                  formRegisterChallengeValues.personalDetails.nickname,
+                );
+              cy.dataCy(selectorPersonalDetails.selectorGender)
+                .find('.q-radio:has(.q-radio__inner--truthy)')
+                .contains(i18n.global.t('global.man'));
+              cy.dataCy(selectorPersonalDetails.selectorNewsletter)
+                .find('.q-checkbox:has(.q-checkbox__inner--truthy)')
+                .contains(
+                  i18n.global.t(
+                    'form.personalDetails.labelNewsletterChallenges',
+                  ),
+                );
+              cy.dataCy(selectorPersonalDetails.selectorTermsInput).should(
+                'be.checked',
+              );
+            });
+          },
         );
       });
     });
@@ -370,9 +427,9 @@ describe('Register Challenge page', () => {
 });
 
 function passToStep2() {
-  cy.dataCy('form-firstName-input').type('John');
-  cy.dataCy('form-lastName-input').type('Doe');
-  cy.dataCy('form-personal-details-gender')
+  cy.dataCy(selectorPersonalDetails.selectorFirstName).type('John');
+  cy.dataCy(selectorPersonalDetails.selectorLastName).type('Doe');
+  cy.dataCy(selectorPersonalDetails.selectorGender)
     .find('.q-radio__label')
     .first()
     .click();

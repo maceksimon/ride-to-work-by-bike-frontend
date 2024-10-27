@@ -10,6 +10,16 @@ import {
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
+// selectors
+const selectorFirstName = 'form-personal-details-first-name';
+const selectorLastName = 'form-personal-details-last-name';
+const selectorNickname = 'form-personal-details-nickname';
+const selectorGender = 'form-personal-details-gender';
+const selectorNewsletter = 'form-personal-details-newsletter';
+const selectorTerms = 'form-personal-details-terms';
+const selectorTermsInput = 'form-terms-input';
+const selectorTermsLink = 'form-terms-link';
+
 describe('<FormPersonalDetails>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['man', 'woman'], 'global', i18n);
@@ -47,15 +57,15 @@ describe('<FormPersonalDetails>', () => {
     });
 
     it('renders form field first name', () => {
-      cy.dataCy('form-personal-details-first-name').should('be.visible');
+      cy.dataCy(selectorFirstName).should('be.visible');
     });
 
     it('renders form field last name', () => {
-      cy.dataCy('form-personal-details-last-name').should('be.visible');
+      cy.dataCy(selectorLastName).should('be.visible');
     });
 
     it('renders form field nickname', () => {
-      cy.dataCy('form-personal-details-nickname')
+      cy.dataCy(selectorNickname)
         .should('be.visible')
         .find('label')
         .should('be.visible')
@@ -64,20 +74,20 @@ describe('<FormPersonalDetails>', () => {
     });
 
     it('renders radio select gender', () => {
-      cy.dataCy('form-personal-details-gender')
+      cy.dataCy(selectorGender)
         .should('be.visible')
         .find('label')
         .should('be.visible')
         .and('have.color', grey10)
         .and('have.css', 'font-size', '12px');
-      cy.dataCy('form-personal-details-gender').should(
+      cy.dataCy(selectorGender).should(
         'contain',
         i18n.global.t('form.personalDetails.hintGender'),
       );
     });
 
     it('renders checkbox select newsletter', () => {
-      cy.dataCy('form-field-newsletter')
+      cy.dataCy(selectorNewsletter)
         .should('be.visible')
         .find('label')
         .should('be.visible')
@@ -86,16 +96,16 @@ describe('<FormPersonalDetails>', () => {
     });
 
     it('renders checkbox terms', () => {
-      cy.dataCy('form-personal-details-terms').should('be.visible');
-      cy.dataCy('form-terms-input').should('have.attr', 'aria-checked', 'true');
-      cy.dataCy('form-terms-link').then(($el) => {
+      cy.dataCy(selectorTerms).should('be.visible');
+      cy.dataCy(selectorTermsInput).should('have.attr', 'aria-checked', 'true');
+      cy.dataCy(selectorTermsLink).then(($el) => {
         // prevent standard link behaviour
         $el[0].addEventListener('click', (e) => {
           e.preventDefault();
         });
-        cy.dataCy('form-terms-link').should('be.visible').click();
+        cy.dataCy(selectorTermsLink).should('be.visible').click();
         // correctly does NOT check the box when clicking on the link
-        cy.dataCy('form-terms-input').should(
+        cy.dataCy(selectorTermsInput).should(
           'have.attr',
           'aria-checked',
           'true',
@@ -138,17 +148,11 @@ describe('<FormPersonalDetails>', () => {
     cy.fixture('formRegisterChallenge').then((formRegisterChallengeValues) => {
       const { personalDetails } = formRegisterChallengeValues;
       // Fill first name
-      cy.dataCy('form-personal-details-first-name').type(
-        personalDetails.firstName,
-      );
+      cy.dataCy(selectorFirstName).type(personalDetails.firstName);
       // Fill last name
-      cy.dataCy('form-personal-details-last-name').type(
-        personalDetails.lastName,
-      );
+      cy.dataCy(selectorLastName).type(personalDetails.lastName);
       // Fill nickname
-      cy.dataCy('form-personal-details-nickname').type(
-        personalDetails.nickname,
-      );
+      cy.dataCy(selectorNickname).type(personalDetails.nickname);
       // Select gender "Male"
       cy.get('.q-radio').contains(i18n.global.t('global.man')).click();
       // Select newsletter "Challenges"

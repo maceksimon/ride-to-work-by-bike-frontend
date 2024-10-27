@@ -457,9 +457,14 @@ export const interceptRegisterChallenge = (
     i18n as I18n,
   );
   const urlApiChallengeRegistrationUserLocalized = `${apiBaseUrl}${urlApiChallengeRegistrationUser}`;
-  cy.intercept('GET', urlApiChallengeRegistrationUserLocalized, {
-    statusCode: httpSuccessfullCreatedStatus,
-  }).as('registerChallengeGet');
+  cy.fixture('formRegisterChallenge.json').then(
+    (formRegisterChallengeValues) => {
+      cy.intercept('GET', urlApiChallengeRegistrationUserLocalized, {
+        statusCode: httpSuccessfullStatus,
+        body: formRegisterChallengeValues,
+      }).as('registerChallengeGet');
+    },
+  );
 };
 
 export const httpSuccessfullStatus = 200;
