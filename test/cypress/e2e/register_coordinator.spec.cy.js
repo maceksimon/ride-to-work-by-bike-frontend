@@ -145,10 +145,26 @@ describe('Login page', () => {
             cy.dataCy('form-register-coordinator-responsibility')
               .find('.q-checkbox')
               .click();
+            // prevent action on link to avoid accidental redirect
+            cy.dataCy('form-register-coordinator-terms')
+              .find('a')
+              .then(($el) => {
+                $el[0].addEventListener('click', (event) => {
+                  event.preventDefault();
+                });
+              });
             // check terms checkbox
             cy.dataCy('form-register-coordinator-terms')
               .find('.q-checkbox')
               .click();
+            // reset the action on link
+            cy.dataCy('form-register-coordinator-terms')
+              .find('a')
+              .then(($el) => {
+                $el[0].removeEventListener('click', (event) => {
+                  event.preventDefault();
+                });
+              });
             // submit form
             cy.dataCy('form-register-coordinator-submit').click();
             // wait for the API call to complete
