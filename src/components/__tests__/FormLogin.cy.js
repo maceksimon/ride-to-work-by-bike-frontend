@@ -450,7 +450,7 @@ describe('<FormLogin>', () => {
                 timeUntilExpirationSeconds, // time until expiration in seconds
               );
               expect(store.isJwtExpired()).to.equal(false);
-              cy.fixture('refreshTokensResponse.json').then(
+              cy.fixture('refreshTokensResponseChallengeActive.json').then(
                 (refreshTokensResponse) => {
                   // intercept refresh token API call
                   const apiBaseUrl = getApiBaseUrlWithLang(
@@ -514,7 +514,7 @@ describe('<FormLogin>', () => {
                 timeUntilExpirationSeconds,
               );
               expect(store.isJwtExpired()).to.equal(false);
-              cy.fixture('refreshTokensResponse.json').then(
+              cy.fixture('refreshTokensResponseChallengeActive.json').then(
                 (refreshTokensResponse) => {
                   // intercept refresh token API call
                   const apiBaseUrl = getApiBaseUrlWithLang(

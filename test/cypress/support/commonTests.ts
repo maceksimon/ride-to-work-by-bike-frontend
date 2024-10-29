@@ -130,7 +130,7 @@ export const testDesktopSidebar = (): void => {
   it('renders user email in UserSelect after login', () => {
     cy.fixture('loginRegisterResponseChallengeActive.json').then(
       (loginResponse) => {
-        cy.fixture('refreshTokensResponse.json').then(
+        cy.fixture('refreshTokensResponseChallengeActive.json').then(
           (refreshTokensResponse) => {
             cy.get('@config').then((config: unknown) => {
               cy.clock().then((clock) => {
@@ -328,7 +328,7 @@ export const setupApiChallengeActive = (
   }).as('verifyEmail');
   // set system time to "during challenge"
   cy.clock().then((clock) => {
-    clock.setSystemTime(systemTimeChallengeActive);
+    clock.setSystemTime(systemTimeLoggedIn);
   });
 };
 
@@ -368,12 +368,14 @@ export const setupApiChallengeInactive = (
   );
   // intercept refresh token API call
   const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
-  cy.fixture('refreshTokensResponse.json').then((refreshTokensResponse) => {
-    cy.intercept('POST', apiRefreshUrl, {
-      statusCode: httpSuccessfullStatus,
-      body: refreshTokensResponse,
-    }).as('refreshTokens');
-  });
+  cy.fixture('refreshTokensResponseChallengeInactive.json').then(
+    (refreshTokensResponse) => {
+      cy.intercept('POST', apiRefreshUrl, {
+        statusCode: httpSuccessfullStatus,
+        body: refreshTokensResponse,
+      }).as('refreshTokens');
+    },
+  );
   // intercept verify email API call
   const apiHasUserVerifiedEmailUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
   cy.intercept('GET', apiHasUserVerifiedEmailUrl, {

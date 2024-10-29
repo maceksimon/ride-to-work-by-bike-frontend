@@ -3,8 +3,8 @@ import {
   testLanguageSwitcher,
   testBackgroundImage,
   timeUntilExpiration,
-  systemTimeChallengeActive,
   setupApiChallengeActive,
+  systemTimeLoggedIn,
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 import { httpSuccessfullStatus } from '../support/commonTests';
@@ -147,7 +147,7 @@ describe('Login page', () => {
 
   context('login user flow', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeActive);
+      cy.clock(systemTimeLoggedIn);
       cy.visit('#' + routesConf['login']['path']);
       cy.viewport('macbook-16');
 
@@ -187,8 +187,8 @@ describe('Login page', () => {
       cy.dataCy('form-login-submit-login').should('be.visible');
     });
 
-    it('allows user to login and refreshes token 1 min before expiration', () => {
-      cy.clock(systemTimeChallengeActive).then((clock) => {
+    it.only('allows user to login and refreshes token 1 min before expiration', () => {
+      cy.clock(systemTimeLoggedIn).then((clock) => {
         // fill in form
         loginWithUI();
         // wait for login API call
