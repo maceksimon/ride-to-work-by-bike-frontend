@@ -3,6 +3,13 @@ import SocialBar from 'components/homepage/SocialBar.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+import {
+  failOnStatusCode,
+  httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+} from '../../../test/cypress/support/commonTests';
+
 // colors
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -128,17 +135,45 @@ function coreTests() {
   });
 
   it('provides valid URLs for social links', () => {
-    cy.request(rideToWorkByBikeConfig.urlFacebook)
-      .its('status')
-      .should('eq', 200);
-    cy.request(rideToWorkByBikeConfig.urlInstagram)
-      .its('status')
-      .should('eq', 200);
-    cy.request(rideToWorkByBikeConfig.urlTwitter)
-      .its('status')
-      .should('eq', 200);
-    cy.request(rideToWorkByBikeConfig.urlYoutube)
-      .its('status')
-      .should('eq', 200);
+    cy.request({
+      url: rideToWorkByBikeConfig.urlFacebook,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+    cy.request({
+      url: rideToWorkByBikeConfig.urlInstagram,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+    cy.request({
+      url: rideToWorkByBikeConfig.urlTwitter,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
+    cy.request({
+      url: rideToWorkByBikeConfig.urlYoutube,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
   });
 }
