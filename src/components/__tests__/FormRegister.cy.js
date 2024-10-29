@@ -15,6 +15,7 @@ import {
   systemTimeChallengeInactive,
 } from '../../../test/cypress/support/commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
+import { PhaseType } from '../types/Challenge';
 
 // colors
 const { getPaletteColor, changeAlpha } = colors;
@@ -417,7 +418,9 @@ describe('<FormRegister>', () => {
 
     it('shows a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeInActivePhase).to.equal(false);
+      expect(
+        challengeStore.getIsChallengeInPhase(PhaseType.competition),
+      ).to.equal(false);
       cy.dataCy(selectorFormRegisterTextNoActiveChallenge)
         .should('be.visible')
         .and('have.css', 'font-size', `${fontSizeText}px`)
@@ -504,20 +507,26 @@ describe('<FormRegister>', () => {
 
     it('does not show a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeInActivePhase).to.equal(true);
+      expect(
+        challengeStore.getIsChallengeInPhase(PhaseType.competition),
+      ).to.equal(true);
       cy.dataCy(selectorFormRegisterTextNoActiveChallenge).should('not.exist');
     });
 
     it('does not show checkboxes for privacy policy and newsletter subscription', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeInActivePhase).to.equal(true);
+      expect(
+        challengeStore.getIsChallengeInPhase(PhaseType.competition),
+      ).to.equal(true);
       cy.dataCy(selectorFormRegisterPrivacyConsent).should('not.exist');
       cy.dataCy(selectorFormRegisterNewsletterSubscription).should('not.exist');
     });
 
     it('allows to submit form after filling fields and accepting privacy policy', () => {
       const challengeStore = useChallengeStore();
-      expect(challengeStore.getIsChallengeInActivePhase).to.equal(true);
+      expect(
+        challengeStore.getIsChallengeInPhase(PhaseType.competition),
+      ).to.equal(true);
       // variables
       const apiBaseUrl = getApiBaseUrlWithLang(
         null,

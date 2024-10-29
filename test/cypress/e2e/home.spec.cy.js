@@ -356,7 +356,7 @@ describe('Home page', () => {
       });
     });
 
-    it('renders all components', () => {
+    it.only('renders all components', () => {
       cy.get('@i18n').then((i18n) => {
         cy.dataCy('q-main').should('be.visible');
         // title

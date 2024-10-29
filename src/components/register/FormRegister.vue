@@ -37,6 +37,9 @@ import { useValidation } from '../../composables/useValidation';
 import FormFieldEmail from '../global/FormFieldEmail.vue';
 import LoginRegisterButtons from '../global/LoginRegisterButtons.vue';
 
+// enums
+import { PhaseType } from '../types/Challenge';
+
 // stores
 import { useChallengeStore } from '../../stores/challenge';
 import { useRegisterStore } from '../../stores/register';
@@ -58,8 +61,8 @@ export default defineComponent({
 
     const registerStore = useRegisterStore();
     const challengeStore = useChallengeStore();
-    const isActiveChallenge = computed(
-      (): boolean => challengeStore.getIsChallengeInActivePhase,
+    const isActiveChallenge = computed((): boolean =>
+      challengeStore.getIsChallengeInPhase(PhaseType.competition),
     );
     const isPassword = ref<boolean>(true);
     const isPasswordConfirm = ref<boolean>(true);

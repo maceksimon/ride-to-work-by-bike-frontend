@@ -11,6 +11,7 @@ import { useLoginStore } from 'src/stores/login';
 import { useRegisterStore } from 'src/stores/register';
 import routes from './routes';
 import { routesConf } from './routes_conf';
+import { PhaseType } from '../components/types/Challenge';
 
 import type { Logger } from '../components/types/Logger';
 /*
@@ -54,7 +55,7 @@ export default route(function (/* { store, ssrContext } */) {
       const isAuthenticated: boolean = await loginStore.validateAccessToken();
       const isEmailVerified: boolean = registerStore.getIsEmailVerified;
       const isChallengeActive: boolean =
-        useChallengeStore().getIsChallengeInActivePhase;
+        useChallengeStore().getIsChallengeInPhase(PhaseType.competition);
 
       logger?.debug(`Router path <${to.path}>.`);
       logger?.debug(`Router from path <${from.path}>.`);

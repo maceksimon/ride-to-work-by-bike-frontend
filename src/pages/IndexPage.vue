@@ -1,7 +1,6 @@
 <template>
   <q-page class="overflow-hidden" data-cy="q-main">
     <div class="bg-white">
-      {{ challengeStatus }}
       <div
         class="q-px-lg q-pt-lg q-pb-xl overflow-hidden"
         :style="{ maxWidth }"
@@ -123,7 +122,7 @@
 <script lang="ts">
 // libraries
 import { colors } from 'quasar';
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
 // components
 import BannerApp from 'components/homepage/BannerApp.vue';
@@ -184,7 +183,7 @@ export default defineComponent({
   },
   setup() {
     const challengeStore = useChallengeStore();
-    const challengeStatus = computed(() => challengeStore.getChallengeStatus);
+    const challengeStatus = challengeStore.getChallengeStatus;
 
     const { challengeStartDate } = rideToWorkByBikeConfig;
 

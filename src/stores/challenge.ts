@@ -37,58 +37,42 @@ export const useChallengeStore = defineStore('challenge', {
   getters: {
     getChallengeStatus: (): ChallengeStatus => {
       const thisStore = useChallengeStore();
-      if (thisStore.getIsChallengeInActivePhase) {
+      if (thisStore.getIsChallengeInPhase(PhaseType.competition)) {
         return ChallengeStatus.during;
-      } else if (thisStore.getIsChallengeInRegistrationPhase) {
+      } else if (thisStore.getIsChallengeInPhase(PhaseType.registration)) {
         return ChallengeStatus.before;
       }
       return ChallengeStatus.after;
     },
+  },
+
+  actions: {
     /**
-     * Gets active challenge status
-     * Status is based on phase_set array variable.
+     * Checks if challenge is in a given phase
+     * Returns true if now is within the phase dates
+     * Returns false if now is not within the phase dates
+     * or if the phase is not found in the phase set
+     * @param {PhaseType} phaseType - Phase type to check
      * @returns {boolean}
      */
-    getIsChallengeInActivePhase: (store): boolean => {
-      const competitionPhase = store.phaseSet.find(
-        (phase: Phase) => phase.phase_type === PhaseType.competition,
+    getIsChallengeInPhase(phaseType: PhaseType): boolean {
+      this.$log?.debug(`Checking if challenge is in <${phaseType}> phase.`);
+      const phase = this.phaseSet.find(
+        (phase: Phase) => phase.phase_type === phaseType,
       );
-      if (competitionPhase) {
-        const startDate: number = new Date(
-          competitionPhase.date_from,
-        ).getTime();
-        const endDate: number = new Date(competitionPhase.date_to).getTime();
-        store.$log?.debug(`Competition phase date from: ${startDate}`);
-        store.$log?.debug(`Competition phase date to: ${endDate}`);
-        const date = new Date();
-        const now: number = date.getTime();
-        store.$log?.debug(`Competition phase now date: ${now}`);
+      if (phase) {
+        const startDate: number = new Date(phase.date_from).getTime();
+        const endDate: number = new Date(phase.date_to).getTime();
+        this.$log?.debug(`<${phaseType}> phase date from <${startDate}>`);
+        this.$log?.debug(`<${phaseType}> phase date to <${endDate}>`);
+        const now: number = new Date().getTime();
+        this.$log?.debug(`Now date <${now}>`);
         return now >= startDate && now <= endDate;
       }
-      store.$log?.debug('No competition phase found.');
-      return false;
-    },
-    getIsChallengeInRegistrationPhase: (store): boolean => {
-      const registrationPhase = store.phaseSet.find(
-        (phase: Phase) => phase.phase_type === PhaseType.registration,
-      );
-      if (registrationPhase) {
-        const startDate: number = new Date(
-          registrationPhase.date_from,
-        ).getTime();
-        const endDate: number = new Date(registrationPhase.date_to).getTime();
-        store.$log?.debug(`Registration phase date from: ${startDate}`);
-        store.$log?.debug(`Registration phase date to: ${endDate}`);
-        const date = new Date();
-        const now: number = date.getTime();
-        return now >= startDate && now <= endDate;
-      }
-      store.$log?.debug('No before phase found.');
+      this.$log?.debug(`No <${phaseType}> phase found.`);
       return false;
     },
   },
-
-  actions: {},
 
   persist: {
     pick: ['phaseSet'],
