@@ -12,24 +12,22 @@ describe('Login page', () => {
   context('desktop', () => {
     beforeEach(() => {
       /**
-       * Visit home so that we can setup the API intercepts.
-       * The setup needs i18n object to be initialized.
+       * Visit login page so that we can setup the API intercepts.
+       * The setup needs config and i18n objects to be initialized.
        */
-      cy.viewport('macbook-16');
-      cy.visit('#' + routesConf['login']['path']).then(() => {
-        // load config an i18n objects as aliases
-        cy.task('getAppConfig', process).then((config) => {
-          // alias config
-          cy.wrap(config).as('config');
+      cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
+        // Visit the login page to initialize i18n
+        cy.visit('#' + routesConf['login']['path']).then(() => {
           cy.window().should('have.property', 'i18n');
           cy.window().then((win) => {
-            // alias i18n
             cy.wrap(win.i18n).as('i18n');
-            // intercept organizations API call (before mounting component)
+
+            // Set up API intercepts
             interceptOrganizationsApi(config, win.i18n);
-            // intercept register coordinator API call (before mounting component)
             interceptRegisterCoordinatorApi(config, win.i18n);
-            // specify data for register coordinator request body
+
+            // Load fixtures and set up request body
             cy.fixture('formRegisterCoordinator').then(
               (formRegisterCoordinatorData) => {
                 cy.fixture('formFieldCompany').then(
@@ -48,6 +46,10 @@ describe('Login page', () => {
                 );
               },
             );
+
+            // After setup, visit the page to test
+            cy.visit('#' + routesConf['register_coordinator']['path']);
+            cy.viewport('macbook-16');
           });
         });
       });
@@ -56,7 +58,6 @@ describe('Login page', () => {
     testBackgroundImage();
 
     it('renders login register header component', () => {
-      cy.visit('#' + routesConf['register_coordinator']['path']);
       cy.dataCy('login-register-header').should('be.visible');
       cy.dataCy('button-help').should('be.visible');
       cy.dataCy('language-switcher').should('be.visible');
@@ -66,7 +67,6 @@ describe('Login page', () => {
     testLanguageSwitcher();
 
     it('renders page title', () => {
-      cy.visit('#' + routesConf['register_coordinator']['path']);
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           cy.dataCy('register-coordinator-title')
@@ -90,7 +90,6 @@ describe('Login page', () => {
     });
 
     it('renders info card', () => {
-      cy.visit('#' + routesConf['register_coordinator']['path']);
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           cy.dataCy('info-card')
@@ -126,7 +125,6 @@ describe('Login page', () => {
     });
 
     it('fills in the form, submits it, and redirects to homepage on success', () => {
-      cy.visit('#' + routesConf['register_coordinator']['path']);
       cy.get('@i18n').then((i18n) => {
         cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
           cy.wait('@getOrganizations').then((interception) => {
