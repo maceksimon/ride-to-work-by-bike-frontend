@@ -92,19 +92,20 @@ describe('Register page', () => {
 
   context('inactive challenge', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeInactive);
-      cy.visit('#' + routesConf['register']['path']);
-      cy.viewport('macbook-16');
+      cy.clock(systemTimeChallengeInactive).then(() => {
+        cy.viewport('macbook-16');
+        cy.visit('#' + routesConf['register']['path']);
 
-      // load config an i18n objects as aliases
-      cy.task('getAppConfig', process).then((config) => {
-        // alias config
-        cy.wrap(config).as('config');
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          // alias i18n
-          cy.wrap(win.i18n).as('i18n');
-          setupApiChallengeActive(config, win.i18n, false);
+        // load config an i18n objects as aliases
+        cy.task('getAppConfig', process).then((config) => {
+          // alias config
+          cy.wrap(config).as('config');
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            // alias i18n
+            cy.wrap(win.i18n).as('i18n');
+            setupApiChallengeActive(config, win.i18n, false);
+          });
         });
       });
     });
@@ -260,19 +261,20 @@ describe('Register page', () => {
 
   context('active challenge', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeActive);
-      cy.visit('#' + routesConf['register']['path']);
-      cy.viewport('macbook-16');
+      cy.clock(systemTimeChallengeActive).then(() => {
+        cy.visit('#' + routesConf['register']['path']);
+        cy.viewport('macbook-16');
 
-      // load config an i18n objects as aliases
-      cy.task('getAppConfig', process).then((config) => {
-        // alias config
-        cy.wrap(config).as('config');
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          // alias i18n
-          cy.wrap(win.i18n).as('i18n');
-          setupApiChallengeActive(config, win.i18n, false);
+        // load config an i18n objects as aliases
+        cy.task('getAppConfig', process).then((config) => {
+          // alias config
+          cy.wrap(config).as('config');
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            // alias i18n
+            cy.wrap(win.i18n).as('i18n');
+            setupApiChallengeActive(config, win.i18n, false);
+          });
         });
       });
     });
