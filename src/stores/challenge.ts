@@ -35,6 +35,12 @@ export const useChallengeStore = defineStore('challenge', {
   }),
 
   getters: {
+    /**
+     * Returns the status of the current challenge
+     * This determines the stage the challenge is in.
+     * @see {ChallengeStatus} enum for possible values.
+     * @returns {ChallengeStatus}
+     */
     getChallengeStatus: (): ChallengeStatus => {
       const thisStore = useChallengeStore();
       if (thisStore.getIsChallengeInPhase(PhaseType.competition)) {
