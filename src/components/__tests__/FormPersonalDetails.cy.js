@@ -77,7 +77,7 @@ describe('<FormPersonalDetails>', () => {
     });
 
     it('renders checkbox select newsletter', () => {
-      cy.dataCy('form-personal-details-newsletter')
+      cy.dataCy('form-field-newsletter')
         .should('be.visible')
         .find('label')
         .should('be.visible')
