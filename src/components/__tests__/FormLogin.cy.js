@@ -13,6 +13,7 @@ import {
   timeUntilExpiration,
 } from '../../../test/cypress/support/commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
+import { nextTick } from 'vue';
 
 // colors
 const { getPaletteColor, changeAlpha } = colors;
@@ -465,23 +466,28 @@ describe('<FormLogin>', () => {
                   })
                     .as('refreshTokens')
                     .then(() => {
-                      // set time to when JWT should be expired + 1 second
+                      // set time to when JWT should be expired
                       clock.tick(timeUntilExpiration);
-                      // intercepted function apiRefreshUrl should be called
-                      cy.wait('@refreshTokens')
-                        .its('response.statusCode')
-                        .should('eq', httpSuccessfullStatus)
-                        .then(() => {
-                          // new JWT
-                          expect(store.getAccessToken).to.equal(
-                            refreshTokensResponse.access,
-                          );
-                          // JWT not be expired
-                          expect(store.isJwtExpired()).to.equal(false);
-                          expect(store.getJwtExpiration).to.equal(
-                            fixtureTokenRefreshExpirationTime,
-                          );
-                        });
+                      nextTick().then(() => {
+                        expect(store.getTimeUntilExpiration()).to.be.equal(0);
+                        // intercepted function apiRefreshUrl should be called
+                        cy.wait('@refreshTokens')
+                          .its('response.statusCode')
+                          .should('eq', httpSuccessfullStatus)
+                          .then(() => {
+                            // new JWT
+                            nextTick().then(() => {
+                              expect(store.getAccessToken).to.equal(
+                                refreshTokensResponse.access,
+                              );
+                              // JWT not be expired
+                              expect(store.isJwtExpired()).to.equal(false);
+                              expect(store.getJwtExpiration).to.equal(
+                                fixtureTokenRefreshExpirationTime,
+                              );
+                            });
+                          });
+                      });
                     });
                 },
               );
@@ -522,21 +528,25 @@ describe('<FormLogin>', () => {
                     statusCode: httpSuccessfullStatus,
                     body: refreshTokensResponse,
                   }).then(() => {
-                    // set time to when JWT should be expired + 1 second
-                    clock.tick(timeUntilExpiration + 1000);
-                    expect(store.getTimeUntilExpiration()).to.be.lessThan(0);
-                    expect(store.isJwtExpired()).to.equal(true);
-                    // refresh tokens
-                    cy.wrap(store.refreshTokens()).then(() => {
-                      // new JWT
-                      expect(store.getAccessToken).to.equal(
-                        refreshTokensResponse.access,
-                      );
-                      // JWT not be expired
-                      expect(store.isJwtExpired()).to.equal(false);
-                      expect(store.getJwtExpiration).to.equal(
-                        fixtureTokenRefreshExpirationTime,
-                      );
+                    // set time to when JWT should be expired
+                    clock.tick(timeUntilExpiration);
+                    nextTick().then(() => {
+                      expect(store.getTimeUntilExpiration()).to.be.equal(0);
+                      expect(store.isJwtExpired()).to.equal(true);
+                      // refresh tokens
+                      cy.wrap(store.refreshTokens()).then(() => {
+                        nextTick().then(() => {
+                          // new JWT
+                          expect(store.getAccessToken).to.equal(
+                            refreshTokensResponse.access,
+                          );
+                          // JWT not be expired
+                          expect(store.isJwtExpired()).to.equal(false);
+                          expect(store.getJwtExpiration).to.equal(
+                            fixtureTokenRefreshExpirationTime,
+                          );
+                        });
+                      });
                     });
                   });
                 },
