@@ -36,21 +36,29 @@ export const testLanguageSwitcher = (): void => {
           .find('.q-btn')
           .should('have.class', 'bg-secondary');
 
-        locales?.forEach((locale) => {
-          if (locale !== initialActiveLocale) {
-            // changing the language
-            cy.dataCy('switcher-' + locale)
-              .should('exist')
-              .and('be.visible');
-            cy.dataCy('switcher-' + locale)
-              .find('.q-btn')
-              .as('switcher-button')
-              .click();
-            // old language becomes inactive
-            cy.get('@switcher-button').should('have.class', 'bg-white');
-            // new language becomes active
-            cy.get('@switcher-button').should('have.class', 'bg-secondary');
-          }
+        locales?.forEach((selectedLocale) => {
+          cy.dataCy('switcher-button-' + selectedLocale).click();
+          locales?.forEach((locale) => {
+            if (locale !== selectedLocale) {
+              // inactive language
+              cy.dataCy('switcher-' + locale)
+                .should('exist')
+                .and('be.visible');
+              cy.dataCy('switcher-button-' + locale).should(
+                'have.class',
+                'bg-white',
+              );
+            } else {
+              // active language
+              cy.dataCy('switcher-' + locale)
+                .should('exist')
+                .and('be.visible');
+              cy.dataCy('switcher-button-' + locale).should(
+                'have.class',
+                'bg-secondary',
+              );
+            }
+          });
         });
       });
   });

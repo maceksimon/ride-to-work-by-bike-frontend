@@ -82,6 +82,7 @@ export default defineComponent({
         @click.prevent="$i18n.locale = item"
         :class="getButtonClasses(item)"
         size="13px"
+        :data-cy="'switcher-button-' + item"
       >
         {{ item }}
       </q-btn>
