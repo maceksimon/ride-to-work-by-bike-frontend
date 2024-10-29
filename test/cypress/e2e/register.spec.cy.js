@@ -4,6 +4,7 @@ import {
   httpSuccessfullStatus,
   httpInternalServerErrorStatus,
   systemTimeLoggedIn,
+  systemTimeChallengeInactive,
   systemTimeChallengeActive,
   setupApiChallengeActive,
 } from '../support/commonTests';
@@ -87,6 +88,26 @@ describe('Register page', () => {
         .invoke('attr', 'href')
         .should('contain', routesConf['login']['path']);
     });
+  });
+
+  context('inactive challenge', () => {
+    beforeEach(() => {
+      cy.clock(systemTimeChallengeInactive);
+      cy.visit('#' + routesConf['register']['path']);
+      cy.viewport('macbook-16');
+
+      // load config an i18n objects as aliases
+      cy.task('getAppConfig', process).then((config) => {
+        // alias config
+        cy.wrap(config).as('config');
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          // alias i18n
+          cy.wrap(win.i18n).as('i18n');
+          setupApiChallengeActive(config, win.i18n, false);
+        });
+      });
+    });
 
     it('shows error message on registration failure', () => {
       cy.get('@i18n').then((i18n) => {
@@ -120,6 +141,7 @@ describe('Register page', () => {
           cy.wait('@registerRequest');
           // check error message
           cy.get('@i18n').then((i18n) => {
+            cy.tick(1000);
             cy.contains(
               i18n.global.t('register.apiMessageErrorWithMessage'),
             ).should('be.visible');
