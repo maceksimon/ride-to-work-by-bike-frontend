@@ -350,7 +350,7 @@ describe('<FormLogin>', () => {
     });
 
     it('allows to save tokens and user into store', () => {
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (loginResponse) => {
           const store = useLoginStore();
           store.setAccessToken(loginResponse.access);
@@ -423,7 +423,7 @@ describe('<FormLogin>', () => {
         i18n,
       );
       const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (loginResponse) => {
           cy.intercept('POST', apiLoginUrl, {
             statusCode: httpSuccessfullStatus,
@@ -434,7 +434,7 @@ describe('<FormLogin>', () => {
     });
 
     it('performs login and refreshes token 1 min before expiration', () => {
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (loginResponse) => {
           cy.get('@clock').then((clock) => {
             const store = useLoginStore();
@@ -498,7 +498,7 @@ describe('<FormLogin>', () => {
     });
 
     it('performs login and sets token and expiration time', () => {
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (loginResponse) => {
           cy.get('@clock').then((clock) => {
             const store = useLoginStore();

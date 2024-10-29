@@ -75,7 +75,7 @@ describe('<EmailVerification>', () => {
         props: {},
       }).then(() => {
         // set store var
-        cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+        cy.fixture('loginRegisterResponseChallengeActive.json').then(
           (loginResponse) => {
             const loginStore = useLoginStore();
             loginStore.setUser(loginResponse.user);
@@ -111,7 +111,7 @@ describe('<EmailVerification>', () => {
         props: {},
       }).then(() => {
         // set store var
-        cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+        cy.fixture('loginRegisterResponseChallengeActive.json').then(
           (loginResponse) => {
             const loginStore = useLoginStore();
             loginStore.setUser(loginResponse.user);
@@ -126,7 +126,7 @@ describe('<EmailVerification>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+    cy.fixture('loginRegisterResponseChallengeActive.json').then(
       (loginResponse) => {
         cy.dataCy(selectorEmailVerification).should('be.visible');
         // title

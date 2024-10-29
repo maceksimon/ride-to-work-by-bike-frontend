@@ -128,7 +128,7 @@ export const testDesktopSidebar = (): void => {
   testUserSelect(selectorUserSelectDesktop);
 
   it('renders user email in UserSelect after login', () => {
-    cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+    cy.fixture('loginRegisterResponseChallengeActive.json').then(
       (loginResponse) => {
         cy.fixture('refreshTokensResponse.json').then(
           (refreshTokensResponse) => {

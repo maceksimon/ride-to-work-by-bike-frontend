@@ -51,7 +51,7 @@ describe('<UserSelect>', () => {
     });
 
     it('allows to logout', () => {
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (loginResponse) => {
           cy.fixture('loggedUser').then((user) => {
             const loginStore = useLoginStore();

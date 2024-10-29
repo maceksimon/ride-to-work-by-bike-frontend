@@ -4,9 +4,9 @@ import {
   httpSuccessfullStatus,
   httpInternalServerErrorStatus,
   systemTimeLoggedIn,
-  systemTimeChallengeInactive,
   systemTimeChallengeActive,
   setupApiChallengeActive,
+  setupApiChallengeInactive,
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
@@ -92,20 +92,18 @@ describe('Register page', () => {
 
   context('inactive challenge', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeInactive).then(() => {
-        cy.viewport('macbook-16');
-        cy.visit('#' + routesConf['register']['path']);
+      cy.viewport('macbook-16');
+      cy.visit('#' + routesConf['register']['path']);
 
-        // load config an i18n objects as aliases
-        cy.task('getAppConfig', process).then((config) => {
-          // alias config
-          cy.wrap(config).as('config');
-          cy.window().should('have.property', 'i18n');
-          cy.window().then((win) => {
-            // alias i18n
-            cy.wrap(win.i18n).as('i18n');
-            setupApiChallengeActive(config, win.i18n, false);
-          });
+      // load config an i18n objects as aliases
+      cy.task('getAppConfig', process).then((config) => {
+        // alias config
+        cy.wrap(config).as('config');
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          // alias i18n
+          cy.wrap(win.i18n).as('i18n');
+          setupApiChallengeInactive(config, win.i18n, false);
         });
       });
     });
@@ -150,6 +148,27 @@ describe('Register page', () => {
         });
       });
     });
+  });
+
+  context('active challenge', () => {
+    beforeEach(() => {
+      cy.clock(systemTimeChallengeActive).then(() => {
+        cy.visit('#' + routesConf['register']['path']);
+        cy.viewport('macbook-16');
+
+        // load config an i18n objects as aliases
+        cy.task('getAppConfig', process).then((config) => {
+          // alias config
+          cy.wrap(config).as('config');
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            // alias i18n
+            cy.wrap(win.i18n).as('i18n');
+            setupApiChallengeActive(config, win.i18n, false);
+          });
+        });
+      });
+    });
 
     // ! router redirection rules are enabled for this file in /router/index.ts
     it('allows user to register with valid credentials and requires email verification to access other pages', () => {
@@ -170,7 +189,7 @@ describe('Register page', () => {
           );
           const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
           const apiEmailVerificationUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
-          cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+          cy.fixture('loginRegisterResponseChallengeActive.json').then(
             (registerResponse) => {
               // intercept register request
               cy.intercept('POST', apiRegisterUrl, {
@@ -193,10 +212,6 @@ describe('Register page', () => {
                 cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
                   testPassword,
                 );
-                // accept privacy policy
-                cy.dataCy(selectorFormRegisterPrivacyConsent)
-                  .should('be.visible')
-                  .click('topLeft');
                 cy.dataCy(selectorFormRegisterSubmit).click();
                 // wait for request to complete
                 cy.wait('@registerRequest').then((interception) => {
@@ -254,27 +269,6 @@ describe('Register page', () => {
               });
             },
           );
-        });
-      });
-    });
-  });
-
-  context('active challenge', () => {
-    beforeEach(() => {
-      cy.clock(systemTimeChallengeActive).then(() => {
-        cy.visit('#' + routesConf['register']['path']);
-        cy.viewport('macbook-16');
-
-        // load config an i18n objects as aliases
-        cy.task('getAppConfig', process).then((config) => {
-          // alias config
-          cy.wrap(config).as('config');
-          cy.window().should('have.property', 'i18n');
-          cy.window().then((win) => {
-            // alias i18n
-            cy.wrap(win.i18n).as('i18n');
-            setupApiChallengeActive(config, win.i18n, false);
-          });
         });
       });
     });

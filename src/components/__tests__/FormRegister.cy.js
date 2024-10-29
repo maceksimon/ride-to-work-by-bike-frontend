@@ -370,7 +370,7 @@ describe('<FormRegister>', () => {
         i18n,
       );
       const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (registerResponse) => {
           // intercept registration API call
           cy.intercept('POST', apiRegisterUrl, {
@@ -460,7 +460,7 @@ describe('<FormRegister>', () => {
         i18n,
       );
       const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (registerResponse) => {
           // intercept registration API call
           cy.intercept('POST', apiRegisterUrl, {
@@ -535,7 +535,7 @@ describe('<FormRegister>', () => {
         i18n,
       );
       const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('loginRegisterResponseChallengeInactive.json').then(
+      cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (registerResponse) => {
           // intercept registration API call
           cy.intercept('POST', apiRegisterUrl, {
