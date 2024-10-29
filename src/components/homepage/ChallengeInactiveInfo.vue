@@ -16,13 +16,19 @@
 import { colors } from 'quasar';
 import { defineComponent } from 'vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 export default defineComponent({
   name: 'ChallengeInactiveInfo',
   setup() {
     // colors
     const { getPaletteColor, changeAlpha } = colors;
     const white = getPaletteColor('white');
-    const whiteOpacity20 = changeAlpha(white, 0.2);
+    const whiteOpacity20 = changeAlpha(
+      white,
+      rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
+    );
 
     return {
       white,

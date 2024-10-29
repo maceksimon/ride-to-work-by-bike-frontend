@@ -1,11 +1,15 @@
 import { colors } from 'quasar';
 import ChallengeInactiveInfo from 'components/homepage/ChallengeInactiveInfo.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // colors
 const { getPaletteColor, changeAlpha } = colors;
 const white = getPaletteColor('white');
-const whiteOpacity20 = changeAlpha(white, 0.2);
+const whiteOpacity20 = changeAlpha(
+  white,
+  rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
+);
 
 // selectors
 const selectorChallengeInactiveInfo = 'challenge-inactive-info';
