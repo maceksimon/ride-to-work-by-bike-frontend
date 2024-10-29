@@ -69,7 +69,7 @@ export const useChallengeStore = defineStore('challenge', {
         this.$log?.debug(`Now date <${now}>`);
         return now >= startDate && now <= endDate;
       }
-      this.$log?.debug(`No <${phaseType}> phase found.`);
+      this.$log?.info(`No <${phaseType}> phase found.`);
       return false;
     },
   },
