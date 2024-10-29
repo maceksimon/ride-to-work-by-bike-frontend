@@ -47,14 +47,14 @@ describe('Login page', () => {
               );
             },
           );
+          /**
+           * Visit register coordinator page to run tests.
+           * Intercepts need to be setup as organizations load on mount.
+           */
+          cy.visit('#' + routesConf['register_coordinator']['path']);
+          cy.viewport('macbook-16');
         });
       });
-      /**
-       * Visit register coordinator page to run tests.
-       * Intercepts need to be setup as organizations load on mount.
-       */
-      cy.visit('#' + routesConf['register_coordinator']['path']);
-      cy.viewport('macbook-16');
     });
 
     testBackgroundImage();
