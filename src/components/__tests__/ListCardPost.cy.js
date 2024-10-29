@@ -4,6 +4,13 @@ import { hexToRgb } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+import {
+  failOnStatusCode,
+  httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+} from '../../../test/cypress/support/commonTests';
+
 // variables
 const title = i18n.global.t('index.cardListPost.title');
 const buttonUrl = rideToWorkByBikeConfig.urlBlog;
@@ -147,5 +154,15 @@ function coreTests() {
       .and('contain', i18n.global.t('index.cardListPost.button'))
       .invoke('attr', 'href')
       .should('equal', buttonUrl);
+    cy.request({
+      url: buttonUrl,
+      failOnStatusCode: failOnStatusCode,
+    }).then((resp) => {
+      if (resp.status === httpTooManyRequestsStatus) {
+        cy.log(httpTooManyRequestsStatusMessage);
+        return;
+      }
+      expect(resp.status).to.eq(httpSuccessfullStatus);
+    });
   });
 }
