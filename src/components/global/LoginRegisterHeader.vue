@@ -21,12 +21,14 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { Screen } from 'quasar';
+import { computed, defineComponent } from 'vue';
 
 // components
 import HeaderLogo from './HeaderLogo.vue';
 import HelpButton from './HelpButton.vue';
 import LanguageSwitcher from './LanguageSwitcher.vue';
+import LoginRegisterMobileMenu from './LoginRegisterMobileMenu.vue';
 
 export default defineComponent({
   name: 'LoginRegisterHeader',
@@ -34,9 +36,24 @@ export default defineComponent({
     HeaderLogo,
     HelpButton,
     LanguageSwitcher,
+    LoginRegisterMobileMenu,
   },
   setup() {
-    return {};
+    const isDesktop = computed((): boolean => {
+      return Screen.gt.sm;
+    });
+    const logoHeight = computed((): string => {
+      return isDesktop.value ? '80px' : '48px';
+    });
+    const logoWidth = computed((): string => {
+      return isDesktop.value ? '280px' : '170px';
+    });
+
+    return {
+      isDesktop,
+      logoHeight,
+      logoWidth,
+    };
   },
 });
 </script>
@@ -44,18 +61,20 @@ export default defineComponent({
 <template>
   <div class="flex items-center justify-between q-py-lg">
     <!-- RTWBB logo -->
-    <header-logo width="280px" height="80px" data-cy="header-logo" />
-    <div class="flex items-center gap-32">
+    <header-logo
+      :width="logoWidth"
+      :height="logoHeight"
+      data-cy="header-logo"
+    />
+    <div v-if="isDesktop" class="flex items-center gap-32">
       <!-- Help icon link for displaying modal dialog -->
       <help-button data-cy="help-button" />
       <!-- Language switcher -->
       <language-switcher variant="light" data-cy="language-switcher" />
     </div>
+    <div v-else class="flex items-center gap-16">
+      <!-- Mobile menu -->
+      <login-register-mobile-menu />
+    </div>
   </div>
 </template>
-
-<style scoped lang="scss">
-.logo {
-  height: 80px;
-}
-</style>
