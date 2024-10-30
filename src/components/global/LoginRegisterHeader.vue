@@ -74,7 +74,7 @@ export default defineComponent({
     </div>
     <div v-else class="flex items-center gap-16">
       <!-- Mobile menu -->
-      <login-register-mobile-menu />
+      <login-register-mobile-menu data-cy="login-register-mobile-menu" />
     </div>
   </div>
 </template>
