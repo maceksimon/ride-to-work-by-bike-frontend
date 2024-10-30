@@ -66,7 +66,7 @@ export default defineComponent({
       :height="logoHeight"
       data-cy="header-logo"
     />
-    <div v-if="!isDesktop" class="flex items-center gap-32">
+    <div v-if="isDesktop" class="flex items-center gap-32">
       <!-- Help icon link for displaying modal dialog -->
       <help-button data-cy="help-button" />
       <!-- Language switcher -->

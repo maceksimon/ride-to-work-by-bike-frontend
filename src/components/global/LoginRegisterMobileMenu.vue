@@ -21,8 +21,23 @@
 // libraries
 import { defineComponent } from 'vue';
 
+// components
+import HelpButton from './HelpButton.vue';
+
 export default defineComponent({
   name: 'LoginRegisterMobileMenu',
+  components: {
+    HelpButton,
+  },
+  setup() {
+    const mobileMenuOffsetTop = 20;
+    const mobileMenuOffsetRight = 0;
+
+    return {
+      mobileMenuOffsetTop,
+      mobileMenuOffsetRight,
+    };
+  },
 });
 </script>
 
@@ -32,12 +47,16 @@ export default defineComponent({
       class="block"
       anchor="bottom right"
       self="top right"
-      :offset="[0, 20]"
+      :offset="[mobileMenuOffsetRight, mobileMenuOffsetTop]"
     >
       <q-list style="min-width: 80vw">
-        <q-item clickable v-close-popup>
-          <q-item-section>New tab</q-item-section>
-        </q-item>
+        <help-button>
+          <template #button="{ openDialog }">
+            <q-item clickable @click.prevent="openDialog">
+              <q-item-section>New tab</q-item-section>
+            </q-item>
+          </template>
+        </help-button>
         <q-item clickable v-close-popup>
           <q-item-section>New incognito tab</q-item-section>
         </q-item>
