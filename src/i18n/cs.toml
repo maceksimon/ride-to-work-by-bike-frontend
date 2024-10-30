@@ -415,10 +415,10 @@ apiMessageError = "Přihlášení se nezdařilo. Prosím, zkuste to znovu pozdě
 apiMessageErrorWithMessage = "Přihlášení se nezdařilo. Prosím, zkuste to znovu později. Chyba: {error}"
 
 [loginRegisterMobileMenu]
-labelLoggedInAs = "Jste přihlášeni jako"
 labelHelp = "Nápověda"
-labelLogOut = "Odhlásit se"
 labelLanguage = "Jazyk"
+labelLoggedInAs = "Jste přihlášeni jako"
+labelLogOut = "Odhlásit se"
 
 [login.form]
 titleLogin = "Přihlášení"

@@ -70,7 +70,11 @@ export default defineComponent({
       >
         <q-list style="min-width: 80vw" class="q-py-sm">
           <!-- Logged in info -->
-          <q-item class="text-center" data-cy="mobile-menu-user-info">
+          <q-item
+            v-if="userEmail"
+            class="text-center"
+            data-cy="mobile-menu-user-info"
+          >
             <q-item-section>
               <q-item-label caption data-cy="mobile-menu-user-info-label">
                 {{ $t('loginRegisterMobileMenu.labelLoggedInAs') }}
@@ -83,9 +87,9 @@ export default defineComponent({
               </q-item-label>
             </q-item-section>
           </q-item>
-          <q-separator class="q-my-sm" />
+          <q-separator v-if="userEmail" class="q-my-sm" />
           <!-- Item: Help -->
-          <help-button>
+          <help-button data-cy="mobile-menu-help">
             <template #button="{ openDialog }">
               <q-item clickable @click.prevent="openDialog">
                 <q-item-section>{{
@@ -110,6 +114,7 @@ export default defineComponent({
               variant="light"
               class="q-py-none q-my-none"
               style="padding: 0"
+              data-cy="language-switcher"
             />
           </q-item>
         </q-list>
