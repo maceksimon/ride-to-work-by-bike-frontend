@@ -40,20 +40,20 @@ export default defineComponent({
     LanguageSwitcher,
   },
   setup() {
-    const mobileMenuOffsetTop = 20;
-    const mobileMenuOffsetRight = 0;
-
     const isOpen = ref(false);
     const icon = computed(() => (isOpen.value ? 'close' : 'menu'));
 
     const loginStore = useLoginStore();
     const userEmail = computed((): string => loginStore.getUserEmail);
+
     const { borderRadiusCard: borderRadius, colorWhiteBackgroundOpacity } =
       rideToWorkByBikeConfig;
     const { getPaletteColor, changeAlpha } = colors;
     const white = getPaletteColor('white');
     const whiteOpacity = changeAlpha(white, colorWhiteBackgroundOpacity);
     const border = `1px solid ${whiteOpacity}`;
+    const mobileMenuOffsetTop = 20;
+    const mobileMenuOffsetRight = 0;
 
     return {
       border,
@@ -70,6 +70,7 @@ export default defineComponent({
 
 <template>
   <div data-cy="login-register-mobile-menu">
+    <!-- Menu button -->
     <q-btn
       unelevated
       round
@@ -78,6 +79,7 @@ export default defineComponent({
       :icon="icon"
       data-cy="mobile-menu-button"
     >
+      <!-- Menu dropdown -->
       <q-menu
         v-model="isOpen"
         dark
@@ -97,9 +99,11 @@ export default defineComponent({
             data-cy="mobile-menu-user-info"
           >
             <q-item-section>
+              <!-- Label -->
               <q-item-label caption data-cy="mobile-menu-user-info-label">
                 {{ $t('loginRegisterMobileMenu.labelLoggedInAs') }}
               </q-item-label>
+              <!-- Email -->
               <q-item-label
                 class="text-weight-bold text-white"
                 data-cy="mobile-menu-user-info-email"
@@ -108,6 +112,7 @@ export default defineComponent({
               </q-item-label>
             </q-item-section>
           </q-item>
+          <!-- Separator -->
           <q-separator
             v-if="userEmail"
             dark
@@ -117,10 +122,11 @@ export default defineComponent({
           <!-- Item: Help -->
           <help-button data-cy="mobile-menu-help">
             <template #button="{ openDialog }">
+              <!-- Item -->
               <q-item dark clickable @click.prevent="openDialog">
-                <q-item-section>{{
-                  $t('loginRegisterMobileMenu.labelHelp')
-                }}</q-item-section>
+                <q-item-section>
+                  {{ $t('loginRegisterMobileMenu.labelHelp') }}
+                </q-item-section>
               </q-item>
             </template>
           </help-button>
@@ -130,7 +136,9 @@ export default defineComponent({
               $t('loginRegisterMobileMenu.labelLogOut')
             }}</q-item-section>
           </q-item>
+          <!-- Separator -->
           <q-separator dark class="q-my-sm" data-cy="mobile-menu-separator" />
+          <!-- Language header -->
           <q-item-label header data-cy="mobile-menu-language-header">
             {{ $t('loginRegisterMobileMenu.labelLanguage') }}
           </q-item-label>

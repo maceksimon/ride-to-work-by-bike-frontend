@@ -5,32 +5,32 @@ import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { useLoginStore } from '../../stores/login';
 
-// config
-const { borderRadiusCard, colorWhiteBackgroundOpacity } =
-  rideToWorkByBikeConfig;
-
 // colors
 const { getPaletteColor } = colors;
 const primary = getPaletteColor('primary');
 const white = getPaletteColor('white');
-const border = `1px solid rgba(255, 255, 255, ${colorWhiteBackgroundOpacity})`;
+
+// config
+const { borderRadiusCard, colorWhiteBackgroundOpacity } =
+  rideToWorkByBikeConfig;
 
 // selectors
-const selectorMobileMenu = 'login-register-mobile-menu';
+const selectorDialogHelp = 'dialog-help';
 const selectorMenuButton = 'mobile-menu-button';
 const selectorMenuDropdown = 'mobile-menu-dropdown';
 const selectorMenuHelp = 'mobile-menu-help';
-const selectorDialogHelp = 'dialog-help';
 const selectorMenuLanguageHeader = 'mobile-menu-language-header';
 const selectorMenuLanguageSwitcher = 'mobile-menu-language-switcher';
 const selectorMenuLogout = 'mobile-menu-logout';
-const selectorMenuUserInfo = 'mobile-menu-user-info';
-const selectorMenuUserInfoLabel = 'mobile-menu-user-info-label';
-const selectorMenuUserInfoEmail = 'mobile-menu-user-info-email';
 const selectorMenuSeparator = 'mobile-menu-separator';
+const selectorMenuUserInfo = 'mobile-menu-user-info';
+const selectorMenuUserInfoEmail = 'mobile-menu-user-info-email';
+const selectorMenuUserInfoLabel = 'mobile-menu-user-info-label';
+const selectorMobileMenu = 'login-register-mobile-menu';
 
 // variables
 const fontWeightBold = 700;
+const border = `1px solid rgba(255, 255, 255, ${colorWhiteBackgroundOpacity})`;
 
 describe('<LoginRegisterMobileMenu>', () => {
   beforeEach(() => {
