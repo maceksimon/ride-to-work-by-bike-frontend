@@ -2,11 +2,17 @@ import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
 import LoginRegisterMobileMenu from 'components/global/LoginRegisterMobileMenu.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
+// config
+const { borderRadiusCard, colorWhiteBackgroundOpacity } =
+  rideToWorkByBikeConfig;
 
 // colors
 const { getPaletteColor } = colors;
 const primary = getPaletteColor('primary');
 const white = getPaletteColor('white');
+const border = `1px solid rgba(255, 255, 255, ${colorWhiteBackgroundOpacity})`;
 
 // selectors
 const selectorMobileMenu = 'login-register-mobile-menu';
@@ -57,7 +63,11 @@ describe('<LoginRegisterMobileMenu>', () => {
       // click menu button
       cy.dataCy(selectorMenuButton).click();
       // menu dropdown
-      cy.dataCy(selectorMenuDropdown).should('be.visible');
+      cy.dataCy(selectorMenuDropdown)
+        .should('be.visible')
+        .and('have.backgroundColor', primary)
+        .and('have.css', 'border', border)
+        .and('have.css', 'border-radius', borderRadiusCard);
       // help button
       cy.dataCy(selectorMenuHelp).should('be.visible');
       // language header
