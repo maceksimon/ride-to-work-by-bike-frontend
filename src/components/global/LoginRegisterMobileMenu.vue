@@ -2,28 +2,20 @@
 /**
  * LoginRegisterMobileMenu Component
  *
- * @description * Use this component to ... .
- * You can adjust its appearance by ... .
- *
- * @props
- * - `NAME` (TYPE, required): The object representing ... .
- *   It should be of type `TYPE`.
- *
- * @events
- * - `update:modelValue`: Emitted as a part of v-model structure.
- *
- * @slots
- * - `content`: For ... .
- *   exposed props and methods:
- *     - `state`
+ * @description * Use this component to render a mobile dropdown menu in
+ * `LoginRegisterHeader` component.
+ * Note: It should be rendered only on mobile devices and only on pages
+ * using the `LoginRegisterLayout`.
  *
  * @components
- * - `CHILD`: Component to ... .
+ * - `HelpButton`: Component to render help icon with dialog.
  *
  * @example
- * <LoginRegisterMobileMenu></LoginRegisterMobileMenu>
+ * <login-register-mobile-menu />
  *
- * @see [Figma Design](...)
+ * @see
+ * [Figma Design: Variant Logged out](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=1074-15529&t=4UqwJpgG48utdVoI-1)
+ * [Figma Design: Variant Logged in](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=1174-15287&t=4UqwJpgG48utdVoI-1)
  */
 
 // libraries
