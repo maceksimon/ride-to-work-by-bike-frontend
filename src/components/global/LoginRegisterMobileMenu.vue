@@ -20,11 +20,14 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 // components
 import HelpButton from './HelpButton.vue';
 import LanguageSwitcher from './LanguageSwitcher.vue';
+
+// stores
+import { useLoginStore } from '../../stores/login';
 
 export default defineComponent({
   name: 'LoginRegisterMobileMenu',
@@ -36,64 +39,81 @@ export default defineComponent({
     const mobileMenuOffsetTop = 20;
     const mobileMenuOffsetRight = 0;
 
+    const loginStore = useLoginStore();
+    const userEmail = computed((): string => loginStore.getUserEmail);
+
     return {
       mobileMenuOffsetTop,
       mobileMenuOffsetRight,
+      userEmail,
     };
   },
 });
 </script>
 
 <template>
-  <q-btn unelevated round color="white" text-color="primary" icon="menu">
-    <q-menu
-      class="block"
-      anchor="bottom right"
-      self="top right"
-      :offset="[mobileMenuOffsetRight, mobileMenuOffsetTop]"
+  <div data-cy="login-register-mobile-menu">
+    <q-btn
+      unelevated
+      round
+      color="white"
+      text-color="primary"
+      icon="menu"
+      data-cy="mobile-menu-button"
     >
-      <q-list style="min-width: 80vw" class="q-py-sm">
-        <!-- Logged in info -->
-        <q-item class="text-center">
-          <q-item-section>
-            <q-item-label caption>{{
-              $t('loginRegisterMobileMenu.labelLoggedInAs')
-            }}</q-item-label>
-            <q-item-label class="text-weight-bold text-primary"
-              >anonym@dopracenakole.cz</q-item-label
-            >
-          </q-item-section>
-        </q-item>
-        <q-separator class="q-my-sm" />
-        <!-- Item: Help -->
-        <help-button>
-          <template #button="{ openDialog }">
-            <q-item clickable @click.prevent="openDialog">
-              <q-item-section>{{
-                $t('loginRegisterMobileMenu.labelHelp')
-              }}</q-item-section>
-            </q-item>
-          </template>
-        </help-button>
-        <!-- Item: Log out -->
-        <q-item clickable v-close-popup>
-          <q-item-section>{{
-            $t('loginRegisterMobileMenu.labelLogOut')
-          }}</q-item-section>
-        </q-item>
-        <q-separator class="q-my-sm" />
-        <q-item-label header>{{
-          $t('loginRegisterMobileMenu.labelLanguage')
-        }}</q-item-label>
-        <q-item v-close-popup>
-          <!-- Item: Language switcher -->
-          <language-switcher
-            variant="light"
-            class="q-py-none q-my-none"
-            style="padding: 0"
-          />
-        </q-item>
-      </q-list>
-    </q-menu>
-  </q-btn>
+      <q-menu
+        class="block"
+        anchor="bottom right"
+        self="top right"
+        :offset="[mobileMenuOffsetRight, mobileMenuOffsetTop]"
+        data-cy="mobile-menu-dropdown"
+      >
+        <q-list style="min-width: 80vw" class="q-py-sm">
+          <!-- Logged in info -->
+          <q-item class="text-center" data-cy="mobile-menu-user-info">
+            <q-item-section>
+              <q-item-label caption data-cy="mobile-menu-user-info-label">
+                {{ $t('loginRegisterMobileMenu.labelLoggedInAs') }}
+              </q-item-label>
+              <q-item-label
+                class="text-weight-bold text-primary"
+                data-cy="mobile-menu-user-info-email"
+              >
+                {{ userEmail }}
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator class="q-my-sm" />
+          <!-- Item: Help -->
+          <help-button>
+            <template #button="{ openDialog }">
+              <q-item clickable @click.prevent="openDialog">
+                <q-item-section>{{
+                  $t('loginRegisterMobileMenu.labelHelp')
+                }}</q-item-section>
+              </q-item>
+            </template>
+          </help-button>
+          <!-- Item: Log out -->
+          <q-item clickable v-close-popup data-cy="mobile-menu-logout">
+            <q-item-section>{{
+              $t('loginRegisterMobileMenu.labelLogOut')
+            }}</q-item-section>
+          </q-item>
+          <q-separator class="q-my-sm" />
+          <q-item-label header data-cy="mobile-menu-language-header">
+            {{ $t('loginRegisterMobileMenu.labelLanguage') }}
+          </q-item-label>
+          <q-item v-close-popup data-cy="mobile-menu-language-switcher">
+            <!-- Item: Language switcher -->
+            <language-switcher
+              variant="light"
+              class="q-py-none q-my-none"
+              style="padding: 0"
+            />
+          </q-item>
+        </q-list>
+      </q-menu>
+    </q-btn>
+  </div>
 </template>
