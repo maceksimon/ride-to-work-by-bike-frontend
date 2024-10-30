@@ -411,6 +411,12 @@ apiMessageSuccess = "Login was successful"
 apiMessageError = "Login failed. Please try again later. {error}"
 apiMessageErrorWithMessage = "Login failed. Please try again later. Error: {error}"
 
+[loginRegisterMobileMenu]
+labelLoggedInAs = "You are logged in as"
+labelHelp = "Help"
+labelLogOut = "Log out"
+labelLanguage = "Language"
+
 [login.form]
 titleLogin = "Login"
 titlePasswordReset = "Forgotten password"

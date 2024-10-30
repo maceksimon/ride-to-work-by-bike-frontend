@@ -56,7 +56,9 @@ export default defineComponent({
         <!-- Logged in info -->
         <q-item class="text-center">
           <q-item-section>
-            <q-item-label caption>Jste přihlášeni jako</q-item-label>
+            <q-item-label caption>{{
+              $t('loginRegisterMobileMenu.labelLoggedInAs')
+            }}</q-item-label>
             <q-item-label class="text-weight-bold text-primary"
               >anonym@dopracenakole.cz</q-item-label
             >
@@ -67,15 +69,22 @@ export default defineComponent({
         <help-button>
           <template #button="{ openDialog }">
             <q-item clickable @click.prevent="openDialog">
-              <q-item-section>{{ 'Nápověda' }}</q-item-section>
+              <q-item-section>{{
+                $t('loginRegisterMobileMenu.labelHelp')
+              }}</q-item-section>
             </q-item>
           </template>
         </help-button>
         <!-- Item: Log out -->
         <q-item clickable v-close-popup>
-          <q-item-section>Odhlásit se</q-item-section>
+          <q-item-section>{{
+            $t('loginRegisterMobileMenu.labelLogOut')
+          }}</q-item-section>
         </q-item>
         <q-separator class="q-my-sm" />
+        <q-item-label header>{{
+          $t('loginRegisterMobileMenu.labelLanguage')
+        }}</q-item-label>
         <q-item v-close-popup>
           <!-- Item: Language switcher -->
           <language-switcher

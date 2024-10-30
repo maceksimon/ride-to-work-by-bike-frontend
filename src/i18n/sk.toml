@@ -411,6 +411,12 @@ apiMessageSuccess = "Prihlásenie bolo úspešné"
 apiMessageError = "Prihlásenie sa nepodarilo. Prosím, skúste to znovu později. {error}"
 apiMessageErrorWithMessage = "Prihlásenie sa nepodarilo. Prosím, skúste to znovu později. Chyba: {error}"
 
+[loginRegisterMobileMenu]
+labelLoggedInAs = "Ste prihlásení ako"
+labelHelp = "Pomocník"
+labelLogOut = "Odhlásiť sa"
+labelLanguage = "Jazyk"
+
 [login.form]
 titleLogin = "Prihlásenie"
 titlePasswordReset = "Zabudnuté heslo"
