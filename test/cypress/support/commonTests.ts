@@ -407,6 +407,6 @@ export const timeUntilExpiration = timeUntilRefresh * 2;
 export const systemTimeLoggedIn =
   fixtureTokenExpirationTime - timeUntilExpiration;
 // time before challenge starts
-export const systemTimeChallengeInactive = new Date('2024-09-15T23:59:00.000Z');
+export const systemTimeChallengeInactive = new Date('2024-08-14T23:59:00.000Z');
 // time after challenge starts
 export const systemTimeChallengeActive = new Date('2024-09-16T00:01:00.000Z');
