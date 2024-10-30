@@ -1,9 +1,10 @@
+import { nextTick } from 'vue';
 import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
 import LoginRegisterMobileMenu from 'components/global/LoginRegisterMobileMenu.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
-import { useLoginStore } from '../../stores/login';
+import { emptyUser, useLoginStore } from '../../stores/login';
 
 // colors
 const { getPaletteColor } = colors;
@@ -171,6 +172,25 @@ describe('<LoginRegisterMobileMenu>', () => {
         cy.dataCy(selectorMenuSeparator).last().should('exist');
         cy.dataCy(selectorMenuLanguageHeader).should('be.visible');
         cy.dataCy(selectorMenuLanguageSwitcher).should('be.visible');
+      });
+    });
+
+    it('logs out user when logout button is clicked', () => {
+      const store = useLoginStore();
+      // user is logged in
+      cy.wrap(store.getUserEmail).should('not.be.empty');
+      // open menu and click logout
+      cy.dataCy(selectorMenuButton).click();
+      cy.dataCy(selectorMenuLogout).click();
+      // menu is closed
+      cy.dataCy(selectorMenuDropdown).should('not.exist');
+      // store is cleared
+      nextTick(() => {
+        cy.wrap(store.getUserEmail).should('be.empty');
+        cy.wrap(store.getUser).should('deep.equal', emptyUser);
+        cy.wrap(store.getAccessToken).should('be.empty');
+        cy.wrap(store.getRefreshToken).should('be.empty');
+        cy.wrap(store.getJwtExpiration).should('be.null');
       });
     });
   });

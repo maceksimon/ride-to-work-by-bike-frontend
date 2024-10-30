@@ -55,6 +55,10 @@ export default defineComponent({
     const mobileMenuOffsetTop = 20;
     const mobileMenuOffsetRight = 0;
 
+    const onLogout = () => {
+      loginStore.logout();
+    };
+
     return {
       border,
       borderRadius,
@@ -62,6 +66,7 @@ export default defineComponent({
       isOpen,
       mobileMenuOffsetTop,
       mobileMenuOffsetRight,
+      onLogout,
       userEmail,
     };
   },
@@ -131,7 +136,13 @@ export default defineComponent({
             </template>
           </help-button>
           <!-- Item: Log out -->
-          <q-item dark clickable v-close-popup data-cy="mobile-menu-logout">
+          <q-item
+            dark
+            clickable
+            v-close-popup
+            data-cy="mobile-menu-logout"
+            @click="onLogout"
+          >
             <q-item-section>{{
               $t('loginRegisterMobileMenu.labelLogOut')
             }}</q-item-section>
