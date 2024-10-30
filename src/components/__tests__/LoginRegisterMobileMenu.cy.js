@@ -3,6 +3,7 @@ import { createPinia, setActivePinia } from 'pinia';
 import LoginRegisterMobileMenu from 'components/global/LoginRegisterMobileMenu.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { useLoginStore } from '../../stores/login';
 
 // config
 const { borderRadiusCard, colorWhiteBackgroundOpacity } =
@@ -22,7 +23,14 @@ const selectorMenuHelp = 'mobile-menu-help';
 const selectorDialogHelp = 'dialog-help';
 const selectorMenuLanguageHeader = 'mobile-menu-language-header';
 const selectorMenuLanguageSwitcher = 'mobile-menu-language-switcher';
+const selectorMenuLogout = 'mobile-menu-logout';
 const selectorMenuUserInfo = 'mobile-menu-user-info';
+const selectorMenuUserInfoLabel = 'mobile-menu-user-info-label';
+const selectorMenuUserInfoEmail = 'mobile-menu-user-info-email';
+const selectorMenuSeparator = 'mobile-menu-separator';
+
+// variables
+const fontWeightBold = 700;
 
 describe('<LoginRegisterMobileMenu>', () => {
   beforeEach(() => {
@@ -54,6 +62,12 @@ describe('<LoginRegisterMobileMenu>', () => {
         .should('be.visible')
         .and('have.backgroundColor', white)
         .and('have.color', primary);
+      // changing menu icon
+      cy.dataCy(selectorMenuButton).should('contain', 'menu');
+      cy.dataCy(selectorMenuButton).click();
+      cy.dataCy(selectorMenuButton).should('contain', 'close');
+      cy.dataCy(selectorMenuButton).click();
+      cy.dataCy(selectorMenuButton).should('contain', 'menu');
     });
 
     it('shows menu with correct items when clicked', () => {
@@ -78,7 +92,7 @@ describe('<LoginRegisterMobileMenu>', () => {
       cy.dataCy(selectorMenuLanguageSwitcher).should('be.visible');
     });
 
-    it('renders help button', () => {
+    it('renders help button and displays dialog when clicked', () => {
       // open menu
       cy.dataCy(selectorMenuButton).click();
       // help button
@@ -99,6 +113,65 @@ describe('<LoginRegisterMobileMenu>', () => {
         .should('be.visible')
         .find('[data-cy="language-switcher"]')
         .should('exist');
+    });
+  });
+
+  context('logged in', () => {
+    beforeEach(() => {
+      cy.mount(LoginRegisterMobileMenu, {
+        props: {},
+      });
+      cy.fixture('loginResponse.json')
+        .as('loginResponse')
+        .then((loginResponse) => {
+          const store = useLoginStore();
+          store.setUser(loginResponse.user);
+        });
+      cy.viewport('iphone-6');
+    });
+
+    it('renders component', () => {
+      cy.dataCy(selectorMobileMenu).should('be.visible');
+    });
+
+    it('shows user info and logout button when menu is opened', () => {
+      // Click menu button
+      cy.dataCy(selectorMenuButton).click();
+      // user info
+      cy.dataCy(selectorMenuUserInfo).should('be.visible');
+      cy.dataCy(selectorMenuUserInfoLabel)
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('loginRegisterMobileMenu.labelLoggedInAs'),
+        );
+      // user email
+      cy.get('@loginResponse').then((loginResponse) => {
+        cy.dataCy(selectorMenuUserInfoEmail)
+          .should('be.visible')
+          .and('have.color', white)
+          .and('have.css', 'font-weight', `${fontWeightBold}`)
+          .and('contain', loginResponse.user.email);
+      });
+      // logout button
+      cy.dataCy(selectorMenuLogout)
+        .should('be.visible')
+        .and('contain', i18n.global.t('loginRegisterMobileMenu.labelLogOut'));
+    });
+
+    it('shows all menu items and separators', () => {
+      // click menu button
+      cy.dataCy(selectorMenuButton).click();
+      // menu dropdown
+      cy.dataCy(selectorMenuDropdown).within(() => {
+        cy.dataCy(selectorMenuUserInfo).should('be.visible');
+        cy.dataCy(selectorMenuSeparator).first().should('exist');
+        cy.dataCy(selectorMenuHelp).should('be.visible');
+        cy.dataCy(selectorMenuLogout).should('be.visible');
+        cy.dataCy(selectorMenuSeparator).last().should('exist');
+        cy.dataCy(selectorMenuLanguageHeader).should('be.visible');
+        cy.dataCy(selectorMenuLanguageSwitcher).should('be.visible');
+      });
     });
   });
 });

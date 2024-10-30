@@ -21,7 +21,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 
 // components
 import HelpButton from './HelpButton.vue';
@@ -43,6 +43,9 @@ export default defineComponent({
     const mobileMenuOffsetTop = 20;
     const mobileMenuOffsetRight = 0;
 
+    const isOpen = ref(false);
+    const icon = computed(() => (isOpen.value ? 'close' : 'menu'));
+
     const loginStore = useLoginStore();
     const userEmail = computed((): string => loginStore.getUserEmail);
     const { borderRadiusCard: borderRadius, colorWhiteBackgroundOpacity } =
@@ -55,6 +58,8 @@ export default defineComponent({
     return {
       border,
       borderRadius,
+      icon,
+      isOpen,
       mobileMenuOffsetTop,
       mobileMenuOffsetRight,
       userEmail,
@@ -70,10 +75,11 @@ export default defineComponent({
       round
       color="white"
       text-color="primary"
-      icon="menu"
+      :icon="icon"
       data-cy="mobile-menu-button"
     >
       <q-menu
+        v-model="isOpen"
         dark
         class="block bg-primary"
         anchor="bottom right"
@@ -95,14 +101,19 @@ export default defineComponent({
                 {{ $t('loginRegisterMobileMenu.labelLoggedInAs') }}
               </q-item-label>
               <q-item-label
-                class="text-weight-bold text-primary"
+                class="text-weight-bold text-white"
                 data-cy="mobile-menu-user-info-email"
               >
                 {{ userEmail }}
               </q-item-label>
             </q-item-section>
           </q-item>
-          <q-separator v-if="userEmail" dark class="q-my-sm" />
+          <q-separator
+            v-if="userEmail"
+            dark
+            class="q-my-sm"
+            data-cy="mobile-menu-separator"
+          />
           <!-- Item: Help -->
           <help-button data-cy="mobile-menu-help">
             <template #button="{ openDialog }">
@@ -119,7 +130,7 @@ export default defineComponent({
               $t('loginRegisterMobileMenu.labelLogOut')
             }}</q-item-section>
           </q-item>
-          <q-separator dark class="q-my-sm" />
+          <q-separator dark class="q-my-sm" data-cy="mobile-menu-separator" />
           <q-item-label header data-cy="mobile-menu-language-header">
             {{ $t('loginRegisterMobileMenu.labelLanguage') }}
           </q-item-label>
