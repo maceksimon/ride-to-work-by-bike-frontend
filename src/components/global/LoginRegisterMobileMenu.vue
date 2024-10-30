@@ -9,6 +9,7 @@
  *
  * @components
  * - `HelpButton`: Component to render help icon with dialog.
+ * - `LanguageSwitcher`: Component to render language switcher.
  *
  * @example
  * <login-register-mobile-menu />
@@ -23,11 +24,13 @@ import { defineComponent } from 'vue';
 
 // components
 import HelpButton from './HelpButton.vue';
+import LanguageSwitcher from './LanguageSwitcher.vue';
 
 export default defineComponent({
   name: 'LoginRegisterMobileMenu',
   components: {
     HelpButton,
+    LanguageSwitcher,
   },
   setup() {
     const mobileMenuOffsetTop = 20;
@@ -49,34 +52,37 @@ export default defineComponent({
       self="top right"
       :offset="[mobileMenuOffsetRight, mobileMenuOffsetTop]"
     >
-      <q-list style="min-width: 80vw">
+      <q-list style="min-width: 80vw" class="q-py-sm">
+        <!-- Logged in info -->
+        <q-item class="text-center">
+          <q-item-section>
+            <q-item-label caption>Jste přihlášeni jako</q-item-label>
+            <q-item-label class="text-weight-bold text-primary"
+              >anonym@dopracenakole.cz</q-item-label
+            >
+          </q-item-section>
+        </q-item>
+        <q-separator class="q-my-sm" />
+        <!-- Item: Help -->
         <help-button>
           <template #button="{ openDialog }">
             <q-item clickable @click.prevent="openDialog">
-              <q-item-section>New tab</q-item-section>
+              <q-item-section>{{ 'Nápověda' }}</q-item-section>
             </q-item>
           </template>
         </help-button>
+        <!-- Item: Log out -->
         <q-item clickable v-close-popup>
-          <q-item-section>New incognito tab</q-item-section>
+          <q-item-section>Odhlásit se</q-item-section>
         </q-item>
-        <q-separator />
-        <q-item clickable v-close-popup>
-          <q-item-section>Recent tabs</q-item-section>
-        </q-item>
-        <q-item clickable v-close-popup>
-          <q-item-section>History</q-item-section>
-        </q-item>
-        <q-item clickable v-close-popup>
-          <q-item-section>Downloads</q-item-section>
-        </q-item>
-        <q-separator />
-        <q-item clickable v-close-popup>
-          <q-item-section>Settings</q-item-section>
-        </q-item>
-        <q-separator />
-        <q-item clickable v-close-popup>
-          <q-item-section>Help &amp; Feedback</q-item-section>
+        <q-separator class="q-my-sm" />
+        <q-item v-close-popup>
+          <!-- Item: Language switcher -->
+          <language-switcher
+            variant="light"
+            class="q-py-none q-my-none"
+            style="padding: 0"
+          />
         </q-item>
       </q-list>
     </q-menu>
