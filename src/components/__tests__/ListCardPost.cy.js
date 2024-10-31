@@ -9,6 +9,7 @@ import {
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
   httpTooManyRequestsStatusMessage,
+  userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
 
 // variables
@@ -157,6 +158,8 @@ function coreTests() {
     cy.request({
       url: buttonUrl,
       failOnStatusCode: failOnStatusCode,
+      headers: { ...userAgentHeader },
+      headers: { ...userAgentHeader },
     }).then((resp) => {
       if (resp.status === httpTooManyRequestsStatus) {
         cy.log(httpTooManyRequestsStatusMessage);

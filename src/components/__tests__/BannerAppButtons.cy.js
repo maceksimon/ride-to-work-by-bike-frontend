@@ -7,6 +7,7 @@ import {
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
   httpTooManyRequestsStatusMessage,
+  userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
 
 const rideToWorkByBikeConfig = JSON.parse(
@@ -126,6 +127,7 @@ describe('<BannerAppButtons>', () => {
       cy.request({
         url: urlGooglePlay,
         failOnStatusCode: failOnStatusCode,
+        headers: { ...userAgentHeader },
       }).then((resp) => {
         if (resp.status === httpTooManyRequestsStatus) {
           cy.log(httpTooManyRequestsStatusMessage);
@@ -133,15 +135,17 @@ describe('<BannerAppButtons>', () => {
         }
         expect(resp.status).to.eq(httpSuccessfullStatus);
       });
-      cy.request({ url: urlAppStore, failOnStatusCode: failOnStatusCode }).then(
-        (resp) => {
-          if (resp.status === httpTooManyRequestsStatus) {
-            cy.log(httpTooManyRequestsStatusMessage);
-            return;
-          }
-          expect(resp.status).to.eq(httpSuccessfullStatus);
-        },
-      );
+      cy.request({
+        url: urlAppStore,
+        failOnStatusCode: failOnStatusCodem,
+        headers: { ...userAgentHeader },
+      }).then((resp) => {
+        if (resp.status === httpTooManyRequestsStatus) {
+          cy.log(httpTooManyRequestsStatusMessage);
+          return;
+        }
+        expect(resp.status).to.eq(httpSuccessfullStatus);
+      });
     });
   });
 

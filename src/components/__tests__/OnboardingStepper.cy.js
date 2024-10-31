@@ -8,6 +8,7 @@ import {
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
   httpTooManyRequestsStatusMessage,
+  userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
 
 const { getPaletteColor } = colors;
@@ -86,6 +87,7 @@ describe('<OnboardingStepper>', () => {
       cy.request({
         url: rideToWorkByBikeConfig.urlVideoOnboarding,
         failOnStatusCode: failOnStatusCode,
+        headers: { ...userAgentHeader },
       }).then((resp) => {
         if (resp.status === httpTooManyRequestsStatus) {
           cy.log(httpTooManyRequestsStatusMessage);

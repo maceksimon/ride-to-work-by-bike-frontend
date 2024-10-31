@@ -6,6 +6,7 @@ import {
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
   httpTooManyRequestsStatusMessage,
+  userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
 
 // colors
@@ -91,6 +92,7 @@ describe('<ProfileQuestionnaires>', () => {
             cy.request({
               url: questionnaire.link.url,
               failOnStatusCode: failOnStatusCode,
+              headers: { ...userAgentHeader },
             }).then((resp) => {
               if (resp.status === httpTooManyRequestsStatus) {
                 cy.log(httpTooManyRequestsStatusMessage);
