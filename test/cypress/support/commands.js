@@ -37,8 +37,6 @@ import {
   userAgentHeader,
 } from './commonTests';
 
-import { rideToWorkByBikeConfig } from '/src/boot/global_vars';
-
 // Fix for ResizeObserver loop issue in Firefox
 // see https://stackoverflow.com/questions/74947338/i-keep-getting-error-resizeobserver-loop-limit-exceeded-in-cypress
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
@@ -246,7 +244,7 @@ Cypress.Commands.add(
   },
 );
 
-Cypress.Commands.add('testSoacialMediaUrlRequest', () => {
+Cypress.Commands.add('testSoacialMediaUrlRequest', (rideToWorkByBikeConfig) => {
   cy.request({
     url: rideToWorkByBikeConfig.urlFacebook,
     failOnStatusCode: failOnStatusCode,

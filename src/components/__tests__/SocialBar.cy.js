@@ -128,6 +128,6 @@ function coreTests() {
   });
 
   it('provides valid URLs for social links', () => {
-    cy.testSoacialMediaUrlRequest();
+    cy.testSoacialMediaUrlRequest(rideToWorkByBikeConfig);
   });
 }
