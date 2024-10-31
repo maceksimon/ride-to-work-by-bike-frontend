@@ -69,13 +69,16 @@ export const useChallengeStore = defineStore('challenge', {
       if (phase) {
         const startDate: number = new Date(phase.date_from).getTime();
         const endDate: number = new Date(phase.date_to).getTime();
-        this.$log?.debug(`<${phaseType}> phase date from <${startDate}>`);
-        this.$log?.debug(`<${phaseType}> phase date to <${endDate}>`);
+        this.$log?.debug(`<${phaseType}> phase date from <${startDate}>.`);
+        this.$log?.debug(`<${phaseType}> phase date to <${endDate}>.`);
         const now: number = new Date().getTime();
-        this.$log?.debug(`Now date <${now}>`);
+        this.$log?.debug(`Now date <${now}>.`);
+        this.$log?.debug(
+          `Is challenge in phase type <${phaseType}> <${now >= startDate && now <= endDate}>.`,
+        );
         return now >= startDate && now <= endDate;
       }
-      this.$log?.info(`No <${phaseType}> phase found.`);
+      this.$log?.debug(`No <${phaseType}> phase type found.`);
       return false;
     },
   },
