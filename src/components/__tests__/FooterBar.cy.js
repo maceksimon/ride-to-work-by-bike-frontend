@@ -99,6 +99,7 @@ describe('<FooterBar>', () => {
       cy.request({
         url: rideToWorkByBikeConfig.urlFreeSoftwareDefinition,
         failOnStatusCode: failOnStatusCode,
+        headers: { ...userAgentHeader },
       }).then((resp) => {
         if (resp.status === httpTooManyRequestsStatus) {
           cy.log(httpTooManyRequestsStatusMessage);
@@ -163,6 +164,7 @@ function coreTests() {
       cy.request({
         url: rideToWorkByBikeConfig.urlAutoMat,
         failOnStatusCode: failOnStatusCode,
+        headers: { ...userAgentHeader },
       }).then((resp) => {
         if (resp.status === httpTooManyRequestsStatus) {
           cy.log(httpTooManyRequestsStatusMessage);
@@ -230,48 +232,7 @@ function coreTests() {
   });
 
   it('provides valid URLs for social links', () => {
-    cy.request({
-      url: rideToWorkByBikeConfig.urlFacebook,
-      failOnStatusCode: failOnStatusCode,
-      headers: { ...userAgentHeader },
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
-    cy.request({
-      url: rideToWorkByBikeConfig.urlInstagram,
-      failOnStatusCode: failOnStatusCode,
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
-    cy.request({
-      url: rideToWorkByBikeConfig.urlTwitter,
-      headers: { ...userAgentHeader },
-      failOnStatusCode: failOnStatusCode,
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
-    cy.request({
-      url: rideToWorkByBikeConfig.urlYoutube,
-      failOnStatusCode: failOnStatusCode,
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
+    cy.testSoacialMediaUrlRequest();
   });
 
   it('renders language switcher', () => {

@@ -29,6 +29,16 @@
 import { registerCommands } from '@quasar/quasar-app-extension-testing-e2e-cypress';
 registerCommands();
 
+import {
+  failOnStatusCode,
+  httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+  userAgentHeader,
+} from './commonTests';
+
+import { rideToWorkByBikeConfig } from '/src/boot/global_vars';
+
 // Fix for ResizeObserver loop issue in Firefox
 // see https://stackoverflow.com/questions/74947338/i-keep-getting-error-resizeobserver-loop-limit-exceeded-in-cypress
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
@@ -235,3 +245,50 @@ Cypress.Commands.add(
     });
   },
 );
+
+Cypress.Commands.add('testSoacialMediaUrlRequest', () => {
+  cy.request({
+    url: rideToWorkByBikeConfig.urlFacebook,
+    failOnStatusCode: failOnStatusCode,
+    headers: { ...userAgentHeader },
+  }).then((resp) => {
+    if (resp.status === httpTooManyRequestsStatus) {
+      cy.log(httpTooManyRequestsStatusMessage);
+      return;
+    }
+    expect(resp.status).to.eq(httpSuccessfullStatus);
+  });
+  cy.request({
+    url: rideToWorkByBikeConfig.urlInstagram,
+    failOnStatusCode: failOnStatusCode,
+    headers: { ...userAgentHeader },
+  }).then((resp) => {
+    if (resp.status === httpTooManyRequestsStatus) {
+      cy.log(httpTooManyRequestsStatusMessage);
+      return;
+    }
+    expect(resp.status).to.eq(httpSuccessfullStatus);
+  });
+  cy.request({
+    url: rideToWorkByBikeConfig.urlTwitter,
+    failOnStatusCode: failOnStatusCode,
+    headers: { ...userAgentHeader },
+  }).then((resp) => {
+    if (resp.status === httpTooManyRequestsStatus) {
+      cy.log(httpTooManyRequestsStatusMessage);
+      return;
+    }
+    expect(resp.status).to.eq(httpSuccessfullStatus);
+  });
+  cy.request({
+    url: rideToWorkByBikeConfig.urlYoutube,
+    failOnStatusCode: failOnStatusCode,
+    headers: { ...userAgentHeader },
+  }).then((resp) => {
+    if (resp.status === httpTooManyRequestsStatus) {
+      cy.log(httpTooManyRequestsStatusMessage);
+      return;
+    }
+    expect(resp.status).to.eq(httpSuccessfullStatus);
+  });
+});

@@ -3,14 +3,6 @@ import SocialBar from 'components/homepage/SocialBar.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
-import {
-  failOnStatusCode,
-  httpSuccessfullStatus,
-  httpTooManyRequestsStatus,
-  httpTooManyRequestsStatusMessage,
-  userAgentHeader,
-} from '../../../test/cypress/support/commonTests';
-
 // colors
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -136,47 +128,6 @@ function coreTests() {
   });
 
   it('provides valid URLs for social links', () => {
-    cy.request({
-      url: rideToWorkByBikeConfig.urlFacebook,
-      failOnStatusCode: failOnStatusCode,
-      headers: { ...userAgentHeader },
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
-    cy.request({
-      url: rideToWorkByBikeConfig.urlInstagram,
-      failOnStatusCode: failOnStatusCode,
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
-    cy.request({
-      url: rideToWorkByBikeConfig.urlTwitter,
-      failOnStatusCode: failOnStatusCode,
-      headers: { ...userAgentHeader },
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
-    cy.request({
-      url: rideToWorkByBikeConfig.urlYoutube,
-      failOnStatusCode: failOnStatusCode,
-    }).then((resp) => {
-      if (resp.status === httpTooManyRequestsStatus) {
-        cy.log(httpTooManyRequestsStatusMessage);
-        return;
-      }
-      expect(resp.status).to.eq(httpSuccessfullStatus);
-    });
+    cy.testSoacialMediaUrlRequest();
   });
 }
