@@ -95,20 +95,18 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('be.visible')
         .and('have.css', 'width', avatarSize)
         .and('have.css', 'height', avatarSize);
+      // wait until image has no loading indicator
       cy.dataCy(selectorAvatar)
+        .find('.q-img__loading')
+        .should('not.exist')
         .then(() => {
-          // wait for image loading (otherwise, we might snapshot the placeholder)
-          return new Cypress.Promise((resolve) => {
-            setTimeout(() => {
-              resolve();
-            }, 500);
+          // take a snapshot
+          cy.dataCy(selectorAvatar).then(() => {
+            cy.matchImageSnapshotNamed(
+              selectorAvatar,
+              `${Cypress.currentTest.titlePath[0]}-avatar`,
+            );
           });
-        })
-        .then(() => {
-          cy.matchImageSnapshotNamed(
-            selectorAvatar,
-            `${Cypress.currentTest.titlePath[0]}-avatar`,
-          );
         });
     });
 
