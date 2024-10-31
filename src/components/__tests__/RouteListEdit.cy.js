@@ -1,4 +1,4 @@
-import { date } from 'quasar';
+import { date, colors } from 'quasar';
 import { computed } from 'vue';
 import RouteListEdit from 'components/routes/RouteListEdit.vue';
 import { i18n } from '../../boot/i18n';
@@ -6,6 +6,8 @@ import { testRouteListDayDate } from '../../../test/cypress/support/commonTests'
 import { useRoutes } from '../../../src/composables/useRoutes';
 import { useLogRoutes } from '../../../src/composables/useLogRoutes';
 import { rideToWorkByBikeConfig } from '../../../src/boot/global_vars';
+
+const { getPaletteColor } = colors;
 
 const { getTransportLabel } = useRoutes();
 
@@ -135,7 +137,7 @@ function coreTests() {
   });
 
   // day date (title) styles
-  testRouteListDayDate();
+  testRouteListDayDate(getPaletteColor('grey-10'));
 
   it('renders route list transport methods', () => {
     cy.fixture('routeList').then((routeList) => {

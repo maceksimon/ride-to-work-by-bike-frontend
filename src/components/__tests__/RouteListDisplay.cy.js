@@ -77,7 +77,7 @@ function coreTests() {
   });
 
   // day date (title) styles
-  testRouteListDayDate();
+  testRouteListDayDate(grey10);
 
   it('renders route list transport methods', () => {
     cy.fixture('routeList').then((routeList) => {
