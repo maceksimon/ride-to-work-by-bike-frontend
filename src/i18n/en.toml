@@ -415,7 +415,6 @@ apiMessageErrorWithMessage = "Login failed. Please try again later. Error: {erro
 labelHelp = "Help"
 labelLanguage = "Language"
 labelLoggedInAs = "You are logged in as"
-labelLogOut = "Log out"
 
 [login.form]
 titleLogin = "Login"
@@ -705,7 +704,7 @@ unknown = "Not logged"
 [userSelect]
 companyCoordinator = "Become a company coordinator"
 connectApps = "Connect apps"
-logout = "Logout"
+logout = "Log out"
 newsletter = "Subscribe to newsletter"
 notifications = "Notification history"
 profileDetails = "Your profile"

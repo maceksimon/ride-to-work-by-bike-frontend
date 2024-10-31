@@ -41,10 +41,11 @@ describe('<LoginRegisterMobileMenu>', () => {
 
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
-      ['labelHelp', 'labelLanguage', 'labelLoggedInAs', 'labelLogOut'],
+      ['labelHelp', 'labelLanguage', 'labelLoggedInAs'],
       'loginRegisterMobileMenu',
       i18n,
     );
+    cy.testLanguageStringsInContext(['logout'], 'userSelect', i18n);
   });
 
   context('logged out', () => {
@@ -158,7 +159,7 @@ describe('<LoginRegisterMobileMenu>', () => {
       // logout button
       cy.dataCy(selectorMenuLogout)
         .should('be.visible')
-        .and('contain', i18n.global.t('loginRegisterMobileMenu.labelLogOut'));
+        .and('contain', i18n.global.t('userSelect.logout'));
     });
 
     it('shows all menu items and separators', () => {

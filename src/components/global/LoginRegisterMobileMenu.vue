@@ -143,9 +143,7 @@ export default defineComponent({
             data-cy="mobile-menu-logout"
             @click="onLogout"
           >
-            <q-item-section>{{
-              $t('loginRegisterMobileMenu.labelLogOut')
-            }}</q-item-section>
+            <q-item-section>{{ $t('userSelect.logout') }}</q-item-section>
           </q-item>
           <!-- Separator -->
           <q-separator dark class="q-my-sm" data-cy="mobile-menu-separator" />

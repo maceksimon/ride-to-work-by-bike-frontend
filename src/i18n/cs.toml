@@ -418,7 +418,6 @@ apiMessageErrorWithMessage = "Přihlášení se nezdařilo. Prosím, zkuste to z
 labelHelp = "Nápověda"
 labelLanguage = "Jazyk"
 labelLoggedInAs = "Jste přihlášeni jako"
-labelLogOut = "Odhlásit se"
 
 [login.form]
 titleLogin = "Přihlášení"

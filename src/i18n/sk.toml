@@ -415,7 +415,6 @@ apiMessageErrorWithMessage = "Prihlásenie sa nepodarilo. Prosím, skúste to zn
 labelHelp = "Pomoc"
 labelLanguage = "Jazyk"
 labelLoggedInAs = "Ste prihlásení ako"
-labelLogOut = "Odhlásiť sa"
 
 [login.form]
 titleLogin = "Prihlásenie"
