@@ -5,9 +5,10 @@ import LoginRegisterMobileMenu from 'components/global/LoginRegisterMobileMenu.v
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { emptyUser, useLoginStore } from '../../stores/login';
+import { rgbaColorObjectToString } from '../../utils';
 
 // colors
-const { getPaletteColor } = colors;
+const { getPaletteColor, changeAlpha, hexToRgb } = colors;
 const primary = getPaletteColor('primary');
 const white = getPaletteColor('white');
 
@@ -31,7 +32,7 @@ const selectorMobileMenu = 'login-register-mobile-menu';
 
 // variables
 const fontWeightBold = 700;
-const border = `1px solid rgba(255, 255, 255, ${colorWhiteBackgroundOpacity})`;
+const border = `1px solid ${rgbaColorObjectToString(hexToRgb(changeAlpha(white, colorWhiteBackgroundOpacity)))}`;
 
 describe('<LoginRegisterMobileMenu>', () => {
   beforeEach(() => {

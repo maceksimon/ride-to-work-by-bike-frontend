@@ -7,6 +7,13 @@ const rideToWorkByBikeConfig: ConfigGlobal = JSON.parse(
   process.env.RIDE_TO_WORK_BY_BIKE_CONFIG,
 );
 
+interface RgbaI {
+  r: number;
+  g: number;
+  b: number;
+  a: number;
+}
+
 /*
  * Convert date time timestamp number to formated
  * date time string.
@@ -52,4 +59,22 @@ const requestTokenHeader = {
   Authorization: 'Bearer ',
 } as AxiosRequestHeaders;
 
-export { requestDefaultHeader, requestTokenHeader, timestampToDatetimeString };
+/*
+ * Convert RGBA color object definition returned from
+ * hexToRgb() function to string representation
+ * e.g. rgba(255, 255, 255, 0.2)
+ *
+ * @param {rgbai} rgba: RGBA object returned from hexToRgb() function
+ *
+ * @return {string}: RGBA string e.g. rgba(255, 255, 255, 0.2)
+ */
+const rgbaColorObjectToString = (rgba: RgbaI): string => {
+  return `rgba(${rgba['r']}, ${rgba['g']}, ${rgba['b']}, ${rgba['a'] / 100.0})`;
+};
+
+export {
+  requestDefaultHeader,
+  requestTokenHeader,
+  rgbaColorObjectToString,
+  timestampToDatetimeString,
+};
