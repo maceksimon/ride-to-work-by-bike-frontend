@@ -101,12 +101,10 @@ describe('<ProfileCoordinatorContact>', () => {
         .should('not.exist')
         .then(() => {
           // take a snapshot
-          cy.dataCy(selectorAvatar).then(() => {
-            cy.matchImageSnapshotNamed(
-              selectorAvatar,
-              `${Cypress.currentTest.titlePath[0]}-avatar`,
-            );
-          });
+          cy.matchImageSnapshotNamed(
+            selectorAvatar,
+            `${Cypress.currentTest.titlePath[0]}-avatar`,
+          );
         });
     });
 
