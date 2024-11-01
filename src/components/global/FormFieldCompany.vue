@@ -53,7 +53,7 @@ import type {
 import type { Logger } from 'src/components/types/Logger';
 import type {
   GetOrganizationsResponse,
-  PostOrganizationsBody,
+  PostOrganizationPayload,
   PostOrganizationsResponse,
 } from 'src/components/types/Organization';
 
@@ -234,7 +234,7 @@ export default defineComponent({
       // data
       logger?.debug(`Create organization with name <${companyNew.name}>.`);
       logger?.debug(`Create organization with vatId <${companyNew.vatId}>.`);
-      const body: PostOrganizationsBody = {
+      const payload: PostOrganizationPayload = {
         name: companyNew.name,
         vatId: companyNew.vatId,
       };
@@ -244,7 +244,7 @@ export default defineComponent({
         method: 'post',
         translationKey: 'createOrganization',
         headers: Object.assign(requestDefaultHeader, requestTokenHeader_),
-        payload: body,
+        payload: payload,
         logger,
       });
       if (data?.id) {

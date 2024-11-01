@@ -51,7 +51,7 @@ export interface GetOrganizationsResponse {
   results: OrganizationOption[];
 }
 
-export interface PostOrganizationsBody {
+export interface PostOrganizationPayload {
   name: string;
   vatId: string;
 }
