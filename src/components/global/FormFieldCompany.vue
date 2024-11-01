@@ -100,7 +100,7 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     const loadOptions = async (): Promise<void> => {
-      logger?.info('Get API organizations.');
+      logger?.info('Get organizations from the API.');
       isOptionsLoading.value = true;
       // append access token into HTTP header
       const requestTokenHeader_ = { ...requestTokenHeader };
@@ -118,7 +118,7 @@ export default defineComponent({
       if (data?.results?.length) {
         logger?.info('Organizations fetched. Saving to default options.');
         logger?.debug(
-          `Setting default options to <${JSON.stringify(data.results)}>`,
+          `Setting default options to <${JSON.stringify(data.results)}>.`,
         );
         optionsDefault.value = data.results.map((option) => {
           return {
@@ -127,7 +127,7 @@ export default defineComponent({
           };
         });
         logger?.debug(
-          `Default options set to <${JSON.stringify(optionsDefault.value)}>`,
+          `Default options set to <${JSON.stringify(optionsDefault.value)}>.`,
         );
       }
       isOptionsLoading.value = false;
@@ -139,7 +139,7 @@ export default defineComponent({
     const company = computed({
       get: () => props.modelValue,
       set: (value: string) => {
-        logger?.debug(`Company set to <${value}>`);
+        logger?.debug(`Company set to <${value}>.`);
         emit('update:modelValue', value);
       },
     });
@@ -197,6 +197,7 @@ export default defineComponent({
     const onClose = (): void => {
       if (formRef.value) {
         formRef.value.reset();
+        logger?.info('Close add company modal dialog and reset form.');
       }
       isDialogOpen.value = false;
     };
@@ -209,7 +210,9 @@ export default defineComponent({
       if (formRef.value) {
         const isFormValid: boolean = await formRef.value.validate();
 
+        logger?.debug(`Form is valid <${isFormValid}>.`);
         if (isFormValid) {
+          logger?.info('Create organization.');
           createOrganization();
         } else {
           formRef.value.$el.scrollIntoView({
@@ -224,13 +227,13 @@ export default defineComponent({
      * @returns {Promise<void>}
      */
     const createOrganization = async (): Promise<void> => {
-      logger?.info('Post API new organization.');
+      logger?.info('Post new organization to API.');
       // append access token into HTTP header
       const requestTokenHeader_ = { ...requestTokenHeader };
       requestTokenHeader_.Authorization += loginStore.getAccessToken;
-      // body
-      logger?.debug(`Create organization name <${companyNew.name}>`);
-      logger?.debug(`Create organization vatId <${companyNew.vatId}>`);
+      // data
+      logger?.debug(`Create organization with name <${companyNew.name}>.`);
+      logger?.debug(`Create organization with vatId <${companyNew.vatId}>.`);
       const body: PostOrganizationsBody = {
         name: companyNew.name,
         vatId: companyNew.vatId,
@@ -245,15 +248,16 @@ export default defineComponent({
         logger,
       });
       if (data?.id) {
-        logger?.info(`Organization created with ID <${data.id}>`);
-        logger?.info(`Organization created with name <${data.name}>`);
+        logger?.debug(`Organization created with ID <${data.id}>.`);
+        logger?.debug(`Organization created with name <${data.name}>.`);
         // close dialog
         isDialogOpen.value = false;
+        logger?.info('Close add company modal dialog.');
         // refetch organizations
-        logger?.debug('Refetching organizations.');
+        logger?.info('Refetching organizations.');
         await loadOptions();
         // set company to new organization
-        logger?.debug(`Setting organization to ID <${data.id}>`);
+        logger?.debug(`Setting organization to ID <${data.id}>.`);
         const newCompanyOption: FormSelectOption = {
           label: data.name,
           value: data.id,
