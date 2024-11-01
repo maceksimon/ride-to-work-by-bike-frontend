@@ -133,8 +133,10 @@ export const useApi = () => {
           });
         }
         // Check if response data is undefined or null, indicating no body
-        const responseData = response.data !== undefined ? response.data : null;
-        return { data: responseData, success: true };
+        return {
+          data: response.data !== undefined ? response.data : null,
+          success: true,
+        };
       } else {
         Notify.create({
           message: i18n.global.t(`${translationKey}.apiMessageError`),
