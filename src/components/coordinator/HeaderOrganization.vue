@@ -36,7 +36,7 @@ export default defineComponent({
   },
   emits: ['export'],
   setup(props) {
-    const countBranches = computed((): number => {
+    const subsidiariesCount = computed((): number => {
       return props.organization?.subsidiaries?.length
         ? props.organization.subsidiaries.length
         : 0;
@@ -49,7 +49,7 @@ export default defineComponent({
     });
 
     return {
-      countBranches,
+      subsidiariesCount,
       countMembers,
     };
   },
@@ -95,15 +95,15 @@ export default defineComponent({
               </q-item-section>
             </q-item>
             <!-- Branch -->
-            <q-item dense class="col-auto q-pa-none" v-if="countBranches">
+            <q-item dense class="col-auto q-pa-none" v-if="subsidiariesCount">
               <q-item-section avatar>
                 <!-- Icon -->
                 <q-icon name="mdi-office-building" color="grey-6" size="18px" />
               </q-item-section>
               <q-item-section data-cy="header-organization-branch-count">
                 <!-- Label -->
-                {{ countBranches }}
-                {{ $tc('coordinator.labelBranches', countBranches) }}
+                {{ subsidiariesCount }}
+                {{ $tc('coordinator.labelBranches', subsidiariesCount) }}
               </q-item-section>
             </q-item>
             <!-- Members -->
