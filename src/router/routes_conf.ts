@@ -23,11 +23,11 @@ const routesConf: RoutesConf = {
       name: 'community',
     },
   },
-  company_coordinator: {
-    path: '/company-coordinator',
+  become_coordinator: {
+    path: '/become-coordinator',
     children: {
-      fullPath: '/company-coordinator',
-      name: 'company-coordinator',
+      fullPath: '/become-coordinator',
+      name: 'become-coordinator',
     },
   },
   verify_email: {

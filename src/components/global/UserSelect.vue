@@ -71,7 +71,7 @@ export default defineComponent({
     const menuBottom: Link[] = [
       {
         title: i18n.global.t('userSelect.companyCoordinator'),
-        url: routesConf['company_coordinator']['children']['fullPath'],
+        url: routesConf['coordinator']['children']['fullPath'],
       },
     ];
 

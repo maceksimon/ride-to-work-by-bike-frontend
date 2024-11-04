@@ -5,7 +5,7 @@
  * @description * Use this component to render a form for applying for
  * the position of a company coordinator.
  *
- * Note: This component is commonly used in `CompanyCoordinatorPage`.
+ * Note: This component is commonly used in `BecomeCoordinatorPage`.
  *
  * Component uses lazy-rules="ondemand" which means that validation will be
  * triggered only when component’s validate() method is manually called or

@@ -3,7 +3,7 @@
  * CoordinatorTabs Component
  *
  * @description * Use this component to render tabs on the Coordinator page.
- * Note: Used on `CoordinatorPage`.
+ * Note: Used on `CompanyCoordinatorPage`.
  *
  * @example
  * <coordinator-tabs />

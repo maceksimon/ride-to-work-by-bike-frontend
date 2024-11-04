@@ -64,13 +64,13 @@ const routes: RouteRecordRaw[] = [
   },
   // company coordinator
   {
-    path: routesConf['company_coordinator']['path'],
+    path: routesConf['become_coordinator']['path'],
     component: () => import('layouts/MainLayout.vue'),
     children: [
       {
         path: '',
-        name: routesConf['company_coordinator']['children']['name'],
-        component: () => import('pages/CompanyCoordinatorPage.vue'),
+        name: routesConf['become_coordinator']['children']['name'],
+        component: () => import('pages/BecomeCoordinatorPage.vue'),
       },
     ],
   },

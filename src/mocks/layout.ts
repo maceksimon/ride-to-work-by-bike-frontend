@@ -35,7 +35,7 @@ export const menuTop: Link[] = [
   {
     url: '',
     icon: 'svguse:icons/drawer_menu/icons.svg#lucide-building',
-    name: 'company-coordinator',
+    name: 'coordinator',
     title: 'coordinator',
   },
   {

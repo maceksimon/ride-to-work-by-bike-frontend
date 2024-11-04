@@ -4,7 +4,7 @@ import { testDesktopSidebar, testMobileHeader } from '../support/commonTests';
 describe('Company coordinator page', () => {
   context('desktop', () => {
     beforeEach(() => {
-      cy.visit('#' + routesConf['company_coordinator']['path']);
+      cy.visit('#' + routesConf['become_coordinator']['path']);
       cy.viewport('macbook-16');
 
       // load config an i18n objects as aliases
@@ -25,7 +25,7 @@ describe('Company coordinator page', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.visit('#' + routesConf['company_coordinator']['path']);
+      cy.visit('#' + routesConf['become_coordinator']['path']);
       cy.viewport('iphone-6');
 
       // load config an i18n objects as aliases

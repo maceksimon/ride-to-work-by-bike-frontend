@@ -237,7 +237,7 @@ export const testUserSelect = (selector: string): void => {
       {
         url: routesConf['profile_notifications']['children']['fullPath'],
       },
-      { url: routesConf['company_coordinator']['children']['fullPath'] },
+      { url: routesConf['coordinator']['children']['fullPath'] },
     ];
 
     cy.dataCy(selector).within(() => {
