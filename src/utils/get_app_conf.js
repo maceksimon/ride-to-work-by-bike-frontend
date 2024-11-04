@@ -31,7 +31,8 @@ const getAppConfig = (process) => {
     config['colorSecondaryBackgroundOpacity'] =
       process.env.COLOR_SECONDARY_BACKGROUND_OPACITY;
   } else if (process.env.COLOR_WHITE_BACKGROUND_OPACITY) {
-    config['colorWhiteBackgroundOpacity'] = process.env.COLOR_WHITE_BACKGROUND_OPACITY;
+    config['colorWhiteBackgroundOpacity'] =
+      process.env.COLOR_WHITE_BACKGROUND_OPACITY;
   } else if (process.env.IMAGE) {
     config['image'] = process.env.IMAGE;
   } else if (process.env.WIDTH) {
@@ -91,6 +92,8 @@ const getAppConfig = (process) => {
     config['entryFeePaymentOptions'] = process.env.ENTRY_FEE_PAYMENT_OPTIONS;
   } else if (process.env.NOTIFY_MESSAGE_POSITION) {
     config['notifyMessagePosition'] = process.env.NOTIFY_MESSAGE_POSITION;
+  } else if (process.env.DATE_FORMAT_MONTH_NAME) {
+    config['dateFormatMonthName'] = process.env.DATE_FORMAT_MONTH_NAME;
   } else if (process.env.API_BASE) {
     config['apiBase'] = process.env.API_BASE;
   } else if (process.env.API_VERSION) {

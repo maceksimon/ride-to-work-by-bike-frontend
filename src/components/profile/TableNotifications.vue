@@ -27,6 +27,9 @@ import { defineComponent } from 'vue';
 import { i18n } from '../../boot/i18n';
 import { useNotifications } from '../../composables/useNotifications';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // enums
 enum NotificationTableColumn {
   title = 'title',
@@ -49,6 +52,8 @@ export default defineComponent({
       onNotificationClick,
     } = useNotifications();
 
+    const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
+
     const columns: TableColumn[] = [
       {
         name: NotificationTableColumn.title,
@@ -65,7 +70,9 @@ export default defineComponent({
         label: i18n.global.t('notifications.labelDate'),
         field: 'timestamp',
         format: (val: number | string | null): string =>
-          val ? date.formatDate(new Date(String(val)), 'D. MMM. YYYY') : '',
+          val
+            ? date.formatDate(new Date(String(val)), dateFormatMonthName)
+            : '',
         sortable: true,
         required: true,
       },

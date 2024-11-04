@@ -64,6 +64,7 @@ const dataByDateDesc = [
 
 // variables
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
+const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
 
 describe('<TableFeeApproval>', () => {
   it('has translation for all strings', () => {
@@ -171,7 +172,7 @@ function coreTests() {
               'contain',
               formatDate(
                 new Date(String(rows[index].dateCreated)),
-                'D. MMM. YYYY',
+                dateFormatMonthName,
               ),
             );
           });

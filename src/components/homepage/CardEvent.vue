@@ -37,11 +37,11 @@ import { date, Screen } from 'quasar';
 import ButtonAddToCalendar from '../global/ButtonAddToCalendar.vue';
 import DialogDefault from '../global/DialogDefault.vue';
 
-// types
-import { CardEvent as CardEventType } from '../types';
-
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
+// types
+import { CardEvent as CardEventType } from '../types';
 
 const { formatDate } = date;
 
@@ -59,9 +59,11 @@ export default defineComponent({
   },
   setup(props) {
     const modalOpened = ref(false);
+
+    const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
     const eventDateTime = formatDate(
       new Date(props?.card?.dates),
-      'ddd D. MMM. YYYY, HH:mm',
+      `ddd ${dateFormatMonthName}, HH:mm`,
     );
     const setHorizontalPosition = (): boolean => (Screen.xs ? false : true);
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;

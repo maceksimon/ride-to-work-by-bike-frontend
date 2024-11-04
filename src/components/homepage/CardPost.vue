@@ -44,10 +44,12 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
     const formattedDate = computed((): string => {
       if (!props.card.date || !date.isValid(props.card.date)) return '';
-      return formatDate(new Date(props.card.date), 'D. MMM. YYYY');
+      return formatDate(new Date(props.card.date), dateFormatMonthName);
     });
+
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
     return {

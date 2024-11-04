@@ -6,6 +6,9 @@ import { computed, ref } from 'vue';
 import { i18n } from 'src/boot/i18n';
 // TODO: import format price
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // enums
 import { AttendanceTablePayColumnIcons } from '../components/types/Table';
 import { PaymentState, PaymentType } from '../components/types/Payment';
@@ -317,6 +320,8 @@ export const useTable = () => {
 };
 
 export const useTableFeeApproval = () => {
+  const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
+
   const tableFeeApprovalColumns: QTableProps['columns'] = [
     {
       align: 'left',
@@ -367,7 +372,7 @@ export const useTableFeeApproval = () => {
       align: 'left',
       field: FeeApprovalTableColumns.dateCreated,
       format: (val: number | string | null): string =>
-        val ? date.formatDate(new Date(String(val)), 'D. MMM. YYYY') : '',
+        val ? date.formatDate(new Date(String(val)), dateFormatMonthName) : '',
       label: i18n.global.t('table.labelDateRegistered'),
       name: FeeApprovalTableColumns.dateCreated,
       required: true,

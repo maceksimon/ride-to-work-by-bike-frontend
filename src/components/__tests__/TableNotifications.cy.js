@@ -1,6 +1,7 @@
 import { colors, date } from 'quasar';
 import TableNotifications from 'components/profile/TableNotifications.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // colors
 const { getPaletteColor } = colors;
@@ -19,6 +20,7 @@ const classSelectorNotificationRow = '.q-tr';
 const selectorButtonMarkAllAsRead = 'button-mark-all-as-read';
 
 // variables
+const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
 const defaultTablePostsPerPage = 5;
 const fontWeightBold = '700';
 const fontWeightRegular = '400';
@@ -103,7 +105,7 @@ describe('<TableNotifications>', () => {
             'contain',
             date.formatDate(
               new Date(String(notification.timestamp)),
-              'D. MMM. YYYY',
+              dateFormatMonthName,
             ),
           );
         cy.wrap(row)

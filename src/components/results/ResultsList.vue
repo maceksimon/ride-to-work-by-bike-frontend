@@ -24,6 +24,9 @@ import SectionHeading from '../global/SectionHeading.vue';
 // composables
 import { i18n } from 'src/boot/i18n';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // types
 import type { ItemStatistics } from '../types/Item';
 
@@ -36,7 +39,8 @@ export default defineComponent({
   },
   setup() {
     const date = new Date('Ocotober 17, 2024 13:00:00');
-    const dateChallengeStart = formatDate(date, 'D. MMM. YYYY');
+    const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
+    const dateChallengeStart = formatDate(date, dateFormatMonthName);
 
     return {
       dateChallengeStart,

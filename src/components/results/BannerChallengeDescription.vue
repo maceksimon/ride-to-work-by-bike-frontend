@@ -18,6 +18,9 @@ import { computed, defineComponent } from 'vue';
 import { useRoutes } from '../../composables/useRoutes';
 import { i18n } from '../../boot/i18n';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // fixtures
 import challengeDescriptions from '../../../test/cypress/fixtures/bannerChallengeDescription.json';
 
@@ -39,6 +42,8 @@ export default defineComponent({
         : challenge.transportTypes.map((type) => getRouteIcon(type));
     });
 
+    const dateFormatMonthName = rideToWorkByBikeConfig.dateFormatMonthName;
+
     /**
      * Returns a string representing the time period of a challenge.
      * Accounts for both dateStart and dateEnd.
@@ -50,13 +55,13 @@ export default defineComponent({
         return '';
       }
       if (!challenge?.dateStart) {
-        return `${i18n.global.t('global.from')} ${formatDate(challenge?.dateEnd, 'D. MMM. YYYY')}`;
+        return `${i18n.global.t('global.from')} ${formatDate(challenge?.dateEnd, dateFormatMonthName)}`;
       }
       if (!challenge?.dateEnd) {
-        return `${i18n.global.t('global.to')} ${formatDate(challenge?.dateStart, 'D. MMM. YYYY')}`;
+        return `${i18n.global.t('global.to')} ${formatDate(challenge?.dateStart, dateFormatMonthName)}`;
       }
 
-      return `${formatDate(challenge?.dateStart, 'D. MMM.')} - ${formatDate(challenge?.dateEnd, 'D. MMM. YYYY')}`;
+      return `${formatDate(challenge?.dateStart, 'D. MMM.')} - ${formatDate(challenge?.dateEnd, dateFormatMonthName)}`;
     });
 
     return {

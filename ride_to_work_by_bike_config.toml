@@ -31,7 +31,10 @@ width = "850px"
 title = "Title"
 subtitle = "Subtitle"
 
+# UTILITIES
+
 notifyMessagePosition = "top"
+dateFormatMonthName = "D. MMM. YYYY"
 
 # CONTACT DETAILS
 

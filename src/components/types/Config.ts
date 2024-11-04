@@ -41,6 +41,7 @@ export interface ConfigGlobal {
   entryFeePaymentMax: string;
   entryFeePaymentOptions: string;
   notifyMessagePosition: string;
+  dateFormatMonthName: string;
   apiBase: string;
   apiVersion: string;
   apiDefaultLang: string;

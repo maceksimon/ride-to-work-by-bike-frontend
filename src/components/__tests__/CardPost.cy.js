@@ -9,7 +9,7 @@ const white = getPaletteColor('white');
 const grey10 = getPaletteColor('grey-10');
 const blueGrey5 = getPaletteColor('blue-grey-5');
 
-const { borderRadiusCard } = rideToWorkByBikeConfig;
+const { borderRadiusCard, dateFormatMonthName } = rideToWorkByBikeConfig;
 const { formatDate } = date;
 
 describe('<CardPost>', () => {
@@ -85,7 +85,7 @@ describe('<CardPost>', () => {
           .then(($date) => {
             // manual workaround to avoid having to calculate dynamic date
             expect($date.text()).to.equal(
-              formatDate(card.date, 'D. MMM. YYYY'),
+              formatDate(card.date, dateFormatMonthName),
             );
           });
       });
