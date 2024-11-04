@@ -334,6 +334,10 @@ instagram = "Instagram"
 facebook = "Facebook"
 twitter = "Twitter"
 youtube = "Youtube"
+autoMat = "Auto-Mat.cz"
+support = "Podporte nás"
+projectCode = "Kód projektu"
+mobileApp = "Mobilná aplikácia"
 
 [index.contact]
 subject = "Názov"

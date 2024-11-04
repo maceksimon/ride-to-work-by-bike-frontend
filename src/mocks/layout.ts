@@ -1,5 +1,4 @@
 import { Link } from 'src/components/types';
-import { i18n } from 'src/boot/i18n';
 
 export const menuTop: Link[] = [
   {
@@ -142,51 +141,5 @@ export const faqCoordinator = [
   {
     title: 'Kde najdu fakturu?',
     text: dummyText,
-  },
-];
-
-export const socialLinks = [
-  {
-    title: i18n.global.t('index.menuLinks.instagram'),
-    icon: 'mdi-instagram',
-    url: 'https://www.instagram.com/spolekautomat',
-  },
-  {
-    title: i18n.global.t('index.menuLinks.facebook'),
-    icon: 'mdi-facebook',
-    url: 'https://www.facebook.com/spolekautomat',
-  },
-  {
-    title: i18n.global.t('index.menuLinks.twitter'),
-    icon: 'mdi-twitter',
-    url: 'https://twitter.com/spolekautomat',
-  },
-  {
-    title: i18n.global.t('index.menuLinks.youtube'),
-    icon: 'mdi-youtube',
-    url: 'https://www.youtube.com/@spolekautomat',
-  },
-];
-
-export const usefulLinks = [
-  {
-    title: 'Auto-Mat.cz',
-    icon: 'link',
-    url: 'https://auto-mat.cz/',
-  },
-  {
-    title: 'Podpořte nás',
-    icon: 'volunteer_activism',
-    url: '#',
-  },
-  {
-    title: 'Kód projektu',
-    icon: 'mdi-github',
-    url: 'https://github.com/auto-mat/ride-to-work-by-bike-frontend',
-  },
-  {
-    title: 'Mobilní aplikace',
-    icon: 'smartphone',
-    url: '#',
   },
 ];

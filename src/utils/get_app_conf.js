@@ -61,6 +61,8 @@ const getAppConfig = (process) => {
     config['urlGooglePlay'] = process.env.URL_GOOGLE_PLAY;
   } else if (process.env.URL_INSTAGRAM) {
     config['urlInstagram'] = process.env.URL_INSTAGRAM;
+  } else if (process.env.URL_PROJECT_CODE) {
+    config['urlProjectCode'] = process.env.URL_PROJECT_CODE;
   } else if (process.env.URL_TWITTER) {
     config['urlTwitter'] = process.env.URL_TWITTER;
   } else if (process.env.URL_VIDEO_LOGGING_ROUTES) {

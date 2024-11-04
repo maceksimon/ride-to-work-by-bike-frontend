@@ -26,9 +26,7 @@ import { defineComponent, computed } from 'vue';
 
 // composables
 import { useSocialLinks } from '../../composables/useSocialLinks';
-
-// mocks
-import { usefulLinks } from '../../mocks/layout';
+import { useUsefulLinks } from '../../composables/useUsefulLinks';
 
 export default defineComponent({
   name: 'MenuLinks',
@@ -45,7 +43,7 @@ export default defineComponent({
   setup(props) {
     const items = computed(() => {
       const { socialLinks } = useSocialLinks();
-
+      const { usefulLinks } = useUsefulLinks();
       if (props.variant === 'social') {
         return socialLinks;
       }
