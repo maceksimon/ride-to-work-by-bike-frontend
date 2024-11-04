@@ -25,7 +25,7 @@ export const useUsefulLinks = () => {
         url = rideToWorkByBikeConfig.urlProjectCode;
         break;
       case UsefulLinkId.mobileApp:
-        url = rideToWorkByBikeConfig.urlYoutube;
+        url = rideToWorkByBikeConfig.urlAppStore;
         break;
       default:
         url = '';
