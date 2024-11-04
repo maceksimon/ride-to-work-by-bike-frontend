@@ -1,7 +1,7 @@
 import { routesConf } from '../../../src/router/routes_conf';
 import { testDesktopSidebar, testMobileHeader } from '../support/commonTests';
 
-describe('Company coordinator page', () => {
+describe('Become coordinator page', () => {
   context('desktop', () => {
     beforeEach(() => {
       cy.visit('#' + routesConf['become_coordinator']['path']);
