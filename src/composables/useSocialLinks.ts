@@ -1,3 +1,6 @@
+// composables
+import { i18n } from '../boot/i18n';
+
 // enums
 import { SocialLinkId } from '../components/types/Link';
 
@@ -31,6 +34,7 @@ export const useSocialLinks = () => {
 
     return {
       ...item,
+      title: i18n.global.t(item.title),
       url,
     } as SocialLink;
   });

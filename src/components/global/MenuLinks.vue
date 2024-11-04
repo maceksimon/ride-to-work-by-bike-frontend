@@ -80,13 +80,14 @@ export default defineComponent({
         target="_blank"
         color="blue-grey-1"
         class="q-btn-underline text-body2 q-mt-md"
+        :title="item.title"
         data-cy="button-menu-links"
       >
         <!-- Icon -->
         <q-icon :name="item.icon" size="xs" color="blue-grey-3"></q-icon>
         <!-- Label -->
         <span v-if="item.title" class="inline-block text-black q-pl-sm">
-          {{ $t(item.title) }}
+          {{ item.title }}
         </span>
       </q-btn>
     </div>
