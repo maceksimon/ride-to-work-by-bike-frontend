@@ -44,8 +44,9 @@ describe('<MenuLinks>', () => {
       cy.dataCy('button-menu-links')
         .should('have.length', socialLinks.length)
         .each(($el, index) => {
-          cy.wrap($el).should('have.attr', 'title', socialLinks[index].title);
-          cy.wrap($el).should('have.attr', 'href', socialLinks[index].url);
+          cy.wrap($el)
+            .should('have.attr', 'href', socialLinks[index].url)
+            .and('have.attr', 'title', socialLinks[index].title);
         });
       cy.dataCy('button-menu-links')
         .and('have.backgroundColor', blueGrey1)
