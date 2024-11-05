@@ -22,7 +22,7 @@ export const useUsefulLinks = () => {
         url = rideToWorkByBikeConfig.urlAutoMat;
         break;
       case UsefulLinkId.projectCode:
-        url = rideToWorkByBikeConfig.urlProjectCode;
+        url = rideToWorkByBikeConfig.urlProjectSourceCode;
         break;
       case UsefulLinkId.mobileApp:
         url = rideToWorkByBikeConfig.urlAppStore;

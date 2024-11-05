@@ -62,7 +62,7 @@ const getAppConfig = (process) => {
   } else if (process.env.URL_INSTAGRAM) {
     config['urlInstagram'] = process.env.URL_INSTAGRAM;
   } else if (process.env.URL_PROJECT_CODE) {
-    config['urlProjectCode'] = process.env.URL_PROJECT_CODE;
+    config['urlProjectSourceCode'] = process.env.URL_PROJECT_SOURCE_CODE;
   } else if (process.env.URL_TWITTER) {
     config['urlTwitter'] = process.env.URL_TWITTER;
   } else if (process.env.URL_VIDEO_LOGGING_ROUTES) {
