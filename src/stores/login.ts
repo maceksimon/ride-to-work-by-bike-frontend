@@ -185,7 +185,7 @@ export const useLoginStore = defineStore('login', {
     ): Promise<LoginResponse | null> {
       if (!authResponse) {
         Notify.create({
-          message: i18n.global.t('login.form.messageGoogleAuthNotAvailable'),
+          message: i18n.global.t('login.form.messageFacebookAuthNotAuthorized'),
           color: 'negative',
         });
         return null;
