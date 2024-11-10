@@ -33,13 +33,13 @@ import { i18n } from '../../boot/i18n';
 import { useLocale } from '../../composables/useLocale';
 
 // config
-import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { FacebookLoginStatus } from '../types/Login';
 
 // stores
-import { useLoginStore } from 'src/stores/login';
+import { useLoginStore } from '../../stores/login';
 
 // types
 import type { Logger } from '../types/Logger';
