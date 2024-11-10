@@ -114,3 +114,8 @@ facebookLoginAppId = "SECRET"
 # LIBRARIES
 
 facebookLoginSdkVersion = "v21.0"
+facebookLoginSdkOptions = '''
+{
+  "scope": "email,public_profile"
+}
+'''
