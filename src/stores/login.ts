@@ -194,13 +194,16 @@ export const useLoginStore = defineStore('login', {
         `Facebook login access token <${authResponse.accessToken}>.`,
       );
       // login
-      this.$log?.info('Get API access/refresh token.');
+      this.$log?.info('Get API access/refresh token (Facebook auth).');
+      const payload = {
+        access_token: authResponse.accessToken,
+        code: '',
+        id_token: '',
+      };
       const { data } = await apiFetch<LoginResponse>({
         endpoint: rideToWorkByBikeConfig.urlApiLoginFacebook,
         method: 'post',
-        payload: {
-          token: authResponse.accessToken,
-        },
+        payload,
         translationKey: 'login',
         logger: this.$log,
       });
