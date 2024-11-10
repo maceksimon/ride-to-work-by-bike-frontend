@@ -61,6 +61,21 @@ export default defineComponent({
     const logger: Logger | undefined = inject('vuejs3-logger');
     const facebookLoginAppId = rideToWorkByBikeConfig.facebookLoginAppId;
 
+    /**
+     * Hide Google login button if no client ID is provided.
+     * Client ID is provided in `google_login.js` boot file.
+     */
+    const isGoogleLoginAvailable: boolean =
+      !!rideToWorkByBikeConfig.googleLoginAppId &&
+      rideToWorkByBikeConfig.googleLoginAppId !==
+        rideToWorkByBikeConfig.secretString;
+
+    logger?.debug(
+      'Is Google login button widget available (Google ID' +
+        ` <${rideToWorkByBikeConfig.googleLoginAppId}> is provided)` +
+        ` <${isGoogleLoginAvailable}>.`,
+    );
+
     const onGoogleLogin = async (response: CallbackTypes.CodePopupResponse) => {
       logger?.debug(
         `Google login component response <${JSON.stringify(response, null, 2)}>.`,
@@ -91,24 +106,27 @@ export default defineComponent({
     };
 
     /**
-     * Hide Google login button if no client ID is provided.
-     * Client ID is provided in `google_login.js` boot file.
+     * Hide Facebook login button if no app ID is provided.
+     * In this case, app ID is provided directly in the component.
      */
-    const isGoogleLoginAvailable: boolean =
-      !!rideToWorkByBikeConfig.googleLoginAppId &&
-      rideToWorkByBikeConfig.googleLoginAppId !==
+    const isFacebookLoginAvailable: boolean =
+      !!rideToWorkByBikeConfig.facebookLoginAppId &&
+      rideToWorkByBikeConfig.facebookLoginAppId !==
         rideToWorkByBikeConfig.secretString;
 
     logger?.debug(
-      'Is Google login button widget available (Google ID' +
-        ` <${rideToWorkByBikeConfig.googleLoginAppId}> is provided)` +
-        ` <${isGoogleLoginAvailable}>.`,
+      'Is Facebook login button widget available (Facebook ID' +
+        ` <${rideToWorkByBikeConfig.facebookLoginAppId}> is provided)` +
+        ` <${isFacebookLoginAvailable}>.`,
     );
 
     const onFacebookLogin = (response: FacebookLoginResponse) => {
       logger?.debug(
         `Facebook login response <${JSON.stringify(response, null, 2)}>.`,
       );
+      if (!response) {
+        return;
+      }
       logger?.debug(`Facebook login response status <${response.status}>.`);
       if (
         response.status === FacebookLoginStatus.connected &&
@@ -137,6 +155,7 @@ export default defineComponent({
 
     return {
       isGoogleLoginAvailable,
+      isFacebookLoginAvailable,
       facebookLoginAppId,
       localeWithCountry,
       logger,
@@ -185,10 +204,11 @@ export default defineComponent({
     </GoogleLogin>
     <!-- Button: Login Facebook -->
     <v-facebook-login-scope
+      v-if="isFacebookLoginAvailable"
       :app-id="facebookLoginAppId"
       v-slot="scope"
-      version="v6.0"
-      :login-options="{ scope: 'email' }"
+      version="v21.0"
+      :login-options="{ scope: 'email,public_profile' }"
       :sdk-locale="localeWithCountry"
       @login="onFacebookLogin"
       @logout="onFacebookLogout"
