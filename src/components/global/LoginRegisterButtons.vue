@@ -57,10 +57,8 @@ export default defineComponent({
   },
   setup() {
     const loginStore = useLoginStore();
-    const facebookLoginAppId = rideToWorkByBikeConfig.facebookLoginAppId;
-
     const logger: Logger | undefined = inject('vuejs3-logger');
-    const loginStore = useLoginStore();
+    const facebookLoginAppId = rideToWorkByBikeConfig.facebookLoginAppId;
 
     const onGoogleLogin = async (response: CallbackTypes.CodePopupResponse) => {
       logger?.debug(
@@ -208,7 +206,7 @@ export default defineComponent({
         rounded
         outline
         color="white"
-        class="full-width q-mt-md"
+        class="full-width"
         data-cy="login-register-button-facebook"
         @click="scope.login"
       >
