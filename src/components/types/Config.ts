@@ -60,6 +60,7 @@ export interface ConfigGlobal {
   checkIsEmailVerifiedInterval: number;
   googleLoginAppId: string;
   facebookLoginAppId: string;
+  secretString: string;
 }
 
 export interface ConfigAppVersion {
