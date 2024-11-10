@@ -15,7 +15,6 @@ export interface ConfigGlobal {
   width: string;
   title: string;
   subtitle: string;
-  facebookLoginAppId: string;
   borderRadiusCard: string;
   borderRadiusCardSmall: string;
   borderRadiusButtonSmall: string;
@@ -60,6 +59,7 @@ export interface ConfigGlobal {
   urlRTWBBLogo: string;
   checkIsEmailVerifiedInterval: number;
   googleLoginAppId: string;
+  facebookLoginAppId: string;
 }
 
 export interface ConfigAppVersion {

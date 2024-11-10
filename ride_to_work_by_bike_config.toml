@@ -38,10 +38,6 @@ notifyMessagePosition = "top"
 # Emails
 contactEmail = "kontakt@dopracenakole.cz"
 
-# SECRETS
-
-facebookLoginAppId = "SECRET"
-
 # LOCAL URLS
 
 urlRTWBBLogo = "#/"
@@ -113,3 +109,4 @@ dateTimeFormatsAllLocales = '''
 
 secretString = "SECRET"
 googleLoginAppId = "SECRET"
+facebookLoginAppId = "SECRET"
