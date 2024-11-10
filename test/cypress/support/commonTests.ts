@@ -457,6 +457,37 @@ export const interceptGoogleLoginApi = (
   );
 };
 
+/**
+ * Intercept Facebook login API call
+ * It uses the same response data as the login API call.
+ * Provides a `@loginFacebook` alias for the intercepted request.
+ * @param {ConfigGlobal} config - App global config
+ * @param {I18n} i18n - i18n instance
+ * @returns {void}
+ */
+export const interceptFacebookLoginApi = (
+  config: ConfigGlobal,
+  i18n: I18n,
+): void => {
+  cy.fixture('loginRegisterResponseChallengeActive.json').then(
+    (loginResponse) => {
+      const { apiBase, apiDefaultLang, urlApiLoginFacebook } = config;
+      const apiBaseUrl = getApiBaseUrlWithLang(
+        null,
+        apiBase,
+        apiDefaultLang,
+        i18n,
+      );
+      const urlApiLoginFacebookLocalized = `${apiBaseUrl}${urlApiLoginFacebook}`;
+      // intercept facebook login API call (before mounting component)
+      cy.intercept('POST', urlApiLoginFacebookLocalized, {
+        statusCode: httpSuccessfullStatus,
+        body: loginResponse,
+      }).as('loginFacebook');
+    },
+  );
+};
+
 export const fillFormRegisterCoordinator = (): void => {
   cy.fixture('formRegisterCoordinator').then((formRegisterCoordinatorData) => {
     cy.dataCy('form-register-coordinator-first-name')

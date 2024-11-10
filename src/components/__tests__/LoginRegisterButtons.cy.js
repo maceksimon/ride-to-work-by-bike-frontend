@@ -6,11 +6,11 @@ import { i18n } from '../../boot/i18n';
 import {
   httpSuccessfullStatus,
   interceptGoogleLoginApi,
+  interceptFacebookLoginApi,
 } from '../../../test/cypress/support/commonTests';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 const { getPaletteColor } = colors;
-const primary = getPaletteColor('primary');
 const white = getPaletteColor('white');
 
 describe('<LoginRegisterButtons>', () => {
@@ -36,6 +36,7 @@ describe('<LoginRegisterButtons>', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
       rideToWorkByBikeConfig.googleLoginAppId = 'TEST_SECRET';
+      rideToWorkByBikeConfig.facebookLoginAppId = 'TEST_SECRET';
       cy.mount(LoginRegisterButtons, {
         props: {
           variant: 'login',
@@ -114,13 +115,13 @@ describe('<LoginRegisterButtons>', () => {
         .and('have.css', 'font-weight', '500')
         .and('have.css', 'text-transform', 'uppercase')
         .and('have.css', 'border-radius', '28px')
-        .and('have.color', primary);
+        .and('have.color', white);
     });
 
     it('renders facebook button icon', () => {
       cy.dataCy('login-register-button-facebook-icon')
         .should('contain', 'facebook')
-        .and('have.color', primary);
+        .and('have.color', white);
       cy.dataCy('login-register-button-facebook-icon')
         .invoke('height')
         .should('be.equal', 24);
@@ -159,6 +160,33 @@ describe('<LoginRegisterButtons>', () => {
           },
         );
       });
+    });
+
+    it('sends request to facebook auth endpoint with Facebook login info', () => {
+      const loginStore = useLoginStore();
+      // intercept facebook login BE API call
+      interceptFacebookLoginApi(rideToWorkByBikeConfig, i18n);
+      // mock the Facebook API response (which we do not control)
+      cy.fixture('facebookLoginApiResponse.json').then(
+        (facebookLoginResponse) => {
+          cy.fixture('loginRegisterResponseChallengeActive.json').then(
+            (loginResponse) => {
+              // login with Facebook data
+              loginStore.authenticateWithFacebook(
+                facebookLoginResponse.authResponse,
+              );
+              // test request to the BE endpoint
+              cy.wait('@loginFacebook').then(({ request, response }) => {
+                expect(request.body.access_token).to.eq(
+                  facebookLoginResponse.authResponse.accessToken,
+                );
+                expect(response.statusCode).to.eq(httpSuccessfullStatus);
+                expect(response.body).to.deep.eq(loginResponse);
+              });
+            },
+          );
+        },
+      );
     });
   }
 });
