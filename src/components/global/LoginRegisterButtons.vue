@@ -132,7 +132,7 @@ export default defineComponent({
         response.status === FacebookLoginStatus.connected &&
         response.authResponse
       ) {
-        loginStore.loginWithFacebook(response.authResponse);
+        loginStore.authenticateWithFacebook(response.authResponse);
       } else if (response.status === FacebookLoginStatus.notAuthorized) {
         Notify.create({
           message: i18n.global.t('login.form.messageFacebookAuthNotAuthorized'),

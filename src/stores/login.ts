@@ -180,7 +180,7 @@ export const useLoginStore = defineStore('login', {
      * Login with Facebook
      * @returns Promise<LoginResponse | null>
      */
-    async loginWithFacebook(
+    async authenticateWithFacebook(
       authResponse: FacebookAuthResponse,
     ): Promise<LoginResponse | null> {
       if (!authResponse) {
