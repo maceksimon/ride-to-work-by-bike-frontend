@@ -33,6 +33,4 @@ export interface FacebookAuthResponse {
   signedRequest: string;
   graphDomain: string;
   data_access_expiration_time: number;
-  // Keep reauthorize_required_in as optional since it's not in the sample
-  reauthorize_required_in?: number;
 }
