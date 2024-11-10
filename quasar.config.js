@@ -10,7 +10,6 @@
 // https://v2.quasar.dev/quasar-cli-vite/quasar-config-js
 
 const { configure } = require('quasar/wrappers');
-require('dotenv').config();
 
 const { getAppConfig } = require('./src/utils/get_app_conf');
 const {
