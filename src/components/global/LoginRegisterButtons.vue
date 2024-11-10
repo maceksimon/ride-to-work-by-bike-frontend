@@ -22,7 +22,7 @@
  */
 
 import { Notify } from 'quasar';
-import { computed, defineComponent, inject } from 'vue';
+import { defineComponent, inject } from 'vue';
 import { CallbackTypes } from 'vue3-google-login';
 
 // components
@@ -30,6 +30,7 @@ import { VFBLoginScope as VFacebookLoginScope } from 'vue-facebook-login-compone
 
 // composables
 import { i18n } from '../../boot/i18n';
+import { useLocale } from '../../composables/useLocale';
 
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
@@ -132,21 +133,12 @@ export default defineComponent({
       loginStore.logout();
     };
 
-    const facebookLanguage = computed(() => {
-      switch (i18n.global.locale) {
-        case 'cs':
-          return 'cs_CZ';
-        case 'sk':
-          return 'sk_SK';
-        default:
-          return 'en_US';
-      }
-    });
+    const { localeWithCountry } = useLocale();
 
     return {
       isGoogleLoginAvailable,
       facebookLoginAppId,
-      facebookLanguage,
+      localeWithCountry,
       logger,
       onGoogleLogin,
       onGoogleLoginError,
@@ -197,7 +189,7 @@ export default defineComponent({
       v-slot="scope"
       version="v6.0"
       :login-options="{ scope: 'email' }"
-      :sdk-locale="facebookLanguage"
+      :sdk-locale="localeWithCountry"
       @login="onFacebookLogin"
       @logout="onFacebookLogout"
     >
