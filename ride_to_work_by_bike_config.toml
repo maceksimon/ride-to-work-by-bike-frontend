@@ -110,3 +110,7 @@ dateTimeFormatsAllLocales = '''
 secretString = "SECRET"
 googleLoginAppId = "SECRET"
 facebookLoginAppId = "SECRET"
+
+# LIBRARIES
+
+facebookLoginSdkVersion = "v21.0"

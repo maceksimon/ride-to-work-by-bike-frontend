@@ -120,6 +120,11 @@ export default defineComponent({
         ` <${isFacebookLoginAvailable}>.`,
     );
 
+    const facebookLoginSdkVersion =
+      rideToWorkByBikeConfig.facebookLoginSdkVersion;
+
+    logger?.debug(`Facebook login SDK version <${facebookLoginSdkVersion}>.`);
+
     const onFacebookLogin = (response: FacebookLoginResponse) => {
       logger?.debug(
         `Facebook login response <${JSON.stringify(response, null, 2)}>.`,
@@ -157,6 +162,7 @@ export default defineComponent({
       isGoogleLoginAvailable,
       isFacebookLoginAvailable,
       facebookLoginAppId,
+      facebookLoginSdkVersion,
       localeWithCountry,
       logger,
       onGoogleLogin,
@@ -207,7 +213,7 @@ export default defineComponent({
       v-if="isFacebookLoginAvailable"
       :app-id="facebookLoginAppId"
       v-slot="scope"
-      version="v21.0"
+      :version="facebookLoginSdkVersion"
       :login-options="{ scope: 'email,public_profile' }"
       :sdk-locale="localeWithCountry"
       @login="onFacebookLogin"

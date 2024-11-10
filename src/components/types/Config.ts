@@ -61,6 +61,7 @@ export interface ConfigGlobal {
   googleLoginAppId: string;
   facebookLoginAppId: string;
   secretString: string;
+  facebookLoginSdkVersion: string;
 }
 
 export interface ConfigAppVersion {
