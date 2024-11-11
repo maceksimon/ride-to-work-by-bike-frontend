@@ -420,6 +420,15 @@ describe('Register Challenge page', () => {
             cy.dataCy(selectorPersonalDetails.selectorTermsInput).should(
               'be.checked',
             );
+
+            /**
+             * TODO: check other values:
+             * - organization type
+             * - organization id
+             * - subsidiary id
+             * - team id
+             * - merch id
+             */
           });
         },
       );
