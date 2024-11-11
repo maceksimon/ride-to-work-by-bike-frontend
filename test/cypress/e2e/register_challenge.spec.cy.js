@@ -78,9 +78,7 @@ const selectorPersonalDetails = {
   selectorNickname: 'form-personal-details-nickname',
   selectorGender: 'form-personal-details-gender',
   selectorNewsletter: 'form-field-newsletter',
-  selectorTerms: 'form-personal-details-terms',
   selectorTermsInput: 'form-terms-input',
-  selectorTermsLink: 'form-terms-link',
 };
 
 describe('Register Challenge page', () => {
