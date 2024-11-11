@@ -85,7 +85,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
      * Called on RegisterChallenge page load.
      * If user has a registration in progress, fetch and store values.
      * If not, do nothing.
-     * @returns {Promise<RegisterChallengeResponse | null>}
+     * @returns {Promise<RegisterChallengeResponse | null>} - Response or null.
      */
     async getRegisterChallengeValues(): Promise<RegisterChallengeResponse | null> {
       const { apiFetch } = useApi();
