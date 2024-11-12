@@ -4,15 +4,18 @@ import { computed } from 'vue';
 // composables
 import { i18n } from '../boot/i18n';
 
+// enum
+import { LocaleLangCode } from '../components/types/Locale';
+
 export const useLocale = () => {
   const localeWithCountry = computed(() => {
     switch (i18n.global.locale) {
       case 'cs':
-        return 'cs_CZ';
+        return LocaleLangCode.cs;
       case 'sk':
-        return 'sk_SK';
+        return LocaleLangCode.sk;
       default:
-        return 'en_US';
+        return LocaleLangCode.en;
     }
   });
 
