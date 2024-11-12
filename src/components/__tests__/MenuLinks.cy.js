@@ -2,6 +2,13 @@ import { colors } from 'quasar';
 import MenuLinks from '../global/MenuLinks.vue';
 import { useSocialLinks } from '../../composables/useSocialLinks';
 import { useUsefulLinks } from '../../composables/useUsefulLinks';
+import {
+  failOnStatusCode,
+  httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+  userAgentHeader,
+} from '../../../test/cypress/support/commonTests';
 
 // colors
 const { getPaletteColor } = colors;
@@ -42,7 +49,7 @@ describe('<MenuLinks>', () => {
         .and('have.css', 'column-gap', '24px');
     });
 
-    it('renders social buttons with correct styling (social variant)', () => {
+    it('renders social buttons with correct styling (social links variant)', () => {
       cy.dataCy('button-menu-links')
         .should('have.length', socialLinks.length)
         .each(($el, index) => {
@@ -58,6 +65,22 @@ describe('<MenuLinks>', () => {
         .then(($el) => {
           cy.wrap($el).should('have.color', black);
         });
+    });
+
+    it('provides valid URLs for buttons (social links variant)', () => {
+      cy.wrap(socialLinks).each((link) => {
+        cy.request({
+          url: link.url,
+          failOnStatusCode: failOnStatusCode,
+          headers: { ...userAgentHeader },
+        }).then((resp) => {
+          if (resp.status === httpTooManyRequestsStatus) {
+            cy.log(httpTooManyRequestsStatusMessage);
+            return;
+          }
+          expect(resp.status).to.eq(httpSuccessfullStatus);
+        });
+      });
     });
   });
 
@@ -89,6 +112,22 @@ describe('<MenuLinks>', () => {
         .then(($el) => {
           cy.wrap($el).should('have.color', black);
         });
+    });
+
+    it('provides valid URLs for buttons (useful links variant)', () => {
+      cy.wrap(usefulLinks).each((link) => {
+        cy.request({
+          url: link.url,
+          failOnStatusCode: failOnStatusCode,
+          headers: { ...userAgentHeader },
+        }).then((resp) => {
+          if (resp.status === httpTooManyRequestsStatus) {
+            cy.log(httpTooManyRequestsStatusMessage);
+            return;
+          }
+          expect(resp.status).to.eq(httpSuccessfullStatus);
+        });
+      });
     });
   });
 
