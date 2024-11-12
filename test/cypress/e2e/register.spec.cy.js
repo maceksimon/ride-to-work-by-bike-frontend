@@ -148,7 +148,7 @@ describe('Register page', () => {
 
   context('active challenge', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeActive).then(() => {
+      cy.clock(systemTimeChallengeActive, ['Date']).then(() => {
         cy.visit('#' + routesConf['register']['path']);
         cy.viewport('macbook-16');
 
