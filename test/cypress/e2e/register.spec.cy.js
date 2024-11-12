@@ -136,7 +136,6 @@ describe('Register page', () => {
           cy.wait('@registerRequest');
           // check error message
           cy.get('@i18n').then((i18n) => {
-            cy.tick(1000);
             cy.contains(
               i18n.global.t('register.apiMessageErrorWithMessage'),
             ).should('be.visible');
@@ -294,8 +293,6 @@ describe('Register page', () => {
           has_user_verified_email_address: false,
         });
       });
-      // tick to render screen size dependent components
-      cy.tick(1000);
       // it shows logout button
       cy.dataCy(selectorLogoutButton).should('be.visible');
       // click logout button
@@ -365,8 +362,6 @@ describe('Register page', () => {
           cy.dataCy(selectorUserSelectDesktop).within(() => {
             cy.dataCy(selectorUserSelectInput).should('be.visible').click();
           });
-          // tick to render animated component
-          cy.tick(1000);
           // logout
           cy.dataCy('menu-item')
             .contains(i18n.global.t('userSelect.logout'))

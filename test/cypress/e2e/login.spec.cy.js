@@ -147,7 +147,14 @@ describe('Login page', () => {
 
   context('login user flow', () => {
     beforeEach(() => {
-      cy.clock(systemTimeLoggedIn);
+      /**
+       * In this test, we need to extend the scope of the clock effect to
+       * the `setTimeout` function since we use it in
+       * the `scheduleTokenRefresh` in login store.
+       */
+      cy.clock(systemTimeLoggedIn, ['Date', 'setTimeout']).then((clock) => {
+        cy.wrap(clock).as('clock');
+      });
       cy.visit('#' + routesConf['login']['path']);
       cy.viewport('macbook-16');
 
@@ -188,7 +195,7 @@ describe('Login page', () => {
     });
 
     it('allows user to login and refreshes token 1 min before expiration', () => {
-      cy.clock(systemTimeLoggedIn).then((clock) => {
+      cy.get('@clock').then((clock) => {
         // fill in form
         loginWithUI();
         // wait for login API call

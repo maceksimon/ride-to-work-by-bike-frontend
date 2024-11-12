@@ -134,73 +134,68 @@ export const testDesktopSidebar = (): void => {
         cy.fixture('refreshTokensResponseChallengeActive.json').then(
           (refreshTokensResponse) => {
             cy.get('@config').then((config: unknown) => {
-              cy.clock().then((clock) => {
-                clock.setSystemTime(systemTimeLoggedIn);
-                let i18n: I18n | undefined;
-                cy.window().should('have.property', 'i18n');
-                cy.window()
-                  .then((win: AUTWindow) => {
-                    i18n = win.i18n;
-                  })
-                  .then(() => {
-                    cy.visit('#' + routesConf['login']['path']);
-                    const {
-                      apiBase,
-                      apiDefaultLang,
-                      urlApiLogin,
-                      urlApiRefresh,
-                    } = config as ConfigGlobal;
-                    const apiBaseUrl = getApiBaseUrlWithLang(
-                      null,
-                      apiBase,
-                      apiDefaultLang,
-                      i18n as I18n,
-                    );
-                    const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
-                    const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
-                    // intercept API login request
-                    cy.intercept('POST', apiLoginUrl, {
-                      statusCode: httpSuccessfullStatus,
-                      body: loginResponse,
-                    }).as('loginRequest');
-                    // intercept API refresh token request
-                    cy.intercept('POST', apiRefreshUrl, {
-                      statusCode: httpSuccessfullStatus,
-                      body: refreshTokensResponse,
-                    }).as('refreshTokens');
-                    cy.dataCy('form-login-email')
-                      .find('input')
-                      .type('test@example.com');
-                    cy.dataCy('form-login-password')
-                      .find('input')
-                      .type('password123');
-                    // submit form
-                    cy.dataCy('form-login-submit-login').click();
-                    // check if user is redirected to the home page
-                    cy.url().should('include', routesConf['home']['path']);
-                    cy.dataCy(selectorUserSelectDesktop).within(() => {
-                      cy.dataCy(selectorUserSelectInput)
-                        .should('be.visible')
-                        .and('contain', loginResponse.user.email);
-                    });
-                    // click on user select
-                    cy.dataCy(selectorUserSelectDesktop).within(() => {
-                      cy.dataCy(selectorUserSelectInput)
-                        .should('be.visible')
-                        .click();
-                    });
-                    // tick to render animated component
-                    cy.tick(1000).then(() => {
-                      // logout
-                      cy.dataCy('menu-item')
-                        .contains(i18n?.global.t('userSelect.logout'))
-                        .click();
-                      cy.dataCy(selectorUserSelectDesktop).should('not.exist');
-                      // redirected to login page
-                      cy.url().should('include', routesConf['login']['path']);
-                    });
+              cy.clock(systemTimeLoggedIn, ['Date']);
+              let i18n: I18n | undefined;
+              cy.window().should('have.property', 'i18n');
+              cy.window()
+                .then((win: AUTWindow) => {
+                  i18n = win.i18n;
+                })
+                .then(() => {
+                  cy.visit('#' + routesConf['login']['path']);
+                  const {
+                    apiBase,
+                    apiDefaultLang,
+                    urlApiLogin,
+                    urlApiRefresh,
+                  } = config as ConfigGlobal;
+                  const apiBaseUrl = getApiBaseUrlWithLang(
+                    null,
+                    apiBase,
+                    apiDefaultLang,
+                    i18n as I18n,
+                  );
+                  const apiLoginUrl = `${apiBaseUrl}${urlApiLogin}`;
+                  const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
+                  // intercept API login request
+                  cy.intercept('POST', apiLoginUrl, {
+                    statusCode: httpSuccessfullStatus,
+                    body: loginResponse,
+                  }).as('loginRequest');
+                  // intercept API refresh token request
+                  cy.intercept('POST', apiRefreshUrl, {
+                    statusCode: httpSuccessfullStatus,
+                    body: refreshTokensResponse,
+                  }).as('refreshTokens');
+                  cy.dataCy('form-login-email')
+                    .find('input')
+                    .type('test@example.com');
+                  cy.dataCy('form-login-password')
+                    .find('input')
+                    .type('password123');
+                  // submit form
+                  cy.dataCy('form-login-submit-login').click();
+                  // check if user is redirected to the home page
+                  cy.url().should('include', routesConf['home']['path']);
+                  cy.dataCy(selectorUserSelectDesktop).within(() => {
+                    cy.dataCy(selectorUserSelectInput)
+                      .should('be.visible')
+                      .and('contain', loginResponse.user.email);
                   });
-              });
+                  // click on user select
+                  cy.dataCy(selectorUserSelectDesktop).within(() => {
+                    cy.dataCy(selectorUserSelectInput)
+                      .should('be.visible')
+                      .click();
+                  });
+                  // logout
+                  cy.dataCy('menu-item')
+                    .contains(i18n?.global.t('userSelect.logout'))
+                    .click();
+                  cy.dataCy(selectorUserSelectDesktop).should('not.exist');
+                  // redirected to login page
+                  cy.url().should('include', routesConf['login']['path']);
+                });
             });
           },
         );
@@ -328,9 +323,7 @@ export const setupApiChallengeActive = (
     body: { has_user_verified_email_address: verifiedEmail },
   }).as('verifyEmail');
   // set system time to "during challenge"
-  cy.clock().then((clock) => {
-    clock.setSystemTime(systemTimeLoggedIn);
-  });
+  cy.clock(systemTimeLoggedIn, ['Date']);
 };
 
 export const setupApiChallengeInactive = (

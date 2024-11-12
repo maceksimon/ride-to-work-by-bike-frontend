@@ -339,7 +339,7 @@ describe('Home page', () => {
 
   context('before challenge', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeInactive).then(() => {
+      cy.clock(systemTimeChallengeInactive, ['Date']).then(() => {
         cy.visit(Cypress.config('baseUrl'));
         cy.viewport('macbook-16');
 

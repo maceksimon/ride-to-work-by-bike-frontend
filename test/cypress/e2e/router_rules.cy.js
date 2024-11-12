@@ -10,7 +10,7 @@ import {
 describe('Router rules', () => {
   context('challenge inactive', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeInactive);
+      cy.clock(systemTimeChallengeInactive, ['Date']);
       cy.visit('#' + routesConf['login']['path']);
       cy.viewport('macbook-16');
 
@@ -43,7 +43,7 @@ describe('Router rules', () => {
 
   context('challenge active', () => {
     beforeEach(() => {
-      cy.clock(systemTimeChallengeActive);
+      cy.clock(systemTimeChallengeActive, ['Date']);
       cy.visit('#' + routesConf['login']['path']);
       cy.viewport('macbook-16');
 
@@ -64,16 +64,13 @@ describe('Router rules', () => {
         cy.get('@i18n').then((i18n) => {
           setupApiChallengeActive(config, i18n, true);
           loginWithUI();
-          cy.clock().then((clock) => {
-            clock.tick(1000);
-            cy.url().should('not.include', routesConf['login']['path']);
-            cy.url().should('not.include', routesConf['verify_email']['path']);
-            cy.url().should(
-              'not.include',
-              routesConf['challenge_inactive']['path'],
-            );
-            cy.url().should('include', routesConf['home']['path']);
-          });
+          cy.url().should('not.include', routesConf['login']['path']);
+          cy.url().should('not.include', routesConf['verify_email']['path']);
+          cy.url().should(
+            'not.include',
+            routesConf['challenge_inactive']['path'],
+          );
+          cy.url().should('include', routesConf['home']['path']);
         });
       });
     });
