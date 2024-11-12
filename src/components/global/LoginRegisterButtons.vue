@@ -127,7 +127,9 @@ export default defineComponent({
     const facebookLoginSdkOptions = JSON.parse(
       rideToWorkByBikeConfig.facebookLoginSdkOptions,
     );
-    logger?.debug(`Facebook login SDK options <${facebookLoginSdkOptions}>.`);
+    logger?.debug(
+      `Facebook login SDK options <${JSON.stringify(facebookLoginSdkOptions, null, 2)}>.`,
+    );
 
     const onFacebookLogin = (response: FacebookLoginResponse) => {
       logger?.debug(
