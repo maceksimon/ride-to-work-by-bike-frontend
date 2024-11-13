@@ -14,11 +14,6 @@
  *   company.
  * - `options` (Array<FormSelectTableOption>, required): The object
  *   representing the options.
- * - `label` (string, required): The translation for the label.
- * - `labelButton` (string): The translation for the add button.
- * - `labelButtonDialog` (string): The translation for the add
- *   button inside the dialog.
- * - `titleDialog` (string): The translation for the dialog title.
  * - `organizationLevel` (OrganizationLevel, required): The organization
  *   level - table is used for organization or team selection.
  * - `organizationType` (OrganizationType,
@@ -33,7 +28,11 @@
  * - `FormAddTeam`: Used to render form for registering a new team.
  *
  * @example
- * <form-field-select-table />
+ * <form-field-select-table
+ *  v-model="organizationId"
+ *  :organization-level="OrganizationLevel.organization"
+ *  :options="organizationOptions"
+ * />
  *
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=5366%3A28607&mode=dev)
  */
@@ -51,6 +50,7 @@ import FormAddCompany from '../form/FormAddCompany.vue';
 import FormAddTeam from '../form/FormAddTeam.vue';
 
 // composables
+import { useSelectTable } from '../../composables/useSelectTable';
 import { useValidation } from '../../composables/useValidation';
 
 // enums
@@ -78,22 +78,6 @@ export default defineComponent({
     },
     options: {
       type: Array as () => FormSelectTableOption[] | FormOption[],
-      required: true,
-    },
-    label: {
-      type: String,
-      required: true,
-    },
-    labelButton: {
-      type: String,
-      required: true,
-    },
-    labelButtonDialog: {
-      type: String,
-      required: true,
-    },
-    titleDialog: {
-      type: String,
       required: true,
     },
     organizationLevel: {
@@ -187,6 +171,9 @@ export default defineComponent({
       }
     };
 
+    const { label, labelButton, labelButtonDialog, titleDialog } =
+      useSelectTable(props.organizationLevel);
+
     return {
       borderRadius,
       companyNew,
@@ -195,8 +182,12 @@ export default defineComponent({
       formRef,
       inputValue,
       isDialogOpen,
+      label,
+      labelButton,
+      labelButtonDialog,
       query,
       teamNew,
+      titleDialog,
       isFilled,
       onClose,
       onSubmit,

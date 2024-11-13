@@ -69,10 +69,6 @@ describe('<FormFieldSelectTable>', () => {
           options: options.value,
           organizationLevel: OrganizationLevel.organization,
           organizationType: OrganizationType.company,
-          label: i18n.global.t('form.company.labelCompany'),
-          labelButton: i18n.global.t('register.challenge.buttonAddCompany'),
-          labelButtonDialog: i18n.global.t('form.company.buttonAddCompany'),
-          titleDialog: i18n.global.t('form.company.titleAddCompany'),
         },
       });
       cy.viewport('macbook-16');
@@ -199,10 +195,6 @@ describe('<FormFieldSelectTable>', () => {
           organizationLevel: OrganizationLevel.organization,
           organizationType: OrganizationType.company,
           modelValue: options.value[0].value,
-          label: i18n.global.t('form.company.labelCompany'),
-          labelButton: i18n.global.t('register.challenge.buttonAddCompany'),
-          labelButtonDialog: i18n.global.t('form.company.buttonAddCompany'),
-          titleDialog: i18n.global.t('form.company.titleAddCompany'),
         },
       });
       cy.viewport('macbook-16');
@@ -222,10 +214,6 @@ describe('<FormFieldSelectTable>', () => {
         props: {
           options: options.value,
           organizationLevel: OrganizationLevel.team,
-          label: i18n.global.t('form.team.labelTeam'),
-          labelButton: i18n.global.t('form.team.buttonAddTeam'),
-          labelButtonDialog: i18n.global.t('form.team.buttonAddTeam'),
-          titleDialog: i18n.global.t('form.team.titleAddTeam'),
         },
       });
       cy.viewport('macbook-16');

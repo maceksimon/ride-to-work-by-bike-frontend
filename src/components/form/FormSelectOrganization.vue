@@ -67,10 +67,6 @@ export default defineComponent({
       v-model="organizationId"
       :organization-level="OrganizationLevel.organization"
       :options="organizationOptions"
-      :label="$t('form.company.labelCompany')"
-      :label-button="$t('register.challenge.buttonAddCompany')"
-      :label-button-dialog="$t('form.company.buttonAddCompany')"
-      :title-dialog="$t('form.company.titleAddCompany')"
       data-cy="form-select-table-company"
     />
     <form-field-company-address

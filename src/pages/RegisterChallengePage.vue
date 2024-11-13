@@ -393,10 +393,6 @@ export default defineComponent({
                 v-model="team"
                 :organization-level="OrganizationLevel.team"
                 :options="teamOptions"
-                :label="$t('form.team.labelTeam')"
-                :label-button="$t('form.team.buttonAddTeam')"
-                :label-button-dialog="$t('form.team.buttonAddTeam')"
-                :title-dialog="$t('form.team.titleAddTeam')"
                 data-cy="form-select-table-team"
               />
             </q-form>
