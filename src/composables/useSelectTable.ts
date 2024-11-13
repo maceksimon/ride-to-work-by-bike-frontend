@@ -12,6 +12,8 @@ export const useSelectTable = (organizationLevel: OrganizationLevel) => {
     switch (organizationLevel) {
       case OrganizationLevel.team:
         return i18n.global.t('form.team.labelTeam');
+      case OrganizationLevel.subsidiary:
+        return i18n.global.t('form.subsidiary.labelSubsidiary');
       default:
         return i18n.global.t('form.company.labelCompany');
     }
@@ -21,6 +23,8 @@ export const useSelectTable = (organizationLevel: OrganizationLevel) => {
     switch (organizationLevel) {
       case OrganizationLevel.team:
         return i18n.global.t('form.team.buttonAddTeam');
+      case OrganizationLevel.subsidiary:
+        return i18n.global.t('form.subsidiary.buttonAddSubsidiary');
       default:
         return i18n.global.t('register.challenge.buttonAddCompany');
     }
@@ -30,6 +34,8 @@ export const useSelectTable = (organizationLevel: OrganizationLevel) => {
     switch (organizationLevel) {
       case OrganizationLevel.team:
         return i18n.global.t('form.team.buttonAddTeam');
+      case OrganizationLevel.subsidiary:
+        return i18n.global.t('form.subsidiary.buttonAddSubsidiary');
       default:
         return i18n.global.t('form.company.buttonAddCompany');
     }
@@ -39,6 +45,8 @@ export const useSelectTable = (organizationLevel: OrganizationLevel) => {
     switch (organizationLevel) {
       case OrganizationLevel.team:
         return i18n.global.t('form.team.titleAddTeam');
+      case OrganizationLevel.subsidiary:
+        return i18n.global.t('form.subsidiary.titleAddSubsidiary');
       default:
         return i18n.global.t('form.company.titleAddCompany');
     }

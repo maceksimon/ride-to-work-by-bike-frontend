@@ -304,6 +304,11 @@ titleAddFamily = "Add family"
 titleAddAddress = "Add your subsidiary"
 titleSubsidiaryAddress = "Your branch address"
 
+[form.subsidiary]
+labelSubsidiary = "Subsidiary name"
+buttonAddSubsidiary = "Add subsidiary"
+titleAddSubsidiary = "Add subsidiary"
+
 [form.team]
 buttonAddTeam = "Add team"
 labelMembers = "member | members"

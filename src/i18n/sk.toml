@@ -304,6 +304,11 @@ titleAddFamily = "Pridať rodinu"
 titleAddAddress = "Pridajte svoju pobočku"
 titleSubsidiaryAddress = "Adresa vašej pobočky"
 
+[form.subsidiary]
+labelSubsidiary = "Název pobočky"
+buttonAddSubsidiary = "Pridať pobočku"
+titleAddSubsidiary = "Pridať pobočku"
+
 [form.team]
 buttonAddTeam = "Pridať tím"
 labelMembers = "člen | členov"

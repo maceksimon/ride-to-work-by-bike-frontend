@@ -56,6 +56,11 @@ describe('<FormFieldSelectTable>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
+      ['buttonAddSubsidiary', 'labelSubsidiary', 'titleAddSubsidiary'],
+      'form.subsidiary',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
       ['labelCity', 'labelHouseNumber', 'labelStreet', 'labelZip'],
       'form',
       i18n,
@@ -307,6 +312,38 @@ describe('<FormFieldSelectTable>', () => {
       // submit
       cy.dataCy('dialog-button-submit').click();
       cy.dataCy('dialog-add-option').should('not.exist');
+    });
+  });
+
+  context('subsidiary desktop', () => {
+    beforeEach(() => {
+      cy.mount(FormFieldSelectTable, {
+        props: {
+          options: options.value,
+          organizationLevel: OrganizationLevel.subsidiary,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('renders HTML elements', () => {
+      // input label
+      cy.dataCy('form-select-table-query')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.subsidiary.labelSubsidiary'));
+      // add new button
+      cy.dataCy('button-add-option')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.subsidiary.buttonAddSubsidiary'));
+      // open dialog
+      cy.dataCy('button-add-option').click();
+      cy.dataCy('dialog-add-option').should('be.visible');
+      cy.dataCy('dialog-add-option')
+        .find('h3')
+        .should('be.visible')
+        .and('have.css', 'font-size', '20px')
+        .and('have.css', 'font-weight', '500')
+        .and('contain', i18n.global.t('form.subsidiary.titleAddSubsidiary'));
     });
   });
 });

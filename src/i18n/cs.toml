@@ -307,6 +307,11 @@ titleAddSchool = "Přidat školu"
 titleAddFamily = "Přidat rodinu"
 titleSubsidiaryAddress = "Adresa vaší pobočky"
 
+[form.subsidiary]
+labelSubsidiary = "Název pobočky"
+buttonAddSubsidiary = "Přidat pobočku"
+titleAddSubsidiary = "Přidat pobočku"
+
 [form.team]
 buttonAddTeam = "Přidat tým"
 labelMembers = "člen | členů"
