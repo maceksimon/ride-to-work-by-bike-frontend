@@ -33,7 +33,7 @@ import '@quasar/extras/ionicons-v4';
 import '@quasar/extras/ionicons-v4/ionicons-v4.css';
 import '@quasar/extras/fontawesome-v5';
 import '@quasar/extras/fontawesome-v5/fontawesome-v5.css';
-import 'quasar/dist/icon-set/material-symbols-sharp.umd.prod';
+import '@quasar/extras/material-symbols-sharp';
 import '@quasar/extras/material-symbols-sharp/material-symbols-sharp.css';
 
 import { installQuasarPlugin } from '@quasar/quasar-app-extension-testing-e2e-cypress';
