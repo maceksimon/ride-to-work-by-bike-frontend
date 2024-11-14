@@ -37,6 +37,7 @@ const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
 const optionCustom = 'custom';
 const optionVoucher = 'voucher';
 const optionCompany = 'company';
+const optionIndividual = 'individual';
 const optionSchool = 'school';
 const optionIndividual = 'individual';
 const sliderClickTolerance = 10;
@@ -195,7 +196,7 @@ function coreTests() {
     );
   });
 
-  it('if selected voucher - allows to apply voucher (HALF)', () => {
+  it.only('if selected voucher - allows to apply voucher (HALF)', () => {
     cy.get('@voucherHalf').then((voucher) => {
       // option default amount is active
       cy.dataCy(getRadioOption(defaultPaymentAmountMin))
@@ -203,6 +204,8 @@ function coreTests() {
         .click();
       // option voucher payment is active
       cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+      // input amount is hidden
+      cy.dataCy(selectorPaymentAmount).should('not.exist');
       // input voucher
       cy.dataCy(selectorVoucherInput).type(voucher.code);
       cy.dataCy(selectorVoucherSubmit).click();
@@ -215,6 +218,13 @@ function coreTests() {
       cy.dataCy(selectorVoucherButtonRemove).click();
       // invalid voucher is input
       cy.dataCy(selectorVoucherInput).should('be.visible');
+      // input amount is hidden
+      cy.dataCy(selectorPaymentAmount).should('not.exist');
+      // input custom amount is hidden
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // after voucher is removed, default amount is reset
+      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+      cy.contains(defaultPaymentAmountMin).should('be.visible');
     });
   });
 

@@ -287,11 +287,20 @@ export default defineComponent({
         data-cy="form-field-payment-subject"
       />
     </div>
+    <!-- Input: Voucher -->
+    <div v-if="selectedPaymentSubject === PaymentSubject.voucher">
+      <form-field-voucher
+        @update:voucher="onUpdateVoucher"
+        @remove:voucher="onRemoveVoucher"
+      />
+    </div>
     <!-- Input: Payment amount -->
     <div
       v-if="
         selectedPaymentSubject === PaymentSubject.individual ||
-        (selectedPaymentSubject === PaymentSubject.voucher && !isEntryFeeFree)
+        (selectedPaymentSubject === PaymentSubject.voucher &&
+          activeVoucher?.code &&
+          !isEntryFeeFree)
       "
       class="q-my-md"
     >
@@ -343,7 +352,13 @@ export default defineComponent({
     </div>
     <!-- Input: Custom amount -->
     <div
-      v-if="selectedPaymentAmount === PaymentAmount.custom && !isEntryFeeFree"
+      v-if="
+        (selectedPaymentSubject === PaymentSubject.voucher &&
+          activeVoucher?.code &&
+          !isEntryFeeFree) ||
+        (selectedPaymentSubject !== PaymentSubject.voucher &&
+          selectedPaymentAmount === PaymentAmount.custom)
+      "
     >
       <form-field-slider-number
         v-model="selectedPaymentAmountCustom"
