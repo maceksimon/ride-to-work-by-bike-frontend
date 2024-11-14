@@ -196,7 +196,7 @@ function coreTests() {
     );
   });
 
-  it.only('if selected voucher - allows to apply voucher (HALF)', () => {
+  it('if selected voucher - allows to apply voucher (HALF)', () => {
     cy.get('@voucherHalf').then((voucher) => {
       // option default amount is active
       cy.dataCy(getRadioOption(defaultPaymentAmountMin))
