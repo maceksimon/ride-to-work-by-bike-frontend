@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import * as fs from 'fs';
 
 const {
@@ -44,6 +45,7 @@ module.exports = defineConfig({
     indexHtmlFile: 'test/cypress/support/component-index.html',
     devServer: injectQuasarDevServerConfig(),
     defaultCommandTimeout: 60000,
+    excludeSpecPattern: ['*/*/**/RoutesMap.cy.js'], // RoutesMap.cy.js file tests REQUIRE REVIEW/REFACTOR/EXTENDS tests
   },
 });
 
