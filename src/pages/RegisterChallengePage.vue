@@ -36,6 +36,7 @@ import FormFieldOptionGroup from 'src/components/form/FormFieldOptionGroup.vue';
 import FormPersonalDetails from 'src/components/form/FormPersonalDetails.vue';
 import FormSelectOrganization from 'src/components/form/FormSelectOrganization.vue';
 import LoginRegisterHeader from 'components/global/LoginRegisterHeader.vue';
+import RegisterChallengePayment from 'src/components/register/RegisterChallengePayment.vue';
 import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
 
 // composables
@@ -62,6 +63,7 @@ export default defineComponent({
     FormPersonalDetails,
     FormSelectOrganization,
     LoginRegisterHeader,
+    RegisterChallengePayment,
     TopBarCountdown,
   },
   setup() {
