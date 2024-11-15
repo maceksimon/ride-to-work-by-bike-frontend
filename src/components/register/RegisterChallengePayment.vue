@@ -129,8 +129,11 @@ export default defineComponent({
     }
 
     const optionsPaymentAmount: FormOption[] = reactive([
+      // min option
       defaultPaymentOption,
+      // other options
       ...paymentOptions,
+      // custom option
       {
         label: i18n.global.t('global.custom'),
         value: PaymentAmount.custom,
@@ -142,8 +145,7 @@ export default defineComponent({
     const selectedPaymentAmountCustom = ref<number>(defaultPaymentAmountMin);
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
-    const selectedPaymentSubject = ref<string>('individual');
-    const isEntryFeeFree = ref<boolean>(false);
+    const selectedPaymentSubject = ref<string>(PaymentSubject.individual);
     const selectedCompany = ref<string>('');
     const isRegistrationCoordinator = ref<boolean>(false);
     const formRegisterCoordinator = reactive({
@@ -151,6 +153,15 @@ export default defineComponent({
       phone: '',
       responsibility: false,
       terms: false,
+    });
+    const isVoucherValid = computed((): boolean => {
+      return !!activeVoucher.value?.code;
+    });
+    const isVoucherFreeEntry = computed((): boolean => {
+      return isVoucherValid.value && !activeVoucher.value?.amount;
+    });
+    const isVoucherDiscountedEntry = computed((): boolean => {
+      return isVoucherValid.value && !!activeVoucher.value?.amount;
     });
 
     /**
@@ -202,10 +213,7 @@ export default defineComponent({
           selectedPaymentAmount.value = String(voucher.amount);
         }
       }
-      // no amount = free entry
-      else {
-        isEntryFeeFree.value = true;
-      }
+      // no amount (free entry)
     };
 
     /**
@@ -216,7 +224,6 @@ export default defineComponent({
     const onRemoveVoucher = (): void => {
       // clear active voucher
       activeVoucher.value = null;
-      isEntryFeeFree.value = false;
       optionsPaymentAmount.shift();
       optionsPaymentAmount.unshift(defaultPaymentOption);
       paymentAmountMin.value = defaultPaymentAmountMin;
@@ -227,13 +234,65 @@ export default defineComponent({
       }
     };
 
+    const optionsPaymentAmountComputed = computed((): FormOption[] => {
+      if (
+        selectedPaymentSubject.value === PaymentSubject.voucher &&
+        isVoucherFreeEntry.value
+      ) {
+        return [];
+      } else if (
+        selectedPaymentSubject.value === PaymentSubject.voucher &&
+        isVoucherValid.value &&
+        activeVoucher.value?.amount
+      ) {
+        return [
+          {
+            label: formatPriceCurrency(
+              activeVoucher.value?.amount,
+              Currency.CZK,
+            ),
+            value: String(activeVoucher.value?.amount),
+          },
+          // other options
+          ...paymentOptions,
+          // custom option
+          {
+            label: i18n.global.t('global.custom'),
+            value: PaymentAmount.custom,
+          },
+        ];
+      } else if (selectedPaymentSubject.value !== PaymentSubject.voucher) {
+        return [
+          // min option
+          defaultPaymentOption,
+          // other options
+          ...paymentOptions,
+          // custom option
+          {
+            label: i18n.global.t('global.custom'),
+            value: PaymentAmount.custom,
+          },
+        ];
+      } else {
+        return [];
+      }
+    });
+
+    /**
+     * Set first amount option
+     * Updates payment options and sets
+     */
+
     return {
       activeVoucher,
       borderRadius,
       formRegisterCoordinator,
-      isEntryFeeFree,
+      isVoucherFreeEntry,
+      isVoucherValid,
+      isVoucherDiscountedEntry,
       isRegistrationCoordinator,
       optionsPaymentAmount,
+      optionsPaymentAmountComputed,
       optionsPaymentSubject,
       paymentAmount,
       paymentAmountMax,
@@ -290,20 +349,13 @@ export default defineComponent({
     <!-- Input: Voucher -->
     <div v-if="selectedPaymentSubject === PaymentSubject.voucher">
       <form-field-voucher
+        :active-voucher="activeVoucher"
         @update:voucher="onUpdateVoucher"
         @remove:voucher="onRemoveVoucher"
       />
     </div>
     <!-- Input: Payment amount -->
-    <div
-      v-if="
-        selectedPaymentSubject === PaymentSubject.individual ||
-        (selectedPaymentSubject === PaymentSubject.voucher &&
-          activeVoucher?.code &&
-          !isEntryFeeFree)
-      "
-      class="q-my-md"
-    >
+    <div v-if="optionsPaymentAmountComputed.length" class="q-my-md">
       <!-- Label -->
       <label
         for="paymentAmount"
@@ -317,7 +369,7 @@ export default defineComponent({
         inline
         id="paymentAmount"
         v-model="selectedPaymentAmount"
-        :options="optionsPaymentAmount"
+        :options="optionsPaymentAmountComputed"
         class="q-mt-sm"
         data-cy="form-field-payment-amount"
       />
@@ -354,8 +406,8 @@ export default defineComponent({
     <div
       v-if="
         (selectedPaymentSubject === PaymentSubject.voucher &&
-          activeVoucher?.code &&
-          !isEntryFeeFree) ||
+          isVoucherDiscountedEntry &&
+          selectedPaymentAmount === PaymentAmount.custom) ||
         (selectedPaymentSubject !== PaymentSubject.voucher &&
           selectedPaymentAmount === PaymentAmount.custom)
       "
@@ -371,7 +423,8 @@ export default defineComponent({
     <!-- Input: Donation -->
     <div
       v-if="
-        (selectedPaymentSubject === PaymentSubject.voucher && isEntryFeeFree) ||
+        (selectedPaymentSubject === PaymentSubject.voucher &&
+          isVoucherFreeEntry) ||
         selectedPaymentSubject === PaymentSubject.company ||
         selectedPaymentSubject === PaymentSubject.school
       "

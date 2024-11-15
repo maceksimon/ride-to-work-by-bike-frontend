@@ -222,9 +222,6 @@ function coreTests() {
       cy.dataCy(selectorPaymentAmount).should('not.exist');
       // input custom amount is hidden
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
-      // after voucher is removed, default amount is reset
-      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
-      cy.contains(defaultPaymentAmountMin).should('be.visible');
     });
   });
 
@@ -238,12 +235,10 @@ function coreTests() {
     cy.dataCy(selectorVoucherInput).type('ABCD');
     cy.dataCy(selectorVoucherSubmit).click();
     cy.dataCy(selectorVoucherInput).find('input').should('have.value', 'ABCD');
-    // option with default amount is available
+    // input amount is hidden
+    cy.dataCy(selectorPaymentAmount).should('not.exist');
+    // input custom amount is hidden
     cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
-    // after voucher is removed, default amount is reset
-    cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
-    // default amount is shown
-    cy.contains(defaultPaymentAmountMin).should('be.visible');
   });
 
   it('if selected voucher - allows to apply voucher (FULL) + donate option', () => {
@@ -286,6 +281,29 @@ function coreTests() {
       cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
       // shows voucher
       cy.dataCy(selectorVoucherBannerCode).should('be.visible');
+    });
+  });
+
+  it('if selected voucher - resets prices after switching back to option individual', () => {
+    cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+    cy.dataCy(selectorPaymentAmount).should('not.exist');
+    cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+    // enter voucher HALF
+    cy.get('@voucherHalf').then((voucher) => {
+      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherSubmit).click();
+      // amount options and custom amount are hidden
+      cy.dataCy(selectorPaymentAmount).should('be.visible');
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // HALF voucher value is shown
+      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
+      // switch back to individual
+      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+      // amount options are shown
+      cy.dataCy(selectorPaymentAmount).should('be.visible');
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // default amount is shown
+      cy.dataCy(getRadioOption(defaultPaymentAmountMin)).should('be.visible');
     });
   });
 
