@@ -214,9 +214,9 @@ function coreTests() {
       // custom amount is set to discount value
       cy.dataCy(getRadioOption(optionCustom)).click();
       cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
-      // clear input
+      // clear voucher
       cy.dataCy(selectorVoucherButtonRemove).click();
-      // invalid voucher is input
+      // input voucher is shown
       cy.dataCy(selectorVoucherInput).should('be.visible');
       // input amount is hidden
       cy.dataCy(selectorPaymentAmount).should('not.exist');
@@ -239,13 +239,11 @@ function coreTests() {
     cy.dataCy(selectorVoucherSubmit).click();
     cy.dataCy(selectorVoucherInput).find('input').should('have.value', 'ABCD');
     // option with default amount is available
-    cy.dataCy(getRadioOption(defaultPaymentAmountMin)).click();
-    cy.dataCy(getRadioOption(optionCustom)).click();
-    // custom amount is set to default value
-    cy.dataCy(selectorSliderNumberInput).should(
-      'have.value',
-      defaultPaymentAmountMin.toString(),
-    );
+    cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+    // after voucher is removed, default amount is reset
+    cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+    // default amount is shown
+    cy.contains(defaultPaymentAmountMin).should('be.visible');
   });
 
   it('if selected voucher - allows to apply voucher (FULL) + donate option', () => {
