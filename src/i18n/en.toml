@@ -791,6 +791,7 @@ labelTeam = "Team"
 labelVariableSymbol = "Var. symbol"
 textEmptyTable = "No results. Try changing the filter settings."
 titleFeeApproval = "Entry fee payments for approval"
+titleInvoices = "Invoices"
 
 [resetPassword]
 apiMessageError = "Request to reset password failed."

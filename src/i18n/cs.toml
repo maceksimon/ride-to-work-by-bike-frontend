@@ -794,6 +794,7 @@ labelTeam = "Tým"
 labelVariableSymbol = "Var. symbol"
 textEmptyTable = "Žádné výsledky. Zkuste změnit nastavení filtrů."
 titleFeeApproval = "Platby startovného ke schválení"
+titleInvoices = "Faktury"
 
 [resetPassword]
 apiMessageError = "Požadavek na obnovení hesla se nezdařil."
