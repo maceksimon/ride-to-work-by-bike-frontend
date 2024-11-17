@@ -1,4 +1,3 @@
-import { ref } from 'vue';
 import FormFieldCompany from 'components/global/FormFieldCompany.vue';
 import { vModelAdapter } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
@@ -21,17 +20,17 @@ describe('<FormFieldCompany>', () => {
         'messageNoCompany',
       ],
       'form',
-      i18n,
+      i18n
     );
     cy.testLanguageStringsInContext(
       ['buttonAddCompany', 'titleAddCompany'],
       'form.company',
-      i18n,
+      i18n
     );
     cy.testLanguageStringsInContext(
       ['buttonAddCompany'],
       'register.challenge',
-      i18n,
+      i18n
     );
     cy.testLanguageStringsInContext(['discard'], 'navigation', i18n);
   });
@@ -91,6 +90,21 @@ describe('<FormFieldCompany>', () => {
             );
           });
         });
+        cy.dataCy('form-company').find('input').click();
+        // select option
+        cy.get('.q-menu')
+          .should('be.visible')
+          .within(() => {
+            cy.get('.q-item').should(
+              'have.length',
+              formFieldCompany.results.length
+            );
+            cy.get('.q-item').first().click();
+          });
+        cy.get('.q-menu').should('not.exist');
+        cy.wrap(model)
+          .its('value')
+          .should('eq', formFieldCompany.results[0].id);
       });
     });
 
@@ -99,10 +113,10 @@ describe('<FormFieldCompany>', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.wait('@getOrganizations').then((interception) => {
           expect(interception.request.headers.authorization).to.include(
-            'Bearer',
+            'Bearer'
           );
           expect(interception.response.statusCode).to.equal(
-            httpSuccessfullStatus,
+            httpSuccessfullStatus
           );
           expect(interception.response.body).to.deep.equal(formFieldCompany);
           cy.dataCy('form-company').find('input').focus();
@@ -130,7 +144,7 @@ describe('<FormFieldCompany>', () => {
       cy.contains(
         i18n.global.t('form.messageFieldRequired', {
           fieldName: i18n.global.t('form.labelCompanyShort'),
-        }),
+        })
       ).should('be.visible');
       cy.dataCy('form-company').find('input').click();
       // select option
@@ -142,7 +156,7 @@ describe('<FormFieldCompany>', () => {
       cy.contains(
         i18n.global.t('form.messageFieldRequired', {
           fieldName: i18n.global.t('form.labelCompanyShort'),
-        }),
+        })
       ).should('not.exist');
     });
 
@@ -171,7 +185,7 @@ describe('<FormFieldCompany>', () => {
                 .should('be.visible')
                 .and(
                   'have.text',
-                  i18n.global.t('form.company.buttonAddCompany'),
+                  i18n.global.t('form.company.buttonAddCompany')
                 );
               // fill form
               cy.dataCy('form-add-company-name')
@@ -185,17 +199,17 @@ describe('<FormFieldCompany>', () => {
               // test response
               cy.wait('@createOrganization').then((interception) => {
                 expect(interception.request.headers.authorization).to.include(
-                  'Bearer',
+                  'Bearer'
                 );
                 expect(interception.response.statusCode).to.equal(
-                  httpSuccessfullStatus,
+                  httpSuccessfullStatus
                 );
                 expect(interception.request.body).to.deep.equal({
                   name: formFieldCompanyCreateRequest.name,
                   vatId: formFieldCompanyCreateRequest.vatId,
                 });
                 expect(interception.response.body).to.deep.equal(
-                  formFieldCompanyCreateResponse,
+                  formFieldCompanyCreateResponse
                 );
               });
               // test selected option
@@ -203,9 +217,9 @@ describe('<FormFieldCompany>', () => {
                 .find('input')
                 .invoke('val')
                 .should('eq', formFieldCompanyCreateResponse.name);
-            },
+            }
           );
-        },
+        }
       );
     });
   });
