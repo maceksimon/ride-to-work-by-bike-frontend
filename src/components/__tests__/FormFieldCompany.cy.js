@@ -196,6 +196,8 @@ describe('<FormFieldCompany>', () => {
                 expect(interception.request.body).to.deep.equal({
                   name: formFieldCompanyCreateRequest.name,
                   vatId: formFieldCompanyCreateRequest.vatId,
+                  organization_type:
+                    formFieldCompanyCreateRequest.organization_type,
                 });
                 expect(interception.response.body).to.deep.equal(
                   formFieldCompanyCreateResponse,
