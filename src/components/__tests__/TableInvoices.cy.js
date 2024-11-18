@@ -7,6 +7,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // colors
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
+const primary = getPaletteColor('primary');
 
 // selectors
 const classSelectorTableSortable = 'th.sortable';
@@ -17,6 +18,8 @@ const selectorTableRow = 'table-invoices-row';
 const selectorTableIssueDate = 'table-invoices-issue-date';
 const selectorTableOrderNumber = 'table-invoices-order-number';
 const selectorTableFiles = 'table-invoices-files';
+const selectorTableFileIcon = 'table-invoices-file-icon';
+const selectorTableFileLabel = 'table-invoices-file-label';
 const selectorTableVariableSymbol = 'table-invoices-variable-symbol';
 const selectorTablePaymentCount = 'table-invoices-payment-count';
 const selectorTableAmount = 'table-invoices-amount';
@@ -40,6 +43,8 @@ const dataByIssueDateDesc = [
 
 // variables
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
+const iconSize = 18;
+const marginXs = 4;
 
 describe('<TableInvoices>', () => {
   it('has translation for all strings', () => {
@@ -131,6 +136,33 @@ function coreTests() {
               'contain',
               rows[index].orderNumber,
             );
+            // files
+            cy.dataCy(selectorTableFiles).within(() => {
+              // buttons
+              cy.get('.q-btn').should('have.length', rows[index].files.length);
+              // loop over files
+              rows[index].files.forEach((file, fileIndex) => {
+                cy.get('.q-btn')
+                  .eq(fileIndex)
+                  .within(() => {
+                    // icon
+                    cy.dataCy(selectorTableFileIcon)
+                      .should('be.visible')
+                      .and('have.color', primary)
+                      .and('have.css', 'margin-right', `${marginXs}px`);
+                    cy.dataCy(selectorTableFileIcon)
+                      .invoke('width')
+                      .should('eq', iconSize);
+                    cy.dataCy(selectorTableFileIcon)
+                      .invoke('height')
+                      .should('eq', iconSize);
+                    // label
+                    cy.dataCy(selectorTableFileLabel)
+                      .should('be.visible')
+                      .and('contain', file.label);
+                  });
+              });
+            });
             // variable symbol
             cy.dataCy(selectorTableVariableSymbol).should(
               'contain',
@@ -146,10 +178,6 @@ function coreTests() {
               'contain',
               rows[index].amount,
             );
-            // files
-            cy.dataCy(selectorTableFiles).within(() => {
-              cy.get('.q-btn').should('have.length', rows[index].files.length);
-            });
           });
         });
     });

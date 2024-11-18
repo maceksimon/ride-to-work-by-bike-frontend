@@ -3,8 +3,9 @@
     "issueDate": "2023-01-04T14:48:00Z",
     "orderNumber": "2023001",
     "files": [
-      { "id": 1, "name": "invoice.pdf" },
-      { "id": 2, "name": "receipt.pdf" }
+      { "id": 1, "label": "PDF" },
+      { "id": 2, "label": "Fakturoid" },
+      { "id": 3, "label": "Pohoda" }
     ],
     "variableSymbol": "20230001",
     "paymentCount": 5,
@@ -14,7 +15,11 @@
   {
     "issueDate": "2023-06-04T14:48:00Z",
     "orderNumber": "2023002",
-    "files": [{ "id": 3, "name": "invoice.pdf" }],
+    "files": [
+      { "id": 1, "label": "PDF" },
+      { "id": 2, "label": "Fakturoid" },
+      { "id": 3, "label": "Pohoda" }
+    ],
     "variableSymbol": "20230002",
     "paymentCount": 3,
     "amount": 1500,
@@ -24,8 +29,9 @@
     "issueDate": "2023-10-10T14:48:00Z",
     "orderNumber": "2023003",
     "files": [
-      { "id": 4, "name": "invoice.pdf" },
-      { "id": 5, "name": "receipt.pdf" }
+      { "id": 1, "label": "PDF" },
+      { "id": 2, "label": "Fakturoid" },
+      { "id": 3, "label": "Pohoda" }
     ],
     "variableSymbol": "20230003",
     "paymentCount": 10,
