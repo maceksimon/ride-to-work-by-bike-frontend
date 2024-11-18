@@ -1,3 +1,4 @@
+import { ref } from 'vue';
 import FormFieldCompany from 'components/global/FormFieldCompany.vue';
 import { vModelAdapter } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
@@ -20,17 +21,17 @@ describe('<FormFieldCompany>', () => {
         'messageNoCompany',
       ],
       'form',
-      i18n
+      i18n,
     );
     cy.testLanguageStringsInContext(
       ['buttonAddCompany', 'titleAddCompany'],
       'form.company',
-      i18n
+      i18n,
     );
     cy.testLanguageStringsInContext(
       ['buttonAddCompany'],
       'register.challenge',
-      i18n
+      i18n,
     );
     cy.testLanguageStringsInContext(['discard'], 'navigation', i18n);
   });
@@ -38,7 +39,11 @@ describe('<FormFieldCompany>', () => {
   context('desktop', () => {
     beforeEach(() => {
       // intercept api
-      interceptOrganizationsApi(rideToWorkByBikeConfig);
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -69,38 +74,20 @@ describe('<FormFieldCompany>', () => {
     it('allows user to select option', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
-          cy.wait('@getOrganizations').then((interception) => {
-            expect(interception.request.headers.authorization).to.include(
-              'Bearer',
-            );
-            expect(interception.response.statusCode).to.equal(
-              httpSuccessfullStatus,
-            );
-            expect(interception.response.body).to.deep.equal(formFieldCompany);
-          });
-          cy.wait('@getOrganizationsNextPage').then((interception) => {
-            expect(interception.request.headers.authorization).to.include(
-              'Bearer',
-            );
-            expect(interception.response.statusCode).to.equal(
-              httpSuccessfullStatus,
-            );
-            expect(interception.response.body).to.deep.equal(
-              formFieldCompanyNext,
-            );
-          });
+          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          cy.dataCy('form-company').find('input').click();
+          // select option
+          cy.get('.q-menu')
+            .should('be.visible')
+            .within(() => {
+              cy.get('.q-item').should(
+                'have.length',
+                formFieldCompany.results.length +
+                  formFieldCompanyNext.results.length,
+              );
+              cy.get('.q-item').first().click();
+            });
         });
-        cy.dataCy('form-company').find('input').click();
-        // select option
-        cy.get('.q-menu')
-          .should('be.visible')
-          .within(() => {
-            cy.get('.q-item').should(
-              'have.length',
-              formFieldCompany.results.length
-            );
-            cy.get('.q-item').first().click();
-          });
         cy.get('.q-menu').should('not.exist');
         cy.wrap(model)
           .its('value')
@@ -111,14 +98,8 @@ describe('<FormFieldCompany>', () => {
     it('allows to search through options', () => {
       // search for option
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
-        cy.wait('@getOrganizations').then((interception) => {
-          expect(interception.request.headers.authorization).to.include(
-            'Bearer'
-          );
-          expect(interception.response.statusCode).to.equal(
-            httpSuccessfullStatus
-          );
-          expect(interception.response.body).to.deep.equal(formFieldCompany);
+        cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
+          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           cy.dataCy('form-company').find('input').focus();
           cy.dataCy('form-company')
             .find('input')
@@ -128,7 +109,8 @@ describe('<FormFieldCompany>', () => {
             .should('be.visible')
             .within(() => {
               // only shows the one filtered option
-              cy.get('.q-item').should('have.length', 1).first().click();
+              cy.get('.q-item').should('have.length', 1);
+              cy.get('.q-item').first().click();
             });
           cy.get('.q-menu').should('not.exist');
           cy.wrap(model)
@@ -139,25 +121,31 @@ describe('<FormFieldCompany>', () => {
     });
 
     it('validates company field correctly', () => {
-      cy.dataCy('form-company').find('input').focus();
-      cy.dataCy('form-company').find('input').blur();
-      cy.contains(
-        i18n.global.t('form.messageFieldRequired', {
-          fieldName: i18n.global.t('form.labelCompanyShort'),
-        })
-      ).should('be.visible');
-      cy.dataCy('form-company').find('input').click();
-      // select option
-      cy.get('.q-menu')
-        .should('be.visible')
-        .within(() => {
-          cy.get('.q-item').first().click();
+      cy.fixture('formFieldCompany').then((formFieldCompany) => {
+        cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
+          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          cy.dataCy('form-company').find('input').focus();
+          cy.dataCy('form-company').find('input').blur();
+          cy.contains(
+            i18n.global.t('form.messageFieldRequired', {
+              fieldName: i18n.global.t('form.labelCompanyShort'),
+            }),
+          ).should('be.visible');
+          cy.dataCy('form-company').find('input').click();
+          // select option
+          cy.get('.q-menu')
+            .should('be.visible')
+            .within(() => {
+              cy.get('.q-item').first().click();
+            });
+          cy.dataCy('form-company').find('input').blur();
+          cy.contains(
+            i18n.global.t('form.messageFieldRequired', {
+              fieldName: i18n.global.t('form.labelCompanyShort'),
+            }),
+          ).should('not.exist');
         });
-      cy.contains(
-        i18n.global.t('form.messageFieldRequired', {
-          fieldName: i18n.global.t('form.labelCompanyShort'),
-        })
-      ).should('not.exist');
+      });
     });
 
     it('renders input and button in a column layout', () => {
@@ -185,7 +173,7 @@ describe('<FormFieldCompany>', () => {
                 .should('be.visible')
                 .and(
                   'have.text',
-                  i18n.global.t('form.company.buttonAddCompany')
+                  i18n.global.t('form.company.buttonAddCompany'),
                 );
               // fill form
               cy.dataCy('form-add-company-name')
@@ -199,17 +187,17 @@ describe('<FormFieldCompany>', () => {
               // test response
               cy.wait('@createOrganization').then((interception) => {
                 expect(interception.request.headers.authorization).to.include(
-                  'Bearer'
+                  'Bearer',
                 );
                 expect(interception.response.statusCode).to.equal(
-                  httpSuccessfullStatus
+                  httpSuccessfullStatus,
                 );
                 expect(interception.request.body).to.deep.equal({
                   name: formFieldCompanyCreateRequest.name,
                   vatId: formFieldCompanyCreateRequest.vatId,
                 });
                 expect(interception.response.body).to.deep.equal(
-                  formFieldCompanyCreateResponse
+                  formFieldCompanyCreateResponse,
                 );
               });
               // test selected option
@@ -217,16 +205,20 @@ describe('<FormFieldCompany>', () => {
                 .find('input')
                 .invoke('val')
                 .should('eq', formFieldCompanyCreateResponse.name);
-            }
+            },
           );
-        }
+        },
       );
     });
   });
 
   context('mobile', () => {
     beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig);
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -244,4 +236,17 @@ describe('<FormFieldCompany>', () => {
       cy.testElementPercentageWidth(cy.dataCy('col-button'), 100);
     });
   });
+
+  function waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext) {
+    cy.wait('@getOrganizations').then((interception) => {
+      expect(interception.request.headers.authorization).to.include('Bearer');
+      expect(interception.response.statusCode).to.equal(httpSuccessfullStatus);
+      expect(interception.response.body).to.deep.equal(formFieldCompany);
+    });
+    cy.wait('@getOrganizationsNextPage').then((interception) => {
+      expect(interception.request.headers.authorization).to.include('Bearer');
+      expect(interception.response.statusCode).to.equal(httpSuccessfullStatus);
+      expect(interception.response.body).to.deep.equal(formFieldCompanyNext);
+    });
+  }
 });
