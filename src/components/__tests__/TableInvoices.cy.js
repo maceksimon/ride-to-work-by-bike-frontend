@@ -194,13 +194,12 @@ function coreTests() {
             dataByIssueDateAsc[index].orderNumber,
           );
         });
-
       // sorting by issueDate descending
       cy.dataCy(selectorTableInvoices)
         .find(classSelectorTableSortable)
         .first()
         .click();
-
+      // check if data is sorted correctly
       cy.dataCy(selectorTableRow)
         .should('have.length', rows.length)
         .each((tableRow, index) => {
@@ -228,7 +227,6 @@ function coreTests() {
               i18n.global.d(new Date(rows[index].issueDate), 'numeric'),
             );
           });
-
           // confirmation date
           cy.dataCy(selectorTableConfirmationDate).then(($td) => {
             const date = rows[index].confirmationDate;
