@@ -22,7 +22,7 @@
  */
 
 // libraries
-import { defineComponent, inject, reactive, computed } from 'vue';
+import { computed, defineComponent, inject, reactive, watch } from 'vue';
 
 // components
 import FormFieldCheckboxRequired from './../form/FormFieldCheckboxRequired.vue';
@@ -87,6 +87,22 @@ export default defineComponent({
         },
       ];
     });
+
+    watch(
+      () => formRegisterCoordinator.organizationType,
+      (newVal: OrganizationType, oldVal: OrganizationType) => {
+        if (newVal !== oldVal) {
+          logger?.debug(`Organization type set to <${newVal}>`);
+          logger?.debug(
+            `Clearing organization ID <${formRegisterCoordinator.organizationId}>`,
+          );
+          formRegisterCoordinator.organizationId = '';
+          logger?.debug(
+            `Organization ID cleared <${formRegisterCoordinator.organizationId}>`,
+          );
+        }
+      },
+    );
 
     const onSubmit = async (): Promise<void> => {
       // build payload
