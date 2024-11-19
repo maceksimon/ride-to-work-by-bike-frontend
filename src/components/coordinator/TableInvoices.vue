@@ -107,6 +107,7 @@ export default defineComponent({
             <q-td key="files" :props="props" data-cy="table-invoices-files">
               <!-- TODO: Implement file download/preview functionality -->
               <div class="flex flex-wrap gap-4">
+                <!-- Button: Invoice preview -->
                 <q-btn
                   dense
                   flat
@@ -115,6 +116,7 @@ export default defineComponent({
                   v-for="file in props.row.files"
                   :key="file.id"
                 >
+                  <!-- Icon -->
                   <q-icon
                     name="svguse:icons/table_invoices/icons.svg#tabler:file-type-pdf"
                     size="18px"
@@ -122,6 +124,7 @@ export default defineComponent({
                     class="q-mr-xs"
                     data-cy="table-invoices-file-icon"
                   />
+                  <!-- Label -->
                   <span data-cy="table-invoices-file-label">
                     {{ file.label }}
                   </span>
