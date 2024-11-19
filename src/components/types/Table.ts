@@ -81,3 +81,9 @@ export enum InvoicesTableColumns {
   amount = 'amount',
   confirmationDate = 'confirmationDate',
 }
+
+export enum OrdersTableColumns {
+  orderIssueDate = 'orderIssueDate',
+  order = 'order',
+  orderUploadDate = 'orderUploadDate',
+}

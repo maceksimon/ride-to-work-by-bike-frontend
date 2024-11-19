@@ -7,7 +7,10 @@ import { i18n } from 'src/boot/i18n';
 // TODO: import format price
 
 // enums
-import { AttendanceTablePayColumnIcons } from '../components/types/Table';
+import {
+  AttendanceTablePayColumnIcons,
+  OrdersTableColumns,
+} from '../components/types/Table';
 import { PaymentState, PaymentType } from '../components/types/Payment';
 
 // types
@@ -601,5 +604,50 @@ export const useTableInvoices = () => {
   return {
     columns: tableInvoicesColumns,
     visibleColumns: tableInvoicesVisibleColumns,
+  };
+};
+
+export const useTableOrders = () => {
+  const tableOrdersColumns: QTableProps['columns'] = [
+    {
+      align: 'left',
+      field: OrdersTableColumns.orderIssueDate,
+      format: (val: number | string | null): string =>
+        val ? i18n.global.d(new Date(String(val)), 'numeric') : '',
+      label: i18n.global.t('table.labelOrderIssueDate'),
+      name: OrdersTableColumns.orderIssueDate,
+      required: true,
+      sortable: true,
+    },
+    {
+      align: 'left',
+      field: OrdersTableColumns.order,
+      format: (val: number | string | null): string => (val ? `${val}` : ''),
+      label: i18n.global.t('table.labelOrder'),
+      name: OrdersTableColumns.order,
+      required: true,
+      sortable: false,
+    },
+    {
+      align: 'left',
+      field: OrdersTableColumns.orderUploadDate,
+      format: (val: number | string | null): string =>
+        val ? i18n.global.d(new Date(String(val)), 'numeric') : '',
+      label: i18n.global.t('table.labelOrderUploadDate'),
+      name: OrdersTableColumns.orderUploadDate,
+      required: true,
+      sortable: true,
+    },
+  ];
+
+  const tableOrdersVisibleColumns: string[] = [
+    OrdersTableColumns.orderIssueDate,
+    OrdersTableColumns.order,
+    OrdersTableColumns.orderUploadDate,
+  ];
+
+  return {
+    columns: tableOrdersColumns,
+    visibleColumns: tableOrdersVisibleColumns,
   };
 };
