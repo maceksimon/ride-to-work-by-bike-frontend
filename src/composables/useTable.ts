@@ -7,7 +7,10 @@ import { i18n } from 'src/boot/i18n';
 // TODO: import format price
 
 // enums
-import { AttendanceTablePayColumnIcons } from '../components/types/Table';
+import {
+  AttendanceTablePayColumnIcons,
+  InvoiceTableFileId,
+} from '../components/types/Table';
 import { PaymentState, PaymentType } from '../components/types/Payment';
 
 // types
@@ -598,8 +601,32 @@ export const useTableInvoices = () => {
     InvoicesTableColumns.confirmationDate,
   ];
 
+  const getFileIcon = (id: InvoiceTableFileId): string => {
+    switch (id) {
+      case InvoiceTableFileId.fakturoid:
+        return 'svguse:icons/table_invoices/icons.svg#tabler:file-type-pdf';
+      case InvoiceTableFileId.pohoda:
+        return 'svguse:icons/table_invoices/icons.svg#tabler:file-type-xml';
+      default:
+        return '';
+    }
+  };
+
+  const getFileLabel = (id: InvoiceTableFileId): string => {
+    switch (id) {
+      case InvoiceTableFileId.fakturoid:
+        return i18n.global.t('table.labelFakturoid');
+      case InvoiceTableFileId.pohoda:
+        return i18n.global.t('table.labelPohoda');
+      default:
+        return '';
+    }
+  };
+
   return {
     columns: tableInvoicesColumns,
     visibleColumns: tableInvoicesVisibleColumns,
+    getFileIcon,
+    getFileLabel,
   };
 };

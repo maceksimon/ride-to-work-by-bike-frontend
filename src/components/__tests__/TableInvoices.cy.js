@@ -3,6 +3,7 @@ import TableInvoices from 'components/coordinator/TableInvoices.vue';
 import { i18n } from '../../boot/i18n';
 import tableInvoices from '../../../test/cypress/fixtures/tableInvoices.json';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { useTableInvoices } from '../../composables/useTable';
 
 // colors
 const { getPaletteColor } = colors;
@@ -45,6 +46,7 @@ const dataByIssueDateDesc = [
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const iconSize = 18;
 const marginXs = 4;
+const { getFileLabel } = useTableInvoices();
 
 describe('<TableInvoices>', () => {
   it('has translation for all strings', () => {
@@ -157,9 +159,10 @@ function coreTests() {
                       .invoke('height')
                       .should('eq', iconSize);
                     // label
-                    cy.dataCy(selectorTableFileLabel)
-                      .should('be.visible')
-                      .and('contain', file.label);
+                    const label = getFileLabel(
+                      rows[index].files[fileIndex].source,
+                    );
+                    cy.dataCy(selectorTableFileLabel).should('contain', label);
                   });
               });
             });

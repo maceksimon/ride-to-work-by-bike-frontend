@@ -37,7 +37,8 @@ export default defineComponent({
       }
     });
 
-    const { columns, visibleColumns } = useTableInvoices();
+    const { columns, visibleColumns, getFileIcon, getFileLabel } =
+      useTableInvoices();
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
     return {
@@ -46,6 +47,8 @@ export default defineComponent({
       tableInvoices,
       tableRef,
       visibleColumns,
+      getFileIcon,
+      getFileLabel,
     };
   },
 });
@@ -118,7 +121,7 @@ export default defineComponent({
                 >
                   <!-- Icon -->
                   <q-icon
-                    name="svguse:icons/table_invoices/icons.svg#tabler:file-type-pdf"
+                    :name="getFileIcon(file.id)"
                     size="18px"
                     color="primary"
                     class="q-mr-xs"
@@ -126,7 +129,7 @@ export default defineComponent({
                   />
                   <!-- Label -->
                   <span data-cy="table-invoices-file-label">
-                    {{ file.label }}
+                    {{ getFileLabel(file.id) }}
                   </span>
                 </q-btn>
               </div>

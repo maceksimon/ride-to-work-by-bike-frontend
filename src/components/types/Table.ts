@@ -81,3 +81,8 @@ export enum InvoicesTableColumns {
   amount = 'amount',
   confirmationDate = 'confirmationDate',
 }
+
+export enum InvoiceTableFileId {
+  fakturoid = 'fakturoid',
+  pohoda = 'pohoda',
+}
