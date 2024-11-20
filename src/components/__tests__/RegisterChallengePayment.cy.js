@@ -39,7 +39,6 @@ const optionVoucher = 'voucher';
 const optionCompany = 'company';
 const optionIndividual = 'individual';
 const optionSchool = 'school';
-const optionIndividual = 'individual';
 const sliderClickTolerance = 10;
 const testNumberValue = 500;
 
