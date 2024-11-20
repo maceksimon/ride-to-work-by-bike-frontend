@@ -74,30 +74,28 @@ describe('<FormFieldCompany>', () => {
 
     it('allows user to select option', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
-        cy.fixture('formFieldCompanyNext').then(
-          async (formFieldCompanyNext) => {
-            waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
-            cy.wrap(nextTick());
-            cy.dataCy('form-company').find('input').click();
-            // select option
-            cy.get('.q-menu')
-              .should('be.visible')
-              .within(() => {
-                cy.get('.q-item')
-                  .should('be.visible')
-                  .and(
-                    'have.length',
-                    formFieldCompany.results.length +
-                      formFieldCompanyNext.results.length,
-                  );
-                cy.get('.q-item').first().click();
-              });
-            cy.get('.q-menu').should('not.exist');
-            cy.wrap(model)
-              .its('value')
-              .should('eq', formFieldCompany.results[0].id);
-          },
-        );
+        cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
+          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          cy.wrap(nextTick());
+          cy.dataCy('form-company').find('input').click();
+          // select option
+          cy.get('.q-menu')
+            .should('be.visible')
+            .within(() => {
+              cy.get('.q-item')
+                .should('be.visible')
+                .and(
+                  'have.length',
+                  formFieldCompany.results.length +
+                    formFieldCompanyNext.results.length,
+                );
+              cy.get('.q-item').first().click();
+            });
+          cy.get('.q-menu').should('not.exist');
+          cy.wrap(model)
+            .its('value')
+            .should('eq', formFieldCompany.results[0].id);
+        });
       });
     });
 
