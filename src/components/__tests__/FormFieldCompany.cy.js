@@ -89,11 +89,11 @@ describe('<FormFieldCompany>', () => {
               );
               cy.get('.q-item').first().click();
             });
+          cy.get('.q-menu').should('not.exist');
+          cy.wrap(model)
+            .its('value')
+            .should('eq', formFieldCompany.results[0].id);
         });
-        cy.get('.q-menu').should('not.exist');
-        cy.wrap(model)
-          .its('value')
-          .should('eq', formFieldCompany.results[0].id);
       });
     });
 
