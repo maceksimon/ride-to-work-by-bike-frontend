@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import {
   fillFormRegisterCoordinator,
   httpSuccessfullStatus,
