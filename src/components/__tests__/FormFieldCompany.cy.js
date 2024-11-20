@@ -1,4 +1,4 @@
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import FormFieldCompany from 'components/global/FormFieldCompany.vue';
 import { vModelAdapter } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
@@ -76,6 +76,7 @@ describe('<FormFieldCompany>', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          nextTick();
           cy.dataCy('form-company').find('input').click();
           // select option
           cy.get('.q-menu')
@@ -101,6 +102,7 @@ describe('<FormFieldCompany>', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          nextTick();
           cy.dataCy('form-company').find('input').focus();
           cy.dataCy('form-company')
             .find('input')
@@ -128,6 +130,7 @@ describe('<FormFieldCompany>', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          nextTick();
           cy.dataCy('form-company').find('input').focus();
           cy.dataCy('form-company').find('input').blur();
           cy.contains(

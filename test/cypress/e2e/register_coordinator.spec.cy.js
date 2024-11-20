@@ -150,6 +150,7 @@ describe('Login page', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          nextTick();
           // fill in the form
           fillFormRegisterCoordinator();
           // check responsibility checkbox

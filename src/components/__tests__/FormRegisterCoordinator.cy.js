@@ -185,6 +185,7 @@ describe('<FormRegisterCoordinator>', () => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
         });
       });
+      nextTick();
       // fill in other parts of the form to be able to test password
       fillFormRegisterCoordinator();
       // test responsibility checkbox unchecked
@@ -231,6 +232,7 @@ describe('<FormRegisterCoordinator>', () => {
             waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           });
         });
+        nextTick();
         // fill in the form
         fillFormRegisterCoordinator();
         // check responsibility checkbox
