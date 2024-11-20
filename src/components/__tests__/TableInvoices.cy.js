@@ -146,6 +146,7 @@ function coreTests() {
               rows[index].files.forEach((file, fileIndex) => {
                 cy.get('.q-btn')
                   .eq(fileIndex)
+                  .should('have.attr', 'href', file.url)
                   .within(() => {
                     // icon
                     cy.dataCy(selectorTableFileIcon)
@@ -159,9 +160,7 @@ function coreTests() {
                       .invoke('height')
                       .should('eq', iconSize);
                     // label
-                    const label = getFileLabel(
-                      rows[index].files[fileIndex].source,
-                    );
+                    const label = getFileLabel(rows[index].files[fileIndex].id);
                     cy.dataCy(selectorTableFileLabel).should('contain', label);
                   });
               });

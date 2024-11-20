@@ -118,6 +118,7 @@ export default defineComponent({
                   rounded
                   v-for="file in props.row.files"
                   :key="file.id"
+                  :href="file.url"
                 >
                   <!-- Icon -->
                   <q-icon
