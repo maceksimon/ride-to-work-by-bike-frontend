@@ -74,26 +74,30 @@ describe('<FormFieldCompany>', () => {
 
     it('allows user to select option', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
-        cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
-          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
-          nextTick();
-          cy.dataCy('form-company').find('input').click();
-          // select option
-          cy.get('.q-menu')
-            .should('be.visible')
-            .within(() => {
-              cy.get('.q-item').should(
-                'have.length',
-                formFieldCompany.results.length +
-                  formFieldCompanyNext.results.length,
-              );
-              cy.get('.q-item').first().click();
-            });
-          cy.get('.q-menu').should('not.exist');
-          cy.wrap(model)
-            .its('value')
-            .should('eq', formFieldCompany.results[0].id);
-        });
+        cy.fixture('formFieldCompanyNext').then(
+          async (formFieldCompanyNext) => {
+            waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+            cy.wrap(nextTick());
+            cy.dataCy('form-company').find('input').click();
+            // select option
+            cy.get('.q-menu')
+              .should('be.visible')
+              .within(() => {
+                cy.get('.q-item')
+                  .should('be.visible')
+                  .and(
+                    'have.length',
+                    formFieldCompany.results.length +
+                      formFieldCompanyNext.results.length,
+                  );
+                cy.get('.q-item').first().click();
+              });
+            cy.get('.q-menu').should('not.exist');
+            cy.wrap(model)
+              .its('value')
+              .should('eq', formFieldCompany.results[0].id);
+          },
+        );
       });
     });
 
@@ -102,11 +106,12 @@ describe('<FormFieldCompany>', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
-          nextTick();
+          cy.wrap(nextTick());
           cy.dataCy('form-company').find('input').focus();
           cy.dataCy('form-company')
             .find('input')
             .type(formFieldCompany.results[1].name);
+          cy.wrap(nextTick());
           // blur to trigger search (typing occasionally doesn't trigger it)
           cy.dataCy('form-company').find('input').blur();
           cy.dataCy('form-company').find('input').focus();
@@ -115,7 +120,7 @@ describe('<FormFieldCompany>', () => {
             .should('be.visible')
             .within(() => {
               // only shows the one filtered option
-              cy.get('.q-item').should('have.length', 1);
+              cy.get('.q-item').should('be.visible').and('have.length', 1);
               cy.get('.q-item').first().click();
             });
           cy.get('.q-menu').should('not.exist');
@@ -130,7 +135,7 @@ describe('<FormFieldCompany>', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
-          nextTick();
+          cy.wrap(nextTick());
           cy.dataCy('form-company').find('input').focus();
           cy.dataCy('form-company').find('input').blur();
           cy.contains(

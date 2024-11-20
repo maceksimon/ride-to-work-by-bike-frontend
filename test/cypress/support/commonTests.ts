@@ -1,3 +1,4 @@
+import { nextTick } from 'vue';
 import { routesConf } from '../../../src/router/routes_conf';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 import { bearerTokeAuth } from 'src/utils';
@@ -20,6 +21,10 @@ type AUTWindow = Window & typeof globalThis & ApplicationWindow;
 interface ApplicationWindow {
   i18n?: I18n;
 }
+
+export const syncNextTick = async (): Promise<void> => {
+  await nextTick();
+};
 
 /**
  * Basic tests for Language Switcher

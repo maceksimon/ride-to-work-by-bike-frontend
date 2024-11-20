@@ -22,7 +22,7 @@ const compareRegisterResponseWithStore = () => {
     'be.visible',
   );
   const registerStore = useRegisterStore();
-  nextTick();
+  cy.wrap(nextTick());
   expect(registerStore.getIsRegistrationComplete).to.equal(true);
 };
 
@@ -185,7 +185,7 @@ describe('<FormRegisterCoordinator>', () => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
         });
       });
-      nextTick();
+      cy.wrap(nextTick());
       // fill in other parts of the form to be able to test password
       fillFormRegisterCoordinator();
       // test responsibility checkbox unchecked
@@ -232,7 +232,7 @@ describe('<FormRegisterCoordinator>', () => {
             waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           });
         });
-        nextTick();
+        cy.wrap(nextTick());
         // fill in the form
         fillFormRegisterCoordinator();
         // check responsibility checkbox
