@@ -306,6 +306,31 @@ function coreTests() {
     });
   });
 
+  it('if selected voucher - resets prices after switching back to option individual (custom amount)', () => {
+    cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+    cy.dataCy(selectorPaymentAmount).should('not.exist');
+    cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+    // enter voucher HALF
+    cy.get('@voucherHalf').then((voucher) => {
+      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherSubmit).click();
+      // amount options and custom amount are hidden
+      cy.dataCy(selectorPaymentAmount).should('be.visible');
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // HALF voucher value is shown
+      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
+      // select custom amount
+      cy.dataCy(getRadioOption(optionCustom)).should('be.visible').click();
+      // switch back to individual
+      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+      // amount options are shown
+      cy.dataCy(selectorPaymentAmount).should('be.visible');
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // default amount is shown
+      cy.dataCy(getRadioOption(defaultPaymentAmountMin)).should('be.visible');
+    });
+  });
+
   it('if selected company - renders company select + donate option', () => {
     cy.dataCy(selectorCompany).should('not.exist');
     cy.dataCy(getRadioOption(optionCompany)).should('be.visible').click();

@@ -44,12 +44,14 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { Currency } from '../../composables/useFormatPrice';
+
 enum PaymentSubject {
   individual = 'individual',
   voucher = 'voucher',
   company = 'company',
   school = 'school',
 }
+
 enum PaymentAmount {
   custom = 'custom',
 }
@@ -128,18 +130,6 @@ export default defineComponent({
       });
     }
 
-    const optionsPaymentAmount: FormOption[] = reactive([
-      // min option
-      defaultPaymentOption,
-      // other options
-      ...paymentOptions,
-      // custom option
-      {
-        label: i18n.global.t('global.custom'),
-        value: PaymentAmount.custom,
-      },
-    ]);
-
     const activeVoucher = ref<FormPaymentVoucher | null>(null);
     const selectedPaymentAmount = ref<string>(String(defaultPaymentAmountMin));
     const selectedPaymentAmountCustom = ref<number>(defaultPaymentAmountMin);
@@ -176,18 +166,6 @@ export default defineComponent({
     });
 
     /**
-     * After selecting a payment amount from the given options,
-     * set it as the default value for custom payment amount.
-     */
-    watch(selectedPaymentAmount, (newValue) => {
-      if (newValue !== PaymentAmount.custom) {
-        selectedPaymentAmountCustom.value = parseInt(
-          selectedPaymentAmount.value,
-        );
-      }
-    });
-
-    /**
      * Handles voucher submission.
      * Updates payment options, minimum payment amount and current payment amount.
      * if entry fee is free, display voluntary contribution.
@@ -197,23 +175,6 @@ export default defineComponent({
         // set active voucher
         activeVoucher.value = voucher;
       }
-      // amount = discounted price
-      if (voucher.amount) {
-        // discount the lowest price in the price options
-        optionsPaymentAmount.shift();
-        optionsPaymentAmount.unshift({
-          label: formatPriceCurrency(voucher.amount, Currency.CZK),
-          value: String(voucher.amount),
-        });
-        // set min amount for custom amount
-        paymentAmountMin.value = voucher.amount;
-        // if current value is not in new options, set it to discounted value
-        const optionValues = optionsPaymentAmount.map((option) => option.value);
-        if (!optionValues.includes(String(selectedPaymentAmount.value))) {
-          selectedPaymentAmount.value = String(voucher.amount);
-        }
-      }
-      // no amount (free entry)
     };
 
     /**
@@ -224,14 +185,6 @@ export default defineComponent({
     const onRemoveVoucher = (): void => {
       // clear active voucher
       activeVoucher.value = null;
-      optionsPaymentAmount.shift();
-      optionsPaymentAmount.unshift(defaultPaymentOption);
-      paymentAmountMin.value = defaultPaymentAmountMin;
-      // if current value is not in new options, set it to default value
-      const optionValues = optionsPaymentAmount.map((option) => option.value);
-      if (!optionValues.includes(String(selectedPaymentAmount.value))) {
-        selectedPaymentAmount.value = String(defaultPaymentOption.value);
-      }
     };
 
     const optionsPaymentAmountComputed = computed((): FormOption[] => {
@@ -278,6 +231,33 @@ export default defineComponent({
       }
     });
 
+    watch(optionsPaymentAmountComputed, (options) => {
+      const optionValues = options.map((option) => option.value);
+      // reset to first option if selected amount is not in options or if it is custom
+      if (
+        !optionValues.includes(String(selectedPaymentAmount.value)) ||
+        selectedPaymentAmount.value === PaymentAmount.custom
+      ) {
+        if (optionValues.length) {
+          selectedPaymentAmount.value = String(optionValues[0]);
+        } else {
+          selectedPaymentAmount.value = String(defaultPaymentOption.value);
+        }
+      }
+    });
+
+    /**
+     * After selecting a payment amount from the given options,
+     * set it as the default value for custom payment amount.
+     */
+    watch(selectedPaymentAmount, (newValue) => {
+      if (newValue !== PaymentAmount.custom) {
+        selectedPaymentAmountCustom.value = parseInt(
+          selectedPaymentAmount.value,
+        );
+      }
+    });
+
     /**
      * Set first amount option
      * Updates payment options and sets
@@ -291,7 +271,6 @@ export default defineComponent({
       isVoucherValid,
       isVoucherDiscountedEntry,
       isRegistrationCoordinator,
-      optionsPaymentAmount,
       optionsPaymentAmountComputed,
       optionsPaymentSubject,
       paymentAmount,
@@ -372,14 +351,6 @@ export default defineComponent({
         :options="optionsPaymentAmountComputed"
         class="q-mt-sm"
         data-cy="form-field-payment-amount"
-      />
-    </div>
-    <!-- Input: Voucher -->
-    <div v-if="selectedPaymentSubject === PaymentSubject.voucher">
-      <form-field-voucher
-        :active-voucher="activeVoucher"
-        @update:voucher="onUpdateVoucher"
-        @remove:voucher="onRemoveVoucher"
       />
     </div>
     <!-- Input: Company -->
