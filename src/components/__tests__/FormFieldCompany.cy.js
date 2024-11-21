@@ -83,13 +83,15 @@ describe('<FormFieldCompany>', () => {
             .should('be.visible')
             .within(() => {
               cy.get('.q-item')
-                .should('be.visible')
-                .and(
-                  'have.length',
-                  formFieldCompany.results.length +
-                    formFieldCompanyNext.results.length,
-                );
-              cy.get('.q-item').first().click();
+                .should((opts) => {
+                  expect(
+                    opts.length,
+                    formFieldCompany.results.length +
+                      formFieldCompanyNext.results.length,
+                  );
+                })
+                .first()
+                .click();
             });
           cy.get('.q-menu').should('not.exist');
           cy.wrap(model)
@@ -106,20 +108,19 @@ describe('<FormFieldCompany>', () => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           cy.wrap(nextTick());
           cy.dataCy('form-company').find('input').focus();
-          cy.dataCy('form-company')
-            .find('input')
-            .type(formFieldCompany.results[1].name);
+          cy.focused().type(formFieldCompany.results[1].name);
           cy.wrap(nextTick());
-          // blur to trigger search (typing occasionally doesn't trigger it)
-          cy.dataCy('form-company').find('input').blur();
-          cy.dataCy('form-company').find('input').focus();
           // select first option from filtered results
           cy.get('.q-menu')
             .should('be.visible')
             .within(() => {
               // only shows the one filtered option
-              cy.get('.q-item').should('be.visible').and('have.length', 1);
-              cy.get('.q-item').first().click();
+              cy.get('.q-item')
+                .should((opts) => {
+                  expect(opts.length, 1);
+                })
+                .first()
+                .click();
             });
           cy.get('.q-menu').should('not.exist');
           cy.wrap(model)
@@ -135,7 +136,7 @@ describe('<FormFieldCompany>', () => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           cy.wrap(nextTick());
           cy.dataCy('form-company').find('input').focus();
-          cy.dataCy('form-company').find('input').blur();
+          cy.focused().blur();
           cy.contains(
             i18n.global.t('form.messageFieldRequired', {
               fieldName: i18n.global.t('form.labelCompanyShort'),
