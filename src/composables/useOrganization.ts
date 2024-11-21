@@ -10,6 +10,7 @@ export type OrganizationLabels = {
   label: string;
   labelName: string;
   labelShort: string;
+  messageNoResult: string;
   buttonDialog: string;
 };
 
@@ -24,6 +25,7 @@ export const useOrganization = () => {
           label: i18n.global.t('form.labelCompany'), // used in register coordinator form
           labelName: i18n.global.t('form.company.labelCompany'),
           labelShort: i18n.global.t('form.labelCompanyShort'), // used in "add new" dialog
+          messageNoResult: i18n.global.t('form.messageNoCompany'),
           buttonDialog: i18n.global.t('form.company.buttonAddCompany'),
         };
       case OrganizationType.school:
@@ -32,6 +34,7 @@ export const useOrganization = () => {
           label: i18n.global.t('form.labelSchool'), // used in register coordinator form
           labelName: i18n.global.t('form.company.labelSchool'),
           labelShort: i18n.global.t('form.labelSchoolShort'), // used in "add new" dialog
+          messageNoResult: i18n.global.t('form.messageNoSchool'),
           buttonDialog: i18n.global.t('form.company.buttonAddSchool'),
         };
       case OrganizationType.family:
@@ -40,13 +43,16 @@ export const useOrganization = () => {
           label: i18n.global.t('form.labelFamily'), // used in register coordinator form
           labelName: i18n.global.t('form.company.labelFamily'),
           labelShort: i18n.global.t('form.labelFamilyShort'), // used in "add new" dialog
+          messageNoResult: i18n.global.t('form.messageNoFamily'),
           buttonDialog: i18n.global.t('form.company.buttonAddFamily'),
         };
       default:
         return {
           titleDialog: '',
           label: '',
+          labelName: '',
           labelShort: '',
+          messageNoResult: '',
           buttonDialog: '',
         };
     }
