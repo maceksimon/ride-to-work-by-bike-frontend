@@ -77,7 +77,7 @@ describe('<FormFieldCompany>', () => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           cy.wrap(nextTick());
-          cy.dataCy('form-company').find('input').click();
+          cy.dataCy('form-company-input').click();
           // select option
           cy.get('.q-menu')
             .should('be.visible')
@@ -93,7 +93,7 @@ describe('<FormFieldCompany>', () => {
                 .first()
                 .click();
             });
-          cy.get('.q-menu').should('not.exist');
+          cy.wrap(nextTick());
           cy.wrap(model)
             .its('value')
             .should('eq', formFieldCompany.results[0].id);
@@ -107,8 +107,10 @@ describe('<FormFieldCompany>', () => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           cy.wrap(nextTick());
-          cy.dataCy('form-company').find('input').focus();
-          cy.focused().type(formFieldCompany.results[1].name);
+          cy.dataCy('form-company-input')
+            .closest('input')
+            .type(formFieldCompany.results[1].name);
+          cy.focused().trigger('input');
           cy.wrap(nextTick());
           // select first option from filtered results
           cy.get('.q-menu')
@@ -122,7 +124,7 @@ describe('<FormFieldCompany>', () => {
                 .first()
                 .click();
             });
-          cy.get('.q-menu').should('not.exist');
+          cy.wrap(nextTick());
           cy.wrap(model)
             .its('value')
             .should('eq', formFieldCompany.results[1].id);
