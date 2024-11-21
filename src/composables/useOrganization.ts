@@ -8,6 +8,7 @@ import { OrganizationType } from '../components/types/Organization';
 export type OrganizationLabels = {
   titleDialog: string;
   label: string;
+  labelName: string;
   labelShort: string;
   buttonDialog: string;
 };
@@ -21,6 +22,7 @@ export const useOrganization = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddCompany'),
           label: i18n.global.t('form.labelCompany'), // used in register coordinator form
+          labelName: i18n.global.t('form.company.labelCompany'),
           labelShort: i18n.global.t('form.labelCompanyShort'), // used in "add new" dialog
           buttonDialog: i18n.global.t('form.company.buttonAddCompany'),
         };
@@ -28,6 +30,7 @@ export const useOrganization = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddSchool'),
           label: i18n.global.t('form.labelSchool'), // used in register coordinator form
+          labelName: i18n.global.t('form.company.labelSchool'),
           labelShort: i18n.global.t('form.labelSchoolShort'), // used in "add new" dialog
           buttonDialog: i18n.global.t('form.company.buttonAddSchool'),
         };
@@ -35,6 +38,7 @@ export const useOrganization = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddFamily'),
           label: i18n.global.t('form.labelFamily'), // used in register coordinator form
+          labelName: i18n.global.t('form.company.labelFamily'),
           labelShort: i18n.global.t('form.labelFamilyShort'), // used in "add new" dialog
           buttonDialog: i18n.global.t('form.company.buttonAddFamily'),
         };
