@@ -87,9 +87,6 @@ export default defineComponent({
     const addressIndex = 0;
 
     const isOrganizationCompany = computed((): boolean => {
-      if (!props.organizationType) {
-        return true;
-      }
       return props.organizationType === OrganizationType.company;
     });
 
