@@ -23,7 +23,7 @@ export const useOrganization = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddCompany'),
           label: i18n.global.t('form.labelCompany'), // used in register coordinator form
-          labelName: i18n.global.t('form.company.labelCompany'),
+          labelName: i18n.global.t('form.company.labelCompany'), // used in SelectTable
           labelShort: i18n.global.t('form.labelCompanyShort'), // used in "add new" dialog
           messageNoResult: i18n.global.t('form.messageNoCompany'),
           buttonDialog: i18n.global.t('form.company.buttonAddCompany'),
@@ -32,7 +32,7 @@ export const useOrganization = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddSchool'),
           label: i18n.global.t('form.labelSchool'), // used in register coordinator form
-          labelName: i18n.global.t('form.company.labelSchool'),
+          labelName: i18n.global.t('form.company.labelSchool'), // used in SelectTable
           labelShort: i18n.global.t('form.labelSchoolShort'), // used in "add new" dialog
           messageNoResult: i18n.global.t('form.messageNoSchool'),
           buttonDialog: i18n.global.t('form.company.buttonAddSchool'),
@@ -41,7 +41,7 @@ export const useOrganization = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddFamily'),
           label: i18n.global.t('form.labelFamily'), // used in register coordinator form
-          labelName: i18n.global.t('form.company.labelFamily'),
+          labelName: i18n.global.t('form.company.labelFamily'), // used in SelectTable
           labelShort: i18n.global.t('form.labelFamilyShort'), // used in "add new" dialog
           messageNoResult: i18n.global.t('form.messageNoFamily'),
           buttonDialog: i18n.global.t('form.company.buttonAddFamily'),
