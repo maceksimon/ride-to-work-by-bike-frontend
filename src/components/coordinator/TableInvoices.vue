@@ -21,6 +21,8 @@ import { useTableInvoices } from '../../composables/useTable';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+import { InvoicesTableColumns } from '../../components/types/Table';
+
 // fixtures
 // TODO: Create and import tableInvoices fixture
 import tableInvoices from '../../../test/cypress/fixtures/tableInvoices.json';
@@ -44,6 +46,7 @@ export default defineComponent({
     return {
       borderRadius,
       columns,
+      InvoicesTableColumns,
       tableInvoices,
       tableRef,
       visibleColumns,
@@ -75,7 +78,7 @@ export default defineComponent({
         :rows="tableInvoices"
         :columns="columns"
         :visible-columns="visibleColumns"
-        row-key="orderNumber"
+        :row-key="InvoicesTableColumns.orderNumber"
         :style="{ borderRadius }"
         data-cy="table-invoices-table"
       >
@@ -87,27 +90,31 @@ export default defineComponent({
           >
             <!-- Issue Date -->
             <q-td
-              key="issueDate"
+              :key="InvoicesTableColumns.issueDate"
               :props="props"
               data-cy="table-invoices-issue-date"
             >
               <!-- Loop over data to get formatted content -->
               <template v-for="col in props.cols" :key="col.field">
-                <span v-if="col.field === 'issueDate'">
+                <span v-if="col.field === InvoicesTableColumns.issueDate">
                   {{ col.value }}
                 </span>
               </template>
             </q-td>
             <!-- Order Number -->
             <q-td
-              key="orderNumber"
+              :key="InvoicesTableColumns.orderNumber"
               :props="props"
               data-cy="table-invoices-order-number"
             >
               {{ props.row.orderNumber }}
             </q-td>
             <!-- Files -->
-            <q-td key="files" :props="props" data-cy="table-invoices-files">
+            <q-td
+              :key="InvoicesTableColumns.files"
+              :props="props"
+              data-cy="table-invoices-files"
+            >
               <!-- TODO: Implement file download/preview functionality -->
               <div class="flex flex-wrap gap-4">
                 <!-- Button: Invoice preview -->
@@ -137,7 +144,7 @@ export default defineComponent({
             </q-td>
             <!-- Variable Symbol -->
             <q-td
-              key="variableSymbol"
+              :key="InvoicesTableColumns.variableSymbol"
               :props="props"
               data-cy="table-invoices-variable-symbol"
             >
@@ -145,25 +152,34 @@ export default defineComponent({
             </q-td>
             <!-- Payment Count -->
             <q-td
-              key="paymentCount"
+              :key="InvoicesTableColumns.paymentCount"
               :props="props"
               data-cy="table-invoices-payment-count"
             >
               {{ props.row.paymentCount }}
             </q-td>
             <!-- Amount -->
-            <q-td key="amount" :props="props" data-cy="table-invoices-amount">
+            <q-td
+              :key="InvoicesTableColumns.amount"
+              :props="props"
+              data-cy="table-invoices-amount"
+            >
               {{ props.row.amount }}
             </q-td>
             <!-- Confirmation Date -->
             <q-td
-              key="confirmationDate"
+              :key="InvoicesTableColumns.confirmationDate"
               :props="props"
               data-cy="table-invoices-confirmation-date"
             >
               <!-- Loop over data to get formatted content -->
               <template v-for="col in props.cols" :key="col.field">
-                <span v-if="col.field === 'confirmationDate' && col.value">
+                <span
+                  v-if="
+                    col.field === InvoicesTableColumns.confirmationDate &&
+                    col.value
+                  "
+                >
                   {{ col.value }}
                 </span>
               </template>
