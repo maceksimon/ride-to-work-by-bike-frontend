@@ -220,7 +220,7 @@ function coreTests() {
           cy.wrap(
             i18n.global.d(new Date(rows[index].issueDate), 'numeric'),
           ).then((value) => {
-            console.log(value);
+            cy.log(`Table row localized date time format is <${value}>.`);
           });
           // issue date
           cy.dataCy(selectorTableIssueDate).then(($td) => {
