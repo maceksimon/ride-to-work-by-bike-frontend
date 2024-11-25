@@ -554,22 +554,20 @@ export const interceptFacebookLoginApi = (
   );
 };
 
-export const fillFormRegisterCoordinator = (): void => {
-  cy.fixture('formRegisterCoordinator').then((formRegisterCoordinatorData) => {
+export const fillFormRegisterCoordinator = (): Cypress.Chainable => {
+  return cy.fixture('formRegisterCoordinator').then((data) => {
     cy.dataCy('form-register-coordinator-first-name')
       .find('input')
-      .type(formRegisterCoordinatorData.firstName);
+      .type(data.firstName);
     cy.dataCy('form-register-coordinator-last-name')
       .find('input')
-      .type(formRegisterCoordinatorData.lastName);
+      .type(data.lastName);
     cy.dataCy('form-register-coordinator-company').find('input').click();
     cy.get('.q-menu .q-item').first().click();
     cy.dataCy('form-register-coordinator-job-title')
       .find('input')
-      .type(formRegisterCoordinatorData.jobTitle);
-    cy.dataCy('form-register-coordinator-phone')
-      .find('input')
-      .type(formRegisterCoordinatorData.phone);
+      .type(data.jobTitle);
+    cy.dataCy('form-register-coordinator-phone').find('input').type(data.phone);
   });
 };
 
