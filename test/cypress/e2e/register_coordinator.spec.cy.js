@@ -151,46 +151,55 @@ describe('Login page', () => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
           // fill in the form
-          fillFormRegisterCoordinator();
-          // check responsibility checkbox
-          cy.dataCy('form-register-coordinator-responsibility')
-            .find('.q-checkbox')
-            .click();
-          // prevent action on link to avoid accidental redirect
-          cy.dataCy('form-register-coordinator-terms')
-            .find('a')
-            .then(($el) => {
-              $el[0].addEventListener('click', (event) => {
-                event.preventDefault();
-              });
-            });
-          // check terms checkbox
-          cy.dataCy('form-register-coordinator-terms')
-            .find('.q-checkbox')
-            .click();
-          // reset the action on link
-          cy.dataCy('form-register-coordinator-terms')
-            .find('a')
-            .then(($el) => {
-              $el[0].removeEventListener('click', (event) => {
-                event.preventDefault();
-              });
-            });
-          // submit form
-          cy.dataCy('form-register-coordinator-submit').click();
-          // wait for the API call to complete
-          cy.wait('@registerCoordinator').then((interception) => {
-            cy.get('@registerRequestBody').then((registerRequestBody) => {
-              expect(interception.request.body).to.deep.equal(
-                registerRequestBody,
+          cy.fixture('formRegisterCoordinator').then(
+            (formRegisterCoordinatorData) => {
+              fillFormRegisterCoordinator(formRegisterCoordinatorData).then(
+                () => {
+                  // check responsibility checkbox
+                  cy.dataCy('form-register-coordinator-responsibility')
+                    .find('.q-checkbox')
+                    .click();
+                  // prevent action on link to avoid accidental redirect
+                  cy.dataCy('form-register-coordinator-terms')
+                    .find('a')
+                    .then(($el) => {
+                      $el[0].addEventListener('click', (event) => {
+                        event.preventDefault();
+                      });
+                    });
+                  // check terms checkbox
+                  cy.dataCy('form-register-coordinator-terms')
+                    .find('.q-checkbox')
+                    .click();
+                  // reset the action on link
+                  cy.dataCy('form-register-coordinator-terms')
+                    .find('a')
+                    .then(($el) => {
+                      $el[0].removeEventListener('click', (event) => {
+                        event.preventDefault();
+                      });
+                    });
+                  // submit form
+                  cy.dataCy('form-register-coordinator-submit').click();
+                  // wait for the API call to complete
+                  cy.wait('@registerCoordinator').then((interception) => {
+                    cy.get('@registerRequestBody').then(
+                      (registerRequestBody) => {
+                        expect(interception.request.body).to.deep.equal(
+                          registerRequestBody,
+                        );
+                        expect(interception.response.statusCode).to.equal(
+                          httpSuccessfullStatus,
+                        );
+                        // check if redirected to homepage
+                        cy.url().should('include', routesConf['home']['path']);
+                      },
+                    );
+                  });
+                },
               );
-              expect(interception.response.statusCode).to.equal(
-                httpSuccessfullStatus,
-              );
-              // check if redirected to homepage
-              cy.url().should('include', routesConf['home']['path']);
-            });
-          });
+            },
+          );
         });
       });
     });
