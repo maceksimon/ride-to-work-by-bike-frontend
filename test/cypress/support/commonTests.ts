@@ -388,46 +388,64 @@ export const setupApiChallengeInactive = (
 };
 
 /**
- * Intercept organizations API call
- * Provides a `@getOrganizations`, `@getOrganizationsNextPage`
- * `@createOrganization` alias for the intercepted request.
+ * Intercept organizations GET API calls
+ * Provides `@getOrganizations` and `@getOrganizationsNextPage` aliases
  * @param {ConfigGlobal} config - App global config
  * @param {I18n} i18n - i18n instance
- * @returns {void}
+ * @param {OrganizationType} type - Organization type
+ * @returns {Cypress.Chainable}
  */
-export const interceptOrganizationsApi = (
+export const interceptOrganizationsGetApi = (
   config: ConfigGlobal,
   i18n: I18n,
   type: OrganizationType,
-) => {
+): Cypress.Chainable => {
   const { apiBase, apiDefaultLang, urlApiOrganizations } = config;
-  // get API base URL
   const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
   const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
   const urlApiOrganizationsLocalizedWithType = `${urlApiOrganizationsLocalized}${type}/`;
-  cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-    cy.fixture('formFieldCompanyNext').then((formFieldCompanyNextResponse) => {
-      // intercept organizations API call (before mounting component)
-      cy.intercept('GET', urlApiOrganizationsLocalizedWithType, {
-        statusCode: httpSuccessfullStatus,
-        body: formFieldCompanyResponse,
-      }).as('getOrganizations');
-      // intercept next page API call
-      cy.intercept('GET', formFieldCompanyResponse.next, {
-        statusCode: httpSuccessfullStatus,
-        body: formFieldCompanyNextResponse,
-      }).as('getOrganizationsNextPage');
-    });
+
+  return cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+    return cy
+      .fixture('formFieldCompanyNext')
+      .then((formFieldCompanyNextResponse) => {
+        // intercept organizations API call
+        cy.intercept('GET', urlApiOrganizationsLocalizedWithType, {
+          statusCode: httpSuccessfullStatus,
+          body: formFieldCompanyResponse,
+        }).as('getOrganizations');
+        // intercept next page API call
+        cy.intercept('GET', formFieldCompanyResponse.next, {
+          statusCode: httpSuccessfullStatus,
+          body: formFieldCompanyNextResponse,
+        }).as('getOrganizationsNextPage');
+      });
   });
-  // intercept create organization API call (before mounting component)
-  cy.fixture('formFieldCompanyCreate').then(
-    (formFieldCompanyCreateResponse) => {
+};
+
+/**
+ * Intercept organization POST API call
+ * Provides `@createOrganization` alias
+ * @param {ConfigGlobal} config - App global config
+ * @param {I18n} i18n - i18n instance
+ * @returns {Cypress.Chainable}
+ */
+export const interceptOrganizationsPostApi = (
+  config: ConfigGlobal,
+  i18n: I18n,
+): Cypress.Chainable => {
+  const { apiBase, apiDefaultLang, urlApiOrganizations } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
+
+  return cy
+    .fixture('formFieldCompanyCreate')
+    .then((formFieldCompanyCreateResponse) => {
       cy.intercept('POST', urlApiOrganizationsLocalized, {
         statusCode: httpSuccessfullStatus,
         body: formFieldCompanyCreateResponse,
       }).as('createOrganization');
-    },
-  );
+    });
 };
 
 /**
@@ -437,45 +455,49 @@ export const interceptOrganizationsApi = (
  * intercept request.
  * @param {GetOrganizationsResponse} formFieldCompany - Get organizations API data response
  * @param {GetOrganizationsRespons} formFieldCompanyNext - Get organizations API data response
- * @returns {void}
+ * @returns {Cypress.Chainable}
  */
 export const waitForOrganizationsApi = (
   formFieldCompany: GetOrganizationsResponse,
   formFieldCompanyNext: GetOrganizationsResponse,
-) => {
-  cy.wait(['@getOrganizations', '@getOrganizationsNextPage']).spread(
-    (
-      getOrganizations: Interception<
-        AxiosRequestConfig,
-        AxiosResponse<GetOrganizationsResponse>
-      >,
-      getOrganizationsNextPage: Interception<
-        AxiosRequestConfig,
-        AxiosResponse<GetOrganizationsResponse>
-      >,
-    ) => {
-      expect(getOrganizations.request.headers.authorization).to.include(
-        bearerTokeAuth,
-      );
-      if (getOrganizations.response) {
-        expect(getOrganizations.response.statusCode).to.equal(
-          httpSuccessfullStatus,
+): Cypress.Chainable => {
+  return cy
+    .wait(['@getOrganizations', '@getOrganizationsNextPage'])
+    .spread(
+      (
+        getOrganizations: Interception<
+          AxiosRequestConfig,
+          AxiosResponse<GetOrganizationsResponse>
+        >,
+        getOrganizationsNextPage: Interception<
+          AxiosRequestConfig,
+          AxiosResponse<GetOrganizationsResponse>
+        >,
+      ) => {
+        expect(getOrganizations.request.headers.authorization).to.include(
+          bearerTokeAuth,
         );
-        expect(getOrganizations.response.body).to.deep.equal(formFieldCompany);
-      }
-      expect(getOrganizationsNextPage.request.headers.authorization).to.include(
-        bearerTokeAuth,
-      );
-      if (getOrganizationsNextPage.response) {
-        expect(getOrganizationsNextPage.response.statusCode).to.equal(
-          httpSuccessfullStatus,
-        );
-        expect(getOrganizationsNextPage.response.body).to.deep.equal(
-          formFieldCompanyNext,
-        );
-      }
-    },
-  );
+        if (getOrganizations.response) {
+          expect(getOrganizations.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getOrganizations.response.body).to.deep.equal(
+            formFieldCompany,
+          );
+        }
+        expect(
+          getOrganizationsNextPage.request.headers.authorization,
+        ).to.include(bearerTokeAuth);
+        if (getOrganizationsNextPage.response) {
+          expect(getOrganizationsNextPage.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getOrganizationsNextPage.response.body).to.deep.equal(
+            formFieldCompanyNext,
+          );
+        }
+      },
+    );
 };
 
 export const interceptRegisterCoordinatorApi = (
@@ -554,6 +576,10 @@ export const interceptFacebookLoginApi = (
   );
 };
 
+/**
+ * Fill in the form register coordinator
+ * @returns {Cypress.Chainable}
+ */
 export const fillFormRegisterCoordinator = (): Cypress.Chainable => {
   return cy.fixture('formRegisterCoordinator').then((data) => {
     cy.dataCy('form-register-coordinator-first-name')

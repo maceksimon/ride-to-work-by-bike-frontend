@@ -7,7 +7,8 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import {
   fillFormRegisterCoordinator,
   httpSuccessfullStatus,
-  interceptOrganizationsApi,
+  interceptOrganizationsGetApi,
+  interceptOrganizationsPostApi,
   interceptRegisterCoordinatorApi,
   waitForOrganizationsApi,
 } from '../../../test/cypress/support/commonTests';
@@ -69,34 +70,40 @@ describe('<FormRegisterCoordinator>', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
       // intercept organizations API call (before mounting component)
-      interceptOrganizationsApi(
+      // intercept api
+      interceptOrganizationsGetApi(
         rideToWorkByBikeConfig,
         i18n,
         OrganizationType.company,
-      );
-      // intercept register coordinator API call (before mounting component)
-      interceptRegisterCoordinatorApi(rideToWorkByBikeConfig, i18n);
-      // specify data for register coordinator request body
-      cy.fixture('formRegisterCoordinator').then(
-        (formRegisterCoordinatorData) => {
-          cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
-            cy.wrap({
-              firstName: formRegisterCoordinatorData.firstName,
-              jobTitle: formRegisterCoordinatorData.jobTitle,
-              lastName: formRegisterCoordinatorData.lastName,
-              newsletter: formRegisterCoordinatorData.newsletter,
-              organizationId: formFieldCompanyResponse.results[0].id,
-              phone: formRegisterCoordinatorData.phone,
-              responsibility: true,
-              terms: true,
-            }).as('registerRequestBody');
+      ).then(() => {
+        interceptOrganizationsPostApi(rideToWorkByBikeConfig, i18n).then(() => {
+          // intercept register coordinator API call (before mounting component)
+          interceptRegisterCoordinatorApi(rideToWorkByBikeConfig, i18n);
+          // specify data for register coordinator request body
+          cy.fixture('formRegisterCoordinator').then(
+            (formRegisterCoordinatorData) => {
+              cy.fixture('formFieldCompany').then(
+                (formFieldCompanyResponse) => {
+                  cy.wrap({
+                    firstName: formRegisterCoordinatorData.firstName,
+                    jobTitle: formRegisterCoordinatorData.jobTitle,
+                    lastName: formRegisterCoordinatorData.lastName,
+                    newsletter: formRegisterCoordinatorData.newsletter,
+                    organizationId: formFieldCompanyResponse.results[0].id,
+                    phone: formRegisterCoordinatorData.phone,
+                    responsibility: true,
+                    terms: true,
+                  }).as('registerRequestBody');
+                },
+              );
+            },
+          );
+          cy.mount(FormRegisterCoordinator, {
+            props: {},
           });
-        },
-      );
-      cy.mount(FormRegisterCoordinator, {
-        props: {},
+          cy.viewport('macbook-16');
+        });
       });
-      cy.viewport('macbook-16');
     });
 
     it('renders title', () => {
@@ -182,52 +189,55 @@ describe('<FormRegisterCoordinator>', () => {
       // wait for organizations API call
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
-          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext).then(
+            () => {
+              // fill in other parts of the form to be able to test password
+              fillFormRegisterCoordinator().then(() => {
+                // test responsibility checkbox unchecked
+                cy.dataCy('form-register-coordinator-submit')
+                  .should('be.visible')
+                  .click();
+                // responsibility - required message shown
+                cy.contains(
+                  i18n.global.t(
+                    'register.coordinator.form.messageResponsibilityRequired',
+                  ),
+                ).should('be.visible');
+                // test responsibility checkbox checked
+                cy.dataCy('form-register-coordinator-responsibility')
+                  .find('.q-checkbox')
+                  .click();
+                // responsibility - required message hidden
+                cy.contains(
+                  i18n.global.t(
+                    'register.coordinator.form.messageResponsibilityRequired',
+                  ),
+                ).should('not.exist');
+                // test terms checkbox unchecked
+                cy.dataCy('form-register-coordinator-submit')
+                  .should('be.visible')
+                  .click();
+                // terms - required message shown
+                cy.contains(
+                  i18n.global.t(
+                    'register.coordinator.form.messageTermsRequired',
+                  ),
+                ).should('be.visible');
+                // test terms checkbox checked
+                cy.dataCy('form-register-coordinator-terms')
+                  .find('.q-checkbox')
+                  .click();
+                // terms - required message hidden
+                cy.contains(
+                  i18n.global.t(
+                    'register.coordinator.form.messageTermsRequired',
+                  ),
+                ).should('not.exist');
+              });
+            },
+          );
         });
       });
-      // fill in other parts of the form to be able to test password
-      cy.fixture('formRegisterCoordinator').then(
-        (formRegisterCoordinatorData) => {
-          fillFormRegisterCoordinator(formRegisterCoordinatorData).then(() => {
-            // test responsibility checkbox unchecked
-            cy.dataCy('form-register-coordinator-submit')
-              .should('be.visible')
-              .click();
-            // responsibility - required message shown
-            cy.contains(
-              i18n.global.t(
-                'register.coordinator.form.messageResponsibilityRequired',
-              ),
-            ).should('be.visible');
-            // test responsibility checkbox checked
-            cy.dataCy('form-register-coordinator-responsibility')
-              .find('.q-checkbox')
-              .click();
-            // responsibility - required message hidden
-            cy.contains(
-              i18n.global.t(
-                'register.coordinator.form.messageResponsibilityRequired',
-              ),
-            ).should('not.exist');
-            // test terms checkbox unchecked
-            cy.dataCy('form-register-coordinator-submit')
-              .should('be.visible')
-              .click();
-            // terms - required message shown
-            cy.contains(
-              i18n.global.t('register.coordinator.form.messageTermsRequired'),
-            ).should('be.visible');
-            // test terms checkbox checked
-            cy.dataCy('form-register-coordinator-terms')
-              .find('.q-checkbox')
-              .click();
-            // terms - required message hidden
-            cy.contains(
-              i18n.global.t('register.coordinator.form.messageTermsRequired'),
-            ).should('not.exist');
-          });
-        },
-      );
     });
 
     it('submits form correctly', () => {
@@ -235,14 +245,12 @@ describe('<FormRegisterCoordinator>', () => {
         // wait for organizations API call
         cy.fixture('formFieldCompany').then((formFieldCompany) => {
           cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
-            waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
-          });
-        });
-        // fill in the form
-        cy.fixture('formRegisterCoordinator').then(
-          (formRegisterCoordinatorData) => {
-            fillFormRegisterCoordinator(formRegisterCoordinatorData).then(
-              () => {
+            waitForOrganizationsApi(
+              formFieldCompany,
+              formFieldCompanyNext,
+            ).then(() => {
+              // fill in the form
+              fillFormRegisterCoordinator().then(() => {
                 // check responsibility checkbox
                 cy.dataCy('form-register-coordinator-responsibility')
                   .find('.q-checkbox')
@@ -271,10 +279,10 @@ describe('<FormRegisterCoordinator>', () => {
                       compareRegisterResponseWithStore();
                     });
                 });
-              },
-            );
-          },
-        );
+              });
+            });
+          });
+        });
       });
     });
   });
