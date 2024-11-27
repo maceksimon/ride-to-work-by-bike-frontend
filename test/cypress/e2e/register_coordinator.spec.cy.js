@@ -1,12 +1,8 @@
 import {
-  fillFormRegisterCoordinator,
   httpSuccessfullStatus,
-  interceptOrganizationsGetApi,
-  interceptOrganizationsPostApi,
   interceptRegisterCoordinatorApi,
   testLanguageSwitcher,
   testBackgroundImage,
-  waitForOrganizationsApi,
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 import { OrganizationType } from '../../../src/components/types/Organization';
@@ -112,36 +108,32 @@ describe('Login page', () => {
               cy.wrap(win.i18n).as('i18n');
 
               // Set up API intercepts
-              interceptOrganizationsGetApi(
+              cy.interceptOrganizationsGetApi(
                 config,
                 win.i18n,
                 OrganizationType.company,
-              ).then(() => {
-                interceptOrganizationsPostApi(config, win.i18n).then(() => {
-                  interceptRegisterCoordinatorApi(config, win.i18n);
-
-                  // Load fixtures and set up request body
-                  cy.fixture('formRegisterCoordinator').then(
-                    (formRegisterCoordinatorData) => {
-                      cy.fixture('formFieldCompany').then(
-                        (formFieldCompanyResponse) => {
-                          cy.wrap({
-                            firstName: formRegisterCoordinatorData.firstName,
-                            jobTitle: formRegisterCoordinatorData.jobTitle,
-                            lastName: formRegisterCoordinatorData.lastName,
-                            newsletter: formRegisterCoordinatorData.newsletter,
-                            organizationId:
-                              formFieldCompanyResponse.results[0].id,
-                            phone: formRegisterCoordinatorData.phone,
-                            responsibility: true,
-                            terms: true,
-                          }).as('registerRequestBody');
-                        },
-                      );
+              );
+              cy.interceptOrganizationsPostApi(config, win.i18n);
+              interceptRegisterCoordinatorApi(config, win.i18n);
+              // Load fixtures and set up request body
+              cy.fixture('formRegisterCoordinator').then(
+                (formRegisterCoordinatorData) => {
+                  cy.fixture('formFieldCompany').then(
+                    (formFieldCompanyResponse) => {
+                      cy.wrap({
+                        firstName: formRegisterCoordinatorData.firstName,
+                        jobTitle: formRegisterCoordinatorData.jobTitle,
+                        lastName: formRegisterCoordinatorData.lastName,
+                        newsletter: formRegisterCoordinatorData.newsletter,
+                        organizationId: formFieldCompanyResponse.results[0].id,
+                        phone: formRegisterCoordinatorData.phone,
+                        responsibility: true,
+                        terms: true,
+                      }).as('registerRequestBody');
                     },
                   );
-                });
-              });
+                },
+              );
             });
           })
           .then(() => {
@@ -154,52 +146,48 @@ describe('Login page', () => {
     it('fills in the form, submits it, and redirects to homepage on success', () => {
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
-          waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext).then(
-            () => {
-              // fill in the form
-              fillFormRegisterCoordinator().then(() => {
-                // check responsibility checkbox
-                cy.dataCy('form-register-coordinator-responsibility')
-                  .find('.q-checkbox')
-                  .click();
-                // prevent action on link to avoid accidental redirect
-                cy.dataCy('form-register-coordinator-terms')
-                  .find('a')
-                  .then(($el) => {
-                    $el[0].addEventListener('click', (event) => {
-                      event.preventDefault();
-                    });
-                  });
-                // check terms checkbox
-                cy.dataCy('form-register-coordinator-terms')
-                  .find('.q-checkbox')
-                  .click();
-                // reset the action on link
-                cy.dataCy('form-register-coordinator-terms')
-                  .find('a')
-                  .then(($el) => {
-                    $el[0].removeEventListener('click', (event) => {
-                      event.preventDefault();
-                    });
-                  });
-                // submit form
-                cy.dataCy('form-register-coordinator-submit').click();
-                // wait for the API call to complete
-                cy.wait('@registerCoordinator').then((interception) => {
-                  cy.get('@registerRequestBody').then((registerRequestBody) => {
-                    expect(interception.request.body).to.deep.equal(
-                      registerRequestBody,
-                    );
-                    expect(interception.response.statusCode).to.equal(
-                      httpSuccessfullStatus,
-                    );
-                    // check if redirected to homepage
-                    cy.url().should('include', routesConf['home']['path']);
-                  });
-                });
+          cy.waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+          // fill in the form
+          cy.fillFormRegisterCoordinator();
+          // check responsibility checkbox
+          cy.dataCy('form-register-coordinator-responsibility')
+            .find('.q-checkbox')
+            .click();
+          // prevent action on link to avoid accidental redirect
+          cy.dataCy('form-register-coordinator-terms')
+            .find('a')
+            .then(($el) => {
+              $el[0].addEventListener('click', (event) => {
+                event.preventDefault();
               });
-            },
-          );
+            });
+          // check terms checkbox
+          cy.dataCy('form-register-coordinator-terms')
+            .find('.q-checkbox')
+            .click();
+          // reset the action on link
+          cy.dataCy('form-register-coordinator-terms')
+            .find('a')
+            .then(($el) => {
+              $el[0].removeEventListener('click', (event) => {
+                event.preventDefault();
+              });
+            });
+          // submit form
+          cy.dataCy('form-register-coordinator-submit').click();
+          // wait for the API call to complete
+          cy.wait('@registerCoordinator').then((interception) => {
+            cy.get('@registerRequestBody').then((registerRequestBody) => {
+              expect(interception.request.body).to.deep.equal(
+                registerRequestBody,
+              );
+              expect(interception.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              // check if redirected to homepage
+              cy.url().should('include', routesConf['home']['path']);
+            });
+          });
         });
       });
     });

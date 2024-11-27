@@ -37,6 +37,9 @@ import {
   userAgentHeader,
 } from './commonTests';
 
+import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
+import { bearerTokeAuth } from 'src/utils';
+
 // Fix for ResizeObserver loop issue in Firefox
 // see https://stackoverflow.com/questions/74947338/i-keep-getting-error-resizeobserver-loop-limit-exceeded-in-cypress
 const resizeObserverLoopErrRe = /^[^(ResizeObserver loop limit exceeded)]/;
@@ -288,5 +291,114 @@ Cypress.Commands.add('testSoacialMediaUrlRequest', (rideToWorkByBikeConfig) => {
       return;
     }
     expect(resp.status).to.eq(httpSuccessfullStatus);
+  });
+});
+
+/**
+ * Intercept organizations GET API calls
+ * Provides `@getOrganizations` and `@getOrganizationsNextPage` aliases
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ * @param {string} type - Organization type
+ */
+Cypress.Commands.add('interceptOrganizationsGetApi', (config, i18n, type) => {
+  const { apiBase, apiDefaultLang, urlApiOrganizations } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
+  const urlApiOrganizationsLocalizedWithType = `${urlApiOrganizationsLocalized}${type}/`;
+
+  cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+    cy.fixture('formFieldCompanyNext').then((formFieldCompanyNextResponse) => {
+      // intercept organizations API call
+      cy.intercept('GET', urlApiOrganizationsLocalizedWithType, {
+        statusCode: httpSuccessfullStatus,
+        body: formFieldCompanyResponse,
+      }).as('getOrganizations');
+      // intercept next page API call
+      cy.intercept('GET', formFieldCompanyResponse.next, {
+        statusCode: httpSuccessfullStatus,
+        body: formFieldCompanyNextResponse,
+      }).as('getOrganizationsNextPage');
+    });
+  });
+});
+
+/**
+ * Intercept organization POST API call
+ * Provides `@createOrganization` alias
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ */
+Cypress.Commands.add('interceptOrganizationsPostApi', (config, i18n) => {
+  const { apiBase, apiDefaultLang, urlApiOrganizations } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiOrganizationsLocalized = `${apiBaseUrl}${urlApiOrganizations}`;
+
+  cy.fixture('formFieldCompanyCreate').then(
+    (formFieldCompanyCreateResponse) => {
+      cy.intercept('POST', urlApiOrganizationsLocalized, {
+        statusCode: httpSuccessfullStatus,
+        body: formFieldCompanyCreateResponse,
+      }).as('createOrganization');
+    },
+  );
+});
+
+/**
+ * Wait for intercept organizations API calls and compare request/response object
+ * Wait for `@getOrganizations` and `@getOrganizationsNextPage` intercepts
+ * @param {object} formFieldCompany - Get organizations API data response
+ * @param {object} formFieldCompanyNext - Get organizations API data response next page
+ */
+Cypress.Commands.add(
+  'waitForOrganizationsApi',
+  (formFieldCompany, formFieldCompanyNext) => {
+    cy.wait(['@getOrganizations', '@getOrganizationsNextPage']).spread(
+      (getOrganizations, getOrganizationsNextPage) => {
+        expect(getOrganizations.request.headers.authorization).to.include(
+          bearerTokeAuth,
+        );
+        if (getOrganizations.response) {
+          expect(getOrganizations.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getOrganizations.response.body).to.deep.equal(
+            formFieldCompany,
+          );
+        }
+        expect(
+          getOrganizationsNextPage.request.headers.authorization,
+        ).to.include(bearerTokeAuth);
+        if (getOrganizationsNextPage.response) {
+          expect(getOrganizationsNextPage.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getOrganizationsNextPage.response.body).to.deep.equal(
+            formFieldCompanyNext,
+          );
+        }
+      },
+    );
+  },
+);
+
+/**
+ * Fill form register coordinator
+ * @param {object} data - Form register coordinator data
+ */
+Cypress.Commands.add('fillFormRegisterCoordinator', () => {
+  cy.fixture('formRegisterCoordinator').then((data) => {
+    cy.dataCy('form-register-coordinator-first-name')
+      .find('input')
+      .type(data.firstName);
+    cy.dataCy('form-register-coordinator-last-name')
+      .find('input')
+      .type(data.lastName);
+    cy.dataCy('form-register-coordinator-company').find('input').click();
+    cy.get('.q-menu .q-item').first().click();
+    cy.dataCy('form-register-coordinator-job-title')
+      .find('input')
+      .type(data.jobTitle);
+    cy.dataCy('form-register-coordinator-phone').find('input').type(data.phone);
   });
 });
