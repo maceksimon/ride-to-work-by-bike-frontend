@@ -41,20 +41,17 @@ describe('<FormFieldCompany>', () => {
         i18n,
         OrganizationType.company,
       );
-      cy.interceptOrganizationsPostApi(rideToWorkByBikeConfig, i18n).then(
-        () => {
-          // reset model value
-          model.value = '';
-          // mount component
-          cy.mount(FormFieldCompany, {
-            props: {
-              ...vModelAdapter(model),
-              organizationType: OrganizationType.company,
-            },
-          });
-          cy.viewport('macbook-16');
+      cy.interceptOrganizationsPostApi(rideToWorkByBikeConfig, i18n);
+      // reset model value
+      model.value = '';
+      // mount component
+      cy.mount(FormFieldCompany, {
+        props: {
+          ...vModelAdapter(model),
+          organizationType: OrganizationType.company,
         },
-      );
+      });
+      cy.viewport('macbook-16');
     });
 
     it('renders input with label', () => {
@@ -214,18 +211,17 @@ context('mobile', () => {
       i18n,
       OrganizationType.company,
     );
-    cy.interceptOrganizationsPostApi(rideToWorkByBikeConfig, i18n).then(() => {
-      // reset model value
-      model.value = '';
-      // mount component
-      cy.mount(FormFieldCompany, {
-        props: {
-          ...vModelAdapter(model),
-          organizationType: OrganizationType.company,
-        },
-      });
-      cy.viewport('iphone-6');
+    cy.interceptOrganizationsPostApi(rideToWorkByBikeConfig, i18n);
+    // reset model value
+    model.value = '';
+    // mount component
+    cy.mount(FormFieldCompany, {
+      props: {
+        ...vModelAdapter(model),
+        organizationType: OrganizationType.company,
+      },
     });
+    cy.viewport('iphone-6');
   });
 
   it('renders input and button in a stacked layout', () => {
