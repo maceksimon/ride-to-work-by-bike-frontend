@@ -25,6 +25,7 @@
  */
 
 // libraries
+import { QForm } from 'quasar';
 import { computed, defineComponent, inject, ref, watch } from 'vue';
 
 // components
@@ -39,10 +40,7 @@ import { useValidation } from 'src/composables/useValidation';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
-import type {
-  FormCompanyAddressFields,
-  FormOption,
-} from 'src/components/types/Form';
+import type { FormCompanyAddressFields } from 'src/components/types/Form';
 import type { Logger } from 'src/components/types/Logger';
 
 export default defineComponent({
