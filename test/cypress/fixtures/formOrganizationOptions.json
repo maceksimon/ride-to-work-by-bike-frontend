@@ -10,7 +10,7 @@
       "houseNumber": "42",
       "city": "Prague",
       "zip": "11000",
-      "cityChallenge": "Prague",
+      "cityChallenge": 4,
       "department": "IT"
     },
     "image": {
@@ -25,7 +25,7 @@
           "houseNumber": "42",
           "city": "Prague",
           "zip": "11000",
-          "cityChallenge": "Prague",
+          "cityChallenge": 4,
           "department": "IT"
         },
         "title": "Software Development",
@@ -90,7 +90,7 @@
           "houseNumber": "100",
           "city": "Brno",
           "zip": "60200",
-          "cityChallenge": "Brno",
+          "cityChallenge": 5,
           "department": "Operations"
         },
         "teams": [
@@ -122,7 +122,7 @@
           "houseNumber": "1",
           "city": "Ostrava",
           "zip": "70200",
-          "cityChallenge": "Ostrava",
+          "cityChallenge": 9,
           "department": "Administration"
         },
         "teams": [
@@ -168,7 +168,7 @@
           "houseNumber": "1",
           "city": "Ostrava",
           "zip": "70200",
-          "cityChallenge": "Ostrava",
+          "cityChallenge": 9,
           "department": "Administration"
         },
         "teams": [
@@ -200,7 +200,7 @@
           "houseNumber": "1",
           "city": "Ostrava",
           "zip": "70200",
-          "cityChallenge": "Ostrava",
+          "cityChallenge": 9,
           "department": "Administration"
         },
         "teams": [
