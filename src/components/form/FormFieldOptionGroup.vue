@@ -72,18 +72,18 @@ export default defineComponent({
       {
         label: i18n.global.t('form.participation.labelColleagues'),
         description: i18n.global.t('form.participation.textColleagues'),
-        value: 'colleagues',
+        value: OrganizationType.company,
         icon: 'favorite',
       },
       {
         label: i18n.global.t('form.participation.labelSchoolmates'),
         description: i18n.global.t('form.participation.textSchoolmates'),
-        value: 'schoolmates',
+        value: OrganizationType.school,
         icon: 'flight_takeoff',
       },
       {
         label: i18n.global.t('form.participation.labelFamilyShort'),
-        value: 'family',
+        value: OrganizationType.family,
         icon: 'flight_land',
       },
     ];

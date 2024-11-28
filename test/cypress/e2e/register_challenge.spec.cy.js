@@ -83,6 +83,16 @@ describe('Register Challenge page', () => {
         cy.window().then((win) => {
           // alias i18n
           cy.wrap(win.i18n).as('i18n');
+          // setup API intercepts
+          cy.fixture('formOrganizationOptions').then(
+            (formOrganizationOptions) => {
+              cy.interceptSubsidiariesGetApi(
+                config,
+                win.i18n,
+                formOrganizationOptions[0].id,
+              );
+            },
+          );
         });
       });
     });
