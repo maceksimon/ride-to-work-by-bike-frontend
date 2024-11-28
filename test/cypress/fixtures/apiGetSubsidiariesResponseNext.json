@@ -1,225 +1,93 @@
 {
-  "count": 20,
+  "count": 8,
   "next": null,
   "previous": "https://test.dopracenakole.cz/rest/organizations/580/subsidiaries/?limit=20&offset=0",
   "results": [
     {
-      "id": 1358,
+      "id": 1388,
       "address": {
-        "street": "Krkonošská",
-        "street_number": "177",
-        "recipient": "pobočka Vrchlabí",
-        "psc": "54301",
-        "city": "Vrchlabí"
-      },
-      "teams": []
-    },
-    {
-      "id": 805,
-      "address": {
-        "street": "Krkonošská",
-        "street_number": "177",
-        "recipient": "Vrchlabí",
-        "psc": "54301",
-        "city": "Vrchlabí"
-      },
-      "teams": []
-    },
-    {
-      "id": 888,
-      "address": {
-        "street": "1.Máje",
-        "street_number": "79/18",
-        "recipient": "ČSOB, a.s., Liberec - 1. Máje",
-        "psc": "46178",
-        "city": "Liberec"
-      },
-      "teams": []
-    },
-    {
-      "id": 889,
-      "address": {
-        "street": "Tř.T.G.Masaryka",
-        "street_number": "492",
-        "recipient": "Frýdek-Místek",
-        "psc": "73801",
-        "city": "Frýdek-Místek"
-      },
-      "teams": []
-    },
-    {
-      "id": 974,
-      "address": {
-        "street": "Náměstí Osvoboditelů",
-        "street_number": "6",
-        "recipient": "Poštovní spořitelna Opava (Era), Finanční centrum",
-        "psc": "74601",
-        "city": "Opava"
-      },
-      "teams": []
-    },
-    {
-      "id": 1013,
-      "address": {
-        "street": "Dolní náměstí",
-        "street_number": "27 - 28",
-        "recipient": "Olomouc Dolní náměstí",
-        "psc": "77900",
-        "city": "Olomouc"
-      },
-      "teams": []
-    },
-    {
-      "id": 1045,
-      "address": {
-        "street": "Hollarova",
+        "street": "Joštova",
         "street_number": "5",
-        "recipient": "pobočka Ostrava-Hollarova",
-        "psc": "70200",
-        "city": "Ostrava"
+        "recipient": "ČSOB",
+        "psc": "60179",
+        "city": "60179"
       },
       "teams": []
     },
     {
-      "id": 973,
+      "id": 1747,
       "address": {
-        "street": "Mírové náměstí",
-        "street_number": "1/1",
-        "recipient": "ČSOB-ÚL",
-        "psc": "40001",
-        "city": "Ústí nad Labem"
-      },
-      "teams": []
-    },
-    {
-      "id": 1000,
-      "address": {
-        "street": "Milady Horákové",
-        "street_number": "6",
-        "recipient": "Brno - Milady Horákové",
-        "psc": "60200",
+        "street": "Palachovo náměstí",
+        "street_number": "2",
+        "recipient": "KBC SSC",
+        "psc": "62500",
         "city": "Brno"
       },
       "teams": []
     },
     {
-      "id": 1109,
+      "id": 1875,
       "address": {
-        "street": "Horní 47",
-        "street_number": "1471/47",
-        "recipient": "Ostrava Hrabůvka,Horní 47",
-        "psc": "70030",
-        "city": "Ostrava Hrabůvka"
+        "street": "Na Pankráci",
+        "street_number": "310/60",
+        "recipient": "ČSOB - Na Pankráci",
+        "psc": "14000",
+        "city": "Praha 4"
       },
       "teams": []
     },
     {
-      "id": 1150,
+      "id": 2219,
       "address": {
-        "street": "Dukelská brána",
-        "street_number": "5",
-        "recipient": "ČSOB, a. s., Dukelská brána 5, 796 01 Prostějov",
-        "psc": "79601",
-        "city": "Prostějov"
+        "street": "Nám. T.G.Masaryka",
+        "street_number": "12",
+        "recipient": "ČSOB, a.s.",
+        "psc": "30555",
+        "city": "30555"
       },
       "teams": []
     },
     {
-      "id": 1199,
+      "id": 2234,
       "address": {
-        "street": "Pivovarská",
-        "street_number": "113",
-        "recipient": "pobočka Mladá Boleslav - Pivovarská",
-        "psc": "29301",
-        "city": "Mladá Boleslav"
+        "street": "Zbraslavské nám.",
+        "street_number": "461",
+        "recipient": "ČSOB a.s., Zbraslavské nám.",
+        "psc": "15600",
+        "city": "Praha 5"
       },
       "teams": []
     },
     {
-      "id": 1547,
+      "id": 2241,
       "address": {
-        "street": "Lannova",
-        "street_number": "11/3",
-        "recipient": "ČSOB, České Budějovice-Lannova",
-        "psc": "37001",
-        "city": "České Budějovice"
-      },
-      "teams": []
-    },
-    {
-      "id": 1604,
-      "address": {
-        "street": "tř. Míru",
-        "street_number": "63",
-        "recipient": "FIB Pardubice",
-        "psc": "53183",
-        "city": "Pardubice"
-      },
-      "teams": []
-    },
-    {
-      "id": 1616,
-      "address": {
-        "street": "Náměstí Osvoboditelů",
-        "street_number": "6",
-        "recipient": "ČSOB a.s. Era finanční centrum",
+        "street": "Ostrožná",
+        "street_number": "17",
+        "recipient": "pobočka Opava, Ostrožná 17",
         "psc": "74601",
         "city": "Opava"
       },
       "teams": []
     },
     {
-      "id": 1642,
+      "id": 2285,
       "address": {
-        "street": "T.G.Masaryka",
-        "street_number": "492",
-        "recipient": "pobočka Frýdek",
-        "psc": "73801",
-        "city": "Frýdek-Místek"
+        "street": "Čechova",
+        "street_number": "4",
+        "recipient": "ČSOB, a.s.",
+        "psc": "75002",
+        "city": "Přerov"
       },
       "teams": []
     },
     {
-      "id": 1605,
+      "id": 2301,
       "address": {
-        "street": "Nerudova",
-        "street_number": "18/39",
-        "recipient": "ČSOB",
-        "psc": "50002",
-        "city": "Hradec Králové"
-      },
-      "teams": []
-    },
-    {
-      "id": 1639,
-      "address": {
-        "street": "Sušilova",
-        "street_number": "1528",
-        "recipient": "ČSOB",
-        "psc": "50003",
-        "city": "Hradec Králové"
-      },
-      "teams": []
-    },
-    {
-      "id": 1676,
-      "address": {
-        "street": "Kostelní",
-        "street_number": "85",
-        "recipient": "ČSOB, a.s., pobočka Žamberk",
-        "psc": "56401",
-        "city": "Žamberk"
-      },
-      "teams": []
-    },
-    {
-      "id": 1135,
-      "address": {
-        "street": "Komenkého",
-        "street_number": "802/17",
-        "recipient": "Jablonec nad Nisou",
-        "psc": "46629",
-        "city": "Jablonec nad Nisou"
+        "street": "Radlická",
+        "street_number": "333/150",
+        "recipient": "ústředí společnosti",
+        "psc": "15057",
+        "city": "Prha 5"
       },
       "teams": []
     }
