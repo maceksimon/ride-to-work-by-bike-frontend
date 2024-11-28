@@ -407,32 +407,36 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add(
   'waitForSubsidiariesApi',
-  (subsidiariesResponse, subsidiariesResponseNext) => {
-    cy.wait(['@getSubsidiaries', '@getSubsidiariesNextPage']).spread(
-      (getSubsidiaries, getSubsidiariesNextPage) => {
-        expect(getSubsidiaries.request.headers.authorization).to.include(
-          bearerTokeAuth,
+  cy.fixture('apiGetSubsidiariesResponse').then((subsidiariesResponse) => {
+    cy.fixture('apiGetSubsidiariesResponseNext').then(
+      (subsidiariesResponseNext) => {
+        cy.wait(['@getSubsidiaries', '@getSubsidiariesNextPage']).spread(
+          (getSubsidiaries, getSubsidiariesNextPage) => {
+            expect(getSubsidiaries.request.headers.authorization).to.include(
+              bearerTokeAuth,
+            );
+            if (getSubsidiaries.response) {
+              expect(getSubsidiaries.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(getSubsidiaries.response.body).to.deep.equal(
+                subsidiariesResponse,
+              );
+            }
+            expect(
+              getSubsidiariesNextPage.request.headers.authorization,
+            ).to.include(bearerTokeAuth);
+            if (getSubsidiariesNextPage.response) {
+              expect(getSubsidiariesNextPage.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(getSubsidiariesNextPage.response.body).to.deep.equal(
+                subsidiariesResponseNext,
+              );
+            }
+          },
         );
-        if (getSubsidiaries.response) {
-          expect(getSubsidiaries.response.statusCode).to.equal(
-            httpSuccessfullStatus,
-          );
-          expect(getSubsidiaries.response.body).to.deep.equal(
-            subsidiariesResponse,
-          );
-        }
-        expect(
-          getSubsidiariesNextPage.request.headers.authorization,
-        ).to.include(bearerTokeAuth);
-        if (getSubsidiariesNextPage.response) {
-          expect(getSubsidiariesNextPage.response.statusCode).to.equal(
-            httpSuccessfullStatus,
-          );
-          expect(getSubsidiariesNextPage.response.body).to.deep.equal(
-            subsidiariesResponseNext,
-          );
-        }
       },
     );
-  },
+  }),
 );

@@ -9,8 +9,6 @@
  * Note: This component is commonly used in `RegisterChallengePage`.
  *
  * @props
- * - `options` (FormOption[], required): Object representing address options.
- *   It should be of type `FormOption[]`.
  * - `modelValue` (object, required): The object representing address.
  *   It should be of type `FormAddressType`.
  *
@@ -27,15 +25,18 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, ref, watch } from 'vue';
-import { QForm } from 'quasar';
+import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 
 // components
 import DialogDefault from 'src/components/global/DialogDefault.vue';
 import FormAddSubsidiary from 'src/components/form/FormAddSubsidiary.vue';
 
 // composables
+import { useApiGetSubsidiaries } from 'src/composables/useApiGetSubsidiaries';
 import { useValidation } from 'src/composables/useValidation';
+
+// stores
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
 import type {
@@ -51,10 +52,6 @@ export default defineComponent({
     DialogDefault,
   },
   props: {
-    options: {
-      type: Array as () => FormOption[],
-      required: true,
-    },
     modelValue: {
       type: Object as () => FormCompanyAddressFields | null,
       required: true,
@@ -64,6 +61,11 @@ export default defineComponent({
   setup(props, { emit }) {
     const formRef = ref<typeof QForm | null>(null);
     const logger = inject('vuejs3-logger') as Logger | null;
+
+    const store = useRegisterChallengeStore();
+    const organizationId = computed<number | null>(() => {
+      return store.getOrganizationId ? store.getOrganizationId : null;
+    });
 
     const address = computed<FormCompanyAddressFields | null>({
       get: () => props.modelValue,
@@ -80,11 +82,29 @@ export default defineComponent({
       department: '',
     });
 
+    const { subsidiaries, isLoading, loadSubsidiaries } =
+      useApiGetSubsidiaries(logger);
+    onMounted(() => {
+      if (organizationId.value) {
+        loadSubsidiaries(organizationId.value);
+      }
+    });
+    /**
+     * On organization ID change, reset address and load new subsidiaries
+     * for the new organization.
+     */
     watch(
-      () => props.options,
+      () => organizationId.value,
       () => {
         address.value = null;
       },
+    );
+
+    const options = computed(() =>
+      subsidiaries.value?.map((subsidiary) => ({
+        label: getAddressString(subsidiary.address),
+        value: subsidiary.id,
+      })),
     );
 
     const { isFilled } = useValidation();
@@ -94,6 +114,29 @@ export default defineComponent({
       // TODO: Add address via API
       isDialogOpen.value = false;
     };
+
+    /**
+     * Get a formatted address string from the provided address object.
+     * @param {FormCompanyAddressFields | undefined} address - The address object.
+     * @returns {string} - Formatted string representation of the address or
+     * empty string.
+     */
+    function getAddressString(
+      address: FormCompanyAddressFields | undefined,
+    ): string {
+      if (!address) return '';
+
+      const parts = [
+        address.street,
+        address.houseNumber,
+        address.city,
+        address.zip,
+        address.cityChallenge,
+        address.department,
+      ].filter(Boolean);
+
+      return parts.join(', ');
+    }
 
     /**
      * Provides dialog behaviour
@@ -122,8 +165,10 @@ export default defineComponent({
       address,
       addressNew,
       formRef,
+      options,
       isDialogOpen,
       isFilled,
+      isLoading,
       onClose,
       onSubmit,
     };
