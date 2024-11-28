@@ -1,29 +1,20 @@
+import { ref } from 'vue';
 import { colors } from 'quasar';
 import FormFieldCompanyAddress from 'components/form/FormFieldCompanyAddress.vue';
 import { i18n } from '../../boot/i18n';
-import { useSelectedOrganization } from 'src/composables/useSelectedOrganization';
+import { vModelAdapter } from 'app/test/cypress/utils';
 import { createPinia, setActivePinia } from 'pinia';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
+// variables
+const model = ref(null);
+const organizationId = 580;
+
 describe('<FormFieldCompanyAddress>', () => {
-  let options;
-
-  before(() => {
-    setActivePinia(createPinia());
-    const store = useRegisterChallengeStore();
-
-    cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
-      const { addressOptions, organizationOptions } = useSelectedOrganization(
-        formOrganizationOptions,
-      );
-      store.setOrganizationId(organizationOptions.value[0].value);
-      options = addressOptions.value;
-    });
-  });
-
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       ['messageNoResult', 'labelAddress'],
@@ -47,10 +38,18 @@ describe('<FormFieldCompanyAddress>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.interceptSubsidiariesGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        organizationId,
+      );
       cy.mount(FormFieldCompanyAddress, {
         props: {
-          options,
+          ...vModelAdapter(model),
         },
+      }).then(() => {
+        model.value = null;
       });
       cy.viewport('macbook-16');
     });
@@ -74,28 +73,48 @@ describe('<FormFieldCompanyAddress>', () => {
       cy.dataCy('button-add-address').should('be.visible');
     });
 
-    it('allows user to select option', () => {
-      cy.dataCy('form-company-address').find('.q-select').click();
-      // select option
-      cy.get('.q-menu')
-        .should('be.visible')
-        .within(() => {
-          cy.get('.q-item').should('have.length', options.length);
-        });
-    });
-
     it('validates address field correctly', () => {
       cy.dataCy('form-company-address').find('input').focus();
       cy.dataCy('form-company-address').find('input').blur();
-      cy.dataCy('form-company-address')
-        .find('.q-field__messages')
-        .should('be.visible')
-        .and(
-          'contain',
-          i18n.global.t('form.messageFieldRequired', {
-            fieldName: i18n.global.t('form.labelAddress'),
-          }),
+      cy.contains(
+        i18n.global.t('form.messageFieldRequired', {
+          fieldName: i18n.global.t('form.labelAddress'),
+        }),
+      ).should('be.visible');
+    });
+
+    it('allows user to select option', () => {
+      cy.fixture('apiGetSubsidiariesResponse').then((subsidiariesResponse) => {
+        cy.fixture('apiGetSubsidiariesResponseNext').then(
+          (subsidiariesResponseNext) => {
+            cy.wrap(useRegisterChallengeStore()).then((store) => {
+              // set organization ID in store
+              store.setOrganizationId(organizationId);
+              cy.wrap(store.getOrganizationId).should('eq', organizationId);
+              // wait for subsidiaries API
+              cy.waitForSubsidiariesApi(
+                subsidiariesResponse,
+                subsidiariesResponseNext,
+              );
+              cy.dataCy('form-company-address').find('.q-select').click();
+              // select option
+              cy.get('.q-menu')
+                .should('be.visible')
+                .within(() => {
+                  cy.get('.q-item').should(
+                    'have.length',
+                    subsidiariesResponse.results.length +
+                      subsidiariesResponseNext.results.length,
+                  );
+                  cy.get('.q-item').first().click();
+                });
+              cy.wrap(model)
+                .its('value')
+                .should('eq', subsidiariesResponse.results[0].id);
+            });
+          },
         );
+      });
     });
 
     it('renders dialog for adding a new address', () => {
@@ -126,10 +145,18 @@ describe('<FormFieldCompanyAddress>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.interceptSubsidiariesGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        organizationId,
+      );
       cy.mount(FormFieldCompanyAddress, {
         props: {
-          options,
+          ...vModelAdapter(model),
         },
+      }).then(() => {
+        model.value = null;
       });
       cy.viewport('iphone-6');
     });

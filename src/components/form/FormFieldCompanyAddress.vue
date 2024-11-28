@@ -25,7 +25,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
+import { computed, defineComponent, inject, ref, watch } from 'vue';
 
 // components
 import DialogDefault from 'src/components/global/DialogDefault.vue';
@@ -53,7 +53,7 @@ export default defineComponent({
   },
   props: {
     modelValue: {
-      type: Object as () => FormCompanyAddressFields | null,
+      type: Number as () => number | null,
       required: true,
     },
   },
@@ -62,15 +62,9 @@ export default defineComponent({
     const formRef = ref<typeof QForm | null>(null);
     const logger = inject('vuejs3-logger') as Logger | null;
 
-    const store = useRegisterChallengeStore();
-    const organizationId = computed<number | null>(() => {
-      return store.getOrganizationId ? store.getOrganizationId : null;
-    });
-
-    const address = computed<FormCompanyAddressFields | null>({
+    const address = computed<number | null>({
       get: () => props.modelValue,
-      set: (value: FormCompanyAddressFields | null) =>
-        emit('update:modelValue', value),
+      set: (value: number | null) => emit('update:modelValue', value),
     });
 
     const addressNew = ref<FormCompanyAddressFields>({
@@ -84,20 +78,18 @@ export default defineComponent({
 
     const { subsidiaries, isLoading, loadSubsidiaries } =
       useApiGetSubsidiaries(logger);
-    onMounted(() => {
-      if (organizationId.value) {
-        loadSubsidiaries(organizationId.value);
-      }
-    });
-    /**
-     * On organization ID change, reset address and load new subsidiaries
-     * for the new organization.
-     */
+
+    const store = useRegisterChallengeStore();
     watch(
-      () => organizationId.value,
-      () => {
+      () => store.getOrganizationId,
+      (newValue) => {
+        logger?.debug(`organizationId updated to <${newValue}>`);
         address.value = null;
+        if (newValue) {
+          loadSubsidiaries(newValue);
+        }
       },
+      { immediate: true },
     );
 
     const options = computed(() =>

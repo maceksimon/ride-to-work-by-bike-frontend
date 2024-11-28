@@ -37,7 +37,7 @@ import {
   userAgentHeader,
 } from './commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
-import { bearerTokeAuth } from 'src/utils';
+import { bearerTokeAuth } from '../../../src/utils';
 
 // Fix for ResizeObserver loop issue in Firefox
 // see https://stackoverflow.com/questions/74947338/i-keep-getting-error-resizeobserver-loop-limit-exceeded-in-cypress
@@ -407,36 +407,32 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add(
   'waitForSubsidiariesApi',
-  cy.fixture('apiGetSubsidiariesResponse').then((subsidiariesResponse) => {
-    cy.fixture('apiGetSubsidiariesResponseNext').then(
-      (subsidiariesResponseNext) => {
-        cy.wait(['@getSubsidiaries', '@getSubsidiariesNextPage']).spread(
-          (getSubsidiaries, getSubsidiariesNextPage) => {
-            expect(getSubsidiaries.request.headers.authorization).to.include(
-              bearerTokeAuth,
-            );
-            if (getSubsidiaries.response) {
-              expect(getSubsidiaries.response.statusCode).to.equal(
-                httpSuccessfullStatus,
-              );
-              expect(getSubsidiaries.response.body).to.deep.equal(
-                subsidiariesResponse,
-              );
-            }
-            expect(
-              getSubsidiariesNextPage.request.headers.authorization,
-            ).to.include(bearerTokeAuth);
-            if (getSubsidiariesNextPage.response) {
-              expect(getSubsidiariesNextPage.response.statusCode).to.equal(
-                httpSuccessfullStatus,
-              );
-              expect(getSubsidiariesNextPage.response.body).to.deep.equal(
-                subsidiariesResponseNext,
-              );
-            }
-          },
+  (subsidiariesResponse, subsidiariesResponseNext) => {
+    cy.wait(['@getSubsidiaries', '@getSubsidiariesNextPage']).spread(
+      (getSubsidiaries, getSubsidiariesNextPage) => {
+        expect(getSubsidiaries.request.headers.authorization).to.include(
+          bearerTokeAuth,
         );
+        if (getSubsidiaries.response) {
+          expect(getSubsidiaries.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getSubsidiaries.response.body).to.deep.equal(
+            subsidiariesResponse,
+          );
+        }
+        expect(
+          getSubsidiariesNextPage.request.headers.authorization,
+        ).to.include(bearerTokeAuth);
+        if (getSubsidiariesNextPage.response) {
+          expect(getSubsidiariesNextPage.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getSubsidiariesNextPage.response.body).to.deep.equal(
+            subsidiariesResponseNext,
+          );
+        }
       },
     );
-  }),
+  },
 );
