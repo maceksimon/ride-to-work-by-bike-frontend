@@ -4,6 +4,7 @@
  *
  * @description Use this component to render a table for selecting a team.
  * Handles fetching teams from API.
+ * Note: This component is used on `RegisterChallengePage`.
  *
  * @components
  * - `FormFieldSelectTable`: Base component for displaying selectable table options
