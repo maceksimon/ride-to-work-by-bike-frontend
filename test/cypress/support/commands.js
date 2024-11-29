@@ -370,14 +370,15 @@ Cypress.Commands.add('waitForCitiesApi', () => {
 Cypress.Commands.add(
   'interceptSubsidiariesGetApi',
   (config, i18n, organizationId) => {
-    const { apiBase, apiDefaultLang, urlApiOrganizations } = config;
+    const { apiBase, apiDefaultLang, urlApiOrganizations, urlApiSubsidiaries } =
+      config;
     const apiBaseUrl = getApiBaseUrlWithLang(
       null,
       apiBase,
       apiDefaultLang,
       i18n,
     );
-    const urlApiSubsidiariesLocalized = `${apiBaseUrl}${urlApiOrganizations}${organizationId}/subsidiaries/`;
+    const urlApiSubsidiariesLocalized = `${apiBaseUrl}${urlApiOrganizations}${organizationId}/${urlApiSubsidiaries}`;
 
     cy.fixture('apiGetSubsidiariesResponse').then((subsidiariesResponse) => {
       cy.fixture('apiGetSubsidiariesResponseNext').then(

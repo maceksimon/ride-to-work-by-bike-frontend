@@ -86,6 +86,7 @@ urlApiRefresh = "auth/token/refresh/"
 urlApiRegister = "auth/registration/"
 urlApiRegisterCoordinator = "challenge/registration/coordinator/"
 urlApiResetPassword = "auth/password/reset/"
+urlApiSubsidiaries = "subsidiaries/"
 urlApiChallengeRegistrationUser = "challenge/registration/user/"
 urlApiCities = "cities/"
 
