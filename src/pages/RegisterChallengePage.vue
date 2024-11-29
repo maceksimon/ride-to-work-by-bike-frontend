@@ -30,11 +30,11 @@ import { QForm, QStepper } from 'quasar';
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 // components
-import FormFieldSelectTable from 'src/components/form/FormFieldSelectTable.vue';
 import FormFieldListMerch from 'src/components/form/FormFieldListMerch.vue';
 import FormFieldOptionGroup from 'src/components/form/FormFieldOptionGroup.vue';
 import FormPersonalDetails from 'src/components/form/FormPersonalDetails.vue';
 import FormSelectOrganization from 'src/components/form/FormSelectOrganization.vue';
+import FormSelectTeam from 'src/components/form/FormSelectTeam.vue';
 import LoginRegisterHeader from 'components/global/LoginRegisterHeader.vue';
 import RegisterChallengePayment from 'src/components/register/RegisterChallengePayment.vue';
 import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
@@ -43,25 +43,19 @@ import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
 import { useStepperValidation } from 'src/composables/useStepperValidation';
 
 // enums
-import {
-  OrganizationLevel,
-  OrganizationType,
-} from 'src/components/types/Organization';
+import { OrganizationType } from 'src/components/types/Organization';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
-// types
-import type { FormSelectTableOption } from 'src/components/types/Form';
-
 export default defineComponent({
   name: 'RegisterChallengePage',
   components: {
-    FormFieldSelectTable,
     FormFieldListMerch,
     FormFieldOptionGroup,
     FormPersonalDetails,
     FormSelectOrganization,
+    FormSelectTeam,
     LoginRegisterHeader,
     RegisterChallengePayment,
     TopBarCountdown,
@@ -130,22 +124,6 @@ export default defineComponent({
       },
     });
 
-    const teamOptions: FormSelectTableOption[] = [
-      {
-        label: 'Zelený team',
-        value: 34565,
-        members: 2,
-        maxMembers: 5,
-      },
-      {
-        label: 'Modrý team',
-        value: 34566,
-        members: 5,
-        maxMembers: 5,
-      },
-    ];
-    const team = ref<number | null>(null);
-
     const step = ref(1);
     const stepperRef = ref<typeof QStepper | null>(null);
     const stepCompanyRef = ref<typeof QForm | null>(null);
@@ -193,11 +171,8 @@ export default defineComponent({
       activeIconImgSrcStepper6,
       doneIconImgSrcStepper6,
       organizationType,
-      team,
-      teamOptions,
       onBack,
       onContinue,
-      OrganizationLevel,
     };
   },
 });
@@ -404,12 +379,7 @@ export default defineComponent({
             data-cy="step-5"
           >
             <q-form ref="stepTeamRef">
-              <form-field-select-table
-                v-model="team"
-                :organization-level="OrganizationLevel.team"
-                :options="teamOptions"
-                data-cy="form-select-table-team"
-              />
+              <form-select-team data-cy="form-select-team" />
             </q-form>
             <q-stepper-navigation class="flex justify-end">
               <q-btn

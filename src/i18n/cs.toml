@@ -678,6 +678,7 @@ textCountdownOctober = "Do Říjnové výzvy zbývá {days} dní a {hours}:{minu
 textCountdownMay = "Do Květnové výzvy zbývá {days} dní a {hours}:{minutes}:{seconds} hodin!"
 textPaymentMinimum = "<b>Startovné je účastnický poplatek s minimem 390 Kč</b>. Umožňujete nám tak Výzvu provozovat, poskytovat během ní podporu a poskytnout vám startovní balíček. Pokud nás chcete podpořit, budeme rádi za vyšší částky."
 textPaymentOrganizer = "<p>Výzvu Do práce na kole pro vás pořádá spolek AutoMat, který kontinuálně pracuje na zlepšování podmínek pro pěší a lidi na kolech v Česku.</p><p>Pokud nás v našem úsilí chcete podpořit, můžete své startovné do výzvy navýšit o benefiční příspěvek v libovolné výši. Pomůžete tak dalšímu udržitelnému rozvoji našich měst. Děkujeme.</p>"
+textTeamInfo = "V jednom týmu může být max. 5 členů."
 titleRegisterToChallenge.may = "Registrace do Květnové výzvy"
 titleRegisterToChallenge.october = "Registrace do Říjnové výzvy"
 titleStepPersonalDetails = "Osobní údaje"

@@ -675,6 +675,7 @@ textCountdownOctober = "{days} days and {hours}:{minutes}:{seconds} hours left t
 textCountdownMay = "{days} days and {hours}:{minutes}:{seconds} hours left to May Challenge!"
 textPaymentMinimum = "<b>The entry fee is a participation fee with a minimum of 390 CZK</b>. You allow us to run the Challenge, provide support during the Challenge and provide you with a starter package. If you would like to support us, higher amounts will be much appreciated."
 textPaymentOrganizer = "<p>Ride to Work by Bike Challenge is organized by AutoMat, which continuously works to improve conditions for pedestrians and people on bicycles in the Czech Republic.</p><p>If you want to support us in our efforts, you can increase your entry fee for the challenge by a charitable contribution of any amount. You will be helping to further the sustainable development of our cities. Thank you.</p>"
+textTeamInfo = "In one team, there can be a maximum of 5 members."
 titleRegisterToChallenge.may = "Register for May challenge"
 titleRegisterToChallenge.october = "Register for October challenge"
 titleStepPersonalDetails = "Personal details"
