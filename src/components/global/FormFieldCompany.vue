@@ -37,9 +37,9 @@ import DialogDefault from 'src/components/global/DialogDefault.vue';
 import FormAddCompany from 'src/components/form/FormAddCompany.vue';
 
 // composables
-import { i18n } from 'src/boot/i18n';
 import { useApi } from 'src/composables/useApi';
 import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
+import { useOrganizations } from 'src/composables/useOrganizations';
 import { useValidation } from 'src/composables/useValidation';
 
 // config
@@ -248,84 +248,26 @@ export default defineComponent({
 
     const { isFilled } = useValidation();
 
-    let organizationTypesTransStrings = {};
-
-    // Company
-    organizationTypesTransStrings[OrganizationType.company] = {
-      form: {
-        label: i18n.global.t('form.labelCompany'),
-        labelShort: 'form.labelCompanyShort', // trans is done in template with $() func
-      },
-      'form.company': {
-        titleAdd: i18n.global.t('form.company.titleAddCompany'),
-        buttonAdd: i18n.global.t('form.company.buttonAddCompany'),
-      },
-    };
-    // School
-    organizationTypesTransStrings[OrganizationType.school] = {
-      form: {
-        label: i18n.global.t('form.labelSchool'),
-        labelShort: 'form.labelSchoolShort', // trans is done in template with $() func
-      },
-      'form.company': {
-        titleAdd: i18n.global.t('form.company.titleAddSchool'),
-        buttonAdd: i18n.global.t('form.company.buttonAddSchool'),
-      },
-    };
-    // Family
-    organizationTypesTransStrings[OrganizationType.family] = {
-      form: {
-        label: i18n.global.t('form.labelFamily'),
-        labelShort: 'form.labelFamilyShort', // trans is done in template with $() func
-      },
-      'form.company': {
-        titleAdd: i18n.global.t('form.company.titleAddFamily'),
-        buttonAdd: i18n.global.t('form.company.buttonAddFamily'),
-      },
-    };
+    const { getOrganizationLabels } = useOrganizations();
 
     const formFieldLabel = computed(() => {
-      if (props.label) {
-        return props.label;
-      } else {
-        return organizationTypesTransStrings[props.organizationType]['form'][
-          'label'
-        ];
-      }
-      return '';
+      return getOrganizationLabels(props.organizationType).label;
     });
 
     const addNewOrganizationDialogTitle = computed(() => {
-      if (props.label) {
-        return props.label;
-      } else {
-        return organizationTypesTransStrings[props.organizationType][
-          'form.company'
-        ]['titleAdd'];
-      }
-      return '';
+      return getOrganizationLabels(props.organizationType).titleDialog;
     });
 
     const addNewOrganizationDialogBtn = computed(() => {
-      if (props.label) {
-        return props.label;
-      } else {
-        return organizationTypesTransStrings[props.organizationType][
-          'form.company'
-        ]['buttonAdd'];
-      }
-      return '';
+      return getOrganizationLabels(props.organizationType).buttonDialog;
     });
 
     const organizationFieldValidationTransStrings = computed(() => {
-      if (props.label) {
-        return props.label;
-      } else {
-        return organizationTypesTransStrings[props.organizationType]['form'][
-          'labelShort'
-        ];
-      }
-      return '';
+      return getOrganizationLabels(props.organizationType).labelShort;
+    });
+
+    const messageNoResult = computed(() => {
+      return getOrganizationLabels(props.organizationType).messageNoResult;
     });
 
     const organizationType = toRef(props, 'organizationType');
@@ -353,6 +295,8 @@ export default defineComponent({
       isFilled,
       isLoading,
       optionsFiltered,
+      messageNoResult,
+      options,
       onClose,
       onFilter,
       onSubmit,
@@ -397,7 +341,7 @@ export default defineComponent({
             (val) =>
               isFilled(val) ||
               $t('form.messageFieldRequired', {
-                fieldName: $t(organizationFieldValidationTransStrings),
+                fieldName: organizationFieldValidationTransStrings,
               }),
           ]"
           @filter="onFilter"
@@ -408,7 +352,7 @@ export default defineComponent({
           <template v-slot:no-option>
             <q-item>
               <q-item-section class="text-grey">
-                {{ $t('form.messageNoCompany') }}
+                {{ messageNoResult }}
               </q-item-section>
             </q-item>
           </template>

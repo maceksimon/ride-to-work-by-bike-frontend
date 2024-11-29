@@ -227,6 +227,20 @@ describe('<FormAddCompany>', () => {
       );
     });
 
+    it('shows label for school type (default)', () => {
+      cy.mount(FormAddCompany, {
+        props: {
+          ...vModelAdapter(model),
+          organizationType: OrganizationType.school,
+          variant: 'default',
+        },
+      });
+      cy.dataCy(selectorFormTitle).should(
+        'contain',
+        i18n.global.t('form.labelSchoolShort'),
+      );
+    });
+
     it('hides VAT field for family type (simple)', () => {
       cy.mount(FormAddCompany, {
         props: {
@@ -257,6 +271,20 @@ describe('<FormAddCompany>', () => {
       );
     });
 
+    it('shows label for family type (default)', () => {
+      cy.mount(FormAddCompany, {
+        props: {
+          ...vModelAdapter(model),
+          organizationType: OrganizationType.family,
+          variant: 'default',
+        },
+      });
+      cy.dataCy(selectorFormTitle).should(
+        'contain',
+        i18n.global.t('form.labelFamilyShort'),
+      );
+    });
+
     it('shows VAT field when organizationType is not provided (simple)', () => {
       cy.mount(FormAddCompany, {
         props: {
@@ -279,6 +307,19 @@ describe('<FormAddCompany>', () => {
         },
       });
       cy.dataCy(selectorFormVatId).should('be.visible');
+      cy.dataCy(selectorFormTitle).should(
+        'contain',
+        i18n.global.t('form.labelCompanyShort'),
+      );
+    });
+
+    it('shows correct label when organizationType is not provided', () => {
+      cy.mount(FormAddCompany, {
+        props: {
+          ...vModelAdapter(model),
+          variant: 'default',
+        },
+      });
       cy.dataCy(selectorFormTitle).should(
         'contain',
         i18n.global.t('form.labelCompanyShort'),

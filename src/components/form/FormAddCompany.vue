@@ -11,7 +11,8 @@
  *
  * @props
  * - `modelValue` (Object, required): The object representing the form state.
- * - `organizationType` (String as OrganizationType): The type of organization.
+ * - `organizationType` (String as OrganizationType, required, default:
+ *   OrganizationType.company): The type of organization.
  * - `variant` (String as 'default', 'simple'): The variant of the form.
  *   `simple` only shows `name` and `vatId` fields.
  *
@@ -37,6 +38,7 @@ import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 import FormFieldBusinessId from '../form/FormFieldBusinessId.vue';
 
 // composables
+import { useOrganizations } from '../../composables/useOrganizations';
 import { useValidation } from '../../composables/useValidation';
 
 // enums
@@ -59,6 +61,8 @@ export default defineComponent({
     },
     organizationType: {
       type: String as () => OrganizationType,
+      required: true,
+      default: OrganizationType.company,
     },
     variant: {
       type: String as () => 'default' | 'simple',
@@ -81,15 +85,18 @@ export default defineComponent({
     const addressIndex = 0;
 
     const isVatShown = computed((): boolean => {
-      if (!props.organizationType) {
-        return true;
-      }
       return props.organizationType === OrganizationType.company;
+    });
+
+    const { getOrganizationLabels } = useOrganizations();
+    const titleDialog = computed((): string => {
+      return getOrganizationLabels(props.organizationType).labelShort;
     });
 
     return {
       addressIndex,
       company,
+      titleDialog,
       OrganizationType,
       isVatShown,
       isFilled,
@@ -106,13 +113,7 @@ export default defineComponent({
         class="text-body1 text-bold text-black q-my-none"
         data-cy="form-add-company-title"
       >
-        <span v-if="organizationType === OrganizationType.school">{{
-          $t('form.labelSchoolShort')
-        }}</span>
-        <span v-else-if="organizationType === OrganizationType.family">{{
-          $t('form.labelFamilyShort')
-        }}</span>
-        <span v-else>{{ $t('form.labelCompanyShort') }}</span>
+        {{ titleDialog }}
       </h3>
       <p
         v-if="variant === 'default'"
