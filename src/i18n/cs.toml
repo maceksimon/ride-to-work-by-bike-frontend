@@ -45,6 +45,11 @@ apiMessageError = "Načítání měst selhalo."
 apiMessageErrorWithMessage = "Načítání měst selhalo. Chyba: {error}"
 apiMessageSuccess = "Města byla úspěšně načtena."
 
+[getSubsidiaries]
+apiMessageError = "Načítání poboček selhalo."
+apiMessageErrorWithMessage = "Načítání poboček selhalo. Chyba: {error}"
+apiMessageSuccess = "Pobočky byly úspěšně načteny."
+
 [global]
 all = "Všechny"
 and = "a"

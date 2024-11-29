@@ -45,6 +45,11 @@ apiMessageError = "Fetching cities failed."
 apiMessageErrorWithMessage = "Fetching cities failed. Error: {error}"
 apiMessageSuccess = "Cities fetched successfully."
 
+[getSubsidiaries]
+apiMessageError = "Fetching subsidiaries failed."
+apiMessageErrorWithMessage = "Fetching subsidiaries failed. Error: {error}"
+apiMessageSuccess = "Subsidiaries fetched successfully."
+
 [global]
 all = "All"
 and = "and"
