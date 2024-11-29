@@ -47,7 +47,7 @@ export const useApiGetSubsidiaries = (logger: Logger | null) => {
 
     // fetch subsidiaries
     const { data } = await apiFetch<GetSubsidiariesResponse>({
-      endpoint: `${rideToWorkByBikeConfig.urlApiOrganizations}${organizationId}/subsidiaries/`,
+      endpoint: `${rideToWorkByBikeConfig.urlApiOrganizations}${organizationId}/${rideToWorkByBikeConfig.urlApiSubsidiaries}`,
       method: 'get',
       translationKey: 'getSubsidiaries',
       showSuccessMessage: false,
