@@ -39,10 +39,13 @@ describe('<FormSelectTeam>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    // component
     cy.dataCy(selectorFormSelectTeam).should('be.visible');
-    cy.dataCy(selectorFormSelectTableTeam).should('be.visible');
+    // info text
     cy.dataCy(selectorFormSelectTeamInfo)
       .should('be.visible')
       .should('have.text', i18n.global.t('register.challenge.textTeamInfo'));
+    // select table
+    cy.dataCy(selectorFormSelectTableTeam).should('be.visible');
   });
 }
