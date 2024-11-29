@@ -62,9 +62,11 @@ export default defineComponent({
 
 <template>
   <div data-cy="form-select-team">
+    <!-- Text: Info -->
     <div class="q-mb-lg" data-cy="form-select-team-info">
       {{ $t('register.challenge.textTeamInfo') }}
     </div>
+    <!-- Select table -->
     <form-field-select-table
       v-model="team"
       :organization-level="OrganizationLevel.team"
