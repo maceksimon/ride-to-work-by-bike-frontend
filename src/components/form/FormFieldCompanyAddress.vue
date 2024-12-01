@@ -9,8 +9,8 @@
  * Note: This component is commonly used in `RegisterChallengePage`.
  *
  * @props
- * - `modelValue` (object, required): The object representing address.
- *   It should be of type `FormAddressType`.
+ * - `modelValue` (number|null): the number representing address.
+ *
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -52,7 +52,8 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Number as () => number | null,
-      required: true,
+      required: false,
+      default: null,
     },
   },
   emits: ['update:modelValue'],
@@ -81,7 +82,9 @@ export default defineComponent({
     watch(
       () => store.getOrganizationId,
       (newValue) => {
-        logger?.debug(`organizationId updated to <${newValue}>`);
+        logger?.debug(
+          `Resgister challenge stote organization ID updated to <${newValue}>`,
+        );
         address.value = null;
         if (newValue) {
           loadSubsidiaries(newValue);
@@ -111,9 +114,9 @@ export default defineComponent({
      * @returns {string} - Formatted string representation of the address or
      * empty string.
      */
-    function getAddressString(
+    const getAddressString = (
       address: FormCompanyAddressFields | undefined,
-    ): string {
+    ): string => {
       if (!address) return '';
 
       const parts = [
@@ -126,11 +129,11 @@ export default defineComponent({
       ].filter(Boolean);
 
       return parts.join(', ');
-    }
+    };
 
     /**
      * Provides dialog behaviour
-     * @returns
+     * @returns {isDialogOpen, onClose}
      * - `isDialogOpen` (boolean): Whether the dialog is open.
      * - `onClose` (function): Runs when the dialog is closed.
      */
