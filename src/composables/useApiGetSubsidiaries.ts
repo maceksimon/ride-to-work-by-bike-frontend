@@ -1,5 +1,5 @@
 // libraries
-import { ref } from 'vue';
+import { ref, Ref } from 'vue';
 
 // composables
 import { useApi } from './useApi';
@@ -24,7 +24,21 @@ interface GetSubsidiariesResponse {
   results: OrganizationSubsidiary[];
 }
 
-export const useApiGetSubsidiaries = (logger: Logger | null) => {
+type UseApiGetSubsidiariesReturn = {
+  subsidiaries: Ref<OrganizationSubsidiary[]>;
+  isLoading: Ref<boolean>;
+  loadSubsidiaries: (organizationId: number) => Promise<void>;
+};
+
+/**
+ * Get subsidiaries composable
+ * Used to enable calling the API to get organization subsidiaries
+ * @param logger - Logger
+ * @returns {UseApiGetSubsidiariesReturn}
+ */
+export const useApiGetSubsidiaries = (
+  logger: Logger | null,
+): UseApiGetSubsidiariesReturn => {
   const subsidiaries = ref<OrganizationSubsidiary[]>([]);
   const isLoading = ref<boolean>(false);
   const loginStore = useLoginStore();
@@ -33,12 +47,20 @@ export const useApiGetSubsidiaries = (logger: Logger | null) => {
   /**
    * Load subsidiaries
    * Fetches subsidiaries and saves them into options
+   * @param {number} organizationId - Organization Id to get subsidiaries
+   * @returns {Promise<void>} - Promise
    */
   const loadSubsidiaries = async (organizationId: number): Promise<void> => {
     // reset options
+    logger?.debug(
+      `Reseting default options <${JSON.stringify(subsidiaries.value, null, 2)}>.`,
+    );
     subsidiaries.value = [];
-
+    logger?.debug(
+      `Default options set to <${JSON.stringify(subsidiaries.value, null, 2)}>.`,
+    );
     // get subsidiaries
+    logger?.info('Get subsidiaries from the API.');
     isLoading.value = true;
 
     // append access token into HTTP header
@@ -69,8 +91,11 @@ export const useApiGetSubsidiaries = (logger: Logger | null) => {
 
   /**
    * Fetch next page of subsidiaries
+   * @param {string} url - Get subsidiaries next page API URL
+   * @returns {Promise<void>} - Promise
    */
   const fetchNextPage = async (url: string): Promise<void> => {
+    logger?.debug(`Fetching next page of subsidiaries from <${url}>.`);
     // append access token into HTTP header
     const requestTokenHeader_ = { ...requestTokenHeader };
     requestTokenHeader_.Authorization += loginStore.getAccessToken;
