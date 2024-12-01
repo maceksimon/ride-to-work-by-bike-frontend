@@ -44,12 +44,11 @@ describe('<FormFieldCompanyAddress>', () => {
         i18n,
         organizationId,
       );
+      model.value = null;
       cy.mount(FormFieldCompanyAddress, {
         props: {
           ...vModelAdapter(model),
         },
-      }).then(() => {
-        model.value = null;
       });
       cy.viewport('macbook-16');
     });
@@ -151,12 +150,11 @@ describe('<FormFieldCompanyAddress>', () => {
         i18n,
         organizationId,
       );
+      model.value = null;
       cy.mount(FormFieldCompanyAddress, {
         props: {
           ...vModelAdapter(model),
         },
-      }).then(() => {
-        model.value = null;
       });
       cy.viewport('iphone-6');
     });
