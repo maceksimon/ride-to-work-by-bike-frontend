@@ -74,7 +74,8 @@ export default defineComponent({
   props: {
     modelValue: {
       type: Number as () => number | null,
-      required: true,
+      required: false,
+      default: null,
     },
     options: {
       type: Array as () => FormSelectTableOption[] | FormOption[],
