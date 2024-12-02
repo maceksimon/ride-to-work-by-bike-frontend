@@ -6,3 +6,8 @@ export enum FormSubsidiaryAddressFields {
   cityChallenge = 'cityChallenge',
   department = 'deparment',
 }
+
+export enum FormAddCompanyVariantProp {
+  default = 'default',
+  simple = 'simple',
+}

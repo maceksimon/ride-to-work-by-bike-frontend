@@ -43,6 +43,7 @@ import { useValidation } from '../../composables/useValidation';
 
 // enums
 import { OrganizationType } from '../types/Organization';
+import { FormAddCompanyVariantProp } from '../enums/Form';
 
 // types
 import type { FormCompanyFields } from '../types/Form';
@@ -65,8 +66,8 @@ export default defineComponent({
       default: OrganizationType.company,
     },
     variant: {
-      type: String as () => 'default' | 'simple',
-      default: 'default',
+      type: String as () => FormAddCompanyVariantProp,
+      default: FormAddCompanyVariantProp.default,
     },
   },
   emits: ['update:modelValue'],
@@ -101,6 +102,7 @@ export default defineComponent({
       isVatShown,
       isFilled,
       onUpdate,
+      FormAddCompanyVariantProp,
     };
   },
 });
@@ -116,7 +118,7 @@ export default defineComponent({
         {{ titleDialog }}
       </h3>
       <p
-        v-if="variant === 'default'"
+        v-if="variant === FormAddCompanyVariantProp.default"
         class="q-mt-sm"
         data-cy="form-add-company-permission"
       >
@@ -146,7 +148,7 @@ export default defineComponent({
         />
       </div>
     </div>
-    <div v-if="variant === 'default'" class="q-mt-lg">
+    <div v-if="variant === FormAddCompanyVariantProp.default" class="q-mt-lg">
       <div class="q-mb-md">
         <h3 class="text-body1 text-bold text-black q-my-none">
           {{ $t('form.company.titleSubsidiaryAddress') }}

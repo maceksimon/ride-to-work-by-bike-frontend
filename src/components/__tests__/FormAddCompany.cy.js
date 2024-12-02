@@ -5,6 +5,7 @@ import { i18n } from '../../boot/i18n';
 import { OrganizationType } from '../types/Organization';
 import { emptyFormCompanyFields } from '../global/FormFieldCompany.vue';
 import { deepObjectWithSimplePropsCopy } from '../../utils';
+import { FormAddCompanyVariantProp } from '../enums/Form';
 
 // selectors
 const classSelectorDropdownItem = '.q-item';
@@ -23,8 +24,6 @@ const selectorFormDepartment = 'form-add-subsidiary-department';
 describe('<FormAddCompany>', () => {
   // default form state (make a deep copy of empty state)
   const model = ref(deepObjectWithSimplePropsCopy(emptyFormCompanyFields));
-  const FormAddCompanyComponentVariantPropSimple = 'simple';
-  const FormAddCompanyComponentVariantPropDefault = 'default';
 
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -58,7 +57,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.company,
-          variant: FormAddCompanyComponentVariantPropSimple,
+          variant: FormAddCompanyVariantProp.simple,
         },
       });
     });
@@ -101,7 +100,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.company,
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
     });
@@ -169,7 +168,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.company,
-          variant: FormAddCompanyComponentVariantPropSimple,
+          variant: FormAddCompanyVariantProp.simple,
         },
       });
       cy.dataCy(selectorFormVatId).should('be.visible');
@@ -184,7 +183,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.company,
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormVatId).should('be.visible');
@@ -199,7 +198,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.school,
-          variant: FormAddCompanyComponentVariantPropSimple,
+          variant: FormAddCompanyVariantProp.simple,
         },
       });
       cy.dataCy(selectorFormVatId).should('not.exist');
@@ -214,7 +213,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.school,
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormVatId).should('not.exist');
@@ -229,7 +228,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.school,
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormTitle).should(
@@ -243,7 +242,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.family,
-          variant: FormAddCompanyComponentVariantPropSimple,
+          variant: FormAddCompanyVariantProp.simple,
         },
       });
       cy.dataCy(selectorFormVatId).should('not.exist');
@@ -258,7 +257,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.family,
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormVatId).should('not.exist');
@@ -273,7 +272,7 @@ describe('<FormAddCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.family,
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormTitle).should(
@@ -286,7 +285,7 @@ describe('<FormAddCompany>', () => {
       cy.mount(FormAddCompany, {
         props: {
           ...vModelAdapter(model),
-          variant: FormAddCompanyComponentVariantPropSimple,
+          variant: FormAddCompanyVariantProp.simple,
         },
       });
       cy.dataCy(selectorFormVatId).should('be.visible');
@@ -300,7 +299,7 @@ describe('<FormAddCompany>', () => {
       cy.mount(FormAddCompany, {
         props: {
           ...vModelAdapter(model),
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormVatId).should('be.visible');
@@ -314,7 +313,7 @@ describe('<FormAddCompany>', () => {
       cy.mount(FormAddCompany, {
         props: {
           ...vModelAdapter(model),
-          variant: FormAddCompanyComponentVariantPropDefault,
+          variant: FormAddCompanyVariantProp.default,
         },
       });
       cy.dataCy(selectorFormTitle).should(
