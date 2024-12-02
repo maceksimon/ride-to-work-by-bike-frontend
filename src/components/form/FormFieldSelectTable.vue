@@ -264,7 +264,7 @@ export default defineComponent({
                     <div class="flex">
                       <div :class="{ 'text-weight-bold': opt.members > 4 }">
                         {{ opt.members }} / {{ opt.maxMembers }}
-                        {{ $tc('form.team.labelMembers', opt.maxMembers) }}
+                        {{ $t('form.team.labelMembers', opt.maxMembers) }}
                       </div>
                       <!-- Member dot icons -->
                       <div class="d-flex gap-4">
