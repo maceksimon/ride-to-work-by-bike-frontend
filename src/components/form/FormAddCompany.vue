@@ -13,8 +13,9 @@
  * - `modelValue` (Object, required): The object representing the form state.
  * - `organizationType` (String as OrganizationType,
  *                       default: OrganizationType.company): The type of organization.
- * - `variant` (String as 'default', 'simple'): The variant of the form.
- *   `simple` only shows `name` and `vatId` fields.
+ * - `variant` (String as FormAddCompanyVariantProp,
+ *              default: FormAddCompanyVariantProp.default): The variant of the form.
+ *                                                           `simple` only shows `name` and `vatId` fields.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
