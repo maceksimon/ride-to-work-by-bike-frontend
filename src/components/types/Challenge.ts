@@ -36,5 +36,8 @@ export interface Campaign {
 }
 
 export interface ThisCampaignResponse {
+  count: number;
+  next: string;
+  previous: string;
   results: Campaign[];
 }

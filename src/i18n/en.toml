@@ -40,6 +40,11 @@ profile = "Profile"
 results = "Results"
 routes = "Routes"
 
+[getCampaign]
+apiMessageError = "Fetching campaign failed."
+apiMessageErrorWithMessage = "Fetching campaign failed. Error: {error}"
+apiMessageSuccess = "Campaign fetched successfully."
+
 [getCities]
 apiMessageError = "Fetching cities failed."
 apiMessageErrorWithMessage = "Fetching cities failed. Error: {error}"

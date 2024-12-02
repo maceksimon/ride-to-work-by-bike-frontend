@@ -2,6 +2,7 @@ import { markRaw } from 'vue';
 import { boot } from 'quasar/wrappers';
 import { createPinia } from 'pinia';
 import { useLoginStore } from '../stores/login';
+import { useChallengeStore } from '../stores/challenge';
 import piniaPluginPersistedstate from 'pinia-plugin-persistedstate';
 
 /**
@@ -34,4 +35,8 @@ export default boot(({ app, router }) => {
   if (loginStore.refreshToken) {
     loginStore.refreshTokens();
   }
+
+  // refresh phase set on each reload
+  const challengeStore = useChallengeStore();
+  challengeStore.loadPhaseSet();
 });

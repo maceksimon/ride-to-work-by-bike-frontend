@@ -2,6 +2,10 @@
 import { defineStore } from 'pinia';
 import { PhaseType } from '../components/types/Challenge';
 
+// composables
+import { useApiGetCampaign } from '../composables/useApiGetCampaign';
+
+// utils
 import { timestampToDatetimeString } from 'src/utils';
 
 // enums
@@ -52,9 +56,27 @@ export const useChallengeStore = defineStore('challenge', {
       }
       return ChallengeStatus.after;
     },
+    getPhaseSet(): Phase[] {
+      return this.phaseSet;
+    },
   },
 
   actions: {
+    async loadPhaseSet(): Promise<void> {
+      const { campaigns, loadCampaign } = useApiGetCampaign(this.$log);
+      await loadCampaign();
+      if (campaigns.value.length && campaigns.value[0]?.phase_set) {
+        this.$log?.debug(
+          `Load phase set: Saving phase set <${JSON.stringify(campaigns.value[0].phase_set, null, 2)}>.`,
+        );
+        this.phaseSet = campaigns.value[0].phase_set;
+        this.$log?.debug(
+          `Load phase set: New phase set <${JSON.stringify(this.getPhaseSet, null, 2)}>.`,
+        );
+      } else {
+        this.$log?.debug('Load phase set: No phase set found.');
+      }
+    },
     /**
      * Checks if challenge is in a given phase
      * Returns true if now is within the phase dates

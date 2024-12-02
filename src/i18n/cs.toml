@@ -40,6 +40,11 @@ profile = "Profil"
 results = "Výsledky"
 routes = "Cesty"
 
+[getCampaign]
+apiMessageError = "Načítání fází výzvy selhalo."
+apiMessageErrorWithMessage = "Načítání fází výzvy selhalo. Chyba: {error}"
+apiMessageSuccess = "Fáze výzvy byla úspěšně načtena."
+
 [getCities]
 apiMessageError = "Načítání měst selhalo."
 apiMessageErrorWithMessage = "Načítání měst selhalo. Chyba: {error}"
