@@ -1,4 +1,4 @@
-import { nextTick, ref } from 'vue';
+import { ref } from 'vue';
 import FormAddCompany from '../form/FormAddCompany.vue';
 import { vModelAdapter } from '../../../test/cypress/utils';
 import { i18n } from '../../boot/i18n';
@@ -85,12 +85,10 @@ describe('<FormAddCompany>', () => {
     it('updates model value when fields change', () => {
       cy.fixture('companyAddress').then((companyAddress) => {
         model.value = deepObjectWithSimplePropsCopy(emptyFormCompanyFields);
-        nextTick();
         // fill in basic fields
         cy.dataCy(selectorFormName).find('input').type(companyAddress.name);
         cy.dataCy(selectorFormVatId).find('input').type(companyAddress.vatId);
         // verify model updates
-        nextTick();
         cy.wrap(model).its('value.name').should('eq', companyAddress.name);
         cy.wrap(model).its('value.vatId').should('eq', companyAddress.vatId);
       });
@@ -110,7 +108,6 @@ describe('<FormAddCompany>', () => {
 
     it('renders all form elements', () => {
       model.value = deepObjectWithSimplePropsCopy(emptyFormCompanyFields);
-      nextTick();
       // title
       cy.dataCy(selectorFormTitle)
         .should('be.visible')
@@ -134,7 +131,6 @@ describe('<FormAddCompany>', () => {
     it('updates model value when all fields change', () => {
       cy.fixture('companyAddress').then((companyAddress) => {
         model.value = deepObjectWithSimplePropsCopy(emptyFormCompanyFields);
-        nextTick();
         // fill in basic fields
         cy.dataCy(selectorFormName).find('input').type(companyAddress.name);
         cy.dataCy(selectorFormVatId).find('input').type(companyAddress.vatId);
@@ -161,7 +157,6 @@ describe('<FormAddCompany>', () => {
           companyAddress.address[0].department,
         );
         cy.dataCy(selectorFormDepartment).blur();
-        nextTick();
         // verify model updates
         cy.wrap(model).its('value').should('deep.equal', companyAddress);
       });
