@@ -11,8 +11,8 @@
  *
  * @props
  * - `modelValue` (Object, required): The object representing the form state.
- * - `organizationType` (String as OrganizationType, required, default:
- *   OrganizationType.company): The type of organization.
+ * - `organizationType` (String as OrganizationType,
+ *                       default: OrganizationType.company): The type of organization.
  * - `variant` (String as 'default', 'simple'): The variant of the form.
  *   `simple` only shows `name` and `vatId` fields.
  *
@@ -62,7 +62,6 @@ export default defineComponent({
     },
     organizationType: {
       type: String as () => OrganizationType,
-      required: true,
       default: OrganizationType.company,
     },
     variant: {

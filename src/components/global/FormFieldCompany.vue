@@ -11,9 +11,10 @@
  *
  * @props
  * - `modelValue` (number|string, required): The object representing user input.
- *   It should be of type `string` or `number`.
+ *                                           It should be of type `string` or `number`.
  * - `label` (string, optional): The label for the form field.
- * - `organizationType` (string['company'|'school'|'family'], optional): Organization type
+ * - `organizationType` (String as OrganizationType,
+ *                       default: OrganizationType.company): The type of organization.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -101,7 +102,6 @@ export default defineComponent({
     },
     organizationType: {
       type: String as () => OrganizationType,
-      required: true,
       default: OrganizationType.company,
     },
   },
