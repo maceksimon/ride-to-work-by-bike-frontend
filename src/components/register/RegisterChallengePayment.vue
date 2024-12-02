@@ -486,8 +486,8 @@ export default defineComponent({
       <!-- Input: Company -->
       <form-field-company
         v-model="selectedCompany"
+        :organizationType="selectedPaymentSubject"
         class="text-grey-10"
-        :label="$t('register.challenge.labelCompanyOrSchool')"
         data-cy="form-field-company"
       />
       <!-- Text: Company approval -->

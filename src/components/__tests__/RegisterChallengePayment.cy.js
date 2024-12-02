@@ -340,7 +340,7 @@ function coreTests() {
       .and('have.css', 'font-size', '12px')
       .and('have.css', 'font-weight', '700')
       .and('have.color', grey10)
-      .and('contain', i18n.global.t('register.challenge.labelCompanyOrSchool'));
+      .and('contain', i18n.global.t('form.labelCompany'));
     // info text
     cy.dataCy(selectorCompanyPaymentText)
       .should('be.visible')
