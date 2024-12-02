@@ -44,6 +44,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { Currency } from '../../composables/useFormatPrice';
+import { OrganizationType } from '../types/Organization';
 
 enum PaymentSubject {
   individual = 'individual',
@@ -56,8 +57,12 @@ enum PaymentAmount {
   custom = 'custom',
 }
 
+// stores
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
+
 // types
 import type { FormOption, FormPaymentVoucher } from '../types/Form';
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'RegisterChallengePayment',
@@ -172,6 +177,26 @@ export default defineComponent({
       phone: '',
       responsibility: false,
       terms: false,
+    });
+
+    const registerChallengeStore = useRegisterChallengeStore();
+    watch(selectedPaymentSubject, (newVal, oldVal) => {
+      logger?.debug(
+        `Selected payment subject changed from <${oldVal}> to <${newVal}>`,
+      );
+      if (newVal === PaymentSubject.company) {
+        logger?.debug(`Set organization type to <${OrganizationType.company}>`);
+        registerChallengeStore.setOrganizationType(OrganizationType.company);
+      } else if (newVal === PaymentSubject.school) {
+        logger?.debug(`Set organization type to <${OrganizationType.school}>`);
+        registerChallengeStore.setOrganizationType(OrganizationType.school);
+      } else {
+        logger?.debug(`Set organization type to <${OrganizationType.none}>`);
+        registerChallengeStore.setOrganizationType(OrganizationType.none);
+      }
+      logger?.debug(
+        `Organization type <${registerChallengeStore.getOrganizationType}>`,
+      );
     });
 
     const isVoucherValid = computed((): boolean => {
