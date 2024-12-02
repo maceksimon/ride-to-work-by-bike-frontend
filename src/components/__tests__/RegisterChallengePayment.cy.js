@@ -6,6 +6,7 @@ import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { OrganizationType } from 'components/types/Organization';
 import { useRegisterChallengeStore } from 'stores/registerChallenge';
+import { getRadioOption } from 'test/cypress/utils';
 
 // selectors
 const selectorBannerPaymentMinimum = 'banner-payment-minimum';
@@ -458,10 +459,6 @@ function coreTests() {
         .should('equal', OrganizationType.none);
     });
   });
-}
-
-function getRadioOption(value) {
-  return `radio-option-${value}`;
 }
 
 function testDonation() {
