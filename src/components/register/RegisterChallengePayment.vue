@@ -44,17 +44,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { Currency } from '../../composables/useFormatPrice';
-
-enum PaymentSubject {
-  individual = 'individual',
-  voucher = 'voucher',
-  company = 'company',
-  school = 'school',
-}
-
-enum PaymentAmount {
-  custom = 'custom',
-}
+import { PaymentAmount, PaymentSubject } from '../enums/Payment';
 
 // types
 import type { FormOption, FormPaymentVoucher } from '../types/Form';

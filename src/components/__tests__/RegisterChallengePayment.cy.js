@@ -2,6 +2,7 @@ import { colors } from 'quasar';
 import RegisterChallengePayment from 'components/register/RegisterChallengePayment.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { PaymentAmount, PaymentSubject } from '../enums/Payment';
 
 // selectors
 const selectorBannerPaymentMinimum = 'banner-payment-minimum';
@@ -34,11 +35,6 @@ const selectorVoucherSubmit = 'form-field-voucher-submit';
 const borderRadiusCardSmall = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
 const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
-const optionCustom = 'custom';
-const optionVoucher = 'voucher';
-const optionCompany = 'company';
-const optionIndividual = 'individual';
-const optionSchool = 'school';
 const sliderClickTolerance = 10;
 const testNumberValue = 500;
 
@@ -181,13 +177,17 @@ function coreTests() {
 
   it('if selected individual + custom amount - renders amount input with slider', () => {
     // enable custom payment amount
-    cy.dataCy(getRadioOption(optionCustom)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentAmount.custom))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorPaymentAmountCustom).should('be.visible');
     // switch to fixed payment amount
     cy.dataCy(getRadioOption(testNumberValue)).should('be.visible').click();
     cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
     // switch to custom payment amount
-    cy.dataCy(getRadioOption(optionCustom)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentAmount.custom))
+      .should('be.visible')
+      .click();
     // custom amount is set to last selected
     cy.dataCy(selectorSliderNumberInput).should(
       'have.value',
@@ -202,7 +202,9 @@ function coreTests() {
         .should('be.visible')
         .click();
       // option voucher payment is active
-      cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
       // input amount is hidden
       cy.dataCy(selectorPaymentAmount).should('not.exist');
       // input voucher
@@ -211,7 +213,7 @@ function coreTests() {
       // option with discounted amount is available
       cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
       // custom amount is set to discount value
-      cy.dataCy(getRadioOption(optionCustom)).click();
+      cy.dataCy(getRadioOption(PaymentAmount.custom)).click();
       cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
       // clear voucher
       cy.dataCy(selectorVoucherButtonRemove).click();
@@ -230,7 +232,9 @@ function coreTests() {
       .should('be.visible')
       .click();
     // option voucher payment is active
-    cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentSubject.voucher))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorVoucherInput).type('ABCD');
     cy.dataCy(selectorVoucherSubmit).click();
     cy.dataCy(selectorVoucherInput).find('input').should('have.value', 'ABCD');
@@ -247,7 +251,9 @@ function coreTests() {
         .should('be.visible')
         .click();
       // option voucher payment is active
-      cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
       // input voucher
       cy.dataCy(selectorVoucherInput).type(voucher.code);
       cy.dataCy(selectorVoucherSubmit).click();
@@ -266,25 +272,33 @@ function coreTests() {
   it('if selected voucher - retains shown voucher after switching between payment subjects', () => {
     cy.get('@voucherHalf').then((voucher) => {
       // select voucher
-      cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
       cy.dataCy(selectorVoucherInput).type(voucher.code);
       cy.dataCy(selectorVoucherSubmit).click();
       // shows voucher
       cy.dataCy(selectorVoucherBannerCode).should('be.visible');
       // switch back to individual
-      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
       // shows amount selection but not voucher
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorVoucherBannerCode).should('not.exist');
       // switch back to voucher
-      cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
       // shows voucher
       cy.dataCy(selectorVoucherBannerCode).should('be.visible');
     });
   });
 
   it('if selected voucher - resets prices after switching back to option individual', () => {
-    cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentSubject.voucher))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorPaymentAmount).should('not.exist');
     cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
     // enter voucher HALF
@@ -297,7 +311,9 @@ function coreTests() {
       // HALF voucher value is shown
       cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
       // switch back to individual
-      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
       // amount options are shown
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
@@ -307,7 +323,9 @@ function coreTests() {
   });
 
   it('if selected voucher - resets prices after switching back to option individual (custom amount)', () => {
-    cy.dataCy(getRadioOption(optionVoucher)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentSubject.voucher))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorPaymentAmount).should('not.exist');
     cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
     // enter voucher HALF
@@ -320,9 +338,13 @@ function coreTests() {
       // HALF voucher value is shown
       cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
       // select custom amount
-      cy.dataCy(getRadioOption(optionCustom)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentAmount.custom))
+        .should('be.visible')
+        .click();
       // switch back to individual
-      cy.dataCy(getRadioOption(optionIndividual)).should('be.visible').click();
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
       // amount options are shown
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
@@ -333,7 +355,9 @@ function coreTests() {
 
   it('if selected company - renders company select + donate option', () => {
     cy.dataCy(selectorCompany).should('not.exist');
-    cy.dataCy(getRadioOption(optionCompany)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentSubject.company))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorCompany).should('be.visible');
     cy.dataCy(selectorCompanyLabel)
       .should('be.visible')
@@ -361,7 +385,9 @@ function coreTests() {
      * TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY
      */
     cy.dataCy(selectorCompany).should('not.exist');
-    cy.dataCy(getRadioOption(optionCompany)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentSubject.company))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorCompany).should('be.visible');
     // checkbox coordinator
     cy.dataCy(selectorCoordinatorCheckbox)
@@ -407,7 +433,9 @@ function coreTests() {
 
   it('if selected school - renders school select + donate option', () => {
     cy.dataCy(selectorCompany).should('not.exist');
-    cy.dataCy(getRadioOption(optionSchool)).should('be.visible').click();
+    cy.dataCy(getRadioOption(PaymentSubject.school))
+      .should('be.visible')
+      .click();
     cy.dataCy(selectorCompany).should('be.visible');
 
     // if coordinator user still has option to add donation
