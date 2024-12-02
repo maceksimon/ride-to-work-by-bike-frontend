@@ -351,12 +351,15 @@ describe('Home page', () => {
           cy.window().then((win) => {
             // alias i18n
             cy.wrap(win.i18n).as('i18n');
+            cy.interceptThisCampaignGetApi(config, win.i18n);
           });
         });
+        cy.reload();
       });
     });
 
     it('renders all components', () => {
+      cy.waitForThisCampaignApi();
       cy.get('@i18n').then((i18n) => {
         cy.dataCy('q-main').should('be.visible');
         // title

@@ -99,13 +99,17 @@ describe('Register page', () => {
         cy.window().then((win) => {
           // alias i18n
           cy.wrap(win.i18n).as('i18n');
+          cy.interceptThisCampaignGetApi(config, win.i18n);
           setupApiChallengeInactive(config, win.i18n, false);
         });
       });
+      cy.reload();
     });
 
     it('shows error message on registration failure', () => {
-      cy.get('@i18n').then((i18n) => {
+      cy.waitForThisCampaignApi();
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
         cy.get('@config').then((config) => {
           // variables
           const { apiBase, apiDefaultLang, urlApiRegister } = config;
@@ -113,7 +117,7 @@ describe('Register page', () => {
             null,
             apiBase,
             apiDefaultLang,
-            i18n,
+            win.i18n,
           );
           const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
           // intercept register request
@@ -135,11 +139,9 @@ describe('Register page', () => {
           // wait for request to complete
           cy.wait('@registerRequest');
           // check error message
-          cy.get('@i18n').then((i18n) => {
-            cy.contains(
-              i18n.global.t('register.apiMessageErrorWithMessage'),
-            ).should('be.visible');
-          });
+          cy.contains(
+            win.i18n.global.t('register.apiMessageErrorWithMessage'),
+          ).should('be.visible');
         });
       });
     });
@@ -159,15 +161,19 @@ describe('Register page', () => {
           cy.window().then((win) => {
             // alias i18n
             cy.wrap(win.i18n).as('i18n');
+            cy.interceptThisCampaignGetApi(config, win.i18n);
             setupApiChallengeActive(config, win.i18n, false);
           });
         });
+        cy.reload();
       });
     });
 
     // ! router redirection rules are enabled for this file in /router/index.ts
     it('allows user to register with valid credentials and requires email verification to access other pages', () => {
-      cy.get('@i18n').then((i18n) => {
+      cy.waitForThisCampaignApi();
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
         cy.get('@config').then((config) => {
           // variables
           const {
@@ -180,7 +186,7 @@ describe('Register page', () => {
             null,
             apiBase,
             apiDefaultLang,
-            i18n,
+            win.i18n,
           );
           const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
           const apiEmailVerificationUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
@@ -269,6 +275,7 @@ describe('Register page', () => {
     });
 
     it('displays a logout button on the verify email page and allows to logout', () => {
+      cy.waitForThisCampaignApi();
       // fill form
       cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
       cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
@@ -305,7 +312,9 @@ describe('Register page', () => {
     });
 
     it('redirects to home page after registering and verifying email and allows logout', () => {
-      cy.get('@i18n').then((i18n) => {
+      cy.waitForThisCampaignApi();
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
         cy.get('@config').then((config) => {
           // fill form
           cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
@@ -344,7 +353,7 @@ describe('Register page', () => {
             null,
             apiBase,
             apiDefaultLang,
-            i18n,
+            win.i18n,
           );
           const apiEmailVerificationUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
           // intercept email verification request
@@ -366,7 +375,7 @@ describe('Register page', () => {
           });
           // logout
           cy.dataCy('menu-item')
-            .contains(i18n.global.t('userSelect.logout'))
+            .contains(win.i18n.global.t('userSelect.logout'))
             .click();
           // redirected to login page
           cy.url().should('include', routesConf['login']['path']);
@@ -375,6 +384,7 @@ describe('Register page', () => {
     });
 
     it('allows user to stop registration process before email verification and register again', () => {
+      cy.waitForThisCampaignApi();
       cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (registerResponse) => {
           // fill form

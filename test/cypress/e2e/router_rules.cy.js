@@ -55,11 +55,14 @@ describe('Router rules', () => {
         cy.window().then((win) => {
           // alias i18n
           cy.wrap(win.i18n).as('i18n');
+          cy.interceptThisCampaignGetApi(config, win.i18n);
         });
       });
+      cy.reload();
     });
 
     it('after login, redirects to home page', () => {
+      cy.waitForThisCampaignApi();
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           setupApiChallengeActive(config, i18n, true);

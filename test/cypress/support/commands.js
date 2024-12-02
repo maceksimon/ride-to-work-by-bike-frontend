@@ -437,3 +437,45 @@ Cypress.Commands.add(
     );
   },
 );
+
+/**
+ * Intercept this campaign GET API call
+ * Provides `@getThisCampaign` alias
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ */
+Cypress.Commands.add('interceptThisCampaignGetApi', (config, i18n) => {
+  const { apiBase, apiDefaultLang, urlApiThisCampaign } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiThisCampaignLocalized = `${apiBaseUrl}${urlApiThisCampaign}`;
+
+  cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
+    cy.intercept('GET', urlApiThisCampaignLocalized, {
+      statusCode: httpSuccessfullStatus,
+      body: thisCampaignResponse,
+    }).as('getThisCampaign');
+  });
+});
+
+/**
+ * Wait for intercept this campaign API call and compare request/response object
+ * Wait for `@getThisCampaign` intercept
+ * @param {object} thisCampaignResponse - Get this campaign API data response
+ */
+Cypress.Commands.add('waitForThisCampaignApi', () => {
+  cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
+    cy.wait('@getThisCampaign').then((getThisCampaign) => {
+      expect(getThisCampaign.request.headers.authorization).to.include(
+        bearerTokeAuth,
+      );
+      if (getThisCampaign.response) {
+        expect(getThisCampaign.response.statusCode).to.equal(
+          httpSuccessfullStatus,
+        );
+        expect(getThisCampaign.response.body).to.deep.equal(
+          thisCampaignResponse,
+        );
+      }
+    });
+  });
+});
