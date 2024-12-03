@@ -50,9 +50,6 @@ import FormAddCompany from '../form/FormAddCompany.vue';
 import FormAddTeam from '../form/FormAddTeam.vue';
 
 // composables
-// import { useApiGetCompanies } from '../../composables/useApiGetCompanies';
-// import { useApiGetSubsidiaries } from '../../composables/useApiGetSubsidiaries';
-// import { useApiGetTeams } from '../../composables/useApiGetTeams';
 import { useSelectTable } from '../../composables/useSelectTable';
 import { useValidation } from '../../composables/useValidation';
 
@@ -115,19 +112,6 @@ export default defineComponent({
     const teamNew = ref<FormTeamFields>({
       name: '',
     });
-
-    // let fetchComposable = null;
-    // switch (props.organizationLevel) {
-    // case OrganizationLevel.organization:
-    //   fetchComposable = useApiGetCompanies;
-    //   break;
-    // case OrganizationLevel.subsidiary:
-    //   fetchComposable = useApiGetSubsidiaries;
-    //   break;
-    // case OrganizationLevel.team:
-    //   fetchComposable = useApiGetTeams;
-    //   break;
-    // }
 
     /**
      * Provides autocomplete functionality via computed property

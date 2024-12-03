@@ -1028,26 +1028,34 @@ Cypress.Commands.add('fillAndSubmitLoginForm', () => {
 /**
  * Wait for intercept teams API calls and compare request/response object
  * Wait for `@getTeams` and `@getTeamsNextPage` intercepts
- * @param {object} teamsResponse - Get teams API data response
- * @param {object} teamsResponseNext - Get teams API data response next page
  */
-Cypress.Commands.add('waitForTeamsApi', (teamsResponse, teamsResponseNext) => {
-  cy.wait(['@getTeams', '@getTeamsNextPage']).spread(
-    (getTeams, getTeamsNextPage) => {
-      expect(getTeams.request.headers.authorization).to.include(bearerTokeAuth);
-      if (getTeams.response) {
-        expect(getTeams.response.statusCode).to.equal(httpSuccessfullStatus);
-        expect(getTeams.response.body).to.deep.equal(teamsResponse);
-      }
-      expect(getTeamsNextPage.request.headers.authorization).to.include(
-        bearerTokeAuth,
+Cypress.Commands.add('waitForTeamsGetApi', () => {
+  cy.fixture('apiGetTeamsResponse').then((teamsResponse) => {
+    cy.fixture('apiGetTeamsResponseNext').then((teamsResponseNext) => {
+      cy.wait(['@getTeams', '@getTeamsNextPage']).spread(
+        (getTeams, getTeamsNextPage) => {
+          expect(getTeams.request.headers.authorization).to.include(
+            bearerTokeAuth,
+          );
+          if (getTeams.response) {
+            expect(getTeams.response.statusCode).to.equal(
+              httpSuccessfullStatus,
+            );
+            expect(getTeams.response.body).to.deep.equal(teamsResponse);
+          }
+          expect(getTeamsNextPage.request.headers.authorization).to.include(
+            bearerTokeAuth,
+          );
+          if (getTeamsNextPage.response) {
+            expect(getTeamsNextPage.response.statusCode).to.equal(
+              httpSuccessfullStatus,
+            );
+            expect(getTeamsNextPage.response.body).to.deep.equal(
+              teamsResponseNext,
+            );
+          }
+        },
       );
-      if (getTeamsNextPage.response) {
-        expect(getTeamsNextPage.response.statusCode).to.equal(
-          httpSuccessfullStatus,
-        );
-        expect(getTeamsNextPage.response.body).to.deep.equal(teamsResponseNext);
-      }
-    },
-  );
+    });
+  });
 });
