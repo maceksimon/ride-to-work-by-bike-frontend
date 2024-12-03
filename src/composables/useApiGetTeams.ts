@@ -1,5 +1,5 @@
 // libraries
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 
 // composables
 import { useApi } from './useApi';
@@ -13,6 +13,7 @@ import { useLoginStore } from '../stores/login';
 // types
 import type { Logger } from '../components/types/Logger';
 import type { OrganizationTeam } from '../components/types/Organization';
+import type { FormSelectTableOption } from '../components/types/Form';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
@@ -96,8 +97,18 @@ export const useApiGetTeams = (logger: Logger | null) => {
     }
   };
 
+  const options = computed<FormSelectTableOption[]>(() => {
+    return teams.value.map((team: OrganizationTeam): FormSelectTableOption => {
+      return {
+        label: team.name,
+        value: team.id,
+      };
+    });
+  });
+
   return {
     teams,
+    options,
     isLoading,
     loadTeams,
   };
