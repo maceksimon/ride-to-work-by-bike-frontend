@@ -17,6 +17,7 @@ import { routesConf } from '../router/routes_conf';
 
 // stores
 import { useRegisterStore } from './register';
+import { useChallengeStore } from './challenge';
 
 // types
 import type { Logger } from '../components/types/Logger';
@@ -253,19 +254,26 @@ export const useLoginStore = defineStore('login', {
      */
     async redirectHomeAfterLogin(): Promise<void> {
       const registerStore = useRegisterStore();
-      /*
-       * Check if user email address is verified before login,
-       * prevent to show confirming your email page.
+      const challengeStore = useChallengeStore();
+      /**
+       * Check if user email address is verified from the API,
+       * to prevent to show use confirming email page.
        */
-      await registerStore.checkEmailVerification().then(() => {
-        this.$log?.debug(
-          `Login was successfull, redirect to <${routesConf['home']['path']}> URL.`,
-        );
-        // redirect to home page
-        if (this.$router) {
-          this.$router.push(routesConf['home']['path']);
-        }
-      });
+      this.$log?.info('Check the email verification process from the API.');
+      await registerStore.checkEmailVerification();
+      /**
+       * Load campaign phases from the API, to prevent
+       * to show challenge inactive page.
+       */
+      this.$log?.info('Check the current campaign phases from the API.');
+      await challengeStore.loadPhaseSet();
+      this.$log?.debug(
+        `Login was successfull, redirect to <${routesConf['home']['path']}> URL.`,
+      );
+      // redirect to home page
+      if (this.$router) {
+        this.$router.push(routesConf['home']['path']);
+      }
     },
     /**
      * Logout user
