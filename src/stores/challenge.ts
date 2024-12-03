@@ -9,11 +9,7 @@ import { useApiGetCampaign } from '../composables/useApiGetCampaign';
 import { timestampToDatetimeString } from 'src/utils';
 
 // enums
-export enum ChallengeStatus {
-  before = 'before',
-  during = 'during',
-  after = 'after',
-}
+import { ChallengeStatus } from '../components/enums/Challenge';
 
 // types
 import type { Logger } from '../components/types/Logger';

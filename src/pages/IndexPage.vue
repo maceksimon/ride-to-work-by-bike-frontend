@@ -147,7 +147,7 @@ import { routesConf } from '../router/routes_conf';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // enums
-import { ChallengeStatus as ChallengeStatusEnum } from 'src/stores/challenge';
+import { ChallengeStatus as ChallengeStatusEnum } from 'src/components/enums/Challenge';
 import { BannerRoutesVariants as BannerRoutesVariantsEnum } from 'src/components/homepage/BannerRoutes.vue';
 
 // fixtures
