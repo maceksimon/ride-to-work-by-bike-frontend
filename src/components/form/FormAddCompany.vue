@@ -86,7 +86,7 @@ export default defineComponent({
 
     const addressIndex = 0;
 
-    const isVatShown = computed((): boolean => {
+    const isOrganizationCompany = computed((): boolean => {
       return props.organizationType === OrganizationType.company;
     });
 
@@ -101,7 +101,7 @@ export default defineComponent({
       company,
       titleDialog,
       OrganizationType,
-      isVatShown,
+      isOrganizationCompany,
       isFilled,
       onUpdate,
       FormAddCompanyVariantProp,
@@ -120,7 +120,9 @@ export default defineComponent({
         {{ titleDialog }}
       </h3>
       <p
-        v-if="variant === FormAddCompanyVariantProp.default && isOrganizationCompany"
+        v-if="
+          variant === FormAddCompanyVariantProp.default && isOrganizationCompany
+        "
         class="q-mt-sm"
         data-cy="form-add-company-permission"
       >
@@ -128,7 +130,7 @@ export default defineComponent({
       </p>
     </div>
     <div class="row q-col-gutter-lg">
-      <div class="col-12" :class="{ 'col-sm-6': isVatShown }">
+      <div class="col-12" :class="{ 'col-sm-6': isOrganizationCompany }">
         <!-- Input: Company name -->
         <form-field-text-required
           v-model="company.name"
@@ -138,10 +140,10 @@ export default defineComponent({
           data-cy="form-add-company-name"
         />
       </div>
-      <div class="col-12" :class="{ 'col-sm-6': isVatShown }">
+      <div class="col-12" :class="{ 'col-sm-6': isOrganizationCompany }">
         <!-- Input: VAT ID -->
         <form-field-business-id
-          v-if="isVatShown"
+          v-if="isOrganizationCompany"
           v-model="company.vatId"
           name="vatId"
           :label="$t('form.labelBusinessId')"
