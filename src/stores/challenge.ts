@@ -62,14 +62,14 @@ export const useChallengeStore = defineStore('challenge', {
       await loadCampaign();
       if (campaigns.value.length && campaigns.value[0]?.phase_set) {
         this.$log?.debug(
-          `Load phase set: Saving phase set <${JSON.stringify(campaigns.value[0].phase_set, null, 2)}>.`,
+          `Saving phase set <${JSON.stringify(campaigns.value[0].phase_set, null, 2)}>.`,
         );
         this.phaseSet = campaigns.value[0].phase_set;
         this.$log?.debug(
-          `Load phase set: New phase set <${JSON.stringify(this.getPhaseSet, null, 2)}>.`,
+          `New phase set <${JSON.stringify(this.getPhaseSet, null, 2)}>.`,
         );
       } else {
-        this.$log?.debug('Load phase set: No phase set found.');
+        this.$log?.debug('No phase set found.');
       }
     },
     /**
