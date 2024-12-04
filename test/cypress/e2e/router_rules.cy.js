@@ -1,8 +1,5 @@
 import { routesConf } from '../../../src/router/routes_conf';
 import {
-  setupApiChallengeInactive,
-  setupApiChallengeActive,
-  loginWithUI,
   systemTimeChallengeActive,
   systemTimeChallengeInactive,
 } from '../support/commonTests';
@@ -22,15 +19,28 @@ describe('Router rules', () => {
         cy.window().then((win) => {
           // alias i18n
           cy.wrap(win.i18n).as('i18n');
+          cy.interceptLoginVerifyEmailVerifyCampaignPhaseApi(
+            config,
+            win.i18n,
+            null,
+            null,
+            { has_user_verified_email_address: true },
+          );
         });
       });
     });
 
     it('after login, redirects to challenge inactive page', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       cy.get('@config').then((config) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         cy.get('@i18n').then((i18n) => {
-          setupApiChallengeInactive(config, i18n, true);
-          loginWithUI();
+          cy.fillAndSubmitLoginForm();
+          cy.wait([
+            '@loginRequest',
+            '@verifyEmailRequest',
+            '@thisCampaignRequest',
+          ]);
           cy.url().should('include', routesConf['challenge_inactive']['path']);
           // try to access other pages
           cy.visit('#' + routesConf['prizes']['path']);
@@ -55,18 +65,28 @@ describe('Router rules', () => {
         cy.window().then((win) => {
           // alias i18n
           cy.wrap(win.i18n).as('i18n');
-          cy.interceptThisCampaignGetApi(config, win.i18n);
+          cy.interceptLoginVerifyEmailVerifyCampaignPhaseApi(
+            config,
+            win.i18n,
+            null,
+            null,
+            { has_user_verified_email_address: true },
+          );
         });
       });
-      cy.reload();
     });
 
     it('after login, redirects to home page', () => {
-      cy.waitForThisCampaignApi();
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       cy.get('@config').then((config) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         cy.get('@i18n').then((i18n) => {
-          setupApiChallengeActive(config, i18n, true);
-          loginWithUI();
+          cy.fillAndSubmitLoginForm();
+          cy.wait([
+            '@loginRequest',
+            '@verifyEmailRequest',
+            '@thisCampaignRequest',
+          ]);
           cy.url().should('not.include', routesConf['login']['path']);
           cy.url().should('not.include', routesConf['verify_email']['path']);
           cy.url().should(
