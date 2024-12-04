@@ -557,8 +557,8 @@ Cypress.Commands.add(
 );
 
 /**
- * Intercept this register POST API call and intercept verify
- * email GET API call
+ * Intercept register POST API call,
+ *           verify email GET API call
  * Provides `@registerRequest`,
  *          `@verifyEmailRequest` alias
  * @param {Object} config - App global config
@@ -600,8 +600,9 @@ Cypress.Commands.add(
 );
 
 /**
- * Intercept this register POST API call and intercept verify
- * email GET API call
+ * Intercept register POST API call and intercept verify,
+ *           email GET API call,
+ *           this campaign GET API call
  * Provides `@registerRequest`,
  *          `@verifyEmailRequest`,
  *          `@thisCampaignRequest` alias
@@ -611,8 +612,6 @@ Cypress.Commands.add(
  *                                        register intercept
  * @param {Object} registerResponseStatusCode - Override default response HTTP status code
  *                                              register intercept
- * @param {Number} verifyEmailResponseStatustCode - Override default response HTTP status code
- *                                                  for register intercept
  * @param {Object} verifyEmailResponseBody - Override default response body for
  *                                           verify email intercept
  * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
@@ -677,5 +676,140 @@ Cypress.Commands.add('fillAndSubmitRegisterForm', () => {
       .find('.q-checkbox__inner')
       .click();
     cy.dataCy(selectorFormRegisterSubmit).click();
+  });
+});
+
+/**
+ * Intercept this login POST API call
+ * Provides `@loginRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptLoginApi',
+  (config, i18n, responseBody, responseStatusCode) => {
+    const { apiBase, apiDefaultLang, urlApiLogin } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    // intercept register API call
+    const apiRegisterUrl = `${apiBaseUrl}${urlApiLogin}`;
+    cy.fixture('loginResponse.json').then((registerResponse) => {
+      cy.intercept('POST', apiRegisterUrl, {
+        statusCode: responseStatusCode
+          ? responseStatusCode
+          : httpSuccessfullStatus,
+        body: responseBody ? responseBody : registerResponse,
+      }).as('loginRequest');
+    });
+  },
+);
+
+/**
+ * Intercept login POST API call,
+ *           verify email GET API call
+ * Provides `@loginRequest`,
+ *          `@verifyEmailRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} loginResponseBody - Override default response body for
+ *                                        register intercept
+ * @param {Object} loginResponseStatusCode - Override default response HTTP status code
+ *                                              register intercept
+ * @param {Object} verifyEmailResponseBody - Override default response body for
+ *                                           verify email intercept
+ * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
+ *                                                 for verify email intercept
+ */
+Cypress.Commands.add(
+  'interceptLoginVerifyEmailApi',
+  (
+    config,
+    i18n,
+    loginResponseBody,
+    loginResponseStatusCode,
+    verifyEmailResponseBody,
+    verifyEmailResponseStatusCode,
+  ) => {
+    // Intercept login API call
+    cy.interceptLoginApi(
+      config,
+      i18n,
+      loginResponseBody,
+      loginResponseStatusCode,
+    );
+    // Intercept verify email API call
+    cy.interceptVerifyEmailApi(
+      config,
+      i18n,
+      verifyEmailResponseBody,
+      verifyEmailResponseStatusCode,
+    );
+  },
+);
+
+/**
+ * Intercept login POST API call
+ *           verify email GET API call,
+ *           this campaign GET API call
+ * Provides `@loginRequest`,
+ *          `@verifyEmailRequest`,
+ *          `@thisCampaignRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} loginResponseBody - Override default response body for
+ *                                     login intercept
+ * @param {Object} loginResponseStatusCode - Override default response HTTP status code
+ *                                           login intercept
+ * @param {Object} verifyEmailResponseBody - Override default response body for
+ *                                           verify email intercept
+ * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
+ *                                                 for verify email intercept
+ * @param {Object} verifyCampaignPhaseResponseBody - Override default response body for
+ *                                                   verify campaign phase intercept
+ * @param {Number} verifyCampaignPhaseResponseStatusCode - Override default response HTTP status code
+ *                                                         for verify campaign phase intercept
+ */
+Cypress.Commands.add(
+  'interceptLoginVerifyEmailVerifyCampaignPhaseApi',
+  (
+    config,
+    i18n,
+    loginResponseBody,
+    loginResponseStatusCode,
+    verifyEmailResponseBody,
+    verifyEmailResponseStatusCode,
+    verifyCampaignPhaseResponseBody,
+    verifyCampaignPhaseResponseStatusCode,
+  ) => {
+    // Intercept loginand verify email API call
+    cy.interceptLoginVerifyEmailApi(
+      config,
+      i18n,
+      loginResponseBody,
+      loginResponseStatusCode,
+      verifyEmailResponseBody,
+      verifyEmailResponseStatusCode,
+    );
+    // Intercept this campaign API call
+    cy.interceptThisCampaignGetApi(
+      config,
+      i18n,
+      verifyCampaignPhaseResponseBody,
+      verifyCampaignPhaseResponseStatusCode,
+    );
+  },
+);
+
+Cypress.Commands.add('fillAndSubmitLoginForm', () => {
+  cy.fixture('registerUserRequest').then((loginUserFormData) => {
+    cy.dataCy('form-email-input').type(loginUserFormData.email);
+    cy.dataCy('form-login-password-input').type(loginUserFormData.password1);
+    cy.dataCy('form-login-submit-login').click();
   });
 });
