@@ -1,5 +1,4 @@
 import {
-  loginWithUI,
   testLanguageSwitcher,
   testBackgroundImage,
   timeUntilExpiration,
@@ -196,8 +195,8 @@ describe('Login page', () => {
 
     it('allows user to login and refreshes token 1 min before expiration', () => {
       cy.get('@clock').then((clock) => {
-        // fill in form
-        loginWithUI();
+        // fill in and submit form
+        cy.fillAndSubmitLoginForm();
         // wait for login API call
         cy.wait('@loginRequest').then(() => {
           // check that we are on homepage

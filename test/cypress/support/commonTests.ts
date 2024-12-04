@@ -273,12 +273,6 @@ export const testRouteListDayDate = (color: string): void => {
   });
 };
 
-export const loginWithUI = (): void => {
-  cy.dataCy('form-email-input').type('test@test.com');
-  cy.dataCy('form-login-password-input').type('test1234');
-  cy.dataCy('form-login-submit-login').click();
-};
-
 export const setupApiChallengeActive = (
   config: ConfigGlobal,
   i18n: I18n,
