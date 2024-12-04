@@ -440,22 +440,34 @@ Cypress.Commands.add(
 
 /**
  * Intercept this campaign GET API call
- * Provides `@getThisCampaign` alias
- * @param {object} config - App global config
- * @param {object} i18n - i18n instance
+ * Provides `@thisCampaignRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
  */
-Cypress.Commands.add('interceptThisCampaignGetApi', (config, i18n) => {
-  const { apiBase, apiDefaultLang, urlApiThisCampaign } = config;
-  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
-  const urlApiThisCampaignLocalized = `${apiBaseUrl}${urlApiThisCampaign}`;
+Cypress.Commands.add(
+  'interceptThisCampaignGetApi',
+  (config, i18n, responseBody, responseStatusCode) => {
+    const { apiBase, apiDefaultLang, urlApiThisCampaign } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiThisCampaignLocalized = `${apiBaseUrl}${urlApiThisCampaign}`;
 
-  cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
-    cy.intercept('GET', urlApiThisCampaignLocalized, {
-      statusCode: httpSuccessfullStatus,
-      body: thisCampaignResponse,
-    }).as('getThisCampaign');
-  });
-});
+    cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
+      cy.intercept('GET', urlApiThisCampaignLocalized, {
+        statusCode: responseStatusCode
+          ? responseStatusCode
+          : httpSuccessfullStatus,
+        body: responseBody ? responseBody : thisCampaignResponse,
+      }).as('thisCampaignRequest');
+    });
+  },
+);
 
 /**
  * Wait for intercept this campaign API call and compare request/response object
@@ -477,5 +489,193 @@ Cypress.Commands.add('waitForThisCampaignApi', () => {
         );
       }
     });
+  });
+});
+
+/**
+ * Intercept this register POST API call
+ * Provides `@registerRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptRegisterApi',
+  (config, i18n, responseBody, responseStatusCode) => {
+    const { apiBase, apiDefaultLang, urlApiRegister } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    // intercept register API call
+    const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
+    cy.fixture('registerResponse.json').then((registerResponse) => {
+      cy.intercept('POST', apiRegisterUrl, {
+        statusCode: responseStatusCode
+          ? responseStatusCode
+          : httpSuccessfullStatus,
+        body: responseBody ? responseBody : registerResponse,
+      }).as('registerRequest');
+    });
+  },
+);
+
+/**
+ * Intercept this verify email GET API call
+ * Provides `@verifyEmailRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptVerifyEmailApi',
+  (config, i18n, responseBody, responseStatusCode) => {
+    const { apiBase, apiDefaultLang, urlApiHasUserVerifiedEmail } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    // intercept verify email API call
+    const apiEmailVerificationUrl = `${apiBaseUrl}${urlApiHasUserVerifiedEmail}`;
+    cy.fixture('apiGetVerifyEmailResponse.json').then(
+      (apiGetVerifyEmailResponse) => {
+        cy.intercept('GET', apiEmailVerificationUrl, {
+          statusCode: responseStatusCode
+            ? responseStatusCode
+            : httpSuccessfullStatus,
+          body: responseBody ? responseBody : apiGetVerifyEmailResponse,
+        }).as('verifyEmailRequest');
+      },
+    );
+  },
+);
+
+/**
+ * Intercept this register POST API call and intercept verify
+ * email GET API call
+ * Provides `@registerRequest`,
+ *          `@verifyEmailRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} registerResponseBody - Override default response body for
+ *                                        register intercept
+ * @param {Object} registerResponseStatusCode - Override default response HTTP status code
+ *                                              register intercept
+ * @param {Object} verifyEmailResponseBody - Override default response body for
+ *                                           verify email intercept
+ * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
+ *                                                 for verify email intercept
+ */
+Cypress.Commands.add(
+  'interceptRegisterVerifyEmailApi',
+  (
+    config,
+    i18n,
+    registerResponseBody,
+    registerResponseStatusCode,
+    verifyEmailResponseBody,
+    verifyEmailResponseStatusCode,
+  ) => {
+    // Intercept register API call
+    cy.interceptRegisterApi(
+      config,
+      i18n,
+      registerResponseBody,
+      registerResponseStatusCode,
+    );
+    // Intercept verify email API call
+    cy.interceptVerifyEmailApi(
+      config,
+      i18n,
+      verifyEmailResponseBody,
+      verifyEmailResponseStatusCode,
+    );
+  },
+);
+
+/**
+ * Intercept this register POST API call and intercept verify
+ * email GET API call
+ * Provides `@registerRequest`,
+ *          `@verifyEmailRequest`,
+ *          `@thisCampaignRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} registerResponseBody - Override default response body for
+ *                                        register intercept
+ * @param {Object} registerResponseStatusCode - Override default response HTTP status code
+ *                                              register intercept
+ * @param {Number} verifyEmailResponseStatustCode - Override default response HTTP status code
+ *                                                  for register intercept
+ * @param {Object} verifyEmailResponseBody - Override default response body for
+ *                                           verify email intercept
+ * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
+ *                                                 for verify email intercept
+ * @param {Object} verifyCampaignPhaseResponseBody - Override default response body for
+ *                                                   verify campaign phase intercept
+ * @param {Number} verifyCampaignPhaseResponseStatusCode - Override default response HTTP status code
+ *                                                         for verify campaign phase intercept
+ */
+Cypress.Commands.add(
+  'interceptRegisterVerifyEmailVerifyCampaignPhaseApi',
+  (
+    config,
+    i18n,
+    registerResponseBody,
+    registerResponseStatusCode,
+    verifyEmailResponseBody,
+    verifyEmailResponseStatusCode,
+    verifyCampaignPhaseResponseBody,
+    verifyCampaignPhaseResponseStatusCode,
+  ) => {
+    // Intercept register and verify email API call
+    cy.interceptRegisterVerifyEmailApi(
+      config,
+      i18n,
+      registerResponseBody,
+      registerResponseStatusCode,
+      verifyEmailResponseBody,
+      verifyEmailResponseStatusCode,
+    );
+    // Intercept this campaign API call
+    cy.interceptThisCampaignGetApi(
+      config,
+      i18n,
+      verifyCampaignPhaseResponseBody,
+      verifyCampaignPhaseResponseStatusCode,
+    );
+  },
+);
+
+Cypress.Commands.add('fillAndSubmitRegisterForm', () => {
+  const selectorFormRegisterEmail = 'form-register-email';
+  const selectorFormRegisterPasswordInput = 'form-register-password-input';
+  const selectorFormRegisterPasswordConfirmInput =
+    'form-register-password-confirm-input';
+  const selectorFormRegisterPrivacyConsent = 'form-register-privacy-consent';
+  const selectorFormRegisterSubmit = 'form-register-submit';
+  // Fill form
+  cy.fixture('registerUserRequest').then((registerUserFormData) => {
+    cy.dataCy(selectorFormRegisterEmail)
+      .find('input')
+      .type(registerUserFormData.email);
+    cy.dataCy(selectorFormRegisterPasswordInput).type(
+      registerUserFormData.password1,
+    );
+    cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
+      registerUserFormData.password1,
+    );
+    // Accept privacy policy
+    cy.dataCy(selectorFormRegisterPrivacyConsent)
+      .should('be.visible')
+      .find('.q-checkbox__inner')
+      .click();
+    cy.dataCy(selectorFormRegisterSubmit).click();
   });
 });
