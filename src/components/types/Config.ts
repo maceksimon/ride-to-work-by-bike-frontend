@@ -62,6 +62,7 @@ export interface ConfigGlobal {
   urlLoginRegisterBackgroundImage: string;
   urlRTWBBLogo: string;
   checkIsEmailVerifiedInterval: number;
+  checkIsThisCampaignCompetitionPhaseTypeInterval: string;
   googleLoginAppId: string;
   facebookLoginAppId: string;
   secretString: string;
