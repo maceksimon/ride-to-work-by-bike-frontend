@@ -27,7 +27,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { defineComponent, ref, reactive, computed } from 'vue';
+import { defineComponent, onMounted, ref, reactive, computed } from 'vue';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // composables
@@ -91,6 +91,10 @@ export default defineComponent({
       getPaletteColor('white'),
       rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
     );
+
+    onMounted(() => {
+      challengeStore.loadPhaseSet();
+    });
 
     return {
       whiteOpacity,
