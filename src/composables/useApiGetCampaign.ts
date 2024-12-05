@@ -58,17 +58,13 @@ export const useApiGetCampaign = (
     logger?.info('Get campaign from the API.');
     isLoading.value = true;
 
-    // append access token into HTTP header
-    const requestTokenHeader_ = { ...requestTokenHeader };
-    requestTokenHeader_.Authorization += loginStore.getAccessToken;
-
     // fetch campaign
     const { data } = await apiFetch<ThisCampaignResponse>({
       endpoint: `${rideToWorkByBikeConfig.urlApiThisCampaign}`,
       method: 'get',
       translationKey: 'getCampaign',
       showSuccessMessage: false,
-      headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
+      headers: requestDefaultHeader(),
       logger,
     });
 

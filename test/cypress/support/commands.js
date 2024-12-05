@@ -477,9 +477,6 @@ Cypress.Commands.add(
 Cypress.Commands.add('waitForThisCampaignApi', () => {
   cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
     cy.wait('@thisCampaignRequest').then((thisCampaignRequest) => {
-      expect(thisCampaignRequest.request.headers.authorization).to.include(
-        bearerTokeAuth,
-      );
       if (thisCampaignRequest.response) {
         expect(thisCampaignRequest.response.statusCode).to.equal(
           httpSuccessfullStatus,
