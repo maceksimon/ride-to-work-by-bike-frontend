@@ -652,6 +652,14 @@ Cypress.Commands.add(
   },
 );
 
+/**
+ * Fill and submit register form
+ *
+ * Form fields: Email
+ *              Password
+ *              Confirm password
+ *              Accept privacy policy
+ */
 Cypress.Commands.add('fillAndSubmitRegisterForm', () => {
   const selectorFormRegisterEmail = 'form-register-email';
   const selectorFormRegisterPasswordInput = 'form-register-password-input';
@@ -806,6 +814,12 @@ Cypress.Commands.add(
   },
 );
 
+/**
+ * Fill and submit login form
+ *
+ * Form fields: Email
+ *              Password
+ */
 Cypress.Commands.add('fillAndSubmitLoginForm', () => {
   cy.fixture('registerUserRequest').then((loginUserFormData) => {
     cy.dataCy('form-email-input').type(loginUserFormData.email);
