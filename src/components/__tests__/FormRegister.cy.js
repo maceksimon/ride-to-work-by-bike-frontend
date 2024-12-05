@@ -6,6 +6,7 @@ import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import route from '../../../src/router';
 import { testPasswordInputReveal } from '../../../test/cypress/support/commonTests';
+import registerUserRequest from '../../../test/cypress/fixtures/registerUserRequest.json';
 import { useChallengeStore } from '../../stores/challenge';
 import { useRegisterStore } from '../../stores/register';
 import { useLoginStore } from '../../stores/login';
@@ -19,7 +20,6 @@ import {
   systemTimeChallengeInactive,
   userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
-import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 import { PhaseType } from '../types/Challenge';
 
 // colors
@@ -46,7 +46,8 @@ const selectorFormRegisterPrivacyConsentLink =
 const selectorFormRegisterSubmit = 'form-register-submit';
 const selectorFormRegisterLogin = 'form-register-login';
 const selectorFormRegisterLoginLink = 'form-register-login-link';
-// const selectorFormRegisterTextNoActiveChallenge = 'form-register-text-no-active-challenge';
+const selectorFormRegisterTextNoActiveChallenge =
+  'form-register-text-no-active-challenge';
 const selectorFormRegisterPrivacyConsent = 'form-register-privacy-consent';
 const selectorFormRegisterSeparator = 'form-register-separator';
 
@@ -55,9 +56,6 @@ const iconSize = 18;
 const fontSizeText = 14;
 const fontWeightText = 400;
 const router = route();
-const testEmail = 'test@test.com';
-const testPassword = '12345a';
-const { apiBase, apiDefaultLang, urlApiRegister } = rideToWorkByBikeConfig;
 const defaultLoginUserEmailStoreValue = '';
 const urlAppDataPrivacyPolicy = rideToWorkByBikeConfig.urlAppDataPrivacyPolicy;
 
@@ -100,6 +98,14 @@ describe('<FormRegister>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      cy.fixture('apiGetThisCampaign').then((apiGetThisCampaign) => {
+        cy.interceptThisCampaignGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          apiGetThisCampaign,
+          null,
+        );
+      });
       setActivePinia(createPinia());
       cy.mount(FormRegister, {
         props: {},
@@ -246,6 +252,7 @@ describe('<FormRegister>', () => {
     });
 
     it('validates privacy policy correctly', () => {
+      cy.wait('@thisCampaignRequest');
       // fill in email input to be able to test password
       cy.dataCy(selectorFormRegisterEmail).find('input').type('qw123@qw.com');
       // fill in password input to be able to test password confirm
@@ -261,6 +268,12 @@ describe('<FormRegister>', () => {
     });
 
     it('renders link to privacy policy', () => {
+      cy.waitForThisCampaignApi();
+      cy.clock()
+        .as('clock')
+        .then((clock) => {
+          clock.setSystemTime(systemTimeChallengeActive);
+        });
       cy.dataCy(selectorFormRegisterPrivacyConsentLink)
         .should('be.visible')
         .and('have.attr', 'href', urlAppDataPrivacyPolicy);
@@ -307,24 +320,27 @@ describe('<FormRegister>', () => {
         null,
         httpInternalServerErrorStatus,
       );
-      cy.wrap(registerStore.register(testEmail, testPassword)).then(
-        (response) => {
-          expect(response).to.deep.equal(null);
-          // state does not change
-          expect(loginStore.getUserEmail).to.equal(
-            defaultLoginUserEmailStoreValue,
-          );
-          expect(registerStore.getIsEmailVerified).to.equal(false);
-          // error is shown
-          cy.contains(
-            i18n.global.t('register.apiMessageErrorWithMessage'),
-          ).should('be.visible');
-          // wait for error to disappear
-          cy.contains(
-            i18n.global.t('register.apiMessageErrorWithMessage'),
-          ).should('not.exist');
-        },
-      );
+      cy.wrap(
+        registerStore.register(
+          registerUserRequest.email,
+          registerUserRequest.password1,
+        ),
+      ).then((response) => {
+        expect(response).to.deep.equal(null);
+        // state does not change
+        expect(loginStore.getUserEmail).to.equal(
+          defaultLoginUserEmailStoreValue,
+        );
+        expect(registerStore.getIsEmailVerified).to.equal(false);
+        // error is shown
+        cy.contains(
+          i18n.global.t('register.apiMessageErrorWithMessage'),
+        ).should('be.visible');
+        // wait for error to disappear
+        cy.contains(
+          i18n.global.t('register.apiMessageErrorWithMessage'),
+        ).should('not.exist');
+      });
     });
 
     it('allows to register with email and password', () => {
@@ -333,62 +349,51 @@ describe('<FormRegister>', () => {
       // default store state
       expect(loginStore.getUserEmail).to.equal(defaultLoginUserEmailStoreValue);
       expect(registerStore.getIsEmailVerified).to.equal(false);
-
-      cy.fixture('loginRegisterResponseChallengeActive.json').then(
-        (registerResponse) => {
-          // intercept registration API call
-          cy.interceptRegisterApi(
-            rideToWorkByBikeConfig,
-            i18n,
-            registerResponse,
-            null,
+      // intercept registration API call
+      cy.interceptRegisterApi(rideToWorkByBikeConfig, i18n);
+      cy.fixture('registerResponse.json').then((registerResponse) => {
+        // register
+        cy.wrap(
+          registerStore.register(
+            registerUserRequest.email,
+            registerUserRequest.password1,
+          ),
+        ).then((response) => {
+          cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+            'be.visible',
           );
-          // register
-          cy.wrap(registerStore.register(testEmail, testPassword)).then(
-            (response) => {
-              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-                'be.visible',
-              );
-              // wait for success message to disappear
-              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-                'not.exist',
-              );
-              // test function return value
-              expect(response).to.deep.equal(registerResponse);
-              // store state
-              expect(loginStore.getUserEmail).to.equal(
-                registerResponse.user.email,
-              );
-              expect(registerStore.getIsEmailVerified).to.equal(false);
-            },
+          // wait for success message to disappear
+          cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+            'not.exist',
           );
-        },
-      );
+          // test function return value
+          expect(response).to.deep.equal(registerResponse);
+          // store state
+          expect(loginStore.getUserEmail).to.equal(registerResponse.user.email);
+          expect(registerStore.getIsEmailVerified).to.equal(false);
+        });
+      });
     });
   });
 
   context('no active challenge', () => {
     beforeEach(() => {
-      setActivePinia(createPinia());
       cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
-      cy.wrap(useChallengeStore()).then((store) => {
-        store.loadPhaseSet();
-        // wait for load phase set
-        cy.waitForThisCampaignApi();
-        cy.clock()
-          .as('clock')
-          .then((clock) => {
-            clock.setSystemTime(systemTimeChallengeInactive);
-          });
-        cy.mount(FormRegister, {
-          props: {},
+      setActivePinia(createPinia());
+      //cy.waitForThisCampaignApi();
+      cy.clock()
+        .as('clock')
+        .then((clock) => {
+          clock.setSystemTime(systemTimeChallengeInactive);
         });
-        cy.viewport('iphone-6');
+      cy.mount(FormRegister, {
+        props: {},
       });
+      cy.viewport('iphone-6');
     });
 
-    /*
     it('shows a text with no active challenge', () => {
+      cy.waitForThisCampaignApi();
       const challengeStore = useChallengeStore();
       expect(
         challengeStore.getIsChallengeInPhase(PhaseType.competition),
@@ -400,9 +405,9 @@ describe('<FormRegister>', () => {
         .and('have.color', white)
         .and('contain', i18n.global.t('register.form.textNoActiveChallenge'));
     });
-    */
 
     it('shows checkboxes for privacy policy and newsletter subscription', () => {
+      cy.waitForThisCampaignApi();
       // privacy policy
       cy.dataCy(selectorFormRegisterPrivacyConsent)
         .should('be.visible')
@@ -417,43 +422,30 @@ describe('<FormRegister>', () => {
     it('allows to submit form after filling fields', () => {
       const registerStore = useRegisterStore();
       const loginStore = useLoginStore();
-      // variables
-      const apiBaseUrl = getApiBaseUrlWithLang(
-        null,
-        apiBase,
-        apiDefaultLang,
-        i18n,
-      );
-      const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      cy.fixture('loginRegisterResponseChallengeActive.json').then(
-        (registerResponse) => {
-          // intercept registration API call
-          cy.intercept('POST', apiRegisterUrl, {
-            statusCode: httpSuccessfullStatus,
-            body: registerResponse,
-          }).as('registerRequest');
-          // fill and submit form
-          cy.fillAndSubmitRegisterForm();
-          // check that form is submitted
-          cy.wait('@registerRequest')
-            .its('response.statusCode')
-            .should('be.equal', httpSuccessfullStatus)
-            .then(() => {
-              compareRegisterResponseWithStore(
-                loginStore,
-                registerStore,
-                registerResponse,
-              );
-            });
-        },
-      );
+      // intercept registration API call
+      cy.interceptRegisterApi(rideToWorkByBikeConfig, i18n);
+      cy.fixture('registerResponse.json').then((registerResponse) => {
+        // fill and submit form
+        cy.fillAndSubmitRegisterForm();
+        // check that form is submitted
+        cy.wait('@registerRequest')
+          .its('response.statusCode')
+          .should('be.equal', httpSuccessfullStatus)
+          .then(() => {
+            compareRegisterResponseWithStore(
+              loginStore,
+              registerStore,
+              registerResponse,
+            );
+          });
+      });
     });
   });
 
   context('active challenge', () => {
     beforeEach(() => {
-      setActivePinia(createPinia());
       cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
+      setActivePinia(createPinia());
       cy.clock()
         .as('clock')
         .then((clock) => {
@@ -465,12 +457,8 @@ describe('<FormRegister>', () => {
       cy.viewport('iphone-6');
     });
 
-    /*
     it('does not show a text with no active challenge', () => {
       cy.wrap(useChallengeStore()).then((store) => {
-        store.loadPhaseSet();
-        // wait for load phase set
-        cy.waitForThisCampaignApi();
         const isChallengeCompetition = computed(() =>
           store.getIsChallengeInPhase(PhaseType.competition),
         );
@@ -482,10 +470,8 @@ describe('<FormRegister>', () => {
     });
 
     it('does not show checkboxes for privacy policy and newsletter subscription', () => {
+      cy.waitForThisCampaignApi();
       cy.wrap(useChallengeStore()).then((store) => {
-        store.loadPhaseSet();
-        // wait for load phase set
-        cy.waitForThisCampaignApi();
         const isChallengeCompetition = computed(() =>
           store.getIsChallengeInPhase(PhaseType.competition),
         );
@@ -493,43 +479,35 @@ describe('<FormRegister>', () => {
         cy.dataCy(selectorFormRegisterPrivacyConsent).should('not.exist');
       });
     });
-    */
 
     it('allows to submit form after filling fields and accepting privacy policy', () => {
+      cy.waitForThisCampaignApi();
       cy.wrap(useChallengeStore()).then((challengeStore) => {
-        challengeStore.loadPhaseSet();
-        // wait for load phase set
-        cy.waitForThisCampaignApi();
         const isChallengeCompetition = computed(() =>
           challengeStore.getIsChallengeInPhase(PhaseType.competition),
         );
         cy.wrap(isChallengeCompetition).its('value').should('equal', true);
         const loginStore = useLoginStore();
         const registerStore = useRegisterStore();
-        cy.fixture('loginRegisterResponseChallengeActive.json').then(
-          (registerResponse) => {
-            // intercept registration API call
-            cy.interceptRegisterApi(
-              rideToWorkByBikeConfig,
-              i18n,
-              registerResponse,
-              null,
-            );
-            // fill and submit form
-            cy.fillAndSubmitRegisterForm();
-            // check that form is submitted
-            cy.wait('@registerRequest')
-              .its('response.statusCode')
-              .should('be.equal', httpSuccessfullStatus)
-              .then(() => {
-                compareRegisterResponseWithStore(
-                  loginStore,
-                  registerStore,
-                  registerResponse,
-                );
-              });
-          },
-        );
+        // intercept registration API call
+        cy.interceptRegisterApi(rideToWorkByBikeConfig, i18n);
+        cy.fixture('registerResponse.json').then((registerResponse) => {
+          // fill and submit form
+          cy.fillAndSubmitRegisterForm({
+            checkAcceptPrivacyPolicyCheckbox: false,
+          });
+          // check that form is submitted
+          cy.wait('@registerRequest')
+            .its('response.statusCode')
+            .should('be.equal', httpSuccessfullStatus)
+            .then(() => {
+              compareRegisterResponseWithStore(
+                loginStore,
+                registerStore,
+                registerResponse,
+              );
+            });
+        });
       });
     });
   });
