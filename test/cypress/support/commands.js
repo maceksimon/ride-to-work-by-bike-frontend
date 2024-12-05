@@ -476,15 +476,15 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add('waitForThisCampaignApi', () => {
   cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
-    cy.wait('@getThisCampaign').then((getThisCampaign) => {
+    cy.wait('@thisCampaignRequest').then((thisCampaignRequest) => {
       expect(getThisCampaign.request.headers.authorization).to.include(
         bearerTokeAuth,
       );
-      if (getThisCampaign.response) {
+      if (thisCampaignRequest.response) {
         expect(getThisCampaign.response.statusCode).to.equal(
           httpSuccessfullStatus,
         );
-        expect(getThisCampaign.response.body).to.deep.equal(
+        expect(thisCampaignRequest.response.body).to.deep.equal(
           thisCampaignResponse,
         );
       }
