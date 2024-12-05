@@ -27,7 +27,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { defineComponent, ref, reactive, computed } from 'vue';
+import { defineComponent, ref, reactive } from 'vue'; // computed
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // composables
@@ -38,10 +38,10 @@ import FormFieldEmail from '../global/FormFieldEmail.vue';
 import LoginRegisterButtons from '../global/LoginRegisterButtons.vue';
 
 // enums
-import { PhaseType } from '../types/Challenge';
+// import { PhaseType } from '../types/Challenge';
 
 // stores
-import { useChallengeStore } from '../../stores/challenge';
+// import { useChallengeStore } from '../../stores/challenge';
 import { useRegisterStore } from '../../stores/register';
 
 export default defineComponent({
@@ -60,10 +60,10 @@ export default defineComponent({
     });
 
     const registerStore = useRegisterStore();
-    const challengeStore = useChallengeStore();
+    /* const challengeStore = useChallengeStore();
     const isActiveChallenge = computed((): boolean =>
       challengeStore.getIsChallengeInPhase(PhaseType.competition),
-    );
+    ); */
     const isPassword = ref<boolean>(true);
     const isPasswordConfirm = ref<boolean>(true);
     const isPrivacyConsent = ref<boolean>(false);
@@ -95,7 +95,7 @@ export default defineComponent({
     return {
       whiteOpacity,
       formRegister,
-      isActiveChallenge,
+      // isActiveChallenge,
       isPassword,
       isPasswordConfirm,
       isPrivacyConsent,
@@ -119,13 +119,13 @@ export default defineComponent({
       <h1 class="text-h5 text-bold q-my-none" data-cy="form-register-title">
         {{ $t('register.form.titleRegister') }}
       </h1>
-      <p
+      <!-- <p
         v-if="!isActiveChallenge"
         class="q-mt-md q-mb-none"
         data-cy="form-register-text-no-active-challenge"
       >
         {{ $t('register.form.textNoActiveChallenge') }}
-      </p>
+      </p> -->
     </div>
     <!-- Form: register -->
     <q-form @submit.prevent="onSubmitRegister" @reset="onReset">
@@ -225,7 +225,8 @@ export default defineComponent({
         </q-input>
       </div>
       <!-- Section: checkboxes (only if no challenge is active) -->
-      <div v-if="!isActiveChallenge">
+      <!-- <div v-if="!isActiveChallenge"> -->
+      <div>
         <div class="q-mt-lg">
           <!-- Input: Privacy policy -->
           <q-field
