@@ -656,33 +656,43 @@ Cypress.Commands.add(
  *              Password
  *              Confirm password
  *              Accept privacy policy
+ * @param {Boolean} checkAcceptPrivacyPolicyCheckbox: do not check accept privacy
+ *                                                    policy checkbox element if
+ *                                                    this camapign competition phase
+ *                                                    is not active, because element
+ *                                                    is not visible, default value is
+ *                                                    true
  */
-Cypress.Commands.add('fillAndSubmitRegisterForm', () => {
-  const selectorFormRegisterEmail = 'form-register-email';
-  const selectorFormRegisterPasswordInput = 'form-register-password-input';
-  const selectorFormRegisterPasswordConfirmInput =
-    'form-register-password-confirm-input';
-  const selectorFormRegisterPrivacyConsent = 'form-register-privacy-consent';
-  const selectorFormRegisterSubmit = 'form-register-submit';
-  // Fill form
-  cy.fixture('registerUserRequest').then((registerUserFormData) => {
-    cy.dataCy(selectorFormRegisterEmail)
-      .find('input')
-      .type(registerUserFormData.email);
-    cy.dataCy(selectorFormRegisterPasswordInput).type(
-      registerUserFormData.password1,
-    );
-    cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
-      registerUserFormData.password1,
-    );
-    // Accept privacy policy
-    cy.dataCy(selectorFormRegisterPrivacyConsent)
-      .should('be.visible')
-      .find('.q-checkbox__inner')
-      .click();
-    cy.dataCy(selectorFormRegisterSubmit).click();
-  });
-});
+Cypress.Commands.add(
+  'fillAndSubmitRegisterForm',
+  (checkAcceptPrivacyPolicyCheckbox = true) => {
+    const selectorFormRegisterEmail = 'form-register-email';
+    const selectorFormRegisterPasswordInput = 'form-register-password-input';
+    const selectorFormRegisterPasswordConfirmInput =
+      'form-register-password-confirm-input';
+    const selectorFormRegisterPrivacyConsent = 'form-register-privacy-consent';
+    const selectorFormRegisterSubmit = 'form-register-submit';
+    // Fill form
+    cy.fixture('registerUserRequest').then((registerUserFormData) => {
+      cy.dataCy(selectorFormRegisterEmail)
+        .find('input')
+        .type(registerUserFormData.email);
+      cy.dataCy(selectorFormRegisterPasswordInput).type(
+        registerUserFormData.password1,
+      );
+      cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
+        registerUserFormData.password1,
+      );
+      if (checkAcceptPrivacyPolicyCheckbox === true)
+        // Accept privacy policy
+        cy.dataCy(selectorFormRegisterPrivacyConsent)
+          .should('be.visible')
+          .find('.q-checkbox__inner')
+          .click();
+      cy.dataCy(selectorFormRegisterSubmit).click();
+    });
+  },
+);
 
 /**
  * Intercept this login POST API call
