@@ -471,17 +471,17 @@ Cypress.Commands.add(
 
 /**
  * Wait for intercept this campaign API call and compare request/response object
- * Wait for `@getThisCampaign` intercept
+ * Wait for `@thisCampaignRequest` intercept
  * @param {object} thisCampaignResponse - Get this campaign API data response
  */
 Cypress.Commands.add('waitForThisCampaignApi', () => {
   cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
     cy.wait('@thisCampaignRequest').then((thisCampaignRequest) => {
-      expect(getThisCampaign.request.headers.authorization).to.include(
+      expect(thisCampaignRequest.request.headers.authorization).to.include(
         bearerTokeAuth,
       );
       if (thisCampaignRequest.response) {
-        expect(getThisCampaign.response.statusCode).to.equal(
+        expect(thisCampaignRequest.response.statusCode).to.equal(
           httpSuccessfullStatus,
         );
         expect(thisCampaignRequest.response.body).to.deep.equal(
