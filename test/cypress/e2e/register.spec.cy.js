@@ -3,6 +3,7 @@ import {
   testBackgroundImage,
   httpInternalServerErrorStatus,
   systemTimeChallengeActive,
+  systemTimeChallengeInactive,
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 
@@ -12,6 +13,7 @@ const selectorUserSelectDesktop = 'user-select-desktop';
 const selectorUserSelectInput = 'user-select-input';
 const selectorEmailVerificationRegisterLink =
   'email-verification-register-link';
+const selectorChallengeInactiveInfo = 'challenge-inactive-info';
 
 describe('Register page', () => {
   context('desktop', () => {
@@ -67,28 +69,28 @@ describe('Register page', () => {
 
   context('inactive challenge', () => {
     beforeEach(() => {
-      cy.viewport('macbook-16');
-      cy.visit('#' + routesConf['register']['path']);
-
-      // load config an i18n objects as aliases
-      cy.task('getAppConfig', process).then((config) => {
-        // alias config
-        cy.wrap(config).as('config');
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          // alias i18n
-          cy.wrap(win.i18n).as('i18n');
+      cy.clock(systemTimeChallengeInactive, ['Date']).then(() => {
+        cy.viewport('macbook-16');
+        cy.visit('#' + routesConf['register']['path']);
+        cy.task('getAppConfig', process).then((config) => {
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            cy.interceptThisCampaignGetApi(config, win.i18n);
+          });
         });
       });
+      cy.reload();
     });
 
     it('shows error message on registration failure', () => {
-      cy.get('@i18n').then((i18n) => {
-        cy.get('@config').then((config) => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.waitForThisCampaignApi();
           // intercept register request
           cy.interceptRegisterApi(
             config,
-            i18n,
+            win.i18n,
             {
               message: 'Registration failed',
             },
@@ -99,11 +101,57 @@ describe('Register page', () => {
           // wait for request to complete
           cy.wait('@registerRequest');
           // check error message
-          cy.get('@i18n').then((i18n) => {
-            cy.contains(
-              i18n.global.t('register.apiMessageErrorWithMessage'),
-            ).should('be.visible');
+          cy.contains(
+            win.i18n.global.t('register.apiMessageErrorWithMessage'),
+          ).should('be.visible');
+        });
+      });
+    });
+
+    it('redirects to campaign inactive page after registering and verifying email', () => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.waitForThisCampaignApi();
+          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
+          // fill form
+          cy.fillAndSubmitRegisterForm();
+          // wait for request to complete
+          cy.fixture('registerResponse.json').then((registerResponse) => {
+            cy.wait('@registerRequest').then((interception) => {
+              cy.fixture('registerUserRequest').then((registerUserFormData) => {
+                expect(interception.request.body).to.deep.equal(
+                  registerUserFormData,
+                );
+              });
+              expect(interception.response.body).to.deep.equal(
+                registerResponse,
+              );
+            });
           });
+          // wait for email verification request to complete
+          cy.wait('@verifyEmailRequest').then((interception) => {
+            expect(interception.response.body).to.deep.equal({
+              has_user_verified_email_address: false,
+            });
+          });
+          cy.url().should('contain', routesConf['verify_email']['path']);
+
+          // update verification request - verified
+          cy.interceptVerifyEmailApi(config, win.i18n, {
+            has_user_verified_email_address: true,
+          });
+          cy.reload();
+          cy.wait('@verifyEmailRequest').then((interception) => {
+            expect(interception.response.body).to.deep.equal({
+              has_user_verified_email_address: true,
+            });
+          });
+
+          // redirected to home page
+          cy.url().should('contain', routesConf['home']['path']);
+          // campaign inactive page text
+          cy.dataCy(selectorChallengeInactiveInfo).should('be.visible');
         });
       });
     });
@@ -112,31 +160,30 @@ describe('Register page', () => {
   context('active challenge', () => {
     beforeEach(() => {
       cy.clock(systemTimeChallengeActive, ['Date']).then(() => {
-        cy.visit('#' + routesConf['register']['path']);
         cy.viewport('macbook-16');
-
-        // load config an i18n objects as aliases
+        cy.visit('#' + routesConf['register']['path']);
         cy.task('getAppConfig', process).then((config) => {
-          // alias config
-          cy.wrap(config).as('config');
           cy.window().should('have.property', 'i18n');
           cy.window().then((win) => {
-            // alias i18n
-            cy.wrap(win.i18n).as('i18n');
+            cy.interceptThisCampaignGetApi(config, win.i18n);
           });
         });
       });
-      //cy.reload();
+      cy.reload();
     });
 
     // ! router redirection rules are enabled for this file in /router/index.ts
     it('allows user to register with valid credentials and requires email verification to access other pages', () => {
-      cy.get('@i18n').then((i18n) => {
-        cy.get('@config').then((config) => {
-          cy.interceptRegisterVerifyEmailApi(config, i18n);
+      cy.task('getAppConfig', process).then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.waitForThisCampaignApi();
+          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
 
           // fill and submit form
-          cy.fillAndSubmitRegisterForm();
+          cy.fillAndSubmitRegisterForm({
+            checkAcceptPrivacyPolicyCheckbox: false,
+          });
           // wait for request to complete
           cy.wait('@registerRequest').then((interception) => {
             cy.fixture('registerUserRequest').then((registerUserFormData) => {
@@ -194,11 +241,15 @@ describe('Register page', () => {
     });
 
     it('displays a logout button on the verify email page and allows to logout', () => {
-      cy.get('@i18n').then((i18n) => {
-        cy.get('@config').then((config) => {
-          cy.interceptRegisterVerifyEmailApi(config, i18n);
+      cy.task('getAppConfig', process).then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.waitForThisCampaignApi();
+          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
           // fill and submit form
-          cy.fillAndSubmitRegisterForm();
+          cy.fillAndSubmitRegisterForm({
+            checkAcceptPrivacyPolicyCheckbox: false,
+          });
           // wait for request to complete
           cy.fixture('registerResponse.json').then((registerResponse) => {
             cy.wait('@registerRequest').then((interception) => {
@@ -234,11 +285,15 @@ describe('Register page', () => {
     });
 
     it('redirects to home page after registering and verifying email and allows logout', () => {
-      cy.get('@i18n').then((i18n) => {
-        cy.get('@config').then((config) => {
-          cy.interceptRegisterVerifyEmailVerifyCampaignPhaseApi(config, i18n);
+      cy.task('getAppConfig', process).then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.waitForThisCampaignApi();
+          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
           // fill form
-          cy.fillAndSubmitRegisterForm();
+          cy.fillAndSubmitRegisterForm({
+            checkAcceptPrivacyPolicyCheckbox: false,
+          });
           // wait for request to complete
           cy.fixture('registerResponse.json').then((registerResponse) => {
             cy.wait('@registerRequest').then((interception) => {
@@ -252,8 +307,6 @@ describe('Register page', () => {
               );
             });
           });
-          // redirect to verify email page
-          cy.url().should('contain', routesConf['verify_email']['path']);
           // wait for email verification request to complete
           cy.wait('@verifyEmailRequest').then((interception) => {
             expect(interception.response.body).to.deep.equal({
@@ -263,21 +316,13 @@ describe('Register page', () => {
           cy.url().should('contain', routesConf['verify_email']['path']);
 
           // update verification request - verified
-          cy.interceptVerifyEmailApi(config, i18n, {
+          cy.interceptVerifyEmailApi(config, win.i18n, {
             has_user_verified_email_address: true,
           });
           cy.reload();
           cy.wait('@verifyEmailRequest').then((interception) => {
             expect(interception.response.body).to.deep.equal({
               has_user_verified_email_address: true,
-            });
-          });
-          cy.reload();
-          cy.fixture('apiGetThisCampaign').then((apiGetThisCampaign) => {
-            cy.wait('@thisCampaignRequest').then((interception) => {
-              expect(interception.response.body).to.deep.equal(
-                apiGetThisCampaign,
-              );
             });
           });
 
@@ -289,7 +334,7 @@ describe('Register page', () => {
           });
           // logout
           cy.dataCy('menu-item')
-            .contains(i18n.global.t('userSelect.logout'))
+            .contains(win.i18n.global.t('userSelect.logout'))
             .click();
           // redirected to login page
           cy.url().should('include', routesConf['login']['path']);
@@ -298,12 +343,16 @@ describe('Register page', () => {
     });
 
     it('allows user to stop registration process before email verification and register again', () => {
-      cy.get('@i18n').then((i18n) => {
-        cy.get('@config').then((config) => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.waitForThisCampaignApi();
           cy.fixture('registerResponse.json').then((registerResponse) => {
-            cy.interceptRegisterApi(config, i18n);
+            cy.interceptRegisterApi(config, win.i18n);
             // fill form
-            cy.fillAndSubmitRegisterForm();
+            cy.fillAndSubmitRegisterForm({
+              checkAcceptPrivacyPolicyCheckbox: false,
+            });
             cy.wait('@registerRequest').then((interception) => {
               cy.fixture('registerUserRequest').then((registerUserFormData) => {
                 expect(interception.request.body).to.deep.equal(
