@@ -673,15 +673,15 @@ Cypress.Commands.add(
     const selectorFormRegisterPrivacyConsent = 'form-register-privacy-consent';
     const selectorFormRegisterSubmit = 'form-register-submit';
     // Fill form
-    cy.fixture('registerUserRequest').then((registerUserFormData) => {
+    cy.fixture('registerRequest').then((registerRequest) => {
       cy.dataCy(selectorFormRegisterEmail)
         .find('input')
-        .type(registerUserFormData.email);
+        .type(registerRequest.email);
       cy.dataCy(selectorFormRegisterPasswordInput).type(
-        registerUserFormData.password1,
+        registerRequest.password1,
       );
       cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
-        registerUserFormData.password1,
+        registerRequest.password1,
       );
       if (checkAcceptPrivacyPolicyCheckbox === true)
         // Accept privacy policy
@@ -828,9 +828,9 @@ Cypress.Commands.add(
  *              Password
  */
 Cypress.Commands.add('fillAndSubmitLoginForm', () => {
-  cy.fixture('registerUserRequest').then((loginUserFormData) => {
-    cy.dataCy('form-email-input').type(loginUserFormData.email);
-    cy.dataCy('form-login-password-input').type(loginUserFormData.password1);
+  cy.fixture('registerRequest').then((loginRequest) => {
+    cy.dataCy('form-email-input').type(loginRequest.email);
+    cy.dataCy('form-login-password-input').type(loginRequest.password1);
     cy.dataCy('form-login-submit-login').click();
   });
 });

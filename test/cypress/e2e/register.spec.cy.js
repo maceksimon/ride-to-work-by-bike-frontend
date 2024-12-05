@@ -119,9 +119,9 @@ describe('Register page', () => {
           // wait for request to complete
           cy.fixture('registerResponse.json').then((registerResponse) => {
             cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerUserRequest').then((registerUserFormData) => {
+              cy.fixture('registerRequest').then((registerRequest) => {
                 expect(interception.request.body).to.deep.equal(
-                  registerUserFormData,
+                  registerRequest,
                 );
               });
               expect(interception.response.body).to.deep.equal(
@@ -186,10 +186,8 @@ describe('Register page', () => {
           });
           // wait for request to complete
           cy.wait('@registerRequest').then((interception) => {
-            cy.fixture('registerUserRequest').then((registerUserFormData) => {
-              expect(interception.request.body).to.deep.equal(
-                registerUserFormData,
-              );
+            cy.fixture('registerRequest').then((registerRequest) => {
+              expect(interception.request.body).to.deep.equal(registerRequest);
             });
             cy.fixture('registerResponse.json').then((registerResponse) => {
               expect(interception.response.body).to.deep.equal(
@@ -253,9 +251,9 @@ describe('Register page', () => {
           // wait for request to complete
           cy.fixture('registerResponse.json').then((registerResponse) => {
             cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerUserRequest').then((registerUserFormData) => {
+              cy.fixture('registerRequest').then((registerRequest) => {
                 expect(interception.request.body).to.deep.equal(
-                  registerUserFormData,
+                  registerRequest,
                 );
               });
               expect(interception.response.body).to.deep.equal(
@@ -297,9 +295,9 @@ describe('Register page', () => {
           // wait for request to complete
           cy.fixture('registerResponse.json').then((registerResponse) => {
             cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerUserRequest').then((registerUserFormData) => {
+              cy.fixture('registerRequest').then((registerRequest) => {
                 expect(interception.request.body).to.deep.equal(
-                  registerUserFormData,
+                  registerRequest,
                 );
               });
               expect(interception.response.body).to.deep.equal(
@@ -354,9 +352,9 @@ describe('Register page', () => {
               checkAcceptPrivacyPolicyCheckbox: false,
             });
             cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerUserRequest').then((registerUserFormData) => {
+              cy.fixture('registerRequest').then((registerRequest) => {
                 expect(interception.request.body).to.deep.equal(
-                  registerUserFormData,
+                  registerRequest,
                 );
               });
               expect(interception.response.body).to.deep.equal(

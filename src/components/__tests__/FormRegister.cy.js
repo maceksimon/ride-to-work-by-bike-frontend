@@ -6,7 +6,7 @@ import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import route from '../../../src/router';
 import { testPasswordInputReveal } from '../../../test/cypress/support/commonTests';
-import registerUserRequest from '../../../test/cypress/fixtures/registerUserRequest.json';
+import registerRequest from '../../../test/cypress/fixtures/registerRequest.json';
 import { useChallengeStore } from '../../stores/challenge';
 import { useRegisterStore } from '../../stores/register';
 import { useLoginStore } from '../../stores/login';
@@ -98,14 +98,7 @@ describe('<FormRegister>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
-      cy.fixture('apiGetThisCampaign').then((apiGetThisCampaign) => {
-        cy.interceptThisCampaignGetApi(
-          rideToWorkByBikeConfig,
-          i18n,
-          apiGetThisCampaign,
-          null,
-        );
-      });
+      cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
       setActivePinia(createPinia());
       cy.mount(FormRegister, {
         props: {},
@@ -322,8 +315,8 @@ describe('<FormRegister>', () => {
       );
       cy.wrap(
         registerStore.register(
-          registerUserRequest.email,
-          registerUserRequest.password1,
+          registerRequest.email,
+          registerRequest.password1,
         ),
       ).then((response) => {
         expect(response).to.deep.equal(null);
@@ -355,8 +348,8 @@ describe('<FormRegister>', () => {
         // register
         cy.wrap(
           registerStore.register(
-            registerUserRequest.email,
-            registerUserRequest.password1,
+            registerRequest.email,
+            registerRequest.password1,
           ),
         ).then((response) => {
           cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
