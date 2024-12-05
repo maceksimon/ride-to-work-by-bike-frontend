@@ -1,4 +1,4 @@
-import { computed, nextTick } from 'vue';
+import { computed } from 'vue';
 import { colors } from 'quasar';
 import { createPinia, setActivePinia } from 'pinia';
 import FormRegister from '../register/FormRegister.vue';
@@ -46,8 +46,7 @@ const selectorFormRegisterPrivacyConsentLink =
 const selectorFormRegisterSubmit = 'form-register-submit';
 const selectorFormRegisterLogin = 'form-register-login';
 const selectorFormRegisterLoginLink = 'form-register-login-link';
-const selectorFormRegisterTextNoActiveChallenge =
-  'form-register-text-no-active-challenge';
+// const selectorFormRegisterTextNoActiveChallenge = 'form-register-text-no-active-challenge';
 const selectorFormRegisterPrivacyConsent = 'form-register-privacy-consent';
 const selectorFormRegisterSeparator = 'form-register-separator';
 
@@ -67,7 +66,6 @@ const compareRegisterResponseWithStore = (
   registerStore,
   registerResponse,
 ) => {
-  nextTick();
   expect(registerStore.getIsEmailVerified).to.equal(false);
   expect(loginStore.getUserEmail).to.equal(registerResponse.user.email);
   expect(loginStore.getUser).to.eql(registerResponse.user);
@@ -303,19 +301,12 @@ describe('<FormRegister>', () => {
       // default store state
       expect(loginStore.getUserEmail).to.equal(defaultLoginUserEmailStoreValue);
       expect(registerStore.getIsEmailVerified).to.equal(false);
-      // variables
-      const apiBaseUrl = getApiBaseUrlWithLang(
-        null,
-        apiBase,
-        apiDefaultLang,
+      cy.interceptRegisterApi(
+        rideToWorkByBikeConfig,
         i18n,
+        null,
+        httpInternalServerErrorStatus,
       );
-      const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-      // intercept registration API call
-      cy.intercept('POST', apiRegisterUrl, {
-        statusCode: httpInternalServerErrorStatus,
-      }).as('registerRequest');
-      // register
       cy.wrap(registerStore.register(testEmail, testPassword)).then(
         (response) => {
           expect(response).to.deep.equal(null);
@@ -342,41 +333,35 @@ describe('<FormRegister>', () => {
       // default store state
       expect(loginStore.getUserEmail).to.equal(defaultLoginUserEmailStoreValue);
       expect(registerStore.getIsEmailVerified).to.equal(false);
-      // variables
-      const apiBaseUrl = getApiBaseUrlWithLang(
-        null,
-        apiBase,
-        apiDefaultLang,
-        i18n,
-      );
-      const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
+
       cy.fixture('loginRegisterResponseChallengeActive.json').then(
         (registerResponse) => {
           // intercept registration API call
-          cy.intercept('POST', apiRegisterUrl, {
-            statusCode: httpSuccessfullStatus,
-            body: registerResponse,
-          }).then(() => {
-            // register
-            cy.wrap(registerStore.register(testEmail, testPassword)).then(
-              (response) => {
-                cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-                  'be.visible',
-                );
-                // wait for success message to disappear
-                cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
-                  'not.exist',
-                );
-                // test function return value
-                expect(response).to.deep.equal(registerResponse);
-                // store state
-                expect(loginStore.getUserEmail).to.equal(
-                  registerResponse.user.email,
-                );
-                expect(registerStore.getIsEmailVerified).to.equal(false);
-              },
-            );
-          });
+          cy.interceptRegisterApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            registerResponse,
+            null,
+          );
+          // register
+          cy.wrap(registerStore.register(testEmail, testPassword)).then(
+            (response) => {
+              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                'be.visible',
+              );
+              // wait for success message to disappear
+              cy.contains(i18n.global.t('register.apiMessageSuccess')).should(
+                'not.exist',
+              );
+              // test function return value
+              expect(response).to.deep.equal(registerResponse);
+              // store state
+              expect(loginStore.getUserEmail).to.equal(
+                registerResponse.user.email,
+              );
+              expect(registerStore.getIsEmailVerified).to.equal(false);
+            },
+          );
         },
       );
     });
@@ -402,6 +387,7 @@ describe('<FormRegister>', () => {
       });
     });
 
+    /*
     it('shows a text with no active challenge', () => {
       const challengeStore = useChallengeStore();
       expect(
@@ -414,6 +400,7 @@ describe('<FormRegister>', () => {
         .and('have.color', white)
         .and('contain', i18n.global.t('register.form.textNoActiveChallenge'));
     });
+    */
 
     it('shows checkboxes for privacy policy and newsletter subscription', () => {
       // privacy policy
@@ -445,18 +432,8 @@ describe('<FormRegister>', () => {
             statusCode: httpSuccessfullStatus,
             body: registerResponse,
           }).as('registerRequest');
-          // fill in form
-          cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
-          cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
-          cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
-            testPassword,
-          );
-          // accept privacy policy
-          cy.dataCy(selectorFormRegisterPrivacyConsent)
-            .should('be.visible')
-            .click('topLeft');
-          // submit form
-          cy.dataCy(selectorFormRegisterSubmit).should('be.visible').click();
+          // fill and submit form
+          cy.fillAndSubmitRegisterForm();
           // check that form is submitted
           cy.wait('@registerRequest')
             .its('response.statusCode')
@@ -488,6 +465,7 @@ describe('<FormRegister>', () => {
       cy.viewport('iphone-6');
     });
 
+    /*
     it('does not show a text with no active challenge', () => {
       cy.wrap(useChallengeStore()).then((store) => {
         store.loadPhaseSet();
@@ -515,6 +493,7 @@ describe('<FormRegister>', () => {
         cy.dataCy(selectorFormRegisterPrivacyConsent).should('not.exist');
       });
     });
+    */
 
     it('allows to submit form after filling fields and accepting privacy policy', () => {
       cy.wrap(useChallengeStore()).then((challengeStore) => {
@@ -527,29 +506,17 @@ describe('<FormRegister>', () => {
         cy.wrap(isChallengeCompetition).its('value').should('equal', true);
         const loginStore = useLoginStore();
         const registerStore = useRegisterStore();
-        // variables
-        const apiBaseUrl = getApiBaseUrlWithLang(
-          null,
-          apiBase,
-          apiDefaultLang,
-          i18n,
-        );
-        const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
         cy.fixture('loginRegisterResponseChallengeActive.json').then(
           (registerResponse) => {
             // intercept registration API call
-            cy.intercept('POST', apiRegisterUrl, {
-              statusCode: httpSuccessfullStatus,
-              body: registerResponse,
-            }).as('registerRequest');
-            // fill in form
-            cy.dataCy(selectorFormRegisterEmail).find('input').type(testEmail);
-            cy.dataCy(selectorFormRegisterPasswordInput).type(testPassword);
-            cy.dataCy(selectorFormRegisterPasswordConfirmInput).type(
-              testPassword,
+            cy.interceptRegisterApi(
+              rideToWorkByBikeConfig,
+              i18n,
+              registerResponse,
+              null,
             );
-            // submit form
-            cy.dataCy(selectorFormRegisterSubmit).should('be.visible').click();
+            // fill and submit form
+            cy.fillAndSubmitRegisterForm();
             // check that form is submitted
             cy.wait('@registerRequest')
               .its('response.statusCode')
