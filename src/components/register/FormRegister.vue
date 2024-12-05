@@ -96,7 +96,11 @@ export default defineComponent({
       challengeStore.loadPhaseSet();
     });
 
+    let datetimeNow;
+    if (window.Cypress)
+      datetimeNow = `Current date time  ${new Date().toLocaleString()}`;
     return {
+      datetimeNow,
       whiteOpacity,
       formRegister,
       isActiveChallenge,
@@ -118,6 +122,10 @@ export default defineComponent({
 
 <template>
   <div class="bg-primary text-white" data-cy="form-register">
+    <!-- Show current date time during Cypress tests required
+         to indentify if this campaign competition phase is active/inactive
+    -->
+    <div v-if="datetimeNow">{{ datetimeNow }}</div>
     <!-- Heading -->
     <div class="q-mb-lg" data-cy="form-register-form">
       <h1 class="text-h5 text-bold q-my-none" data-cy="form-register-title">
