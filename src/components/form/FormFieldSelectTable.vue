@@ -398,4 +398,15 @@ export default defineComponent({
 :deep(.text-negative .q-radio__label) {
   color: $negative;
 }
+/**
+ * Fix issue with nesting of fields.
+ * Wrapper field has borderless and dense classes
+ * which interfere with nested outlined field.
+ * Override padding-right to fix the loader position.
+ */
+:deep(
+  .q-field--borderless.q-field--dense .q-field--outlined .q-field__control
+) {
+  padding-right: 12px;
+}
 </style>
