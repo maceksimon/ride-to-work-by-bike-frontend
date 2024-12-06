@@ -23,23 +23,33 @@ export const getApiBaseUrlWithLang = (
   logger: Logger | null,
   apiBase: string,
   apiDefaultLang: string,
-  i18n: I18n,
+  i18n: I18n | string,
 ): string => {
-  // Use same API default cs lang for sk lang
-  if (![apiDefaultLang, 'sk'].includes(i18n.global.locale as string)) {
-    logger?.info(
-      'Inject Axios base API URL with language (internationalization).',
-    );
-    const apiBaseUrl = new URL(apiBase);
-    logger?.debug(`Available locales <${i18n.global.availableLocales}>.`);
-    logger?.debug(
-      `Injected base API URL with language <${i18n.global.locale}>.`,
-    );
-    return `${apiBaseUrl.origin}/${i18n.global.locale}${apiBaseUrl.pathname}`;
+  if (typeof i18n !== 'string') {
+    // Use same API default cs lang for sk lang
+    if (![apiDefaultLang, 'sk'].includes(i18n.global.locale as string)) {
+      logger?.info(
+        'Inject Axios base API URL with language (internationalization).',
+      );
+      const apiBaseUrl = new URL(apiBase);
+      logger?.debug(`Available locales <${i18n.global.availableLocales}>.`);
+      logger?.debug(
+        `Injected base API URL with language <${i18n.global.locale}>.`,
+      );
+      return `${apiBaseUrl.origin}/${i18n.global.locale}${apiBaseUrl.pathname}`;
+    } else {
+      logger?.debug(
+        `Reset injected base API URL to default language <${apiDefaultLang}>.`,
+      );
+      return apiBase;
+    }
   } else {
-    logger?.debug(
-      `Reset injected base API URL to default language <${apiDefaultLang}>.`,
-    );
-    return apiBase;
+    /**
+     * Required for localization REST API URL during e2e tests for
+     * intercepting API before visiting app URL page when i18n locale
+     * instance is not available for getting current lang
+     */
+    const apiBaseUrl = new URL(apiBase);
+    return `${apiBaseUrl.origin}/${i18n}/${apiBaseUrl.pathname}`;
   }
 };
