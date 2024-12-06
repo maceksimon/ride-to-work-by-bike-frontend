@@ -18,6 +18,7 @@
  *   level - table is used for organization or team selection.
  * - `organizationType` (OrganizationType,
  *   default: OrganizationType.organization): The organization type.
+ * - `loading` (Boolean, default: false): The loading state.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -88,6 +89,10 @@ export default defineComponent({
     organizationType: {
       type: String as () => OrganizationType,
       default: OrganizationType.company,
+    },
+    loading: {
+      type: Boolean,
+      default: false,
     },
   },
   emits: ['update:modelValue'],
@@ -235,6 +240,7 @@ export default defineComponent({
             dense
             outlined
             v-model="query"
+            :loading="loading"
             icon
             id="form-select-table-query"
           >
