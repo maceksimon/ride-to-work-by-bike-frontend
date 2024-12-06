@@ -38,6 +38,7 @@ describe('<ChallengeInactiveInfo>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
       cy.mount(ChallengeInactiveInfo, {
         props: {},
       });
@@ -49,6 +50,7 @@ describe('<ChallengeInactiveInfo>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
       cy.mount(ChallengeInactiveInfo, {
         props: {},
       });
@@ -61,6 +63,7 @@ describe('<ChallengeInactiveInfo>', () => {
 
 function coreTests() {
   it('renders component', () => {
+    cy.wait('@thisCampaignRequest');
     cy.dataCy(selectorChallengeInactiveInfo).should('be.visible');
     // title
     cy.dataCy(selectorChallengeInactiveTitle)
