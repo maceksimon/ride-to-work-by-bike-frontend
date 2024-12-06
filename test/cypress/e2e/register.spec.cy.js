@@ -79,6 +79,10 @@ describe('Register page', () => {
       cy.clock(systemTimeChallengeInactive, ['Date']).then(() => {
         cy.viewport('macbook-16');
         cy.task('getAppConfig', process).then((config) => {
+          /**
+           * Call intercept this camapaign API, before visit URL page,
+           * see FormRegister component OnMounted() callback
+           */
           cy.interceptThisCampaignGetApi(config, defLocale);
           cy.visit('#' + routesConf['register']['path']);
           cy.window().should('have.property', 'i18n');
@@ -92,7 +96,7 @@ describe('Register page', () => {
         cy.window().then((win) => {
           cy.waitForThisCampaignApi();
           // intercept register request
-          cy.interceptRegisterApi(
+          cy.interceptRegisterRefreshAuthTokenApi(
             config,
             win.i18n,
             {
@@ -117,22 +121,38 @@ describe('Register page', () => {
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           cy.waitForThisCampaignApi();
-          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
+          cy.fixture('refreshTokensResponseChallengeActive').then(
+            (refreshTokensResponseChallengeActive) => {
+              cy.fixture('loginRegisterResponseChallengeInactive').then(
+                (loginRegisterResponseChallengeInactive) => {
+                  cy.interceptRegisterRefreshAuthTokenVerifyEmailApi(
+                    config,
+                    win.i18n,
+                    loginRegisterResponseChallengeInactive,
+                    null,
+                    refreshTokensResponseChallengeActive,
+                    null,
+                  );
+                },
+              );
+            },
+          );
           // fill form
           cy.fillAndSubmitRegisterForm();
           // wait for request to complete
-          cy.fixture('registerResponse.json').then((registerResponse) => {
-            cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerRequest').then((registerRequest) => {
-                expect(interception.request.body).to.deep.equal(
-                  registerRequest,
-                );
-              });
-              expect(interception.response.body).to.deep.equal(
-                registerResponse,
-              );
+          cy.wait('@registerRequest').then((interception) => {
+            cy.fixture('registerRequest').then((registerRequest) => {
+              expect(interception.request.body).to.deep.equal(registerRequest);
             });
+            cy.fixture('loginRegisterResponseChallengeInactive').then(
+              (loginRegisterResponseChallengeInactive) => {
+                expect(interception.response.body).to.deep.equal(
+                  loginRegisterResponseChallengeInactive,
+                );
+              },
+            );
           });
+
           // wait for email verification request to complete
           cy.wait('@verifyEmailRequest').then((interception) => {
             expect(interception.response.body).to.deep.equal({
@@ -166,6 +186,10 @@ describe('Register page', () => {
       cy.clock(systemTimeChallengeActive, ['Date']).then(() => {
         cy.viewport('macbook-16');
         cy.task('getAppConfig', process).then((config) => {
+          /**
+           * Call intercept this camapaign API, before visit URL page,
+           * see FormRegister component OnMounted() callback
+           */
           cy.interceptThisCampaignGetApi(config, defLocale);
           cy.visit('#' + routesConf['register']['path']);
           cy.window().should('have.property', 'i18n');
@@ -179,22 +203,38 @@ describe('Register page', () => {
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           cy.waitForThisCampaignApi();
-          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
-
+          cy.fixture('refreshTokensResponseChallengeActive').then(
+            (refreshTokensResponseChallengeActive) => {
+              cy.fixture('loginRegisterResponseChallengeActive').then(
+                (loginRegisterResponseChallengeActive) => {
+                  cy.interceptRegisterRefreshAuthTokenVerifyEmailApi(
+                    config,
+                    win.i18n,
+                    loginRegisterResponseChallengeActive,
+                    null,
+                    refreshTokensResponseChallengeActive,
+                    null,
+                  );
+                },
+              );
+            },
+          );
           // fill and submit form
           cy.fillAndSubmitRegisterForm({
             checkAcceptPrivacyPolicyCheckbox: false,
           });
           // wait for request to complete
           cy.wait('@registerRequest').then((interception) => {
-            cy.fixture('registerRequest').then((registerRequest) => {
+            cy.fixture('registerRequest.json').then((registerRequest) => {
               expect(interception.request.body).to.deep.equal(registerRequest);
             });
-            cy.fixture('registerResponse.json').then((registerResponse) => {
-              expect(interception.response.body).to.deep.equal(
-                registerResponse,
-              );
-            });
+            cy.fixture('loginRegisterResponseChallengeActive').then(
+              (loginRegisterResponseChallengeActive) => {
+                expect(interception.response.body).to.deep.equal(
+                  loginRegisterResponseChallengeActive,
+                );
+              },
+            );
           });
           // redirect to verify email page
           cy.url().should('contain', routesConf['verify_email']['path']);
@@ -244,23 +284,38 @@ describe('Register page', () => {
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           cy.waitForThisCampaignApi();
-          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
+          cy.fixture('refreshTokensResponseChallengeActive').then(
+            (refreshTokensResponseChallengeActive) => {
+              cy.fixture('loginRegisterResponseChallengeActive').then(
+                (loginRegisterResponseChallengeActive) => {
+                  cy.interceptRegisterRefreshAuthTokenVerifyEmailApi(
+                    config,
+                    win.i18n,
+                    loginRegisterResponseChallengeActive,
+                    null,
+                    refreshTokensResponseChallengeActive,
+                    null,
+                  );
+                },
+              );
+            },
+          );
           // fill and submit form
           cy.fillAndSubmitRegisterForm({
             checkAcceptPrivacyPolicyCheckbox: false,
           });
           // wait for request to complete
-          cy.fixture('registerResponse.json').then((registerResponse) => {
-            cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerRequest').then((registerRequest) => {
-                expect(interception.request.body).to.deep.equal(
-                  registerRequest,
-                );
-              });
-              expect(interception.response.body).to.deep.equal(
-                registerResponse,
-              );
+          cy.wait('@registerRequest').then((interception) => {
+            cy.fixture('registerRequest').then((registerRequest) => {
+              expect(interception.request.body).to.deep.equal(registerRequest);
             });
+            cy.fixture('loginRegisterResponseChallengeActive').then(
+              (loginRegisterResponseChallengeActive) => {
+                expect(interception.response.body).to.deep.equal(
+                  loginRegisterResponseChallengeActive,
+                );
+              },
+            );
           });
           // redirect to verify email page
           cy.url().should('contain', routesConf['verify_email']['path']);
@@ -288,23 +343,38 @@ describe('Register page', () => {
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           cy.waitForThisCampaignApi();
-          cy.interceptRegisterVerifyEmailApi(config, win.i18n);
+          cy.fixture('refreshTokensResponseChallengeActive').then(
+            (refreshTokensResponseChallengeActive) => {
+              cy.fixture('loginRegisterResponseChallengeActive').then(
+                (loginRegisterResponseChallengeActive) => {
+                  cy.interceptRegisterRefreshAuthTokenVerifyEmailApi(
+                    config,
+                    win.i18n,
+                    loginRegisterResponseChallengeActive,
+                    null,
+                    refreshTokensResponseChallengeActive,
+                    null,
+                  );
+                },
+              );
+            },
+          );
           // fill form
           cy.fillAndSubmitRegisterForm({
             checkAcceptPrivacyPolicyCheckbox: false,
           });
           // wait for request to complete
-          cy.fixture('registerResponse.json').then((registerResponse) => {
-            cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerRequest').then((registerRequest) => {
-                expect(interception.request.body).to.deep.equal(
-                  registerRequest,
-                );
-              });
-              expect(interception.response.body).to.deep.equal(
-                registerResponse,
-              );
+          cy.wait('@registerRequest').then((interception) => {
+            cy.fixture('registerRequest').then((registerRequest) => {
+              expect(interception.request.body).to.deep.equal(registerRequest);
             });
+            cy.fixture('loginRegisterResponseChallengeActive').then(
+              (loginRegisterResponseChallengeActive) => {
+                expect(interception.response.body).to.deep.equal(
+                  loginRegisterResponseChallengeActive,
+                );
+              },
+            );
           });
           // wait for email verification request to complete
           cy.wait('@verifyEmailRequest').then((interception) => {
@@ -346,23 +416,39 @@ describe('Register page', () => {
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           cy.waitForThisCampaignApi();
-          cy.fixture('registerResponse.json').then((registerResponse) => {
-            cy.interceptRegisterApi(config, win.i18n);
-            // fill form
-            cy.fillAndSubmitRegisterForm({
-              checkAcceptPrivacyPolicyCheckbox: false,
-            });
-            cy.wait('@registerRequest').then((interception) => {
-              cy.fixture('registerRequest').then((registerRequest) => {
-                expect(interception.request.body).to.deep.equal(
-                  registerRequest,
-                );
-              });
-              expect(interception.response.body).to.deep.equal(
-                registerResponse,
+          cy.fixture('refreshTokensResponseChallengeActive').then(
+            (refreshTokensResponseChallengeActive) => {
+              cy.fixture('loginRegisterResponseChallengeActive').then(
+                (loginRegisterResponseChallengeActive) => {
+                  cy.interceptRegisterRefreshAuthTokenVerifyEmailApi(
+                    config,
+                    win.i18n,
+                    loginRegisterResponseChallengeActive,
+                    null,
+                    refreshTokensResponseChallengeActive,
+                    null,
+                  );
+                },
               );
+            },
+          );
+          // fill form
+          cy.fillAndSubmitRegisterForm({
+            checkAcceptPrivacyPolicyCheckbox: false,
+          });
+          cy.wait('@registerRequest').then((interception) => {
+            cy.fixture('loginRegisterResponseChallengeActive').then(
+              (loginRegisterResponseChallengeActive) => {
+                expect(interception.response.body).to.deep.equal(
+                  loginRegisterResponseChallengeActive,
+                );
+              },
+            );
+            cy.fixture('registerRequest').then((registerRequest) => {
+              expect(interception.request.body).to.deep.equal(registerRequest);
             });
           });
+          cy.wait('@verifyEmailRequest');
           // redirect to verify email page
           cy.url().should('contain', routesConf['verify_email']['path']);
           // test access to register page
