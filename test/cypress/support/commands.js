@@ -777,14 +777,16 @@ Cypress.Commands.add(
     );
     // intercept register API call
     const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
-    cy.fixture('refreshTokenResponse').then((refreshTokenResponse) => {
-      cy.intercept('POST', apiRefreshUrl, {
-        statusCode: responseStatusCode
-          ? responseStatusCode
-          : httpSuccessfullStatus,
-        body: responseBody ? responseBody : refreshTokenResponse,
-      }).as('refreshAuthTokenRequest');
-    });
+    cy.fixture('refreshTokensResponseChallengeInactive').then(
+      (refreshTokenResponse) => {
+        cy.intercept('POST', apiRefreshUrl, {
+          statusCode: responseStatusCode
+            ? responseStatusCode
+            : httpSuccessfullStatus,
+          body: responseBody ? responseBody : refreshTokenResponse,
+        }).as('refreshAuthTokenRequest');
+      },
+    );
   },
 );
 
