@@ -509,14 +509,59 @@ Cypress.Commands.add(
     );
     // intercept register API call
     const apiRegisterUrl = `${apiBaseUrl}${urlApiRegister}`;
-    cy.fixture('registerResponse.json').then((registerResponse) => {
-      cy.intercept('POST', apiRegisterUrl, {
-        statusCode: responseStatusCode
-          ? responseStatusCode
-          : httpSuccessfullStatus,
-        body: responseBody ? responseBody : registerResponse,
-      }).as('registerRequest');
-    });
+    cy.fixture('loginRegisterResponseChallengeInactive').then(
+      (loginRegisterResponseChallengeInactive) => {
+        cy.intercept('POST', apiRegisterUrl, {
+          statusCode: responseStatusCode
+            ? responseStatusCode
+            : httpSuccessfullStatus,
+          body: responseBody
+            ? responseBody
+            : loginRegisterResponseChallengeInactive,
+        }).as('registerRequest');
+      },
+    );
+  },
+);
+
+/**
+ * Intercept register POST API call,
+ *           refresh auth toke POST API call
+ * Provides `@registerRequest`,
+ *          `@refreshAuthTokenRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} registerResponseBody - Override default response body
+ * @param {Number} registerResponseStatusCode - Override default response HTTP status code
+ * @param {Object} refreshAuthTokenResponseBody - Override default response body for
+ *                                                refresh auth token intercept
+ * @param {Number} refreshAuthTokenResponseStatusCode - Override default response HTTP status code
+ *                                                      for refresh auth token intercept
+ */
+Cypress.Commands.add(
+  'interceptRegisterRefreshAuthTokenApi',
+  (
+    config,
+    i18n,
+    registerResponseBody,
+    registerResponseStatusCode,
+    refreshAuthTokenResponseBody,
+    refreshAuthTokenResponseStatusCode,
+  ) => {
+    // Intercept register API call
+    cy.interceptRegisterApi(
+      config,
+      i18n,
+      registerResponseBody,
+      registerResponseStatusCode,
+    );
+    // Intercept refresh auth token API call
+    cy.interceptRefreshAuthTokenApi(
+      config,
+      i18n,
+      refreshAuthTokenResponseBody,
+      refreshAuthTokenResponseStatusCode,
+    );
   },
 );
 
@@ -564,27 +609,35 @@ Cypress.Commands.add(
  *                                        register intercept
  * @param {Object} registerResponseStatusCode - Override default response HTTP status code
  *                                              register intercept
+ * @param {Object} refreshAuthTokenResponseBody - Override default response body for
+ *                                                refresh auth token intercept
+ * @param {Number} refreshAuthTokenResponseStatusCode - Override default response HTTP status code
+ *                                                      for refresh auth token intercept
  * @param {Object} verifyEmailResponseBody - Override default response body for
  *                                           verify email intercept
  * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
  *                                                 for verify email intercept
  */
 Cypress.Commands.add(
-  'interceptRegisterVerifyEmailApi',
+  'interceptRegisterRefreshAuthTokenVerifyEmailApi',
   (
     config,
     i18n,
     registerResponseBody,
     registerResponseStatusCode,
+    refreshAuthTokenResponseBody,
+    refreshAuthTokenResponseStatusCode,
     verifyEmailResponseBody,
     verifyEmailResponseStatusCode,
   ) => {
-    // Intercept register API call
-    cy.interceptRegisterApi(
+    // Intercept register and refresh auth token API call
+    cy.interceptRegisterRefreshAuthTokenApi(
       config,
       i18n,
       registerResponseBody,
       registerResponseStatusCode,
+      refreshAuthTokenResponseBody,
+      refreshAuthTokenResponseStatusCode,
     );
     // Intercept verify email API call
     cy.interceptVerifyEmailApi(
@@ -598,9 +651,11 @@ Cypress.Commands.add(
 
 /**
  * Intercept register POST API call and intercept verify,
+ *           refresh auth token POST API call,
  *           email GET API call,
  *           this campaign GET API call
  * Provides `@registerRequest`,
+ *          `@refreshAuthTokenRequest`,
  *          `@verifyEmailRequest`,
  *          `@thisCampaignRequest` alias
  * @param {Object} config - App global config
@@ -609,6 +664,10 @@ Cypress.Commands.add(
  *                                        register intercept
  * @param {Object} registerResponseStatusCode - Override default response HTTP status code
  *                                              register intercept
+ * @param {Object} refreshAuthTokenResponseBody - Override default response body for
+ *                                                refresh auth token intercept
+ * @param {Number} refreshAuthTokenResponseStatusCode - Override default response HTTP status code
+ *                                                      for refresh auth token intercept
  * @param {Object} verifyEmailResponseBody - Override default response body for
  *                                           verify email intercept
  * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
@@ -619,23 +678,27 @@ Cypress.Commands.add(
  *                                                         for verify campaign phase intercept
  */
 Cypress.Commands.add(
-  'interceptRegisterVerifyEmailVerifyCampaignPhaseApi',
+  'interceptRegisterRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi',
   (
     config,
     i18n,
     registerResponseBody,
     registerResponseStatusCode,
+    refreshAuthTokenResponseBody,
+    refreshAuthTokenResponseStatusCode,
     verifyEmailResponseBody,
     verifyEmailResponseStatusCode,
     verifyCampaignPhaseResponseBody,
     verifyCampaignPhaseResponseStatusCode,
   ) => {
-    // Intercept register and verify email API call
-    cy.interceptRegisterVerifyEmailApi(
+    // Intercept register, refresh auth token, and verify email API call
+    cy.interceptRegisterRefreshAuthTokenVerifyEmailApi(
       config,
       i18n,
       registerResponseBody,
       registerResponseStatusCode,
+      refreshAuthTokenResponseBody,
+      refreshAuthTokenResponseStatusCode,
       verifyEmailResponseBody,
       verifyEmailResponseStatusCode,
     );
@@ -695,6 +758,37 @@ Cypress.Commands.add(
 );
 
 /**
+ * Intercept refresh auth token POST API call
+ * Provides `@refreshTokenRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptRefreshAuthTokenApi',
+  (config, i18n, responseBody, responseStatusCode) => {
+    const { apiBase, apiDefaultLang, urlApiRefresh } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    // intercept register API call
+    const apiRefreshUrl = `${apiBaseUrl}${urlApiRefresh}`;
+    cy.fixture('refreshTokenResponse').then((refreshTokenResponse) => {
+      cy.intercept('POST', apiRefreshUrl, {
+        statusCode: responseStatusCode
+          ? responseStatusCode
+          : httpSuccessfullStatus,
+        body: responseBody ? responseBody : refreshTokenResponse,
+      }).as('refreshAuthTokenRequest');
+    });
+  },
+);
+
+/**
  * Intercept this login POST API call
  * Provides `@loginRequest` alias
  * @param {Object} config - App global config
@@ -714,42 +808,46 @@ Cypress.Commands.add(
     );
     // intercept register API call
     const apiRegisterUrl = `${apiBaseUrl}${urlApiLogin}`;
-    cy.fixture('loginResponse.json').then((registerResponse) => {
-      cy.intercept('POST', apiRegisterUrl, {
-        statusCode: responseStatusCode
-          ? responseStatusCode
-          : httpSuccessfullStatus,
-        body: responseBody ? responseBody : registerResponse,
-      }).as('loginRequest');
-    });
+    cy.fixture('loginRegisterResponseChallengeInactive').then(
+      (loginRegisterResponseChallengeInactive) => {
+        cy.intercept('POST', apiRegisterUrl, {
+          statusCode: responseStatusCode
+            ? responseStatusCode
+            : httpSuccessfullStatus,
+          body: responseBody
+            ? responseBody
+            : loginRegisterResponseChallengeInactive,
+        }).as('loginRequest');
+      },
+    );
   },
 );
 
 /**
  * Intercept login POST API call,
- *           verify email GET API call
+ *           refresh auth token POST API call
  * Provides `@loginRequest`,
- *          `@verifyEmailRequest` alias
+ *          `@refreshAuthTokenRequest` alias
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
  * @param {Object} loginResponseBody - Override default response body for
- *                                        register intercept
+ *                                     register intercept
  * @param {Object} loginResponseStatusCode - Override default response HTTP status code
- *                                              register intercept
- * @param {Object} verifyEmailResponseBody - Override default response body for
- *                                           verify email intercept
- * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
- *                                                 for verify email intercept
+ *                                           register intercept
+ * @param {Object} refreshAuthTokenResponseBody - Override default response body for
+ *                                                refresh auth token intercept
+ * @param {Number} refreshAuthTokenResponseStatusCode - Override default response HTTP status code
+ *                                                      for refresh auth token intercept
  */
 Cypress.Commands.add(
-  'interceptLoginVerifyEmailApi',
+  'interceptLoginRefreshAuthTokenApi',
   (
     config,
     i18n,
     loginResponseBody,
     loginResponseStatusCode,
-    verifyEmailResponseBody,
-    verifyEmailResponseStatusCode,
+    refreshAuthTokenResponseBody,
+    refreshAuthTokenResponseStatusCode,
   ) => {
     // Intercept login API call
     cy.interceptLoginApi(
@@ -757,6 +855,59 @@ Cypress.Commands.add(
       i18n,
       loginResponseBody,
       loginResponseStatusCode,
+    );
+    // Intercept refresh auth token API call
+    cy.interceptRefreshAuthTokenApi(
+      config,
+      i18n,
+      refreshAuthTokenResponseBody,
+      refreshAuthTokenResponseStatusCode,
+    );
+  },
+);
+
+/**
+ * Intercept login POST API call,
+ *           refresh auth token POST API call,
+ *           verify email GET API call
+ * Provides `@loginRequest`,
+ *          `@refreshAuthTokenRequest`,
+ *          `@verifyEmailRequest` alias
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {Object} loginResponseBody - Override default response body for
+ *                                     login intercept
+ * @param {Object} loginResponseStatusCode - Override default response HTTP status code
+ *                                           login intercept
+ * @param {Object} refreshAuthTokenResponseStatusCode - Override default response HTTP status code
+ *                                                      refresh auth token intercept
+ * @param {Object} refreshAuthTokenResponseBody - Override default response body for
+ *                                                refresh auth token intercept
+ * @param {Object} verifyEmailResponseBody - Override default response body for
+ *                                           verify email intercept
+ * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
+ *                                                 for verify email intercept
+ */
+Cypress.Commands.add(
+  'interceptLoginRefreshAuthTokenVerifyEmailApi',
+  (
+    config,
+    i18n,
+    loginResponseBody,
+    loginResponseStatusCode,
+    refreshAuthTokenResponseBody,
+    refreshAuthTokenResponseStatusCode,
+    verifyEmailResponseBody,
+    verifyEmailResponseStatusCode,
+  ) => {
+    // Intercept login and refresh auth token API call
+    cy.interceptLoginRefreshAuthTokenApi(
+      config,
+      i18n,
+      loginResponseBody,
+      loginResponseStatusCode,
+      refreshAuthTokenResponseBody,
+      refreshAuthTokenResponseStatusCode,
     );
     // Intercept verify email API call
     cy.interceptVerifyEmailApi(
@@ -781,6 +932,10 @@ Cypress.Commands.add(
  *                                     login intercept
  * @param {Object} loginResponseStatusCode - Override default response HTTP status code
  *                                           login intercept
+ * @param {Object} refreshAuthTokenResponseBody - Override default response body for
+ *                                                refresh auth token intercept
+ * @param {Object} refreshAuthTokenResponseStatusCode - Override default response HTTP status code
+ *                                                      refresh auth token intercept
  * @param {Object} verifyEmailResponseBody - Override default response body for
  *                                           verify email intercept
  * @param {Number} verifyEmailResponseStatusCode - Override default response HTTP status code
@@ -791,23 +946,27 @@ Cypress.Commands.add(
  *                                                         for verify campaign phase intercept
  */
 Cypress.Commands.add(
-  'interceptLoginVerifyEmailVerifyCampaignPhaseApi',
+  'interceptLoginRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi',
   (
     config,
     i18n,
     loginResponseBody,
     loginResponseStatusCode,
+    refreshAuthTokenResponseBody,
+    refreshAuthTokenResponseStatusCode,
     verifyEmailResponseBody,
     verifyEmailResponseStatusCode,
     verifyCampaignPhaseResponseBody,
     verifyCampaignPhaseResponseStatusCode,
   ) => {
-    // Intercept loginand verify email API call
-    cy.interceptLoginVerifyEmailApi(
+    // Intercept login, refresh auth token and verify email API call
+    cy.interceptLoginRefreshAuthTokenVerifyEmailApi(
       config,
       i18n,
       loginResponseBody,
       loginResponseStatusCode,
+      refreshAuthTokenResponseBody,
+      refreshAuthTokenResponseStatusCode,
       verifyEmailResponseBody,
       verifyEmailResponseStatusCode,
     );
