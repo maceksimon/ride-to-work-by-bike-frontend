@@ -19,6 +19,7 @@ import { defineComponent } from 'vue';
 
 import { useRouter } from 'vue-router';
 
+import ShowCurrentDatetime from 'components/debug/ShowCurrentDatetime.vue';
 import { routesConf } from '../../router/routes_conf';
 import { useChallengeStore } from '../../stores/challenge';
 
@@ -30,6 +31,7 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 export default defineComponent({
   name: 'ChallengeInactiveInfo',
+  components: { ShowCurrentDatetime },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
     // colors
@@ -119,6 +121,10 @@ export default defineComponent({
     </div>
     <!-- Heading -->
     <div class="q-mb-lg">
+      <!-- Show current date time debug message during Cypress tests required
+         to indentify if this campaign competition phase is active/inactive
+      -->
+      <show-current-datetime></show-current-datetime>
       <h1
         class="text-h5 text-bold q-my-none"
         data-cy="challenge-inactive-title"
