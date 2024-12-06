@@ -7,6 +7,13 @@ import {
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 
+/**
+ * Required for localization REST API URL during e2e tests for
+ * intercepting API before visiting app URL page when i18n locale
+ * instance is not available for getting current lang
+ */
+import { defLocale } from '../../../src/i18n/def_locale';
+
 // selectors
 const selectorLogoutButton = 'logout-button';
 const selectorUserSelectDesktop = 'user-select-desktop';
@@ -71,15 +78,12 @@ describe('Register page', () => {
     beforeEach(() => {
       cy.clock(systemTimeChallengeInactive, ['Date']).then(() => {
         cy.viewport('macbook-16');
-        cy.visit('#' + routesConf['register']['path']);
         cy.task('getAppConfig', process).then((config) => {
+          cy.interceptThisCampaignGetApi(config, defLocale);
+          cy.visit('#' + routesConf['register']['path']);
           cy.window().should('have.property', 'i18n');
-          cy.window().then((win) => {
-            cy.interceptThisCampaignGetApi(config, win.i18n);
-          });
         });
       });
-      cy.reload();
     });
 
     it('shows error message on registration failure', () => {
@@ -161,15 +165,12 @@ describe('Register page', () => {
     beforeEach(() => {
       cy.clock(systemTimeChallengeActive, ['Date']).then(() => {
         cy.viewport('macbook-16');
-        cy.visit('#' + routesConf['register']['path']);
         cy.task('getAppConfig', process).then((config) => {
+          cy.interceptThisCampaignGetApi(config, defLocale);
+          cy.visit('#' + routesConf['register']['path']);
           cy.window().should('have.property', 'i18n');
-          cy.window().then((win) => {
-            cy.interceptThisCampaignGetApi(config, win.i18n);
-          });
         });
       });
-      cy.reload();
     });
 
     // ! router redirection rules are enabled for this file in /router/index.ts
