@@ -104,45 +104,43 @@ describe('Login page', () => {
       cy.task('getAppConfig', process).then((config) => {
         cy.wrap(config).as('config');
         // Visit the login page to initialize i18n
-        cy.visit('#' + routesConf['register_coordinator']['path'])
-          .then(() => {
-            cy.window().should('have.property', 'i18n');
-            cy.window().then((win) => {
-              cy.wrap(win.i18n).as('i18n');
-
-              // Set up API intercepts
-              interceptOrganizationsApi(
-                config,
-                win.i18n,
-                OrganizationType.company,
-              );
-              interceptRegisterCoordinatorApi(config, win.i18n);
-
-              // Load fixtures and set up request body
-              cy.fixture('formRegisterCoordinator').then(
-                (formRegisterCoordinatorData) => {
-                  cy.fixture('formFieldCompany').then(
-                    (formFieldCompanyResponse) => {
-                      cy.wrap({
-                        firstName: formRegisterCoordinatorData.firstName,
-                        jobTitle: formRegisterCoordinatorData.jobTitle,
-                        lastName: formRegisterCoordinatorData.lastName,
-                        newsletter: formRegisterCoordinatorData.newsletter,
-                        organizationId: formFieldCompanyResponse.results[0].id,
-                        phone: formRegisterCoordinatorData.phone,
-                        responsibility: true,
-                        terms: true,
-                      }).as('registerRequestBody');
-                    },
-                  );
-                },
-              );
+        cy.visit('#' + routesConf['login']['path']);
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.wrap(win.i18n).as('i18n');
+          // Set up API intercepts
+          cy.interceptLoginRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi(
+            config,
+            win.i18n,
+          );
+          cy.fillAndSubmitLoginForm(config, win.i18n);
+          cy.wait([
+            '@loginRequest',
+            '@refreshAuthTokenRequest',
+            '@verifyEmailRequest',
+            '@thisCampaignRequest',
+          ]);
+          cy.visit('#' + routesConf['register_coordinator']['path']);
+          interceptRegisterCoordinatorApi(config, win.i18n);
+          interceptOrganizationsApi(config, win.i18n, OrganizationType.company);
+        });
+        // Load fixtures and set up request body
+        cy.fixture('formRegisterCoordinator').then(
+          (formRegisterCoordinatorData) => {
+            cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+              cy.wrap({
+                firstName: formRegisterCoordinatorData.firstName,
+                jobTitle: formRegisterCoordinatorData.jobTitle,
+                lastName: formRegisterCoordinatorData.lastName,
+                newsletter: formRegisterCoordinatorData.newsletter,
+                organizationId: formFieldCompanyResponse.results[0].id,
+                phone: formRegisterCoordinatorData.phone,
+                responsibility: true,
+                terms: true,
+              }).as('registerRequestBody');
             });
-          })
-          .then(() => {
-            // Reload page to initiate onload API calls
-            cy.reload();
-          });
+          },
+        );
       });
     });
 
