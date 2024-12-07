@@ -120,9 +120,9 @@ describe('Login page', () => {
             '@verifyEmailRequest',
             '@thisCampaignRequest',
           ]);
-          cy.visit('#' + routesConf['register_coordinator']['path']);
           interceptRegisterCoordinatorApi(config, win.i18n);
           interceptOrganizationsApi(config, win.i18n, OrganizationType.company);
+          cy.visit('#' + routesConf['register_coordinator']['path']);
         });
         // Load fixtures and set up request body
         cy.fixture('formRegisterCoordinator').then(
