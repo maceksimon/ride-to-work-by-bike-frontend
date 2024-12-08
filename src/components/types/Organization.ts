@@ -1,5 +1,6 @@
+import { Ref } from 'vue';
 import { Image } from './Image';
-import { FormCompanyAddressFields } from './Form';
+import { FormCompanyAddressFields, FormSelectTableOption } from './Form';
 
 export enum OrganizationType {
   company = 'company',
@@ -72,3 +73,17 @@ export interface PostOrganizationsResponse {
   id: number;
   name: string;
 }
+
+export interface GetTeamsResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: OrganizationTeam[];
+}
+
+export type useApiGetTeamsReturn = {
+  teams: Ref<OrganizationTeam[]>;
+  options: Ref<FormSelectTableOption[]>;
+  isLoading: Ref<boolean>;
+  loadTeams: (subsidiaryId: number) => Promise<void>;
+};
