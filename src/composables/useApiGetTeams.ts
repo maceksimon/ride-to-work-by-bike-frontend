@@ -12,20 +12,23 @@ import { useLoginStore } from '../stores/login';
 
 // types
 import type { Logger } from '../components/types/Logger';
-import type { OrganizationTeam } from '../components/types/Organization';
+import type {
+  GetTeamsResponse,
+  OrganizationTeam,
+  useApiGetTeamsReturn,
+} from '../components/types/Organization';
 import type { FormSelectTableOption } from '../components/types/Form';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
-interface GetTeamsResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: OrganizationTeam[];
-}
-
-export const useApiGetTeams = (logger: Logger | null) => {
+/**
+ * Get teams composable
+ * Used to getting API teams data
+ * @param logger - Logger
+ * @returns {useApiGetTeamsReturn}
+ */
+export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
   const teams = ref<OrganizationTeam[]>([]);
   const isLoading = ref<boolean>(false);
   const loginStore = useLoginStore();
@@ -37,9 +40,17 @@ export const useApiGetTeams = (logger: Logger | null) => {
    */
   const loadTeams = async (subsidiaryId: number): Promise<void> => {
     // reset options
+    logger?.debug(
+      `Reseting default options <${JSON.stringify(teams.value, null, 2)}>.`,
+    );
+    // reset options
     teams.value = [];
+    logger?.debug(
+      `Default options set to <${JSON.stringify(teams.value, null, 2)}>.`,
+    );
 
     // get teams
+    logger?.info('Get teams from the API.');
     isLoading.value = true;
 
     // append access token into HTTP header
@@ -70,8 +81,11 @@ export const useApiGetTeams = (logger: Logger | null) => {
 
   /**
    * Fetch next page of teams
+   * @param {string} url - Get teams next page API URL
+   * @returns {Promise<void>} - Promise
    */
   const fetchNextPage = async (url: string): Promise<void> => {
+    logger?.debug(`Fetching next page of teams from <${url}>.`);
     // append access token into HTTP header
     const requestTokenHeader_ = { ...requestTokenHeader };
     requestTokenHeader_.Authorization += loginStore.getAccessToken;
@@ -97,6 +111,7 @@ export const useApiGetTeams = (logger: Logger | null) => {
     }
   };
 
+  // Push results to options
   const options = computed<FormSelectTableOption[]>(() => {
     return teams.value.map((team: OrganizationTeam): FormSelectTableOption => {
       return {
