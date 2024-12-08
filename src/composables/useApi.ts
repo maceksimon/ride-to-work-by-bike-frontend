@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 import { Notify } from 'quasar';
 import { api, axios } from '../boot/axios';
 import { i18n } from '../boot/i18n';
+import { ApiBaseUrl } from '../components/enums/Api';
 import { getApiBaseUrlWithLang } from '../utils/get_api_base_url_with_lang';
 
 // utils
@@ -61,25 +62,25 @@ const hasReponseDataNonFieldsErrorsKey = ({
 
 /*
  * Select Axios base API URL based on the variant
- * @param {BaseUrl} variant - Base URL variant
+ * @param {ApiBaseUrl} variant - Base URL variant
  * @param {(Logger|null)} logger - Logger instance
  * @returns {string} - Axios base API URL
  */
 const getAxiosBaseApiUrl = (
-  variant: BaseUrl,
+  variant: ApiBaseUrl,
   logger: Logger | null,
 ): string => {
   logger?.debug(`Get Axios base API URL with variant <${variant}>.`);
   switch (variant) {
-    case BaseUrl.rest:
+    case ApiBaseUrl.rest:
       logger?.debug(`Use endpoint <${apiBase}>.`);
       return `${apiBase}`;
-    case BaseUrl.feed:
+    case ApiBaseUrl.feed:
       logger?.debug(`Use endpoint <${apiBaseFeed}>.`);
       return `${apiBaseFeed}`;
     default:
       logger?.debug(
-        `Defaulting to <${BaseUrl.rest}> variant in getAxiosBaseApiUrl().`,
+        `Defaulting to <${ApiBaseUrl.rest}> variant in getAxiosBaseApiUrl().`,
       );
       return `${apiBase}`;
   }
@@ -106,12 +107,7 @@ const injectAxioBaseApiUrlWithLang = (
   );
 };
 
-export enum BaseUrl {
-  rest = 'rest',
-  feed = 'feed',
-}
-
-export const useApi = (variant: BaseUrl = BaseUrl.rest) => {
+export const useApi = (variant: ApiBaseUrl = ApiBaseUrl.rest) => {
   const apiFetch = async <T>({
     endpoint,
     payload,
