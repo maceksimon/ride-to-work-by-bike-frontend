@@ -297,7 +297,7 @@ Cypress.Commands.add('testSoacialMediaUrlRequest', (rideToWorkByBikeConfig) => {
  * Intercept cities GET API calls
  * Provides `@getCities` and `@getCitiesNextPage` aliases
  * @param {object} config - App global config
- * @param {object} i18n - i18n instance
+ * @param {object|string} i18n - i18n instance or locale lang string e.g. en
  */
 Cypress.Commands.add('interceptCitiesGetApi', (config, i18n) => {
   const { apiBase, apiDefaultLang, urlApiCities } = config;
@@ -364,7 +364,7 @@ Cypress.Commands.add('waitForCitiesApi', () => {
  * Intercept teams GET API calls
  * Provides `@getTeams` and `@getTeamsNextPage` aliases
  * @param {object} config - App global config
- * @param {object} i18n - i18n instance
+ * @param {object|string} i18n - i18n instance or locale lang string e.g. en
  * @param {number} subsidiaryId - Subsidiary ID
  */
 Cypress.Commands.add('interceptTeamsGetApi', (config, i18n, subsidiaryId) => {
@@ -393,7 +393,7 @@ Cypress.Commands.add('interceptTeamsGetApi', (config, i18n, subsidiaryId) => {
  * Intercept subsidiaries GET API calls
  * Provides `@getSubsidiaries` and `@getSubsidiariesNextPage` aliases
  * @param {object} config - App global config
- * @param {object} i18n - i18n instance
+ * @param {object|string} i18n - i18n instance or locale lang string e.g. en
  * @param {number} organizationId - Organization ID
  */
 Cypress.Commands.add(
