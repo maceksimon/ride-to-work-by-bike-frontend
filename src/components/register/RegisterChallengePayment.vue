@@ -48,6 +48,7 @@ import { PaymentAmount, PaymentSubject } from '../enums/Payment';
 
 // types
 import type { FormOption, FormPaymentVoucher } from '../types/Form';
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'RegisterChallengePayment',
@@ -154,7 +155,9 @@ export default defineComponent({
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
     //  Model for 'Entry fee payment' radio button element
-    const selectedPaymentSubject = ref<string>(PaymentSubject.individual);
+    const selectedPaymentSubject = ref<PaymentSubject>(
+      PaymentSubject.individual,
+    );
     const selectedCompany = ref<string>('');
     const isRegistrationCoordinator = ref<boolean>(false);
     const formRegisterCoordinator = reactive({
@@ -204,7 +207,7 @@ export default defineComponent({
           ` <${i18n.global.t('register.challenge.labelPaymentAmount')}>` +
           ' radio button element.',
       );
-      let opts = [];
+      let opts: FormOption[] = [];
       if (
         selectedPaymentSubject.value === PaymentSubject.voucher &&
         isVoucherFreeEntry.value
@@ -240,7 +243,13 @@ export default defineComponent({
             value: PaymentAmount.custom,
           },
         ];
-      } else if (selectedPaymentSubject.value !== PaymentSubject.voucher) {
+      } else if (
+        selectedPaymentSubject.value === PaymentSubject.company ||
+        selectedPaymentSubject.value === PaymentSubject.school ||
+        selectedPaymentSubject.value === PaymentSubject.voucher
+      ) {
+        opts = [];
+      } else if (selectedPaymentSubject.value === PaymentSubject.individual) {
         logger?.debug(
           `Selected payement subject <${selectedPaymentSubject.value}>.`,
         );
