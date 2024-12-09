@@ -5,9 +5,10 @@ import RegisterChallengePayment from 'components/register/RegisterChallengePayme
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { PaymentAmount, PaymentSubject } from '../enums/Payment';
-import { OrganizationType } from 'components/types/Organization';
 import { useRegisterChallengeStore } from 'stores/registerChallenge';
 import { getRadioOption } from '../../../test/cypress/utils';
+import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
+import { OrganizationType } from '../types/Organization';
 
 // selectors
 const selectorBannerPaymentMinimum = 'banner-payment-minimum';
@@ -85,6 +86,16 @@ describe('<RegisterChallengePayment>', () => {
   context('desktop', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
       cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
         cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
           cy.wrap(voucherFull).as('voucherFull');
@@ -103,6 +114,16 @@ describe('<RegisterChallengePayment>', () => {
   context('mobile', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
       cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
         cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
           cy.wrap(voucherFull).as('voucherFull');
