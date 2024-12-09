@@ -67,11 +67,11 @@ export default defineComponent({
     const defaultPaymentAmountMax = parseInt(
       rideToWorkByBikeConfig.entryFeePaymentMax,
     );
-    logger?.debug(`Default max. payement amount <${defaultPaymentAmountMax}>.`);
+    logger?.debug(`Default max. payment amount <${defaultPaymentAmountMax}>.`);
     const defaultPaymentAmountMin = parseInt(
       rideToWorkByBikeConfig.entryFeePaymentMin,
     );
-    logger?.debug(`Default min. payement amount <${defaultPaymentAmountMin}>.`);
+    logger?.debug(`Default min. payment amount <${defaultPaymentAmountMin}>.`);
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');
@@ -213,7 +213,7 @@ export default defineComponent({
         isVoucherFreeEntry.value
       ) {
         logger?.debug(
-          `Selected payement subject <${selectedPaymentSubject.value}>,` +
+          `Selected payment subject <${selectedPaymentSubject.value}>,` +
             ` is voucher free entry <${isVoucherFreeEntry.value}>.`,
         );
         opts = [];
@@ -223,7 +223,7 @@ export default defineComponent({
         activeVoucher.value?.amount
       ) {
         logger?.debug(
-          `Selected payement subject <${selectedPaymentSubject.value}>,` +
+          `Selected payment subject <${selectedPaymentSubject.value}>,` +
             ` is voucher valid <${isVoucherValid.value}>,` +
             ` active voucher amount <${activeVoucher.value?.amount}>.`,
         );
@@ -251,7 +251,7 @@ export default defineComponent({
         opts = [];
       } else if (selectedPaymentSubject.value === PaymentSubject.individual) {
         logger?.debug(
-          `Selected payement subject <${selectedPaymentSubject.value}>.`,
+          `Selected payment subject <${selectedPaymentSubject.value}>.`,
         );
         opts = [
           // min option
