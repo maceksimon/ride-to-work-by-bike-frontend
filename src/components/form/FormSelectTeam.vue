@@ -48,9 +48,10 @@ export default defineComponent({
       () => registerChallengeStore.getSubsidiaryId,
       (newValue: number | null) => {
         logger?.debug(
-          `Resgister challenge store subsidiary ID updated to <${newValue}>`,
+          `Register challenge store subsidiary ID changed to <${newValue}>.`,
         );
         if (newValue) {
+          logger?.info('Loading teams.');
           loadTeams(newValue);
         }
       },
