@@ -74,7 +74,8 @@ entryFeePaymentOptions = "500,700"
 # API CONFIGURATION
 
 apiBase = "https://test.dopracenakole.cz/rest/"
-apiBaseFeed = "https://dopracenakole.cz/feed/"
+apiBaseRtwbbFeed = "https://dopracenakole.cz/feed/"
+
 apiVersion = "1.0"
 apiDefaultLang = "cs"
 

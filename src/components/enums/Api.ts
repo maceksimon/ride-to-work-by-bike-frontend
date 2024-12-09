@@ -1,4 +1,4 @@
 export enum ApiBaseUrl {
-  rest = 'rest',
-  feed = 'feed',
+  rtwbbBackendApi = 'rtwbbBackendApi',
+  rtwbbFeedApi = 'rtwbFeedApi',
 }

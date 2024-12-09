@@ -11,7 +11,7 @@ import { requestDefaultHeader } from '../utils';
 
 // config
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
-const { apiDefaultLang, apiBase, apiBaseFeed } = rideToWorkByBikeConfig;
+const { apiDefaultLang, apiBase, apiBaseRtwbbFeed } = rideToWorkByBikeConfig;
 
 // types
 import type { AxiosRequestHeaders, Method } from 'axios';
@@ -61,27 +61,25 @@ const hasReponseDataNonFieldsErrorsKey = ({
 };
 
 /*
- * Select Axios base API URL based on the variant
- * @param {ApiBaseUrl} variant - Base URL variant
+ * Select Axios base API URL endpoint
+ * @param {ApiBaseUrl} baseUrlEndpointType - Base URL endpoint type
  * @param {(Logger|null)} logger - Logger instance
  * @returns {string} - Axios base API URL
  */
 const getAxiosBaseApiUrl = (
-  variant: ApiBaseUrl,
+  baseUrlEndpointType: ApiBaseUrl,
   logger: Logger | null,
 ): string => {
-  logger?.debug(`Get Axios base API URL with variant <${variant}>.`);
-  switch (variant) {
-    case ApiBaseUrl.rest:
-      logger?.debug(`Use endpoint <${apiBase}>.`);
+  logger?.debug(`Base API URL endopint type is <${baseUrlEndpointType}>.`);
+  switch (baseUrlEndpointType) {
+    case ApiBaseUrl.rtwbbBackendApi:
+      logger?.debug(`Use base API URL <${apiBase}> endpoint.`);
       return `${apiBase}`;
-    case ApiBaseUrl.feed:
-      logger?.debug(`Use endpoint <${apiBaseFeed}>.`);
-      return `${apiBaseFeed}`;
+    case ApiBaseUrl.rtwbbFeedApi:
+      logger?.debug(`Use base API URL <${apiBaseRtwbbFeed}> endpoint.`);
+      return `${apiBaseRtwbbFeed}`;
     default:
-      logger?.debug(
-        `Defaulting to <${ApiBaseUrl.rest}> variant in getAxiosBaseApiUrl().`,
-      );
+      logger?.debug(`Use default base API URL <${apiBase}> endpoint.`);
       return `${apiBase}`;
   }
 };
@@ -105,9 +103,12 @@ const injectAxioBaseApiUrlWithLang = (
     apiDefaultLang,
     i18n,
   );
+  logger?.debug(`Injected base API URL <${api.defaults.baseURL}>.`);
 };
 
-export const useApi = (variant: ApiBaseUrl = ApiBaseUrl.rest) => {
+export const useApi = (
+  baseUrlEndpointType: ApiBaseUrl = ApiBaseUrl.rtwbbBackendApi,
+) => {
   const apiFetch = async <T>({
     endpoint,
     payload,
@@ -135,9 +136,9 @@ export const useApi = (variant: ApiBaseUrl = ApiBaseUrl.rest) => {
       logger?.debug(
         `<api()> function headers parameter argument <${JSON.stringify(headers)}>.`,
       );
+      // Get Axios base API URL endpoint
+      const baseUrl = getAxiosBaseApiUrl(baseUrlEndpointType, logger);
       // Inject Axios base API URL with lang (internationalization)
-      const baseUrl = getAxiosBaseApiUrl(variant, logger);
-      logger?.debug(`Base API URL <${baseUrl}>.`);
       injectAxioBaseApiUrlWithLang(baseUrl, logger);
       const startTime = performance.now();
       const data: apiData = {
