@@ -244,10 +244,12 @@ export default defineComponent({
           },
         ];
       } else if (
-        selectedPaymentSubject.value === PaymentSubject.company ||
-        selectedPaymentSubject.value === PaymentSubject.school ||
-        selectedPaymentSubject.value === PaymentSubject.voucher
+        [PaymentSubject.company, PaymentSubject.school, Payment.voucher]
+          .includes[selectedPaymentSubject.value]
       ) {
+        logger?.debug(
+          `Selected payment subject <${selectedPaymentSubject.value}>.`,
+        );
         opts = [];
       } else if (selectedPaymentSubject.value === PaymentSubject.individual) {
         logger?.debug(
