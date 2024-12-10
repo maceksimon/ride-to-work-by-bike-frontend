@@ -244,8 +244,11 @@ export default defineComponent({
           },
         ];
       } else if (
-        [PaymentSubject.company, PaymentSubject.school, Payment.voucher]
-          .includes[selectedPaymentSubject.value]
+        [
+          PaymentSubject.company,
+          PaymentSubject.school,
+          PaymentSubject.voucher,
+        ].includes(selectedPaymentSubject.value)
       ) {
         logger?.debug(
           `Selected payment subject <${selectedPaymentSubject.value}>.`,
