@@ -175,7 +175,7 @@ describe('<FormFieldListMerch>', () => {
       cy.dataCy('button-submit-merch').should('be.visible').click();
       // dialog does not close
       cy.dataCy('dialog-merch').should('be.visible');
-      // select size within dialog because input is duplicated in card
+      // scope size selection to dialog because input is duplicated in card
       cy.dataCy('dialog-merch').within(() => {
         // select size
         cy.dataCy('form-field-merch-size')
