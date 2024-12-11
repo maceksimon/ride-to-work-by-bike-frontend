@@ -10,10 +10,3 @@ export interface TeamPostApiResponse {
   id: number;
   name: string;
 }
-
-export interface TeamGetApiResponse {
-  count: number;
-  next: string | null;
-  previous: string | null;
-  results: TeamPostApiResponse[];
-}
