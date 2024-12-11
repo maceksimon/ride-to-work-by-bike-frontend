@@ -395,24 +395,24 @@ describe('Register Challenge page', () => {
     });
 
     /**
-     * TODO: Validate sixth step (merch) when step 7 is added
-        // select package tracking
-        cy.dataCy('form-merch-tracking-input').click();
-        // go to next step
-        cy.dataCy('step-6-continue').should('be.visible').click();
-        // step does not change (phone number not valid)
-        cy.dataCy('step-6').find('.q-stepper__step-content').should('be.visible');
-        cy.dataCy('step-7').find('.q-stepper__step-content').should('not.exist');
-        // fill phone number
-        cy.dataCy('form-merch-phone-input')
-          .should('be.visible')
-          .find('input')
-          .type('736 123 456');
-        // go to next step
-        cy.dataCy('step-6-continue').should('be.visible').click();
-        // step changes
-        cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
-        cy.dataCy('step-7').find('.q-stepper__step-content').should('be.visible');
+      TODO: Validate sixth step (merch) when step 7 is added
+      // select package tracking
+      cy.dataCy('form-merch-tracking-input').click();
+      // go to next step
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      // step does not change (phone number not valid)
+      cy.dataCy('step-6').find('.q-stepper__step-content').should('be.visible');
+      cy.dataCy('step-7').find('.q-stepper__step-content').should('not.exist');
+      // fill phone number
+      cy.dataCy('form-merch-phone-input')
+        .should('be.visible')
+        .find('input')
+        .type('736 123 456');
+      // go to next step
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      // step changes
+      cy.dataCy('step-6').find('.q-stepper__step-content').should('not.exist');
+      cy.dataCy('step-7').find('.q-stepper__step-content').should('be.visible');
      */
 
     it('allows user to pass back and forth through stepper', () => {
