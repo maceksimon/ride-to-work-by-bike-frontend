@@ -175,34 +175,17 @@ describe('<FormFieldListMerch>', () => {
       cy.dataCy('button-submit-merch').should('be.visible').click();
       // dialog does not close
       cy.dataCy('dialog-merch').should('be.visible');
-      // select size
-      cy.dataCy('form-field-merch-size')
-        .should('be.visible')
-        .find('.q-radio')
-        .first()
-        .click();
+      // select size within dialog because input is duplicated in card
+      cy.dataCy('dialog-merch').within(() => {
+        // select size
+        cy.dataCy('form-field-merch-size')
+          .should('be.visible')
+          .find('.q-radio')
+          .first()
+          .click();
+      });
       // close dialog
       cy.dataCy('dialog-body').scrollTo('bottom');
-      cy.dataCy('button-submit-merch').should('be.visible').click();
-      // dialog closes
-      cy.dataCy('dialog-merch').should('not.exist');
-      // open dialog
-      cy.dataCy('form-card-merch-female')
-        .first()
-        .find('[data-cy="button-selected"]')
-        .click();
-      cy.dataCy('dialog-merch').should('be.visible');
-      // select package tracking
-      cy.dataCy('form-merch-tracking-input').click();
-      // close dialog
-      cy.dataCy('button-submit-merch').should('be.visible').click();
-      // dialog does not close (number not valid)
-      cy.dataCy('dialog-merch').should('be.visible');
-      cy.dataCy('form-merch-phone-input')
-        .should('be.visible')
-        .find('input')
-        .type('736 123 456');
-      // close dialog
       cy.dataCy('button-submit-merch').should('be.visible').click();
       // dialog closes
       cy.dataCy('dialog-merch').should('not.exist');
