@@ -486,6 +486,7 @@ Cypress.Commands.add(
       i18n,
     );
     const urlApiThisCampaignLocalized = `${apiBaseUrl}${urlApiThisCampaign}`;
+
     cy.fixture('apiGetThisCampaign').then((thisCampaignResponse) => {
       cy.intercept('GET', urlApiThisCampaignLocalized, {
         statusCode: responseStatusCode
@@ -1060,12 +1061,12 @@ Cypress.Commands.add('waitForTeamsGetApi', () => {
 });
 
 /*
-* Intercept subsidiary POST API call
-* Provides `@postSubsidiary` alias
-* @param {object} config - App global config
-* @param {object} i18n - i18n instance
-* @param {number} organizationId - Organization ID
-*/
+ * Intercept subsidiary POST API call
+ * Provides `@postSubsidiary` alias
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ * @param {number} organizationId - Organization ID
+ */
 Cypress.Commands.add(
   'interceptSubsidiaryPostApi',
   (config, i18n, organizationId) => {
@@ -1084,7 +1085,7 @@ Cypress.Commands.add(
         body: subsidiaryResponse,
       }).as('postSubsidiary');
     });
-  }
+  },
 );
 
 /*
