@@ -361,6 +361,57 @@ export default defineComponent({
       </q-tab-panel>
     </q-tab-panels>
 
+    <!-- Input: Merch size (card) - duplicated in dialog -->
+    <div v-if="selectedOption" class="q-pt-sm">
+      <span
+        class="text-caption text-weight-medium text-grey-10"
+        v-if="selectedGender === Gender.female"
+        >{{ $t('form.merch.labelSizeFemale') }}</span
+      >
+      <span
+        class="text-caption text-weight-medium text-grey-10"
+        v-if="selectedGender === Gender.male"
+        >{{ $t('form.merch.labelSizeMale') }}</span
+      >
+      <form-field-radio-required
+        inline
+        v-model="selectedSize"
+        :options="selectedOption.sizes"
+        class="q-mt-sm"
+        data-cy="form-field-merch-size"
+      />
+    </div>
+
+    <!-- Input: Phone number -->
+    <form-field-phone
+      v-model="phone"
+      :hint="$t('form.merch.hintPhone')"
+      :required="trackDelivery"
+      data-cy="form-merch-phone-input"
+    />
+    <!-- Input: Track delivery checkbox -->
+    <q-checkbox
+      dense
+      v-model="trackDelivery"
+      color="primary"
+      :false-value="false"
+      :label="$t('form.merch.labelTrackDelivery')"
+      :true-value="true"
+      class="text-grey-10 q-mt-lg"
+      data-cy="form-merch-tracking-input"
+    />
+    <!-- Input: News checkbox -->
+    <q-checkbox
+      dense
+      v-model="newsletter"
+      color="primary"
+      :false-value="false"
+      :label="$t('form.merch.labelNewsletter')"
+      :true-value="true"
+      class="text-grey-10 q-mt-md"
+      data-cy="form-terms-input"
+    />
+
     <!-- Dialog -->
     <dialog-default v-model="isOpen" data-cy="dialog-merch">
       <template #title>
@@ -387,7 +438,7 @@ export default defineComponent({
                 data-cy="form-field-merch-gender"
               />
             </div>
-            <!-- Input: Merch size -->
+            <!-- Input: Merch size (dialog) - duplicated in card -->
             <div class="q-pt-sm">
               <span
                 class="text-caption text-weight-medium text-grey-10"
@@ -408,35 +459,6 @@ export default defineComponent({
               />
             </div>
             <!-- TODO: Add size legend -->
-            <!-- Input: Phone -->
-            <form-field-phone
-              v-model="phone"
-              :hint="$t('form.merch.hintPhone')"
-              :required="trackDelivery"
-              data-cy="form-merch-phone-input"
-            />
-            <!-- Input: Track delivery checkbox -->
-            <q-checkbox
-              dense
-              v-model="trackDelivery"
-              color="primary"
-              :false-value="false"
-              :label="$t('form.merch.labelTrackDelivery')"
-              :true-value="true"
-              class="text-grey-10 q-mt-lg"
-              data-cy="form-merch-tracking-input"
-            />
-            <!-- Input: News checkbox -->
-            <q-checkbox
-              dense
-              v-model="newsletter"
-              color="primary"
-              :false-value="false"
-              :label="$t('form.merch.labelNewsletter')"
-              :true-value="true"
-              class="text-grey-10 q-mt-md"
-              data-cy="form-terms-input"
-            />
             <div class="q-mt-lg flex justify-end">
               <q-btn
                 rounded
