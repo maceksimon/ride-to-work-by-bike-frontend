@@ -49,12 +49,15 @@ export type FormCardMerchType = {
   dialogDescription: string;
   dialogImages: Image[];
   dialogTitle: string;
-  gender: FormOption[];
+  gender: string;
+  genderOptions?: FormOption[];
   value: string;
   image: string;
   material: string;
   label: string;
-  sizes: FormOption[];
+  size: string;
+  sizeId: string;
+  sizeOptions?: FormOption[];
 };
 
 export type FormPaymentVoucher = {

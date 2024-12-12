@@ -1,7 +1,6 @@
 /**
  * Types for merchandise-related operations
  */
-import { Ref } from 'vue';
 
 // enums
 import { Gender } from './Profile';
@@ -23,9 +22,3 @@ export interface GetMerchandiseResponse {
   previous: string | null;
   results: Merchandise[];
 }
-
-export type UseApiGetMerchandiseReturn = {
-  merchandise: Ref<Merchandise[]>;
-  isLoading: Ref<boolean>;
-  loadMerchandise: () => Promise<void>;
-};

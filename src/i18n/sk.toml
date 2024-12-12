@@ -92,6 +92,7 @@ woman = "Žena"
 routes = "cestu|cest"
 routeLengthUnit = "km"
 rtwbb = "DPNB"
+unisex = "Unisex"
 weightUnitGram = "g"
 carbonDioxideWeightUnit = "g CO<sub>2</sub>"
 

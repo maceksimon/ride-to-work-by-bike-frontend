@@ -97,20 +97,24 @@ export default defineComponent({
       <dl class="q-my-sm" data-cy="form-card-merch-parameters">
         <div class="flex q-gutter-x-xs">
           <dt>{{ $t('form.merch.labelSizes') }}:</dt>
-          <dd class="text-weight-bold">
-            <span v-for="(size, index) in option.sizes" :key="size.label">
+          <dd v-if="option.sizeOptions" class="text-weight-bold">
+            <span v-for="(size, index) in option.sizeOptions" :key="size.label">
               {{ size.label }}
-              <span v-if="index < option.sizes.length - 1">, </span>
+              <span v-if="index < option.sizeOptions.length - 1">, </span>
             </span>
           </dd>
         </div>
         <div class="flex q-gutter-x-xs">
           <dt>{{ $t('form.merch.labelAuthor') }}:</dt>
-          <dd class="text-weight-bold">{{ option.author }}</dd>
+          <dd v-if="option.author" class="text-weight-bold">
+            {{ option.author }}
+          </dd>
         </div>
         <div class="flex q-gutter-x-xs">
           <dt>{{ $t('form.merch.labelMaterial') }}:</dt>
-          <dd class="text-weight-bold">{{ option.material }}</dd>
+          <dd v-if="option.material" class="text-weight-bold">
+            {{ option.material }}
+          </dd>
         </div>
       </dl>
     </q-card-section>
