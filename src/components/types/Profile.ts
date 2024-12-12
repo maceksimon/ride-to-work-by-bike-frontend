@@ -8,6 +8,7 @@ import { OrganizationType } from './Organization';
 export enum Gender {
   male = 'male',
   female = 'female',
+  unisex = 'unisex',
 }
 
 export enum PaymentState {

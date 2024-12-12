@@ -4,7 +4,7 @@
 import { Ref } from 'vue';
 
 // enums
-import { Gender } from '../enums/Profile';
+import { Gender } from './Profile';
 
 export interface Merchandise {
   id: number;
