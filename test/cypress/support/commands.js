@@ -1098,3 +1098,72 @@ Cypress.Commands.add('waitForTeamPostApi', () => {
     });
   });
 });
+
+/**
+ * Intercept merchandise GET API call
+ * Provides `@getMerchandise` and `@getMerchandiseNextPage` aliases
+ * @param {object} config - App global config
+ * @param {object|string} i18n - i18n instance or locale lang string e.g. en
+ */
+Cypress.Commands.add('interceptMerchandiseGetApi', (config, i18n) => {
+  const { apiBase, apiDefaultLang, urlApiMerchandise } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiMerchandiseLocalized = `${apiBaseUrl}${urlApiMerchandise}`;
+
+  cy.fixture('apiGetMerchandiseResponse').then((merchandiseResponse) => {
+    cy.fixture('apiGetMerchandiseResponseNext').then(
+      (merchandiseResponseNext) => {
+        // intercept initial merchandise API call
+        cy.intercept('GET', urlApiMerchandiseLocalized, {
+          statusCode: httpSuccessfullStatus,
+          body: merchandiseResponse,
+        }).as('getMerchandise');
+
+        // intercept next page API call
+        cy.intercept('GET', merchandiseResponse.next, {
+          statusCode: httpSuccessfullStatus,
+          body: merchandiseResponseNext,
+        }).as('getMerchandiseNextPage');
+      },
+    );
+  });
+});
+
+/**
+ * Wait for intercept merchandise API calls and compare response object
+ * Wait for `@getMerchandise` and `@getMerchandiseNextPage` intercepts
+ */
+Cypress.Commands.add('waitForMerchandiseApi', () => {
+  cy.fixture('apiGetMerchandiseResponse').then((merchandiseResponse) => {
+    cy.fixture('apiGetMerchandiseResponseNext').then(
+      (merchandiseResponseNext) => {
+        cy.wait(['@getMerchandise', '@getMerchandiseNextPage']).spread(
+          (getMerchandise, getMerchandiseNextPage) => {
+            expect(getMerchandise.request.headers.authorization).to.include(
+              bearerTokeAuth,
+            );
+            if (getMerchandise.response) {
+              expect(getMerchandise.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(getMerchandise.response.body).to.deep.equal(
+                merchandiseResponse,
+              );
+            }
+            expect(
+              getMerchandiseNextPage.request.headers.authorization,
+            ).to.include(bearerTokeAuth);
+            if (getMerchandiseNextPage.response) {
+              expect(getMerchandiseNextPage.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(getMerchandiseNextPage.response.body).to.deep.equal(
+                merchandiseResponseNext,
+              );
+            }
+          },
+        );
+      },
+    );
+  });
+});
