@@ -7,9 +7,10 @@ import {
   OrganizationLevel,
   OrganizationType,
 } from 'src/components/types/Organization';
-// import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 const { contactEmail } = rideToWorkByBikeConfig;
+const subsidiaryIdDefault = 1972;
 
 describe('<FormFieldSelectTable>', () => {
   let options;
@@ -314,6 +315,12 @@ describe('<FormFieldSelectTable>', () => {
 
   context('team', () => {
     beforeEach(() => {
+      cy.interceptCitiesGetApi(rideToWorkByBikeConfig, i18n);
+      cy.interceptTeamPostApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        subsidiaryIdDefault,
+      );
       cy.mount(FormFieldSelectTable, {
         props: {
           options: options,
@@ -380,38 +387,60 @@ describe('<FormFieldSelectTable>', () => {
         .and('contain', i18n.global.t('form.messageOptionRequired'));
     });
 
-    it('renders dialog when for adding a new team', () => {
-      cy.dataCy('button-add-option').click();
-      cy.dataCy('dialog-add-option').should('be.visible');
-      cy.dataCy('dialog-add-option')
-        .find('h3')
-        .should('be.visible')
-        .and('have.css', 'font-size', '20px')
-        .and('have.css', 'font-weight', '500')
-        .and('contain', i18n.global.t('form.team.titleAddTeam'));
-      // scroll to bottom
-      cy.dataCy('dialog-body').scrollTo('bottom', {
-        ensureScrollable: false,
+    it.only('renders dialog when for adding a new team', () => {
+      cy.fixture('apiPostTeamRequest').then((teamRequest) => {
+        cy.wrap(useRegisterChallengeStore()).then((store) => {
+          store.setSubsidiaryId(subsidiaryIdDefault);
+
+          cy.dataCy('button-add-option').click();
+          cy.dataCy('dialog-add-option').should('be.visible');
+          cy.dataCy('dialog-add-option')
+            .find('h3')
+            .should('be.visible')
+            .and('have.css', 'font-size', '20px')
+            .and('have.css', 'font-weight', '500')
+            .and('contain', i18n.global.t('form.team.titleAddTeam'));
+          // scroll to bottom
+          cy.dataCy('dialog-body').scrollTo('bottom', {
+            ensureScrollable: false,
+          });
+          // action buttons are visible
+          cy.dataCy('dialog-button-cancel')
+            .should('be.visible')
+            .and('have.text', i18n.global.t('navigation.discard'));
+          cy.dataCy('dialog-button-submit')
+            .should('be.visible')
+            .and('have.text', i18n.global.t('form.team.buttonAddTeam'));
+          // submit empty
+          cy.dataCy('dialog-button-submit').click();
+          cy.dataCy('dialog-add-option').should('be.visible');
+          // scroll to top
+          cy.dataCy('dialog-body').scrollTo('top', {
+            ensureScrollable: false,
+          });
+          // fill in form
+          cy.dataCy('form-add-team-name').find('input').type(teamRequest.name);
+          // submit
+          cy.dataCy('dialog-button-submit').click();
+          // wait for POST API call
+          cy.waitForTeamPostApi();
+          // check if dialog is closed
+          cy.dataCy('dialog-add-option').should('not.exist');
+          // check if event is emitted
+          cy.fixture('apiPostTeamResponse').then((teamResponse) => {
+            // test emitted event
+            cy.wrap(Cypress.vueWrapper.emitted('create:option')).should(
+              'have.length',
+              1,
+            );
+            // test emitted payload
+            cy.wrap(Cypress.vueWrapper.emitted('create:option')[0][0]).should(
+              'deep.equal',
+              teamResponse,
+            );
+          });
+        });
       });
-      // action buttons are visible
-      cy.dataCy('dialog-button-cancel')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('navigation.discard'));
-      cy.dataCy('dialog-button-submit')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('form.team.buttonAddTeam'));
-      // submit empty
-      cy.dataCy('dialog-button-submit').click();
-      cy.dataCy('dialog-add-option').should('be.visible');
-      // scroll to top
-      cy.dataCy('dialog-body').scrollTo('top', {
-        ensureScrollable: false,
-      });
-      // fill in form
-      cy.dataCy('form-add-team-name').find('input').type('Team AutoMat');
-      // submit
-      cy.dataCy('dialog-button-submit').click();
-      cy.dataCy('dialog-add-option').should('not.exist');
     });
   });
 

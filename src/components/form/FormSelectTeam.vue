@@ -16,7 +16,7 @@
  */
 
 // libraries
-import { defineComponent, inject, ref, watch } from 'vue';
+import { computed, defineComponent, inject, watch } from 'vue';
 
 // components
 import FormFieldSelectTable from './FormFieldSelectTable.vue';
@@ -40,10 +40,20 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-    const { options, isLoading, loadTeams } = useApiGetTeams(logger);
 
-    // load teams when subsidiary ID changes
     const registerChallengeStore = useRegisterChallengeStore();
+
+    const team = computed({
+      get: () => {
+        return registerChallengeStore.getTeamId;
+      },
+      set: (value: number | null) => {
+        registerChallengeStore.setTeamId(value);
+      },
+    });
+
+    const { options, isLoading, loadTeams } = useApiGetTeams(logger);
+    // load teams when subsidiary ID changes
     watch(
       () => registerChallengeStore.getSubsidiaryId,
       (newValue: number | null) => {
@@ -58,13 +68,26 @@ export default defineComponent({
       { immediate: true },
     );
 
-    const team = ref<number | null>(null);
+    /**
+     * Handle option created event
+     * When option is created in the child component, refetch options.
+     * This correctly updates the options list as opposed to pushing
+     * the new option into the list manually.
+     * @returns {void}
+     */
+    const onOptionCreated = (): void => {
+      const currentSubsidiaryId = registerChallengeStore.getSubsidiaryId;
+      if (currentSubsidiaryId) {
+        loadTeams(currentSubsidiaryId);
+      }
+    };
 
     return {
       isLoading,
       options,
       team,
       OrganizationLevel,
+      onOptionCreated,
     };
   },
 });
@@ -82,6 +105,7 @@ export default defineComponent({
       :organization-level="OrganizationLevel.team"
       :options="options"
       :loading="isLoading"
+      @create:option="onOptionCreated"
       data-cy="form-select-table-team"
     />
   </div>
