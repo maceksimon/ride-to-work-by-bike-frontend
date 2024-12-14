@@ -55,6 +55,11 @@ apiMessageError = "Fetching cities failed."
 apiMessageErrorWithMessage = "Fetching cities failed. Error: {error}"
 apiMessageSuccess = "Cities fetched successfully."
 
+[getMerchandise]
+apiMessageError = "Fetching merchandise failed."
+apiMessageErrorWithMessage = "Fetching merchandise failed. Error: {error}"
+apiMessageSuccess = "Merchandise fetched successfully."
+
 [getSubsidiaries]
 apiMessageError = "Fetching subsidiaries failed."
 apiMessageErrorWithMessage = "Fetching subsidiaries failed. Error: {error}"

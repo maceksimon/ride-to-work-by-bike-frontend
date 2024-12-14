@@ -55,6 +55,11 @@ apiMessageError = "Načítání měst selhalo."
 apiMessageErrorWithMessage = "Načítání měst selhalo. Chyba: {error}"
 apiMessageSuccess = "Města byla úspěšně načtena."
 
+[getMerchandise]
+apiMessageError = "Načítání startovních balíčků selhalo."
+apiMessageErrorWithMessage = "Načítání startovních balíčků selhalo. Chyba: {error}"
+apiMessageSuccess = "Startovní balíčky byly úspěšně načteny."
+
 [getSubsidiaries]
 apiMessageError = "Načítání poboček selhalo."
 apiMessageErrorWithMessage = "Načítání poboček selhalo. Chyba: {error}"

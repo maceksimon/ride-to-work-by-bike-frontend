@@ -55,6 +55,11 @@ apiMessageError = "Načítanie miest zlyhalo."
 apiMessageErrorWithMessage = "Načítanie miest zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Mestá boli úspešne načítané."
 
+[getMerchandise]
+apiMessageError = "Načítanie startovních balíčkov zlyhalo."
+apiMessageErrorWithMessage = "Načítanie startovních balíčkov zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Startovní balíčky boli úspešne načítané."
+
 [getSubsidiaries]
 apiMessageError = "Načítanie pobočiek zlyhalo."
 apiMessageErrorWithMessage = "Načítanie pobočiek zlyhalo. Chyba: {error}"
