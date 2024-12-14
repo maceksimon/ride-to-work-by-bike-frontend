@@ -392,9 +392,9 @@ Cypress.Commands.add('interceptTeamsGetApi', (config, i18n, subsidiaryId) => {
 /**
  * Intercept subsidiaries GET API calls
  * Provides `@getSubsidiaries` and `@getSubsidiariesNextPage` aliases
- * @param {object} config - App global config
- * @param {object|string} i18n - i18n instance or locale lang string e.g. en
- * @param {number} organizationId - Organization ID
+ * @param {Object} config - App global config
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
+ * @param {Number} organizationId - Organization ID
  */
 Cypress.Commands.add(
   'interceptSubsidiariesGetApi',
@@ -471,7 +471,7 @@ Cypress.Commands.add(
  * Intercept this campaign GET API call
  * Provides `@thisCampaignRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
  * @param {Number} responseStatusCode - Override default response HTTP status code
  */
@@ -522,7 +522,7 @@ Cypress.Commands.add('waitForThisCampaignApi', () => {
  * Intercept this register POST API call
  * Provides `@registerRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
  * @param {Number} responseStatusCode - Override default response HTTP status code
  */
@@ -559,7 +559,7 @@ Cypress.Commands.add(
  * Provides `@registerRequest`,
  *          `@refreshAuthTokenRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} registerResponseBody - Override default response body
  * @param {Number} registerResponseStatusCode - Override default response HTTP status code
  * @param {Object} refreshAuthTokenResponseBody - Override default response body for
@@ -598,7 +598,7 @@ Cypress.Commands.add(
  * Intercept this verify email GET API call
  * Provides `@verifyEmailRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
  * @param {Number} responseStatusCode - Override default response HTTP status code
  */
@@ -633,7 +633,7 @@ Cypress.Commands.add(
  * Provides `@registerRequest`,
  *          `@verifyEmailRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} registerResponseBody - Override default response body for
  *                                        register intercept
  * @param {Object} registerResponseStatusCode - Override default response HTTP status code
@@ -688,7 +688,7 @@ Cypress.Commands.add(
  *          `@verifyEmailRequest`,
  *          `@thisCampaignRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} registerResponseBody - Override default response body for
  *                                        register intercept
  * @param {Object} registerResponseStatusCode - Override default response HTTP status code
@@ -790,7 +790,7 @@ Cypress.Commands.add(
  * Intercept refresh auth token POST API call
  * Provides `@refreshTokenRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
  * @param {Number} responseStatusCode - Override default response HTTP status code
  */
@@ -823,7 +823,7 @@ Cypress.Commands.add(
  * Intercept this login POST API call
  * Provides `@loginRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
  * @param {Number} responseStatusCode - Override default response HTTP status code
  */
@@ -860,7 +860,7 @@ Cypress.Commands.add(
  * Provides `@loginRequest`,
  *          `@refreshAuthTokenRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} loginResponseBody - Override default response body for
  *                                     register intercept
  * @param {Object} loginResponseStatusCode - Override default response HTTP status code
@@ -905,7 +905,7 @@ Cypress.Commands.add(
  *          `@refreshAuthTokenRequest`,
  *          `@verifyEmailRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} loginResponseBody - Override default response body for
  *                                     login intercept
  * @param {Object} loginResponseStatusCode - Override default response HTTP status code
@@ -958,7 +958,7 @@ Cypress.Commands.add(
  *          `@verifyEmailRequest`,
  *          `@thisCampaignRequest` alias
  * @param {Object} config - App global config
- * @param {Object} i18n - i18n instance
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} loginResponseBody - Override default response body for
  *                                     login intercept
  * @param {Object} loginResponseStatusCode - Override default response HTTP status code
@@ -1063,9 +1063,9 @@ Cypress.Commands.add('waitForTeamsGetApi', () => {
 /**
  * Intercept team POST API call
  * Provides `@postTeam` alias
- * @param {object} config - App global config
- * @param {object} i18n - i18n instance
- * @param {number} subsidiaryId - Subsidiary ID
+ * @param {Object} config - App global config
+ * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
+ * @param {Number} subsidiaryId - Subsidiary ID
  */
 Cypress.Commands.add('interceptTeamPostApi', (config, i18n, subsidiaryId) => {
   const { apiBase, apiDefaultLang, urlApiSubsidiaries, urlApiTeams } = config;
