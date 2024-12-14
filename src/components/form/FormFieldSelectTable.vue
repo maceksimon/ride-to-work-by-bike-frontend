@@ -194,6 +194,7 @@ export default defineComponent({
      * Submit dialog form based on organization level
      * If `company`, create a new company
      * If `team`, create a new team
+     * @returns {Promise<void>}
      */
     const submitDialogForm = async (): Promise<void> => {
       if (props.organizationLevel === OrganizationLevel.organization) {
