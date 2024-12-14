@@ -370,7 +370,7 @@ export default defineComponent({
       >
       <span
         class="text-caption text-weight-medium text-grey-10"
-        v-if="selectedGender === Gender.male"
+        v-else-if="selectedGender === Gender.male"
         >{{ $t('form.merch.labelSizeMale') }}</span
       >
       <form-field-radio-required
@@ -447,7 +447,7 @@ export default defineComponent({
               >
               <span
                 class="text-caption text-weight-medium text-grey-10"
-                v-if="selectedGender === Gender.male"
+                v-else-if="selectedGender === Gender.male"
                 >{{ $t('form.merch.labelSizeMale') }}</span
               >
               <form-field-radio-required
