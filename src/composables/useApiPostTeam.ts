@@ -39,8 +39,8 @@ export const useApiPostTeam = (logger: Logger | null): UseApiPostTeamReturn => {
   /**
    * Create team
    * Creates a new team under specified subsidiary
-   * @param {number} subsidiaryId - Team subsidiary ID
-   * @param {string} teamName - Team name to create
+   * @param {Number} subsidiaryId - Team subsidiary ID
+   * @param {String} teamName - Team name to create
    * @returns {Promise<TeamPostApiResponse | null>} - Promise
    */
   const createTeam = async (
