@@ -215,10 +215,9 @@ export default defineComponent({
           // close dialog
           isDialogOpen.value = false;
           logger?.info('Close add team modal dialog.');
-          // set team to new team
-          logger?.debug(`Setting team to ID <${data.id}>.`);
           // store data in v-model (emits to parent component)
           inputValue.value = data.id;
+          logger?.debug(`Team ID set to <${inputValue.value}>.`);
         }
       }
     };
