@@ -366,28 +366,38 @@ Cypress.Commands.add('waitForCitiesApi', () => {
  * @param {object} config - App global config
  * @param {object|string} i18n - i18n instance or locale lang string e.g. en
  * @param {number} subsidiaryId - Subsidiary ID
+ * @param {object} teamsResponse - Optional override for teams response data
+ * @param {object} teamsResponseNext - Optional override for teams next page response data
  */
-Cypress.Commands.add('interceptTeamsGetApi', (config, i18n, subsidiaryId) => {
-  const { apiBase, apiDefaultLang, urlApiSubsidiaries, urlApiTeams } = config;
-  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
-  const urlApiTeamsLocalized = `${apiBaseUrl}${urlApiSubsidiaries}${subsidiaryId}/${urlApiTeams}`;
+Cypress.Commands.add(
+  'interceptTeamsGetApi',
+  (config, i18n, subsidiaryId, teamsResponse, teamsResponseNext) => {
+    const { apiBase, apiDefaultLang, urlApiSubsidiaries, urlApiTeams } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiTeamsLocalized = `${apiBaseUrl}${urlApiSubsidiaries}${subsidiaryId}/${urlApiTeams}`;
 
-  cy.fixture('apiGetTeamsResponse').then((teamsResponse) => {
-    cy.fixture('apiGetTeamsResponseNext').then((teamsResponseNext) => {
-      // intercept initial teams API call
-      cy.intercept('GET', urlApiTeamsLocalized, {
-        statusCode: httpSuccessfullStatus,
-        body: teamsResponse,
-      }).as('getTeams');
+    cy.fixture('apiGetTeamsResponse').then((defaultTeamsResponse) => {
+      cy.fixture('apiGetTeamsResponseNext').then((defaultTeamsResponseNext) => {
+        // intercept initial teams API call
+        cy.intercept('GET', urlApiTeamsLocalized, {
+          statusCode: httpSuccessfullStatus,
+          body: teamsResponse || defaultTeamsResponse,
+        }).as('getTeams');
 
-      // intercept next page API call
-      cy.intercept('GET', teamsResponse.next, {
-        statusCode: httpSuccessfullStatus,
-        body: teamsResponseNext,
-      }).as('getTeamsNextPage');
+        // intercept next page API call
+        cy.intercept('GET', defaultTeamsResponse.next, {
+          statusCode: httpSuccessfullStatus,
+          body: teamsResponseNext || defaultTeamsResponseNext,
+        }).as('getTeamsNextPage');
+      });
     });
-  });
-});
+  },
+);
 
 /**
  * Intercept subsidiaries GET API calls
