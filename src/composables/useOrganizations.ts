@@ -8,6 +8,7 @@ import { OrganizationType } from '../components/types/Organization';
 export type OrganizationLabels = {
   titleDialog: string;
   label: string;
+  labelForCoordinator: string;
   labelName: string;
   labelShort: string;
   messageNoResult: string;
@@ -23,6 +24,7 @@ export const useOrganizations = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddCompany'),
           label: i18n.global.t('form.labelCompany'), // used in register coordinator form
+          labelForCoordinator: i18n.global.t('form.labelCompanyForCoordinator'),
           labelName: i18n.global.t('form.company.labelCompany'), // used in SelectTable
           labelShort: i18n.global.t('form.labelCompanyShort'), // used in "add new" dialog
           messageNoResult: i18n.global.t('form.messageNoCompany'),
@@ -32,6 +34,7 @@ export const useOrganizations = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddSchool'),
           label: i18n.global.t('form.labelSchool'), // used in register coordinator form
+          labelForCoordinator: i18n.global.t('form.labelSchoolForCoordinator'),
           labelName: i18n.global.t('form.company.labelSchool'), // used in SelectTable
           labelShort: i18n.global.t('form.labelSchoolShort'), // used in "add new" dialog
           messageNoResult: i18n.global.t('form.messageNoSchool'),
@@ -41,6 +44,7 @@ export const useOrganizations = () => {
         return {
           titleDialog: i18n.global.t('form.company.titleAddFamily'),
           label: i18n.global.t('form.labelFamily'), // used in register coordinator form
+          labelForCoordinator: i18n.global.t('form.labelFamilyForCoordinator'),
           labelName: i18n.global.t('form.company.labelFamily'), // used in SelectTable
           labelShort: i18n.global.t('form.labelFamilyShort'), // used in "add new" dialog
           messageNoResult: i18n.global.t('form.messageNoFamily'),
@@ -50,6 +54,7 @@ export const useOrganizations = () => {
         return {
           titleDialog: '',
           label: '',
+          labelForCoordinator: '',
           labelName: '',
           labelShort: '',
           messageNoResult: '',

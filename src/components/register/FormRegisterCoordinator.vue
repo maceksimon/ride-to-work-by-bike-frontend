@@ -180,6 +180,7 @@ export default defineComponent({
           </div>
           <!-- Input: organization ID -->
           <form-field-company
+            coordinator
             v-model="formRegisterCoordinator.organizationId"
             :organization-type="formRegisterCoordinator.organizationType"
             class="col-12"

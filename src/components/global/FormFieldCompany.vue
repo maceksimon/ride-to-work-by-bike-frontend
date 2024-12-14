@@ -15,6 +15,7 @@
  * - `label` (string, optional): The label for the form field.
  * - `organizationType` (String as OrganizationType,
  *                       default: OrganizationType.company): The type of organization.
+ * - `coordinator` (boolean, optional): Whether the form is used in coordinator form.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
@@ -103,6 +104,10 @@ export default defineComponent({
     organizationType: {
       type: String as () => OrganizationType,
       default: OrganizationType.company,
+    },
+    coordinator: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { emit }) {
@@ -252,9 +257,13 @@ export default defineComponent({
     const { getOrganizationLabels } = useOrganizations();
 
     const formFieldLabel = computed(() => {
-      return props.label
-        ? props.label
-        : getOrganizationLabels(props.organizationType).label;
+      if (props.label) {
+        return props.label;
+      } else if (props.coordinator) {
+        return getOrganizationLabels(props.organizationType)
+          .labelForCoordinator;
+      }
+      return getOrganizationLabels(props.organizationType).label;
     });
 
     const addNewOrganizationDialogTitle = computed(() => {
