@@ -292,7 +292,101 @@ describe('<FormFieldCompany>', () => {
     });
   });
 
-  context('organization type - company + coordinator', () => {
+  context('organization type - school', () => {
+    beforeEach(() => {
+      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
+      // reset model value
+      model.value = '';
+      // mount component
+      cy.mount(FormFieldCompany, {
+        props: {
+          ...vModelAdapter(model),
+          organizationType: OrganizationType.school,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('renders correct labels', () => {
+      // input label
+      cy.dataCy('form-field-company-label')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.labelSchool'));
+      // dialog title
+      cy.dataCy('button-add-company').click();
+      cy.dataCy('dialog-add-company')
+        .find('h3')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.company.titleAddSchool'));
+      // dialog button
+      cy.dataCy('dialog-button-submit')
+        .should('be.visible')
+        .and('have.text', i18n.global.t('form.company.buttonAddSchool'));
+      cy.dataCy('dialog-button-cancel').should('be.visible').click();
+      // empty state message
+      cy.dataCy('form-company-input').closest('input').type(noResultsQuery);
+      // empty state message
+      cy.contains(i18n.global.t('form.messageNoSchool')).should('be.visible');
+      // simulate escape key
+      cy.dataCy('form-company-input').closest('input').type('{esc}');
+      cy.focused().blur();
+      // validation message
+      cy.contains(
+        i18n.global.t('form.messageFieldRequired', {
+          fieldName: i18n.global.t('form.labelSchoolShort'),
+        }),
+      ).should('be.visible');
+    });
+  });
+
+  context('organization type - family', () => {
+    beforeEach(() => {
+      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
+      // reset model value
+      model.value = '';
+      // mount component
+      cy.mount(FormFieldCompany, {
+        props: {
+          ...vModelAdapter(model),
+          organizationType: OrganizationType.family,
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('renders correct labels', () => {
+      // input label
+      cy.dataCy('form-field-company-label')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.labelFamily'));
+      // dialog title
+      cy.dataCy('button-add-company').click();
+      cy.dataCy('dialog-add-company')
+        .find('h3')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.company.titleAddFamily'));
+      // dialog button
+      cy.dataCy('dialog-button-submit')
+        .should('be.visible')
+        .and('have.text', i18n.global.t('form.company.buttonAddFamily'));
+      cy.dataCy('dialog-button-cancel').should('be.visible').click();
+      // empty state message
+      cy.dataCy('form-company-input').closest('input').type(noResultsQuery);
+      // empty state message
+      cy.contains(i18n.global.t('form.messageNoFamily')).should('be.visible');
+      // simulate escape key
+      cy.dataCy('form-company-input').closest('input').type('{esc}');
+      cy.focused().blur();
+      // validation message
+      cy.contains(
+        i18n.global.t('form.messageFieldRequired', {
+          fieldName: i18n.global.t('form.labelFamilyShort'),
+        }),
+      ).should('be.visible');
+    });
+  });
+
+  context('custom label', () => {
     beforeEach(() => {
       interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
       // reset model value
@@ -302,7 +396,7 @@ describe('<FormFieldCompany>', () => {
         props: {
           ...vModelAdapter(model),
           organizationType: OrganizationType.company,
-          coordinator: true,
+          label: i18n.global.t('form.labelCompanyForCoordinator'),
         },
       });
       cy.viewport('macbook-16');
@@ -335,102 +429,6 @@ describe('<FormFieldCompany>', () => {
       cy.contains(
         i18n.global.t('form.messageFieldRequired', {
           fieldName: i18n.global.t('form.labelCompanyShort'),
-        }),
-      ).should('be.visible');
-    });
-  });
-
-  context('organization type - school + coordinator', () => {
-    beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
-      // reset model value
-      model.value = '';
-      // mount component
-      cy.mount(FormFieldCompany, {
-        props: {
-          ...vModelAdapter(model),
-          organizationType: OrganizationType.school,
-          coordinator: true,
-        },
-      });
-      cy.viewport('macbook-16');
-    });
-
-    it('renders correct labels', () => {
-      // input label
-      cy.dataCy('form-field-company-label')
-        .should('be.visible')
-        .and('contain', i18n.global.t('form.labelSchoolForCoordinator'));
-      // dialog title
-      cy.dataCy('button-add-company').click();
-      cy.dataCy('dialog-add-company')
-        .find('h3')
-        .should('be.visible')
-        .and('contain', i18n.global.t('form.company.titleAddSchool'));
-      // dialog button
-      cy.dataCy('dialog-button-submit')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('form.company.buttonAddSchool'));
-      cy.dataCy('dialog-button-cancel').should('be.visible').click();
-      // empty state message
-      cy.dataCy('form-company-input').closest('input').type(noResultsQuery);
-      // empty state message
-      cy.contains(i18n.global.t('form.messageNoSchool')).should('be.visible');
-      // simulate escape key
-      cy.dataCy('form-company-input').closest('input').type('{esc}');
-      cy.focused().blur();
-      // validation message
-      cy.contains(
-        i18n.global.t('form.messageFieldRequired', {
-          fieldName: i18n.global.t('form.labelSchoolShort'),
-        }),
-      ).should('be.visible');
-    });
-  });
-
-  context('organization type - family + coordinator', () => {
-    beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
-      // reset model value
-      model.value = '';
-      // mount component
-      cy.mount(FormFieldCompany, {
-        props: {
-          ...vModelAdapter(model),
-          organizationType: OrganizationType.family,
-          coordinator: true,
-        },
-      });
-      cy.viewport('macbook-16');
-    });
-
-    it('renders correct labels', () => {
-      // input label
-      cy.dataCy('form-field-company-label')
-        .should('be.visible')
-        .and('contain', i18n.global.t('form.labelFamilyForCoordinator'));
-      // dialog title
-      cy.dataCy('button-add-company').click();
-      cy.dataCy('dialog-add-company')
-        .find('h3')
-        .should('be.visible')
-        .and('contain', i18n.global.t('form.company.titleAddFamily'));
-      // dialog button
-      cy.dataCy('dialog-button-submit')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('form.company.buttonAddFamily'));
-      cy.dataCy('dialog-button-cancel').should('be.visible').click();
-      // empty state message
-      cy.dataCy('form-company-input').closest('input').type(noResultsQuery);
-      // empty state message
-      cy.contains(i18n.global.t('form.messageNoFamily')).should('be.visible');
-      // simulate escape key
-      cy.dataCy('form-company-input').closest('input').type('{esc}');
-      cy.focused().blur();
-      // validation message
-      cy.contains(
-        i18n.global.t('form.messageFieldRequired', {
-          fieldName: i18n.global.t('form.labelFamilyShort'),
         }),
       ).should('be.visible');
     });

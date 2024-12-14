@@ -33,6 +33,7 @@ import FormFieldNewsletter from '../form/FormFieldNewsletter.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
+import { useOrganizations } from 'src/composables/useOrganizations';
 
 // enums
 import { OrganizationType } from '../types/Organization';
@@ -88,6 +89,14 @@ export default defineComponent({
       ];
     });
 
+    const { getOrganizationLabels } = useOrganizations();
+    const organizationType = computed<OrganizationType>(
+      () => formRegisterCoordinator.organizationType,
+    );
+    const fieldCompanyLabel = computed<string>(
+      () => getOrganizationLabels(organizationType.value).labelForCoordinator,
+    );
+
     const onSubmit = async (): Promise<void> => {
       // build payload
       const payload: RegisterCoordinatorRequest = {
@@ -113,6 +122,7 @@ export default defineComponent({
     };
 
     return {
+      fieldCompanyLabel,
       formRegisterCoordinator,
       optionsOrganizationType,
       onReset,
@@ -181,9 +191,9 @@ export default defineComponent({
           </div>
           <!-- Input: organization ID -->
           <form-field-company
-            coordinator
             v-model="formRegisterCoordinator.organizationId"
             :organization-type="formRegisterCoordinator.organizationType"
+            :label="fieldCompanyLabel"
             class="col-12"
             data-cy="form-register-coordinator-company"
           />
