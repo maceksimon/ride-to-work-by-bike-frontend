@@ -463,7 +463,7 @@ export default defineComponent({
               <q-btn
                 rounded
                 unelevated
-                color="black"
+                color="primary"
                 :label="$t('navigation.select')"
                 text-color="white"
                 @click="onSubmit"
