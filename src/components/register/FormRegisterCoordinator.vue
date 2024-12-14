@@ -176,6 +176,7 @@ export default defineComponent({
               :options="optionsOrganizationType"
               color="primary"
               class="q-mt-sm q-gutter-x-lg"
+              data-cy="form-organization-type"
             />
           </div>
           <!-- Input: organization ID -->

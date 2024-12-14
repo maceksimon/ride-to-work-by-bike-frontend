@@ -367,7 +367,7 @@ function coreTests() {
       .click();
     // amount options are hidden
     cy.dataCy(selectorPaymentAmount).should('not.exist');
-    // company select is shown
+    // organization select is shown
     cy.dataCy(selectorCompany).should('be.visible');
     cy.dataCy(selectorCompanyLabel)
       .should('be.visible')
@@ -448,8 +448,15 @@ function coreTests() {
       .click();
     // amount options are hidden
     cy.dataCy(selectorPaymentAmount).should('not.exist');
-    // company select is shown
+    // organization select is shown
     cy.dataCy(selectorCompany).should('be.visible');
+    // label school
+    cy.dataCy(selectorCompanyLabel)
+      .should('be.visible')
+      .and('have.css', 'font-size', '12px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', grey10)
+      .and('contain', i18n.global.t('form.labelSchool'));
 
     // user still has option to add donation
     testDonation();
