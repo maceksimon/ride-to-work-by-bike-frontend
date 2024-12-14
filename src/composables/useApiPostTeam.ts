@@ -12,10 +12,7 @@ import { useLoginStore } from '../stores/login';
 
 // types
 import type { Logger } from '../components/types/Logger';
-import type {
-  TeamPostApiPayload,
-  TeamPostApiResponse,
-} from '../components/types/ApiTeam';
+import type { TeamPostApiResponse } from '../components/types/ApiTeam';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
@@ -42,7 +39,7 @@ export const useApiPostTeam = (logger: Logger | null): UseApiPostTeamReturn => {
   /**
    * Create team
    * Creates a new team under specified subsidiary
-   * @param {number} subsidiaryId - Subsidiary Id to create team under
+   * @param {number} subsidiaryId - Team subsidiary ID
    * @param {string} teamName - Team name to create
    * @returns {Promise<TeamPostApiResponse | null>} - Promise
    */
@@ -50,11 +47,9 @@ export const useApiPostTeam = (logger: Logger | null): UseApiPostTeamReturn => {
     subsidiaryId: number,
     teamName: string,
   ): Promise<TeamPostApiResponse | null> => {
-    // create payload
-    logger?.debug(`Creating team payload with name <${teamName}>.`);
-    const teamPayload: TeamPostApiPayload = { name: teamName };
     logger?.debug(
-      `Created team payload <${JSON.stringify(teamPayload, null, 2)}>.`,
+      `Create new team with name <${teamName}>` +
+        ` under subsidiary with ID <${subsidiaryId}>.`,
     );
     isLoading.value = true;
 
@@ -62,31 +57,18 @@ export const useApiPostTeam = (logger: Logger | null): UseApiPostTeamReturn => {
     const requestTokenHeader_ = { ...requestTokenHeader };
     requestTokenHeader_.Authorization += loginStore.getAccessToken;
 
-    try {
-      // post team
-      const { data } = await apiFetch<TeamPostApiResponse>({
-        endpoint: `${rideToWorkByBikeConfig.urlApiSubsidiaries}${subsidiaryId}/${rideToWorkByBikeConfig.urlApiTeams}`,
-        method: 'post',
-        translationKey: 'createTeam',
-        headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
-        payload: teamPayload,
-        logger,
-      });
+    // post team
+    const { data } = await apiFetch<TeamPostApiResponse>({
+      endpoint: `${rideToWorkByBikeConfig.urlApiSubsidiaries}${subsidiaryId}/${rideToWorkByBikeConfig.urlApiTeams}`,
+      method: 'post',
+      translationKey: 'createTeam',
+      headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
+      payload: { name: teamName },
+      logger,
+    });
 
-      isLoading.value = false;
-
-      if (data) {
-        logger?.debug(`Created team <${JSON.stringify(data, null, 2)}>.`);
-        return data;
-      } else {
-        logger?.debug('No data returned from team creation API.');
-        return null;
-      }
-    } catch (error) {
-      logger?.error(`Error creating team: ${error}`);
-      isLoading.value = false;
-      return null;
-    }
+    isLoading.value = false;
+    return data;
   };
 
   return {
