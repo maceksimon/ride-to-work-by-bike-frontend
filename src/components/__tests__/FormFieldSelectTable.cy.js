@@ -10,10 +10,10 @@ import {
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 const { contactEmail } = rideToWorkByBikeConfig;
-const subsidiaryIdDefault = 1972;
 
 describe('<FormFieldSelectTable>', () => {
   let options;
+  let subsidiaryId;
 
   before(() => {
     setActivePinia(createPinia());
@@ -31,6 +31,10 @@ describe('<FormFieldSelectTable>', () => {
           options = organizations.map(mapOrganizationToOption);
         },
       );
+    });
+    // set common subsidiaryId from fixture
+    cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
+      subsidiaryId = formOrganizationOptions[0].subsidiaries[0].id;
     });
   });
 
@@ -316,11 +320,7 @@ describe('<FormFieldSelectTable>', () => {
   context('team', () => {
     beforeEach(() => {
       cy.interceptCitiesGetApi(rideToWorkByBikeConfig, i18n);
-      cy.interceptTeamPostApi(
-        rideToWorkByBikeConfig,
-        i18n,
-        subsidiaryIdDefault,
-      );
+      cy.interceptTeamPostApi(rideToWorkByBikeConfig, i18n, subsidiaryId);
       cy.mount(FormFieldSelectTable, {
         props: {
           options: options,
@@ -387,10 +387,10 @@ describe('<FormFieldSelectTable>', () => {
         .and('contain', i18n.global.t('form.messageOptionRequired'));
     });
 
-    it.only('renders dialog when for adding a new team', () => {
+    it('renders dialog when for adding a new team', () => {
       cy.fixture('apiPostTeamRequest').then((teamRequest) => {
         cy.wrap(useRegisterChallengeStore()).then((store) => {
-          store.setSubsidiaryId(subsidiaryIdDefault);
+          store.setSubsidiaryId(subsidiaryId);
 
           cy.dataCy('button-add-option').click();
           cy.dataCy('dialog-add-option').should('be.visible');
