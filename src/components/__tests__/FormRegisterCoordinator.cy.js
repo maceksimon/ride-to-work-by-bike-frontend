@@ -137,11 +137,11 @@ describe('<FormRegisterCoordinator>', () => {
     });
 
     it('renders correct company field label based on organization type', () => {
-      // select company organization type
+      // select organization type
       cy.dataCy('form-organization-type').within(() => {
         cy.contains(i18n.global.t('form.labelCompanyShort')).click();
       });
-      // company field label
+      // organization field label
       cy.dataCy('form-register-coordinator-company').should(
         'contain',
         i18n.global.t('form.labelCompanyForCoordinator'),
@@ -150,7 +150,7 @@ describe('<FormRegisterCoordinator>', () => {
       cy.dataCy('form-organization-type').within(() => {
         cy.contains(i18n.global.t('form.labelSchoolShort')).click();
       });
-      // company field label
+      // organization field label
       cy.dataCy('form-register-coordinator-company').should(
         'contain',
         i18n.global.t('form.labelSchoolForCoordinator'),
@@ -159,7 +159,7 @@ describe('<FormRegisterCoordinator>', () => {
       cy.dataCy('form-organization-type').within(() => {
         cy.contains(i18n.global.t('form.labelFamilyShort')).click();
       });
-      // company field label
+      // organization field label
       cy.dataCy('form-register-coordinator-company').should(
         'contain',
         i18n.global.t('form.labelFamilyForCoordinator'),
