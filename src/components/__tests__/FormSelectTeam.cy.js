@@ -12,6 +12,7 @@ const selectorFormSelectTeam = 'form-select-team';
 const selectorFormSelectTableTeam = 'form-select-table-team';
 const selectorFormSelectTeamInfo = 'form-select-team-info';
 const selectorTableOptionGroup = 'form-select-table-option';
+
 describe('<FormSelectTeam>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -119,11 +120,26 @@ function coreTests() {
           cy.waitForTeamPostApi();
           // verify dialog closed
           cy.dataCy('dialog-add-option').should('not.exist');
-          // wait for teams reload
-          cy.waitForTeamsGetApi();
-          // verify api calls count
-          cy.get('@getTeams.all').its('length').should('eq', 2);
-          cy.get('@getTeamsNextPage.all').its('length').should('eq', 2);
+          // get teams fixture data to compare with updated list
+          cy.fixture('apiGetTeamsResponse').then((teamsResponse) => {
+            cy.fixture('apiGetTeamsResponseNext').then((teamsResponseNext) => {
+              // verify new team appears in the list
+              cy.dataCy('form-select-table-team')
+                .find('.q-radio__label')
+                .should(
+                  'have.length',
+                  teamsResponse.results.length +
+                    teamsResponseNext.results.length +
+                    1,
+                )
+                .and('contain', teamRequest.name);
+              // new team is selected
+              cy.dataCy('form-select-table-team')
+                .find('.q-radio__inner.q-radio__inner--truthy')
+                .siblings('.q-radio__label')
+                .should('contain', teamRequest.name);
+            });
+          });
         });
       });
     });
