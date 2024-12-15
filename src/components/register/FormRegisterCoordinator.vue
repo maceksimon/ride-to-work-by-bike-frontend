@@ -93,7 +93,7 @@ export default defineComponent({
     const organizationType = computed<OrganizationType>(
       () => formRegisterCoordinator.organizationType,
     );
-    const fieldCompanyLabel = computed<string>(
+    const fieldOrganizationLabel = computed<string>(
       () => getOrganizationLabels(organizationType.value).labelForCoordinator,
     );
 
@@ -122,7 +122,7 @@ export default defineComponent({
     };
 
     return {
-      fieldCompanyLabel,
+      fieldOrganizationLabel,
       formRegisterCoordinator,
       optionsOrganizationType,
       onReset,
@@ -193,7 +193,7 @@ export default defineComponent({
           <form-field-company
             v-model="formRegisterCoordinator.organizationId"
             :organization-type="formRegisterCoordinator.organizationType"
-            :label="fieldCompanyLabel"
+            :label="fieldOrganizationLabel"
             class="col-12"
             data-cy="form-register-coordinator-company"
           />
