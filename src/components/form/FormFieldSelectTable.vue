@@ -203,13 +203,14 @@ export default defineComponent({
         logger?.info('Create team.');
         const subsidiaryId = registerChallengeStore.getSubsidiaryId;
         if (subsidiaryId === null) {
-          logger?.debug('No subsidiary ID found in store.');
+          logger?.info('No subsidiary ID found in the store.');
           return;
         }
         const data = await createTeam(subsidiaryId, teamNew.value.name);
         if (data?.id) {
-          logger?.debug(`Team created with ID <${data.id}>.`);
-          logger?.debug(`Team created with name <${data.name}>.`);
+          logger?.debug(
+            `New Team was created with ID <${data.id}> and name <${data.name}>.`,
+          );
           // emit `create:option` event
           emit('create:option', data);
           // close dialog
@@ -217,7 +218,7 @@ export default defineComponent({
           logger?.info('Close add team modal dialog.');
           // store data in v-model (emits to parent component)
           inputValue.value = data.id;
-          logger?.debug(`Team ID set to <${inputValue.value}>.`);
+          logger?.debug(`New team model ID set to <${inputValue.value}>.`);
         }
       }
     };
