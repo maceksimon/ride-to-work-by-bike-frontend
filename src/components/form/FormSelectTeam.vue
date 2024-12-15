@@ -32,6 +32,8 @@ import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
 import type { Logger } from '../types/Logger';
+import type { OrganizationTeam } from '../types/Organization';
+import type { TeamPostApiResponse } from '../types/ApiTeam';
 
 export default defineComponent({
   name: 'FormSelectTeam',
@@ -52,7 +54,7 @@ export default defineComponent({
       },
     });
 
-    const { options, isLoading, loadTeams } = useApiGetTeams(logger);
+    const { options, isLoading, teams, loadTeams } = useApiGetTeams(logger);
     // load teams when subsidiary ID changes
     watch(
       () => registerChallengeStore.getSubsidiaryId,
@@ -70,16 +72,19 @@ export default defineComponent({
 
     /**
      * Handle option created event
-     * When option is created in the child component, refetch options.
-     * This correctly updates the options list as opposed to pushing
-     * the new option into the list manually.
+     * When option is created in the child component, push the result into
+     * the `teams` array (options are computed from `teams` array).
+     * @param {TeamPostApiResponse} data - Team data
      * @returns {void}
      */
-    const onOptionCreated = (): void => {
-      const currentSubsidiaryId = registerChallengeStore.getSubsidiaryId;
-      if (currentSubsidiaryId) {
-        loadTeams(currentSubsidiaryId);
-      }
+    const onOptionCreated = (data: TeamPostApiResponse): void => {
+      const newTeam: OrganizationTeam = {
+        id: data.id,
+        name: data.name,
+        subsidiary: registerChallengeStore.getSubsidiaryId as number,
+        members: [],
+      };
+      teams.value.push(newTeam);
     };
 
     return {
