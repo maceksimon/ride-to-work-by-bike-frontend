@@ -16,7 +16,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, watch } from 'vue';
+import { computed, defineComponent, inject, watch, ref } from 'vue';
 
 // components
 import FormFieldSelectTable from './FormFieldSelectTable.vue';
@@ -55,6 +55,7 @@ export default defineComponent({
     });
 
     const { options, isLoading, teams, loadTeams } = useApiGetTeams(logger);
+    const opts = ref([]);
     // load teams when subsidiary ID changes
     watch(
       () => registerChallengeStore.getSubsidiaryId,
@@ -64,7 +65,10 @@ export default defineComponent({
         );
         if (newValue) {
           logger?.info('Loading teams.');
-          loadTeams(newValue);
+          // Lazy loading
+          loadTeams(newValue).then(() => {
+            opts.value = options;
+          });
         }
       },
       { immediate: true },
@@ -89,7 +93,7 @@ export default defineComponent({
 
     return {
       isLoading,
-      options,
+      opts,
       team,
       OrganizationLevel,
       onOptionCreated,
@@ -108,7 +112,7 @@ export default defineComponent({
     <form-field-select-table
       v-model="team"
       :organization-level="OrganizationLevel.team"
-      :options="options"
+      :options="opts.value"
       :loading="isLoading"
       @create:option="onOptionCreated"
       data-cy="form-select-table-team"
