@@ -365,12 +365,6 @@ export default defineComponent({
                     data-cy="form-select-table-option"
                   />
                 </q-item-section>
-                <!-- Additional description
-                <q-item-section>
-                  <q-item-label>Label</q-item-label>
-                  <q-item-label caption>Description</q-item-label>
-                </q-item-section>
-                -->
               </q-item>
             </template>
             <template v-slot:default="{ item }">
