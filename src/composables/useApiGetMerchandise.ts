@@ -12,24 +12,16 @@ import { rideToWorkByBikeConfig } from '../boot/global_vars';
 import { useLoginStore } from '../stores/login';
 
 // types
-import type { Ref } from 'vue';
 import type { Logger } from '../components/types/Logger';
 import type {
   Merchandise,
   GetMerchandiseResponse,
   MerchandiseCard,
   MerchandiseItem,
+  UseApiGetMerchandiseReturn,
 } from '../components/types/Merchandise';
 import type { FormOption } from '../components/types/Form';
 import type { Image } from '../components/types/Image';
-
-export type UseApiGetMerchandiseReturn = {
-  merchandise: Ref<Merchandise[]>;
-  merchandiseCards: Ref<Record<Gender, MerchandiseCard[]>>;
-  merchandiseItems: Ref<MerchandiseItem[]>;
-  isLoading: Ref<boolean>;
-  loadMerchandise: () => Promise<void>;
-};
 
 // enums
 import { Gender } from '../components/types/Profile';

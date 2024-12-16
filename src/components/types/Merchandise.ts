@@ -6,6 +6,7 @@
 import { Gender } from './Profile';
 
 // types
+import type { Ref } from 'vue';
 import type { FormOption } from './Form';
 import type { Image } from './Image';
 
@@ -26,6 +27,14 @@ export interface GetMerchandiseResponse {
   previous: string | null;
   results: Merchandise[];
 }
+
+export type UseApiGetMerchandiseReturn = {
+  merchandise: Ref<Merchandise[]>;
+  merchandiseCards: Ref<Record<Gender, MerchandiseCard[]>>;
+  merchandiseItems: Ref<MerchandiseItem[]>;
+  isLoading: Ref<boolean>;
+  loadMerchandise: () => Promise<void>;
+};
 
 /**
  * Represents a merchandise card for display purposes
