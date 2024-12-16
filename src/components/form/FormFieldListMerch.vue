@@ -86,7 +86,7 @@ export default defineComponent({
 
     // get merchandise data
     const logger = inject('vuejs3-logger') as Logger | null;
-    const { merchandiseCards, merchandiseById, loadMerchandise, isLoading } =
+    const { merchandiseCards, merchandiseItems, loadMerchandise, isLoading } =
       useApiGetMerchandise(logger);
 
     // load merchandise on mount
@@ -124,7 +124,7 @@ export default defineComponent({
       if (!selectedOption.value) return;
 
       // find item with same name in the new gender group
-      const matchingItem = merchandiseById.value.find(
+      const matchingItem = merchandiseItems.value.find(
         (item) =>
           item.gender === newGender && item.size === selectedOption.value?.size,
       );
@@ -147,7 +147,7 @@ export default defineComponent({
       if (!selectedOption.value) return;
 
       // find item with same name and gender but different size
-      const matchingItem = merchandiseById.value.find(
+      const matchingItem = merchandiseItems.value.find(
         (item) => item.sizeId === newSizeId,
       );
       logger?.debug(`matchingItem: <${matchingItem}>`);
@@ -248,7 +248,6 @@ export default defineComponent({
       onCheckboxUpdate,
       isLoading,
       merchandiseCards,
-      merchandiseById,
     };
   },
 });

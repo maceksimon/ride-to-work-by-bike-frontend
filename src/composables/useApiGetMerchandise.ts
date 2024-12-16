@@ -24,7 +24,7 @@ import type { Image } from '../components/types/Image';
 export type UseApiGetMerchandiseReturn = {
   merchandise: Ref<Merchandise[]>;
   merchandiseCards: Ref<Record<Gender, FormCardMerchType[]>>;
-  merchandiseById: Ref<FormCardMerchType[]>;
+  merchandiseItems: Ref<FormCardMerchType[]>;
   isLoading: Ref<boolean>;
   loadMerchandise: () => Promise<void>;
 };
@@ -68,7 +68,7 @@ export const useApiGetMerchandise = (
    * This is used to render merchandise options in form fields
    * where each product (ID) holds information about its available variants.
    */
-  const merchandiseById = computed<FormCardMerchType[]>(() => {
+  const merchandiseItems = computed<FormCardMerchType[]>(() => {
     // transform items grouped by name into FormCardMerchType
     return merchandise.value.map((item): FormCardMerchType => {
       // get all items with the same name (variants)
@@ -307,7 +307,7 @@ export const useApiGetMerchandise = (
   return {
     merchandise,
     merchandiseCards,
-    merchandiseById,
+    merchandiseItems,
     isLoading,
     loadMerchandise,
   };
