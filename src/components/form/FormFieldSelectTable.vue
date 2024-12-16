@@ -42,7 +42,7 @@
 
 // libraries
 import { computed, defineComponent, inject, ref } from 'vue';
-import { QForm, QVirtualScroll } from 'quasar';
+import { QForm } from 'quasar';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -109,7 +109,6 @@ export default defineComponent({
 
     // user input for filtering
     const query = ref<string>('');
-    const virtualScrollRef = ref<typeof QVirtualScroll | null>(null);
     const formRef = ref<typeof QForm | null>(null);
     const companyNew = ref<FormCompanyFields>({
       name: '',
@@ -284,7 +283,6 @@ export default defineComponent({
       query,
       teamNew,
       titleDialog,
-      virtualScrollRef,
       isFilled,
       onClose,
       onSubmit,
@@ -345,7 +343,6 @@ export default defineComponent({
         <!-- Options list -->
         <q-card-section class="q-pa-xs" data-cy="form-select-table-options">
           <q-virtual-scroll
-            ref="virtualScrollRef"
             style="max-height: 250px"
             :items="filteredOptions"
             :virtual-scroll-item-size="56"
@@ -354,7 +351,11 @@ export default defineComponent({
             separator
           >
             <template v-slot:before>
-              <q-item class="sticky" v-if="inputValue" tag="label">
+              <q-item
+                class="sticky"
+                v-if="inputValue && getOptionLabel(inputValue)"
+                tag="label"
+              >
                 <q-item-section avatar>
                   <!-- Show selected option -->
                   <q-radio
