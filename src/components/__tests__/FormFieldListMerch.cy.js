@@ -206,35 +206,6 @@ describe('<FormFieldListMerch>', () => {
         cy.get('[data-selected="true"]').find('button').should('be.disabled');
       });
     });
-
-    // DISABLED: Need to ensure that size is not selected at the beginning of the test.
-    // it('validates dialog settings', () => {
-    //   // open dialog
-    //   cy.dataCy('form-card-merch-female')
-    //     .first()
-    //     .find('[data-cy="button-more-info"]')
-    //     .click();
-    //   cy.dataCy('dialog-merch').should('be.visible');
-    //   // invalid settings (size not selected)
-    //   cy.dataCy('dialog-body').scrollTo('bottom', { ensureScrollable: false });
-    //   cy.dataCy('button-submit-merch').should('be.visible').click();
-    //   // dialog does not close
-    //   cy.dataCy('dialog-merch').should('be.visible');
-    //   // scope size selection to dialog because input is duplicated in card
-    //   cy.dataCy('dialog-merch').within(() => {
-    //     // select size
-    //     cy.dataCy('form-field-merch-size')
-    //       .should('be.visible')
-    //       .find('.q-radio')
-    //       .first()
-    //       .click();
-    //   });
-    //   // close dialog
-    //   cy.dataCy('dialog-body').scrollTo('bottom', { ensureScrollable: false });
-    //   cy.dataCy('button-submit-merch').should('be.visible').click();
-    //   // dialog closes
-    //   cy.dataCy('dialog-merch').should('not.exist');
-    // });
   });
 
   context('mobile', () => {
