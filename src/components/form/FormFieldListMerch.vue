@@ -186,19 +186,20 @@ export default defineComponent({
       option: MerchandiseCard,
       openDialog: boolean = true,
     ): void => {
-      // find items with the option name and gender
+      // find items from the given card option
       const cardItems = merchandiseItems.value.filter((item) =>
         option.itemIds?.includes(item.id),
       );
       logger?.debug(`cardItems <${JSON.stringify(cardItems, null, 2)}>.`);
-      // find item that matches current selected size (string label)
+      // find item that matches current selected size (compares string labels)
       const item = cardItems.find(
         (item) => item.size === selectedOption.value?.size,
       );
-      // if it exists, select it
+      // if same-size item exists, select it
       if (item) {
         logger?.debug(
-          `Found item matching current size <${JSON.stringify(item, null, 2)}>.`,
+          'Found item matching current size ' +
+            `<${JSON.stringify(item, null, 2)}>.`,
         );
         selectedSize.value = item.id;
         selectedGender.value = item.gender;
@@ -207,10 +208,11 @@ export default defineComponent({
           isOpen.value = true;
         }
       }
-      // if it does not exist, select the first available item
+      // if same-size item does not exist, select the first available item
       else if (cardItems.length) {
         logger?.debug(
-          `No item matching current size, selecting the first available item <${JSON.stringify(cardItems[0], null, 2)}>.`,
+          'No item matching current size, selecting the first available ' +
+            `item <${JSON.stringify(cardItems[0], null, 2)}>.`,
         );
         selectedGender.value = cardItems[0].gender;
         selectedSize.value = cardItems[0].id;

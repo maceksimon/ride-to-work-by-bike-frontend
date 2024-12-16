@@ -146,10 +146,14 @@ export const useApiGetMerchandise = (
    * where each product (ID) holds information about its available variants.
    */
   const computeMerchandiseItems = (): MerchandiseItem[] => {
+    logger?.info('Computing merchandise items');
+    logger?.debug(`Transform <${merchandise.value.length}> items`);
+
     // transform items grouped by name into MerchandiseItem
-    return merchandise.value.map((item): MerchandiseItem => {
+    const items = merchandise.value.map((item): MerchandiseItem => {
       // get all items with the same name (variants)
       const variants = merchandiseGroupedByName.value[item.name];
+      logger?.debug(`Item <${item.name}> has <${variants.length}> variants`);
 
       /**
        * Get all unique genders available for this item name and size.
@@ -165,6 +169,9 @@ export const useApiGetMerchandise = (
         label: getGenderLabel(sex),
         value: sex,
       }));
+      logger?.debug(
+        `Gender options <${JSON.stringify(genderOptions, null, 2)}>`,
+      );
 
       /**
        * Get all sizes available for this item name and gender.
@@ -176,6 +183,7 @@ export const useApiGetMerchandise = (
           label: variant.size,
           value: variant.id,
         }));
+      logger?.debug(`Size options <${JSON.stringify(sizeOptions, null, 2)}>`);
 
       // create image array from t_shirt_preview
       const images: Image[] = [
@@ -186,7 +194,7 @@ export const useApiGetMerchandise = (
       ];
 
       // return MerchandiseItem
-      return {
+      const merchandiseItem = {
         id: item.id,
         label: item.name,
         gender: item.sex,
@@ -196,7 +204,14 @@ export const useApiGetMerchandise = (
         description: item.description,
         images,
       };
+      logger?.debug(
+        `Created item <${JSON.stringify(merchandiseItem, null, 2)}>`,
+      );
+      return merchandiseItem;
     });
+
+    logger?.info(`Computed <${items.length}> merchandise items`);
+    return items;
   };
 
   /**
@@ -206,6 +221,9 @@ export const useApiGetMerchandise = (
    * showing information about all variants of the product of that name.
    */
   const computeMerchandiseCards = (): Record<Gender, MerchandiseCard[]> => {
+    logger?.info('Computing merchandise cards by gender');
+    logger?.debug(`Transform <${merchandise.value.length}> items to cards`);
+
     // group merchandise by gender
     const merchandiseGroupedByGender = merchandise.value.reduce(
       (acc, item) => {
@@ -218,9 +236,17 @@ export const useApiGetMerchandise = (
       {} as Record<Gender, Merchandise[]>,
     );
 
+    logger?.debug(
+      `Items by gender <${JSON.stringify(merchandiseGroupedByGender, null, 2)}>`,
+    );
+
     // for each gender, group by name and transform to MerchandiseCard
-    return Object.entries(merchandiseGroupedByGender).reduce(
+    const cards = Object.entries(merchandiseGroupedByGender).reduce(
       (acc, [gender, genderItems]) => {
+        logger?.debug(
+          `Processing <${genderItems.length}> items for <${gender}>`,
+        );
+
         /**
          * Group merchandise by name within given gender
          * This is done to distinguish between size options for each gender.
@@ -236,6 +262,10 @@ export const useApiGetMerchandise = (
           {} as Record<string, Merchandise[]>,
         );
 
+        logger?.debug(
+          `Items by name <${JSON.stringify(merchandiseGroupedByName, null, 2)}>`,
+        );
+
         // transform each name group into MerchandiseCard
         acc[gender as Gender] = Object.entries(merchandiseGroupedByName).map(
           ([name, items]): MerchandiseCard => {
@@ -249,7 +279,7 @@ export const useApiGetMerchandise = (
             }));
 
             // return MerchandiseCard
-            return {
+            const card = {
               label: name,
               image: firstItem.t_shirt_preview,
               description: firstItem.description,
@@ -258,6 +288,10 @@ export const useApiGetMerchandise = (
               itemIds: items.map((item) => item.id),
               sizeOptions,
             };
+
+            logger?.debug(`Created card <${JSON.stringify(card, null, 2)}>`);
+
+            return card;
           },
         );
 
@@ -265,6 +299,9 @@ export const useApiGetMerchandise = (
       },
       {} as Record<Gender, MerchandiseCard[]>,
     );
+
+    logger?.debug(`Computed cards <${JSON.stringify(cards, null, 2)}>`);
+    return cards;
   };
 
   /**
