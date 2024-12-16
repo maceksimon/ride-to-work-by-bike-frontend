@@ -345,9 +345,7 @@ export default defineComponent({
           <q-virtual-scroll
             style="max-height: 250px"
             :items="filteredOptions"
-            :virtual-scroll-item-size="56"
             :virtual-scroll-sticky-size-start="56"
-            :virtual-scroll-sticky-size-end="32"
             separator
           >
             <template v-slot:before>
