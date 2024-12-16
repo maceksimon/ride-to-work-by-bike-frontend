@@ -42,7 +42,7 @@
 
 // libraries
 import { computed, defineComponent, inject, ref } from 'vue';
-import { QForm } from 'quasar';
+import { QForm, QVirtualScroll } from 'quasar';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -109,6 +109,7 @@ export default defineComponent({
 
     // user input for filtering
     const query = ref<string>('');
+    const virtualScrollRef = ref<typeof QVirtualScroll | null>(null);
     const formRef = ref<typeof QForm | null>(null);
     const companyNew = ref<FormCompanyFields>({
       name: '',
@@ -260,6 +261,15 @@ export default defineComponent({
       return getSelectTableLabels(props.organizationLevel).titleDialog;
     });
 
+    const getOptionLabel = (value: number): string => {
+      return (
+        props.options?.find(
+          (option: FormSelectTableOption | FormOption) =>
+            option.value === value,
+        )?.label || ''
+      );
+    };
+
     return {
       borderRadius,
       companyNew,
@@ -274,9 +284,11 @@ export default defineComponent({
       query,
       teamNew,
       titleDialog,
+      virtualScrollRef,
       isFilled,
       onClose,
       onSubmit,
+      getOptionLabel,
       OrganizationType,
       OrganizationLevel,
     };
@@ -333,28 +345,54 @@ export default defineComponent({
         <!-- Options list -->
         <q-card-section class="q-pa-xs" data-cy="form-select-table-options">
           <q-virtual-scroll
+            ref="virtualScrollRef"
             style="max-height: 250px"
             :items="filteredOptions"
+            :virtual-scroll-item-size="56"
+            :virtual-scroll-sticky-size-start="56"
+            :virtual-scroll-sticky-size-end="32"
             separator
-            v-slot="{ item }"
           >
-            <q-item tag="label" v-ripple>
-              <q-item-section avatar>
-                <q-radio
-                  v-model="inputValue"
-                  :val="item.value"
-                  :label="item.label"
-                  color="primary"
-                  data-cy="form-select-table-option"
-                />
-              </q-item-section>
-              <!-- Additional description
-              <q-item-section>
-                <q-item-label>Label</q-item-label>
-                <q-item-label caption>Description</q-item-label>
-              </q-item-section>
-              -->
-            </q-item>
+            <template v-slot:before>
+              <q-item class="sticky" v-if="inputValue" tag="label">
+                <q-item-section avatar>
+                  <!-- Show selected option -->
+                  <q-radio
+                    v-model="inputValue"
+                    :val="inputValue"
+                    :label="getOptionLabel(inputValue)"
+                    color="primary"
+                    class="text-weight-bold"
+                    data-cy="form-select-table-option"
+                  />
+                </q-item-section>
+                <!-- Additional description
+                <q-item-section>
+                  <q-item-label>Label</q-item-label>
+                  <q-item-label caption>Description</q-item-label>
+                </q-item-section>
+                -->
+              </q-item>
+            </template>
+            <template v-slot:default="{ item }">
+              <q-item tag="label" :key="item.value" v-ripple>
+                <q-item-section avatar>
+                  <q-radio
+                    v-model="inputValue"
+                    :val="item.value"
+                    :label="item.label"
+                    color="primary"
+                    data-cy="form-select-table-option"
+                  />
+                </q-item-section>
+                <!-- Additional description
+                <q-item-section>
+                  <q-item-label>Label</q-item-label>
+                  <q-item-label caption>Description</q-item-label>
+                </q-item-section>
+                -->
+              </q-item>
+            </template>
             <!-- REQUIRE CHANGE IT
             <!~~ Slot: Option label ~~>
             <template v-slot:label="opt">
@@ -499,5 +537,14 @@ export default defineComponent({
 }
 :deep(.text-negative .q-radio__label) {
   color: $negative;
+}
+
+:deep(.sticky) {
+  position: sticky;
+  top: 0;
+  opacity: 1;
+  z-index: 1;
+  background-color: $white;
+  border-bottom: 1px solid $grey-4;
 }
 </style>
