@@ -5,6 +5,10 @@
 // enums
 import { Gender } from './Profile';
 
+// types
+import type { FormOption } from './Form';
+import type { Image } from './Image';
+
 export interface Merchandise {
   id: number;
   name: string;
@@ -21,4 +25,33 @@ export interface GetMerchandiseResponse {
   next: string | null;
   previous: string | null;
   results: Merchandise[];
+}
+
+/**
+ * Represents a merchandise card for display purposes
+ * Used in grid/list views to show merchandise options
+ */
+export interface MerchandiseCard {
+  label: string;
+  image: string;
+  description: string;
+  gender: Gender;
+  sizeOptions: FormOption[];
+  material: string;
+  itemIds: number[];
+}
+
+/**
+ * Represents a merchandise item for selection and state management
+ * Used in forms and dialogs for merchandise selection
+ */
+export interface MerchandiseItem {
+  id: number;
+  label: string;
+  gender: Gender;
+  genderOptions: FormOption[];
+  size: string;
+  sizeOptions: FormOption[];
+  description: string;
+  images: Image[];
 }

@@ -139,7 +139,7 @@ describe('<FormFieldListMerch>', () => {
       });
     });
 
-    it('changes tabs when changing gender radio', () => {
+    it('changes tabs when changing gender radio (in dialog)', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
         const item = response.results.find((item) => item.id === 135);
@@ -204,6 +204,86 @@ describe('<FormFieldListMerch>', () => {
         cy.dataCy('dialog-merch').should('not.exist');
         // button is disabled
         cy.get('[data-selected="true"]').find('button').should('be.disabled');
+      });
+    });
+
+    it('when gender is changed and new product contains the same size, it is selected', () => {
+      cy.fixture('apiGetMerchandiseResponse').then((response) => {
+        // select our test item (Triko 2024, female, size M)
+        const item = response.results.find((item) => item.id === 135);
+        cy.contains(item.name).click();
+        cy.dataCy('dialog-merch').should('be.visible');
+        cy.dataCy('dialog-merch').within(() => {
+          cy.dataCy('form-field-merch-size')
+            .should('be.visible')
+            .contains(item.size)
+            .click();
+          // change gender
+          cy.dataCy('form-field-merch-gender')
+            .contains(i18n.global.t('global.male'))
+            .should('be.visible')
+            .click();
+          // same size is selected
+          cy.dataCy('form-field-merch-size')
+            .find('.q-radio__inner.q-radio__inner--truthy')
+            .siblings('.q-radio__label')
+            .should('contain', item.size);
+        });
+      });
+    });
+
+    it('when gender is changed via tabs, it does not open dialog', () => {
+      cy.fixture('apiGetMerchandiseResponse').then((response) => {
+        // select our test item (Triko 2024, female, size M)
+        const item = response.results.find((item) => item.id === 135);
+        cy.contains(item.name).click();
+        cy.dataCy('dialog-merch').should('be.visible');
+        cy.dataCy('dialog-merch').within(() => {
+          cy.dataCy('form-field-merch-size')
+            .should('be.visible')
+            .contains(item.size)
+            .click();
+        });
+        // close dialog
+        cy.dataCy('dialog-close').click();
+        // dialog is not open
+        cy.dataCy('dialog-merch').should('not.exist');
+        // change merch via tabs
+        cy.dataCy('list-merch-tab-male').click();
+        // male options are visible
+        cy.dataCy('form-card-merch-male').should('be.visible');
+        cy.dataCy('form-card-merch-female').should('not.exist');
+        // dialog is not open
+        cy.dataCy('dialog-merch').should('not.exist');
+      });
+    });
+
+    it('when gender is changed to via tabs and size is not available, it selects first available size', () => {
+      cy.fixture('apiGetMerchandiseResponse').then((response) => {
+        // select our test item (Triko 2024, female, size XS)
+        const item = response.results.find((item) => item.id === 133);
+        cy.contains(item.name).click();
+        cy.dataCy('dialog-merch').should('be.visible');
+        cy.dataCy('dialog-merch').within(() => {
+          cy.dataCy('form-field-merch-size')
+            .should('be.visible')
+            .contains(item.size)
+            .click();
+        });
+        // close dialog
+        cy.dataCy('dialog-close').click();
+        // dialog is not open
+        cy.dataCy('dialog-merch').should('not.exist');
+        // change merch via tabs
+        cy.dataCy('list-merch-tab-male').click();
+        // male options are visible
+        cy.dataCy('form-card-merch-male').should('be.visible');
+        cy.dataCy('form-card-merch-female').should('not.exist');
+        // XS is not available in male options - first option is selected
+        cy.dataCy('form-field-merch-size')
+          .find('.q-radio__inner')
+          .first()
+          .should('have.class', 'q-radio__inner--truthy');
       });
     });
   });

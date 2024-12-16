@@ -49,12 +49,14 @@ import SliderMerch from './SliderMerch.vue';
 
 // composables
 import { useApiGetMerchandise } from '../../composables/useApiGetMerchandise';
+import { i18n } from 'src/boot/i18n';
 
 // enums
 import { Gender } from '../types/Profile';
 
 // types
-import type { FormCardMerchType, FormOption } from '../types/Form';
+import type { FormOption } from '../types/Form';
+import type { MerchandiseCard, MerchandiseItem } from '../types/Merchandise';
 import type { Logger } from '../types/Logger';
 
 export default defineComponent({
@@ -75,11 +77,21 @@ export default defineComponent({
 
     // selected options
     const selectedGender = ref<string>(Gender.female);
-    const selectedOption = ref<FormCardMerchType | null>(null);
-    const selectedSize = ref<string>('');
+    const selectedSize = ref<number | null>(null);
+    const selectedOption = computed<MerchandiseItem | null>(
+      (): MerchandiseItem | null => {
+        return (
+          merchandiseItems.value.find(
+            (item) => item.id === selectedSize.value,
+          ) || null
+        );
+      },
+    );
     const phone = ref<string>('');
     const trackDelivery = ref<boolean>(false);
     const newsletter = ref<boolean>(false);
+    // dialog
+    const isOpen = ref<boolean>(false);
 
     // merch tabs
     const tabsMerchRef = ref<typeof QCard | null>(null);
@@ -95,15 +107,15 @@ export default defineComponent({
     });
 
     // computed properties for gender-specific options
-    const optionsFemale = computed((): FormCardMerchType[] => {
+    const optionsFemale = computed((): MerchandiseCard[] => {
       return Object.values(merchandiseCards.value[Gender.female] || {});
     });
 
-    const optionsMale = computed((): FormCardMerchType[] => {
+    const optionsMale = computed((): MerchandiseCard[] => {
       return Object.values(merchandiseCards.value[Gender.male] || {});
     });
 
-    const optionsUnisex = computed((): FormCardMerchType[] => {
+    const optionsUnisex = computed((): MerchandiseCard[] => {
       return Object.values(merchandiseCards.value[Gender.unisex] || {});
     });
 
@@ -116,82 +128,101 @@ export default defineComponent({
       return selectedOption.value?.sizeOptions || [];
     });
 
-    /**
-     * When gender changes, find matching item with same name but different gender
-     */
-    const onGenderChange = (newGender: string) => {
-      logger?.debug(`onGenderChange: <${newGender}>`);
-      if (!selectedOption.value) return;
-
-      // find item with same name in the new gender group
-      const matchingItem = merchandiseItems.value.find(
-        (item) =>
-          item.gender === newGender && item.size === selectedOption.value?.size,
-      );
-      logger?.debug(`matchingItem: <${JSON.stringify(matchingItem, null, 2)}>`);
-
-      if (matchingItem) {
-        selectedOption.value = matchingItem;
-        selectedSize.value = matchingItem.sizeId;
+    const currentItemLabelSize = computed((): string => {
+      switch (selectedOption.value?.gender) {
+        case Gender.female:
+          return i18n.global.t('form.merch.labelSizeFemale');
+        case Gender.male:
+          return i18n.global.t('form.merch.labelSizeMale');
+        case Gender.unisex:
+          return i18n.global.t('form.merch.labelSizeUnisex');
+        default:
+          return '';
       }
-      logger?.debug(
-        `selectedOption: <${JSON.stringify(selectedOption.value, null, 2)}>`,
+    });
+
+    /**
+     * Checks if given option is selected.
+     * Used to display "selected" version of the card button.
+     * @param option MerchandiseCard
+     */
+    const isSelected = (option: MerchandiseCard): boolean => {
+      return (
+        !!selectedOption.value &&
+        !!option.itemIds?.includes(selectedOption.value?.id)
       );
     };
 
     /**
-     * When size changes, find matching item with same name and gender but different size
+     * When gender changes, find appropriate card option.
+     * Then run onSelectCardOption logic without opening the dialog.
      */
-    const onSizeChange = (newSizeId: string) => {
-      logger?.debug(`onSizeChange: <${newSizeId}>`);
-      if (!selectedOption.value) return;
-
-      // find item with same name and gender but different size
-      const matchingItem = merchandiseItems.value.find(
-        (item) => item.sizeId === newSizeId,
+    const onGenderChange = (newGender: string) => {
+      logger?.debug(`onGenderChange <${newGender}>`);
+      // find card option in merchandiseCards
+      const cardOption = merchandiseCards.value[newGender as Gender].find(
+        (card) => card.label === selectedOption.value?.label,
       );
-      logger?.debug(`matchingItem: <${matchingItem}>`);
-
-      if (matchingItem) {
-        selectedOption.value = matchingItem;
-        selectedSize.value = matchingItem.sizeId;
+      if (cardOption) {
+        logger?.debug(
+          `Found card option <${JSON.stringify(cardOption, null, 2)}>.`,
+        );
+        onSelectCardOption(cardOption, false);
+      } else {
+        logger?.debug('No card option found');
+        return;
       }
-      logger?.debug(
-        `selectedOption: <${JSON.stringify(selectedOption.value, null, 2)}>`,
-      );
     };
 
     // watch for gender changes
     watch(selectedGender, onGenderChange);
 
-    // watch for size changes
-    watch(selectedSize, onSizeChange);
-
-    /**
-     * Checks if given option is selected.
-     * Used to display "selected" version of the card button.
-     * @param option FormCardMerchType
-     */
-    const isSelected = (option: FormCardMerchType): boolean => {
-      return (
-        !!selectedOption.value?.value &&
-        !!option.itemIds?.includes(selectedOption.value?.value)
-      );
-    };
-
-    // dialog
-    const isOpen = ref<boolean>(false);
-
     /**
      * Handles the card "select" button click.
      * Opens the dialog with more details.
-     * @param option FormCardMerchType
+     * @param option MerchandiseCard
      */
-    const onOptionSelect = (option: FormCardMerchType): void => {
-      selectedOption.value = option;
-      selectedGender.value = option.gender;
-      selectedSize.value = option.sizeId;
-      isOpen.value = true;
+    const onSelectCardOption = (
+      option: MerchandiseCard,
+      openDialog: boolean = true,
+    ): void => {
+      // find items with the option name and gender
+      const cardItems = merchandiseItems.value.filter((item) =>
+        option.itemIds?.includes(item.id),
+      );
+      logger?.debug(`cardItems <${JSON.stringify(cardItems, null, 2)}>.`);
+      // find item that matches current selected size (string label)
+      const item = cardItems.find(
+        (item) => item.size === selectedOption.value?.size,
+      );
+      // if it exists, select it
+      if (item) {
+        logger?.debug(
+          `Found item matching current size <${JSON.stringify(item, null, 2)}>.`,
+        );
+        selectedSize.value = item.id;
+        selectedGender.value = item.gender;
+        // if parameter is not overridden, open the dialog
+        if (openDialog) {
+          isOpen.value = true;
+        }
+      }
+      // if it does not exist, select the first available item
+      else if (cardItems.length) {
+        logger?.debug(
+          `No item matching current size, selecting the first available item <${JSON.stringify(cardItems[0], null, 2)}>.`,
+        );
+        selectedGender.value = cardItems[0].gender;
+        selectedSize.value = cardItems[0].id;
+        // if parameter is not overridden, open the dialog
+        if (openDialog) {
+          isOpen.value = true;
+        }
+      }
+      // if there are no items, do nothing
+      else {
+        logger?.debug('No items match the selected option');
+      }
     };
 
     /**
@@ -226,6 +257,7 @@ export default defineComponent({
     };
 
     return {
+      currentItemLabelSize,
       formMerchRef,
       Gender,
       isNotMerch,
@@ -241,7 +273,7 @@ export default defineComponent({
       currentGenderOptions,
       currentSizeOptions,
       trackDelivery,
-      onOptionSelect,
+      onSelectCardOption,
       onSubmit,
       isSelected,
       tabsMerchRef,
@@ -326,11 +358,11 @@ export default defineComponent({
           <FormCardMerch
             v-for="option in optionsFemale"
             :option="option"
-            :key="`${option.value}-${Gender.female}`"
+            :key="`${option.label}-${Gender.female}`"
             :selected="isSelected(option)"
             class="col-12 col-md-6 col-lg-4"
             data-cy="form-card-merch-female"
-            @select-option="onOptionSelect(option)"
+            @select-option="onSelectCardOption(option)"
           />
         </div>
       </q-tab-panel>
@@ -342,11 +374,11 @@ export default defineComponent({
           <FormCardMerch
             v-for="option in optionsMale"
             :option="option"
-            :key="`${option.value}-${Gender.male}`"
+            :key="`${option.label}-${Gender.male}`"
             :selected="isSelected(option)"
             class="col-12 col-md-6 col-lg-4"
             data-cy="form-card-merch-male"
-            @select-option="onOptionSelect(option)"
+            @select-option="onSelectCardOption(option)"
           />
         </div>
       </q-tab-panel>
@@ -358,11 +390,11 @@ export default defineComponent({
           <FormCardMerch
             v-for="option in optionsUnisex"
             :option="option"
-            :key="`${option.value}-${Gender.unisex}`"
+            :key="`${option.label}-${Gender.unisex}`"
             :selected="isSelected(option)"
             class="col-12 col-md-6 col-lg-4"
             data-cy="form-card-merch-unisex"
-            @select-option="onOptionSelect(option)"
+            @select-option="onSelectCardOption(option)"
           />
         </div>
       </q-tab-panel>
@@ -372,18 +404,8 @@ export default defineComponent({
     <div v-if="currentSizeOptions.length > 1" class="q-pt-sm">
       <span
         class="text-caption text-weight-medium text-grey-10"
-        v-if="selectedGender === Gender.female"
-        >{{ $t('form.merch.labelSizeFemale') }}</span
-      >
-      <span
-        class="text-caption text-weight-medium text-grey-10"
-        v-else-if="selectedGender === Gender.male"
-        >{{ $t('form.merch.labelSizeMale') }}</span
-      >
-      <span
-        class="text-caption text-weight-medium text-grey-10"
-        v-else-if="selectedGender === Gender.unisex"
-        >{{ $t('form.merch.labelSizeUnisex') }}</span
+        v-if="currentItemLabelSize"
+        >{{ currentItemLabelSize }}</span
       >
       <form-field-radio-required
         inline
@@ -428,14 +450,14 @@ export default defineComponent({
     <dialog-default v-model="isOpen" data-cy="dialog-merch">
       <template #title>
         <!-- Merch Title -->
-        <span v-if="selectedOption">{{ selectedOption.dialogTitle }}</span>
+        <span v-if="selectedOption">{{ selectedOption.label }}</span>
       </template>
       <template #content>
         <div v-if="selectedOption">
           <!-- Merch Image Slider -->
-          <slider-merch :items="selectedOption.dialogImages" />
+          <slider-merch :items="selectedOption.images" />
           <!-- Merch Description -->
-          <div v-html="selectedOption.dialogDescription"></div>
+          <div v-html="selectedOption.description"></div>
           <q-form ref="formMerchRef">
             <!-- Input: Merch gender -->
             <div v-if="currentGenderOptions.length" class="q-pt-sm">
@@ -454,18 +476,8 @@ export default defineComponent({
             <div class="q-pt-sm" v-if="currentSizeOptions.length > 1">
               <span
                 class="text-caption text-weight-medium text-grey-10"
-                v-if="selectedGender === Gender.female"
-                >{{ $t('form.merch.labelSizeFemale') }}</span
-              >
-              <span
-                class="text-caption text-weight-medium text-grey-10"
-                v-else-if="selectedGender === Gender.male"
-                >{{ $t('form.merch.labelSizeMale') }}</span
-              >
-              <span
-                class="text-caption text-weight-medium text-grey-10"
-                v-else-if="selectedGender === Gender.unisex"
-                >{{ $t('form.merch.labelSizeUnisex') }}</span
+                v-if="currentItemLabelSize"
+                >{{ currentItemLabelSize }}</span
               >
               <form-field-radio-required
                 inline
