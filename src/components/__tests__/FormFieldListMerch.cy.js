@@ -105,7 +105,7 @@ describe('<FormFieldListMerch>', () => {
         cy.dataCy('form-card-merch-female')
           .first()
           .find('[data-cy="button-more-info"]')
-          .should('not.be.visible');
+          .should('not.exist');
       });
     });
 
@@ -135,48 +135,77 @@ describe('<FormFieldListMerch>', () => {
         cy.dataCy('form-card-merch-female')
           .first()
           .find('[data-cy="button-more-info"]')
-          .should('not.be.visible');
+          .should('not.exist');
       });
     });
 
-    // it('changes tabs when changing gender radio', () => {
-    //   // open dialog
-    //   cy.dataCy('form-card-merch-female')
-    //     .last()
-    //     .find('[data-cy="button-more-info"]')
-    //     .click();
-    //   cy.dataCy('dialog-merch').should('be.visible');
-    //   // change gender setting
-    //   cy.dataCy('form-field-merch-gender')
-    //     .should('be.visible')
-    //     .find('.q-radio')
-    //     .last()
-    //     .click();
-    //   // close dialog
-    //   cy.dataCy('dialog-close').click();
-    //   cy.dataCy('form-card-merch-male').should('be.visible');
-    //   // we should see male options
-    //   cy.dataCy('form-card-merch-female').should('not.exist');
-    //   // same merch type selected
-    //   cy.dataCy('form-card-merch-male')
-    //     .last()
-    //     .find('[data-cy="button-selected"]')
-    //     .should('be.visible')
-    //     .click();
-    //   // open dialog
-    //   cy.dataCy('dialog-merch').should('be.visible');
-    //   // change gender setting
-    //   cy.dataCy('form-field-merch-gender')
-    //     .should('be.visible')
-    //     .find('.q-radio')
-    //     .first()
-    //     .click();
-    //   // close dialog
-    //   cy.dataCy('dialog-close').click();
-    //   // we should see female options
-    //   cy.dataCy('form-card-merch-male').should('not.exist');
-    //   cy.dataCy('form-card-merch-female').should('be.visible');
-    // });
+    it('changes tabs when changing gender radio', () => {
+      cy.fixture('apiGetMerchandiseResponse').then((response) => {
+        // select our test item (Triko 2024, female, size M)
+        const item = response.results.find((item) => item.id === 135);
+        // select last merch option
+        cy.contains(item.name).click();
+        cy.dataCy('dialog-merch').should('be.visible');
+        cy.dataCy('dialog-merch').within(() => {
+          // select size (to make sure both gender options are available)
+          cy.dataCy('form-field-merch-size')
+            .contains(item.size)
+            .should('be.visible')
+            .click();
+        });
+        // change gender setting
+        cy.dataCy('form-field-merch-gender')
+          .contains(i18n.global.t('global.male'))
+          .should('be.visible')
+          .click();
+        // close dialog
+        cy.dataCy('dialog-close').click();
+        // we should see male options
+        cy.dataCy('form-card-merch-male').should('be.visible');
+        cy.dataCy('form-card-merch-female').should('not.exist');
+        // same merch type selected
+        cy.get('[data-selected="true"]').should('contain', item.name);
+      });
+    });
+
+    it('when option with sizes is selected, shows size selection under the cards', () => {
+      cy.fixture('apiGetMerchandiseResponse').then((response) => {
+        // select our test item (Triko 2024, female, size M)
+        const item = response.results.find((item) => item.id === 135);
+        cy.contains(item.name).click();
+        cy.dataCy('dialog-merch').should('be.visible');
+        cy.dataCy('dialog-merch').within(() => {
+          cy.dataCy('form-field-merch-size').should('be.visible');
+        });
+        // close dialog
+        cy.dataCy('dialog-close').click();
+        // size selection is visible
+        cy.dataCy('form-field-merch-size').should('be.visible');
+        // select different size
+        cy.dataCy('form-field-merch-size');
+      });
+    });
+
+    it('when option is selected, disables the merch card interaction', () => {
+      cy.fixture('apiGetMerchandiseResponse').then((response) => {
+        // select our test item (Triko 2024, female, size M)
+        const item = response.results.find((item) => item.id === 135);
+        cy.contains(item.name).click();
+        cy.dataCy('dialog-merch').should('be.visible');
+        cy.dataCy('dialog-merch').within(() => {
+          cy.dataCy('form-field-merch-size').should('be.visible');
+        });
+        // close dialog
+        cy.dataCy('dialog-close').click();
+        // option is selected
+        cy.get('[data-selected="true"]').should('contain', item.name);
+        // if title is clicked dialog is not shown
+        cy.get('[data-selected="true"]').contains(item.name).click();
+        cy.dataCy('dialog-merch').should('not.exist');
+        // button is disabled
+        cy.get('[data-selected="true"]').find('button').should('be.disabled');
+      });
+    });
 
     // DISABLED: Need to ensure that size is not selected at the beginning of the test.
     // it('validates dialog settings', () => {
