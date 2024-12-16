@@ -90,8 +90,8 @@ export default defineComponent({
       useApiGetMerchandise(logger);
 
     // load merchandise on mount
-    onMounted(() => {
-      loadMerchandise();
+    onMounted(async () => {
+      await loadMerchandise();
     });
 
     // computed properties for gender-specific options
@@ -173,7 +173,10 @@ export default defineComponent({
      * @param option FormCardMerchType
      */
     const isSelected = (option: FormCardMerchType): boolean => {
-      return selectedOption.value?.value === option.sizeId;
+      return (
+        !!selectedOption.value?.value &&
+        !!option.itemIds?.includes(selectedOption.value?.value)
+      );
     };
 
     // dialog
@@ -367,7 +370,7 @@ export default defineComponent({
     </q-tab-panels>
 
     <!-- Input: Merch size (card) - duplicated in dialog -->
-    <div v-if="selectedOption" class="q-pt-sm">
+    <div v-if="currentSizeOptions.length > 1" class="q-pt-sm">
       <span
         class="text-caption text-weight-medium text-grey-10"
         v-if="selectedGender === Gender.female"
@@ -378,10 +381,15 @@ export default defineComponent({
         v-else-if="selectedGender === Gender.male"
         >{{ $t('form.merch.labelSizeMale') }}</span
       >
+      <span
+        class="text-caption text-weight-medium text-grey-10"
+        v-else-if="selectedGender === Gender.unisex"
+        >{{ $t('form.merch.labelSizeUnisex') }}</span
+      >
       <form-field-radio-required
         inline
         v-model="selectedSize"
-        :options="selectedOption.sizes"
+        :options="currentSizeOptions"
         class="q-mt-sm"
         data-cy="form-field-merch-size"
       />
@@ -444,7 +452,7 @@ export default defineComponent({
               />
             </div>
             <!-- Input: Merch size (dialog) - duplicated in card -->
-            <div class="q-pt-sm">
+            <div class="q-pt-sm" v-if="currentSizeOptions.length > 1">
               <span
                 class="text-caption text-weight-medium text-grey-10"
                 v-if="selectedGender === Gender.female"
@@ -454,6 +462,11 @@ export default defineComponent({
                 class="text-caption text-weight-medium text-grey-10"
                 v-else-if="selectedGender === Gender.male"
                 >{{ $t('form.merch.labelSizeMale') }}</span
+              >
+              <span
+                class="text-caption text-weight-medium text-grey-10"
+                v-else-if="selectedGender === Gender.unisex"
+                >{{ $t('form.merch.labelSizeUnisex') }}</span
               >
               <form-field-radio-required
                 inline

@@ -57,6 +57,7 @@ export type FormCardMerchType = {
   label: string;
   size: string;
   sizeId: string;
+  itemIds?: string[];
   sizeOptions?: FormOption[];
 };
 
