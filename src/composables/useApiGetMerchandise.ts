@@ -283,6 +283,7 @@ export const useApiGetMerchandise = (
               label: name,
               image: firstItem.t_shirt_preview,
               description: firstItem.description,
+              author: firstItem.author,
               gender: firstItem.sex,
               material: firstItem.material,
               itemIds: items.map((item) => item.id),

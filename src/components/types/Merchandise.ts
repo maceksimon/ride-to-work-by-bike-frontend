@@ -44,6 +44,7 @@ export interface MerchandiseCard {
   label: string;
   image: string;
   description: string;
+  author: string;
   gender: Gender;
   sizeOptions: FormOption[];
   material: string;
