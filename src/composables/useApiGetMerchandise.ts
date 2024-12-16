@@ -41,6 +41,10 @@ export const useApiGetMerchandise = (
   const merchandise = ref<Merchandise[]>([]);
   const isLoading = ref<boolean>(false);
   const loginStore = useLoginStore();
+  const merchandiseItems = ref<MerchandiseItem[]>([]);
+  const merchandiseCards = ref<Record<Gender, MerchandiseCard[]>>(
+    {} as Record<Gender, MerchandiseCard[]>,
+  );
   const { apiFetch } = useApi();
 
   /**
@@ -83,6 +87,9 @@ export const useApiGetMerchandise = (
     if (data?.next) {
       await fetchNextPage(data.next);
     }
+
+    merchandiseItems.value = computeMerchandiseItems();
+    merchandiseCards.value = computeMerchandiseCards();
 
     isLoading.value = false;
   };
@@ -138,7 +145,7 @@ export const useApiGetMerchandise = (
    * This is used to render merchandise options in form fields
    * where each product (ID) holds information about its available variants.
    */
-  const merchandiseItems = computed<MerchandiseItem[]>(() => {
+  const computeMerchandiseItems = (): MerchandiseItem[] => {
     // transform items grouped by name into MerchandiseItem
     return merchandise.value.map((item): MerchandiseItem => {
       // get all items with the same name (variants)
@@ -190,7 +197,7 @@ export const useApiGetMerchandise = (
         images,
       };
     });
-  });
+  };
 
   /**
    * Transform merchandise data into MerchandiseCard format
@@ -198,7 +205,7 @@ export const useApiGetMerchandise = (
    * This is used to display merchandise cards with composite data
    * showing information about all variants of the product of that name.
    */
-  const merchandiseCards = computed<Record<Gender, MerchandiseCard[]>>(() => {
+  const computeMerchandiseCards = (): Record<Gender, MerchandiseCard[]> => {
     // group merchandise by gender
     const merchandiseGroupedByGender = merchandise.value.reduce(
       (acc, item) => {
@@ -258,7 +265,7 @@ export const useApiGetMerchandise = (
       },
       {} as Record<Gender, MerchandiseCard[]>,
     );
-  });
+  };
 
   /**
    * Get gender label
