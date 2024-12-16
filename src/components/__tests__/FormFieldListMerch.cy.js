@@ -82,7 +82,7 @@ describe('<FormFieldListMerch>', () => {
     it('allows user to select merch option (heading click)', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         const item = response.results[0];
-        // open dialog
+        // open dialog and verify content
         cy.dataCy('form-card-merch-female')
           .first()
           .find('[data-cy="form-card-merch-link"]')
@@ -90,7 +90,6 @@ describe('<FormFieldListMerch>', () => {
         cy.dataCy('dialog-merch')
           .should('be.visible')
           .within(() => {
-            // verify dialog content from fixture data
             cy.contains(item.name).should('be.visible');
             cy.contains(item.description).should('be.visible');
           });
@@ -120,7 +119,6 @@ describe('<FormFieldListMerch>', () => {
         cy.dataCy('dialog-merch')
           .should('be.visible')
           .within(() => {
-            // verify dialog content from fixture data
             cy.contains(item.name).should('be.visible');
             cy.contains(item.description).should('be.visible');
           });
@@ -143,21 +141,14 @@ describe('<FormFieldListMerch>', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
         const item = response.results.find((item) => item.id === 135);
-        // select last merch option
-        cy.contains(item.name).click();
-        cy.dataCy('dialog-merch').should('be.visible');
+        cy.listMerchSelectItem(item, { closeDialog: false });
+        // change gender setting
         cy.dataCy('dialog-merch').within(() => {
-          // select size (to make sure both gender options are available)
-          cy.dataCy('form-field-merch-size')
-            .contains(item.size)
+          cy.dataCy('form-field-merch-gender')
+            .contains(i18n.global.t('global.male'))
             .should('be.visible')
             .click();
         });
-        // change gender setting
-        cy.dataCy('form-field-merch-gender')
-          .contains(i18n.global.t('global.male'))
-          .should('be.visible')
-          .click();
         // close dialog
         cy.dataCy('dialog-close').click();
         // we should see male options
@@ -172,13 +163,7 @@ describe('<FormFieldListMerch>', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
         const item = response.results.find((item) => item.id === 135);
-        cy.contains(item.name).click();
-        cy.dataCy('dialog-merch').should('be.visible');
-        cy.dataCy('dialog-merch').within(() => {
-          cy.dataCy('form-field-merch-size').should('be.visible');
-        });
-        // close dialog
-        cy.dataCy('dialog-close').click();
+        cy.listMerchSelectItem(item);
         // size selection is visible
         cy.dataCy('form-field-merch-size').should('be.visible');
         // select different size
@@ -190,13 +175,7 @@ describe('<FormFieldListMerch>', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
         const item = response.results.find((item) => item.id === 135);
-        cy.contains(item.name).click();
-        cy.dataCy('dialog-merch').should('be.visible');
-        cy.dataCy('dialog-merch').within(() => {
-          cy.dataCy('form-field-merch-size').should('be.visible');
-        });
-        // close dialog
-        cy.dataCy('dialog-close').click();
+        cy.listMerchSelectItem(item);
         // option is selected
         cy.get('[data-selected="true"]').should('contain', item.name);
         // if title is clicked dialog is not shown
@@ -211,13 +190,8 @@ describe('<FormFieldListMerch>', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
         const item = response.results.find((item) => item.id === 135);
-        cy.contains(item.name).click();
-        cy.dataCy('dialog-merch').should('be.visible');
+        cy.listMerchSelectItem(item, { closeDialog: false });
         cy.dataCy('dialog-merch').within(() => {
-          cy.dataCy('form-field-merch-size')
-            .should('be.visible')
-            .contains(item.size)
-            .click();
           // change gender
           cy.dataCy('form-field-merch-gender')
             .contains(i18n.global.t('global.male'))
@@ -236,18 +210,7 @@ describe('<FormFieldListMerch>', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
         const item = response.results.find((item) => item.id === 135);
-        cy.contains(item.name).click();
-        cy.dataCy('dialog-merch').should('be.visible');
-        cy.dataCy('dialog-merch').within(() => {
-          cy.dataCy('form-field-merch-size')
-            .should('be.visible')
-            .contains(item.size)
-            .click();
-        });
-        // close dialog
-        cy.dataCy('dialog-close').click();
-        // dialog is not open
-        cy.dataCy('dialog-merch').should('not.exist');
+        cy.listMerchSelectItem(item);
         // change merch via tabs
         cy.dataCy('list-merch-tab-male').click();
         // male options are visible
@@ -262,18 +225,7 @@ describe('<FormFieldListMerch>', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size XS)
         const item = response.results.find((item) => item.id === 133);
-        cy.contains(item.name).click();
-        cy.dataCy('dialog-merch').should('be.visible');
-        cy.dataCy('dialog-merch').within(() => {
-          cy.dataCy('form-field-merch-size')
-            .should('be.visible')
-            .contains(item.size)
-            .click();
-        });
-        // close dialog
-        cy.dataCy('dialog-close').click();
-        // dialog is not open
-        cy.dataCy('dialog-merch').should('not.exist');
+        cy.listMerchSelectItem(item);
         // change merch via tabs
         cy.dataCy('list-merch-tab-male').click();
         // male options are visible
