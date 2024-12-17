@@ -19,7 +19,7 @@
  */
 
 // libraries
-import { defineComponent, ref, watch } from 'vue';
+import { defineComponent, onUnmounted, ref, watch } from 'vue';
 
 // components
 import FormFieldSliderNumber from './FormFieldSliderNumber.vue';
@@ -43,12 +43,20 @@ export default defineComponent({
     /**
      * Watch values and emit 'update:donation' event.
      */
-    watch([amount, donation], () => {
-      if (donation.value) {
-        emit('update:donation', amount.value);
-      } else {
-        emit('update:donation', false);
-      }
+    watch(
+      [amount, donation],
+      () => {
+        if (donation.value) {
+          emit('update:donation', amount.value);
+        } else {
+          emit('update:donation', 0);
+        }
+      },
+      { immediate: true },
+    );
+
+    onUnmounted(() => {
+      emit('update:donation', 0);
     });
 
     return {
