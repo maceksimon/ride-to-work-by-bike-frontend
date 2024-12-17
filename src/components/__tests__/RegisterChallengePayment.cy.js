@@ -223,6 +223,84 @@ function coreTests() {
     );
   });
 
+  it('handles default price when switching between individual and discount voucher', () => {
+    cy.get('@voucherHalf').then((voucher) => {
+      // ensure we are on step individual
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
+      // check amount
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', defaultPaymentAmountMin);
+      // switch to voucher
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
+      // amount options are hidden
+      cy.dataCy(selectorPaymentAmount).should('not.exist');
+      // input voucher
+      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherSubmit).click();
+      // option with discounted amount is available
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', voucher.amount);
+      // switch to individual
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
+      // amount is reset to default value
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', defaultPaymentAmountMin);
+      // switch to voucher
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
+      // amount is reset to voucher value
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', voucher.amount);
+      // select payment amount available for both payment subjects
+      cy.dataCy(getRadioOption(testNumberValue)).should('be.visible').click();
+      // amount is set to shared test value
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', testNumberValue);
+      // switch to individual
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
+      // amount stays the same
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', testNumberValue);
+      // switch to voucher
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
+      // amount stays the same
+      cy.dataCy(selectorPaymentAmount)
+        .should('be.visible')
+        .find('.q-radio__inner.q-radio__inner--truthy')
+        .siblings('.q-radio__label')
+        .should('contain', testNumberValue);
+    });
+  });
+
   it('if selected voucher - allows to apply voucher (HALF)', () => {
     cy.get('@voucherHalf').then((voucher) => {
       // option default amount is active
