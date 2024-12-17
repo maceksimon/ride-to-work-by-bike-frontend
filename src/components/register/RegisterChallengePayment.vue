@@ -159,9 +159,11 @@ export default defineComponent({
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
     //  Model for 'Entry fee payment' radio button element
-    const selectedPaymentSubject = ref<PaymentSubject>(
-      PaymentSubject.individual,
-    );
+    const selectedPaymentSubject = computed<PaymentSubject>({
+      get: (): PaymentSubject => registerChallengeStore.getPaymentSubject,
+      set: (value: PaymentSubject): void =>
+        registerChallengeStore.setPaymentSubject(value),
+    });
     const selectedCompany = ref<string>('');
     const isRegistrationCoordinator = ref<boolean>(false);
     const formRegisterCoordinator = reactive({

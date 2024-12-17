@@ -5,6 +5,7 @@ import { defineStore } from 'pinia';
 import { Gender } from '../components/types/Profile';
 import { NewsletterType } from '../components/types/Newsletter';
 import { OrganizationType } from '../components/types/Organization';
+import { PaymentSubject } from '../components/enums/Payment';
 
 // types
 import type { Logger } from '../components/types/Logger';
@@ -17,6 +18,7 @@ const emptyFormPersonalDetails: RegisterChallengePersonalDetailsForm = {
   nickname: '',
   gender: null as Gender | null,
   terms: true,
+  paymentSubject: PaymentSubject.individual,
 };
 
 /**
@@ -33,6 +35,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     subsidiaryId: null as number | null,
     teamId: null as number | null,
     merchId: null as number | null,
+    paymentSubject: PaymentSubject.individual,
   }),
 
   getters: {
@@ -43,6 +46,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getSubsidiaryId: (state): number | null => state.subsidiaryId,
     getTeamId: (state): number | null => state.teamId,
     getMerchId: (state): number | null => state.merchId,
+    getPaymentSubject: (state): PaymentSubject => state.paymentSubject,
   },
 
   actions: {
@@ -63,6 +67,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setMerchId(merchId: number | null) {
       this.merchId = merchId;
+    },
+    setPaymentSubject(paymentSubject: PaymentSubject) {
+      this.paymentSubject = paymentSubject;
     },
   },
 

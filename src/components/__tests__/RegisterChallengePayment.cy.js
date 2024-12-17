@@ -182,6 +182,48 @@ function coreTests() {
       .and('have.length', 4);
   });
 
+  it('stores payment subject in store', () => {
+    // get store
+    cy.wrap(useRegisterChallengeStore()).then((store) => {
+      // access store via computed property to correctly track changes
+      const computedPaymentSubject = computed(() => store.getPaymentSubject);
+      store.setPaymentSubject(null);
+      // start in default state (individual)
+      cy.wrap(computedPaymentSubject).its('value').should('be.null');
+      cy.dataCy(getRadioOption(PaymentSubject.individual))
+        .should('be.visible')
+        .click();
+      // check store value
+      cy.wrap(computedPaymentSubject)
+        .its('value')
+        .should('equal', PaymentSubject.individual);
+      // switch to voucher
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
+      // check store value
+      cy.wrap(computedPaymentSubject)
+        .its('value')
+        .should('equal', PaymentSubject.voucher);
+      // switch to company
+      cy.dataCy(getRadioOption(PaymentSubject.company))
+        .should('be.visible')
+        .click();
+      // check store value
+      cy.wrap(computedPaymentSubject)
+        .its('value')
+        .should('equal', PaymentSubject.company);
+      // switch to school
+      cy.dataCy(getRadioOption(PaymentSubject.school))
+        .should('be.visible')
+        .click();
+      // check store value
+      cy.wrap(computedPaymentSubject)
+        .its('value')
+        .should('equal', PaymentSubject.school);
+    });
+  });
+
   it('if selected individual + custom amount - renders amount input with slider', () => {
     // enable custom payment amount
     cy.dataCy(getRadioOption(PaymentAmount.custom))
