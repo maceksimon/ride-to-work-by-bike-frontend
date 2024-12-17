@@ -156,6 +156,7 @@ export default defineComponent({
     const selectedPaymentAmount = ref<string>(String(defaultPaymentAmountMin));
     // Model for 'Entry fee amount' radio button element custom option slider element
     const selectedPaymentAmountCustom = ref<number>(defaultPaymentAmountMin);
+    const donationAmount = ref<number>(0);
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
     //  Model for 'Entry fee payment' radio button element
@@ -229,6 +230,11 @@ export default defineComponent({
       // clear active voucher
       activeVoucher.value = null;
       logger?.debug(`Clear active voucher code <${activeVoucher.value}>.`);
+    };
+
+    const onUpdateDonation = (amount: number): void => {
+      donationAmount.value = amount;
+      logger?.debug(`Set donation amount <${donationAmount.value}>.`);
     };
 
     const optionsPaymentAmountComputed = computed((): FormOption[] => {
@@ -479,6 +485,7 @@ export default defineComponent({
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
       onRemoveVoucher,
+      onUpdateDonation,
       onUpdateVoucher,
       showCompanySchoolElement,
       showCustomPaymentAmountElement,
@@ -581,7 +588,11 @@ export default defineComponent({
     </div>
     <!-- Input: Donation -->
     <div v-if="showDonationElement()">
-      <form-field-donation class="q-mt-md" data-cy="form-field-donation" />
+      <form-field-donation
+        class="q-mt-md"
+        @update:donation="onUpdateDonation"
+        data-cy="form-field-donation"
+      />
     </div>
     <!-- Section: Register coordinator -->
     <!-- TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY -->
