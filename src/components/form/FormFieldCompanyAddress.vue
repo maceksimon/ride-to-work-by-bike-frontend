@@ -251,6 +251,7 @@ export default defineComponent({
       isDialogOpen,
       isFilled,
       isLoading,
+      isLoadingCreateSubsidiary,
       onClose,
       onSubmit,
     };
@@ -342,6 +343,7 @@ export default defineComponent({
             outline
             color="primary"
             data-cy="dialog-button-cancel"
+            :disable="isLoadingCreateSubsidiary"
             @click="onClose"
           >
             {{ $t('navigation.discard') }}
@@ -351,6 +353,8 @@ export default defineComponent({
             unelevated
             color="primary"
             data-cy="dialog-button-submit"
+            :loading="isLoadingCreateSubsidiary"
+            :disable="isLoadingCreateSubsidiary"
             @click="onSubmit"
           >
             {{ $t('form.company.buttonAddSubsidiary') }}
