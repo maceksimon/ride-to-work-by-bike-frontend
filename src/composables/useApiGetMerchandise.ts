@@ -286,9 +286,9 @@ export const useApiGetMerchandise = (
 
   /**
    * Groups merchandise items by a given key
-   * @param items - Array of merchandise items to group
-   * @param key - Key to group by (e.g. 'name' or 'sex')
-   * @returns Record with key as string and array of merchandise as value
+   * @param {Merchandise[]} items - Array of merchandise items to group
+   * @param {keyof Merchandise} key - Key to group by (e.g. 'name' or 'sex')
+   * @returns {Record<string, Merchandise[]>} - Record with key as string and array of merchandise as value
    */
   const groupMerchandiseByKey = (
     items: Merchandise[],
