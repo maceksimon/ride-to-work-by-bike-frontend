@@ -154,11 +154,9 @@ describe('<FormFieldCompanyAddress>', () => {
             // set organization ID in store
             store.setOrganizationId(organizationId);
             cy.wrap(store.getOrganizationId).should('eq', organizationId);
-
             // open dialog
             cy.dataCy('button-add-address').click();
             cy.dataCy('dialog-add-address').should('be.visible');
-
             // fill the form
             cy.dataCy('form-add-subsidiary').within(() => {
               cy.dataCy('form-add-subsidiary-street').type(
@@ -187,16 +185,12 @@ describe('<FormFieldCompanyAddress>', () => {
                   .click();
               });
             });
-
             // submit form
             cy.dataCy('dialog-button-submit').click();
-
             // wait for API response
             cy.waitForSubsidiaryPostApi(subsidiaryResponse);
-
             // verify model was updated
             cy.wrap(model).its('value').should('eq', subsidiaryResponse.id);
-
             // verify dialog was closed
             cy.dataCy('dialog-add-address').should('not.exist');
           });
