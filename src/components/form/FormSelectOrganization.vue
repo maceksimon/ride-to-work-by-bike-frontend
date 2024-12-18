@@ -33,7 +33,8 @@ import { OrganizationLevel, OrganizationType } from '../types/Organization';
 // types
 import type { FormSelectOption } from '../types/Form';
 import type { Logger } from '../types/Logger';
-
+import type { OrganizationOption } from '../types/Organization';
+import type { PostOrganizationResponse } from '../types/apiOrganization';
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
@@ -46,7 +47,7 @@ export default defineComponent({
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
     const opts = ref<FormSelectOption[]>([]);
-    const { options, isLoading, loadOrganizations } =
+    const { options, organizations, isLoading, loadOrganizations } =
       useApiGetOrganizations(logger);
 
     const registerChallengeStore = useRegisterChallengeStore();
@@ -85,6 +86,11 @@ export default defineComponent({
       { immediate: true },
     );
 
+    const onCreateOption = (data: PostOrganizationResponse): void => {
+      const newOrganization: OrganizationOption = data;
+      organizations.value.push(newOrganization);
+    };
+
     return {
       isLoading,
       organizationId,
@@ -92,6 +98,7 @@ export default defineComponent({
       subsidiaryId,
       OrganizationLevel,
       organizationType,
+      onCreateOption,
     };
   },
 });
@@ -106,6 +113,7 @@ export default defineComponent({
       :organization-level="OrganizationLevel.organization"
       :organization-type="organizationType"
       :data-organization-type="organizationType"
+      @create:option="onCreateOption"
       data-cy="form-select-table-company"
     />
     <form-field-company-address
