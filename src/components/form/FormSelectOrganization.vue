@@ -78,7 +78,7 @@ export default defineComponent({
           loadOrganizations(newValue).then(() => {
             logger?.info('All organizations data was loaded from the API.');
             // Lazy loading
-            opts.value = options.value;
+            opts.value = options;
           });
         }
       },
@@ -102,7 +102,7 @@ export default defineComponent({
     <form-field-select-table
       v-model="organizationId"
       :loading="isLoading"
-      :options="opts"
+      :options="opts.value"
       :organization-level="OrganizationLevel.organization"
       :organization-type="organizationType"
       :data-organization-type="organizationType"
