@@ -405,6 +405,29 @@ export default defineComponent({
       }
     });
 
+    /**
+     * Compute current value based on selected payment subject, amount option and donation
+     * @returns {number}
+     */
+    const computedCurrentValue = computed<number>((): number => {
+      switch (selectedPaymentSubject.value) {
+        case PaymentSubject.individual:
+          return selectedPaymentAmountCustom.value;
+        case PaymentSubject.voucher:
+          if (isVoucherFreeEntry.value) {
+            return donationAmount.value || 0;
+          } else {
+            // entry is not free so user selects amount
+            return selectedPaymentAmountCustom.value;
+          }
+        case PaymentSubject.company:
+        case PaymentSubject.school:
+          return donationAmount.value || 0;
+        default:
+          return 0;
+      }
+    });
+
     const showVoucherElement = () => {
       const show = selectedPaymentSubject.value === PaymentSubject.voucher;
       logger?.debug(`Show voucher element <${show}>.`);
@@ -472,6 +495,7 @@ export default defineComponent({
     return {
       activeVoucher,
       borderRadius,
+      computedCurrentValue,
       formRegisterCoordinator,
       isRegistrationCoordinator,
       optionsPaymentAmountComputed,
