@@ -30,6 +30,29 @@ import { Gender } from '../components/types/Profile';
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
 /**
+ * Groups merchandise items by a given key
+ * @param items - Array of merchandise items to group
+ * @param key - Key to group by (e.g. 'name' or 'sex')
+ * @returns Record with key as string and array of merchandise as value
+ */
+const groupMerchandiseByKey = (
+  items: Merchandise[],
+  key: keyof Merchandise,
+): Record<string, Merchandise[]> => {
+  return items.reduce(
+    (groups, item) => {
+      const groupKey = item[key] as string;
+      if (!groups[groupKey]) {
+        groups[groupKey] = [];
+      }
+      groups[groupKey].push(item);
+      return groups;
+    },
+    {} as Record<string, Merchandise[]>,
+  );
+};
+
+/**
  * Get merchandise composable
  * Used to getting API merchandise data
  * @param logger - Logger
@@ -127,16 +150,7 @@ export const useApiGetMerchandise = (
   };
 
   const merchandiseGroupedByName = computed(() => {
-    return merchandise.value.reduce(
-      (acc, item) => {
-        if (!acc[item.name]) {
-          acc[item.name] = [];
-        }
-        acc[item.name].push(item);
-        return acc;
-      },
-      {} as Record<string, Merchandise[]>,
-    );
+    return groupMerchandiseByKey(merchandise.value, 'name');
   });
 
   /**
@@ -225,15 +239,9 @@ export const useApiGetMerchandise = (
     logger?.debug(`Transform <${merchandise.value.length}> items to cards`);
 
     // group merchandise by gender
-    const merchandiseGroupedByGender = merchandise.value.reduce(
-      (acc, item) => {
-        if (!acc[item.sex as Gender]) {
-          acc[item.sex as Gender] = [];
-        }
-        acc[item.sex as Gender].push(item);
-        return acc;
-      },
-      {} as Record<Gender, Merchandise[]>,
+    const merchandiseGroupedByGender = groupMerchandiseByKey(
+      merchandise.value,
+      'sex',
     );
 
     logger?.debug(
@@ -242,7 +250,7 @@ export const useApiGetMerchandise = (
 
     // for each gender, group by name and transform to MerchandiseCard
     const cards = Object.entries(merchandiseGroupedByGender).reduce(
-      (acc, [gender, genderItems]) => {
+      (genderGroupsContainingNameGroups, [gender, genderItems]) => {
         logger?.debug(
           `Processing <${genderItems.length}> items for <${gender}>`,
         );
@@ -251,52 +259,46 @@ export const useApiGetMerchandise = (
          * Group merchandise by name within given gender
          * This is done to distinguish between size options for each gender.
          */
-        const merchandiseGroupedByName = genderItems.reduce(
-          (nameAcc, item) => {
-            if (!nameAcc[item.name]) {
-              nameAcc[item.name] = [];
-            }
-            nameAcc[item.name].push(item);
-            return nameAcc;
-          },
-          {} as Record<string, Merchandise[]>,
+        const merchandiseWithCurrentGenderGroupedByName = groupMerchandiseByKey(
+          genderItems,
+          'name',
         );
 
         logger?.debug(
-          `Items by name <${JSON.stringify(merchandiseGroupedByName, null, 2)}>`,
+          `Items grouped by gender and name <${JSON.stringify(merchandiseWithCurrentGenderGroupedByName, null, 2)}>`,
         );
 
         // transform each name group into MerchandiseCard
-        acc[gender as Gender] = Object.entries(merchandiseGroupedByName).map(
-          ([name, items]): MerchandiseCard => {
-            // get first item as a reference for common properties
-            const firstItem = items[0];
+        genderGroupsContainingNameGroups[gender as Gender] = Object.entries(
+          merchandiseWithCurrentGenderGroupedByName,
+        ).map(([name, items]): MerchandiseCard => {
+          // get first item as a reference for common properties
+          const firstItem = items[0];
 
-            // get all sizes available for this item name and gender
-            const sizeOptions: FormOption[] = items.map((item) => ({
-              label: item.size,
-              value: item.id,
-            }));
+          // get all sizes available for this item name and gender
+          const sizeOptions: FormOption[] = items.map((item) => ({
+            label: item.size,
+            value: item.id,
+          }));
 
-            // return MerchandiseCard
-            const card = {
-              label: name,
-              image: firstItem.t_shirt_preview,
-              description: firstItem.description,
-              author: firstItem.author,
-              gender: firstItem.sex,
-              material: firstItem.material,
-              itemIds: items.map((item) => item.id),
-              sizeOptions,
-            };
+          // return MerchandiseCard
+          const card = {
+            label: name,
+            image: firstItem.t_shirt_preview,
+            description: firstItem.description,
+            author: firstItem.author,
+            gender: firstItem.sex,
+            material: firstItem.material,
+            itemIds: items.map((item) => item.id),
+            sizeOptions,
+          };
 
-            logger?.debug(`Created card <${JSON.stringify(card, null, 2)}>`);
+          logger?.debug(`Created card <${JSON.stringify(card, null, 2)}>`);
 
-            return card;
-          },
-        );
+          return card;
+        });
 
-        return acc;
+        return genderGroupsContainingNameGroups;
       },
       {} as Record<Gender, MerchandiseCard[]>,
     );
