@@ -30,6 +30,7 @@ import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
 // types
 import { OrganizationLevel, OrganizationType } from '../types/Organization';
 import { Logger } from '../types/Logger';
+import type { FormSelectOption } from '../types/Form';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
@@ -42,7 +43,7 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-    const opts = ref([]);
+    const opts = ref([] as FormSelectOption[]);
     const { options, isLoading, loadOrganizations } =
       useApiGetOrganizations(logger);
 
@@ -74,7 +75,7 @@ export default defineComponent({
           loadOrganizations(newValue).then(() => {
             logger?.info('All organizations data was loaded from the API.');
             // Lazy loading
-            opts.value = options;
+            opts.value = options.value;
           });
         }
       },
@@ -98,7 +99,7 @@ export default defineComponent({
     <form-field-select-table
       v-model="organizationId"
       :loading="isLoading"
-      :options="opts.value"
+      :options="opts"
       :organization-level="OrganizationLevel.organization"
       :organization-type="organizationType"
       :data-organization-type="organizationType"
