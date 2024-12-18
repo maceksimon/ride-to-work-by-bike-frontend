@@ -182,7 +182,7 @@ export default defineComponent({
                 // set subsidiary ID
                 subsidiaryId.value = data.id;
                 logger?.debug(
-                  `New subsidiary model set to <${JSON.stringify(subsidiaryId.value, null, 2)}>.`,
+                  `Subsidiary ID model set to <${subsidiaryId.value}>.`,
                 );
                 // push new subsidiary to subsidiaries list
                 const newSubsidiary: OrganizationSubsidiary = {
