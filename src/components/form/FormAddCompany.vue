@@ -83,8 +83,6 @@ export default defineComponent({
 
     const { isFilled } = useValidation();
 
-    const addressIndex = 0;
-
     const isCompany = computed((): boolean => {
       return props.organizationType === OrganizationType.company;
     });
@@ -95,7 +93,6 @@ export default defineComponent({
     });
 
     return {
-      addressIndex,
       company,
       titleDialog,
       OrganizationType,
@@ -159,7 +156,7 @@ export default defineComponent({
       </div>
       <!-- TODO: validate the method of accessing address -->
       <form-add-subsidiary
-        v-model="company.address[addressIndex]"
+        v-model="company.address"
         @update:model-value="onUpdate"
         data-cy="form-add-company-subsidiary"
       />

@@ -139,16 +139,16 @@ describe('<FormAddCompany>', () => {
         // fill in address fields
         cy.dataCy(selectorFormStreet)
           .find('input')
-          .type(companyAddress.address[0].street);
+          .type(companyAddress.address.street);
         cy.dataCy(selectorFormHouseNumber)
           .find('input')
-          .type(companyAddress.address[0].houseNumber);
+          .type(companyAddress.address.houseNumber);
         cy.dataCy(selectorFormCity)
           .find('input')
-          .type(companyAddress.address[0].city);
+          .type(companyAddress.address.city);
         cy.dataCy(selectorFormZip)
           .find('input')
-          .type(companyAddress.address[0].zip);
+          .type(companyAddress.address.zip);
         cy.dataCy(selectorFormCityChallenge).click();
         cy.get(classSelectorDropdownMenu)
           .should('be.visible')
@@ -156,13 +156,12 @@ describe('<FormAddCompany>', () => {
             cy.get(classSelectorDropdownItem).first().click();
           });
         cy.dataCy(selectorFormDepartment).type(
-          companyAddress.address[0].department,
+          companyAddress.address.department,
         );
         cy.dataCy(selectorFormDepartment).blur();
         // override cityChallenge with fixture data to get correct ID
         cy.fixture('apiGetCitiesResponse').then((citiesResponse) => {
-          companyAddress.address[0].cityChallenge =
-            citiesResponse.results[0].id;
+          companyAddress.address.cityChallenge = citiesResponse.results.id;
         });
         // verify model updates
         cy.wrap(model).its('value').should('deep.equal', companyAddress);

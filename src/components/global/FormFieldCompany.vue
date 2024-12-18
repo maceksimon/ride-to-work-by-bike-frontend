@@ -52,6 +52,7 @@ import { useOrganizations } from 'src/composables/useOrganizations';
 import { useValidation } from 'src/composables/useValidation';
 
 // enums
+import { FormAddCompanyVariantProp } from '../enums/Form';
 import { OrganizationType } from '../types/Organization';
 
 // types
@@ -67,16 +68,14 @@ import { deepObjectWithSimplePropsCopy } from 'src/utils';
 export const emptyFormCompanyFields: FormCompanyFields = {
   name: '',
   vatId: '',
-  address: [
-    {
-      street: '',
-      houseNumber: '',
-      city: '',
-      zip: '',
-      cityChallenge: null,
-      department: '',
-    },
-  ],
+  address: {
+    street: '',
+    houseNumber: '',
+    city: '',
+    zip: '',
+    cityChallenge: null,
+    department: '',
+  },
 };
 
 export default defineComponent({
@@ -281,6 +280,7 @@ export default defineComponent({
       onFilter,
       onSubmit,
       organizationFieldValidationTransStrings,
+      FormAddCompanyVariantProp,
       OrganizationType,
     };
   },
@@ -368,7 +368,7 @@ export default defineComponent({
         <q-form ref="formRef">
           <form-add-company
             v-model="companyNew"
-            variant="simple"
+            :variant="FormAddCompanyVariantProp.simple"
             :organization-type="organizationType"
           ></form-add-company>
         </q-form>

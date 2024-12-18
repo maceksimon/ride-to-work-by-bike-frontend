@@ -110,19 +110,17 @@ export default defineComponent({
     // user input for filtering
     const query = ref<string>('');
     const formRef = ref<typeof QForm | null>(null);
-    const companyNew = ref<FormCompanyFields>({
+    const organizationNew = ref<FormCompanyFields>({
       name: '',
       vatId: '',
-      address: [
-        {
-          street: '',
-          houseNumber: '',
-          city: '',
-          zip: '',
-          cityChallenge: null,
-          department: '',
-        },
-      ],
+      address: {
+        street: '',
+        houseNumber: '',
+        city: '',
+        zip: '',
+        cityChallenge: null,
+        department: '',
+      },
     });
     const teamNew = ref<FormTeamFields>({
       name: '',
@@ -262,7 +260,7 @@ export default defineComponent({
 
     return {
       borderRadius,
-      companyNew,
+      organizationNew,
       contactEmail,
       filteredOptions,
       formRef,
@@ -418,7 +416,7 @@ export default defineComponent({
             <q-form ref="formRef">
               <form-add-company
                 v-if="organizationLevel === OrganizationLevel.organization"
-                v-model="companyNew"
+                v-model="organizationNew"
                 :organization-type="organizationType"
                 class="q-mb-lg"
               ></form-add-company>
