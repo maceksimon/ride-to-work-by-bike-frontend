@@ -27,9 +27,12 @@ import FormFieldCompanyAddress from '../form/FormFieldCompanyAddress.vue';
 // composables
 import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
 
-// types
+// enums
 import { OrganizationLevel, OrganizationType } from '../types/Organization';
-import { Logger } from '../types/Logger';
+
+// types
+import type { FormSelectOption } from '../types/Form';
+import type { Logger } from '../types/Logger';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
@@ -42,7 +45,7 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-    const opts = ref([]);
+    const opts = ref<FormSelectOption[]>([]);
     const { options, isLoading, loadOrganizations } =
       useApiGetOrganizations(logger);
 
@@ -66,6 +69,7 @@ export default defineComponent({
       set: (value: number | null) =>
         registerChallengeStore.setSubsidiaryId(value),
     });
+
     watch(
       organizationType,
       (newValue: OrganizationType) => {
@@ -74,7 +78,7 @@ export default defineComponent({
           loadOrganizations(newValue).then(() => {
             logger?.info('All organizations data was loaded from the API.');
             // Lazy loading
-            opts.value = options;
+            opts.value = options.value;
           });
         }
       },
@@ -98,7 +102,7 @@ export default defineComponent({
     <form-field-select-table
       v-model="organizationId"
       :loading="isLoading"
-      :options="opts.value"
+      :options="opts"
       :organization-level="OrganizationLevel.organization"
       :organization-type="organizationType"
       :data-organization-type="organizationType"
