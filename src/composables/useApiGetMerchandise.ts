@@ -30,29 +30,6 @@ import { Gender } from '../components/types/Profile';
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
 /**
- * Groups merchandise items by a given key
- * @param items - Array of merchandise items to group
- * @param key - Key to group by (e.g. 'name' or 'sex')
- * @returns Record with key as string and array of merchandise as value
- */
-const groupMerchandiseByKey = (
-  items: Merchandise[],
-  key: keyof Merchandise,
-): Record<string, Merchandise[]> => {
-  return items.reduce(
-    (groups, item) => {
-      const groupKey = item[key] as string;
-      if (!groups[groupKey]) {
-        groups[groupKey] = [];
-      }
-      groups[groupKey].push(item);
-      return groups;
-    },
-    {} as Record<string, Merchandise[]>,
-  );
-};
-
-/**
  * Get merchandise composable
  * Used to getting API merchandise data
  * @param logger - Logger
@@ -305,6 +282,29 @@ export const useApiGetMerchandise = (
 
     logger?.debug(`Computed cards <${JSON.stringify(cards, null, 2)}>`);
     return cards;
+  };
+
+  /**
+   * Groups merchandise items by a given key
+   * @param items - Array of merchandise items to group
+   * @param key - Key to group by (e.g. 'name' or 'sex')
+   * @returns Record with key as string and array of merchandise as value
+   */
+  const groupMerchandiseByKey = (
+    items: Merchandise[],
+    key: keyof Merchandise,
+  ): Record<string, Merchandise[]> => {
+    return items.reduce(
+      (groups, item) => {
+        const groupKey = item[key] as string;
+        if (!groups[groupKey]) {
+          groups[groupKey] = [];
+        }
+        groups[groupKey].push(item);
+        return groups;
+      },
+      {} as Record<string, Merchandise[]>,
+    );
   };
 
   /**
