@@ -161,7 +161,7 @@ describe('<FormAddCompany>', () => {
         cy.dataCy(selectorFormDepartment).blur();
         // override cityChallenge with fixture data to get correct ID
         cy.fixture('apiGetCitiesResponse').then((citiesResponse) => {
-          companyAddress.address.cityChallenge = citiesResponse.results.id;
+          companyAddress.address.cityChallenge = citiesResponse.results[0].id;
         });
         // verify model updates
         cy.wrap(model).its('value').should('deep.equal', companyAddress);
