@@ -72,7 +72,14 @@ export default defineComponent({
           return url.toString();
         }
       }
-      return `${rideToWorkByBikeConfig.backendBaseUrl}${props.option.image}`;
+      // remove leading slash from image if it exists
+      const imagePath = props.option.image.replace(/^\//, '');
+      // ensure that backendBaseUrl ends with a slash
+      const baseUrl = rideToWorkByBikeConfig.backendBaseUrl.replace(
+        /\/?$/,
+        '/',
+      );
+      return baseUrl + imagePath;
     });
 
     return {
