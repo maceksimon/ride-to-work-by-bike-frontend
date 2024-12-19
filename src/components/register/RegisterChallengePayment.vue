@@ -315,44 +315,49 @@ export default defineComponent({
           ` <${i18n.global.t('register.challenge.labelPaymentAmount')}>` +
           ' radio button element.',
       );
-      // new options include currently selected amount
-      const newOptionsIncludeSelectedAmount = optsVals.includes(
+      // New payment options include currently selected amount
+      const newPaymentOptionsIncludeSelectedAmount = optsVals.includes(
         selectedPaymentAmount.value,
       );
-      // selected amount is custom
+      // Selected payment amount is custom
       const isSelectedAmountCustom =
         selectedPaymentAmount.value === PaymentAmount.custom;
-      // reset custom amount to first option to update slider min value
-      if (isSelectedAmountCustom && options.length > 0) {
+
+      // Reset custom payment amount to first option to update slider min value
+      if (isSelectedAmountCustom && optsVals.length > 0) {
         logger?.debug(
-          `Selected amount <${selectedPaymentAmountCustom.value}> is custom,` +
-            ` reset to first option <${options[0].value}>.`,
+          `Selected payment amount is <${selectedPaymentAmountCustom.value}>,` +
+            ` reset it to the first option <${optsVals[0]}>.`,
         );
-        selectedPaymentAmount.value = String(options[0].value);
+        selectedPaymentAmount.value = String(optsVals[0]);
       }
-      // new options include selected amount
-      else if (newOptionsIncludeSelectedAmount) {
+      // New payment options include selected amount
+      else if (newPaymentOptionsIncludeSelectedAmount) {
         logger?.debug(
-          `Selected amount <${selectedPaymentAmount.value}> passed into new options.`,
+          'New payment options include selected payment amount' +
+            ` <${selectedPaymentAmount.value}>, selected payment` +
+            ` amount is the same <${selectedPaymentAmount.value}>.`,
         );
       }
-      // new options do not include selected amount
-      else if (options.length > 0) {
+      // New payment options do not include selected amount
+      else if (!newPaymentOptionsIncludeSelectedAmount) {
+        selectedPaymentAmount.value = String(optsVals[0]);
         logger?.debug(
-          `New options do not include selected amount <${selectedPaymentAmount.value}>` +
-            ` set new selected amount to <${options[0].value}>.`,
+          'New payment options do not include selected payment amount' +
+            ` <${selectedPaymentAmount.value}>, set new selected payment` +
+            ` amount to <${selectedPaymentAmount.value}>.`,
         );
-        selectedPaymentAmount.value = String(options[0].value);
       }
-      // no options, clear selected amount value
-      else if (options.length === 0) {
-        logger?.debug(
-          "No options for payment amount, setting selected amount to <''>",
-        );
+      // No payment options, clear selected amount value
+      else if (optsVals.length === 0) {
         selectedPaymentAmount.value = '';
+        logger?.debug(
+          'No payment options for payment amount, set selected amount to' +
+            ` <${selectedPaymentAmount.value}>.`,
+        );
       }
       logger?.debug(
-        `New selected amount <${selectedPaymentAmount.value}> for` +
+        `New selected payment amount <${selectedPaymentAmount.value}> for` +
           ` <${i18n.global.t('register.challenge.labelPaymentAmount')}>` +
           ' radio button element.',
       );
