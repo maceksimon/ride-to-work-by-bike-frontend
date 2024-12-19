@@ -31,9 +31,11 @@ import { defineComponent, computed } from 'vue';
 import { useValidation } from 'src/composables/useValidation';
 import { i18n } from 'src/boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // enums
 import { OrganizationType } from 'src/components/types/Organization';
+import { PaymentSubject } from 'src/components/enums/Payment';
 
 // types
 import { FormOption } from '../../components/types/Form';
@@ -67,26 +69,36 @@ export default defineComponent({
 
     const { isFilled } = useValidation();
 
-    // TODO: update icons
-    const options: FormOption[] = [
+    // get payment subject from registerChallenge store
+    const registerChallengeStore = useRegisterChallengeStore();
+    const paymentSubject = computed(
+      () => registerChallengeStore.getPaymentSubject,
+    );
+
+    const options = computed<FormOption[]>(() => [
       {
         label: i18n.global.t('form.participation.labelColleagues'),
         description: i18n.global.t('form.participation.textColleagues'),
         value: OrganizationType.company,
         icon: 'svguse:icons/form_field_option_group/icons.svg#colleagues',
+        disable: paymentSubject.value === PaymentSubject.school,
       },
       {
         label: i18n.global.t('form.participation.labelSchoolmates'),
         description: i18n.global.t('form.participation.textSchoolmates'),
         value: OrganizationType.school,
         icon: 'svguse:icons/form_field_option_group/icons.svg#schoolmates',
+        disable: paymentSubject.value === PaymentSubject.company,
       },
       {
         label: i18n.global.t('form.participation.labelFamily'),
         value: OrganizationType.family,
         icon: 'svguse:icons/form_field_option_group/icons.svg#family',
+        disable: [PaymentSubject.company, PaymentSubject.school].includes(
+          paymentSubject.value,
+        ),
       },
-    ];
+    ]);
 
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
@@ -103,6 +115,7 @@ export default defineComponent({
       grey3,
       inputValue,
       options,
+      paymentSubject,
       primary,
       primaryOpacity,
       isFilled,
