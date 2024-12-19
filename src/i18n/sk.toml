@@ -98,6 +98,7 @@ routes = "cestu|cest"
 routeLengthUnit = "km"
 rtwbb = "DPNB"
 unisex = "Vhodné pre obe pohlavia"
+total = "Celkom"
 weightUnitGram = "g"
 carbonDioxideWeightUnit = "g CO<sub>2</sub>"
 

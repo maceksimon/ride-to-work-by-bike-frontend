@@ -98,6 +98,7 @@ routes = "route|routes"
 routeLengthUnit = "km"
 rtwbb = "RTWBB"
 unisex = "Unisex"
+total = "Total"
 weightUnitGram = "g"
 carbonDioxideWeightUnit = "g CO<sub>2</sub>"
 
