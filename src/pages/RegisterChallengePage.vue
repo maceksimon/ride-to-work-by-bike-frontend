@@ -127,7 +127,9 @@ export default defineComponent({
 
     const { getOrganizationLabels } = useOrganizations();
     const organizationStepTitle = computed(() => {
-      return getOrganizationLabels(organizationType.value).labelShort;
+      return getOrganizationLabels(
+        organizationType.value || OrganizationType.company,
+      ).labelShort;
     });
 
     const step = ref(1);

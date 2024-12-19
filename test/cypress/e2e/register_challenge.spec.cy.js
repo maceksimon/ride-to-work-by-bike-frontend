@@ -217,6 +217,35 @@ describe('Register Challenge page', () => {
       });
     });
 
+    it('renders step names', () => {
+      cy.get('@i18n').then((i18n) => {
+        // step 1: personal details
+        cy.contains(
+          i18n.global.t('register.challenge.titleStepPersonalDetails'),
+        ).should('be.visible');
+        // step 2: payment
+        cy.contains(
+          i18n.global.t('register.challenge.titleStepPayment'),
+        ).should('be.visible');
+        // step 3: participation
+        cy.contains(
+          i18n.global.t('register.challenge.titleStepParticipation'),
+        ).should('be.visible');
+        // step 4: organization
+        cy.contains(i18n.global.t('form.labelCompanyShort')).should(
+          'be.visible',
+        );
+        // step 5: team
+        cy.contains(i18n.global.t('register.challenge.titleStepTeam')).should(
+          'be.visible',
+        );
+        // step 6: merch
+        cy.contains(i18n.global.t('register.challenge.titleStepMerch')).should(
+          'be.visible',
+        );
+      });
+    });
+
     it('validates first step (personal details) and shows icons', () => {
       cy.dataCy('form-personal-details').should('be.visible');
       checkActiveIcon(1);
