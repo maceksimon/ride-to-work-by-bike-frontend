@@ -694,26 +694,41 @@ function coreTests() {
       .should('be.visible')
       .click();
     cy.dataCy('total-price').should('not.exist');
+    // donation
+    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
+    // default value is shown
+    cy.dataCy('total-price')
+      .should('contain', i18n.global.t('global.total'))
+      .and('contain', defaultPaymentAmountMin);
+    // enter custom donation
+    cy.dataCy(selectorSliderNumberInput).should('be.visible').clear();
+    cy.dataCy(selectorSliderNumberInput).type(testNumberValue);
+    cy.dataCy('total-price')
+      .should('contain', i18n.global.t('global.total'))
+      .and('contain', testNumberValue);
+    // remove donation
+    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
+    cy.dataCy('total-price').should('not.exist');
 
     // company
     cy.dataCy(getRadioOption(PaymentSubject.company))
       .should('be.visible')
       .click();
     cy.dataCy('total-price').should('not.exist');
+    // donation
+    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
+    // previously entered custom donation value is shown
+    cy.dataCy('total-price')
+      .should('contain', i18n.global.t('global.total'))
+      .and('contain', testNumberValue);
+    // remove donation
+    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
+    cy.dataCy('total-price').should('not.exist');
 
     // voucher
     cy.dataCy(getRadioOption(PaymentSubject.voucher))
       .should('be.visible')
       .click();
-    cy.dataCy('total-price').should('not.exist');
-    // enter voucher FULL
-    cy.get('@voucherFull').then((voucher) => {
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
-      cy.dataCy(selectorVoucherSubmit).click();
-      cy.dataCy('total-price').should('not.exist');
-    });
-    // remove voucher
-    cy.dataCy(selectorVoucherButtonRemove).click();
     cy.dataCy('total-price').should('not.exist');
     // enter voucher HALF
     cy.get('@voucherHalf').then((voucher) => {
@@ -722,6 +737,24 @@ function coreTests() {
       cy.dataCy('total-price')
         .should('contain', i18n.global.t('global.total'))
         .and('contain', voucher.amount);
+    });
+    // remove voucher
+    cy.dataCy(selectorVoucherButtonRemove).click();
+    cy.dataCy('total-price').should('not.exist');
+    // enter voucher FULL
+    cy.get('@voucherFull').then((voucher) => {
+      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherSubmit).click();
+      cy.dataCy('total-price').should('not.exist');
+      // donation
+      cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
+      // default donation value is shown
+      cy.dataCy('total-price')
+        .should('contain', i18n.global.t('global.total'))
+        .and('contain', defaultPaymentAmountMin);
+      // remove donation
+      cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
+      cy.dataCy('total-price').should('not.exist');
     });
   });
 }
