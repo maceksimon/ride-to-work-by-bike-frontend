@@ -31,19 +31,19 @@
  * @see [Figma Design](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A103131&mode=dev)
  */
 
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // types
-import type { FormCardMerchType } from 'src/components/types/Form';
+import type { MerchandiseCard } from '../types/Merchandise';
 
 export default defineComponent({
   name: 'FormCardMerch',
   props: {
     option: {
-      type: Object as () => FormCardMerchType,
+      type: Object as () => MerchandiseCard,
       required: true,
     },
     selected: {
@@ -57,16 +57,28 @@ export default defineComponent({
     const borderRadiusSmall: string =
       rideToWorkByBikeConfig.borderRadiusCardSmall;
 
-    const selectOption = (option: FormCardMerchType) => {
+    const selectOption = (option: MerchandiseCard) => {
       // only emit if option is not selected
       if (!props.selected) {
         emit('select-option', option);
       }
     };
 
+    const optionImage = computed(() => {
+      if (URL.canParse(props.option.image)) {
+        const url = new URL(props.option.image);
+        // Check if URL has a valid domain and protocol
+        if (url.hostname && url.protocol) {
+          return url.toString();
+        }
+      }
+      return `${rideToWorkByBikeConfig.backendBaseUrl}${props.option.image}`;
+    });
+
     return {
       borderRadius,
       borderRadiusSmall,
+      optionImage,
       selectOption,
     };
   },
@@ -85,7 +97,7 @@ export default defineComponent({
       <!-- Image -->
       <q-img
         ratio="1.33"
-        :src="option.image"
+        :src="optionImage"
         data-cy="form-card-merch-image"
         :style="{ 'border-radius': borderRadiusSmall }"
       />
