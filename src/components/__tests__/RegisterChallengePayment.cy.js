@@ -694,36 +694,22 @@ function coreTests() {
       .should('be.visible')
       .click();
     cy.dataCy('total-price').should('not.exist');
-    // donation
-    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
-    // default value is shown
-    cy.dataCy('total-price')
-      .should('contain', i18n.global.t('global.total'))
-      .and('contain', defaultPaymentAmountMin);
-    // enter custom donation
-    cy.dataCy(selectorSliderNumberInput).should('be.visible').clear();
-    cy.dataCy(selectorSliderNumberInput).type(testNumberValue);
-    cy.dataCy('total-price')
-      .should('contain', i18n.global.t('global.total'))
-      .and('contain', testNumberValue);
-    // remove donation
-    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
-    cy.dataCy('total-price').should('not.exist');
+    cy.testPaymentTotalPriceWithDonation(
+      i18n,
+      defaultPaymentAmountMin,
+      testNumberValue,
+    );
 
     // company
     cy.dataCy(getRadioOption(PaymentSubject.company))
       .should('be.visible')
       .click();
     cy.dataCy('total-price').should('not.exist');
-    // donation
-    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
-    // previously entered custom donation value is shown
-    cy.dataCy('total-price')
-      .should('contain', i18n.global.t('global.total'))
-      .and('contain', testNumberValue);
-    // remove donation
-    cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
-    cy.dataCy('total-price').should('not.exist');
+    cy.testPaymentTotalPriceWithDonation(
+      i18n,
+      defaultPaymentAmountMin,
+      testNumberValue,
+    );
 
     // voucher
     cy.dataCy(getRadioOption(PaymentSubject.voucher))
@@ -746,15 +732,11 @@ function coreTests() {
       cy.dataCy(selectorVoucherInput).type(voucher.code);
       cy.dataCy(selectorVoucherSubmit).click();
       cy.dataCy('total-price').should('not.exist');
-      // donation
-      cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
-      // default donation value is shown
-      cy.dataCy('total-price')
-        .should('contain', i18n.global.t('global.total'))
-        .and('contain', defaultPaymentAmountMin);
-      // remove donation
-      cy.dataCy(selectorDonationCheckbox).should('be.visible').click();
-      cy.dataCy('total-price').should('not.exist');
+      cy.testPaymentTotalPriceWithDonation(
+        i18n,
+        defaultPaymentAmountMin,
+        testNumberValue,
+      );
     });
   });
 }
