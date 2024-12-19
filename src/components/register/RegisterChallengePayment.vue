@@ -729,10 +729,15 @@ export default defineComponent({
     <template v-if="computedCurrentValue">
       <q-separator class="q-my-lg" />
       <div class="flex gap-8 items-baseline" data-cy="total-price">
-        <span class="text-grey-8">{{ $t('global.total') }}:</span>
-        <span class="text-h5 text-grey-10 text-weight-bold">{{
-          formatPriceCurrency(computedCurrentValue, Currency.CZK)
-        }}</span>
+        <span class="text-grey-8" data-cy="total-price-label">
+          {{ $t('global.total') }}:
+        </span>
+        <span
+          class="text-h5 text-grey-10 text-weight-bold"
+          data-cy="total-price-value"
+        >
+          {{ formatPriceCurrency(computedCurrentValue, Currency.CZK) }}
+        </span>
       </div>
     </template>
   </div>
