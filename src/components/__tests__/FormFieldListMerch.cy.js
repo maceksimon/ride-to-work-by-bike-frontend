@@ -8,6 +8,9 @@ const { getPaletteColor } = colors;
 const grey8 = getPaletteColor('grey-8');
 const grey10 = getPaletteColor('grey-10');
 
+const tshirt2024FemaleMId = 135;
+const tshirt2024FemaleXsId = 133;
+
 describe('<FormFieldListMerch>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
@@ -140,7 +143,9 @@ describe('<FormFieldListMerch>', () => {
     it('changes tabs when changing gender radio (in dialog)', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
-        const item = response.results.find((item) => item.id === 135);
+        const item = response.results.find(
+          (item) => item.id === tshirt2024FemaleMId,
+        );
         cy.listMerchSelectItem(item, { closeDialog: false });
         // change gender setting
         cy.dataCy('dialog-merch').within(() => {
@@ -162,7 +167,9 @@ describe('<FormFieldListMerch>', () => {
     it('when option with sizes is selected, shows size selection under the cards', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
-        const item = response.results.find((item) => item.id === 135);
+        const item = response.results.find(
+          (item) => item.id === tshirt2024FemaleMId,
+        );
         cy.listMerchSelectItem(item);
         // size selection is visible
         cy.dataCy('form-field-merch-size').should('be.visible');
@@ -174,7 +181,9 @@ describe('<FormFieldListMerch>', () => {
     it('when option is selected, disables the merch card interaction', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
-        const item = response.results.find((item) => item.id === 135);
+        const item = response.results.find(
+          (item) => item.id === tshirt2024FemaleMId,
+        );
         cy.listMerchSelectItem(item);
         // option is selected
         cy.get('[data-selected="true"]').should('contain', item.name);
@@ -189,7 +198,9 @@ describe('<FormFieldListMerch>', () => {
     it('when gender is changed and new product contains the same size, it is selected', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
-        const item = response.results.find((item) => item.id === 135);
+        const item = response.results.find(
+          (item) => item.id === tshirt2024FemaleMId,
+        );
         cy.listMerchSelectItem(item, { closeDialog: false });
         cy.dataCy('dialog-merch').within(() => {
           // change gender
@@ -209,7 +220,9 @@ describe('<FormFieldListMerch>', () => {
     it('when gender is changed via tabs, it does not open dialog', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size M)
-        const item = response.results.find((item) => item.id === 135);
+        const item = response.results.find(
+          (item) => item.id === tshirt2024FemaleMId,
+        );
         cy.listMerchSelectItem(item);
         // change merch via tabs
         cy.dataCy('list-merch-tab-male').click();
@@ -224,7 +237,9 @@ describe('<FormFieldListMerch>', () => {
     it('when gender is changed to via tabs and size is not available, it selects first available size', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         // select our test item (Triko 2024, female, size XS)
-        const item = response.results.find((item) => item.id === 133);
+        const item = response.results.find(
+          (item) => item.id === tshirt2024FemaleXsId,
+        );
         cy.listMerchSelectItem(item);
         // change merch via tabs
         cy.dataCy('list-merch-tab-male').click();
