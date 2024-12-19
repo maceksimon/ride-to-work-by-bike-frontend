@@ -80,7 +80,7 @@ describe('<RegisterChallengePayment>', () => {
       'companyCoordinator',
       i18n,
     );
-    cy.testLanguageStringsInContext(['custom'], 'global', i18n);
+    cy.testLanguageStringsInContext(['custom', 'total'], 'global', i18n);
   });
 
   context('desktop', () => {

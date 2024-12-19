@@ -412,13 +412,13 @@ export default defineComponent({
     const computedCurrentValue = computed<number>((): number => {
       switch (selectedPaymentSubject.value) {
         case PaymentSubject.individual:
-          return selectedPaymentAmountCustom.value;
+          return selectedPaymentAmountCustom.value || 0;
         case PaymentSubject.voucher:
           if (isVoucherFreeEntry.value) {
             return donationAmount.value || 0;
           } else {
             // entry is not free so user selects amount
-            return selectedPaymentAmountCustom.value;
+            return selectedPaymentAmountCustom.value || 0;
           }
         case PaymentSubject.company:
         case PaymentSubject.school:
@@ -508,6 +508,8 @@ export default defineComponent({
       selectedPaymentAmount,
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
+      Currency,
+      formatPriceCurrency,
       onRemoveVoucher,
       onUpdateDonation,
       onUpdateVoucher,
@@ -723,5 +725,15 @@ export default defineComponent({
         </div>
       </div>
     </div>
+    <!-- Section: Total price -->
+    <template v-if="computedCurrentValue">
+      <q-separator class="q-my-lg" />
+      <div class="flex gap-8 items-baseline" data-cy="total-price">
+        <span class="text-grey-8">{{ $t('global.total') }}:</span>
+        <span class="text-h5 text-grey-10 text-weight-bold">{{
+          formatPriceCurrency(computedCurrentValue, Currency.CZK)
+        }}</span>
+      </div>
+    </template>
   </div>
 </template>
