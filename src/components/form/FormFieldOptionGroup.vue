@@ -115,7 +115,6 @@ export default defineComponent({
       grey3,
       inputValue,
       options,
-      paymentSubject,
       primary,
       primaryOpacity,
       isFilled,
