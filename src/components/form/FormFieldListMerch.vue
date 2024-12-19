@@ -158,18 +158,19 @@ export default defineComponent({
      * Then run onSelectCardOption logic without opening the dialog.
      */
     const onGenderChange = (newGender: string) => {
-      logger?.debug(`onGenderChange <${newGender}>`);
+      logger?.debug(`Gender was changed to <${newGender}>.`);
       // find card option in merchandiseCards
       const cardOption = merchandiseCards.value[newGender as Gender].find(
         (card) => card.label === selectedOption.value?.label,
       );
       if (cardOption) {
         logger?.debug(
-          `Found card option <${JSON.stringify(cardOption, null, 2)}>.`,
+          `Card option for gender <${newGender}> has been` +
+            ` found <${JSON.stringify(cardOption, null, 2)}>.`,
         );
         onSelectCardOption(cardOption, false);
       } else {
-        logger?.debug('No card option found');
+        logger?.debug(`No card option found for gender <${newGender}>.`);
         return;
       }
     };
@@ -190,7 +191,7 @@ export default defineComponent({
       const cardItems = merchandiseItems.value.filter((item) =>
         option.itemIds?.includes(item.id),
       );
-      logger?.debug(`cardItems <${JSON.stringify(cardItems, null, 2)}>.`);
+      logger?.debug(`Card items <${JSON.stringify(cardItems, null, 2)}>.`);
       // find item that matches current selected size (compares string labels)
       const item = cardItems.find(
         (item) => item.size === selectedOption.value?.size,
@@ -223,7 +224,7 @@ export default defineComponent({
       }
       // if there are no items, do nothing
       else {
-        logger?.debug('No items match the selected option');
+        logger?.debug('No items match the selected option.');
       }
     };
 
