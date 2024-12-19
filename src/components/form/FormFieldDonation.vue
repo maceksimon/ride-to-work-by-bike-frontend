@@ -38,15 +38,15 @@ export default defineComponent({
       rideToWorkByBikeConfig.entryFeePaymentMin,
     );
     const amount = ref<number>(defaultPaymentAmountMin);
-    const donation = ref<boolean>(false);
+    const isDonation = ref<boolean>(false);
 
     /**
      * Watch values and emit 'update:donation' event.
      */
     watch(
-      [amount, donation],
+      [amount, isDonation],
       () => {
-        if (donation.value) {
+        if (isDonation.value) {
           emit('update:donation', amount.value);
         } else {
           emit('update:donation', 0);
@@ -61,7 +61,7 @@ export default defineComponent({
 
     return {
       amount,
-      donation,
+      isDonation,
     };
   },
 });
@@ -72,7 +72,7 @@ export default defineComponent({
     <!-- Checkbox: Donation -->
     <q-checkbox
       dense
-      v-model="donation"
+      v-model="isDonation"
       color="primary"
       :true-value="true"
       :false-value="false"
@@ -84,7 +84,7 @@ export default defineComponent({
       </span>
     </q-checkbox>
     <!-- Widget: Slider input -->
-    <div v-if="donation" class="q-mt-md">
+    <div v-if="isDonation" class="q-mt-md">
       <form-field-slider-number
         v-model="amount"
         data-cy="form-field-donation-slider"
