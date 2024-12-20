@@ -72,7 +72,7 @@ export default defineComponent({
           return url.href;
         }
       }
-      return new URL(props.option.image, rideToWorkByBikeConfig.backendBaseUrl)
+      return new URL(props.option.image, rideToWorkByBikeConfig.urlBaseBackend)
         .href;
     });
 

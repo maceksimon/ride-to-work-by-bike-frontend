@@ -111,7 +111,7 @@ describe('<FormCardMerch>', () => {
           .and('have.css', 'padding', '16px');
         const imageUrl = new URL(
           option.image,
-          rideToWorkByBikeConfig.backendBaseUrl,
+          rideToWorkByBikeConfig.urlBaseBackend,
         ).href;
         // image
         cy.dataCy('form-card-merch-image')
