@@ -41,8 +41,8 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, ref } from 'vue';
-import { QForm } from 'quasar';
+import { computed, defineComponent, defineExpose, inject, ref } from 'vue';
+import { QForm, QSelect } from 'quasar';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -125,6 +125,7 @@ export default defineComponent({
     const teamNew = ref<FormTeamFields>({
       name: '',
     });
+    const selectOrganizationRef = ref<typeof QSelect | null>(null);
 
     /**
      * Provides autocomplete functionality via computed property
@@ -258,6 +259,10 @@ export default defineComponent({
       return getSelectTableLabels(props.organizationLevel).titleDialog;
     });
 
+    defineExpose({
+      selectOrganizationRef,
+    });
+
     return {
       borderRadius,
       organizationNew,
@@ -277,6 +282,7 @@ export default defineComponent({
       onSubmit,
       OrganizationType,
       OrganizationLevel,
+      selectOrganizationRef,
     };
   },
 });
@@ -302,6 +308,7 @@ export default defineComponent({
       :rules="[
         (val: string) => isFilled(val) || $t('form.messageOptionRequired'),
       ]"
+      ref="selectOrganizationRef"
       data-cy="form-select-table-field"
     >
       <q-card

@@ -70,7 +70,7 @@ export default defineComponent({
       default: null,
     },
   },
-  emits: ['update:modelValue'],
+  emits: ['update:modelValue', 'close:addSubsidiaryDialog'],
   setup(props, { emit }) {
     const formRef = ref<typeof QForm | null>(null);
     const logger = inject('vuejs3-logger') as Logger | null;
@@ -104,7 +104,13 @@ export default defineComponent({
      */
     onMounted(async () => {
       if (store.getOrganizationId) {
+        logger?.info('Loading subsidiaries.');
         await loadSubsidiaries(store.getOrganizationId);
+      } else {
+        logger?.debug(
+          `Organization was not selected <${store.getOrganizationId}>,` +
+            ' subsidiaries was not loaded.',
+        );
       }
     });
     /**
@@ -117,10 +123,11 @@ export default defineComponent({
       () => store.getOrganizationId,
       (newValue) => {
         logger?.debug(
-          `Register challenge store organization ID updated to <${newValue}>`,
+          `Register challenge store organization ID updated to <${newValue}>.`,
         );
         subsidiaryId.value = null;
         if (newValue) {
+          logger?.info('Loading subsidiaries.');
           loadSubsidiaries(newValue);
         }
       },
@@ -161,56 +168,43 @@ export default defineComponent({
     const { isDialogOpen, onClose } = useDialog();
 
     const onSubmit = async (): Promise<void> => {
-      if (formRef.value) {
-        const isFormValid: boolean = await formRef.value.validate();
-
-        if (isFormValid) {
-          const organizationId = store.getOrganizationId;
-
-          if (organizationId) {
-            logger?.info('Create subsidiary.');
-            const data = await createSubsidiary(
-              organizationId,
-              addressNew.value,
-            );
-
-            if (data) {
-              logger?.debug(
-                `New subsidiary was created with data <${JSON.stringify(data, null, 2)}>.`,
-              );
-              if (data.id) {
-                // set subsidiary ID
-                subsidiaryId.value = data.id;
-                logger?.debug(
-                  `Subsidiary ID model set to <${subsidiaryId.value}>.`,
-                );
-                // push new subsidiary to subsidiaries list
-                const newSubsidiary: OrganizationSubsidiary = {
-                  id: data.id,
-                  address: {
-                    street: data.street,
-                    houseNumber: data.houseNumber,
-                    city: data.city,
-                    zip: data.zip,
-                    cityChallenge: data.cityChallenge,
-                    department: data.department,
-                  },
-                  teams: [],
-                };
-                subsidiaries.value.push(newSubsidiary);
-              } else {
-                logger?.error('New subsidiary ID not found.');
-              }
-              onClose();
-            }
-          } else {
-            logger?.info('No organization ID found in the store.');
-            return;
-          }
+      const isFormValid = await formRef.value?.validate();
+      if (isFormValid && store.getOrganizationId) {
+        logger?.info('Create subsidiary.');
+        const data = await createSubsidiary(
+          store.getOrganizationId,
+          addressNew.value,
+        );
+        if (data?.id) {
+          logger?.debug(
+            `New subsidiary was created with data <${JSON.stringify(data, null, 2)}>.`,
+          );
+          // set subsidiary ID
+          subsidiaryId.value = data.id;
+          logger?.debug(`Subsidiary ID model set to <${subsidiaryId.value}>.`);
+          // push new subsidiary to subsidiaries list
+          const newSubsidiary: OrganizationSubsidiary = {
+            id: data.id,
+            address: {
+              street: data.street,
+              houseNumber: data.houseNumber,
+              city: data.city,
+              zip: data.zip,
+              cityChallenge: data.cityChallenge,
+              department: data.department,
+            },
+            teams: [],
+          };
+          subsidiaries.value.push(newSubsidiary);
         } else {
-          logger?.info('Form validation failed.');
-          return;
+          logger?.error('New subsidiary ID not found.');
         }
+        onClose();
+      } else if (!isFormValid) {
+        logger?.error('Form is not valid.');
+      } else if (!store.getOrganizationId) {
+        logger?.info('Organization was not choosed.');
+        onClose();
       }
     };
 
@@ -236,6 +230,18 @@ export default defineComponent({
         isDialogOpen.value = false;
         logger?.info('Close add subsidiary modal dialog.');
       };
+
+      watch(isDialogOpen, (newValue) => {
+        if (newValue === true && !store.getOrganizationId) {
+          logger?.debug(
+            `Add subsidiary dialog is open <${newValue}>,` +
+              ` selected organization ID is <${store.getOrganizationId}>.`,
+          );
+          isDialogOpen.value = false;
+          // Emit organization select widget validation processs event
+          emit('close:addSubsidiaryDialog');
+        }
+      });
 
       return {
         isDialogOpen,

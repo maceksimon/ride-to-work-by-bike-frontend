@@ -123,28 +123,33 @@ describe('<FormFieldCompanyAddress>', () => {
     });
 
     it('renders dialog for adding a new address', () => {
-      cy.dataCy('button-add-address').click();
-      cy.dataCy('dialog-add-address').should('be.visible');
-      // title
-      cy.dataCy('dialog-add-address')
-        .find('h3')
-        .should('be.visible')
-        .and('have.css', 'font-size', '20px')
-        .and('have.css', 'font-weight', '500')
-        .and('contain', i18n.global.t('form.company.titleAddAddress'));
-      // message
-      cy.dataCy('add-subsidiary-text')
-        .should('be.visible')
-        .and('contain', i18n.global.t('form.company.textSubsidiaryAddress'));
-      // form
-      cy.dataCy('form-add-subsidiary').should('be.visible');
-      // buttons
-      cy.dataCy('dialog-button-cancel')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('navigation.discard'));
-      cy.dataCy('dialog-button-submit')
-        .should('be.visible')
-        .and('have.text', i18n.global.t('form.company.buttonAddSubsidiary'));
+      cy.wrap(useRegisterChallengeStore()).then((store) => {
+        // set organization ID in store
+        store.setOrganizationId(organizationId);
+        cy.wrap(store.getOrganizationId).should('eq', organizationId);
+        cy.dataCy('button-add-address').click();
+        cy.dataCy('dialog-add-address').should('be.visible');
+        // title
+        cy.dataCy('dialog-add-address')
+          .find('h3')
+          .should('be.visible')
+          .and('have.css', 'font-size', '20px')
+          .and('have.css', 'font-weight', '500')
+          .and('contain', i18n.global.t('form.company.titleAddAddress'));
+        // message
+        cy.dataCy('add-subsidiary-text')
+          .should('be.visible')
+          .and('contain', i18n.global.t('form.company.textSubsidiaryAddress'));
+        // form
+        cy.dataCy('form-add-subsidiary').should('be.visible');
+        // buttons
+        cy.dataCy('dialog-button-cancel')
+          .should('be.visible')
+          .and('have.text', i18n.global.t('navigation.discard'));
+        cy.dataCy('dialog-button-submit')
+          .should('be.visible')
+          .and('have.text', i18n.global.t('form.company.buttonAddSubsidiary'));
+      });
     });
 
     it('allows user to create a new subsidiary', () => {
