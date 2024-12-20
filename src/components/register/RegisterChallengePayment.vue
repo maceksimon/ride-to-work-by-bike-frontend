@@ -412,18 +412,39 @@ export default defineComponent({
     const computedCurrentValue = computed<number>((): number => {
       switch (selectedPaymentSubject.value) {
         case PaymentSubject.individual:
+          logger?.debug(
+            `Selected payment subject <${selectedPaymentSubject.value}>,` +
+              ` computed current value <${selectedPaymentAmountCustom.value || 0}>.`,
+          );
           return selectedPaymentAmountCustom.value || 0;
         case PaymentSubject.voucher:
           if (isVoucherFreeEntry.value) {
+            logger?.debug(
+              `Selected payment subject <${selectedPaymentSubject.value}>,` +
+                ` voucher free entry <${isVoucherFreeEntry.value}>,` +
+                ` computed current value <${donationAmount.value || 0}>.`,
+            );
             return donationAmount.value || 0;
           } else {
+            logger?.debug(
+              `Selected payment subject <${selectedPaymentSubject.value}>,` +
+                ` computed current value <${selectedPaymentAmountCustom.value || 0}>.`,
+            );
             // entry is not free so user selects amount
             return selectedPaymentAmountCustom.value || 0;
           }
         case PaymentSubject.company:
         case PaymentSubject.school:
+          logger?.debug(
+            `Selected payment subject <${selectedPaymentSubject.value}>,` +
+              ` computed current value <${donationAmount.value || 0}>.`,
+          );
           return donationAmount.value || 0;
         default:
+          logger?.debug(
+            `Selected payment subject <${selectedPaymentSubject.value}>,` +
+              ` computed current value <${0}>.`,
+          );
           return 0;
       }
     });
