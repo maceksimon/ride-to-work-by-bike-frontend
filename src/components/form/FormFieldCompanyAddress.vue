@@ -203,7 +203,7 @@ export default defineComponent({
       } else if (!isFormValid) {
         logger?.error('Form is not valid.');
       } else if (!store.getOrganizationId) {
-        logger?.info('Organization was not choosed.');
+        logger?.error('Organization was not choosed.');
         onClose();
       }
     };
