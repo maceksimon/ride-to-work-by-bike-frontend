@@ -13,6 +13,7 @@ import {
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { vModelAdapter } from 'app/test/cypress/utils';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
+import { vModelAdapter } from 'app/test/cypress/utils';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 import { useApiGetTeams } from 'src/composables/useApiGetTeams';
 
@@ -24,6 +25,7 @@ const model = ref(null);
 const { getPaletteColor } = colors;
 const secondary = getPaletteColor('secondary');
 const grey2 = getPaletteColor('grey-2');
+const grey4 = getPaletteColor('grey-4');
 
 describe('<FormFieldSelectTable>', () => {
   let options;
@@ -73,6 +75,17 @@ describe('<FormFieldSelectTable>', () => {
         organizationId = formFieldCompanyCreateResponse.id;
       },
     );
+    cy.fixture('apiGetTeamsResponse').then((apiGetTeamsResponse) => {
+      cy.fixture('apiGetTeamsResponseNext').then((apiGetTeamsResponseNext) => {
+        const teams = [
+          ...apiGetTeamsResponse.results,
+          ...apiGetTeamsResponseNext.results,
+        ];
+        // map teams to options
+        const { mapTeamsToOptions } = useApiGetTeams();
+        optionsTeams = mapTeamsToOptions(teams);
+      });
+    });
     // set common subsidiaryId from fixture
     cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
       subsidiaryId = formOrganizationOptions[0].subsidiaries[0].id;
@@ -451,6 +464,39 @@ describe('<FormFieldSelectTable>', () => {
           organizationLevel: OrganizationLevel.team,
         },
       });
+    });
+
+    it('renders team members count', () => {
+      cy.dataCy('form-select-table-option')
+        // team view has correct number of options
+        .find('.q-radio__label')
+        .should('have.length', optionsTeams.length)
+        .each((el, index) => {
+          // team view shows correct number of members
+          cy.wrap(el)
+            .dataCy('member-count')
+            .should('contain', optionsTeams[index].members.length);
+          // team view shows correct max number of members
+          cy.wrap(el)
+            .dataCy('member-max')
+            .should('contain', optionsTeams[index].maxMembers);
+          // team view shows icons
+          cy.wrap(el)
+            .dataCy('member-icons')
+            .within(() => {
+              // number of member icons = max number of members
+              cy.dataCy('member-icon')
+                .should('have.length', optionsTeams[index].maxMembers)
+                .each((icon, iconIndex) => {
+                  // icons indicate number of members
+                  if (iconIndex < optionsTeams[index].members.length) {
+                    cy.wrap(icon).should('have.color', secondary);
+                  } else {
+                    cy.wrap(icon).should('have.color', grey4);
+                  }
+                });
+            });
+        });
     });
 
     it('renders HTML elements', () => {
