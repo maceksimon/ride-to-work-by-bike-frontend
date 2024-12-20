@@ -69,17 +69,11 @@ export default defineComponent({
         const url = new URL(props.option.image);
         // Check if URL has a valid domain and protocol
         if (url.hostname && url.protocol) {
-          return url.toString();
+          return url.href;
         }
       }
-      // remove leading slash from image if it exists
-      const imagePath = props.option.image.replace(/^\//, '');
-      // ensure that backendBaseUrl ends with a slash
-      const baseUrl = rideToWorkByBikeConfig.backendBaseUrl.replace(
-        /\/?$/,
-        '/',
-      );
-      return baseUrl + imagePath;
+      return new URL(props.option.image, rideToWorkByBikeConfig.backendBaseUrl)
+        .href;
     });
 
     return {

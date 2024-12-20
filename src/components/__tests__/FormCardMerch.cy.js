@@ -109,14 +109,10 @@ describe('<FormCardMerch>', () => {
             rideToWorkByBikeConfig.borderRadiusCard,
           )
           .and('have.css', 'padding', '16px');
-        // remove leading slash from image if it exists
-        const imagePath = option.image.replace(/^\//, '');
-        // ensure that backendBaseUrl ends with a slash
-        const baseUrl = rideToWorkByBikeConfig.backendBaseUrl.replace(
-          /\/?$/,
-          '/',
-        );
-        const imageUrl = baseUrl + imagePath;
+        const imageUrl = new URL(
+          option.image,
+          rideToWorkByBikeConfig.backendBaseUrl,
+        ).href;
         // image
         cy.dataCy('form-card-merch-image')
           .find('img')
