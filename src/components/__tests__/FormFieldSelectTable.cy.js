@@ -25,7 +25,6 @@ const model = ref(null);
 const { getPaletteColor } = colors;
 const secondary = getPaletteColor('secondary');
 const grey2 = getPaletteColor('grey-2');
-const grey4 = getPaletteColor('grey-4');
 
 describe('<FormFieldSelectTable>', () => {
   let options;
@@ -492,7 +491,7 @@ describe('<FormFieldSelectTable>', () => {
                   if (iconIndex < optionsTeams[index].members.length) {
                     cy.wrap(icon).should('have.color', secondary);
                   } else {
-                    cy.wrap(icon).should('have.color', grey4);
+                    cy.wrap(icon).should('have.color', grey2);
                   }
                 });
             });
