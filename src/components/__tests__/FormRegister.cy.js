@@ -445,8 +445,12 @@ describe('<FormRegister>', () => {
     it('stores days active and max team members values in challenge store', () => {
       cy.waitForThisCampaignApi();
       cy.wrap(useChallengeStore()).then((challengeStore) => {
-        cy.wrap(challengeStore.getDaysActive).should('be.equal', 8);
-        cy.wrap(challengeStore.getMaxTeamMembers).should('be.equal', 5);
+        // access variables as computed properties
+        const daysActive = computed(() => challengeStore.getDaysActive);
+        const maxTeamMembers = computed(() => challengeStore.getMaxTeamMembers);
+        // wait until values are set
+        cy.wrap(daysActive).its('value').should('be.equal', 8);
+        cy.wrap(maxTeamMembers).its('value').should('be.equal', 5);
       });
     });
 
