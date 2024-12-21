@@ -24,7 +24,7 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 /**
  * Get discount coupon composable
  * Used for validating discount coupons
- * @param logger - Logger
+ * @param {Logger | null} logger
  * @returns {useApiGetDiscountCouponReturn}
  */
 export const useApiGetDiscountCoupon = (
@@ -36,8 +36,8 @@ export const useApiGetDiscountCoupon = (
 
   /**
    * Validate discount coupon
-   * @param {string} code - Coupon code to validate
-   * @returns {Promise<ValidatedCoupon>} - Promise resolving to validation result
+   * @param {string} code - coupon code to validate
+   * @returns {Promise<ValidatedCoupon>} - promise resolving to validation result
    */
   const validateCoupon = async (code: string): Promise<ValidatedCoupon> => {
     logger?.info(`Validating discount coupon <${code}>.`);
@@ -58,7 +58,7 @@ export const useApiGetDiscountCoupon = (
 
     const coupon = data?.results?.[0];
 
-    // Return unified response
+    // return unified response
     const response: ValidatedCoupon = {
       valid: !!coupon?.available,
       discount: coupon?.discount || 0,
