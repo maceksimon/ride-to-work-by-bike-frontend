@@ -191,6 +191,7 @@ export default defineComponent({
           unelevated
           color="primary"
           :label="$t('form.buttonVoucherSubmit')"
+          :loading="isLoading"
           @click="onSubmitVoucher"
           class="q-mt-sm"
           data-cy="form-field-voucher-submit"
