@@ -9,6 +9,7 @@ import { useRegisterChallengeStore } from 'stores/registerChallenge';
 import { getRadioOption } from '../../../test/cypress/utils';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { OrganizationType } from '../types/Organization';
+import { couponAdapter } from '../../adapters/couponAdapter';
 
 // selectors
 const selectorBannerPaymentMinimum = 'banner-payment-minimum';
@@ -32,15 +33,21 @@ const selectorCoordinatorTerms = 'register-coordinator-terms';
 const selectorSliderNumberInput = 'form-field-slider-number-input';
 const selectorSliderNumberSlider = 'form-field-slider-number-slider';
 const selectorTextPaymentOrganizer = 'text-payment-organizer';
+const selectorTotalPriceValue = 'total-price-value';
 const selectorVoucherBannerCode = 'voucher-banner-code';
+const selectorVoucherBannerName = 'voucher-banner-name';
 const selectorVoucherButtonRemove = 'voucher-button-remove';
 const selectorVoucherInput = 'form-field-voucher-input';
 const selectorVoucherSubmit = 'form-field-voucher-submit';
 
 // variables
 const borderRadiusCardSmall = rideToWorkByBikeConfig.borderRadiusCardSmall;
-const defaultPaymentAmountMin = rideToWorkByBikeConfig.entryFeePaymentMin;
-const defaultPaymentAmountMax = rideToWorkByBikeConfig.entryFeePaymentMax;
+const defaultPaymentAmountMin = parseInt(
+  rideToWorkByBikeConfig.entryFeePaymentMin,
+);
+const defaultPaymentAmountMax = parseInt(
+  rideToWorkByBikeConfig.entryFeePaymentMax,
+);
 const sliderClickTolerance = 10;
 const testNumberValue = 500;
 
@@ -50,6 +57,7 @@ const grey10 = getPaletteColor('grey-10');
 const grey8 = getPaletteColor('grey-8');
 const primary = getPaletteColor('primary');
 const primaryLight = lighten(primary, 90);
+const voucherCodeInvalid = 'INVALID';
 
 const optionsPaymentSubject = [
   'labelPaymentSubjectIndividual',
@@ -97,16 +105,10 @@ describe('<RegisterChallengePayment>', () => {
         i18n,
         OrganizationType.school,
       );
-      cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
-        cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
-          cy.wrap(voucherFull).as('voucherFull');
-          cy.wrap(voucherHalf).as('voucherHalf');
-          cy.mount(RegisterChallengePayment, {
-            props: {},
-          });
-          cy.viewport('macbook-16');
-        });
+      cy.mount(RegisterChallengePayment, {
+        props: {},
       });
+      cy.viewport('macbook-16');
     });
 
     coreTests();
@@ -125,16 +127,10 @@ describe('<RegisterChallengePayment>', () => {
         i18n,
         OrganizationType.school,
       );
-      cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
-        cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
-          cy.wrap(voucherFull).as('voucherFull');
-          cy.wrap(voucherHalf).as('voucherHalf');
-          cy.mount(RegisterChallengePayment, {
-            props: {},
-          });
-          cy.viewport('iphone-6');
-        });
+      cy.mount(RegisterChallengePayment, {
+        props: {},
       });
+      cy.viewport('iphone-6');
     });
 
     coreTests();
@@ -267,7 +263,15 @@ function coreTests() {
   });
 
   it('handles default price when switching between individual and discount voucher', () => {
-    cy.get('@voucherHalf').then((voucher) => {
+    cy.fixture('apiGetDiscountCouponResponseHalf').then((responseHalf) => {
+      const voucherHalf = couponAdapter.toValidatedCoupon(responseHalf);
+      // intercept coupon HALF
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherHalf.name,
+        responseHalf,
+      );
       // ensure we are on step individual
       cy.dataCy(getRadioOption(PaymentSubject.individual))
         .should('be.visible')
@@ -285,14 +289,19 @@ function coreTests() {
       // amount options are hidden
       cy.dataCy(selectorPaymentAmount).should('not.exist');
       // input voucher
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherInput).type(voucherHalf.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseHalf);
+      // get discounted price
+      const discountAmount =
+        (defaultPaymentAmountMin * voucherHalf.discount) / 100;
       // option with discounted amount is available
       cy.dataCy(selectorPaymentAmount)
         .should('be.visible')
         .find('.q-radio__inner.q-radio__inner--truthy')
         .siblings('.q-radio__label')
-        .should('contain', voucher.amount);
+        .should('contain', discountAmount);
       // switch to individual
       cy.dataCy(getRadioOption(PaymentSubject.individual))
         .should('be.visible')
@@ -312,7 +321,7 @@ function coreTests() {
         .should('be.visible')
         .find('.q-radio__inner.q-radio__inner--truthy')
         .siblings('.q-radio__label')
-        .should('contain', voucher.amount);
+        .should('contain', discountAmount);
       // select payment amount available for both payment subjects
       cy.dataCy(getRadioOption(testNumberValue)).should('be.visible').click();
       // amount is set to shared test value
@@ -345,7 +354,15 @@ function coreTests() {
   });
 
   it('if selected voucher - allows to apply voucher (HALF)', () => {
-    cy.get('@voucherHalf').then((voucher) => {
+    cy.fixture('apiGetDiscountCouponResponseHalf').then((responseHalf) => {
+      const voucherHalf = couponAdapter.toValidatedCoupon(responseHalf);
+      // intercept coupon HALF
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherHalf.name,
+        responseHalf,
+      );
       // option default amount is active
       cy.dataCy(getRadioOption(defaultPaymentAmountMin))
         .should('be.visible')
@@ -357,13 +374,29 @@ function coreTests() {
       // input amount is hidden
       cy.dataCy(selectorPaymentAmount).should('not.exist');
       // input voucher
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherInput).type(voucherHalf.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseHalf);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
+      const discountAmount =
+        (defaultPaymentAmountMin * voucherHalf.discount) / 100;
+      // banner shows discounted amount
+      cy.dataCy(selectorVoucherBannerName)
+        .should('be.visible')
+        .and('contain', discountAmount);
       // option with discounted amount is available
-      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
+      cy.dataCy(getRadioOption(discountAmount)).should('be.visible');
+      // total price shows discounted amount
+      cy.dataCy(selectorTotalPriceValue).should('contain', discountAmount);
       // custom amount is set to discount value
       cy.dataCy(getRadioOption(PaymentAmount.custom)).click();
-      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
+      cy.dataCy(getRadioOption(discountAmount)).should('be.visible');
+      // total price shows discounted amount
+      cy.dataCy(selectorTotalPriceValue).should('contain', discountAmount);
       // clear voucher
       cy.dataCy(selectorVoucherButtonRemove).click();
       // input voucher is shown
@@ -376,25 +409,48 @@ function coreTests() {
   });
 
   it('if selected voucher - does not allow to apply invalid voucher', () => {
-    // option default amount is active
-    cy.dataCy(getRadioOption(defaultPaymentAmountMin))
-      .should('be.visible')
-      .click();
-    // option voucher payment is active
-    cy.dataCy(getRadioOption(PaymentSubject.voucher))
-      .should('be.visible')
-      .click();
-    cy.dataCy(selectorVoucherInput).type('ABCD');
-    cy.dataCy(selectorVoucherSubmit).click();
-    cy.dataCy(selectorVoucherInput).find('input').should('have.value', 'ABCD');
-    // input amount is hidden
-    cy.dataCy(selectorPaymentAmount).should('not.exist');
-    // input custom amount is hidden
-    cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+    cy.fixture('apiGetDiscountCouponResponseEmpty').then((responseEmpty) => {
+      // intercept coupon INVALID
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherCodeInvalid,
+        responseEmpty,
+      );
+      // option default amount is active
+      cy.dataCy(getRadioOption(defaultPaymentAmountMin))
+        .should('be.visible')
+        .click();
+      // option voucher payment is active
+      cy.dataCy(getRadioOption(PaymentSubject.voucher))
+        .should('be.visible')
+        .click();
+      cy.dataCy(selectorVoucherInput).type(voucherCodeInvalid);
+      cy.dataCy(selectorVoucherSubmit).click();
+      cy.dataCy(selectorVoucherInput)
+        .find('input')
+        .should('have.value', voucherCodeInvalid);
+      // check error notification
+      cy.contains(i18n.global.t('notify.voucherApplyError')).should(
+        'be.visible',
+      );
+      // input amount is hidden
+      cy.dataCy(selectorPaymentAmount).should('not.exist');
+      // input custom amount is hidden
+      cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+    });
   });
 
   it('if selected voucher - allows to apply voucher (FULL) + donate option', () => {
-    cy.get('@voucherFull').then((voucher) => {
+    cy.fixture('apiGetDiscountCouponResponseFull').then((responseFull) => {
+      const voucherFull = couponAdapter.toValidatedCoupon(responseFull);
+      // intercept coupon FULL
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherFull.name,
+        responseFull,
+      );
       // option default amount is active
       cy.dataCy(getRadioOption(defaultPaymentAmountMin))
         .should('be.visible')
@@ -404,10 +460,18 @@ function coreTests() {
         .should('be.visible')
         .click();
       // input voucher
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherInput).type(voucherFull.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseFull);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
       // option amount hidden
       cy.dataCy(selectorPaymentAmount).should('not.exist');
+      // total price is hidden
+      cy.dataCy(selectorTotalPriceValue).should('not.exist');
       // custom amount hidden
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
       // clear input
@@ -419,13 +483,23 @@ function coreTests() {
   });
 
   it('if selected voucher - retains shown voucher after switching between payment subjects', () => {
-    cy.get('@voucherHalf').then((voucher) => {
+    cy.fixture('apiGetDiscountCouponResponseHalf').then((responseHalf) => {
+      const voucherHalf = couponAdapter.toValidatedCoupon(responseHalf);
+      // intercept coupon HALF
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherHalf.name,
+        responseHalf,
+      );
       // select voucher
       cy.dataCy(getRadioOption(PaymentSubject.voucher))
         .should('be.visible')
         .click();
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+      cy.dataCy(selectorVoucherInput).type(voucherHalf.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseHalf);
       // shows voucher
       cy.dataCy(selectorVoucherBannerCode).should('be.visible');
       // switch back to individual
@@ -451,14 +525,27 @@ function coreTests() {
     cy.dataCy(selectorPaymentAmount).should('not.exist');
     cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
     // enter voucher HALF
-    cy.get('@voucherHalf').then((voucher) => {
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+    cy.fixture('apiGetDiscountCouponResponseHalf').then((responseHalf) => {
+      const voucherHalf = couponAdapter.toValidatedCoupon(responseHalf);
+      // intercept coupon HALF
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherHalf.name,
+        responseHalf,
+      );
+      cy.dataCy(selectorVoucherInput).type(voucherHalf.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseHalf);
       // amount options and custom amount are hidden
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // calculate discount amount
+      const discountAmount =
+        (defaultPaymentAmountMin * voucherHalf.discount) / 100;
       // HALF voucher value is shown
-      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
+      cy.dataCy(getRadioOption(discountAmount)).should('be.visible');
       // switch back to individual
       cy.dataCy(getRadioOption(PaymentSubject.individual))
         .should('be.visible')
@@ -478,14 +565,27 @@ function coreTests() {
     cy.dataCy(selectorPaymentAmount).should('not.exist');
     cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
     // enter voucher HALF
-    cy.get('@voucherHalf').then((voucher) => {
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+    cy.fixture('apiGetDiscountCouponResponseHalf').then((responseHalf) => {
+      const voucherHalf = couponAdapter.toValidatedCoupon(responseHalf);
+      // intercept coupon HALF
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherHalf.name,
+        responseHalf,
+      );
+      cy.dataCy(selectorVoucherInput).type(voucherHalf.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseHalf);
       // amount options and custom amount are hidden
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
+      // calculate discount amount
+      const discountAmount =
+        (defaultPaymentAmountMin * voucherHalf.discount) / 100;
       // HALF voucher value is shown
-      cy.dataCy(getRadioOption(voucher.amount)).should('be.visible');
+      cy.dataCy(getRadioOption(discountAmount)).should('be.visible');
       // select custom amount
       cy.dataCy(getRadioOption(PaymentAmount.custom))
         .should('be.visible')
@@ -717,20 +817,46 @@ function coreTests() {
       .click();
     cy.dataCy('total-price').should('not.exist');
     // enter voucher HALF
-    cy.get('@voucherHalf').then((voucher) => {
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+    cy.fixture('apiGetDiscountCouponResponseHalf').then((responseHalf) => {
+      const voucherHalf = couponAdapter.toValidatedCoupon(responseHalf);
+      // intercept coupon HALF
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherHalf.name,
+        responseHalf,
+      );
+      // enter voucher HALF
+      cy.dataCy(selectorVoucherInput).type(voucherHalf.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseHalf);
+      // calculate discount amount
+      const discountAmount =
+        (defaultPaymentAmountMin * voucherHalf.discount) / 100;
+      // total price is shown
       cy.dataCy('total-price')
         .should('contain', i18n.global.t('global.total'))
-        .and('contain', voucher.amount);
+        .and('contain', discountAmount);
     });
     // remove voucher
     cy.dataCy(selectorVoucherButtonRemove).click();
     cy.dataCy('total-price').should('not.exist');
     // enter voucher FULL
-    cy.get('@voucherFull').then((voucher) => {
-      cy.dataCy(selectorVoucherInput).type(voucher.code);
+    cy.fixture('apiGetDiscountCouponResponseFull').then((responseFull) => {
+      const voucherFull = couponAdapter.toValidatedCoupon(responseFull);
+      // intercept coupon FULL
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherFull.name,
+        responseFull,
+      );
+      // enter voucher FULL
+      cy.dataCy(selectorVoucherInput).type(voucherFull.name);
       cy.dataCy(selectorVoucherSubmit).click();
+      // wait for API response
+      cy.waitForDiscountCouponApi(responseFull);
       cy.dataCy('total-price').should('not.exist');
       cy.testPaymentTotalPriceWithDonation(
         i18n,

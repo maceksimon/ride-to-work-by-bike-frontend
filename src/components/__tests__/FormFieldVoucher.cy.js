@@ -23,8 +23,11 @@ const selectorVoucherButtonRemove = 'voucher-button-remove';
 const selectorVoucherWidget = 'voucher-widget';
 
 // variables
-const codeInvalid = 'ABCD';
-const amount = 390;
+const defaultPaymentAmountMin = parseInt(
+  rideToWorkByBikeConfig.entryFeePaymentMin,
+);
+const voucherCodeInvalid = 'INVALID';
+const amount = defaultPaymentAmountMin;
 const amountAlt = 1000;
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 const { formatPriceCurrency } = useFormatPrice();
@@ -195,7 +198,7 @@ describe('<FormFieldVoucher>', () => {
           storeRegisterChallenge.setVoucher(voucherHalf);
           // calculate displayed discount
           const discountAmountInt = Math.round(
-            (amountAlt * response.results[0].discount) / 100,
+            (defaultPaymentAmountMin * response.results[0].discount) / 100,
           );
           // display banner
           cy.dataCy(selectorVoucherBannerCode)
@@ -262,16 +265,25 @@ function coreTests() {
   });
 
   it('does not allow to submit invalid voucher', () => {
-    // submit voucher
-    cy.dataCy(selecotrFormFieldVoucherInput).type(codeInvalid);
-    cy.dataCy(selectorFormFieldVoucherSubmit).click();
-    // banner
-    cy.dataCy(selectorVoucherBanner).should('not.exist');
-    // user message
-    cy.get(selectorQNotifyMessage)
-      .should('be.visible')
-      .and('contain', i18n.global.t('getDiscountCoupon.apiMessageError'));
-    // widget
-    cy.dataCy(selectorVoucherWidget).should('be.visible');
+    cy.fixture('apiGetDiscountCouponResponseEmpty').then((responseEmpty) => {
+      // intercept coupon INVALID
+      cy.interceptDiscountCouponGetApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        voucherCodeInvalid,
+        responseEmpty,
+      );
+      // submit voucher
+      cy.dataCy(selecotrFormFieldVoucherInput).type(voucherCodeInvalid);
+      cy.dataCy(selectorFormFieldVoucherSubmit).click();
+      // banner
+      cy.dataCy(selectorVoucherBanner).should('not.exist');
+      // user message
+      cy.get(selectorQNotifyMessage)
+        .should('be.visible')
+        .and('contain', i18n.global.t('notify.voucherApplyError'));
+      // widget
+      cy.dataCy(selectorVoucherWidget).should('be.visible');
+    });
   });
 }

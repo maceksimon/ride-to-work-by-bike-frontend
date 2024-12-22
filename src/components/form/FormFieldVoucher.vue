@@ -8,19 +8,17 @@
  *
  * Used in `RegisterChallengePayment` component.
  *
- * @events
- * - `update:voucher`: Emitted after voucher is successfully applied.
- *
  * @components
  * - `FormFieldTextRequired`: Component to render required text field.
  *
  * @example
- * <form-field-voucher :voucher="voucher" @update:voucher="onUpdateVoucher" />
+ * <form-field-voucher />
  *
  * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=6410-2305&t=gB7ERmDZorpD4TdE-1)
  */
 
 // libraries
+import { Notify } from 'quasar';
 import { computed, defineComponent, ref } from 'vue';
 
 // components
@@ -48,14 +46,13 @@ export default defineComponent({
   components: {
     FormFieldTextRequired,
   },
-  props: {
-    amount: {
-      type: Number,
-      required: true,
-    },
-  },
+  props: {},
   emits: ['remove:voucher', 'update:voucher'],
   setup(props, { emit }) {
+    const defaultPaymentAmountMin = parseInt(
+      rideToWorkByBikeConfig.entryFeePaymentMin,
+    );
+
     const registerChallengeStore = useRegisterChallengeStore();
 
     const code = ref('');
@@ -77,8 +74,16 @@ export default defineComponent({
       const validatedCoupon: ValidatedCoupon = await validateCoupon(code.value);
 
       if (validatedCoupon.valid) {
+        Notify.create({
+          type: 'positive',
+          message: i18n.global.t('notify.voucherApplySuccess'),
+        });
         voucher.value = validatedCoupon;
       } else {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('notify.voucherApplyError'),
+        });
         voucher.value = null;
       }
     };
@@ -99,20 +104,20 @@ export default defineComponent({
      * Displays the text string with the discount
      * If discount is 100% display "Free registration" message
      * If discount is less than 100% display the discount percentage
-     * as well as computed discount amount.
+     * as well as computed discount amount (discounted default amount).
      */
-    const voucherDiscount = computed(() => {
+    const voucherDiscount = computed((): string => {
       const discount = voucher.value?.discount;
-      const amount = props.amount;
       if (!discount) return '';
-      if (!amount) return '';
 
-      const discountAmount: number = (amount * discount) / 100;
-      const discountAmountInt: number = Math.round(discountAmount);
+      // calculate discount from min payment amount
+      const discountAmountInt: number = Math.round(
+        (defaultPaymentAmountMin * discount) / 100,
+      );
 
       if (discount === 100) {
         return i18n.global.t('register.challenge.labelVoucherFreeRegistration');
-      } else if (discountAmount) {
+      } else if (discountAmountInt) {
         return `${i18n.global.t('global.discount')} ${discount}% (${formatPriceCurrency(discountAmountInt, Currency.CZK)})`;
       }
 
