@@ -24,6 +24,6 @@ export interface ValidatedCoupon {
 }
 
 export interface useApiGetDiscountCouponReturn {
-  validateCoupon: (code: string) => Promise<ValidatedCoupon>;
   isLoading: Ref<boolean>;
+  validateCoupon: (code: string) => Promise<ValidatedCoupon>;
 }

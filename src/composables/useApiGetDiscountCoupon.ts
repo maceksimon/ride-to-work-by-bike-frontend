@@ -1,6 +1,9 @@
 // libraries
 import { ref } from 'vue';
 
+// adapters
+import { couponAdapter } from '../adapters/couponAdapter';
+
 // composables
 import { useApi } from './useApi';
 
@@ -51,19 +54,12 @@ export const useApiGetDiscountCoupon = (
       endpoint: `${rideToWorkByBikeConfig.urlApiDiscountCoupon}${code}`,
       method: 'get',
       translationKey: 'getDiscountCoupon',
-      showSuccessMessage: true,
+      showSuccessMessage: false,
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       logger,
     });
 
-    const coupon = data?.results?.[0];
-
-    // return unified response
-    const response: ValidatedCoupon = {
-      valid: !!coupon?.available,
-      discount: coupon?.discount || 0,
-      name: coupon?.name || '',
-    };
+    const response = couponAdapter.toValidatedCoupon(data);
 
     logger?.debug(
       `Discount coupon validation response <${JSON.stringify(response, null, 2)}>.`,

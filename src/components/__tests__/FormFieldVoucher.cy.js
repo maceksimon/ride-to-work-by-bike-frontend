@@ -1,5 +1,14 @@
+import { setActivePinia, createPinia } from 'pinia';
+import { colors } from 'quasar';
 import FormFieldVoucher from 'components/form/FormFieldVoucher.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { couponAdapter } from '../../adapters/couponAdapter';
+import { useFormatPrice, Currency } from 'src/composables/useFormatPrice';
+
+// colors
+const { getPaletteColor } = colors;
+const grey2 = getPaletteColor('grey-2');
 
 // selectors
 const selectorFormFieldVoucher = 'form-field-voucher';
@@ -14,6 +23,10 @@ const selectorVoucherWidget = 'voucher-widget';
 
 // variables
 const codeInvalid = 'ABCD';
+const amount = 390;
+const amountAlt = 1000;
+const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+const { formatPriceCurrency } = useFormatPrice();
 
 describe('<FormFieldVoucher>', () => {
   it('has translation for all strings', () => {
@@ -22,12 +35,22 @@ describe('<FormFieldVoucher>', () => {
       'form',
       i18n,
     );
+    cy.testLanguageStringsInContext(['discount'], 'global', i18n);
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'getDiscountCoupon',
+      i18n,
+    );
   });
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.interceptDiscountCouponGetApi(rideToWorkByBikeConfig, i18n);
       cy.mount(FormFieldVoucher, {
-        props: {},
+        props: {
+          amount,
+        },
       });
       cy.viewport('macbook-16');
     });
@@ -35,52 +58,9 @@ describe('<FormFieldVoucher>', () => {
     coreTests();
   });
 
-  context('desktop - active voucher HALF', () => {
-    beforeEach(() => {
-      cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
-        cy.mount(FormFieldVoucher, {
-          props: {
-            activeVoucher: voucherHalf,
-          },
-        });
-        cy.viewport('macbook-16');
-      });
-    });
-
-    it('renders active voucher if passed in', () => {
-      cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
-        cy.dataCy(selectorVoucherBannerCode)
-          .should('be.visible')
-          .and('contain', voucherHalf.code)
-          .and('contain', i18n.global.t('form.textVoucher'));
-      });
-    });
-  });
-
-  context('desktop - active voucher FULL', () => {
-    beforeEach(() => {
-      cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
-        cy.mount(FormFieldVoucher, {
-          props: {
-            activeVoucher: voucherFull,
-          },
-        });
-        cy.viewport('macbook-16');
-      });
-    });
-
-    it('renders active voucher if passed in', () => {
-      cy.fixture('registerPaymentVoucherFull').then((voucherFull) => {
-        cy.dataCy(selectorVoucherBannerCode)
-          .should('be.visible')
-          .and('contain', voucherFull.code)
-          .and('contain', i18n.global.t('form.textVoucher'));
-      });
-    });
-  });
-
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormFieldVoucher, {
         props: {},
       });
@@ -88,6 +68,193 @@ describe('<FormFieldVoucher>', () => {
     });
 
     coreTests();
+  });
+
+  context('desktop - apply voucher FULL', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
+        cy.interceptDiscountCouponGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          apiResponse.results[0].name,
+        );
+        // create spy for the emit
+        const onUpdateSpyAdd = cy.spy().as('onUpdateSpyAdd');
+        const onUpdateSpyRemove = cy.spy().as('onUpdateSpyRemove');
+        cy.mount(FormFieldVoucher, {
+          props: {
+            amount,
+            'onUpdate:voucher': onUpdateSpyAdd,
+            'onRemove:voucher': onUpdateSpyRemove,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    it('allows to use and then remove coupon FULL (+ correct emits)', () => {
+      cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
+        const expectedEmit = couponAdapter.toValidatedCoupon(apiResponse);
+        // submit voucher
+        cy.dataCy(selecotrFormFieldVoucherInput).type(
+          apiResponse.results[0].name,
+        );
+        cy.dataCy(selectorFormFieldVoucherSubmit).click();
+        // wait for API response
+        cy.waitForDiscountCouponApi();
+        // verify emit
+        cy.get('@onUpdateSpyAdd').should('have.been.calledWith', expectedEmit);
+        // display banner
+        cy.dataCy(selectorVoucherBanner)
+          .should('be.visible')
+          .and('have.css', 'border-radius', borderRadius)
+          .and('have.backgroundColor', grey2);
+        // banner code should be visible
+        cy.dataCy(selectorVoucherBannerCode)
+          .should('be.visible')
+          .and('contain', apiResponse.results[0].name);
+        // banner label should be visible
+        cy.dataCy(selectorVoucherBannerName)
+          .should('be.visible')
+          .and(
+            'contain',
+            i18n.global.t('register.challenge.labelVoucherFreeRegistration'),
+          );
+        // remove button should be visible (click it)
+        cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
+        // after removing voucher, input is visible
+        cy.dataCy(selecotrFormFieldVoucherInput).should('be.visible');
+        // verify emit
+        cy.get('@onUpdateSpyRemove').should('have.been.called');
+      });
+    });
+  });
+
+  context('desktop - apply voucher HALF', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.fixture('apiGetDiscountCouponResponseHalf').then((apiResponse) => {
+        cy.interceptDiscountCouponGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          apiResponse.results[0].name,
+          apiResponse,
+        );
+        // create spy for the emit
+        const onUpdateSpyAdd = cy.spy().as('onUpdateSpyAdd');
+        const onUpdateSpyRemove = cy.spy().as('onUpdateSpyRemove');
+        cy.mount(FormFieldVoucher, {
+          props: {
+            amount,
+            'onUpdate:voucher': onUpdateSpyAdd,
+            'onRemove:voucher': onUpdateSpyRemove,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    it('allows to use and then remove coupon HALF (+ correct emits)', () => {
+      cy.fixture('apiGetDiscountCouponResponseHalf').then((apiResponse) => {
+        const expectedEmit = couponAdapter.toValidatedCoupon(apiResponse);
+        // submit voucher
+        cy.dataCy(selecotrFormFieldVoucherInput).type(
+          apiResponse.results[0].name,
+        );
+        cy.dataCy(selectorFormFieldVoucherSubmit).click();
+        // wait for API response
+        cy.waitForDiscountCouponApi(apiResponse);
+        // verify emit
+        cy.get('@onUpdateSpyAdd').should('have.been.calledWith', expectedEmit);
+        // display banner
+        cy.dataCy(selectorVoucherBanner)
+          .should('be.visible')
+          .and('have.css', 'border-radius', borderRadius)
+          .and('have.backgroundColor', grey2);
+        // banner code should be visible
+        const discountAmountInt = Math.round(
+          (amount * apiResponse.results[0].discount) / 100,
+        );
+        cy.dataCy(selectorVoucherBannerCode)
+          .should('be.visible')
+          .and('contain', apiResponse.results[0].name);
+        // banner label should be visible
+        cy.dataCy(selectorVoucherBannerName)
+          .should('be.visible')
+          .and('contain', i18n.global.t('global.discount'))
+          .and('contain', apiResponse.results[0].discount)
+          .and('contain', formatPriceCurrency(discountAmountInt, Currency.CZK));
+        // remove button should be visible (click it)
+        cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
+        // after removing voucher, input is visible
+        cy.dataCy(selecotrFormFieldVoucherInput).should('be.visible');
+        // verify emit
+        cy.get('@onUpdateSpyRemove').should('have.been.called');
+      });
+    });
+  });
+
+  context('desktop - active voucher HALF', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.fixture('apiGetDiscountCouponResponseHalf').then((response) => {
+        const voucherHalf = couponAdapter.toValidatedCoupon(response);
+        cy.mount(FormFieldVoucher, {
+          props: {
+            activeVoucher: voucherHalf,
+            amount: amountAlt,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    it('renders active voucher if passed in', () => {
+      cy.fixture('apiGetDiscountCouponResponseHalf').then((response) => {
+        const discountAmountInt = Math.round(
+          (amountAlt * response.results[0].discount) / 100,
+        );
+        cy.dataCy(selectorVoucherBannerCode)
+          .should('be.visible')
+          .and('contain', response.results[0].name);
+        cy.dataCy(selectorVoucherBannerName)
+          .should('be.visible')
+          .and('contain', i18n.global.t('global.discount'))
+          .and('contain', response.results[0].discount)
+          .and('contain', formatPriceCurrency(discountAmountInt, Currency.CZK));
+      });
+    });
+  });
+
+  context('desktop - active voucher FULL', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.fixture('apiGetDiscountCouponResponseFull').then((response) => {
+        const voucherFull = couponAdapter.toValidatedCoupon(response);
+        cy.mount(FormFieldVoucher, {
+          props: {
+            activeVoucher: voucherFull,
+            amount,
+          },
+        });
+        cy.viewport('macbook-16');
+      });
+    });
+
+    it('renders active voucher if passed in', () => {
+      cy.fixture('apiGetDiscountCouponResponseFull').then((response) => {
+        cy.dataCy(selectorVoucherBannerCode)
+          .should('be.visible')
+          .and('contain', response.results[0].name);
+        cy.dataCy(selectorVoucherBannerName)
+          .should('be.visible')
+          .and(
+            'contain',
+            i18n.global.t('register.challenge.labelVoucherFreeRegistration'),
+          );
+      });
+    });
   });
 });
 
@@ -105,60 +272,6 @@ function coreTests() {
       .and('contain', i18n.global.t('form.buttonVoucherSubmit'));
   });
 
-  it('allows to submit and remove HALF voucher', () => {
-    cy.fixture('registerPaymentVoucherHalf').then((voucherHalf) => {
-      // submit voucher
-      cy.dataCy(selecotrFormFieldVoucherInput).type(voucherHalf.code);
-      cy.dataCy(selectorFormFieldVoucherSubmit).click();
-      // banner
-      cy.dataCy(selectorVoucherBanner).should('be.visible');
-      cy.dataCy(selectorVoucherBannerCode)
-        .should('be.visible')
-        .and('contain', voucherHalf.code)
-        .and('contain', i18n.global.t('form.textVoucher'));
-      cy.dataCy(selectorVoucherBannerName)
-        .should('be.visible')
-        .and('contain', voucherHalf.name);
-      // user message
-      cy.get(selectorQNotifyMessage)
-        .should('be.visible')
-        .and('contain', i18n.global.t('notify.voucherApplySuccess'));
-      // remove voucher
-      cy.dataCy(selectorVoucherButtonRemove).should('be.visible');
-      cy.dataCy(selectorVoucherButtonRemove).click();
-      cy.dataCy(selectorVoucherBanner).should('not.exist');
-      // widget
-      cy.dataCy(selectorVoucherWidget).should('be.visible');
-    });
-  });
-
-  it('allows to submit and remove FULL voucher', () => {
-    cy.fixture('registerPaymentVoucherHalf').then((voucherFull) => {
-      // submit voucher
-      cy.dataCy(selecotrFormFieldVoucherInput).type(voucherFull.code);
-      cy.dataCy(selectorFormFieldVoucherSubmit).click();
-      // banner
-      cy.dataCy(selectorVoucherBanner).should('be.visible');
-      cy.dataCy(selectorVoucherBannerCode)
-        .should('be.visible')
-        .and('contain', voucherFull.code)
-        .and('contain', i18n.global.t('form.textVoucher'));
-      cy.dataCy(selectorVoucherBannerName)
-        .should('be.visible')
-        .and('contain', voucherFull.name);
-      // user message
-      cy.get(selectorQNotifyMessage)
-        .should('be.visible')
-        .and('contain', i18n.global.t('notify.voucherApplySuccess'));
-      // remove voucher
-      cy.dataCy(selectorVoucherButtonRemove).should('be.visible');
-      cy.dataCy(selectorVoucherButtonRemove).click();
-      cy.dataCy(selectorVoucherBanner).should('not.exist');
-      // widget
-      cy.dataCy(selectorVoucherWidget).should('be.visible');
-    });
-  });
-
   it('does not allow to submit invalid voucher', () => {
     // submit voucher
     cy.dataCy(selecotrFormFieldVoucherInput).type(codeInvalid);
@@ -168,7 +281,7 @@ function coreTests() {
     // user message
     cy.get(selectorQNotifyMessage)
       .should('be.visible')
-      .and('contain', i18n.global.t('notify.voucherApplyError'));
+      .and('contain', i18n.global.t('getDiscountCoupon.apiMessageError'));
     // widget
     cy.dataCy(selectorVoucherWidget).should('be.visible');
   });

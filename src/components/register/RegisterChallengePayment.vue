@@ -584,6 +584,7 @@ export default defineComponent({
     <div v-if="showVoucherElement()">
       <form-field-voucher
         :active-voucher="activeVoucher"
+        :amount="computedCurrentValue"
         @update:voucher="onUpdateVoucher"
         @remove:voucher="onRemoveVoucher"
       />

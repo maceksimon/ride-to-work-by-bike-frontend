@@ -1282,3 +1282,57 @@ Cypress.Commands.add('listMerchSelectItem', (item, options = {}) => {
     cy.dataCy('dialog-merch').should('not.exist');
   }
 });
+
+/**
+ * Intercept discount coupon GET API calls
+ * Provides `@getDiscountCoupon` alias
+ * @param {object} config - App global config
+ * @param {object|string} i18n - i18n instance or locale lang string e.g. en
+ * @param {string} code - Coupon code to validate
+ */
+Cypress.Commands.add(
+  'interceptDiscountCouponGetApi',
+  (config, i18n, code, responseBody) => {
+    const { apiBase, apiDefaultLang, urlApiDiscountCoupon } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiDiscountCouponLocalized = `${apiBaseUrl}${urlApiDiscountCoupon}${code}`;
+
+    cy.fixture('apiGetDiscountCouponResponseFull').then(
+      (discountCouponResponse) => {
+        cy.intercept('GET', urlApiDiscountCouponLocalized, {
+          statusCode: httpSuccessfullStatus,
+          body: responseBody ? responseBody : discountCouponResponse,
+        }).as('getDiscountCoupon');
+      },
+    );
+  },
+);
+
+/**
+ * Wait for intercept discount coupon API call and compare response object
+ * Wait for `@getDiscountCoupon` intercept
+ */
+Cypress.Commands.add('waitForDiscountCouponApi', (responseBody) => {
+  cy.fixture('apiGetDiscountCouponResponseFull').then(
+    (discountCouponResponse) => {
+      cy.wait('@getDiscountCoupon').then((getDiscountCoupon) => {
+        expect(getDiscountCoupon.request.headers.authorization).to.include(
+          bearerTokeAuth,
+        );
+        if (getDiscountCoupon.response) {
+          expect(getDiscountCoupon.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getDiscountCoupon.response.body).to.deep.equal(
+            responseBody ? responseBody : discountCouponResponse,
+          );
+        }
+      });
+    },
+  );
+});

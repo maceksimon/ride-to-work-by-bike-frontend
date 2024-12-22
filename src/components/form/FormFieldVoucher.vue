@@ -21,24 +21,24 @@
  */
 
 // libraries
-import { Notify } from 'quasar';
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
+import { useFormatPrice } from '../../composables/useFormatPrice';
+import { useApiGetDiscountCoupon } from '../../composables/useApiGetDiscountCoupon';
+
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
-import { TestPaymentVoucher } from '../types/Form';
+import { Currency } from '../../composables/useFormatPrice';
 
 // types
-import type { FormPaymentVoucher } from '../types/Form';
-
-// fixtures
-import voucherFull from '../../../test/cypress/fixtures/registerPaymentVoucherFull.json';
-import voucherHalf from '../../../test/cypress/fixtures/registerPaymentVoucherHalf.json';
+import type { ValidatedCoupon } from '../types/Coupon';
 
 export default defineComponent({
   name: 'FormFieldVoucher',
@@ -47,41 +47,36 @@ export default defineComponent({
   },
   props: {
     activeVoucher: {
-      type: Object as () => FormPaymentVoucher | null,
+      type: Object as () => ValidatedCoupon | null,
       default: null,
+    },
+    amount: {
+      type: Number,
+      required: true,
     },
   },
   emits: ['remove:voucher', 'update:voucher'],
   setup(props, { emit }) {
     const code = ref('');
-    const voucher = ref<FormPaymentVoucher | null>(
+    const voucher = ref<ValidatedCoupon | null>(
       props.activeVoucher ? props.activeVoucher : null,
     );
+
+    const { validateCoupon, isLoading } = useApiGetDiscountCoupon(null);
 
     /**
      * Submits voucher data to API
      * If voucher is valid it emits the data
      * @returns {void}
      */
-    const onSubmitVoucher = (): void => {
-      // TODO: Add API call and remove dummy data
-      if (code.value === TestPaymentVoucher.full) {
-        voucher.value = voucherFull;
-      }
-      if (code.value === TestPaymentVoucher.half) {
-        voucher.value = voucherHalf;
-      }
-      if (voucher.value) {
-        Notify.create({
-          type: 'positive',
-          message: i18n.global.t('notify.voucherApplySuccess'),
-        });
-        emit('update:voucher', voucher.value);
+    const onSubmitVoucher = async (): Promise<void> => {
+      const validatedCoupon: ValidatedCoupon = await validateCoupon(code.value);
+
+      if (validatedCoupon.valid) {
+        voucher.value = validatedCoupon;
+        emit('update:voucher', validatedCoupon);
       } else {
-        Notify.create({
-          type: 'negative',
-          message: i18n.global.t('notify.voucherApplyError'),
-        });
+        voucher.value = null;
         emit('remove:voucher');
       }
     };
@@ -96,9 +91,40 @@ export default defineComponent({
       emit('remove:voucher');
     };
 
+    const { formatPriceCurrency } = useFormatPrice();
+
+    /**
+     * Displays the text string with the discount
+     * If discount is 100% display "Free registration" message
+     * If discount is less than 100% display the discount percentage
+     * as well as computed discount amount.
+     */
+    const voucherDiscount = computed(() => {
+      const discount = voucher.value?.discount;
+      const amount = props.amount;
+      if (!discount) return '';
+      if (!amount) return '';
+
+      const discountAmount: number = (amount * discount) / 100;
+      const discountAmountInt: number = Math.round(discountAmount);
+
+      if (discount === 100) {
+        return i18n.global.t('register.challenge.labelVoucherFreeRegistration');
+      } else if (discountAmount) {
+        return `${i18n.global.t('global.discount')} ${discount}% (${formatPriceCurrency(discountAmountInt, Currency.CZK)})`;
+      }
+
+      return `-${discount}%`;
+    });
+
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+
     return {
+      borderRadius,
       code,
+      isLoading,
       voucher,
+      voucherDiscount,
       onRemoveVoucher,
       onSubmitVoucher,
     };
@@ -113,17 +139,18 @@ export default defineComponent({
       inline-actions
       rounded
       class="bg-grey-2 q-my-lg"
+      :style="{ borderRadius }"
       data-cy="voucher-banner"
     >
       <div class="row q-col-gutter-x-md">
         <div class="col-12 col-sm text-grey-10" data-cy="voucher-banner-code">
-          {{ $t('form.textVoucher') }}: {{ voucher.code }}
+          {{ $t('form.textVoucher') }}: {{ voucher.name }}
         </div>
         <div
           class="col-12 col-sm-auto text-weight-bold text-primary"
           data-cy="voucher-banner-name"
         >
-          {{ voucher.name }}
+          {{ voucherDiscount }}
         </div>
       </div>
       <template v-slot:action>
