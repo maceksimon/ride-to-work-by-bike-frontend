@@ -47,8 +47,7 @@ export default defineComponent({
     FormFieldTextRequired,
   },
   props: {},
-  emits: ['remove:voucher', 'update:voucher'],
-  setup(props, { emit }) {
+  setup() {
     const defaultPaymentAmountMin = parseInt(
       rideToWorkByBikeConfig.entryFeePaymentMin,
     );
@@ -89,13 +88,12 @@ export default defineComponent({
     };
 
     /**
-     * Resets the code and voucher values and emits a 'remove:voucher' event.
+     * Resets the code and voucher values.
      * @return {void}
      */
     const onRemoveVoucher = (): void => {
       code.value = '';
       voucher.value = null;
-      emit('remove:voucher');
     };
 
     const { formatPriceCurrency } = useFormatPrice();
