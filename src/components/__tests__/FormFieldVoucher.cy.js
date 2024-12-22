@@ -52,9 +52,7 @@ describe('<FormFieldVoucher>', () => {
       setActivePinia(createPinia());
       cy.interceptDiscountCouponGetApi(rideToWorkByBikeConfig, i18n);
       cy.mount(FormFieldVoucher, {
-        props: {
-          amount,
-        },
+        props: {},
       });
       cy.viewport('macbook-16');
     });
