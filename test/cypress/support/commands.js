@@ -1339,10 +1339,10 @@ Cypress.Commands.add('waitForDiscountCouponApi', (responseBody) => {
 
 /**
  * Apply HALF voucher and verify its effects
- * @param {object} config - App global config
- * @param {object} i18n - i18n instance
- * @param {number} defaultPaymentAmountMin - Default minimum payment amount
- * @returns {Cypress.Chainable<number>} The calculated discount amount
+ * @param {Config} config - app global config
+ * @param {I18n} i18n - i18n instance
+ * @param {number} defaultPaymentAmountMin - default minimum payment amount
+ * @returns {Cypress.Chainable<number>} calculated discount amount
  */
 Cypress.Commands.add(
   'applyHalfVoucher',
@@ -1387,8 +1387,8 @@ Cypress.Commands.add(
 
 /**
  * Apply FULL voucher and verify its effects
- * @param {object} config - App global config
- * @param {object} i18n - i18n instance
+ * @param {Config} config - app global config
+ * @param {I18n} i18n - i18n instance
  */
 Cypress.Commands.add('applyFullVoucher', (config, i18n) => {
   cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
@@ -1423,8 +1423,8 @@ Cypress.Commands.add('applyFullVoucher', (config, i18n) => {
 
 /**
  * Apply invalid voucher and verify error
- * @param {object} config - App global config
- * @param {object} i18n - i18n instance
+ * @param {Config} config - app global config
+ * @param {I18n} i18n - i18n instance
  */
 Cypress.Commands.add('applyInvalidVoucher', (config, i18n) => {
   cy.fixture('apiGetDiscountCouponResponseEmpty').then((responseEmpty) => {
