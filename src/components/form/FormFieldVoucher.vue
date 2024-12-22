@@ -37,6 +37,9 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 // enums
 import { Currency } from '../../composables/useFormatPrice';
 
+// stores
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
+
 // types
 import type { ValidatedCoupon } from '../types/Coupon';
 
@@ -46,10 +49,6 @@ export default defineComponent({
     FormFieldTextRequired,
   },
   props: {
-    activeVoucher: {
-      type: Object as () => ValidatedCoupon | null,
-      default: null,
-    },
     amount: {
       type: Number,
       required: true,
@@ -57,10 +56,15 @@ export default defineComponent({
   },
   emits: ['remove:voucher', 'update:voucher'],
   setup(props, { emit }) {
+    const registerChallengeStore = useRegisterChallengeStore();
+
     const code = ref('');
-    const voucher = ref<ValidatedCoupon | null>(
-      props.activeVoucher ? props.activeVoucher : null,
-    );
+    const voucher = computed<ValidatedCoupon | null>({
+      get: (): ValidatedCoupon | null => registerChallengeStore.getVoucher,
+      set: (voucher: ValidatedCoupon | null) => {
+        registerChallengeStore.setVoucher(voucher);
+      },
+    });
 
     const { validateCoupon, isLoading } = useApiGetDiscountCoupon(null);
 
@@ -74,10 +78,8 @@ export default defineComponent({
 
       if (validatedCoupon.valid) {
         voucher.value = validatedCoupon;
-        emit('update:voucher', validatedCoupon);
       } else {
         voucher.value = null;
-        emit('remove:voucher');
       }
     };
 
