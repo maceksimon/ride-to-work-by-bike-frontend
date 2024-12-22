@@ -1336,3 +1336,109 @@ Cypress.Commands.add('waitForDiscountCouponApi', (responseBody) => {
     },
   );
 });
+
+/**
+ * Apply HALF voucher and verify its effects
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ * @param {number} defaultPaymentAmountMin - Default minimum payment amount
+ * @returns {Cypress.Chainable<number>} The calculated discount amount
+ */
+Cypress.Commands.add(
+  'applyHalfVoucher',
+  (config, i18n, defaultPaymentAmountMin) => {
+    return cy
+      .fixture('apiGetDiscountCouponResponseHalf')
+      .then((apiResponse) => {
+        // intercept coupon endpoint
+        cy.interceptDiscountCouponGetApi(
+          config,
+          i18n,
+          apiResponse.results[0].name,
+          apiResponse,
+        );
+        // submit voucher
+        cy.dataCy('form-field-voucher-input').type(apiResponse.results[0].name);
+        cy.dataCy('form-field-voucher-submit').click();
+        // wait for API response
+        cy.waitForDiscountCouponApi(apiResponse);
+        // check success message
+        cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+          'be.visible',
+        );
+        // calculate discount amount
+        const discountAmountInt = Math.round(
+          (defaultPaymentAmountMin * apiResponse.results[0].discount) / 100,
+        );
+        // verify banner content
+        cy.dataCy('voucher-banner-code')
+          .should('be.visible')
+          .and('contain', apiResponse.results[0].name);
+        cy.dataCy('voucher-banner-name')
+          .should('be.visible')
+          .and('contain', i18n.global.t('global.discount'))
+          .and('contain', apiResponse.results[0].discount)
+          .and('contain', discountAmountInt);
+        // return discount amount as a chainable value
+        return cy.wrap(discountAmountInt);
+      });
+  },
+);
+
+/**
+ * Apply FULL voucher and verify its effects
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ */
+Cypress.Commands.add('applyFullVoucher', (config, i18n) => {
+  cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
+    // intercept coupon endpoint
+    cy.interceptDiscountCouponGetApi(
+      config,
+      i18n,
+      apiResponse.results[0].name,
+      apiResponse,
+    );
+    // submit voucher
+    cy.dataCy('form-field-voucher-input').type(apiResponse.results[0].name);
+    cy.dataCy('form-field-voucher-submit').click();
+    // wait for API response
+    cy.waitForDiscountCouponApi(apiResponse);
+    // check success message
+    cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+      'be.visible',
+    );
+    // verify banner content
+    cy.dataCy('voucher-banner-code')
+      .should('be.visible')
+      .and('contain', apiResponse.results[0].name);
+    cy.dataCy('voucher-banner-name')
+      .should('be.visible')
+      .and(
+        'contain',
+        i18n.global.t('register.challenge.labelVoucherFreeRegistration'),
+      );
+  });
+});
+
+/**
+ * Apply invalid voucher and verify error
+ * @param {object} config - App global config
+ * @param {object} i18n - i18n instance
+ */
+Cypress.Commands.add('applyInvalidVoucher', (config, i18n) => {
+  cy.fixture('apiGetDiscountCouponResponseEmpty').then((responseEmpty) => {
+    // intercept coupon endpoint
+    cy.interceptDiscountCouponGetApi(config, i18n, 'INVALID', responseEmpty);
+    // submit voucher
+    cy.dataCy('form-field-voucher-input').type('INVALID');
+    cy.dataCy('form-field-voucher-submit').click();
+    // verify error state
+    cy.dataCy('voucher-banner').should('not.exist');
+    cy.contains(i18n.global.t('notify.voucherApplyError')).should('be.visible');
+    cy.dataCy('form-field-voucher-input')
+      .should('be.visible')
+      .find('input')
+      .should('have.value', 'INVALID');
+  });
+});

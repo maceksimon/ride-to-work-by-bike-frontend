@@ -15,7 +15,6 @@ const grey2 = getPaletteColor('grey-2');
 const selectorFormFieldVoucher = 'form-field-voucher';
 const selecotrFormFieldVoucherInput = 'form-field-voucher-input';
 const selectorFormFieldVoucherSubmit = 'form-field-voucher-submit';
-const selectorQNotifyMessage = '.q-notification__message';
 const selectorVoucherBanner = 'voucher-banner';
 const selectorVoucherBannerCode = 'voucher-banner-code';
 const selectorVoucherBannerName = 'voucher-banner-name';
@@ -26,7 +25,6 @@ const selectorVoucherWidget = 'voucher-widget';
 const defaultPaymentAmountMin = parseInt(
   rideToWorkByBikeConfig.entryFeePaymentMin,
 );
-const voucherCodeInvalid = 'INVALID';
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const { formatPriceCurrency } = useFormatPrice();
 
@@ -72,110 +70,56 @@ describe('<FormFieldVoucher>', () => {
   context('desktop - apply voucher FULL', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
-      cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
-        // intercept coupon endpoint
-        cy.interceptDiscountCouponGetApi(
-          rideToWorkByBikeConfig,
-          i18n,
-          apiResponse.results[0].name,
-          apiResponse,
-        );
-        cy.mount(FormFieldVoucher, {
-          props: {},
-        });
-        cy.viewport('macbook-16');
+      cy.mount(FormFieldVoucher, {
+        props: {},
       });
+      cy.viewport('macbook-16');
     });
 
     it('allows to use and then remove coupon FULL', () => {
-      cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
-        // submit voucher
-        cy.dataCy(selecotrFormFieldVoucherInput).type(
-          apiResponse.results[0].name,
-        );
-        cy.dataCy(selectorFormFieldVoucherSubmit).click();
-        // wait for API response
-        cy.waitForDiscountCouponApi(apiResponse);
-        // display banner
-        cy.dataCy(selectorVoucherBanner)
-          .should('be.visible')
-          .and('have.css', 'border-radius', borderRadius)
-          .and('have.backgroundColor', grey2);
-        // banner should show voucher code
-        cy.dataCy(selectorVoucherBannerCode)
-          .should('be.visible')
-          .and('contain', apiResponse.results[0].name);
-        // banner label should show "free registration" message
-        cy.dataCy(selectorVoucherBannerName)
-          .should('be.visible')
-          .and(
-            'contain',
-            i18n.global.t('register.challenge.labelVoucherFreeRegistration'),
-          );
-        // remove button should be visible (click it)
-        cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
-        // after removing voucher, empty input is visible
-        cy.dataCy(selecotrFormFieldVoucherInput)
-          .should('be.visible')
-          .find('input')
-          .should('have.value', '');
-      });
+      // apply voucher FULL
+      cy.applyFullVoucher(rideToWorkByBikeConfig, i18n);
+      // check banner styling
+      cy.dataCy(selectorVoucherBanner)
+        .should('be.visible')
+        .and('have.css', 'border-radius', borderRadius)
+        .and('have.backgroundColor', grey2);
+      // remove voucher
+      cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
+      cy.dataCy(selecotrFormFieldVoucherInput)
+        .should('be.visible')
+        .find('input')
+        .should('have.value', '');
     });
   });
 
   context('desktop - apply voucher HALF', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
-      cy.fixture('apiGetDiscountCouponResponseHalf').then((apiResponse) => {
-        cy.interceptDiscountCouponGetApi(
-          rideToWorkByBikeConfig,
-          i18n,
-          apiResponse.results[0].name,
-          apiResponse,
-        );
-        cy.mount(FormFieldVoucher, {
-          props: {},
-        });
-        cy.viewport('macbook-16');
+      cy.mount(FormFieldVoucher, {
+        props: {},
       });
+      cy.viewport('macbook-16');
     });
 
     it('allows to use and then remove coupon HALF', () => {
-      cy.fixture('apiGetDiscountCouponResponseHalf').then((apiResponse) => {
-        // submit voucher
-        cy.dataCy(selecotrFormFieldVoucherInput).type(
-          apiResponse.results[0].name,
-        );
-        cy.dataCy(selectorFormFieldVoucherSubmit).click();
-        // wait for API response
-        cy.waitForDiscountCouponApi(apiResponse);
-        // display banner
-        cy.dataCy(selectorVoucherBanner)
-          .should('be.visible')
-          .and('have.css', 'border-radius', borderRadius)
-          .and('have.backgroundColor', grey2);
-        // banner code should be visible
-        cy.dataCy(selectorVoucherBannerCode)
-          .should('be.visible')
-          .and('contain', apiResponse.results[0].name);
-        // calculate discount amount
-        const discountAmountInt = Math.round(
-          (defaultPaymentAmountMin * apiResponse.results[0].discount) / 100,
-        );
-        // banner label should show discount (percentage and amount)
-        cy.dataCy(selectorVoucherBannerName)
-          .should('be.visible')
-          .and('contain', i18n.global.t('global.discount'))
-          .and('contain', apiResponse.results[0].discount)
-          .and('contain', formatPriceCurrency(discountAmountInt, Currency.CZK));
-        // remove button should be visible (click it)
-        cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
-        // after removing voucher, empty input is visible
-        cy.dataCy(selecotrFormFieldVoucherInput)
-          .should('be.visible')
-          .find('input')
-          .should('have.value', '');
-      });
+      // apply voucher HALF
+      cy.applyHalfVoucher(
+        rideToWorkByBikeConfig,
+        i18n,
+        defaultPaymentAmountMin,
+      );
+      // check banner styling
+      cy.dataCy(selectorVoucherBanner)
+        .should('be.visible')
+        .and('have.css', 'border-radius', borderRadius)
+        .and('have.backgroundColor', grey2);
+      // remove voucher
+      cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
+      cy.dataCy(selecotrFormFieldVoucherInput)
+        .should('be.visible')
+        .find('input')
+        .should('have.value', '');
     });
   });
 
@@ -265,25 +209,7 @@ function coreTests() {
   });
 
   it('does not allow to submit invalid voucher', () => {
-    cy.fixture('apiGetDiscountCouponResponseEmpty').then((responseEmpty) => {
-      // intercept coupon INVALID
-      cy.interceptDiscountCouponGetApi(
-        rideToWorkByBikeConfig,
-        i18n,
-        voucherCodeInvalid,
-        responseEmpty,
-      );
-      // submit voucher
-      cy.dataCy(selecotrFormFieldVoucherInput).type(voucherCodeInvalid);
-      cy.dataCy(selectorFormFieldVoucherSubmit).click();
-      // banner should not be visible
-      cy.dataCy(selectorVoucherBanner).should('not.exist');
-      // user message should be visible
-      cy.get(selectorQNotifyMessage)
-        .should('be.visible')
-        .and('contain', i18n.global.t('notify.voucherApplyError'));
-      // widget should be visible
-      cy.dataCy(selectorVoucherWidget).should('be.visible');
-    });
+    cy.applyInvalidVoucher(rideToWorkByBikeConfig, i18n);
+    cy.dataCy(selectorVoucherWidget).should('be.visible');
   });
 }
