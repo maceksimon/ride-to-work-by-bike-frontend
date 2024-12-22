@@ -124,7 +124,7 @@ export default defineComponent({
       return `-${discount}%`;
     });
 
-    const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
     return {
       borderRadius,

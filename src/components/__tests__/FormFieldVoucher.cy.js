@@ -29,7 +29,7 @@ const defaultPaymentAmountMin = parseInt(
 const voucherCodeInvalid = 'INVALID';
 const amount = defaultPaymentAmountMin;
 const amountAlt = 1000;
-const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
+const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const { formatPriceCurrency } = useFormatPrice();
 
 describe('<FormFieldVoucher>', () => {
