@@ -27,8 +27,6 @@ const defaultPaymentAmountMin = parseInt(
   rideToWorkByBikeConfig.entryFeePaymentMin,
 );
 const voucherCodeInvalid = 'INVALID';
-const amount = defaultPaymentAmountMin;
-const amountAlt = 1000;
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const { formatPriceCurrency } = useFormatPrice();
 
@@ -82,9 +80,7 @@ describe('<FormFieldVoucher>', () => {
           apiResponse.results[0].name,
         );
         cy.mount(FormFieldVoucher, {
-          props: {
-            amount,
-          },
+          props: {},
         });
         cy.viewport('macbook-16');
       });
@@ -134,9 +130,7 @@ describe('<FormFieldVoucher>', () => {
           apiResponse,
         );
         cy.mount(FormFieldVoucher, {
-          props: {
-            amount,
-          },
+          props: {},
         });
         cy.viewport('macbook-16');
       });
@@ -158,7 +152,7 @@ describe('<FormFieldVoucher>', () => {
           .and('have.backgroundColor', grey2);
         // banner code should be visible
         const discountAmountInt = Math.round(
-          (amount * apiResponse.results[0].discount) / 100,
+          (defaultPaymentAmountMin * apiResponse.results[0].discount) / 100,
         );
         cy.dataCy(selectorVoucherBannerCode)
           .should('be.visible')
@@ -181,9 +175,7 @@ describe('<FormFieldVoucher>', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
       cy.mount(FormFieldVoucher, {
-        props: {
-          amount: amountAlt,
-        },
+        props: {},
       });
       cy.viewport('macbook-16');
     });
@@ -219,9 +211,7 @@ describe('<FormFieldVoucher>', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
       cy.mount(FormFieldVoucher, {
-        props: {
-          amount,
-        },
+        props: {},
       });
       cy.viewport('macbook-16');
     });
