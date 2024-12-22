@@ -48,7 +48,6 @@ describe('<FormFieldVoucher>', () => {
   context('desktop', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
-      cy.interceptDiscountCouponGetApi(rideToWorkByBikeConfig, i18n);
       cy.mount(FormFieldVoucher, {
         props: {},
       });
@@ -74,10 +73,12 @@ describe('<FormFieldVoucher>', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
       cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
+        // intercept coupon endpoint
         cy.interceptDiscountCouponGetApi(
           rideToWorkByBikeConfig,
           i18n,
           apiResponse.results[0].name,
+          apiResponse,
         );
         cy.mount(FormFieldVoucher, {
           props: {},
@@ -94,17 +95,17 @@ describe('<FormFieldVoucher>', () => {
         );
         cy.dataCy(selectorFormFieldVoucherSubmit).click();
         // wait for API response
-        cy.waitForDiscountCouponApi();
+        cy.waitForDiscountCouponApi(apiResponse);
         // display banner
         cy.dataCy(selectorVoucherBanner)
           .should('be.visible')
           .and('have.css', 'border-radius', borderRadius)
           .and('have.backgroundColor', grey2);
-        // banner code should be visible
+        // banner should show voucher code
         cy.dataCy(selectorVoucherBannerCode)
           .should('be.visible')
           .and('contain', apiResponse.results[0].name);
-        // banner label should be visible
+        // banner label should show "free registration" message
         cy.dataCy(selectorVoucherBannerName)
           .should('be.visible')
           .and(
@@ -113,8 +114,11 @@ describe('<FormFieldVoucher>', () => {
           );
         // remove button should be visible (click it)
         cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
-        // after removing voucher, input is visible
-        cy.dataCy(selecotrFormFieldVoucherInput).should('be.visible');
+        // after removing voucher, empty input is visible
+        cy.dataCy(selecotrFormFieldVoucherInput)
+          .should('be.visible')
+          .find('input')
+          .should('have.value', '');
       });
     });
   });
@@ -151,13 +155,14 @@ describe('<FormFieldVoucher>', () => {
           .and('have.css', 'border-radius', borderRadius)
           .and('have.backgroundColor', grey2);
         // banner code should be visible
-        const discountAmountInt = Math.round(
-          (defaultPaymentAmountMin * apiResponse.results[0].discount) / 100,
-        );
         cy.dataCy(selectorVoucherBannerCode)
           .should('be.visible')
           .and('contain', apiResponse.results[0].name);
-        // banner label should be visible
+        // calculate discount amount
+        const discountAmountInt = Math.round(
+          (defaultPaymentAmountMin * apiResponse.results[0].discount) / 100,
+        );
+        // banner label should show discount (percentage and amount)
         cy.dataCy(selectorVoucherBannerName)
           .should('be.visible')
           .and('contain', i18n.global.t('global.discount'))
@@ -165,8 +170,11 @@ describe('<FormFieldVoucher>', () => {
           .and('contain', formatPriceCurrency(discountAmountInt, Currency.CZK));
         // remove button should be visible (click it)
         cy.dataCy(selectorVoucherButtonRemove).should('be.visible').click();
-        // after removing voucher, input is visible
-        cy.dataCy(selecotrFormFieldVoucherInput).should('be.visible');
+        // after removing voucher, empty input is visible
+        cy.dataCy(selecotrFormFieldVoucherInput)
+          .should('be.visible')
+          .find('input')
+          .should('have.value', '');
       });
     });
   });
@@ -183,17 +191,19 @@ describe('<FormFieldVoucher>', () => {
     it('renders active voucher if passed in', () => {
       cy.fixture('apiGetDiscountCouponResponseHalf').then((response) => {
         const voucherHalf = couponAdapter.toValidatedCoupon(response);
+        // set voucher via store (as if it was stored and persisted)
         cy.wrap(useRegisterChallengeStore()).then((storeRegisterChallenge) => {
-          // set voucher from store
+          // set voucher in store
           storeRegisterChallenge.setVoucher(voucherHalf);
           // calculate displayed discount
           const discountAmountInt = Math.round(
             (defaultPaymentAmountMin * response.results[0].discount) / 100,
           );
-          // display banner
+          // banner should show voucher code
           cy.dataCy(selectorVoucherBannerCode)
             .should('be.visible')
             .and('contain', response.results[0].name);
+          // banner should show discount (percentage and amount)
           cy.dataCy(selectorVoucherBannerName)
             .should('be.visible')
             .and('contain', i18n.global.t('global.discount'))
@@ -219,13 +229,15 @@ describe('<FormFieldVoucher>', () => {
     it('renders active voucher if passed in', () => {
       cy.fixture('apiGetDiscountCouponResponseFull').then((response) => {
         const voucherFull = couponAdapter.toValidatedCoupon(response);
+        // set voucher via store (as if it was stored and persisted)
         cy.wrap(useRegisterChallengeStore()).then((storeRegisterChallenge) => {
-          // set voucher from store
+          // set voucher in store
           storeRegisterChallenge.setVoucher(voucherFull);
-          // display banner
+          // banner should show voucher code
           cy.dataCy(selectorVoucherBannerCode)
             .should('be.visible')
             .and('contain', response.results[0].name);
+          // banner should show "free registration" message
           cy.dataCy(selectorVoucherBannerName)
             .should('be.visible')
             .and(
@@ -264,13 +276,13 @@ function coreTests() {
       // submit voucher
       cy.dataCy(selecotrFormFieldVoucherInput).type(voucherCodeInvalid);
       cy.dataCy(selectorFormFieldVoucherSubmit).click();
-      // banner
+      // banner should not be visible
       cy.dataCy(selectorVoucherBanner).should('not.exist');
-      // user message
+      // user message should be visible
       cy.get(selectorQNotifyMessage)
         .should('be.visible')
         .and('contain', i18n.global.t('notify.voucherApplyError'));
-      // widget
+      // widget should be visible
       cy.dataCy(selectorVoucherWidget).should('be.visible');
     });
   });

@@ -293,6 +293,10 @@ function coreTests() {
       cy.dataCy(selectorVoucherSubmit).click();
       // wait for API response
       cy.waitForDiscountCouponApi(responseHalf);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
       // get discounted price
       const discountAmount =
         (defaultPaymentAmountMin * voucherHalf.discount) / 100;
@@ -500,6 +504,10 @@ function coreTests() {
       cy.dataCy(selectorVoucherSubmit).click();
       // wait for API response
       cy.waitForDiscountCouponApi(responseHalf);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
       // shows voucher
       cy.dataCy(selectorVoucherBannerCode).should('be.visible');
       // switch back to individual
@@ -538,6 +546,10 @@ function coreTests() {
       cy.dataCy(selectorVoucherSubmit).click();
       // wait for API response
       cy.waitForDiscountCouponApi(responseHalf);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
       // amount options and custom amount are hidden
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
@@ -578,6 +590,10 @@ function coreTests() {
       cy.dataCy(selectorVoucherSubmit).click();
       // wait for API response
       cy.waitForDiscountCouponApi(responseHalf);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
       // amount options and custom amount are hidden
       cy.dataCy(selectorPaymentAmount).should('be.visible');
       cy.dataCy(selectorPaymentAmountCustom).should('not.exist');
@@ -831,6 +847,10 @@ function coreTests() {
       cy.dataCy(selectorVoucherSubmit).click();
       // wait for API response
       cy.waitForDiscountCouponApi(responseHalf);
+      // check success notification
+      cy.contains(i18n.global.t('notify.voucherApplySuccess')).should(
+        'be.visible',
+      );
       // calculate discount amount
       const discountAmount =
         (defaultPaymentAmountMin * voucherHalf.discount) / 100;
