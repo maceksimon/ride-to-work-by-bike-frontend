@@ -1445,3 +1445,33 @@ Cypress.Commands.add('applyInvalidVoucher', (config, i18n) => {
       .should('have.value', invalid);
   });
 });
+
+/**
+ * Wait for intercept organization creation API call and compare request/response object
+ * Wait for `@createOrganization` intercept
+ */
+Cypress.Commands.add('waitForOrganizationCreateApi', () => {
+  cy.fixture('formFieldCompanyCreateRequest').then(
+    (formFieldCompanyCreateRequest) => {
+      cy.fixture('formFieldCompanyCreate').then(
+        (formFieldCompanyCreateResponse) => {
+          cy.wait('@createOrganization').then(({ request, response }) => {
+            expect(request.headers.authorization).to.include(bearerTokeAuth);
+            expect(request.body).to.deep.equal({
+              name: formFieldCompanyCreateRequest.name,
+              vatId: formFieldCompanyCreateRequest.vatId,
+              organization_type:
+                formFieldCompanyCreateRequest.organization_type,
+            });
+            if (response) {
+              expect(response.statusCode).to.equal(httpSuccessfullStatus);
+              expect(response.body).to.deep.equal(
+                formFieldCompanyCreateResponse,
+              );
+            }
+          });
+        },
+      );
+    },
+  );
+});
