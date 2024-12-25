@@ -68,8 +68,8 @@ describe('<FormFieldSelectTable>', () => {
             ...apiGetTeamsResponseNext.results,
           ];
           // map teams to options
-          const { mapTeamsToOptions } = useApiGetTeams();
-          optionsTeams = mapTeamsToOptions(teams);
+          const { mapTeamToOption } = useApiGetTeams();
+          optionsTeams = teams.map(mapTeamToOption);
         });
       });
     });

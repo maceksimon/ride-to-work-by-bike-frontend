@@ -16,7 +16,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, watch, ref } from 'vue';
+import { computed, defineComponent, inject, watch } from 'vue';
 
 // components
 import FormFieldSelectTable from './FormFieldSelectTable.vue';
@@ -34,6 +34,7 @@ import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 import type { Logger } from '../types/Logger';
 import type { OrganizationTeam } from '../types/Organization';
 import type { TeamPostApiResponse } from '../types/ApiTeam';
+import type { FormSelectTableOption } from '../types/Form';
 
 export default defineComponent({
   name: 'FormSelectTeam',
@@ -42,7 +43,7 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-
+    const { mapTeamToOption } = useApiGetTeams(logger);
     const registerChallengeStore = useRegisterChallengeStore();
 
     const team = computed({
@@ -54,21 +55,22 @@ export default defineComponent({
       },
     });
 
-    const { options, isLoading, teams, loadTeams } = useApiGetTeams(logger);
-    const opts = ref([]);
+    const isLoading = computed(() => registerChallengeStore.isLoadingTeams);
+    const teams = computed(() => registerChallengeStore.getTeams);
+    const options = computed<FormSelectTableOption[]>(() =>
+      teams.value.map(mapTeamToOption),
+    );
+
     // load teams when subsidiary ID changes
     watch(
       () => registerChallengeStore.getSubsidiaryId,
-      (newValue: number | null) => {
+      async (newValue: number | null) => {
         logger?.debug(
           `Register challenge store subsidiary ID changed to <${newValue}>.`,
         );
         if (newValue) {
           logger?.info('Loading teams.');
-          // Lazy loading
-          loadTeams(newValue).then(() => {
-            opts.value = options;
-          });
+          await registerChallengeStore.loadTeamsToStore(logger);
         }
       },
       { immediate: true },
@@ -77,7 +79,7 @@ export default defineComponent({
     /**
      * Handle option created event
      * When option is created in the child component, push the result into
-     * the `teams` array (options are computed from `teams` array).
+     * the teams store
      * @param {TeamPostApiResponse} data - Team data
      * @returns {void}
      */
@@ -88,12 +90,13 @@ export default defineComponent({
         subsidiary: registerChallengeStore.getSubsidiaryId as number,
         members: [],
       };
-      teams.value.push(newTeam);
+      const updatedTeams = [...teams.value, newTeam];
+      registerChallengeStore.setTeams(updatedTeams);
     };
 
     return {
       isLoading,
-      opts,
+      options,
       team,
       OrganizationLevel,
       onOptionCreated,
@@ -112,7 +115,7 @@ export default defineComponent({
     <form-field-select-table
       v-model="team"
       :organization-level="OrganizationLevel.team"
-      :options="opts.value"
+      :options="options"
       :loading="isLoading"
       @create:option="onOptionCreated"
       data-cy="form-select-table-team"

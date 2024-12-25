@@ -115,20 +115,14 @@ export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
 
   // Push results to options
   const options = computed<FormSelectTableOption[]>(() => {
-    return mapTeamsToOptions(teams.value);
+    return teams.value.map(mapTeamToOption);
   });
 
-  const mapTeamsToOptions = (
-    teams: OrganizationTeam[],
-  ): FormSelectTableOption[] => {
-    return teams.map((team: OrganizationTeam): FormSelectTableOption => {
-      return {
-        label: team.name,
-        value: team.id,
-        members: team.members,
-        maxMembers: challengeStore.getMaxTeamMembers,
-      };
-    });
+  const mapTeamToOption = (team: OrganizationTeam): FormSelectTableOption => {
+    return {
+      label: team.name,
+      value: team.id,
+    };
   };
 
   return {
@@ -136,6 +130,6 @@ export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
     options,
     isLoading,
     loadTeams,
-    mapTeamsToOptions,
+    mapTeamToOption,
   };
 };

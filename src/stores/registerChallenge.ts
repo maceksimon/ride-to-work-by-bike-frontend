@@ -4,6 +4,7 @@ import { defineStore } from 'pinia';
 // composables
 import { useApiGetSubsidiaries } from 'src/composables/useApiGetSubsidiaries';
 import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
+import { useApiGetTeams } from 'src/composables/useApiGetTeams';
 
 // enums
 import { Gender } from '../components/types/Profile';
@@ -12,6 +13,7 @@ import {
   OrganizationSubsidiary,
   OrganizationType,
   OrganizationOption,
+  OrganizationTeam,
 } from '../components/types/Organization';
 import { PaymentSubject } from '../components/enums/Payment';
 
@@ -48,8 +50,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     voucher: '' as ValidatedCoupon | string,
     subsidiaries: [] as OrganizationSubsidiary[],
     organizations: [] as OrganizationOption[],
+    teams: [] as OrganizationTeam[],
     isLoadingSubsidiaries: false,
     isLoadingOrganizations: false,
+    isLoadingTeams: false,
   }),
 
   getters: {
@@ -64,6 +68,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getVoucher: (state): ValidatedCoupon | string => state.voucher,
     getSubsidiaries: (state): OrganizationSubsidiary[] => state.subsidiaries,
     getOrganizations: (state): OrganizationOption[] => state.organizations,
+    getTeams: (state): OrganizationTeam[] => state.teams,
   },
 
   actions: {
@@ -96,6 +101,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setOrganizations(organizations: OrganizationOption[]) {
       this.organizations = organizations;
+    },
+    setTeams(teams: OrganizationTeam[]) {
+      this.teams = teams;
     },
     async loadSubsidiariesToStore(logger: Logger | null) {
       const { subsidiaries, loadSubsidiaries } = useApiGetSubsidiaries(logger);
@@ -130,9 +138,23 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.isLoadingOrganizations = false;
       }
     },
+    async loadTeamsToStore(logger: Logger | null) {
+      const { teams, loadTeams } = useApiGetTeams(logger);
+      if (this.subsidiaryId) {
+        logger?.debug(
+          `Load subsidiary ID <${this.subsidiaryId}>` +
+            ' teams and save them into store.',
+        );
+        this.isLoadingTeams = true;
+        await loadTeams(this.subsidiaryId);
+        this.teams = teams.value;
+        logger?.debug(`Loaded teams <${this.teams}> saved into store.`);
+        this.isLoadingTeams = false;
+      }
+    },
   },
 
   persist: {
-    omit: ['subsidiaries', 'organizations'],
+    omit: ['subsidiaries', 'organizations', 'teams'],
   },
 });
