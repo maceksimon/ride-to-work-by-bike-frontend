@@ -1289,6 +1289,7 @@ Cypress.Commands.add('listMerchSelectItem', (item, options = {}) => {
  * @param {object} config - App global config
  * @param {object|string} i18n - i18n instance or locale lang string e.g. en
  * @param {string} code - Coupon code to validate
+ * @param {object} responseBody - Returned response body object
  */
 Cypress.Commands.add(
   'interceptDiscountCouponGetApi',
@@ -1316,6 +1317,7 @@ Cypress.Commands.add(
 /**
  * Wait for intercept discount coupon API call and compare response object
  * Wait for `@getDiscountCoupon` intercept
+ * @param {object} responseBody - Returned response body object
  */
 Cypress.Commands.add('waitForDiscountCouponApi', (responseBody) => {
   cy.fixture('apiGetDiscountCouponResponseFull').then(
@@ -1339,10 +1341,10 @@ Cypress.Commands.add('waitForDiscountCouponApi', (responseBody) => {
 
 /**
  * Apply HALF voucher and verify its effects
- * @param {Config} config - app global config
+ * @param {Config} config - App global config
  * @param {I18n} i18n - i18n instance
- * @param {number} defaultPaymentAmountMin - default minimum payment amount
- * @returns {Cypress.Chainable<number>} calculated discount amount
+ * @param {number} defaultPaymentAmountMin - Default minimum payment amount
+ * @returns {Cypress.Chainable<number>} - Calculated discount amount
  */
 Cypress.Commands.add(
   'applyHalfVoucher',
@@ -1387,7 +1389,7 @@ Cypress.Commands.add(
 
 /**
  * Apply FULL voucher and verify its effects
- * @param {Config} config - app global config
+ * @param {Config} config - App global config
  * @param {I18n} i18n - i18n instance
  */
 Cypress.Commands.add('applyFullVoucher', (config, i18n) => {
@@ -1423,7 +1425,7 @@ Cypress.Commands.add('applyFullVoucher', (config, i18n) => {
 
 /**
  * Apply invalid voucher and verify error
- * @param {Config} config - app global config
+ * @param {Config} config - App global config
  * @param {I18n} i18n - i18n instance
  */
 Cypress.Commands.add('applyInvalidVoucher', (config, i18n) => {

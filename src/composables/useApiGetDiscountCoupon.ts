@@ -39,8 +39,8 @@ export const useApiGetDiscountCoupon = (
 
   /**
    * Validate discount coupon
-   * @param {string} code - coupon code to validate
-   * @returns {Promise<ValidatedCoupon>} - promise resolving to validation result
+   * @param {string} code - Coupon code to validate
+   * @returns {Promise<ValidatedCoupon>} - Promise resolving to validation result
    */
   const validateCoupon = async (code: string): Promise<ValidatedCoupon> => {
     logger?.info(`Get discount coupon <${code}> from the API.`);
