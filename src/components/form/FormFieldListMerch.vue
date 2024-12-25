@@ -48,8 +48,10 @@ import FormFieldRadioRequired from '../form/FormFieldRadioRequired.vue';
 import SliderMerch from './SliderMerch.vue';
 
 // composables
-import { useApiGetMerchandise } from '../../composables/useApiGetMerchandise';
 import { i18n } from '../../boot/i18n';
+
+// stores
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // enums
 import { Gender } from '../types/Profile';
@@ -77,16 +79,10 @@ export default defineComponent({
 
     // selected options
     const selectedGender = ref<string>(Gender.female);
-    const selectedSize = ref<number | null>(null);
-    const selectedOption = computed<MerchandiseItem | null>(
-      (): MerchandiseItem | null => {
-        return (
-          merchandiseItems.value.find(
-            (item) => item.id === selectedSize.value,
-          ) || null
-        );
-      },
-    );
+    const selectedSize = computed<number | null>({
+      get: () => registerChallengeStore.getMerchId,
+      set: (value: number | null) => registerChallengeStore.setMerchId(value),
+    });
     const phone = ref<string>('');
     const trackDelivery = ref<boolean>(false);
     const newsletter = ref<boolean>(false);
@@ -98,13 +94,33 @@ export default defineComponent({
 
     // get merchandise data
     const logger = inject('vuejs3-logger') as Logger | null;
-    const { merchandiseCards, merchandiseItems, loadMerchandise, isLoading } =
-      useApiGetMerchandise(logger);
+    const registerChallengeStore = useRegisterChallengeStore();
 
     // load merchandise on mount
     onMounted(async () => {
-      await loadMerchandise();
+      await registerChallengeStore.loadMerchandiseToStore(logger);
     });
+
+    const merchandiseItems = computed(
+      () => registerChallengeStore.getMerchandiseItems,
+    );
+    const merchandiseCards = computed(
+      () => registerChallengeStore.getMerchandiseCards,
+    );
+    const isLoading = computed(
+      () => registerChallengeStore.isLoadingMerchandise,
+    );
+
+    const selectedOption = computed<MerchandiseItem | null>(
+      (): MerchandiseItem | null => {
+        if (!merchandiseItems.value) return null;
+        return (
+          merchandiseItems.value.find(
+            (item) => item.id === selectedSize.value,
+          ) || null
+        );
+      },
+    );
 
     // computed properties for gender-specific options
     const optionsFemale = computed((): MerchandiseCard[] => {
