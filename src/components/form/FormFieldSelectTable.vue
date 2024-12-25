@@ -500,7 +500,7 @@ export default defineComponent({
                         </div>
                         <div class="d-flex gap-4" data-cy="member-icons">
                           <q-icon
-                            v-for="i in 5"
+                            v-for="i in item.maxMembers"
                             :key="i"
                             name="circle"
                             size="8px"

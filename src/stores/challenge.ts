@@ -61,6 +61,9 @@ export const useChallengeStore = defineStore('challenge', {
   },
 
   actions: {
+    setMaxTeamMembers(maxTeamMembers: number | null): void {
+      this.maxTeamMembers = maxTeamMembers;
+    },
     async loadPhaseSet(): Promise<void> {
       const { campaigns, loadCampaign } = useApiGetCampaign(this.$log);
       await loadCampaign();
@@ -137,6 +140,6 @@ export const useChallengeStore = defineStore('challenge', {
   },
 
   persist: {
-    pick: ['phaseSet'],
+    pick: ['daysActive', 'maxTeamMembers', 'phaseSet'],
   },
 });

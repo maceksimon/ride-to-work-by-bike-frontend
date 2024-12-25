@@ -9,6 +9,7 @@ import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 // stores
 import { useLoginStore } from '../stores/login';
+import { useChallengeStore } from '../stores/challenge';
 
 // types
 import type { Logger } from '../components/types/Logger';
@@ -32,6 +33,7 @@ export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
   const teams = ref<OrganizationTeam[]>([]);
   const isLoading = ref<boolean>(false);
   const loginStore = useLoginStore();
+  const challengeStore = useChallengeStore();
   const { apiFetch } = useApi();
 
   /**
@@ -124,7 +126,9 @@ export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
         label: team.name,
         value: team.id,
         members: team.members,
-        maxMembers: rideToWorkByBikeConfig.defaultMaxTeamMembers,
+        maxMembers: challengeStore.getMaxTeamMembers
+          ? challengeStore.getMaxTeamMembers
+          : rideToWorkByBikeConfig.defaultMaxTeamMembers,
       };
     });
   };
