@@ -12,6 +12,7 @@ import {
 } from 'src/components/types/Organization';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { vModelAdapter } from 'app/test/cypress/utils';
+import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 import { useApiGetTeams } from 'src/composables/useApiGetTeams';
 
@@ -28,6 +29,7 @@ describe('<FormFieldSelectTable>', () => {
   let options;
   let organizationId;
   let optionsTeams;
+  let organizationId;
   let subsidiaryId;
   const model = ref(null);
 
@@ -65,6 +67,12 @@ describe('<FormFieldSelectTable>', () => {
         optionsTeams = mapTeamsToOptions(teams);
       });
     });
+    // set common organizationId from fixture
+    cy.fixture('formFieldCompanyCreate').then(
+      (formFieldCompanyCreateResponse) => {
+        organizationId = formFieldCompanyCreateResponse.id;
+      },
+    );
     // set common subsidiaryId from fixture
     cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
       subsidiaryId = formOrganizationOptions[0].subsidiaries[0].id;
