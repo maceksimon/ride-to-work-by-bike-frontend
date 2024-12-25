@@ -213,10 +213,10 @@ export default defineComponent({
      */
     const onChangeOption = (value: number | null): void => {
       if (props.organizationLevel === OrganizationLevel.organization) {
-        logger?.debug(`Organization option changed <${value}>`);
-        logger?.debug('Resetting subsidiary ID to null');
+        logger?.debug(`Organizations option changed to <${value}>.`);
+        logger?.info('Resetting subsidiary ID to null.');
         registerChallengeStore.setSubsidiaryId(null);
-        logger?.debug('Reloading subsidiaries');
+        logger?.info('Reloading subsidiaries data from the API.');
         registerChallengeStore.loadSubsidiariesToStore(logger);
       }
     };
@@ -234,7 +234,7 @@ export default defineComponent({
           logger?.info('No organization type provided.');
           return;
         }
-        logger?.info('Create organization.');
+        logger?.info('Create new organization.');
         const organizationData = await createOrganization(
           organizationNew.value.name,
           organizationNew.value.vatId,
@@ -258,7 +258,7 @@ export default defineComponent({
         emit('create:option', organizationData);
 
         // create subsidiary
-        logger?.info('Create subsidiary.');
+        logger?.info('Create new subsidiary.');
         const subsidiaryData = await createSubsidiary(
           organizationData.id,
           organizationNew.value.address,
