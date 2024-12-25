@@ -37,7 +37,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     teamId: null as number | null,
     merchId: null as number | null,
     paymentSubject: PaymentSubject.individual,
-    voucher: null as ValidatedCoupon | null,
+    voucher: '' as ValidatedCoupon | string,
   }),
 
   getters: {
@@ -49,7 +49,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getTeamId: (state): number | null => state.teamId,
     getMerchId: (state): number | null => state.merchId,
     getPaymentSubject: (state): PaymentSubject => state.paymentSubject,
-    getVoucher: (state): ValidatedCoupon | null => state.voucher,
+    getVoucher: (state): ValidatedCoupon | string => state.voucher,
   },
 
   actions: {
@@ -74,7 +74,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setPaymentSubject(paymentSubject: PaymentSubject) {
       this.paymentSubject = paymentSubject;
     },
-    setVoucher(voucher: ValidatedCoupon | null) {
+    setVoucher(voucher: ValidatedCoupon | string) {
       this.voucher = voucher;
     },
   },
