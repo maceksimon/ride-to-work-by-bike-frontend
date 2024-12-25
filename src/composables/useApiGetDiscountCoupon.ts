@@ -43,7 +43,7 @@ export const useApiGetDiscountCoupon = (
    * @returns {Promise<ValidatedCoupon>} - promise resolving to validation result
    */
   const validateCoupon = async (code: string): Promise<ValidatedCoupon> => {
-    logger?.info(`Validating discount coupon <${code}>.`);
+    logger?.info(`Get discount coupon <${code}> from the API.`);
     isLoading.value = true;
 
     // append access token into HTTP header
@@ -62,7 +62,7 @@ export const useApiGetDiscountCoupon = (
     const response = couponAdapter.toValidatedCoupon(data);
 
     logger?.debug(
-      `Discount coupon validation response <${JSON.stringify(response, null, 2)}>.`,
+      `Discount coupon parsed validation response data <${JSON.stringify(response, null, 2)}>.`,
     );
 
     isLoading.value = false;
