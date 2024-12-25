@@ -96,6 +96,13 @@ describe('<FormFieldCompanyAddress>', () => {
               // set organization ID in store
               store.setOrganizationId(organizationId);
               cy.wrap(store.getOrganizationId).should('eq', organizationId);
+              /**
+               * Manually load subsidiaries.
+               * In the live application, this is handled by `onMounted` hook,
+               * or calling `loadSubsidiariesToStore` method in another
+               * component.
+               */
+              store.loadSubsidiariesToStore(null);
               // wait for subsidiaries API
               cy.waitForSubsidiariesApi(
                 subsidiariesResponse,
