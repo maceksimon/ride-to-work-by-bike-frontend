@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 
 // composables
 import { useApiGetSubsidiaries } from 'src/composables/useApiGetSubsidiaries';
+import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
 
 // enums
 import { Gender } from '../components/types/Profile';
@@ -10,6 +11,7 @@ import { NewsletterType } from '../components/types/Newsletter';
 import {
   OrganizationSubsidiary,
   OrganizationType,
+  OrganizationOption,
 } from '../components/types/Organization';
 import { PaymentSubject } from '../components/enums/Payment';
 
@@ -45,7 +47,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     paymentSubject: PaymentSubject.individual,
     voucher: '' as ValidatedCoupon | string,
     subsidiaries: [] as OrganizationSubsidiary[],
+    organizations: [] as OrganizationOption[],
     isLoadingSubsidiaries: false,
+    isLoadingOrganizations: false,
   }),
 
   getters: {
@@ -59,6 +63,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getPaymentSubject: (state): PaymentSubject => state.paymentSubject,
     getVoucher: (state): ValidatedCoupon | string => state.voucher,
     getSubsidiaries: (state): OrganizationSubsidiary[] => state.subsidiaries,
+    getOrganizations: (state): OrganizationOption[] => state.organizations,
   },
 
   actions: {
@@ -89,6 +94,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setSubsidiaries(subsidiaries: OrganizationSubsidiary[]) {
       this.subsidiaries = subsidiaries;
     },
+    setOrganizations(organizations: OrganizationOption[]) {
+      this.organizations = organizations;
+    },
     async loadSubsidiariesToStore(logger: Logger | null) {
       const { subsidiaries, loadSubsidiaries } = useApiGetSubsidiaries(logger);
       if (this.organizationId) {
@@ -105,9 +113,26 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.isLoadingSubsidiaries = false;
       }
     },
+    async loadOrganizationsToStore(logger: Logger | null) {
+      const { organizations, loadOrganizations } =
+        useApiGetOrganizations(logger);
+      if (this.organizationType !== OrganizationType.none) {
+        logger?.debug(
+          `Load organizations for type <${this.organizationType}>` +
+            ' and save them into store.',
+        );
+        this.isLoadingOrganizations = true;
+        await loadOrganizations(this.organizationType);
+        this.organizations = organizations.value;
+        logger?.debug(
+          `Loaded organizations <${this.organizations}> saved into store.`,
+        );
+        this.isLoadingOrganizations = false;
+      }
+    },
   },
 
   persist: {
-    omit: ['subsidiaries'],
+    omit: ['subsidiaries', 'organizations'],
   },
 });

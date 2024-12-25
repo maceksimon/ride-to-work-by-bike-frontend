@@ -24,20 +24,19 @@ import { defineComponent, computed, inject, watch, ref } from 'vue';
 import FormFieldSelectTable from '../form/FormFieldSelectTable.vue';
 import FormFieldCompanyAddress from '../form/FormFieldCompanyAddress.vue';
 
-// composables
-import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
-
 // enums
 import { OrganizationLevel, OrganizationType } from '../types/Organization';
 
 // types
 import type { FormSelectOption } from '../types/Form';
 import type { Logger } from '../types/Logger';
-import type { OrganizationOption } from '../types/Organization';
 import type { PostOrganizationResponse } from '../types/apiOrganization';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+
+// composables
+import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
 
 export default defineComponent({
   name: 'FormSelectOrganization',
@@ -51,11 +50,8 @@ export default defineComponent({
       null,
     );
 
-    const opts = ref<FormSelectOption[]>([]);
-    const { options, organizations, isLoading, loadOrganizations } =
-      useApiGetOrganizations(logger);
-
     const registerChallengeStore = useRegisterChallengeStore();
+    const { mapOrganizationToOption } = useApiGetOrganizations(logger);
 
     const organizationType = computed(
       (): OrganizationType => registerChallengeStore.getOrganizationType,
@@ -76,16 +72,23 @@ export default defineComponent({
         registerChallengeStore.setSubsidiaryId(value),
     });
 
+    const isLoading = computed(
+      () => registerChallengeStore.isLoadingOrganizations,
+    );
+    const organizations = computed(
+      () => registerChallengeStore.getOrganizations,
+    );
+    const options = computed<FormSelectOption[]>(() =>
+      organizations.value.map(mapOrganizationToOption),
+    );
+
     watch(
       organizationType,
-      (newValue: OrganizationType) => {
+      async (newValue: OrganizationType) => {
         logger?.debug(`Organization type updated to <${newValue}>`);
         if (newValue) {
-          loadOrganizations(newValue).then(() => {
-            logger?.info('All organizations data was loaded from the API.');
-            // Lazy loading
-            opts.value = options.value;
-          });
+          await registerChallengeStore.loadOrganizationsToStore(logger);
+          logger?.info('All organizations data was loaded from the API.');
         }
       },
       { immediate: true },
@@ -104,23 +107,22 @@ export default defineComponent({
      * @param {PostOrganizationResponse} data - The new organization data.
      */
     const onCreateOption = (data: PostOrganizationResponse) => {
-      const newOrganization: OrganizationOption = data;
+      const newOrganization = data;
       logger?.debug(
         `Add new organization to organizations options <${JSON.stringify(newOrganization, null, 2)}>.`,
       );
-      organizations.value.unshift(newOrganization);
+      const updatedOrganizations = [newOrganization, ...organizations.value];
+      registerChallengeStore.setOrganizations(updatedOrganizations);
       logger?.debug(
-        `Organizations options updated to <${JSON.stringify(organizations.value, null, 2)}>.`,
+        `Organizations options updated to <${JSON.stringify(updatedOrganizations, null, 2)}>.`,
       );
-      // lazy load options array with prepended new organization
-      opts.value = options.value;
     };
 
     return {
       formFieldSelectTableRef,
       isLoading,
       organizationId,
-      opts,
+      options,
       subsidiaryId,
       OrganizationLevel,
       organizationType,
@@ -137,7 +139,7 @@ export default defineComponent({
       ref="formFieldSelectTableRef"
       v-model="organizationId"
       :loading="isLoading"
-      :options="opts"
+      :options="options"
       :organization-level="OrganizationLevel.organization"
       :organization-type="organizationType"
       :data-organization-type="organizationType"
