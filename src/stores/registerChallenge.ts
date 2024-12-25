@@ -92,9 +92,16 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     async loadSubsidiariesToStore(logger: Logger | null) {
       const { subsidiaries, loadSubsidiaries } = useApiGetSubsidiaries(logger);
       if (this.organizationId) {
+        logger?.debug(
+          `Load organization ID <${this.organizationId}>` +
+            ' subsidiaries and save them into store.',
+        );
         this.isLoadingSubsidiaries = true;
         await loadSubsidiaries(this.organizationId);
         this.subsidiaries = subsidiaries.value;
+        logger?.debug(
+          `Loaded subsidiaries <${this.subsidiaries}> saved into store.`,
+        );
         this.isLoadingSubsidiaries = false;
       }
     },
