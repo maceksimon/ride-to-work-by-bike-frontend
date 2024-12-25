@@ -26,10 +26,12 @@
  */
 
 // libraries
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, defineExpose, ref } from 'vue';
 
 // composables
 import { useValidation } from 'src/composables/useValidation';
+
+import type { QInput } from 'quasar';
 
 export default defineComponent({
   name: 'FormFieldTextRequired',
@@ -59,6 +61,7 @@ export default defineComponent({
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
+    const inputRef = ref<typeof QInput | null>(null);
     const inputValue = computed({
       get() {
         return props.modelValue;
@@ -70,9 +73,14 @@ export default defineComponent({
 
     const { isFilled } = useValidation();
 
+    defineExpose({
+      inputRef,
+    });
+
     return {
       inputValue,
       isFilled,
+      inputRef,
     };
   },
 });
@@ -103,6 +111,7 @@ export default defineComponent({
       :name="name"
       :autocomplete="autocomplete"
       :data-cy="`form-${name}-input`"
+      ref="inputRef"
     />
   </div>
 </template>

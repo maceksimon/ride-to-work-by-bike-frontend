@@ -48,6 +48,7 @@ export default defineComponent({
   },
   props: {},
   setup() {
+    const formFieldTextRequiredRef = ref(null);
     const defaultPaymentAmountMin = parseInt(
       rideToWorkByBikeConfig.entryFeePaymentMin,
     );
@@ -70,20 +71,24 @@ export default defineComponent({
      * @returns {void}
      */
     const onSubmitVoucher = async (): Promise<void> => {
-      const validatedCoupon: ValidatedCoupon = await validateCoupon(code.value);
+      if (formFieldTextRequiredRef.value.inputRef.validate()) {
+        const validatedCoupon: ValidatedCoupon = await validateCoupon(
+          code.value,
+        );
 
-      if (validatedCoupon.valid) {
-        Notify.create({
-          type: 'positive',
-          message: i18n.global.t('notify.voucherApplySuccess'),
-        });
-        voucher.value = validatedCoupon;
-      } else {
-        Notify.create({
-          type: 'negative',
-          message: i18n.global.t('notify.voucherApplyError'),
-        });
-        voucher.value = null;
+        if (validatedCoupon.valid) {
+          Notify.create({
+            type: 'positive',
+            message: i18n.global.t('notify.voucherApplySuccess'),
+          });
+          voucher.value = validatedCoupon;
+        } else {
+          Notify.create({
+            type: 'negative',
+            message: i18n.global.t('notify.voucherApplyError'),
+          });
+          voucher.value = null;
+        }
       }
     };
 
@@ -132,6 +137,7 @@ export default defineComponent({
       voucherDiscount,
       onRemoveVoucher,
       onSubmitVoucher,
+      formFieldTextRequiredRef,
     };
   },
 });
@@ -182,6 +188,7 @@ export default defineComponent({
           name="voucher"
           label="form.labelVoucher"
           data-cy="form-field-voucher-input"
+          ref="formFieldTextRequiredRef"
         />
       </div>
       <div class="col-auto">
