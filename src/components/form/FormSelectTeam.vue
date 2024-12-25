@@ -79,7 +79,7 @@ export default defineComponent({
     /**
      * Handle option created event
      * When option is created in the child component, push the result into
-     * the teams store
+     * the `teams` array in the `registerChallenge` store.
      * @param {TeamPostApiResponse} data - Team data
      * @returns {void}
      */
