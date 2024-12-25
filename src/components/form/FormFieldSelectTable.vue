@@ -326,6 +326,10 @@ export default defineComponent({
         emptyFormCompanyFields,
       ) as FormCompanyFields;
       teamNew.value = { name: '' };
+      logger?.debug(
+        `Reset new organization model value <${organizationNew.value}>.`,
+      );
+      logger?.debug(`Reset new team model value <${teamNew.value}>.`);
       // close dialog
       isDialogOpen.value = false;
       logger?.info('Close add option modal dialog.');
