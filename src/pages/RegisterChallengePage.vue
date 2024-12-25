@@ -142,7 +142,7 @@ export default defineComponent({
     const { getOrganizationLabels } = useOrganizations();
     const organizationStepTitle = computed(() => {
       return getOrganizationLabels(
-        organizationType.value || OrganizationType.company,
+        registerChallengeStore.getOrganizationType || OrganizationType.company,
       ).labelShort;
     });
 
@@ -319,7 +319,6 @@ export default defineComponent({
                 {{ $t('form.participation.titleParticipation') }}
               </p>
               <form-field-option-group
-                v-model="organizationType"
                 name="participation"
                 label="form.labelParticipation"
               />

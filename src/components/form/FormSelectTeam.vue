@@ -31,10 +31,10 @@ import { OrganizationLevel } from 'src/components/types/Organization';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
+import type { FormSelectTableOption } from '../types/Form';
 import type { Logger } from '../types/Logger';
 import type { OrganizationTeam } from '../types/Organization';
 import type { TeamPostApiResponse } from '../types/ApiTeam';
-import type { FormSelectTableOption } from '../types/Form';
 
 export default defineComponent({
   name: 'FormSelectTeam',
@@ -43,6 +43,10 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
+    const formFieldSelectTableRef = ref<typeof FormFieldSelectTable | null>(
+      null,
+    );
+
     const registerChallengeStore = useRegisterChallengeStore();
     const { mapTeamToOption } = useApiGetTeams(logger);
 
@@ -69,6 +73,9 @@ export default defineComponent({
           `Register challenge store subsidiary ID changed to <${newValue}>.`,
         );
         if (newValue) {
+          // reset team ID in store
+          logger?.debug(`Resetting team ID from <${team.value}> to <null>.`);
+          team.value = null;
           logger?.info('Loading teams.');
           await registerChallengeStore.loadTeamsToStore(logger);
         }
@@ -95,6 +102,7 @@ export default defineComponent({
     };
 
     return {
+      formFieldSelectTableRef,
       isLoading,
       options,
       team,
@@ -113,6 +121,7 @@ export default defineComponent({
     </div>
     <!-- Select table -->
     <form-field-select-table
+      ref="formFieldSelectTableRef"
       v-model="team"
       :organization-level="OrganizationLevel.team"
       :options="options"

@@ -94,6 +94,15 @@ export default defineComponent({
       { immediate: true },
     );
 
+    const onOrganizationIdChange = () => {
+      // reset subsidiaryId on organizationId change
+      logger?.debug('reset subsidiaryId on organizationId change');
+      registerChallengeStore.setSubsidiaryId(null);
+      // reset teamId on organizationId change
+      logger?.debug('reset teamId on organizationId change');
+      registerChallengeStore.setTeamId(null);
+    };
+
     const onCloseAddSubsidiaryDialog = () => {
       if (formFieldSelectTableRef.value) {
         // Run organization validation proccess before open add subsidiary dialog
@@ -128,6 +137,7 @@ export default defineComponent({
       organizationType,
       onCloseAddSubsidiaryDialog,
       onCreateOption,
+      onOrganizationIdChange,
     };
   },
 });
@@ -144,6 +154,7 @@ export default defineComponent({
       :organization-type="organizationType"
       :data-organization-type="organizationType"
       @create:option="onCreateOption"
+      @update:model-value="onOrganizationIdChange"
       data-cy="form-select-table-company"
     />
     <form-field-company-address

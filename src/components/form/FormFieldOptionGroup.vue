@@ -25,7 +25,7 @@
 
 // libraries
 import { colors } from 'quasar';
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, inject } from 'vue';
 
 // composables
 import { useValidation } from 'src/composables/useValidation';
@@ -38,15 +38,12 @@ import { OrganizationType } from 'src/components/types/Organization';
 import { PaymentSubject } from 'src/components/enums/Payment';
 
 // types
-import { FormOption } from '../../components/types/Form';
+import type { FormOption } from '../../components/types/Form';
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'FormFieldOptionGroup',
   props: {
-    modelValue: {
-      type: String as () => OrganizationType,
-      required: true,
-    },
     name: {
       type: String,
       required: true,
@@ -56,16 +53,28 @@ export default defineComponent({
       required: true,
     },
   },
-  emits: ['update:modelValue'],
-  setup(props, { emit }) {
-    const inputValue = computed({
-      get(): OrganizationType {
-        return props.modelValue;
-      },
-      set(value: OrganizationType) {
-        emit('update:modelValue', value);
+  setup() {
+    const logger = inject('vuejs3-logger') as Logger | null;
+
+    const organizationType = computed({
+      get: (): OrganizationType => registerChallengeStore.getOrganizationType,
+      set: (value: OrganizationType) => {
+        // set value
+        registerChallengeStore.setOrganizationType(value);
       },
     });
+
+    const onOrganizationTypeChange = () => {
+      // reset organizationId on organizationType change
+      logger?.debug('reset organizationId on organizationType change');
+      registerChallengeStore.setOrganizationId(null);
+      // reset subsidiaryId on organizationType change
+      logger?.debug('reset subsidiaryId on organizationType change');
+      registerChallengeStore.setSubsidiaryId(null);
+      // reset teamId on organizationType change
+      logger?.debug('reset teamId on organizationType change');
+      registerChallengeStore.setTeamId(null);
+    };
 
     const { isFilled } = useValidation();
 
@@ -113,11 +122,12 @@ export default defineComponent({
     return {
       borderRadius,
       grey3,
-      inputValue,
+      organizationType,
       options,
       primary,
       primaryOpacity,
       isFilled,
+      onOrganizationTypeChange,
     };
   },
 });
@@ -128,26 +138,27 @@ export default defineComponent({
     dense
     borderless
     hide-bottom-space
-    :model-value="inputValue"
+    :model-value="organizationType"
     :rules="[(val) => !!val || $t('form.messageOptionRequired')]"
   >
     <q-option-group
-      v-model="inputValue"
+      v-model="organizationType"
       type="radio"
       :options="options"
       class="q-gutter-md"
       data-cy="form-field-option-group"
+      @update:model-value="onOrganizationTypeChange"
     >
       <!-- Custom option content -->
       <template v-slot:label="opt">
         <div
           class="full-width row items-center bg-white q-py-md q-px-md"
-          :class="[opt.value === inputValue ? '' : 'bg-white']"
+          :class="[opt.value === organizationType ? '' : 'bg-white']"
           :style="{
             'border-radius': borderRadius,
             'border-width': '1px',
             'border-style': 'solid',
-            'border-color': opt.value === inputValue ? primary : grey3,
+            'border-color': opt.value === organizationType ? primary : grey3,
           }"
           data-cy="form-field-option"
         >
@@ -179,7 +190,7 @@ export default defineComponent({
           <div class="col-auto q-ml-md">
             <q-avatar round size="24px" data-cy="form-field-option-check">
               <q-icon
-                v-show="opt.value === inputValue"
+                v-show="opt.value === organizationType"
                 name="done"
                 color="primary"
                 size="24px"
@@ -191,7 +202,6 @@ export default defineComponent({
     </q-option-group>
   </q-field>
 </template>
-
 <style scoped lang="scss">
 // hide radio button
 :deep(.q-radio__inner) {
