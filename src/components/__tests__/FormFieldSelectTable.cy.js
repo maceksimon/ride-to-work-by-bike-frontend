@@ -5,13 +5,10 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { i18n } from '../../boot/i18n';
 import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
 import { createPinia, setActivePinia } from 'pinia';
-import { vModelAdapter } from 'app/test/cypress/utils';
 import {
   OrganizationLevel,
   OrganizationType,
 } from 'src/components/types/Organization';
-import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
-import { vModelAdapter } from 'app/test/cypress/utils';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { vModelAdapter } from 'app/test/cypress/utils';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
@@ -20,6 +17,9 @@ import { useApiGetTeams } from 'src/composables/useApiGetTeams';
 // variables
 const { contactEmail } = rideToWorkByBikeConfig;
 const model = ref(null);
+const setModelValue = (value) => {
+  model.value = value;
+};
 
 // colors
 const { getPaletteColor } = colors;
@@ -30,9 +30,7 @@ describe('<FormFieldSelectTable>', () => {
   let options;
   let organizationId;
   let optionsTeams;
-  let organizationId;
   let subsidiaryId;
-  const model = ref(null);
 
   before(() => {
     setActivePinia(createPinia());
@@ -168,6 +166,7 @@ describe('<FormFieldSelectTable>', () => {
         },
       });
       cy.viewport('macbook-16');
+      cy.wrap(setModelValue(null));
     });
 
     it('renders necessary elements', () => {
@@ -463,6 +462,7 @@ describe('<FormFieldSelectTable>', () => {
           organizationLevel: OrganizationLevel.team,
         },
       });
+      cy.wrap(setModelValue(null));
     });
 
     it('renders team members count', () => {
