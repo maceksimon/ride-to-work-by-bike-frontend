@@ -92,9 +92,9 @@ export default defineComponent({
     );
 
     const onCloseAddSubsidiaryDialog = () => {
-      // Run organization validation proccess before open add subsidiary dialog
-      logger?.info('Run select organization widget validation process.');
       if (formFieldSelectTableRef.value) {
+        // Run organization validation proccess before open add subsidiary dialog
+        logger?.info('Run select organization widget validation process.');
         formFieldSelectTableRef.value.selectOrganizationRef.validate();
       }
     };
