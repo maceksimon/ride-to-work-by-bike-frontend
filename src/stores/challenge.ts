@@ -29,8 +29,8 @@ export const useChallengeStore = defineStore('challenge', {
      * Phase object with id `invoices` marks the ability to see invoices.
      */
     phaseSet: [] as Phase[],
-    daysActive: 0,
-    maxTeamMembers: 0,
+    daysActive: null as number | null,
+    maxTeamMembers: null as number | null,
   }),
 
   getters: {
@@ -52,10 +52,10 @@ export const useChallengeStore = defineStore('challenge', {
     getPhaseSet(): Phase[] {
       return this.phaseSet;
     },
-    getDaysActive(): number {
+    getDaysActive(): number | null {
       return this.daysActive;
     },
-    getMaxTeamMembers(): number {
+    getMaxTeamMembers(): number | null {
       return this.maxTeamMembers;
     },
   },
@@ -78,22 +78,26 @@ export const useChallengeStore = defineStore('challenge', {
 
       if (campaigns.value.length && campaigns.value[0]?.days_active) {
         this.$log?.debug(
-          `Saving days active <${campaigns.value[0].days_active}>.`,
+          `Set store this campaign active days value <${campaigns.value[0].days_active}>.`,
         );
         this.daysActive = campaigns.value[0].days_active;
-        this.$log?.debug(`New days active <${this.daysActive}>.`);
+        this.$log?.debug(
+          `New this camapaing active days value <${this.daysActive}>.`,
+        );
       } else {
-        this.$log?.debug('No days active found.');
+        this.$log?.info('No this campaign active days found.');
       }
 
       if (campaigns.value.length && campaigns.value[0]?.max_team_members) {
         this.$log?.debug(
-          `Saving max team members <${campaigns.value[0].max_team_members}>.`,
+          `Set store this campaing max team members <${campaigns.value[0].max_team_members}>.`,
         );
         this.maxTeamMembers = campaigns.value[0].max_team_members;
-        this.$log?.debug(`New max team members <${this.maxTeamMembers}>.`);
+        this.$log?.debug(
+          `New this campaing max team members value <${this.maxTeamMembers}>.`,
+        );
       } else {
-        this.$log?.debug('No max team members found.');
+        this.$log?.info('No this campaign max team members found.');
       }
     },
     /**
