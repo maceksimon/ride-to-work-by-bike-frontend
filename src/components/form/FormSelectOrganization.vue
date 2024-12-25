@@ -18,7 +18,7 @@
  */
 
 // libraries
-import { defineComponent, computed, inject, nextTick, watch, ref } from 'vue';
+import { defineComponent, computed, inject, watch, ref } from 'vue';
 
 // components
 import FormFieldSelectTable from '../form/FormFieldSelectTable.vue';
@@ -100,23 +100,19 @@ export default defineComponent({
     };
 
     /**
-     * Create new organization option.
+     * Prepend new organization option event handler
      * @param {PostOrganizationResponse} data - The new organization data.
      */
-    const onCreateOption = async (
-      data: PostOrganizationResponse,
-    ): Promise<void> => {
+    const onCreateOption = (data: PostOrganizationResponse) => {
       const newOrganization: OrganizationOption = data;
       logger?.debug(
-        `Add new organization to organizations array <${JSON.stringify(newOrganization, null, 2)}>.`,
+        `Add new organization to organizations options <${JSON.stringify(newOrganization, null, 2)}>.`,
       );
-      organizations.value.push(newOrganization);
+      organizations.value.unshift(newOrganization);
       logger?.debug(
-        `Organizations array updated to <${JSON.stringify(organizations.value, null, 2)}>.`,
+        `Organizations options updated to <${JSON.stringify(organizations.value, null, 2)}>.`,
       );
-      // wait for computed property `options` to update
-      await nextTick();
-      // lazy load options array with appended new organization
+      // lazy load options array with prepended new organization
       opts.value = options.value;
     };
 
