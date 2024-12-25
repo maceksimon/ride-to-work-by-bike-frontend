@@ -63,7 +63,7 @@ const activeIconImgSrcStepper5 = new URL(
   cy.config().baseUrl,
 ).href;
 const doneIconImgSrcStepper5 = doneIcon;
-// Stepper 7 imgs
+// Stepper 6 imgs
 const iconImgSrcStepper6 = new URL(
   '../../../src/assets/svg/numeric-6-outline.svg',
   cy.config().baseUrl,
@@ -72,6 +72,17 @@ const activeIconImgSrcStepper6 = new URL(
   '../../../src/assets/svg/numeric-6-fill.svg',
   cy.config().baseUrl,
 ).href;
+const doneIconImgSrcStepper6 = doneIcon;
+// Stepper 7 imgs
+const iconImgSrcStepper7 = new URL(
+  '../../../src/assets/svg/numeric-7-outline.svg',
+  cy.config().baseUrl,
+).href;
+const activeIconImgSrcStepper7 = new URL(
+  '../../../src/assets/svg/numeric-7-fill.svg',
+  cy.config().baseUrl,
+).href;
+const doneIconImgSrcStepper7 = doneIcon;
 
 describe('Register Challenge page', () => {
   context('desktop', () => {
@@ -127,6 +138,7 @@ describe('Register Challenge page', () => {
                 win.i18n,
                 OrganizationType.school,
               );
+              cy.interceptMerchandiseGetApi(config, win.i18n);
             },
           );
         });
@@ -250,6 +262,10 @@ describe('Register Challenge page', () => {
         cy.contains(i18n.global.t('register.challenge.titleStepMerch')).should(
           'be.visible',
         );
+        // step 7: summary
+        cy.contains(
+          i18n.global.t('register.challenge.titleStepSummary'),
+        ).should('be.visible');
       });
     });
 
@@ -566,10 +582,11 @@ describe('Register Challenge page', () => {
       });
     });
 
-    it('allows user to pass back and forth through stepper', () => {
-      passToStep6();
+    it.only('allows user to pass back and forth through stepper', () => {
+      passToStep7();
 
       // test back navigation in the stepper
+      cy.dataCy('step-7-back').should('be.visible').click();
       cy.dataCy('step-6-back').should('be.visible').click();
       cy.dataCy('step-5-back').should('be.visible').click();
       cy.dataCy('step-4-back').should('be.visible').click();
@@ -583,8 +600,9 @@ describe('Register Challenge page', () => {
       cy.dataCy('step-3-continue').should('be.visible').click();
       cy.dataCy('step-4-continue').should('be.visible').click();
       cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-6-continue').should('be.visible');
-      // test goint to step 1
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
+      // test going to step 1
       cy.dataCy('step-1').should('be.visible').click();
       cy.dataCy('step-1-continue').should('be.visible');
       // go to the last step
@@ -593,8 +611,9 @@ describe('Register Challenge page', () => {
       cy.dataCy('step-3-continue').should('be.visible').click();
       cy.dataCy('step-4-continue').should('be.visible').click();
       cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-6-continue').should('be.visible');
-      // test goint to step 2
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
+      // test going to step 2
       cy.dataCy('step-2').should('be.visible').click();
       cy.dataCy('step-2-continue').should('be.visible');
       // go to the last step
@@ -602,31 +621,38 @@ describe('Register Challenge page', () => {
       cy.dataCy('step-3-continue').should('be.visible').click();
       cy.dataCy('step-4-continue').should('be.visible').click();
       cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-6-continue').should('be.visible');
-      // test goint to step 3
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
+      // test going to step 3
       cy.dataCy('step-3').should('be.visible').click();
       cy.dataCy('step-3-continue').should('be.visible');
       // go to the last step
       cy.dataCy('step-3-continue').should('be.visible').click();
       cy.dataCy('step-4-continue').should('be.visible').click();
       cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-6-continue').should('be.visible');
-      // test goint to step 4
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
+      // test going to step 4
       cy.dataCy('step-4').should('be.visible').click();
       cy.dataCy('step-4-continue').should('be.visible');
       // go to the last step
       cy.dataCy('step-4-continue').should('be.visible').click();
       cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-6-continue').should('be.visible');
-      // test goint to step 5
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
+      // test going to step 5
       cy.dataCy('step-5').should('be.visible').click();
       cy.dataCy('step-5-continue').should('be.visible');
       // go to the last step
       cy.dataCy('step-5-continue').should('be.visible').click();
-      cy.dataCy('step-6-continue').should('be.visible');
-      // test goint to step 7
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
+      // test going to step 6
       cy.dataCy('step-6').should('be.visible').click();
       cy.dataCy('step-6-continue').should('be.visible');
+      // go to the last step
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      cy.dataCy('step-7-continue').should('be.visible');
     });
 
     it('allows user to apply voucher HALF', () => {
@@ -915,8 +941,32 @@ function passToStep6() {
   cy.dataCy('step-6').find('.q-stepper__step-content').should('be.visible');
 }
 
+function passToStep7() {
+  passToStep6();
+  // select merch
+  cy.dataCy('form-card-merch-female')
+    .first()
+    .find('[data-cy="form-card-merch-link"]')
+    .click();
+  // close dialog
+  cy.dataCy('dialog-close').click();
+  // verify dialog is closed
+  cy.dataCy('dialog-merch').should('not.exist');
+  // select package tracking
+  cy.dataCy('form-merch-tracking-input').click();
+  // fill phone number
+  cy.dataCy('form-merch-phone-input')
+    .should('be.visible')
+    .find('input')
+    .type('736 123 456');
+  // go to next step
+  cy.dataCy('step-6-continue').should('be.visible').click();
+  // on step 7
+  cy.dataCy('step-7').find('.q-stepper__step-content').should('be.visible');
+}
+
 function checkActiveIcon(activeStep) {
-  const steps = [1, 2, 3, 4, 5, 6];
+  const steps = [1, 2, 3, 4, 5, 6, 7];
   steps.forEach((step) => {
     let expectedSrc;
     if (step === activeStep) {
@@ -931,7 +981,9 @@ function checkActiveIcon(activeStep) {
                 ? activeIconImgSrcStepper4
                 : step === 5
                   ? activeIconImgSrcStepper5
-                  : activeIconImgSrcStepper6; // for step 6
+                  : step === 6
+                    ? activeIconImgSrcStepper6
+                    : activeIconImgSrcStepper7;
     } else if (step < activeStep) {
       expectedSrc =
         step === 1
@@ -942,7 +994,11 @@ function checkActiveIcon(activeStep) {
               ? doneIconImgSrcStepper3
               : step === 4
                 ? doneIconImgSrcStepper4
-                : doneIconImgSrcStepper5;
+                : step === 5
+                  ? doneIconImgSrcStepper5
+                  : step === 6
+                    ? doneIconImgSrcStepper6
+                    : doneIconImgSrcStepper7;
     } else {
       expectedSrc =
         step === 1
@@ -955,7 +1011,9 @@ function checkActiveIcon(activeStep) {
                 ? iconImgSrcStepper4
                 : step === 5
                   ? iconImgSrcStepper5
-                  : iconImgSrcStepper6; // for step 6
+                  : step === 6
+                    ? iconImgSrcStepper6
+                    : iconImgSrcStepper7;
     }
 
     cy.dataCy(`step-${step}`)

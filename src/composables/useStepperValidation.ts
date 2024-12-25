@@ -16,6 +16,7 @@ export const useStepperValidation = ({
   stepParticipationRef,
   stepCompanyRef,
   stepTeamRef,
+  stepMerchRef,
 }: {
   step: Ref<number>;
   stepperRef: Ref<typeof QStepper | null>;
@@ -24,6 +25,7 @@ export const useStepperValidation = ({
   stepParticipationRef: Ref<typeof QForm | null>;
   stepCompanyRef: Ref<typeof QForm | null>;
   stepTeamRef: Ref<typeof QForm | null>;
+  stepMerchRef: Ref<typeof QForm | null>;
 }): {
   onBack: () => void;
   onContinue: () => Promise<void>;
@@ -92,6 +94,16 @@ export const useStepperValidation = ({
           stepperRef.value.next();
         } else {
           stepTeamRef.value.$el.scrollIntoView({ behavior: 'smooth' });
+        }
+        break;
+      // validate merch step
+      case 6:
+        if (!stepMerchRef.value) return;
+        const isValidMerch: boolean = await stepMerchRef.value.validate();
+        if (isValidMerch) {
+          stepperRef.value.next();
+        } else {
+          stepMerchRef.value.$el.scrollIntoView({ behavior: 'smooth' });
         }
         break;
       default:

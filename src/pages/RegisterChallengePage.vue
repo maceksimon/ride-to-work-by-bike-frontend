@@ -37,6 +37,7 @@ import FormSelectOrganization from 'src/components/form/FormSelectOrganization.v
 import FormSelectTeam from 'src/components/form/FormSelectTeam.vue';
 import LoginRegisterHeader from 'components/global/LoginRegisterHeader.vue';
 import RegisterChallengePayment from 'src/components/register/RegisterChallengePayment.vue';
+import RegisterChallengeSummary from 'src/components/register/RegisterChallengeSummary.vue';
 import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
 
 // composables
@@ -59,6 +60,7 @@ export default defineComponent({
     FormSelectTeam,
     LoginRegisterHeader,
     RegisterChallengePayment,
+    RegisterChallengeSummary,
     TopBarCountdown,
   },
   setup() {
@@ -115,6 +117,14 @@ export default defineComponent({
       new URL('../assets/svg/numeric-6-fill.svg', import.meta.url).href
     }`;
     const doneIconImgSrcStepper6 = doneIcon;
+    // Stepper 7 imgs
+    const iconImgSrcStepper7 = `img:${
+      new URL('../assets/svg/numeric-7-outline.svg', import.meta.url).href
+    }`;
+    const activeIconImgSrcStepper7 = `img:${
+      new URL('../assets/svg/numeric-7-fill.svg', import.meta.url).href
+    }`;
+    const doneIconImgSrcStepper7 = doneIcon;
 
     const registerChallengeStore = useRegisterChallengeStore();
 
@@ -139,7 +149,7 @@ export default defineComponent({
     const stepPaymentRef = ref<typeof QForm | null>(null);
     const stepPersonalDetailsRef = ref<typeof QForm | null>(null);
     const stepTeamRef = ref<typeof QForm | null>(null);
-
+    const stepMerchRef = ref<typeof QForm | null>(null);
     const { onBack, onContinue } = useStepperValidation({
       step,
       stepperRef,
@@ -148,6 +158,7 @@ export default defineComponent({
       stepPaymentRef,
       stepPersonalDetailsRef,
       stepTeamRef,
+      stepMerchRef,
     });
 
     return {
@@ -160,6 +171,7 @@ export default defineComponent({
       stepParticipationRef,
       stepPersonalDetailsRef,
       stepTeamRef,
+      stepMerchRef,
       iconImgSrcStepper1,
       activeIconImgSrcStepper1,
       doneIconImgSrcStepper1,
@@ -178,6 +190,9 @@ export default defineComponent({
       iconImgSrcStepper6,
       activeIconImgSrcStepper6,
       doneIconImgSrcStepper6,
+      iconImgSrcStepper7,
+      activeIconImgSrcStepper7,
+      doneIconImgSrcStepper7,
       organizationType,
       organizationStepTitle,
       onBack,
@@ -440,10 +455,48 @@ export default defineComponent({
                 unelevated
                 rounded
                 color="primary"
-                :label="$t('form.buttonCompleteRegistration')"
+                :label="$t('navigation.continue')"
                 @click="onContinue"
                 class="q-ml-sm"
                 data-cy="step-6-continue"
+              />
+            </q-stepper-navigation>
+          </q-step>
+          <!-- Step: Summary -->
+          <q-step
+            :name="7"
+            :title="$t('register.challenge.titleStepSummary')"
+            :icon="iconImgSrcStepper7"
+            :active-icon="activeIconImgSrcStepper7"
+            :done-icon="doneIconImgSrcStepper7"
+            :done="step > 7"
+            :header-nav="step > 7"
+            class="bg-white q-mt-lg"
+            data-cy="step-7"
+          >
+            <!-- Content: Summary -->
+            <register-challenge-summary />
+            <!-- Buttons: Summary -->
+            <q-stepper-navigation class="flex justify-end">
+              <!-- Button: Back -->
+              <q-btn
+                unelevated
+                rounded
+                outline
+                @click="onBack"
+                color="primary"
+                :label="$t('navigation.back')"
+                data-cy="step-7-back"
+              />
+              <!-- Button: Complete registration -->
+              <q-btn
+                unelevated
+                rounded
+                color="primary"
+                :label="$t('form.buttonCompleteRegistration')"
+                @click="onContinue"
+                class="q-ml-sm"
+                data-cy="step-7-continue"
               />
             </q-stepper-navigation>
           </q-step>
