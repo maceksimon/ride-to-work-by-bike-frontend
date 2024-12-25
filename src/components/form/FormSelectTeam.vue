@@ -43,8 +43,8 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-    const { mapTeamToOption } = useApiGetTeams(logger);
     const registerChallengeStore = useRegisterChallengeStore();
+    const { mapTeamToOption } = useApiGetTeams(logger);
 
     const team = computed({
       get: () => {
@@ -90,7 +90,7 @@ export default defineComponent({
         subsidiary: registerChallengeStore.getSubsidiaryId as number,
         members: [],
       };
-      const updatedTeams = [...teams.value, newTeam];
+      const updatedTeams = [newTeam, ...teams.value];
       registerChallengeStore.setTeams(updatedTeams);
     };
 
