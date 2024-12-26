@@ -94,12 +94,18 @@ export default defineComponent({
       { immediate: true },
     );
 
-    const onOrganizationIdChange = () => {
+    const onOrganizationIdChange = (): void => {
       // reset subsidiaryId on organizationId change
       logger?.debug('reset subsidiaryId on organizationId change');
       registerChallengeStore.setSubsidiaryId(null);
       // reset teamId on organizationId change
       logger?.debug('reset teamId on organizationId change');
+      registerChallengeStore.setTeamId(null);
+    };
+
+    const onSubsidiaryIdChange = (): void => {
+      // reset teamId on subsidiaryId change
+      logger?.debug('reset teamId on subsidiaryId change');
       registerChallengeStore.setTeamId(null);
     };
 
@@ -138,6 +144,7 @@ export default defineComponent({
       onCloseAddSubsidiaryDialog,
       onCreateOption,
       onOrganizationIdChange,
+      onSubsidiaryIdChange,
     };
   },
 });
@@ -160,6 +167,7 @@ export default defineComponent({
     <form-field-company-address
       v-model="subsidiaryId"
       data-cy="form-company-address"
+      @update:model-value="onSubsidiaryIdChange"
       @close:addSubsidiaryDialog="onCloseAddSubsidiaryDialog"
     />
   </div>

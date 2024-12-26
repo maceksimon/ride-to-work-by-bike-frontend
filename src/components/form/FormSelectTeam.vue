@@ -16,7 +16,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, watch } from 'vue';
+import { computed, defineComponent, inject, ref, watch } from 'vue';
 
 // components
 import FormFieldSelectTable from './FormFieldSelectTable.vue';
@@ -73,9 +73,7 @@ export default defineComponent({
           `Register challenge store subsidiary ID changed to <${newValue}>.`,
         );
         if (newValue) {
-          // reset team ID in store
-          logger?.debug(`Resetting team ID from <${team.value}> to <null>.`);
-          team.value = null;
+          // load teams
           logger?.info('Loading teams.');
           await registerChallengeStore.loadTeamsToStore(logger);
         }
