@@ -2,14 +2,14 @@
 /**
  * RegisterChallengeSummary Component
  *
- * @description A summary component that displays the registration details in four sections:
- * personal details, participation, merch, and delivery address.
- * Used as the final step in the registration process to review all entered information.
+ * @description A summary component that displays the registration details.
+ * Draws data from `loginStore` and `registerChallengeStore`.
+ * Used in `RegisterChallengePage` as the last step to review entered data.
  *
  * @example
- * <RegisterChallengeSummary />
+ * <register-challenge-summary />
  *
- * @see [Figma Design](...)
+ * @see [Figma Design](https://www.figma.com/design/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?node-id=8488-42833&t=htgS0Jki0uk9vGfl-1)
  */
 
 // libraries
