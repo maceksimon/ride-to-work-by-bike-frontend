@@ -54,7 +54,16 @@ describe('<RegisterChallengeSummary>', () => {
   });
 
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext([], 'index.component', i18n);
+    cy.testLanguageStringsInContext(
+      [
+        'labelGender',
+        'textGender.male',
+        'textGender.female',
+        'titleDeliveryAddress',
+      ],
+      'register.challenge',
+      i18n,
+    );
   });
 
   context('desktop', () => {
