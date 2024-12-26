@@ -60,6 +60,7 @@ describe('<RegisterChallengeSummary>', () => {
         'textGender.male',
         'textGender.female',
         'titleDeliveryAddress',
+        'titleStepSummary',
       ],
       'register.challenge',
       i18n,
