@@ -582,7 +582,7 @@ describe('Register Challenge page', () => {
       });
     });
 
-    it.only('allows user to pass back and forth through stepper', () => {
+    it('allows user to pass back and forth through stepper', () => {
       passToStep7();
 
       // test back navigation in the stepper
@@ -873,6 +873,47 @@ describe('Register Challenge page', () => {
         // title family
         cy.contains(i18n.global.t('form.labelFamilyShort')).should(
           'be.visible',
+        );
+      });
+    });
+
+    it('shows correct summary data on summary step', () => {
+      cy.get('@i18n').then((i18n) => {
+        passToStep7();
+        // check personal details section
+        cy.dataCy('summary-personal-name').should('contain', 'John Doe');
+        cy.dataCy('summary-personal-gender').should(
+          'contain',
+          i18n.global.t('register.challenge.textGender.male'),
+        );
+        // check participation section
+        cy.fixture('formFieldCompany').then((formFieldCompany) => {
+          cy.dataCy('summary-participation-team').should('be.visible');
+          cy.dataCy('summary-participation-organization')
+            .should('be.visible')
+            .and('contain', formFieldCompany.results[0].name);
+        });
+        // check merch section
+        cy.fixture('apiGetMerchandiseResponse.json').then(
+          (apiGetMerchandiseResponse) => {
+            cy.dataCy('summary-merch-label')
+              .should('be.visible')
+              .and('contain', apiGetMerchandiseResponse.results[0].name);
+            cy.dataCy('summary-merch-description')
+              .should('be.visible')
+              .and('contain', apiGetMerchandiseResponse.results[0].description);
+          },
+        );
+        // check delivery section
+        cy.fixture('apiGetSubsidiariesResponse.json').then(
+          (apiGetSubsidiariesResponse) => {
+            cy.dataCy('summary-delivery-address')
+              .should('be.visible')
+              .and(
+                'contain',
+                apiGetSubsidiariesResponse.results[0].address.street,
+              );
+          },
         );
       });
     });
