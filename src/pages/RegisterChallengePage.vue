@@ -135,6 +135,10 @@ export default defineComponent({
       },
     });
 
+    const merchId = computed(
+      (): number | null => registerChallengeStore.getMerchId,
+    );
+
     const { getOrganizationLabels } = useOrganizations();
     const organizationStepTitle = computed(() => {
       return getOrganizationLabels(
@@ -193,6 +197,7 @@ export default defineComponent({
       iconImgSrcStepper7,
       activeIconImgSrcStepper7,
       doneIconImgSrcStepper7,
+      merchId,
       organizationType,
       organizationStepTitle,
       onBack,
@@ -455,6 +460,7 @@ export default defineComponent({
                 unelevated
                 rounded
                 color="primary"
+                :disable="!merchId"
                 :label="$t('navigation.continue')"
                 @click="onContinue"
                 class="q-ml-sm"
