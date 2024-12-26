@@ -43,7 +43,6 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-
     const registerChallengeStore = useRegisterChallengeStore();
     const { mapTeamToOption } = useApiGetTeams(logger);
 
@@ -70,7 +69,6 @@ export default defineComponent({
           `Register challenge store subsidiary ID changed to <${newValue}>.`,
         );
         if (newValue) {
-          // load teams
           logger?.info('Loading teams.');
           await registerChallengeStore.loadTeamsToStore(logger);
         }
