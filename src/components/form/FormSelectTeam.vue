@@ -31,10 +31,10 @@ import { OrganizationLevel } from 'src/components/types/Organization';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
-import type { FormSelectTableOption } from '../types/Form';
 import type { Logger } from '../types/Logger';
 import type { OrganizationTeam } from '../types/Organization';
 import type { TeamPostApiResponse } from '../types/ApiTeam';
+import type { FormSelectTableOption } from '../types/Form';
 
 export default defineComponent({
   name: 'FormSelectTeam',
