@@ -55,6 +55,7 @@ export interface ConfigGlobal {
   urlApiOrganizations: string;
   urlApiLoginFacebook: string;
   urlApiMerchandise: string;
+  urlApiPayuCreateOrder: string;
   urlAppDataPrivacyPolicy: string;
   urlApiRefresh: string;
   urlApiRegister: string;
