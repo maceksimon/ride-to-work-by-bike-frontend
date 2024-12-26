@@ -33,7 +33,7 @@ const sectionSelectors = [
   selectorSummaryMerch,
   selectorSummaryDelivery,
 ];
-
+// content selectors for iteration
 const contentSelectors = [
   selectorSummaryPersonalEmail,
   selectorSummaryPersonalName,
@@ -127,17 +127,19 @@ function coreTests() {
           registerChallengeStore,
         );
         cy.fixture('loginResponse.json').then((loginData) => {
-          // Personal details section
+          // check personal details - email
           cy.dataCy(selectorSummaryPersonalEmail).should(
             'contain',
             loginData.user.email,
           );
         });
         cy.fixture('formPersonalDetails.json').then((formPersonalDetails) => {
+          // check personal details - name
           cy.dataCy(selectorSummaryPersonalName).should(
             'contain',
             `${formPersonalDetails.firstName} ${formPersonalDetails.lastName}`,
           );
+          // check personal details - gender
           cy.dataCy(selectorSummaryPersonalGender)
             .should('be.visible')
             .and(
@@ -148,6 +150,7 @@ function coreTests() {
             );
         });
         cy.fixture('formFieldCompany.json').then((formFieldCompany) => {
+          // check participation - organization
           cy.dataCy(selectorSummaryParticipationOrganization).should(
             'contain',
             formFieldCompany.results[0].name,
@@ -155,6 +158,7 @@ function coreTests() {
         });
         cy.fixture('apiGetSubsidiariesResponse.json').then(
           (apiGetSubsidiariesResponse) => {
+            // check delivery - address
             cy.dataCy(selectorSummaryDeliveryAddress).should(
               'contain',
               apiGetSubsidiariesResponse.results[0].address.street,
@@ -163,10 +167,12 @@ function coreTests() {
         );
         cy.fixture('apiGetMerchandiseResponse.json').then(
           (apiGetMerchandiseResponse) => {
+            // check merchandise - label
             cy.dataCy(selectorSummaryMerchLabel).should(
               'contain',
               apiGetMerchandiseResponse.results[0].name,
             );
+            // check merchandise - description
             cy.dataCy(selectorSummaryMerchDescription).should(
               'contain',
               apiGetMerchandiseResponse.results[0].description,
