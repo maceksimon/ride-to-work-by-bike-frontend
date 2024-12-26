@@ -25,40 +25,69 @@ export default defineComponent({
     const registerChallengeStore = useRegisterChallengeStore();
     const loginStore = useLoginStore();
 
+    const email = computed(() => loginStore.getUserEmail);
     const personalDetails = computed(
       () => registerChallengeStore.getPersonalDetails,
     );
-    const email = computed(() => loginStore.getUserEmail);
+    const organizationLabel = computed(
+      () => registerChallengeStore.getSelectedOrganizationLabel,
+    );
+    const subsidiaryLabel = computed(
+      () => registerChallengeStore.getSelectedSubsidiaryLabel,
+    );
+    const teamLabel = computed(
+      () => registerChallengeStore.getSelectedTeamLabel,
+    );
+    const merchandiseLabel = computed(
+      () => registerChallengeStore.getSelectedMerchandiseLabel,
+    );
+    const merchandiseDescription = computed(
+      () => registerChallengeStore.getSelectedMerchandiseDescription,
+    );
+    const subsidiaryAddress = computed(
+      () => registerChallengeStore.getSelectedSubsidiaryAddress,
+    );
 
     return {
       personalDetails,
       email,
+      organizationLabel,
+      subsidiaryLabel,
+      teamLabel,
+      merchandiseLabel,
+      merchandiseDescription,
+      subsidiaryAddress,
     };
   },
 });
 </script>
 
 <template>
-  <div>
+  <div class="text-grey-10" data-cy="register-challenge-summary">
     <!-- Personal Details Section -->
-    <div class="q-mb-lg">
-      <h3 class="text-body1 text-weight-bold q-my-none">
+    <div class="q-mb-lg" data-cy="summary-personal">
+      <h3 class="text-body1 text-weight-bold text-grey-10 q-my-none">
         {{ $t('register.challenge.titleStepPersonalDetails') }}
       </h3>
       <div>
         <!-- Email -->
-        <div v-if="email" class="q-mt-sm">
+        <div v-if="email" class="q-mt-sm" data-cy="summary-personal-email">
           {{ email }}
         </div>
         <!-- Full name -->
         <div
           v-if="personalDetails.firstName || personalDetails.lastName"
           class="q-mt-sm"
+          data-cy="summary-personal-name"
         >
           {{ personalDetails.firstName }} {{ personalDetails.lastName }}
         </div>
         <!-- Gender -->
-        <div v-if="personalDetails.gender" class="q-mt-sm">
+        <div
+          v-if="personalDetails.gender"
+          class="q-mt-sm"
+          data-cy="summary-personal-gender"
+        >
           {{ $t('register.challenge.labelGender') }}:
           {{ $t(`register.challenge.textGender.${personalDetails.gender}`) }}
         </div>
@@ -66,32 +95,64 @@ export default defineComponent({
     </div>
 
     <!-- Participation Section -->
-    <div class="q-mb-lg">
+    <div class="q-mb-lg" data-cy="summary-participation">
       <h3 class="text-body1 text-weight-bold q-my-none">
         {{ $t('register.challenge.titleStepParticipation') }}
       </h3>
-      <div class="q-pl-md">
-        <!-- Content will be added later -->
+      <div>
+        <div
+          v-if="teamLabel"
+          class="q-mt-sm"
+          data-cy="summary-participation-team"
+        >
+          {{ teamLabel }}
+        </div>
+        <div
+          v-if="organizationLabel"
+          class="q-mt-sm"
+          data-cy="summary-participation-organization"
+        >
+          {{ organizationLabel }}
+        </div>
       </div>
     </div>
 
     <!-- Merch Section -->
-    <div class="q-mb-lg">
+    <div class="q-mb-lg" data-cy="summary-merch">
       <h3 class="text-body1 text-weight-bold q-my-none">
         {{ $t('register.challenge.titleStepMerch') }}
       </h3>
-      <div class="q-pl-md">
-        <!-- Content will be added later -->
+      <div>
+        <div
+          v-if="merchandiseLabel"
+          class="q-mt-sm"
+          data-cy="summary-merch-label"
+        >
+          {{ merchandiseLabel }}
+        </div>
+        <div
+          v-if="merchandiseDescription"
+          class="q-mt-sm"
+          data-cy="summary-merch-description"
+        >
+          {{ merchandiseDescription }}
+        </div>
       </div>
     </div>
 
     <!-- Delivery Address Section -->
-    <div class="q-mb-lg">
+    <div class="q-mb-lg" data-cy="summary-delivery">
       <h3 class="text-body1 text-weight-bold q-my-none">
         {{ $t('register.challenge.titleDeliveryAddress') }}
       </h3>
-      <div class="q-pl-md">
-        <!-- Content will be added later -->
+      <div>
+        <div
+          v-if="subsidiaryAddress"
+          class="q-mt-sm"
+          data-cy="summary-delivery-address"
+        >
+          {{ subsidiaryAddress }}
+        </div>
       </div>
     </div>
   </div>

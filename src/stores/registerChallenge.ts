@@ -1,6 +1,9 @@
 // libraries
 import { defineStore } from 'pinia';
 
+// adapters
+import { subsidiaryAdapter } from 'src/adapters/subsidiaryAdapter';
+
 // composables
 import { useApiGetSubsidiaries } from 'src/composables/useApiGetSubsidiaries';
 import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
@@ -80,6 +83,60 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getMerchandiseItems: (state): MerchandiseItem[] => state.merchandiseItems,
     getMerchandiseCards: (state): Record<Gender, MerchandiseCard[]> =>
       state.merchandiseCards,
+    getSelectedOrganizationLabel: (state): string => {
+      if (state.organizationId) {
+        const organization = state.organizations.find(
+          (org) => org.id === state.organizationId,
+        );
+        return organization?.name || '';
+      }
+      return '';
+    },
+    getSelectedSubsidiaryLabel: (state): string => {
+      if (state.subsidiaryId) {
+        const subsidiary = state.subsidiaries.find(
+          (sub) => sub.id === state.subsidiaryId,
+        );
+        return subsidiary?.title || '';
+      }
+      return '';
+    },
+    getSelectedTeamLabel: (state): string => {
+      if (state.teamId) {
+        const team = state.teams.find((t) => t.id === state.teamId);
+        return team?.name || '';
+      }
+      return '';
+    },
+    getSelectedMerchandiseLabel: (state): string => {
+      if (state.merchId) {
+        const merchandise = state.merchandiseItems.find(
+          (m) => m.id === state.merchId,
+        );
+        return merchandise?.label || '';
+      }
+      return '';
+    },
+    getSelectedMerchandiseDescription: (state): string => {
+      if (state.merchId) {
+        const merchandise = state.merchandiseItems.find(
+          (m) => m.id === state.merchId,
+        );
+        return merchandise?.description || '';
+      }
+      return '';
+    },
+    getSelectedSubsidiaryAddress: (state): string => {
+      if (state.subsidiaryId) {
+        const subsidiary = state.subsidiaries.find(
+          (sub) => sub.id === state.subsidiaryId,
+        );
+        return subsidiaryAdapter.fromFormCompanyAddressFieldsToString(
+          subsidiary?.address,
+        );
+      }
+      return '';
+    },
   },
 
   actions: {

@@ -1512,3 +1512,52 @@ Cypress.Commands.add(
     cy.get('.q-menu').should('be.visible').find('.q-item').first().click();
   },
 );
+
+/**
+ * Initiate state for register challenge summary
+ */
+Cypress.Commands.add(
+  'initiateRegisterChallengeSummaryState',
+  (loginStore, registerChallengeStore) => {
+    cy.fixture('loginResponse.json').then((loginData) => {
+      loginStore.setUser(loginData.user);
+    });
+    cy.fixture('formPersonalDetails.json').then((formPersonalDetails) => {
+      registerChallengeStore.setPersonalDetails({
+        firstName: formPersonalDetails.firstName,
+        lastName: formPersonalDetails.lastName,
+        newsletter: [],
+        nickname: formPersonalDetails.nickname,
+        gender: formPersonalDetails.gender,
+        terms: true,
+      });
+    });
+    cy.fixture('formFieldCompany.json').then((formFieldCompany) => {
+      registerChallengeStore.setOrganizations(formFieldCompany.results);
+      registerChallengeStore.setOrganizationId(formFieldCompany.results[0].id);
+    });
+    cy.fixture('apiGetSubsidiariesResponse.json').then(
+      (apiGetSubsidiariesResponse) => {
+        registerChallengeStore.setSubsidiaries(
+          apiGetSubsidiariesResponse.results,
+        );
+        registerChallengeStore.setSubsidiaryId(
+          apiGetSubsidiariesResponse.results[0].id,
+        );
+      },
+    );
+    cy.fixture('apiGetTeamsResponse.json').then((apiGetTeamsResponse) => {
+      registerChallengeStore.setTeams(apiGetTeamsResponse.results);
+      registerChallengeStore.setTeamId(apiGetTeamsResponse.results[0].id);
+    });
+    cy.wrap(registerChallengeStore.loadMerchandiseToStore(null));
+    cy.waitForMerchandiseApi();
+    cy.fixture('apiGetMerchandiseResponse.json').then(
+      (apiGetMerchandiseResponse) => {
+        registerChallengeStore.setMerchId(
+          apiGetMerchandiseResponse.results[0].id,
+        );
+      },
+    );
+  },
+);

@@ -39,4 +39,27 @@ export const subsidiaryAdapter = {
       department: apiData.address.recipient,
     };
   },
+
+  /**
+   * Get a formatted address string from the provided address object.
+   * @param {FormCompanyAddressFields | undefined} address - The address object.
+   * @returns {string} - Formatted string representation of the address or
+   * empty string.
+   */
+  fromFormCompanyAddressFieldsToString(
+    address: FormCompanyAddressFields | undefined,
+  ): string {
+    if (!address) return '';
+
+    const parts = [
+      address.street,
+      address.houseNumber,
+      address.city,
+      address.zip,
+      address.cityChallenge,
+      address.department,
+    ].filter(Boolean);
+
+    return parts.join(', ');
+  },
 };

@@ -28,6 +28,9 @@
 import { QForm } from 'quasar';
 import { computed, defineComponent, inject, onMounted, ref, watch } from 'vue';
 
+// adapters
+import { subsidiaryAdapter } from 'src/adapters/subsidiaryAdapter';
+
 // components
 import DialogDefault from 'src/components/global/DialogDefault.vue';
 import FormAddSubsidiary from 'src/components/form/FormAddSubsidiary.vue';
@@ -113,35 +116,14 @@ export default defineComponent({
 
     const options = computed(() =>
       store.getSubsidiaries?.map((subsidiary) => ({
-        label: getAddressString(subsidiary.address),
+        label: subsidiaryAdapter.fromFormCompanyAddressFieldsToString(
+          subsidiary.address,
+        ),
         value: subsidiary.id,
       })),
     );
 
     const { isFilled } = useValidation();
-
-    /**
-     * Get a formatted address string from the provided address object.
-     * @param {FormCompanyAddressFields | undefined} address - The address object.
-     * @returns {string} - Formatted string representation of the address or
-     * empty string.
-     */
-    const getAddressString = (
-      address: FormCompanyAddressFields | undefined,
-    ): string => {
-      if (!address) return '';
-
-      const parts = [
-        address.street,
-        address.houseNumber,
-        address.city,
-        address.zip,
-        address.cityChallenge,
-        address.department,
-      ].filter(Boolean);
-
-      return parts.join(', ');
-    };
 
     const { isDialogOpen, onClose } = useDialog();
 
