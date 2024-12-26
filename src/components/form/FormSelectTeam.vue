@@ -16,7 +16,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, ref, watch } from 'vue';
+import { computed, defineComponent, inject, watch } from 'vue';
 
 // components
 import FormFieldSelectTable from './FormFieldSelectTable.vue';
@@ -43,9 +43,6 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
-    const formFieldSelectTableRef = ref<typeof FormFieldSelectTable | null>(
-      null,
-    );
 
     const registerChallengeStore = useRegisterChallengeStore();
     const { mapTeamToOption } = useApiGetTeams(logger);
@@ -100,7 +97,6 @@ export default defineComponent({
     };
 
     return {
-      formFieldSelectTableRef,
       isLoading,
       options,
       team,
@@ -119,7 +115,6 @@ export default defineComponent({
     </div>
     <!-- Select table -->
     <form-field-select-table
-      ref="formFieldSelectTableRef"
       v-model="team"
       :organization-level="OrganizationLevel.team"
       :options="options"
