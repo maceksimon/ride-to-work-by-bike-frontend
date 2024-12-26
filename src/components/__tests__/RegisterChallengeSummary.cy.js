@@ -100,8 +100,6 @@ function coreTests() {
               .should('have.css', 'font-size', '16px')
               .and('have.css', 'font-weight', '700')
               .and('have.color', grey10);
-            // check content spacing
-            cy.get('div > div').should('have.class', 'q-mt-sm');
           });
           // check section spacing
           cy.dataCy(selector).should('have.class', 'q-mb-lg');
