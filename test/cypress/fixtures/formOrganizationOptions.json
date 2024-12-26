@@ -67,6 +67,17 @@
             ]
           }
         ]
+      },
+      {
+        "id": 805,
+        "address": {
+          "street": "Krkonošská",
+          "street_number": "177",
+          "recipient": "Vrchlabí",
+          "psc": "54301",
+          "city": "Vrchlabí"
+        },
+        "teams": []
       }
     ],
     "description": "Leading software solutions provider"
