@@ -126,9 +126,7 @@ export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
         label: team.name,
         value: team.id,
         members: team.members,
-        maxMembers: challengeStore.getMaxTeamMembers
-          ? challengeStore.getMaxTeamMembers
-          : rideToWorkByBikeConfig.defaultMaxTeamMembers,
+        maxMembers: challengeStore.getMaxTeamMembers,
       };
     });
   };

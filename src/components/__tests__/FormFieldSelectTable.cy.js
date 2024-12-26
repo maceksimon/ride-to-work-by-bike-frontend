@@ -11,6 +11,7 @@ import {
 } from 'src/components/types/Organization';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { vModelAdapter } from 'app/test/cypress/utils';
+import { useChallengeStore } from 'src/stores/challenge';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 import { useApiGetTeams } from 'src/composables/useApiGetTeams';
 
@@ -57,13 +58,19 @@ describe('<FormFieldSelectTable>', () => {
     );
     cy.fixture('apiGetTeamsResponse').then((apiGetTeamsResponse) => {
       cy.fixture('apiGetTeamsResponseNext').then((apiGetTeamsResponseNext) => {
-        const teams = [
-          ...apiGetTeamsResponse.results,
-          ...apiGetTeamsResponseNext.results,
-        ];
-        // map teams to options
-        const { mapTeamsToOptions } = useApiGetTeams();
-        optionsTeams = mapTeamsToOptions(teams);
+        cy.fixture('apiGetThisCampaign').then((apiGetThisCampaign) => {
+          console.log(apiGetThisCampaign);
+          const challengeStore = useChallengeStore();
+          challengeStore.maxTeamMembers =
+            apiGetThisCampaign['results'][0]['max_team_members'];
+          const teams = [
+            ...apiGetTeamsResponse.results,
+            ...apiGetTeamsResponseNext.results,
+          ];
+          // map teams to options
+          const { mapTeamsToOptions } = useApiGetTeams();
+          optionsTeams = mapTeamsToOptions(teams);
+        });
       });
     });
     // set common organizationId from fixture
@@ -72,17 +79,6 @@ describe('<FormFieldSelectTable>', () => {
         organizationId = formFieldCompanyCreateResponse.id;
       },
     );
-    cy.fixture('apiGetTeamsResponse').then((apiGetTeamsResponse) => {
-      cy.fixture('apiGetTeamsResponseNext').then((apiGetTeamsResponseNext) => {
-        const teams = [
-          ...apiGetTeamsResponse.results,
-          ...apiGetTeamsResponseNext.results,
-        ];
-        // map teams to options
-        const { mapTeamsToOptions } = useApiGetTeams();
-        optionsTeams = mapTeamsToOptions(teams);
-      });
-    });
     // set common subsidiaryId from fixture
     cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
       subsidiaryId = formOrganizationOptions[0].subsidiaries[0].id;

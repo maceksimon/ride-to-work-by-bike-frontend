@@ -38,7 +38,6 @@ export interface ConfigGlobal {
   challengeStartDate: string;
   challengeLoggingWindowDays: number;
   defaultDistanceZero: string;
-  defaultMaxTeamMembers: number;
   entryFeePaymentMin: string;
   entryFeePaymentMax: string;
   entryFeePaymentOptions: string;

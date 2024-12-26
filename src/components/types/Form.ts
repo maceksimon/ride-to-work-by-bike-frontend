@@ -14,7 +14,7 @@ export type FormOption = {
 
 export interface FormSelectTableOption extends FormOption {
   members?: OrganizationMember[];
-  maxMembers?: number;
+  maxMembers: number | null;
 }
 
 export type FormSelectOption = {
