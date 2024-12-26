@@ -122,6 +122,8 @@ export const useApiGetTeams = (logger: Logger | null): useApiGetTeamsReturn => {
     return {
       label: team.name,
       value: team.id,
+      members: team.members,
+      maxMembers: challengeStore.getMaxTeamMembers,
     };
   };
 
