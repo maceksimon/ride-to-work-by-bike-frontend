@@ -3,7 +3,7 @@
  * RegisterChallengeSummary Component
  *
  * @description A summary component that displays the registration details.
- * Draws data from `loginStore` and `registerChallengeStore`.
+ * Renders data from the `loginStore` and `registerChallengeStore`.
  * Used in `RegisterChallengePage` as the last step to review entered data.
  *
  * @example
