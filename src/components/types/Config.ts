@@ -41,6 +41,7 @@ export interface ConfigGlobal {
   entryFeePaymentMin: string;
   entryFeePaymentMax: string;
   entryFeePaymentOptions: string;
+  iDontWantMerchandiseItemCode: string;
   notifyMessagePosition: string;
   apiBase: string;
   apiBaseRtwbbFeed: string;

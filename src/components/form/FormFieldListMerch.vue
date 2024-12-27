@@ -53,6 +53,8 @@ import { i18n } from '../../boot/i18n';
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // enums
 import { Gender } from '../types/Profile';
 
@@ -98,7 +100,7 @@ export default defineComponent({
 
     // load merchandise on mount
     onMounted(async () => {
-      await registerChallengeStore.loadMerchandiseToStore(logger);
+      registerChallengeStore.loadMerchandiseToStore(logger);
     });
 
     const merchandiseItems = computed(
@@ -265,7 +267,12 @@ export default defineComponent({
      * "I don't want merch" checkbox widget
      */
     const onCheckboxUpdate = function (val: boolean): void {
-      if (!val) {
+      if (val) {
+        registerChallengeStore.loadFilteredMerchandiseToStore(
+          logger,
+          rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
+        );
+      } else {
         nextTick(() => {
           tabsMerchRef.value?.$el.scrollIntoView({
             behavior: 'smooth',

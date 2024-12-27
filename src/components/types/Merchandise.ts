@@ -65,3 +65,9 @@ export interface MerchandiseItem {
   description: string;
   images: Image[];
 }
+
+export type UseApiGetFilteredMerchandiseReturn = {
+  merchandise: Ref<Merchandise[]>;
+  isLoading: Ref<boolean>;
+  loadFilteredMerchandise: (code: string) => Promise<void>;
+};

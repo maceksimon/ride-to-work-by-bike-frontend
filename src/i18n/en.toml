@@ -70,6 +70,11 @@ apiMessageError = "Fetching merchandise failed."
 apiMessageErrorWithMessage = "Fetching merchandise failed. Error: {error}"
 apiMessageSuccess = "Merchandise fetched successfully."
 
+[getFilteredMerchandise]
+apiMessageError = "Fetching filtered merchandise by code failed."
+apiMessageErrorWithMessage = "Fetching filtered merchandise by code failed. Error: {error}"
+apiMessageSuccess = "Filtered Merchandise by code fetched successfully."
+
 [getSubsidiaries]
 apiMessageError = "Fetching subsidiaries failed."
 apiMessageErrorWithMessage = "Fetching subsidiaries failed. Error: {error}"

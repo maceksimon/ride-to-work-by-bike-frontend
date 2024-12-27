@@ -72,6 +72,10 @@ entryFeePaymentMin = "390"
 entryFeePaymentMax = "2000"
 entryFeePaymentOptions = "500,700"
 
+# Merchandise
+iDontWantMerchandiseItemCode = "nic"
+
+
 # API CONFIGURATION
 
 apiBase = "https://test.dopracenakole.cz/rest/"
