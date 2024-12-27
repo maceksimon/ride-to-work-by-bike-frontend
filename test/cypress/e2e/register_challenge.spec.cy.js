@@ -1011,50 +1011,77 @@ function checkActiveIcon(activeStep) {
   steps.forEach((step) => {
     let expectedSrc;
     if (step === activeStep) {
-      expectedSrc =
-        step === 1
-          ? activeIconImgSrcStepper1
-          : step === 2
-            ? activeIconImgSrcStepper2
-            : step === 3
-              ? activeIconImgSrcStepper3
-              : step === 4
-                ? activeIconImgSrcStepper4
-                : step === 5
-                  ? activeIconImgSrcStepper5
-                  : step === 6
-                    ? activeIconImgSrcStepper6
-                    : activeIconImgSrcStepper7;
+      switch (step) {
+        case 1:
+          expectedSrc = activeIconImgSrcStepper1;
+          break;
+        case 2:
+          expectedSrc = activeIconImgSrcStepper2;
+          break;
+        case 3:
+          expectedSrc = activeIconImgSrcStepper3;
+          break;
+        case 4:
+          expectedSrc = activeIconImgSrcStepper4;
+          break;
+        case 5:
+          expectedSrc = activeIconImgSrcStepper5;
+          break;
+        case 6:
+          expectedSrc = activeIconImgSrcStepper6;
+          break;
+        case 7:
+          expectedSrc = activeIconImgSrcStepper7;
+          break;
+      }
     } else if (step < activeStep) {
-      expectedSrc =
-        step === 1
-          ? doneIconImgSrcStepper1
-          : step === 2
-            ? doneIconImgSrcStepper2
-            : step === 3
-              ? doneIconImgSrcStepper3
-              : step === 4
-                ? doneIconImgSrcStepper4
-                : step === 5
-                  ? doneIconImgSrcStepper5
-                  : step === 6
-                    ? doneIconImgSrcStepper6
-                    : doneIconImgSrcStepper7;
+      switch (step) {
+        case 1:
+          expectedSrc = doneIconImgSrcStepper1;
+          break;
+        case 2:
+          expectedSrc = doneIconImgSrcStepper2;
+          break;
+        case 3:
+          expectedSrc = doneIconImgSrcStepper3;
+          break;
+        case 4:
+          expectedSrc = doneIconImgSrcStepper4;
+          break;
+        case 5:
+          expectedSrc = doneIconImgSrcStepper5;
+          break;
+        case 6:
+          expectedSrc = doneIconImgSrcStepper6;
+          break;
+        case 7:
+          expectedSrc = doneIconImgSrcStepper7;
+          break;
+      }
     } else {
-      expectedSrc =
-        step === 1
-          ? iconImgSrcStepper1
-          : step === 2
-            ? iconImgSrcStepper2
-            : step === 3
-              ? iconImgSrcStepper3
-              : step === 4
-                ? iconImgSrcStepper4
-                : step === 5
-                  ? iconImgSrcStepper5
-                  : step === 6
-                    ? iconImgSrcStepper6
-                    : iconImgSrcStepper7;
+      switch (step) {
+        case 1:
+          expectedSrc = iconImgSrcStepper1;
+          break;
+        case 2:
+          expectedSrc = iconImgSrcStepper2;
+          break;
+        case 3:
+          expectedSrc = iconImgSrcStepper3;
+          break;
+        case 4:
+          expectedSrc = iconImgSrcStepper4;
+          break;
+        case 5:
+          expectedSrc = iconImgSrcStepper5;
+          break;
+        case 6:
+          expectedSrc = iconImgSrcStepper6;
+          break;
+        case 7:
+          expectedSrc = iconImgSrcStepper7;
+          break;
+      }
     }
 
     cy.dataCy(`step-${step}`)
