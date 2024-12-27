@@ -266,12 +266,25 @@ export default defineComponent({
      * Scroll to merch tabs if you uncheck
      * "I don't want merch" checkbox widget
      */
+    let iDontWantMerchandiseCachedId;
     const onCheckboxUpdate = function (val: boolean): void {
       if (val) {
-        registerChallengeStore.loadFilteredMerchandiseToStore(
-          logger,
-          rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
-        );
+        if (!iDontWantMerchandiseCachedId) {
+          logger?.info("Get 'I don't want any merchandise' ID from the API.");
+          registerChallengeStore.loadFilteredMerchandiseToStore(
+            logger,
+            rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
+          );
+          iDontWantMerchandiseCachedId = registerChallengeStore.getMerchId;
+          logger?.debug(
+            `Save 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> into cache.`,
+          );
+        } else {
+          logger?.debug(
+            `Use 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> from the cache.`,
+          );
+          registerChallengeStore.merchId = iDontWantMerchandiseCachedId;
+        }
       } else {
         nextTick(() => {
           tabsMerchRef.value?.$el.scrollIntoView({
