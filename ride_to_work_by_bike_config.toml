@@ -85,6 +85,7 @@ apiVersion = "1.0"
 apiDefaultLang = "cs"
 
 urlApiDiscountCoupon = "discount-coupon/"
+urlApiHasOrganizationAdmin = "has-organization-admin/"
 urlApiHasUserVerifiedEmail = "auth/registration/has-user-verified-email-address/"
 urlApiLogin = "auth/login/"
 urlApiLoginGoogle = "auth/google/login/"

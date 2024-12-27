@@ -1,0 +1,84 @@
+// libraries
+import { ref } from 'vue';
+
+// composables
+import { useApi } from './useApi';
+
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
+// stores
+import { useLoginStore } from '../stores/login';
+import { useRegisterChallengeStore } from '../stores/registerChallenge';
+
+// types
+import type { Logger } from '../components/types/Logger';
+import type {
+  OrganizationAdminResponse,
+  UseApiGetOrganizationAdminReturn,
+} from '../components/types/apiOrganization';
+
+// utils
+import { requestDefaultHeader, requestTokenHeader } from '../utils';
+
+/**
+ * Get organization admin status composable
+ * Used for checking if an organization has an administrator
+ * @param {Logger | null} logger
+ * @returns {UseApiGetOrganizationAdminReturn}
+ */
+export const useApiGetOrganizationAdmin = (
+  logger: Logger | null,
+): UseApiGetOrganizationAdminReturn => {
+  const isLoading = ref<boolean>(false);
+  const hasOrganizationAdmin = ref<boolean | null>(null);
+  const loginStore = useLoginStore();
+  const registerChallengeStore = useRegisterChallengeStore();
+  const { apiFetch } = useApi();
+
+  /**
+   * Check if organization has an administrator
+   * Uses organizationId from registerChallengeStore
+   * @returns {Promise<void>}
+   */
+  const checkOrganizationAdmin = async (): Promise<void> => {
+    const organizationId = registerChallengeStore.getOrganizationId;
+    if (!organizationId) {
+      logger?.warn('Cannot check organization admin: no organization ID set');
+      return;
+    }
+
+    logger?.info(
+      `Check if organization <${organizationId}> has an administrator`,
+    );
+    isLoading.value = true;
+
+    // append access token into HTTP header
+    const requestTokenHeader_ = { ...requestTokenHeader };
+    requestTokenHeader_.Authorization += loginStore.getAccessToken;
+
+    const { data } = await apiFetch<OrganizationAdminResponse>({
+      endpoint: `${rideToWorkByBikeConfig.urlApiHasOrganizationAdmin}${organizationId}`,
+      method: 'get',
+      translationKey: 'getOrganizationAdmin',
+      showSuccessMessage: false,
+      headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
+      logger,
+    });
+
+    if (data) {
+      hasOrganizationAdmin.value = data.has_organization_admin;
+      logger?.debug(
+        `Organization <${organizationId}> has administrator <${hasOrganizationAdmin.value}>.`,
+      );
+    }
+
+    isLoading.value = false;
+  };
+
+  return {
+    isLoading,
+    hasOrganizationAdmin,
+    checkOrganizationAdmin,
+  };
+};

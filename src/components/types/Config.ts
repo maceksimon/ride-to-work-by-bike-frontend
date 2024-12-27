@@ -48,6 +48,7 @@ export interface ConfigGlobal {
   apiVersion: string;
   apiDefaultLang: string;
   urlApiDiscountCoupon: string;
+  urlApiHasOrganizationAdmin: string;
   urlApiHasUserVerifiedEmail: string;
   urlApiLogin: string;
   urlApiLoginGoogle: string;
