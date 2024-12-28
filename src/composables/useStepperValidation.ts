@@ -1,5 +1,12 @@
 // libraries
 import { QForm, QStepper } from 'quasar';
+import { useRouter } from 'vue-router';
+
+// enums
+import { RegisterChallengeStep } from '../components/enums/RegisterChallenge';
+
+// stores
+import { useRegisterChallengeStore } from '../stores/registerChallenge';
 
 // types
 import type { Ref } from 'vue';
@@ -30,6 +37,7 @@ export const useStepperValidation = ({
   onBack: () => void;
   onContinue: () => Promise<void>;
 } => {
+  const registerChallengeStore = useRegisterChallengeStore();
   /**
    * Function to navigate forward in the stepper.
    * For each step, it checks if the appropriate form is valid.
@@ -48,6 +56,9 @@ export const useStepperValidation = ({
         const isValidPersonalDetails: boolean =
           await stepPersonalDetailsRef.value.validate();
         if (isValidPersonalDetails) {
+          await registerChallengeStore.submitStep(
+            RegisterChallengeStep.personalDetails,
+          );
           stepperRef.value.next();
         } else {
           stepPersonalDetailsRef.value.$el.scrollIntoView({
@@ -60,6 +71,9 @@ export const useStepperValidation = ({
         if (!stepPaymentRef.value) return;
         const isValidPayment: boolean = await stepPaymentRef.value.validate();
         if (isValidPayment) {
+          await registerChallengeStore.submitStep(
+            RegisterChallengeStep.payment,
+          );
           stepperRef.value.next();
         } else {
           stepPaymentRef.value.$el.scrollIntoView({ behavior: 'smooth' });
@@ -71,6 +85,7 @@ export const useStepperValidation = ({
         const isValidParticipation: boolean =
           await stepParticipationRef.value.validate();
         if (isValidParticipation) {
+          // no API submission needed
           stepperRef.value.next();
         } else {
           stepParticipationRef.value.$el.scrollIntoView({ behavior: 'smooth' });
@@ -81,6 +96,7 @@ export const useStepperValidation = ({
         if (!stepCompanyRef.value) return;
         const isValidCompany: boolean = await stepCompanyRef.value.validate();
         if (isValidCompany) {
+          // no API submission needed
           stepperRef.value.next();
         } else {
           stepCompanyRef.value.$el.scrollIntoView({ behavior: 'smooth' });
@@ -91,6 +107,7 @@ export const useStepperValidation = ({
         if (!stepTeamRef.value) return;
         const isValidTeam: boolean = await stepTeamRef.value.validate();
         if (isValidTeam) {
+          await registerChallengeStore.submitStep(RegisterChallengeStep.team);
           stepperRef.value.next();
         } else {
           stepTeamRef.value.$el.scrollIntoView({ behavior: 'smooth' });
@@ -101,10 +118,17 @@ export const useStepperValidation = ({
         if (!stepMerchRef.value) return;
         const isValidMerch: boolean = await stepMerchRef.value.validate();
         if (isValidMerch) {
+          await registerChallengeStore.submitStep(RegisterChallengeStep.merch);
           stepperRef.value.next();
         } else {
           stepMerchRef.value.$el.scrollIntoView({ behavior: 'smooth' });
         }
+        break;
+      // validate/handle summary step
+      case 7:
+        // redirect to homepage
+        const router = useRouter();
+        router.push({ name: 'home' });
         break;
       default:
         break;

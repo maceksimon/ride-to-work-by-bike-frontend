@@ -1,4 +1,5 @@
-export type PersonalDetails = {
+// subset of personal details that can be sent in POST requests
+export type CorePersonalDetails = {
   first_name: string;
   last_name: string;
   nickname: string;
@@ -12,9 +13,13 @@ export type PersonalDetails = {
   personal_data_opt_in: boolean;
   discount_coupon: string;
   payment_subject: string;
+  payment_amount: string;
+};
+
+// all personal details including server-side fields
+export type PersonalDetails = CorePersonalDetails & {
   payment_type: string;
   payment_status: string;
-  payment_amount: string;
 };
 
 export type RegisterChallengeResult = {
@@ -30,4 +35,18 @@ export type RegisterChallengeResponse = {
   next: string | null;
   previous: string | null;
   results: RegisterChallengeResult[];
+};
+
+export type RegisterChallengePostPayload = {
+  personal_details?: Partial<CorePersonalDetails>;
+  team_id?: number | null;
+  t_shirt_size_id?: number | null;
+};
+
+export type RegisterChallengePostResponse = {
+  personal_details?: Partial<PersonalDetails>;
+  team_id?: number;
+  organization_id?: number;
+  subsidiary_id?: number;
+  t_shirt_size_id?: number;
 };

@@ -1,6 +1,3 @@
-// enums
-import { PaymentSubject } from '../enums/Payment';
-
 // types
 import type { NewsletterType } from './Newsletter';
 import type { Gender } from './Profile';
@@ -35,11 +32,10 @@ export interface RegisterChallengePersonalDetailsForm
   gender: Gender | null;
   lastName: string;
   newsletter: NewsletterType[];
-  paymentSubject: PaymentSubject;
 }
 
 export interface RegisterChallengePostRequest {
   personalDetails: RegisterChallengePersonalDetailsApi;
   newsletter: NewsletterType[];
-  teamId?: number;
+  teamId?: number | null;
 }

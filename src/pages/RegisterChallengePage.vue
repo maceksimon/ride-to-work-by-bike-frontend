@@ -23,7 +23,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { QForm, QStepper } from 'quasar';
 
 // config
@@ -51,9 +51,6 @@ import { OrganizationType } from 'src/components/types/Organization';
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
-// types
-import { Logger } from 'src/components/types/Logger';
-
 export default defineComponent({
   name: 'RegisterChallengePage',
   components: {
@@ -69,7 +66,6 @@ export default defineComponent({
     TopBarCountdown,
   },
   setup() {
-    const logger = inject('vuejs3-logger') as Logger | null;
     const challengeMonth = rideToWorkByBikeConfig.challengeMonth;
     const containerFormWidth = rideToWorkByBikeConfig.containerFormWidth;
     const doneIcon = `img:${
@@ -135,7 +131,7 @@ export default defineComponent({
     const registerChallengeStore = useRegisterChallengeStore();
 
     onMounted(() => {
-      registerChallengeStore.loadRegisterChallengeToStore(logger);
+      registerChallengeStore.loadRegisterChallengeToStore();
     });
 
     const organizationType = computed({
