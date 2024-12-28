@@ -24,11 +24,20 @@
 
 // libraries
 import { colors, Notify } from 'quasar';
-import { computed, defineComponent, inject, reactive, ref, watch } from 'vue';
+import {
+  computed,
+  defineComponent,
+  inject,
+  onMounted,
+  reactive,
+  ref,
+  watch,
+} from 'vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
 import { useFormatPrice } from '../../composables/useFormatPrice';
+import { useApiGetHasOrganizationAdmin } from '../../composables/useApiGetHasOrganizationAdmin';
 
 // components
 import FormFieldCompany from '../global/FormFieldCompany.vue';
@@ -162,13 +171,41 @@ export default defineComponent({
     const donationAmount = ref<number>(0);
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
+
+    const registerChallengeStore = useRegisterChallengeStore();
+
+    // init organization admin status
+    const { hasOrganizationAdmin, checkOrganizationAdmin } =
+      useApiGetHasOrganizationAdmin(logger);
     //  Model for 'Entry fee payment' radio button element
     const selectedPaymentSubject = computed<PaymentSubject>({
       get: (): PaymentSubject => registerChallengeStore.getPaymentSubject,
       set: (value: PaymentSubject): void =>
         registerChallengeStore.setPaymentSubject(value),
     });
-    const selectedCompany = ref<string>('');
+    // selected company links directly to store organizationId
+    const selectedCompany = computed<number | null>({
+      get: (): number | null =>
+        registerChallengeStore.getOrganizationId
+          ? registerChallengeStore.getOrganizationId
+          : null,
+      set: (value: number | null) =>
+        registerChallengeStore.setOrganizationId(value),
+    });
+    // watch selected company and check if organization has an administrator
+    watch(selectedCompany, (newVal, oldVal) => {
+      logger?.debug(
+        `Selected company changed from <${oldVal}> to <${newVal}>.`,
+      );
+      if (newVal) {
+        checkOrganizationAdmin();
+      }
+    });
+    onMounted(() => {
+      if (selectedCompany.value) {
+        checkOrganizationAdmin();
+      }
+    });
     const isRegistrationCoordinator = ref<boolean>(false);
     const formRegisterCoordinator = reactive({
       jobTitle: '',
@@ -177,7 +214,6 @@ export default defineComponent({
       terms: false,
     });
 
-    const registerChallengeStore = useRegisterChallengeStore();
     watch(selectedPaymentSubject, (newVal, oldVal) => {
       logger?.debug(
         `Selected payment subject changed from <${oldVal}> to <${newVal}>`,
@@ -493,9 +529,16 @@ export default defineComponent({
     };
 
     const showOrganizationAdminElement = () => {
-      const show = selectedPaymentSubject.value === PaymentSubject.company;
+      const isCorrectPaymentSubject = [
+        PaymentSubject.company,
+        PaymentSubject.school,
+      ].includes(selectedPaymentSubject.value);
+      const isOrganizationAdmin = hasOrganizationAdmin.value === true;
+      const show = isCorrectPaymentSubject && !isOrganizationAdmin;
       logger?.debug(
-        `Show <${selectedPaymentSubject.value}> admin element <${show}>.`,
+        `Show organization admin element <${show}>.` +
+          ` Subject <${selectedPaymentSubject.value}>,` +
+          ` organization admin <${isOrganizationAdmin}>.`,
       );
       return show;
     };
@@ -504,6 +547,7 @@ export default defineComponent({
       borderRadius,
       computedCurrentValue,
       formRegisterCoordinator,
+      hasOrganizationAdmin,
       isRegistrationCoordinator,
       optionsPaymentAmountComputed,
       optionsPaymentSubject,
@@ -622,7 +666,6 @@ export default defineComponent({
       />
     </div>
     <!-- Section: Register coordinator -->
-    <!-- TODO: Add condition - NO COORDINATOR IN SELECTED COMPANY -->
     <div v-if="showOrganizationAdminElement()" class="q-mt-md">
       <!-- Checkbox: Register coordinator -->
       <q-checkbox

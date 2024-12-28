@@ -14,8 +14,8 @@ import { useRegisterChallengeStore } from '../stores/registerChallenge';
 // types
 import type { Logger } from '../components/types/Logger';
 import type {
-  OrganizationAdminResponse,
-  UseApiGetOrganizationAdminReturn,
+  HasOrganizationAdminResponse,
+  UseApiGetHasOrganizationAdminReturn,
 } from '../components/types/apiOrganization';
 
 // utils
@@ -25,11 +25,11 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
  * Get organization admin status composable
  * Used for checking if an organization has an administrator
  * @param {Logger | null} logger
- * @returns {UseApiGetOrganizationAdminReturn}
+ * @returns {UseApiGetHasOrganizationAdminReturn}
  */
-export const useApiGetOrganizationAdmin = (
+export const useApiGetHasOrganizationAdmin = (
   logger: Logger | null,
-): UseApiGetOrganizationAdminReturn => {
+): UseApiGetHasOrganizationAdminReturn => {
   const isLoading = ref<boolean>(false);
   const hasOrganizationAdmin = ref<boolean | null>(null);
   const loginStore = useLoginStore();
@@ -57,10 +57,10 @@ export const useApiGetOrganizationAdmin = (
     const requestTokenHeader_ = { ...requestTokenHeader };
     requestTokenHeader_.Authorization += loginStore.getAccessToken;
 
-    const { data } = await apiFetch<OrganizationAdminResponse>({
-      endpoint: `${rideToWorkByBikeConfig.urlApiHasOrganizationAdmin}${organizationId}`,
+    const { data } = await apiFetch<HasOrganizationAdminResponse>({
+      endpoint: `${rideToWorkByBikeConfig.urlApiHasOrganizationAdmin}${organizationId}/`,
       method: 'get',
-      translationKey: 'getOrganizationAdmin',
+      translationKey: 'getHasOrganizationAdmin',
       showSuccessMessage: false,
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       logger,

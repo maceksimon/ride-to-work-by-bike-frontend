@@ -101,6 +101,30 @@ describe('<RegisterChallengePayment>', () => {
         i18n,
         OrganizationType.school,
       );
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        // for first organization, intercept API call with response true
+        cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
+          (response) => {
+            cy.interceptHasOrganizationAdminGetApi(
+              rideToWorkByBikeConfig,
+              i18n,
+              formFieldCompanyResponse.results[0].id,
+              response,
+            );
+          },
+        );
+        // for second organization, intercept API call with response false
+        cy.fixture('apiGetHasOrganizationAdminResponseFalse').then(
+          (response) => {
+            cy.interceptHasOrganizationAdminGetApi(
+              rideToWorkByBikeConfig,
+              i18n,
+              formFieldCompanyResponse.results[1].id,
+              response,
+            );
+          },
+        );
+      });
       cy.mount(RegisterChallengePayment, {
         props: {},
       });
@@ -123,6 +147,30 @@ describe('<RegisterChallengePayment>', () => {
         i18n,
         OrganizationType.school,
       );
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        // for first organization, intercept API call with response true
+        cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
+          (response) => {
+            cy.interceptHasOrganizationAdminGetApi(
+              rideToWorkByBikeConfig,
+              i18n,
+              formFieldCompanyResponse.results[0].id,
+              response,
+            );
+          },
+        );
+        // for second organization, intercept API call with response false
+        cy.fixture('apiGetHasOrganizationAdminResponseFalse').then(
+          (response) => {
+            cy.interceptHasOrganizationAdminGetApi(
+              rideToWorkByBikeConfig,
+              i18n,
+              formFieldCompanyResponse.results[1].id,
+              response,
+            );
+          },
+        );
+      });
       cy.mount(RegisterChallengePayment, {
         props: {},
       });
@@ -734,6 +782,36 @@ function coreTests() {
       defaultPaymentAmountMin,
       testNumberValue,
     );
+  });
+
+  it('shows checkbox become coordinator if organization has no coordinator', () => {
+    cy.dataCy(getRadioOption(PaymentSubject.company))
+      .should('be.visible')
+      .click();
+    // open organization select
+    cy.dataCy(selectorCompany).should('be.visible').click();
+    // from menu select first organization
+    cy.get('.q-menu').within(() => {
+      cy.get('.q-item').first().click();
+    });
+    // checkbox become coordinator should not be visible
+    cy.dataCy(selectorCoordinatorCheckbox).should('not.exist');
+    // open organization select
+    cy.dataCy(selectorCompany).should('be.visible').click();
+    // select second organization
+    cy.get('.q-menu').within(() => {
+      cy.get('.q-item').eq(1).click();
+    });
+    // checkbox become coordinator should be visible
+    cy.dataCy(selectorCoordinatorCheckbox).should('be.visible');
+    // enable checkbox
+    cy.dataCy(selectorCoordinatorCheckbox).click();
+    // test coordinator form
+    cy.dataCy(selectorCoordinatorText).should('be.visible');
+    cy.dataCy(selectorCoordinatorPhone).should('be.visible');
+    cy.dataCy(selectorCoordinatorJobTitle).should('be.visible');
+    cy.dataCy(selectorCoordinatorResponsibility).should('be.visible');
+    cy.dataCy(selectorCoordinatorTerms).should('be.visible');
   });
 }
 

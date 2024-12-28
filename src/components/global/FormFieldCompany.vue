@@ -311,7 +311,7 @@ export default defineComponent({
           hide-bottom-space
           input-debounce="0"
           :lazy-rules="true"
-          :model-value="company"
+          v-model="company"
           :options="optionsFiltered"
           :loading="isLoadingGetOrganization"
           class="q-mt-sm"
@@ -325,7 +325,6 @@ export default defineComponent({
               }),
           ]"
           @filter="onFilter"
-          @update:model-value="company = $event"
           data-cy="form-company-input"
         >
           <!-- Item: No option -->

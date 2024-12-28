@@ -1568,3 +1568,55 @@ Cypress.Commands.add(
     });
   },
 );
+
+/**
+ * Intercept has organization admin GET API call
+ * Provides `@getHasOrganizationAdmin` alias
+ * @param {Config} config - App global config
+ * @param {I18n} i18n - i18n instance
+ * @param {Number} organizationId - Organization ID to check
+ * @param {Object} responseBody - Override default response body
+ */
+Cypress.Commands.add(
+  'interceptHasOrganizationAdminGetApi',
+  (config, i18n, organizationId, responseBody) => {
+    const { apiBase, apiDefaultLang, urlApiHasOrganizationAdmin } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiHasOrganizationAdminLocalized = `${apiBaseUrl}${urlApiHasOrganizationAdmin}${organizationId}/`;
+
+    cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
+      (defaultResponse) => {
+        cy.intercept('GET', urlApiHasOrganizationAdminLocalized, {
+          statusCode: httpSuccessfullStatus,
+          body: responseBody || defaultResponse,
+        }).as('getHasOrganizationAdmin');
+      },
+    );
+  },
+);
+
+/**
+ * Wait for intercept has organization admin API call and compare response object
+ * Wait for `@getHasOrganizationAdmin` intercept
+ * @param {Object} expectedResponse - Expected response body
+ */
+Cypress.Commands.add('waitForHasOrganizationAdminApi', (expectedResponse) => {
+  cy.wait('@getHasOrganizationAdmin').then((getHasOrganizationAdmin) => {
+    expect(getHasOrganizationAdmin.request.headers.authorization).to.include(
+      bearerTokeAuth,
+    );
+    if (getHasOrganizationAdmin.response) {
+      expect(getHasOrganizationAdmin.response.statusCode).to.equal(
+        httpSuccessfullStatus,
+      );
+      expect(getHasOrganizationAdmin.response.body).to.deep.equal(
+        expectedResponse,
+      );
+    }
+  });
+});

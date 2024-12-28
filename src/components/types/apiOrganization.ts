@@ -19,12 +19,12 @@ export interface PostOrganizationResponse {
   name: string;
 }
 
-export interface UseApiGetOrganizationAdminReturn {
+export interface UseApiGetHasOrganizationAdminReturn {
   isLoading: Ref<boolean>;
   hasOrganizationAdmin: Ref<boolean | null>;
   checkOrganizationAdmin: () => Promise<void>;
 }
 
-export interface OrganizationAdminResponse {
+export interface HasOrganizationAdminResponse {
   has_organization_admin: boolean;
 }
