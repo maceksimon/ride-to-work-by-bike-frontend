@@ -611,6 +611,13 @@ labelPaid = "Zaplaceno"
 labelRegistration = "Při registraci"
 labelScheduled = "Po výzvě"
 
+[postRegisterChallenge]
+apiMessageError = "Chyba při ukládání stavu registrace."
+apiMessageErrorWithMessage = "Chyba při ukládání stavu registrace. Chyba: {error}"
+apiMessageSuccess = "Stav registrace byl úspěšně uložen."
+
+
+
 [profile]
 buttonDeleteAccount = "Smazat"
 buttonDownloadInvoice = "Stáhnout potvrzení o platbě"

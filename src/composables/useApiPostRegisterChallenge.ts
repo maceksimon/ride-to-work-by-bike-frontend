@@ -61,7 +61,7 @@ export const useApiPostRegisterChallenge = (
       endpoint: `${rideToWorkByBikeConfig.urlApiRegisterChallenge}`,
       method: 'post',
       translationKey: 'postRegisterChallenge',
-      showSuccessMessage: true,
+      showSuccessMessage: false,
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       payload,
       logger,
