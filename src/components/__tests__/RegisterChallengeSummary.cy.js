@@ -190,4 +190,21 @@ function coreTests() {
       });
     });
   });
+
+  it("test only selected 'I dont't want any merchandise.' merchandise option", () => {
+    cy.wrap(useLoginStore()).then((loginStore) => {
+      cy.wrap(useRegisterChallengeStore()).then((registerChallengeStore) => {
+        cy.initiateRegisterChallengeSummaryState(
+          loginStore,
+          registerChallengeStore,
+          'apiGetFilteredMerchandiseByNicCodeResponse.json',
+        );
+        // check merchandise - label
+        cy.dataCy(selectorSummaryMerchLabel).should(
+          'contain',
+          i18n.global.t('form.merch.labelNoMerch'),
+        );
+      });
+    });
+  });
 }
