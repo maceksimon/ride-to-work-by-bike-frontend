@@ -139,6 +139,32 @@ describe('Register Challenge page', () => {
                 OrganizationType.school,
               );
               cy.interceptMerchandiseGetApi(config, win.i18n);
+              cy.fixture('formFieldCompany').then(
+                (formFieldCompanyResponse) => {
+                  // for first organization, intercept API call with response true
+                  cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
+                    (response) => {
+                      cy.interceptHasOrganizationAdminGetApi(
+                        config,
+                        win.i18n,
+                        formFieldCompanyResponse.results[0].id,
+                        response,
+                      );
+                    },
+                  );
+                  // for second organization, intercept API call with response false
+                  cy.fixture('apiGetHasOrganizationAdminResponseFalse').then(
+                    (response) => {
+                      cy.interceptHasOrganizationAdminGetApi(
+                        config,
+                        win.i18n,
+                        formFieldCompanyResponse.results[1].id,
+                        response,
+                      );
+                    },
+                  );
+                },
+              );
             },
           );
         });
@@ -915,6 +941,77 @@ describe('Register Challenge page', () => {
               );
           },
         );
+      });
+    });
+
+    it('validates coordinator form when user wants to become coordinator', () => {
+      cy.get('@i18n').then((i18n) => {
+        passToStep2();
+        // select company
+        cy.dataCy(getRadioOption(PaymentSubject.company))
+          .should('be.visible')
+          .click();
+        // open organization select
+        cy.dataCy('form-field-company').should('be.visible').click();
+        // select second organization
+        cy.get('.q-menu').within(() => {
+          cy.get('.q-item').eq(1).click();
+        });
+        // checkbox become coordinator should be visible
+        cy.dataCy('register-coordinator-checkbox').should('be.visible');
+        // enable checkbox
+        cy.dataCy('register-coordinator-checkbox').click();
+        // validation prevents going to next step
+        cy.dataCy('step-2-continue').should('be.visible').click();
+        cy.dataCy('step-2-continue').should('be.visible');
+        cy.dataCy('step-3-continue').should('not.exist');
+        // validation message is displayed (job title)
+        cy.contains(
+          i18n.global.t('form.messageFieldRequired', {
+            fieldName: i18n.global.t('form.labelJobTitleShort'),
+          }),
+        ).should('be.visible');
+        // fill job title
+        cy.dataCy('register-coordinator-job-title')
+          .find('input')
+          .type('Manager');
+        // validation prevents going to next step
+        cy.dataCy('step-2-continue').should('be.visible').click();
+        cy.dataCy('step-2-continue').should('be.visible');
+        cy.dataCy('step-3-continue').should('not.exist');
+        // validation message is displayed (phone)
+        cy.contains(
+          i18n.global.t('form.messageFieldRequired', {
+            fieldName: i18n.global.t('form.labelPhone'),
+          }),
+        ).should('be.visible');
+        // fill phone
+        cy.dataCy('register-coordinator-phone')
+          .find('input')
+          .type('736 123 456');
+        // validation prevents going to next step
+        cy.dataCy('step-2-continue').should('be.visible').click();
+        cy.dataCy('step-2-continue').should('be.visible');
+        cy.dataCy('step-3-continue').should('not.exist');
+        // validation message is displayed (responsibility)
+        cy.contains(
+          i18n.global.t('register.coordinator.form.labelResponsibility'),
+        ).should('be.visible');
+        // enable checkbox responsibility
+        cy.dataCy('register-coordinator-responsibility').click();
+        // validation prevents going to next step
+        cy.dataCy('step-2-continue').should('be.visible').click();
+        cy.dataCy('step-2-continue').should('be.visible');
+        cy.dataCy('step-3-continue').should('not.exist');
+        // validation message is displayed (terms)
+        cy.contains(
+          i18n.global.t('register.coordinator.form.messageTermsRequired'),
+        ).should('be.visible');
+        // enable checkbox terms
+        cy.dataCy('register-coordinator-terms').click();
+        // going to next step
+        cy.dataCy('step-2-continue').should('be.visible').click();
+        cy.dataCy('step-3-continue').should('be.visible');
       });
     });
   });
