@@ -271,19 +271,22 @@ export default defineComponent({
       if (val) {
         if (!iDontWantMerchandiseCachedId) {
           logger?.info("Get 'I don't want any merchandise' ID from the API.");
-          registerChallengeStore.loadFilteredMerchandiseToStore(
-            logger,
-            rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
-          );
-          iDontWantMerchandiseCachedId = registerChallengeStore.getMerchId;
-          logger?.debug(
-            `Save 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> into cache.`,
-          );
+          registerChallengeStore
+            .loadFilteredMerchandiseToStore(
+              logger,
+              rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
+            )
+            .then(() => {
+              iDontWantMerchandiseCachedId = registerChallengeStore.getMerchId;
+              logger?.debug(
+                `Save 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> into cache.`,
+              );
+            });
         } else {
           logger?.debug(
             `Use 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> from the cache.`,
           );
-          registerChallengeStore.merchId = iDontWantMerchandiseCachedId;
+          registerChallengeStore.setMerchId(iDontWantMerchandiseCachedId);
         }
       } else {
         nextTick(() => {
