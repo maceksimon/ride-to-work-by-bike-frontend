@@ -250,9 +250,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       );
       this.isLoadingFilteredMerchandise = true;
       await loadFilteredMerchandise(code);
-      this.merchId = merchandise.value[0]['id'];
+      this.setMerchId(merchandise.value[0]['id']);
       logger?.debug(
-        `Loaded filtered merchandise item ID <${this.merchId}> saved into store.`,
+        `Loaded filtered merchandise item ID <${this.getMerchId}> saved into store.`,
       );
       this.isLoadingFilteredMerchandise = false;
     },
