@@ -1,0 +1,31 @@
+{
+  "count": 1,
+  "next": null,
+  "previous": null,
+  "results": [
+    {
+      "personal_details": {
+        "first_name": "Foo",
+        "last_name": "Bar",
+        "nickname": "FB",
+        "sex": "male",
+        "telephone": "736123456",
+        "telephone_opt_in": false,
+        "language": "cs",
+        "occupation": "",
+        "age_group": "",
+        "newsletter": "",
+        "personal_data_opt_in": true,
+        "discount_coupon": "",
+        "payment_subject": "",
+        "payment_type": "",
+        "payment_status": "none",
+        "payment_amount": ""
+      },
+      "team_id": 16249,
+      "organization_id": 2350,
+      "subsidiary_id": 3409,
+      "t_shirt_size_id": 118
+    }
+  ]
+}

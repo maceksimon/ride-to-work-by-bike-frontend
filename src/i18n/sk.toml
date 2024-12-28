@@ -75,6 +75,11 @@ apiMessageError = "Načítanie startovních balíčkov filtrovaných na základe
 apiMessageErrorWithMessage = "Načítanie startovních balíčkov filtrovaných na základe kódu zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Startovní balíčky filtrované na základe kódu boli úspešne načítané."
 
+[getRegisterChallenge]
+apiMessageError = "Načítanie registrácií zlyhalo."
+apiMessageErrorWithMessage = "Načítanie registrácií zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Registrácie boli úspešne načítané."
+
 [getSubsidiaries]
 apiMessageError = "Načítanie pobočiek zlyhalo."
 apiMessageErrorWithMessage = "Načítanie pobočiek zlyhalo. Chyba: {error}"

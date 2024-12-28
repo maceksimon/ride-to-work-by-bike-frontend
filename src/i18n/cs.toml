@@ -75,6 +75,11 @@ apiMessageError = "Načítání startovních balíčků filtrováno na základě
 apiMessageErrorWithMessage = "Načítání startovních balíčků filtrováno na základě kódu selhalo. Chyba: {error}"
 apiMessageSuccess = "Startovní balíčky filtrované na základě kódu byly úspěšně načteny."
 
+[getRegisterChallenge]
+apiMessageError = "Načítání registrací selhalo."
+apiMessageErrorWithMessage = "Načítání registrací selhalo. Chyba: {error}"
+apiMessageSuccess = "Registrace byly úspěšně načteny."
+
 [getSubsidiaries]
 apiMessageError = "Načítání poboček selhalo."
 apiMessageErrorWithMessage = "Načítání poboček selhalo. Chyba: {error}"

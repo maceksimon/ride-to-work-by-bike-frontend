@@ -3,8 +3,10 @@ import { defineStore } from 'pinia';
 
 // adapters
 import { subsidiaryAdapter } from 'src/adapters/subsidiaryAdapter';
+import { registerChallengeAdapter } from '../adapters/registerChallengeAdapter';
 
 // composables
+import { useApiGetRegisterChallenge } from 'src/composables/useApiGetRegisterChallenge';
 import { useApiGetSubsidiaries } from 'src/composables/useApiGetSubsidiaries';
 import { useApiGetOrganizations } from 'src/composables/useApiGetOrganizations';
 import { useApiGetTeams } from 'src/composables/useApiGetTeams';
@@ -33,6 +35,7 @@ import type {
 import { i18n } from '../boot/i18n';
 import { useChallengeStore } from './challenge';
 import { PriceLevelCategory } from '../components/enums/Challenge';
+import type { RegisterChallengeResult } from '../components/types/ApiRegistration';
 
 const emptyFormPersonalDetails: RegisterChallengePersonalDetailsForm = {
   firstName: '',
@@ -65,6 +68,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     teams: [] as OrganizationTeam[],
     merchandiseItems: [] as MerchandiseItem[],
     merchandiseCards: {} as Record<Gender, MerchandiseCard[]>,
+    isLoadingRegisterChallenge: false,
     isLoadingSubsidiaries: false,
     isLoadingOrganizations: false,
     isLoadingTeams: false,
@@ -193,6 +197,47 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setMerchandiseCards(cards: Record<Gender, MerchandiseCard[]>) {
       this.merchandiseCards = cards;
+    },
+    /**
+     * Load registration data from API and set store state
+     * @param {Logger | null} logger - Logger instance
+     */
+    async loadRegisterChallengeToStore(logger: Logger | null): Promise<void> {
+      const { registrations, loadRegistrations } =
+        useApiGetRegisterChallenge(logger);
+      this.isLoadingRegisterChallenge = true;
+      await loadRegistrations();
+      if (registrations.value.length > 0) {
+        this.setRegisterChallengeFromApi(registrations.value[0]);
+      } else {
+        this.$log?.debug('No registration data available to set store state');
+      }
+      this.isLoadingRegisterChallenge = false;
+    },
+    /**
+     * Set store state from API registration data
+     * @param registration - Registration data from API
+     */
+    setRegisterChallengeFromApi(registration: RegisterChallengeResult): void {
+      this.$log?.debug(
+        `Setting store state from registration data <${JSON.stringify(
+          registration,
+          null,
+          2,
+        )}>`,
+      );
+
+      const storeData = registerChallengeAdapter.toStoreData(registration);
+
+      // Update store state
+      this.setPersonalDetails(storeData.personalDetails);
+      this.setOrganizationId(storeData.organizationId);
+      this.setSubsidiaryId(storeData.subsidiaryId);
+      this.setTeamId(storeData.teamId);
+      this.setMerchId(storeData.merchId);
+      this.setVoucher(storeData.voucher);
+
+      this.$log?.debug('Store state updated from registration data');
     },
     async loadSubsidiariesToStore(logger: Logger | null) {
       const { subsidiaries, loadSubsidiaries } = useApiGetSubsidiaries(logger);

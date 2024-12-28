@@ -57,6 +57,7 @@ export interface ConfigGlobal {
   urlAppDataPrivacyPolicy: string;
   urlApiRefresh: string;
   urlApiRegister: string;
+  urlApiRegisterChallenge: string;
   urlApiRegisterCoordinator: string;
   urlApiResetPassword: string;
   urlApiChallengeRegistrationUser: string;

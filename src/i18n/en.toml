@@ -75,6 +75,11 @@ apiMessageError = "Fetching filtered merchandise by code failed."
 apiMessageErrorWithMessage = "Fetching filtered merchandise by code failed. Error: {error}"
 apiMessageSuccess = "Filtered Merchandise by code fetched successfully."
 
+[getRegisterChallenge]
+apiMessageError = "Fetching registrations failed."
+apiMessageErrorWithMessage = "Fetching registrations failed. Error: {error}"
+apiMessageSuccess = "Registrations fetched successfully."
+
 [getSubsidiaries]
 apiMessageError = "Fetching subsidiaries failed."
 apiMessageErrorWithMessage = "Fetching subsidiaries failed. Error: {error}"
