@@ -1620,3 +1620,56 @@ Cypress.Commands.add('waitForHasOrganizationAdminApi', (expectedResponse) => {
     }
   });
 });
+
+/**
+ * Intercept register challenge POST API call
+ * Provides `@postRegisterChallenge` alias
+ * @param {Config} config - App global config
+ * @param {I18n|string} i18n - i18n instance
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptRegisterChallengePostApi',
+  (config, i18n, responseBody, responseStatusCode) => {
+    const { apiBase, apiDefaultLang, urlApiRegisterChallenge } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiRegisterChallengeLocalized = `${apiBaseUrl}${urlApiRegisterChallenge}`;
+
+    cy.fixture('apiPostRegisterChallengeResponse').then(
+      (registerChallengeResponse) => {
+        cy.intercept('POST', urlApiRegisterChallengeLocalized, {
+          statusCode: responseStatusCode
+            ? responseStatusCode
+            : httpSuccessfullStatus,
+          body: responseBody ? responseBody : registerChallengeResponse,
+        }).as('postRegisterChallenge');
+      },
+    );
+  },
+);
+
+/**
+ * Wait for intercept register challenge POST API call and compare request/response object
+ * Wait for `@postRegisterChallenge` intercept
+ * @param {Object} registerChallengeRequest - Request data
+ * @param {Object} registerChallengeResponse - Response data
+ */
+Cypress.Commands.add(
+  'waitForRegisterChallengePostApi',
+  (registerChallengeRequest, registerChallengeResponse) => {
+    cy.wait('@postRegisterChallenge').then(({ request, response }) => {
+      expect(request.headers.authorization).to.include(bearerTokeAuth);
+      expect(request.body).to.deep.equal(registerChallengeRequest);
+      if (response) {
+        expect(response.statusCode).to.equal(httpSuccessfullStatus);
+        expect(response.body).to.deep.equal(registerChallengeResponse);
+      }
+    });
+  },
+);
