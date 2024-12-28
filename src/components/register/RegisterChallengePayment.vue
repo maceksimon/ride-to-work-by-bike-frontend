@@ -543,6 +543,11 @@ export default defineComponent({
       return show;
     };
 
+    // TODO: Update `FormFieldCompany` to use data from `registerChallenge` store.
+    const selectedOrganizationName = computed<string>(
+      () => registerChallengeStore.getSelectedOrganizationLabel,
+    );
+
     return {
       borderRadius,
       computedCurrentValue,
@@ -556,6 +561,7 @@ export default defineComponent({
       paymentAmountMin,
       primaryLightColor,
       selectedCompany,
+      selectedOrganizationName,
       selectedPaymentAmount,
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
