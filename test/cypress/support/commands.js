@@ -1515,10 +1515,19 @@ Cypress.Commands.add(
 
 /**
  * Initiate state for register challenge summary
+ * @param {object} loginStore - Login store instance
+ * @param {object} registerChallengeStore - Register challenge strore instance
+ * @param {object} registerChallengeStore - Register challenge strore instance
+ * @param {string} apiGetMerchandiseResponse - API GET merchandise response data
+ *                                             fixture JSON file name
  */
 Cypress.Commands.add(
   'initiateRegisterChallengeSummaryState',
-  (loginStore, registerChallengeStore) => {
+  (
+    loginStore,
+    registerChallengeStore,
+    apiGetMerchandiseResponse = 'apiGetMerchandiseResponse.json',
+  ) => {
     cy.fixture('loginResponse.json').then((loginData) => {
       loginStore.setUser(loginData.user);
     });
@@ -1552,12 +1561,10 @@ Cypress.Commands.add(
     });
     cy.wrap(registerChallengeStore.loadMerchandiseToStore(null));
     cy.waitForMerchandiseApi();
-    cy.fixture('apiGetMerchandiseResponse.json').then(
-      (apiGetMerchandiseResponse) => {
-        registerChallengeStore.setMerchId(
-          apiGetMerchandiseResponse.results[0].id,
-        );
-      },
-    );
+    cy.fixture(apiGetMerchandiseResponse).then((apiGetMerchandiseResponse) => {
+      registerChallengeStore.setMerchId(
+        apiGetMerchandiseResponse.results[0].id,
+      );
+    });
   },
 );
