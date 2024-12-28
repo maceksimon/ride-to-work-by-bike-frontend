@@ -682,7 +682,11 @@ export default defineComponent({
       <div v-if="isRegistrationCoordinator">
         <div
           class="q-mt-lg"
-          v-html="$t('companyCoordinator.textBecomeCoordinator')"
+          v-html="
+            $t('companyCoordinator.textBecomeCoordinator', {
+              organizationName: selectedOrganizationName,
+            })
+          "
           data-cy="register-coordinator-text"
         />
         <!-- Section: Inputs -->
