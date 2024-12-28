@@ -10,9 +10,6 @@ import type {
 } from '../components/types/ApiRegistration';
 import type { RegisterChallengePersonalDetailsForm } from '../components/types/RegisterChallenge';
 import type { ValidatedCoupon } from '../components/types/Coupon';
-type PartialPersonalDetails = Partial<
-  RegisterChallengePostPayload['personal_details']
->;
 
 /**
  * Adapter for converting between API and store registration data formats
@@ -57,54 +54,42 @@ export const registerChallengeAdapter = {
     teamId?: number | null;
     merchId?: number | null;
     voucher?: ValidatedCoupon | null;
-  }): Partial<RegisterChallengePostPayload> {
-    const payload: Partial<RegisterChallengePostPayload> = {};
+  }): RegisterChallengePostPayload {
+    const payload: RegisterChallengePostPayload = {};
 
     if (storeState.personalDetails) {
-      const personalDetails: PartialPersonalDetails = {};
       const storePersonalDetails = storeState.personalDetails;
 
       if (storePersonalDetails.firstName !== undefined) {
-        personalDetails.first_name = storePersonalDetails.firstName;
+        payload.first_name = storePersonalDetails.firstName;
       }
       if (storePersonalDetails.lastName !== undefined) {
-        personalDetails.last_name = storePersonalDetails.lastName;
+        payload.last_name = storePersonalDetails.lastName;
       }
       if (storePersonalDetails.nickname !== undefined) {
-        personalDetails.nickname = storePersonalDetails.nickname;
+        payload.nickname = storePersonalDetails.nickname;
       }
       if (storePersonalDetails.gender !== undefined) {
-        personalDetails.sex = storePersonalDetails.gender as Gender;
+        payload.sex = storePersonalDetails.gender as Gender;
       }
       if (storePersonalDetails.newsletter?.length) {
-        personalDetails.newsletter = storePersonalDetails.newsletter.join(',');
+        payload.newsletter = this.combineNewsletterValues(
+          storePersonalDetails.newsletter,
+        );
       }
       if (storePersonalDetails.terms !== undefined) {
-        personalDetails.personal_data_opt_in = storePersonalDetails.terms;
-      }
-
-      if (Object.keys(personalDetails).length > 0) {
-        payload.personal_details = personalDetails;
+        payload.personal_data_opt_in = storePersonalDetails.terms;
       }
     }
 
     if (storeState.paymentSubject !== undefined) {
-      payload.personal_details = {
-        ...(payload.personal_details || {}),
-        payment_subject: storeState.paymentSubject,
-      };
+      payload.payment_subject = storeState.paymentSubject;
     }
     if (storeState.paymentAmount !== undefined) {
-      payload.personal_details = {
-        ...(payload.personal_details || {}),
-        payment_amount: storeState.paymentAmount.toString(),
-      };
+      payload.payment_amount = storeState.paymentAmount.toString();
     }
     if (storeState.voucher !== undefined) {
-      payload.personal_details = {
-        ...(payload.personal_details || {}),
-        discount_coupon: storeState.voucher?.name || '',
-      };
+      payload.discount_coupon = storeState.voucher?.name || '';
     }
     if (storeState.teamId !== undefined) {
       payload.team_id = storeState.teamId;
@@ -124,5 +109,27 @@ export const registerChallengeAdapter = {
   parseNewsletter(newsletter: string): NewsletterType[] {
     if (!newsletter) return [];
     return newsletter.split(',').map((n) => n.trim()) as NewsletterType[];
+  },
+
+  /**
+   * Convert array of newsletter types to combined API value
+   * @param newsletters - Array of newsletter types
+   * @returns Combined newsletter string value
+   */
+  combineNewsletterValues(newsletters: NewsletterType[]): string {
+    if (!newsletters?.length) return '';
+    // sort newsletter types (challenge, event, mobility)
+    const sorted = [...newsletters].sort();
+    // if there is only one newsletter type, return it
+    if (sorted.length === 1) return sorted[0];
+    // if there are two newsletter types, return them separated by a dash
+    if (sorted.length === 2) {
+      return `${sorted[0]}-${sorted[1]}`;
+    }
+    // if there are three newsletter types, return them separated by a dash
+    if (sorted.length === 3) {
+      return `${sorted[0]}-${sorted[1]}-${sorted[2]}`;
+    }
+    return '';
   },
 };

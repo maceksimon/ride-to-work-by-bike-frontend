@@ -7,6 +7,6 @@ export interface NewsletterItem {
 
 export enum NewsletterType {
   challenge = 'challenge',
-  event = 'event',
+  event = 'events',
   mobility = 'mobility',
 }

@@ -38,7 +38,20 @@ export type RegisterChallengeResponse = {
 };
 
 export type RegisterChallengePostPayload = {
-  personal_details?: Partial<CorePersonalDetails>;
+  first_name?: string;
+  last_name?: string;
+  nickname?: string;
+  sex?: string;
+  telephone?: string;
+  telephone_opt_in?: boolean;
+  language?: string;
+  occupation?: string;
+  age_group?: string;
+  newsletter?: string;
+  personal_data_opt_in?: boolean;
+  discount_coupon?: string;
+  payment_subject?: string;
+  payment_amount?: string;
   team_id?: number | null;
   t_shirt_size_id?: number | null;
 };
