@@ -26,7 +26,9 @@ export const registerChallengeAdapter = {
       lastName: apiData.personal_details.last_name,
       nickname: apiData.personal_details.nickname,
       gender: apiData.personal_details.sex as Gender,
-      newsletter: this.parseNewsletter(apiData.personal_details.newsletter),
+      newsletter: this.parseNewsletterValues(
+        apiData.personal_details.newsletter,
+      ),
       terms: apiData.personal_details.personal_data_opt_in,
     };
 
@@ -109,7 +111,7 @@ export const registerChallengeAdapter = {
    * @param newsletter - Newsletter string from API
    * @returns Array of NewsletterType
    */
-  parseNewsletter(newsletter: string): NewsletterType[] {
+  parseNewsletterValues(newsletter: string): NewsletterType[] {
     if (!newsletter) return [];
     return newsletter
       .split('-')
