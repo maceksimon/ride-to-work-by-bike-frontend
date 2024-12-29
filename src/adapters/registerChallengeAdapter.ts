@@ -35,6 +35,9 @@ export const registerChallengeAdapter = {
       organizationId: apiData.organization_id,
       paymentSubject: apiData.personal_details
         .payment_subject as PaymentSubject,
+      paymentAmount: apiData.personal_details.payment_amount
+        ? parseInt(apiData.personal_details.payment_amount)
+        : 0,
       subsidiaryId: apiData.subsidiary_id,
       teamId: apiData.team_id,
       merchId: apiData.t_shirt_size_id,

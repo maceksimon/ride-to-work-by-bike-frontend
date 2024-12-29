@@ -242,11 +242,29 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Personal details updated to <${JSON.stringify(this.personalDetails, null, 2)}>`,
       );
-      // !in order not to reset organization, subsidiary and team IDs, we need to set organizationType
-      this.setOrganizationType(OrganizationType.company);
+      // ! payment amount for 'company' and 'school' corresponds to donation
+      // TODO: load payment amount from API to payment step
+      // this.setPaymentAmount(storeData.paymentAmount);
+      // this.$log?.debug(
+      //   `Payment amount updated to <${this.paymentAmount}>`,
+      // );
+      this.setPaymentSubject(storeData.paymentSubject);
+      this.$log?.debug(`Payment subject updated to <${this.paymentSubject}>`);
+      // preset organization type based on payment subject
+      if (storeData.paymentSubject === PaymentSubject.company) {
+        this.setOrganizationType(OrganizationType.company);
+      } else if (storeData.paymentSubject === PaymentSubject.school) {
+        this.setOrganizationType(OrganizationType.school);
+      } else {
+        // if payment subject is "individual" or "voucher"
+        // ! This will reset organization, subsidiary and team IDs.
+        // ! To prevent reset, we need to set correct organizationType.
+        this.setOrganizationType(OrganizationType.none);
+      }
       this.$log?.debug(
         `Organization type updated to <${this.organizationType}>`,
       );
+      // TODO: set voucher with discount value
       this.setOrganizationId(storeData.organizationId);
       this.$log?.debug(`Organization ID updated to <${this.organizationId}>`);
       this.setSubsidiaryId(storeData.subsidiaryId);
@@ -255,7 +273,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(`Team ID updated to <${this.teamId}>`);
       this.setMerchId(storeData.merchId);
       this.$log?.debug(`Merch ID updated to <${this.merchId}>`);
-      // TODO: set voucher with discount value
     },
     /**
      * Post registration data to API
