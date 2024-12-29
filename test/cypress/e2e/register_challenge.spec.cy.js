@@ -190,7 +190,7 @@ describe('Register Challenge page', () => {
                   );
                 },
               );
-              // intercept common response (not currently used)
+              // intercept without specific response (it is not used)
               cy.interceptRegisterChallengePostApi(config, win.i18n);
             },
           );
