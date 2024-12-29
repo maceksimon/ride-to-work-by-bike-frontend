@@ -96,17 +96,25 @@ export default defineComponent({
 
     const onOrganizationIdChange = (): void => {
       // reset subsidiaryId on organizationId change
-      logger?.debug('reset subsidiaryId on organizationId change');
       registerChallengeStore.setSubsidiaryId(null);
+      logger?.debug(
+        'Organization ID change, reset' +
+          ` subsidiary ID <${registerChallengeStore.getSubsidiaryId}>.`,
+      );
       // reset teamId on organizationId change
-      logger?.debug('reset teamId on organizationId change');
       registerChallengeStore.setTeamId(null);
+      logger?.debug(
+        'Organization ID change, reset' +
+          ` team ID <${registerChallengeStore.getTeamId}>.`,
+      );
     };
 
     const onSubsidiaryIdChange = (): void => {
-      // reset teamId on subsidiaryId change
-      logger?.debug('reset teamId on subsidiaryId change');
       registerChallengeStore.setTeamId(null);
+      logger?.debug(
+        'Subsidiary ID change, reset' +
+          ` team ID <${registerChallengeStore.getTeamId}>.`,
+      );
     };
 
     const onCloseAddSubsidiaryDialog = () => {

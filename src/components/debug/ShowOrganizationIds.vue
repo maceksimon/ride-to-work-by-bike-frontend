@@ -48,15 +48,15 @@ export default defineComponent({
   <div v-if="showComponent" data-cy="debug-register-challenge-ids">
     <div class="text-red text-bold">
       <div data-cy="debug-organization-id">
-        DEBUG: organizationId:
+        DEBUG: organization ID
         <span data-cy="debug-organization-id-value">{{ organizationId }}</span>
       </div>
       <div data-cy="debug-subsidiary-id">
-        DEBUG: subsidiaryId:
+        DEBUG: subsidiary ID
         <span data-cy="debug-subsidiary-id-value">{{ subsidiaryId }}</span>
       </div>
       <div data-cy="debug-team-id">
-        DEBUG: teamId: <span data-cy="debug-team-id-value">{{ teamId }}</span>
+        DEBUG: team ID <span data-cy="debug-team-id-value">{{ teamId }}</span>
       </div>
     </div>
   </div>

@@ -66,14 +66,23 @@ export default defineComponent({
 
     const onOrganizationTypeChange = () => {
       // reset organizationId on organizationType change
-      logger?.debug('reset organizationId on organizationType change');
       registerChallengeStore.setOrganizationId(null);
+      logger?.debug(
+        'Organization type change, reset' +
+          ` organization ID <${registerChallengeStore.getOrganizationId}>.`,
+      );
       // reset subsidiaryId on organizationType change
-      logger?.debug('reset subsidiaryId on organizationType change');
       registerChallengeStore.setSubsidiaryId(null);
+      logger?.debug(
+        'Organization type change, reset' +
+          ` subsidiary ID <${registerChallengeStore.getSubsidiaryId}>.`,
+      );
       // reset teamId on organizationType change
-      logger?.debug('reset teamId on organizationType change');
       registerChallengeStore.setTeamId(null);
+      logger?.debug(
+        'Organization type change, reset' +
+          ` team ID <${registerChallengeStore.getTeamId}>.`,
+      );
     };
 
     const { isFilled } = useValidation();
