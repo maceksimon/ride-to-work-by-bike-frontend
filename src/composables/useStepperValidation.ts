@@ -1,6 +1,5 @@
 // libraries
 import { QForm, QStepper } from 'quasar';
-import { useRouter } from 'vue-router';
 
 // enums
 import { RegisterChallengeStep } from '../components/enums/RegisterChallenge';
@@ -123,12 +122,6 @@ export const useStepperValidation = ({
         } else {
           stepMerchRef.value.$el.scrollIntoView({ behavior: 'smooth' });
         }
-        break;
-      // validate/handle summary step
-      case 7:
-        // redirect to homepage
-        const router = useRouter();
-        router.push({ name: 'home' });
         break;
       default:
         break;
