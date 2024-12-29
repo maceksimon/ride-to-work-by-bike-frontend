@@ -111,7 +111,9 @@ export const registerChallengeAdapter = {
    */
   parseNewsletter(newsletter: string): NewsletterType[] {
     if (!newsletter) return [];
-    return newsletter.split(',').map((n) => n.trim()) as NewsletterType[];
+    return newsletter
+      .split('-')
+      .map((option) => option.trim()) as NewsletterType[];
   },
 
   /**
