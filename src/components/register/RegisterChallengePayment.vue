@@ -195,16 +195,14 @@ export default defineComponent({
     // watch selected company and check if organization has an administrator
     watch(selectedCompany, (newVal, oldVal) => {
       logger?.debug(
-        `Selected company changed from <${oldVal}> to <${newVal}>.`,
+        `Selected organization ID changed from <${oldVal}> to <${newVal}>.`,
       );
       if (newVal) {
         checkOrganizationAdmin();
       }
     });
     onMounted(() => {
-      if (selectedCompany.value) {
-        checkOrganizationAdmin();
-      }
+      checkOrganizationAdmin();
     });
     const isRegistrationCoordinator = ref<boolean>(false);
     const formRegisterCoordinator = reactive({
@@ -216,7 +214,7 @@ export default defineComponent({
 
     watch(selectedPaymentSubject, (newVal, oldVal) => {
       logger?.debug(
-        `Selected payment subject changed from <${oldVal}> to <${newVal}>`,
+        `Selected payment subject changed from <${oldVal}> to <${newVal}>.`,
       );
       switch (newVal) {
         case PaymentSubject.company:
@@ -533,12 +531,13 @@ export default defineComponent({
         PaymentSubject.company,
         PaymentSubject.school,
       ].includes(selectedPaymentSubject.value);
+      if (hasOrganizationAdmin.value === null) return false;
       const isOrganizationAdmin = hasOrganizationAdmin.value === true;
       const show = isCorrectPaymentSubject && !isOrganizationAdmin;
       logger?.debug(
-        `Show organization admin element <${show}>.` +
-          ` Subject <${selectedPaymentSubject.value}>,` +
-          ` organization admin <${isOrganizationAdmin}>.`,
+        `Show organization admin element <${show}>,` +
+          ` for payment subject <${selectedPaymentSubject.value}>,` +
+          ` and organization has admin <${isOrganizationAdmin}>.`,
       );
       return show;
     };

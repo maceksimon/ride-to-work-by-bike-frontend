@@ -44,12 +44,15 @@ export const useApiGetHasOrganizationAdmin = (
   const checkOrganizationAdmin = async (): Promise<void> => {
     const organizationId = registerChallengeStore.getOrganizationId;
     if (!organizationId) {
-      logger?.warn('Cannot check organization admin: no organization ID set');
+      logger?.warn(
+        'Cannot check organization admin, ' +
+          ` no organization ID was found into store <${organizationId}>.`,
+      );
       return;
     }
 
     logger?.info(
-      `Check if organization <${organizationId}> has an administrator`,
+      `Check if organization ID <${organizationId}> has an administrator.`,
     );
     isLoading.value = true;
 
@@ -69,7 +72,7 @@ export const useApiGetHasOrganizationAdmin = (
     if (data) {
       hasOrganizationAdmin.value = data.has_organization_admin;
       logger?.debug(
-        `Organization <${organizationId}> has administrator <${hasOrganizationAdmin.value}>.`,
+        `Organization ID <${organizationId}> has administrator <${hasOrganizationAdmin.value}>.`,
       );
     }
 

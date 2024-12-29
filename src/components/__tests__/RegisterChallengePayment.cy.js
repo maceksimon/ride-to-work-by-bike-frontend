@@ -586,43 +586,13 @@ function coreTests() {
       .click();
     cy.dataCy(selectorCompany).should('be.visible');
     // checkbox coordinator
-    cy.dataCy(selectorCoordinatorCheckbox)
-      .should('be.visible')
-      .and('have.css', 'font-size', '14px')
-      .and('have.css', 'font-weight', '700')
-      .and('have.color', primary)
-      .and(
-        'contain',
-        i18n.global.t('companyCoordinator.labelRegisterCoordinator'),
-      );
+    cy.dataCy(selectorCoordinatorCheckbox).should('not.exist');
     // only show form when enabled
     cy.dataCy(selectorCoordinatorText).should('not.exist');
     cy.dataCy(selectorCoordinatorPhone).should('not.exist');
     cy.dataCy(selectorCoordinatorJobTitle).should('not.exist');
     cy.dataCy(selectorCoordinatorResponsibility).should('not.exist');
     cy.dataCy(selectorCoordinatorTerms).should('not.exist');
-    // enable
-    cy.dataCy(selectorCoordinatorCheckbox).click();
-    // form
-    cy.dataCy(selectorCoordinatorText)
-      .should('be.visible')
-      .and('have.css', 'font-size', '14px')
-      .then(($el) => {
-        cy.stripHtmlTags(
-          i18n.global.t('companyCoordinator.textBecomeCoordinator'),
-        ).then((translation) => {
-          expect($el.text()).to.eq(translation);
-        });
-      });
-    // phone label
-    cy.dataCy(selectorCoordinatorPhone).should('be.visible');
-    // input label
-    cy.dataCy(selectorCoordinatorJobTitle).should('be.visible');
-    // checkbox responsibility
-    cy.dataCy(selectorCoordinatorResponsibility).should('be.visible');
-    // checkbox terms
-    cy.dataCy(selectorCoordinatorTerms).should('be.visible');
-
     // if coordinator user still has option to add donation
     testDonation();
   });
@@ -783,7 +753,6 @@ function coreTests() {
       testNumberValue,
     );
   });
-
   it('shows checkbox become coordinator if organization has no coordinator', () => {
     cy.dataCy(getRadioOption(PaymentSubject.company))
       .should('be.visible')
@@ -803,14 +772,36 @@ function coreTests() {
       cy.get('.q-item').eq(1).click();
     });
     // checkbox become coordinator should be visible
-    cy.dataCy(selectorCoordinatorCheckbox).should('be.visible');
+    cy.dataCy(selectorCoordinatorCheckbox)
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .and('have.css', 'font-weight', '700')
+      .and('have.color', primary)
+      .and(
+        'contain',
+        i18n.global.t('companyCoordinator.labelRegisterCoordinator'),
+      );
     // enable checkbox
     cy.dataCy(selectorCoordinatorCheckbox).click();
     // test coordinator form
-    cy.dataCy(selectorCoordinatorText).should('be.visible');
-    cy.dataCy(selectorCoordinatorPhone).should('be.visible');
+    cy.dataCy(selectorCoordinatorText)
+      .should('be.visible')
+      .should('be.visible')
+      .and('have.css', 'font-size', '14px')
+      .then(($el) => {
+        cy.stripHtmlTags(
+          i18n.global.t('companyCoordinator.textBecomeCoordinator'),
+        ).then((translation) => {
+          expect($el.text()).to.eq(translation);
+        });
+      });
+    // input phone label
+    cy.dataCy(selectorCoordinatorPhone);
+    // input job title label
     cy.dataCy(selectorCoordinatorJobTitle).should('be.visible');
+    // checkbox responsibility
     cy.dataCy(selectorCoordinatorResponsibility).should('be.visible');
+    // checkbox terms
     cy.dataCy(selectorCoordinatorTerms).should('be.visible');
   });
 }
