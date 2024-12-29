@@ -248,6 +248,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       // this.$log?.debug(
       //   `Payment amount updated to <${this.paymentAmount}>`,
       // );
+      // TODO: set voucher name to display on complete payment step
       this.setPaymentSubject(storeData.paymentSubject);
       this.$log?.debug(`Payment subject updated to <${this.paymentSubject}>`);
       // preset organization type based on payment subject
@@ -264,7 +265,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Organization type updated to <${this.organizationType}>`,
       );
-      // TODO: set voucher with discount value (unknown from API)
       this.setOrganizationId(storeData.organizationId);
       this.$log?.debug(`Organization ID updated to <${this.organizationId}>`);
       this.setSubsidiaryId(storeData.subsidiaryId);
