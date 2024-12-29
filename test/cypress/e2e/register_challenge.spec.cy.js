@@ -104,6 +104,7 @@ describe('Register Challenge page', () => {
     beforeEach(() => {
       cy.task('getAppConfig', process).then((config) => {
         cy.interceptThisCampaignGetApi(config, defLocale);
+        cy.interceptRegisterChallengeGetApi(config, defLocale);
         // visit challenge inactive page to load campaign data
         cy.visit('#' + routesConf['challenge_inactive']['path']);
         cy.waitForThisCampaignApi();
@@ -189,6 +190,8 @@ describe('Register Challenge page', () => {
                   );
                 },
               );
+              // intercept common response (not currently used)
+              cy.interceptRegisterChallengePostApi(config, win.i18n);
             },
           );
         });
@@ -1141,19 +1144,95 @@ describe('Register Challenge page', () => {
           cy.dataCy('debug-team-id-value').should('be.empty');
         });
     });
+
+    it.only('submits form state on 1st 2nd, 5th and 6th step', () => {
+      passToStep2();
+    });
   });
 });
 
 function passToStep2() {
-  cy.dataCy('form-firstName-input').type('John');
-  cy.dataCy('form-lastName-input').type('Doe');
-  cy.dataCy('form-personal-details-gender')
-    .find('.q-radio__label')
-    .first()
-    .click();
-  cy.dataCy('step-1-continue').should('be.visible').click();
-  // on step 2
-  cy.dataCy('step-2').find('.q-stepper__step-content').should('be.visible');
+  cy.fixture('apiPostRegisterChallengePersonalDetailsRequest').then(
+    (personalDetailsRequest) => {
+      cy.dataCy('form-firstName-input').type(personalDetailsRequest.first_name);
+      cy.dataCy('form-lastName-input').type(personalDetailsRequest.last_name);
+      cy.dataCy('form-nickname-input').type(personalDetailsRequest.nickname);
+      cy.dataCy('form-personal-details-gender')
+        .find('.q-radio__label')
+        .first()
+        .click();
+      cy.dataCy('newsletter-option').each((newsletterOption) => {
+        cy.wrap(newsletterOption).click();
+      });
+      cy.dataCy('step-1-continue').should('be.visible').click();
+      // test API post request (personal details)
+      cy.fixture('apiPostRegisterChallengePersonalDetailsRequest.json').then(
+        (request) => {
+          cy.waitForRegisterChallengePostApi(request);
+        },
+      );
+      // on step 2
+      cy.dataCy('step-2').find('.q-stepper__step-content').should('be.visible');
+      cy.dataCy(getRadioOption(OrganizationType.company))
+        .should('be.visible')
+        .click();
+      // open organization select
+      cy.dataCy('form-field-company').should('be.visible').click();
+      // from menu select first organization
+      cy.get('.q-menu').within(() => {
+        cy.get('.q-item').first().click();
+      });
+      // go to next step
+      cy.dataCy('step-2-continue').should('be.visible').click();
+      // test API post request (payment)
+      cy.fixture('apiPostRegisterChallengePaymentRequest.json').then(
+        (request) => {
+          cy.waitForRegisterChallengePostApi(request);
+        },
+      );
+      // participation is preselected - continue
+      cy.dataCy('step-3-continue').should('be.visible').click();
+      // organization is preselected - select address
+      cy.dataCy('form-company-address').should('be.visible').click();
+      // select option
+      cy.get('.q-menu')
+        .should('be.visible')
+        .within(() => {
+          cy.get('.q-item').first().click();
+        });
+      // go to next step
+      cy.dataCy('step-4-continue').should('be.visible').click();
+      // select first team
+      cy.dataCy('form-select-table-team')
+        .should('be.visible')
+        .find('.q-radio:not(.disabled)')
+        .first()
+        .click();
+      // go to next step
+      cy.dataCy('step-5-continue').should('be.visible').click();
+      // test API post request
+      cy.fixture('apiPostRegisterChallengeTeamRequest.json').then((request) => {
+        cy.waitForRegisterChallengePostApi(request);
+      });
+      // select first merch option
+      cy.dataCy('form-card-merch-female')
+        .first()
+        .find('[data-cy="form-card-merch-link"]')
+        .click();
+      // close dialog
+      cy.dataCy('dialog-close').click();
+      // verify dialog is closed
+      cy.dataCy('dialog-merch').should('not.exist');
+      // go to next step
+      cy.dataCy('step-6-continue').should('be.visible').click();
+      // test API post request (merchandise)
+      cy.fixture('apiPostRegisterChallengeMerchandiseRequest.json').then(
+        (request) => {
+          cy.waitForRegisterChallengePostApi(request);
+        },
+      );
+    },
+  );
 }
 
 function passToStep3() {

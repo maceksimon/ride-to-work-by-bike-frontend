@@ -1,0 +1,15 @@
+{
+  "personal_details": {
+    "first_name": "John",
+    "last_name": "Doe",
+    "nickname": "JD",
+    "sex": "male",
+    "newsletter": "challenge-events-mobility",
+    "personal_data_opt_in": true,
+    "discount_coupon": "ZD-CZBGSD",
+    "payment_amount": "390",
+    "payment_subject": "company"
+  },
+  "team_id": 2451,
+  "t_shirt_size_id": 133
+}

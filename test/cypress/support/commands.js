@@ -1631,7 +1631,7 @@ Cypress.Commands.add('waitForHasOrganizationAdminApi', (expectedResponse) => {
  */
 Cypress.Commands.add(
   'interceptRegisterChallengePostApi',
-  (config, i18n, responseBody, responseStatusCode) => {
+  (config, i18n, responseBody = null, responseStatusCode = null) => {
     const { apiBase, apiDefaultLang, urlApiRegisterChallenge } = config;
     const apiBaseUrl = getApiBaseUrlWithLang(
       null,
@@ -1662,14 +1662,66 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add(
   'waitForRegisterChallengePostApi',
-  (registerChallengeRequest, registerChallengeResponse) => {
+  (registerChallengeRequest, registerChallengeResponse = null) => {
     cy.wait('@postRegisterChallenge').then(({ request, response }) => {
       expect(request.headers.authorization).to.include(bearerTokeAuth);
       expect(request.body).to.deep.equal(registerChallengeRequest);
-      if (response) {
+      // allow to test only request
+      if (response && registerChallengeResponse) {
         expect(response.statusCode).to.equal(httpSuccessfullStatus);
         expect(response.body).to.deep.equal(registerChallengeResponse);
       }
     });
   },
 );
+
+/**
+ * Intercept register challenge GET API call
+ * Provides `@getRegisterChallenge` alias
+ * @param {Config} config - App global config
+ * @param {I18n|String} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptRegisterChallengeGetApi',
+  (config, i18n, responseBody = null, responseStatusCode = null) => {
+    const { apiBase, apiDefaultLang, urlApiRegisterChallenge } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiRegisterChallengeLocalized = `${apiBaseUrl}${urlApiRegisterChallenge}`;
+
+    cy.fixture('apiGetRegisterChallengeEmpty').then((emptyResponse) => {
+      cy.intercept('GET', urlApiRegisterChallengeLocalized, {
+        statusCode: responseStatusCode
+          ? responseStatusCode
+          : httpSuccessfullStatus,
+        body: responseBody ? responseBody : emptyResponse,
+      }).as('getRegisterChallenge');
+    });
+  },
+);
+
+/**
+ * Wait for intercept register challenge GET API call and compare response object
+ * Wait for `@getRegisterChallenge` intercept
+ */
+Cypress.Commands.add('waitForRegisterChallengeGetApi', () => {
+  cy.wait('@getRegisterChallenge').then((getRegisterChallenge) => {
+    expect(getRegisterChallenge.request.headers.authorization).to.include(
+      bearerTokeAuth,
+    );
+    if (getRegisterChallenge.response) {
+      expect(getRegisterChallenge.response.statusCode).to.equal(
+        httpSuccessfullStatus,
+      );
+      cy.fixture('apiGetRegisterChallengeEmpty').then((emptyResponse) => {
+        expect(getRegisterChallenge.response.body).to.deep.equal(emptyResponse);
+      });
+    }
+  });
+});
