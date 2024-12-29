@@ -89,10 +89,18 @@ export const registerChallengeAdapter = {
 
     if (storeState.paymentSubject !== undefined) {
       payload.payment_subject = storeState.paymentSubject;
+
+      // payment (only send if subject = `company` or `school`)
+      if (
+        storeState.paymentAmount !== undefined &&
+        [PaymentSubject.company, PaymentSubject.school].includes(
+          storeState.paymentSubject,
+        )
+      ) {
+        payload.payment_amount = storeState.paymentAmount.toString();
+      }
     }
-    if (storeState.paymentAmount !== undefined) {
-      payload.payment_amount = storeState.paymentAmount.toString();
-    }
+
     if (storeState.voucher !== undefined) {
       payload.discount_coupon = storeState.voucher?.name || '';
     }
