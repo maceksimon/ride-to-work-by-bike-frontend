@@ -242,8 +242,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Personal details updated to <${JSON.stringify(this.personalDetails, null, 2)}>`,
       );
-      // ! payment amount for 'company' and 'school' corresponds to donation
-      // TODO: load payment amount from API to payment step
+      // TODO: load payment amount from API into the payment step UI
+      // ! if subject = 'company' or 'school', amount corresponds to donation
       // this.setPaymentAmount(storeData.paymentAmount);
       // this.$log?.debug(
       //   `Payment amount updated to <${this.paymentAmount}>`,
@@ -257,14 +257,14 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.setOrganizationType(OrganizationType.school);
       } else {
         // if payment subject is "individual" or "voucher"
-        // ! This will reset organization, subsidiary and team IDs.
-        // ! To prevent reset, we need to set correct organizationType.
+        // ! resetting type will reset organization, subsidiary and team IDs
+        // TODO: prevent reset, by setting correct organizationType (unknown)
         this.setOrganizationType(OrganizationType.none);
       }
       this.$log?.debug(
         `Organization type updated to <${this.organizationType}>`,
       );
-      // TODO: set voucher with discount value
+      // TODO: set voucher with discount value (unknown from API)
       this.setOrganizationId(storeData.organizationId);
       this.$log?.debug(`Organization ID updated to <${this.organizationId}>`);
       this.setSubsidiaryId(storeData.subsidiaryId);
@@ -273,26 +273,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(`Team ID updated to <${this.teamId}>`);
       this.setMerchId(storeData.merchId);
       this.$log?.debug(`Merch ID updated to <${this.merchId}>`);
-    },
-    /**
-     * Post registration data to API
-     * @param {RegisterChallengePostPayload} payload - Registration data to send
-     * @returns {Promise<RegisterChallengePostResponse | null>}
-     */
-    async postRegisterChallenge(
-      payload: RegisterChallengePostPayload,
-    ): Promise<RegisterChallengePostResponse | null> {
-      const { registerChallenge } = useApiPostRegisterChallenge(this.$log);
-      this.isLoadingRegisterChallenge = true;
-
-      this.$log?.debug(
-        `Posting registration data to API <${JSON.stringify(payload, null, 2)}>`,
-      );
-
-      const response = await registerChallenge(payload);
-      this.isLoadingRegisterChallenge = false;
-
-      return response;
     },
     /**
      * Submit a registration step
@@ -324,6 +304,26 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       );
       // post payload to API
       return this.postRegisterChallenge(payload);
+    },
+    /**
+     * Post registration data to API
+     * @param {RegisterChallengePostPayload} payload - Registration data to send
+     * @returns {Promise<RegisterChallengePostResponse | null>}
+     */
+    async postRegisterChallenge(
+      payload: RegisterChallengePostPayload,
+    ): Promise<RegisterChallengePostResponse | null> {
+      const { registerChallenge } = useApiPostRegisterChallenge(this.$log);
+      this.isLoadingRegisterChallenge = true;
+
+      this.$log?.debug(
+        `Posting registration data to API <${JSON.stringify(payload, null, 2)}>`,
+      );
+
+      const response = await registerChallenge(payload);
+      this.isLoadingRegisterChallenge = false;
+
+      return response;
     },
     async loadSubsidiariesToStore(logger: Logger | null) {
       const { subsidiaries, loadSubsidiaries } = useApiGetSubsidiaries(logger);
