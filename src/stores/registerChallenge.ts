@@ -242,8 +242,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Personal details updated to <${JSON.stringify(this.personalDetails, null, 2)}>`,
       );
-      // TODO: load payment amount from API into the payment step UI
       // ! if subject = 'company' or 'school', amount corresponds to donation
+      // TODO: load payment amount from API into the payment step UI
       // this.setPaymentAmount(storeData.paymentAmount);
       // this.$log?.debug(
       //   `Payment amount updated to <${this.paymentAmount}>`,
