@@ -100,7 +100,27 @@ export default defineComponent({
 
     // load merchandise on mount
     onMounted(async () => {
-      registerChallengeStore.loadMerchandiseToStore(logger);
+      await registerChallengeStore.loadMerchandiseToStore(logger);
+      // if merch ID is set, select the corresponding item
+      if (registerChallengeStore.getMerchId) {
+        logger?.debug(
+          `Merch ID <${registerChallengeStore.getMerchId}> is set.`,
+        );
+        // find card that contains the merch ID
+        const item = merchandiseItems.value.find(
+          (item) => item.id === registerChallengeStore.getMerchId,
+        );
+        // select gender and size
+        if (item) {
+          logger?.debug(`Found item <${JSON.stringify(item, null, 2)}>.`);
+          selectedGender.value = item.gender;
+          selectedSize.value = item.id;
+        } else {
+          logger?.debug(
+            `No item found for merch ID <${registerChallengeStore.getMerchId}>.`,
+          );
+        }
+      }
     });
 
     const merchandiseItems = computed(

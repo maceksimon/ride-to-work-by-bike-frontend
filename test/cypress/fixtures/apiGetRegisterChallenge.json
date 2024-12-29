@@ -14,7 +14,7 @@
         "language": "cs",
         "occupation": "",
         "age_group": "",
-        "newsletter": "",
+        "newsletter": "challenge",
         "personal_data_opt_in": true,
         "discount_coupon": "",
         "payment_subject": "",
@@ -22,10 +22,10 @@
         "payment_status": "none",
         "payment_amount": ""
       },
-      "team_id": 16249,
-      "organization_id": 2350,
-      "subsidiary_id": 3409,
-      "t_shirt_size_id": 118
+      "team_id": 2451,
+      "organization_id": 987,
+      "subsidiary_id": 1358,
+      "t_shirt_size_id": 133
     }
   ]
 }

@@ -1710,7 +1710,7 @@ Cypress.Commands.add(
  * Wait for intercept register challenge GET API call and compare response object
  * Wait for `@getRegisterChallenge` intercept
  */
-Cypress.Commands.add('waitForRegisterChallengeGetApi', () => {
+Cypress.Commands.add('waitForRegisterChallengeGetApi', (response) => {
   cy.wait('@getRegisterChallenge').then((getRegisterChallenge) => {
     expect(getRegisterChallenge.request.headers.authorization).to.include(
       bearerTokeAuth,
@@ -1719,9 +1719,7 @@ Cypress.Commands.add('waitForRegisterChallengeGetApi', () => {
       expect(getRegisterChallenge.response.statusCode).to.equal(
         httpSuccessfullStatus,
       );
-      cy.fixture('apiGetRegisterChallengeEmpty').then((emptyResponse) => {
-        expect(getRegisterChallenge.response.body).to.deep.equal(emptyResponse);
-      });
+      expect(getRegisterChallenge.response.body).to.deep.equal(response);
     }
   });
 });

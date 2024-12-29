@@ -239,13 +239,23 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       const storeData = registerChallengeAdapter.toStoreData(registration);
       // update store state
       this.setPersonalDetails(storeData.personalDetails);
+      this.$log?.debug(
+        `Personal details updated to <${JSON.stringify(this.personalDetails, null, 2)}>`,
+      );
+      // !in order not to reset organization, subsidiary and team IDs, we need to set organizationType
+      this.setOrganizationType(OrganizationType.company);
+      this.$log?.debug(
+        `Organization type updated to <${this.organizationType}>`,
+      );
       this.setOrganizationId(storeData.organizationId);
+      this.$log?.debug(`Organization ID updated to <${this.organizationId}>`);
       this.setSubsidiaryId(storeData.subsidiaryId);
+      this.$log?.debug(`Subsidiary ID updated to <${this.subsidiaryId}>`);
       this.setTeamId(storeData.teamId);
+      this.$log?.debug(`Team ID updated to <${this.teamId}>`);
       this.setMerchId(storeData.merchId);
+      this.$log?.debug(`Merch ID updated to <${this.merchId}>`);
       // TODO: set voucher with discount value
-
-      this.$log?.debug('Store state updated from registration data');
     },
     /**
      * Post registration data to API
