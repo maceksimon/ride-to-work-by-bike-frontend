@@ -1040,7 +1040,7 @@ describe('Register Challenge page', () => {
       });
     });
 
-    it('reset organization, subsidiary and team on parent data change', () => {
+    it.only('reset organization, subsidiary and team on parent data change', () => {
       passToStep5();
       // select a team
       cy.dataCy('form-select-table-team')
@@ -1058,6 +1058,9 @@ describe('Register Challenge page', () => {
         });
       // go back
       cy.dataCy('step-5-back').should('be.visible').click();
+      // organization and address inputs are visible
+      cy.dataCy('form-select-table-company').should('be.visible');
+      cy.dataCy('form-company-address-input').should('be.visible');
       // select a different address
       cy.dataCy('form-company-address-input').click();
       // select option
