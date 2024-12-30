@@ -447,6 +447,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       'teams',
       'merchandiseItems',
       'merchandiseCards',
+      'ipAddressData',
     ],
   },
 });
