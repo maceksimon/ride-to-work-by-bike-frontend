@@ -31,6 +31,8 @@ import type {
   MerchandiseItem,
 } from '../components/types/Merchandise';
 import { i18n } from '../boot/i18n';
+import { useChallengeStore } from './challenge';
+import { PriceLevelCategory } from '../components/enums/Challenge';
 
 const emptyFormPersonalDetails: RegisterChallengePersonalDetailsForm = {
   firstName: '',
@@ -139,6 +141,15 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         );
       }
       return '';
+    },
+    /**
+     * Get default payment amount for company registration
+     * @returns {number} - Default company payment amount
+     */
+    getDefaultPaymentAmountCompany(): number {
+      const challengeStore = useChallengeStore();
+      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+      return currentPriceLevels[PriceLevelCategory.company].price;
     },
   },
 

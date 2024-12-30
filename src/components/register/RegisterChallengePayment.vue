@@ -55,8 +55,10 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { Currency } from '../../composables/useFormatPrice';
 import { PaymentAmount, PaymentSubject } from '../enums/Payment';
 import { OrganizationType } from '../types/Organization';
+import { PriceLevelCategory } from '../enums/Challenge';
 
 // stores
+import { useChallengeStore } from '../../stores/challenge';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 // types
@@ -77,15 +79,20 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
+    const challengeStore = useChallengeStore();
     // constants
     const defaultPaymentAmountMax = parseInt(
       rideToWorkByBikeConfig.entryFeePaymentMax,
     );
     logger?.debug(`Default max. payment amount <${defaultPaymentAmountMax}>.`);
-    const defaultPaymentAmountMin = parseInt(
-      rideToWorkByBikeConfig.entryFeePaymentMin,
+    // get prices for each category
+    const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+    const defaultPaymentAmountMin =
+      currentPriceLevels[PriceLevelCategory.basic].price;
+    logger?.debug(
+      `Default min. payment amount basic <${defaultPaymentAmountMin}>.`,
     );
-    logger?.debug(`Default min. payment amount <${defaultPaymentAmountMin}>.`);
+
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
     const { getPaletteColor, lighten } = colors;
     const primaryColor = getPaletteColor('primary');

@@ -9,11 +9,14 @@ import { useApiGetCampaign } from '../composables/useApiGetCampaign';
 import { timestampToDatetimeString } from 'src/utils';
 
 // enums
-import { ChallengeStatus } from '../components/enums/Challenge';
+import {
+  ChallengeStatus,
+  PriceLevelCategory,
+} from '../components/enums/Challenge';
 
 // types
 import type { Logger } from '../components/types/Logger';
-import type { Phase } from '../components/types/Challenge';
+import type { Phase, PriceLevel } from '../components/types/Challenge';
 
 export const useChallengeStore = defineStore('challenge', {
   state: () => ({
@@ -31,6 +34,7 @@ export const useChallengeStore = defineStore('challenge', {
     phaseSet: [] as Phase[],
     daysActive: null as number | null,
     maxTeamMembers: null as number | null,
+    priceLevel: [] as PriceLevel[],
   }),
 
   getters: {
@@ -58,11 +62,44 @@ export const useChallengeStore = defineStore('challenge', {
     getMaxTeamMembers(): number | null {
       return this.maxTeamMembers;
     },
+    getPriceLevel(): PriceLevel[] {
+      return this.priceLevel;
+    },
+    /**
+     * Get current price levels for each category
+     * Returns the most recent price levels for basic and company categories
+     * based on takes_effect_on date
+     * @returns {Record<PriceLevelCategory, PriceLevel>} - Current price levels
+     *                                                     by category
+     */
+    getCurrentPriceLevels(): Record<PriceLevelCategory, PriceLevel> {
+      // First get the most recent price level objects
+      return this.priceLevel.reduce(
+        (mostRecentPriceLevelsByCategory, priceLevel) => {
+          const currentDate = new Date(priceLevel.takes_effect_on);
+          const existingLevel =
+            mostRecentPriceLevelsByCategory[priceLevel.category];
+
+          if (
+            !existingLevel ||
+            currentDate > new Date(existingLevel.takes_effect_on)
+          ) {
+            mostRecentPriceLevelsByCategory[priceLevel.category] = priceLevel;
+          }
+
+          return mostRecentPriceLevelsByCategory;
+        },
+        {} as Record<PriceLevelCategory, PriceLevel>,
+      );
+    },
   },
 
   actions: {
     setMaxTeamMembers(maxTeamMembers: number | null): void {
       this.maxTeamMembers = maxTeamMembers;
+    },
+    setPriceLevel(priceLevel: PriceLevel[]): void {
+      this.priceLevel = priceLevel;
     },
     async loadPhaseSet(): Promise<void> {
       const { campaigns, loadCampaign } = useApiGetCampaign(this.$log);
@@ -101,6 +138,15 @@ export const useChallengeStore = defineStore('challenge', {
         );
       } else {
         this.$log?.info('No this campaign max team members found.');
+      }
+
+      if (campaigns.value.length && campaigns.value[0]?.price_level) {
+        this.$log?.debug(
+          `Set store this campaign price level <${campaigns.value[0].price_level}>.`,
+        );
+        this.priceLevel = campaigns.value[0].price_level;
+      } else {
+        this.$log?.info('No this campaign price level found.');
       }
     },
     /**

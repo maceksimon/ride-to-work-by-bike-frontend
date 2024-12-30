@@ -3,3 +3,8 @@ export enum ChallengeStatus {
   during = 'during',
   after = 'after',
 }
+
+export enum PriceLevelCategory {
+  basic = 'basic',
+  company = 'company',
+}

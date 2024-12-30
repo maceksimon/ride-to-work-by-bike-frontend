@@ -1,3 +1,6 @@
+// enums
+import { PriceLevelCategory } from '../enums/Challenge';
+
 // types
 import type { TransportType } from './Route';
 
@@ -26,8 +29,16 @@ export interface Phase {
   date_to: string;
 }
 
+export interface PriceLevel {
+  name: string;
+  price: number;
+  category: PriceLevelCategory;
+  takes_effect_on: string;
+}
+
 export interface Campaign {
   phase_set: Phase[];
+  price_level: PriceLevel[];
   id: number;
   slug: string;
   days_active: number;

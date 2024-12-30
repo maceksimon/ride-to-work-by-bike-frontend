@@ -31,6 +31,44 @@
           "date_to": "2024-10-07"
         }
       ],
+      "price_level": [
+        {
+          "name": "1. fáze startovného pro jednotlivce",
+          "price": 290.0,
+          "category": "basic",
+          "takes_effect_on": "2000-01-01"
+        },
+        {
+          "name": "1. fáze startovného pro firmy",
+          "price": 290.0,
+          "category": "company",
+          "takes_effect_on": "2000-01-01"
+        },
+        {
+          "name": "2. fáze startovného pro jednotlivce",
+          "price": 340.0,
+          "category": "basic",
+          "takes_effect_on": "2019-04-03"
+        },
+        {
+          "name": "2. fáze startovného pro firmy",
+          "price": 340.0,
+          "category": "company",
+          "takes_effect_on": "2019-04-03"
+        },
+        {
+          "name": "3. fáze startovného pro jednotlivce",
+          "price": 390.0,
+          "category": "basic",
+          "takes_effect_on": "2022-09-15"
+        },
+        {
+          "name": "3. fáze startovného pro firmy",
+          "price": 390.0,
+          "category": "company",
+          "takes_effect_on": "2022-09-15"
+        }
+      ],
       "id": 263,
       "slug": "dpnk",
       "days_active": 8,
