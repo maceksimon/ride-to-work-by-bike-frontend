@@ -1040,7 +1040,7 @@ describe('Register Challenge page', () => {
       });
     });
 
-    it.only('reset organization, subsidiary and team on parent data change', () => {
+    it('reset organization, subsidiary and team on parent data change', () => {
       passToStep5();
       // select a team
       cy.dataCy('form-select-table-team')
@@ -1252,7 +1252,7 @@ describe('Register Challenge page', () => {
       cy.viewport('macbook-16');
     });
 
-    it.only('fetches the registration status on load', () => {
+    it('fetches the registration status on load', () => {
       cy.window().should('have.property', 'i18n');
       cy.window().then((win) => {
         cy.fixture('apiGetRegisterChallenge.json').then(
