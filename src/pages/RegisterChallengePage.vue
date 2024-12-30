@@ -49,6 +49,7 @@ import { useOrganizations } from 'src/composables/useOrganizations';
 
 // enums
 import { OrganizationType } from 'src/components/types/Organization';
+// import { PaymentState } from 'src/components/enums/Payment';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
@@ -178,6 +179,39 @@ export default defineComponent({
       router.push(routesConf['home']['path']);
     };
 
+    /**
+     * Payment-related logic
+     */
+    // const isShownPaymentForm = computed(() => {
+    //   switch (registerChallengeStore.getPaymentState) {
+    //     case PaymentState.done:
+    //       return false;
+    //     case PaymentState.none:
+    //       return true;
+    //     case PaymentState.noAdmission:
+    //       return true;
+    //     case PaymentState.waiting:
+    //       return true;
+    //     case PaymentState.unknown:
+    //       return false;
+    //   }
+    // });
+
+    // const isShownPaymentNextStepButton = computed(() => {
+    //   switch (registerChallengeStore.getPaymentState) {
+    //     case PaymentState.done: // Allow to pass always
+    //       return true;
+    //     case PaymentState.none: // Allow to pass if subject is `organization`
+    //       return false;
+    //     case PaymentState.noAdmission: // TODO: determine UI for no_admission
+    //       return true;
+    //     case PaymentState.waiting: // Allow to pass if subject is `organization`
+    //       return true;
+    //     case PaymentState.unknown:
+    //       return false;
+    //   }
+    // });
+
     return {
       challengeMonth,
       containerFormWidth,
@@ -295,7 +329,6 @@ export default defineComponent({
             <q-form ref="stepPaymentRef">
               <register-challenge-payment />
             </q-form>
-            <!-- TODO: Handle redirection to payment gateway and back to registration -->
             <q-stepper-navigation class="flex justify-end">
               <q-btn
                 unelevated
