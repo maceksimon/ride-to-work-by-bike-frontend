@@ -5,7 +5,8 @@
  * @description * Use this component to render a payment widget for the
  * registration process.
  * Options for payment amount are set in the config file as
- * `entryFeePaymentMin`, `entryFeePaymentMax` and `entryFeePaymentOptions`.
+ * `entryFeePaymentMax` and `entryFeePaymentOptions`.
+ * The minimum payment amount is set from API in the challenge store.
  *
  * @components
  * - `FormFieldCompany`: Component to render company select.

@@ -21,11 +21,14 @@
 // libraries
 import { defineComponent, onUnmounted, ref, watch } from 'vue';
 
+// enums
+import { PriceLevelCategory } from '../enums/Challenge';
+
 // components
 import FormFieldSliderNumber from './FormFieldSliderNumber.vue';
 
-// config
-import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+// stores
+import { useChallengeStore } from '../../stores/challenge';
 
 export default defineComponent({
   name: 'FormFieldDonation',
@@ -34,9 +37,10 @@ export default defineComponent({
   },
   emits: ['update:donation'],
   setup(props, { emit }) {
-    const defaultPaymentAmountMin = parseInt(
-      rideToWorkByBikeConfig.entryFeePaymentMin,
-    );
+    const challengeStore = useChallengeStore();
+    const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+    const defaultPaymentAmountMin =
+      currentPriceLevels[PriceLevelCategory.basic].price;
     const amount = ref<number>(defaultPaymentAmountMin);
     const isDonation = ref<boolean>(false);
 

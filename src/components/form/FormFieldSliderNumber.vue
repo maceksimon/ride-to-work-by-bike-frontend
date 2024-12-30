@@ -25,11 +25,19 @@
 // libraries
 import { computed, defineComponent } from 'vue';
 
+// enums
+import { PriceLevelCategory } from '../enums/Challenge';
+
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// stores
+import { useChallengeStore } from '../../stores/challenge';
+
 // variables
-const defaultMin = parseInt(rideToWorkByBikeConfig.entryFeePaymentMin);
+const challengeStore = useChallengeStore();
+const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+const defaultMin = currentPriceLevels[PriceLevelCategory.basic].price;
 const defaultMax = parseInt(rideToWorkByBikeConfig.entryFeePaymentMax);
 
 export default defineComponent({

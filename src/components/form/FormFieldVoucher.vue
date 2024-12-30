@@ -34,8 +34,10 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { Currency } from '../../composables/useFormatPrice';
+import { PriceLevelCategory } from '../enums/Challenge';
 
 // stores
+import { useChallengeStore } from '../../stores/challenge';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 // types
@@ -49,9 +51,10 @@ export default defineComponent({
   props: {},
   setup() {
     const formFieldTextRequiredRef = ref(null);
-    const defaultPaymentAmountMin = parseInt(
-      rideToWorkByBikeConfig.entryFeePaymentMin,
-    );
+    const challengeStore = useChallengeStore();
+    const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+    const defaultPaymentAmountMin =
+      currentPriceLevels[PriceLevelCategory.basic].price;
 
     const registerChallengeStore = useRegisterChallengeStore();
 
