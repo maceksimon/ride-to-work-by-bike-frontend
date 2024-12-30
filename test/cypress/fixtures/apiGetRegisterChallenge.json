@@ -18,9 +18,9 @@
         "personal_data_opt_in": true,
         "discount_coupon": "",
         "payment_subject": "company",
-        "payment_type": "",
-        "payment_status": "none",
-        "payment_amount": 500
+        "payment_type": "fc",
+        "payment_status": "waiting",
+        "payment_amount": 390
       },
       "team_id": 2451,
       "organization_id": 987,

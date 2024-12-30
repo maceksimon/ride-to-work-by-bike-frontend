@@ -236,42 +236,47 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           2,
         )}>`,
       );
-      const storeData = registerChallengeAdapter.toStoreData(registration);
+      const parsedResponse = registerChallengeAdapter.toStoreData(registration);
       // update store state
-      this.setPersonalDetails(storeData.personalDetails);
+      this.setPersonalDetails(parsedResponse.personalDetails);
       this.$log?.debug(
         `Personal details updated to <${JSON.stringify(this.personalDetails, null, 2)}>`,
       );
-      // ! if subject = 'company' or 'school', amount corresponds to donation
-      // TODO: load payment amount from API into the payment step UI
-      // this.setPaymentAmount(storeData.paymentAmount);
-      // this.$log?.debug(
-      //   `Payment amount updated to <${this.paymentAmount}>`,
-      // );
-      // TODO: set voucher name to display on complete payment step
-      this.setPaymentSubject(storeData.paymentSubject);
+      /**
+       * The paymentAmount value is sent for subject = 'company' or 'school'.
+       * It indicates what was the price for which the user registered.
+       * We store the amount because the price may change.
+       */
+      /**
+       * The paymentVoucher value is sent when discounted payment is made.
+       * We do not need the name value (unless for information purposes)
+       * as the payment must be made immediately.
+       */
+      this.setPaymentSubject(parsedResponse.paymentSubject);
       this.$log?.debug(`Payment subject updated to <${this.paymentSubject}>`);
-      // preset organization type based on payment subject
-      if (storeData.paymentSubject === PaymentSubject.company) {
+      /**
+       * In case the payment subject has been selected but the organizationType
+       * has not been set by completing the step "Participation", we set
+       * the organizationType based on the payment subject.
+       */
+      if (parsedResponse.paymentSubject === PaymentSubject.company) {
         this.setOrganizationType(OrganizationType.company);
-      } else if (storeData.paymentSubject === PaymentSubject.school) {
+      } else if (parsedResponse.paymentSubject === PaymentSubject.school) {
         this.setOrganizationType(OrganizationType.school);
-      } else {
-        // if payment subject is "individual" or "voucher"
-        // ! resetting type will reset organization, subsidiary and team IDs
-        // TODO: prevent reset, by setting correct organizationType (unknown)
-        this.setOrganizationType(OrganizationType.none);
+      }
+      if (parsedResponse.organizationType) {
+        this.setOrganizationType(parsedResponse.organizationType);
       }
       this.$log?.debug(
         `Organization type updated to <${this.organizationType}>`,
       );
-      this.setOrganizationId(storeData.organizationId);
+      this.setOrganizationId(parsedResponse.organizationId);
       this.$log?.debug(`Organization ID updated to <${this.organizationId}>`);
-      this.setSubsidiaryId(storeData.subsidiaryId);
+      this.setSubsidiaryId(parsedResponse.subsidiaryId);
       this.$log?.debug(`Subsidiary ID updated to <${this.subsidiaryId}>`);
-      this.setTeamId(storeData.teamId);
+      this.setTeamId(parsedResponse.teamId);
       this.$log?.debug(`Team ID updated to <${this.teamId}>`);
-      this.setMerchId(storeData.merchId);
+      this.setMerchId(parsedResponse.merchId);
       this.$log?.debug(`Merch ID updated to <${this.merchId}>`);
     },
     /**

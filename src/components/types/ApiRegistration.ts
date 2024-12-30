@@ -28,6 +28,7 @@ export type RegisterChallengeResult = {
   organization_id: number;
   subsidiary_id: number;
   t_shirt_size_id: number;
+  organization_type: string;
 };
 
 export type RegisterChallengeResponse = {

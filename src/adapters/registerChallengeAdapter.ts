@@ -2,6 +2,7 @@
 import { Gender } from '../components/types/Profile';
 import { NewsletterType } from '../components/types/Newsletter';
 import { PaymentSubject } from '../components/enums/Payment';
+import { OrganizationType } from '../components/types/Organization';
 
 // types
 import type {
@@ -40,6 +41,7 @@ export const registerChallengeAdapter = {
       paymentAmount: apiData.personal_details.payment_amount
         ? parseInt(apiData.personal_details.payment_amount)
         : 0,
+      organizationType: apiData.organization_type as OrganizationType,
       subsidiaryId: apiData.subsidiary_id,
       teamId: apiData.team_id,
       merchId: apiData.t_shirt_size_id,
@@ -87,16 +89,16 @@ export const registerChallengeAdapter = {
       }
     }
 
-    if (storeState.paymentSubject !== undefined) {
+    // only send payment subject and amount if it's a company or school
+    if (
+      storeState.paymentSubject &&
+      [PaymentSubject.company, PaymentSubject.school].includes(
+        storeState.paymentSubject,
+      )
+    ) {
       payload.payment_subject = storeState.paymentSubject;
 
-      // payment (only send if subject = `company` or `school`)
-      if (
-        storeState.paymentAmount !== undefined &&
-        [PaymentSubject.company, PaymentSubject.school].includes(
-          storeState.paymentSubject,
-        )
-      ) {
+      if (storeState.paymentAmount !== undefined) {
         payload.payment_amount = storeState.paymentAmount.toString();
       }
     }
