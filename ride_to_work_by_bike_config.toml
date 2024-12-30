@@ -79,6 +79,7 @@ iDontWantMerchandiseItemCode = "nic"
 
 apiBase = "https://test.dopracenakole.cz/rest/"
 apiBaseRtwbbFeed = "https://dopracenakole.cz/feed/"
+apiBaseIpAddress = "https://ipapi.co/json/"
 
 apiVersion = "1.0"
 apiDefaultLang = "cs"

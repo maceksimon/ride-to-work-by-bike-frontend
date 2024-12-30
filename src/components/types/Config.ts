@@ -44,6 +44,7 @@ export interface ConfigGlobal {
   notifyMessagePosition: string;
   apiBase: string;
   apiBaseRtwbbFeed: string;
+  apiBaseIpAddress: string;
   apiVersion: string;
   apiDefaultLang: string;
   urlApiDiscountCoupon: string;
