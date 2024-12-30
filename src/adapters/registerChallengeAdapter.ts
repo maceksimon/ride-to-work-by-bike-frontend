@@ -18,8 +18,8 @@ import type { ValidatedCoupon } from '../components/types/Coupon';
 export const registerChallengeAdapter = {
   /**
    * Convert API registration data to store format
-   * @param apiData - Registration data from API
-   * @returns Store-compatible registration data
+   * @param {RegisterChallengeResult} apiData - Registration data from API
+   * @returns {object} Store-compatible registration data
    */
   toStoreData(apiData: RegisterChallengeResult) {
     const personalDetails: RegisterChallengePersonalDetailsForm = {
@@ -50,9 +50,9 @@ export const registerChallengeAdapter = {
   },
 
   /**
-   * Convert store state to API payload format, including only defined properties
-   * @param storeState - Partial store state with only properties to be sent
-   * @returns API-compatible payload with only defined properties
+   * Convert store state to API payload format, including given properties
+   * @param {object} storeState - Partial store state with properties to send
+   * @returns {RegisterChallengePostPayload} API-compatible payload
    */
   toApiPayload(storeState: {
     personalDetails?: Partial<RegisterChallengePersonalDetailsForm>;
@@ -118,8 +118,8 @@ export const registerChallengeAdapter = {
 
   /**
    * Parse newsletter string from API to array of NewsletterType
-   * @param newsletter - Newsletter string from API
-   * @returns Array of NewsletterType
+   * @param {string} newsletter - Newsletter string from API
+   * @returns {NewsletterType[]} Array of NewsletterType
    */
   parseNewsletterValues(newsletter: string): NewsletterType[] {
     if (!newsletter) return [];
@@ -130,8 +130,8 @@ export const registerChallengeAdapter = {
 
   /**
    * Convert array of newsletter types to combined API value
-   * @param newsletters - Array of newsletter types
-   * @returns Combined newsletter string value
+   * @param {NewsletterType[]} newsletters - Array of newsletter types
+   * @returns {string} Combined newsletter string value
    */
   combineNewsletterValues(newsletters: NewsletterType[]): string {
     if (!newsletters?.length) return '';
