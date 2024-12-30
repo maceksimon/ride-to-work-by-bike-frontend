@@ -13,6 +13,7 @@ import { useApiGetTeams } from 'src/composables/useApiGetTeams';
 import { useApiGetMerchandise } from 'src/composables/useApiGetMerchandise';
 import { useApiGetFilteredMerchandise } from 'src/composables/useApiGetFilteredMerchandise';
 import { useApiPostRegisterChallenge } from '../composables/useApiPostRegisterChallenge';
+import { useApiGetIpAddress } from '../composables/useApiGetIpAddress';
 
 // enums
 import { Gender } from '../components/types/Profile';
@@ -43,6 +44,7 @@ import type {
   RegisterChallengeResult,
   ToApiPayloadStoreState,
 } from '../components/types/ApiRegistration';
+import type { IpAddressResponse } from '../components/types/ApiIpAddress';
 
 const emptyFormPersonalDetails: RegisterChallengePersonalDetailsForm = {
   firstName: '',
@@ -76,11 +78,13 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     merchandiseItems: [] as MerchandiseItem[],
     merchandiseCards: {} as Record<Gender, MerchandiseCard[]>,
     isLoadingRegisterChallenge: false,
+    ipAddressData: null as IpAddressResponse | null,
     isLoadingSubsidiaries: false,
     isLoadingOrganizations: false,
     isLoadingTeams: false,
     isLoadingMerchandise: false,
     isLoadingFilteredMerchandise: false,
+    isLoadingIpAddress: false,
   }),
 
   getters: {
@@ -164,6 +168,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       const currentPriceLevels = challengeStore.getCurrentPriceLevels;
       return currentPriceLevels[PriceLevelCategory.company].price;
     },
+    getIpAddressData: (state): IpAddressResponse | null => state.ipAddressData,
+    getIpAddress: (state): string => state.ipAddressData?.ip || '',
   },
 
   actions: {
@@ -415,6 +421,22 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         `Loaded filtered merchandise item ID <${this.getMerchId}> saved into store.`,
       );
       this.isLoadingFilteredMerchandise = false;
+    },
+    /**
+     * Load IP address data from API and save to store
+     */
+    async loadIpAddressToStore(): Promise<void> {
+      const { ipAddressData, loadIpAddress } = useApiGetIpAddress(this.$log);
+      this.$log?.debug('Loading IP address data into store.');
+      this.isLoadingIpAddress = true;
+      await loadIpAddress();
+      if (ipAddressData.value) {
+        this.ipAddressData = ipAddressData.value;
+        this.$log?.debug(
+          `IP address data <${JSON.stringify(this.ipAddressData, null, 2)}> saved into store.`,
+        );
+      }
+      this.isLoadingIpAddress = false;
     },
   },
 
