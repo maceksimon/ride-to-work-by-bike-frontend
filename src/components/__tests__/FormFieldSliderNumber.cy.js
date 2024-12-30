@@ -1,8 +1,14 @@
+import { ref } from 'vue';
+import { setActivePinia, createPinia } from 'pinia';
 import { colors } from 'quasar';
-import FormFieldTestWrapper from '../global/FormFieldTestWrapper.vue';
 import FormFieldSliderNumber from 'components/form/FormFieldSliderNumber.vue';
 import { i18n } from '../../boot/i18n';
+import { useChallengeStore } from '../../stores/challenge';
+import { vModelAdapter } from '../../../test/cypress/utils';
+import { getCurrentPriceLevelsUtil } from '../../utils/price-levels';
+import { PriceLevelCategory } from '../enums/Challenge';
 
+// colors
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
@@ -15,58 +21,93 @@ const selectorFormFieldSliderNumberSlider = 'form-field-slider-number-slider';
 // variables
 const defaultValue = 500;
 const valueThousand = 1000;
+const valueHundred = 100;
+let valueMin = 0;
+
+const model = ref(defaultValue);
+function setModelValue(value) {
+  model.value = value;
+}
 
 describe('<FormFieldSliderNumber>', () => {
+  before(() => {
+    cy.fixture('apiGetThisCampaign.json').then((response) => {
+      const priceLevels = response.results[0].price_level;
+      const currentPriceLevels = getCurrentPriceLevelsUtil(priceLevels);
+      valueMin = currentPriceLevels[PriceLevelCategory.basic].price;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['currencyUnitCzk'], 'global', i18n);
   });
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.wrap(setModelValue(defaultValue));
       cy.mount(FormFieldSliderNumber, {
         props: {
-          modelValue: defaultValue,
+          ...vModelAdapter(model),
         },
       }).then(({ wrapper, component }) => {
         cy.wrap(wrapper).as('wrapper');
         cy.wrap(component).as('component');
       });
       cy.viewport('macbook-13');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
-    interactionTests();
     coreTests();
+    interactionTests();
   });
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.wrap(setModelValue(defaultValue));
       cy.mount(FormFieldSliderNumber, {
         props: {
-          modelValue: defaultValue,
+          ...vModelAdapter(model),
         },
       }).then(({ wrapper, component }) => {
         cy.wrap(wrapper).as('wrapper');
         cy.wrap(component).as('component');
       });
       cy.viewport('iphone-6');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
-    interactionTests();
     coreTests();
+    interactionTests();
   });
 
   context('dynamic', () => {
     beforeEach(() => {
-      cy.mount(FormFieldTestWrapper, {
+      setActivePinia(createPinia());
+      cy.wrap(setModelValue(defaultValue));
+      cy.mount(FormFieldSliderNumber, {
         props: {
-          component: 'FormFieldSliderNumber',
-          defaultValue: defaultValue,
+          ...vModelAdapter(model),
         },
       }).then(({ wrapper, component }) => {
         cy.wrap(wrapper).as('wrapper');
         cy.wrap(component).as('component');
       });
       cy.viewport('iphone-6');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
     coreTests();
@@ -114,5 +155,15 @@ function interactionTests() {
       const lastEventValue = eventValues['update:modelValue'].pop()[0];
       expect(lastEventValue).to.equal(valueThousand);
     });
+  });
+
+  it('does not allow values below minimum', () => {
+    cy.dataCy(selectorFormFieldSliderNumberInput).clear();
+    cy.dataCy(selectorFormFieldSliderNumberInput).type(valueHundred);
+    cy.dataCy(selectorFormFieldSliderNumberInput).blur();
+    cy.dataCy(selectorFormFieldSliderNumberInput).should(
+      'have.value',
+      valueMin,
+    );
   });
 }

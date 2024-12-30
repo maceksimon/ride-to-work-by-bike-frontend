@@ -6,9 +6,12 @@ import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { PaymentAmount, PaymentSubject } from '../enums/Payment';
 import { useRegisterChallengeStore } from 'stores/registerChallenge';
+import { useChallengeStore } from 'stores/challenge';
 import { getRadioOption } from '../../../test/cypress/utils';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { OrganizationType } from '../types/Organization';
+import { getCurrentPriceLevelsUtil } from '../../utils/price-levels';
+import { PriceLevelCategory } from '../../components/enums/Challenge';
 
 // selectors
 const selectorBannerPaymentMinimum = 'banner-payment-minimum';
@@ -39,9 +42,7 @@ const selectorVoucherInput = 'form-field-voucher-input';
 
 // variables
 const borderRadiusCardSmall = rideToWorkByBikeConfig.borderRadiusCardSmall;
-const defaultPaymentAmountMin = parseInt(
-  rideToWorkByBikeConfig.entryFeePaymentMin,
-);
+let defaultPaymentAmountMin = 0;
 const defaultPaymentAmountMax = parseInt(
   rideToWorkByBikeConfig.entryFeePaymentMax,
 );
@@ -63,6 +64,16 @@ const optionsPaymentSubject = [
 ];
 
 describe('<RegisterChallengePayment>', () => {
+  before(() => {
+    // dynamically load default payment amount from fixture
+    cy.fixture('apiGetThisCampaign.json').then((response) => {
+      const priceLevels = response.results[0].price_level;
+      const currentPriceLevels = getCurrentPriceLevelsUtil(priceLevels);
+      defaultPaymentAmountMin =
+        currentPriceLevels[PriceLevelCategory.basic].price;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       [
@@ -128,6 +139,11 @@ describe('<RegisterChallengePayment>', () => {
       cy.mount(RegisterChallengePayment, {
         props: {},
       });
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
       cy.viewport('macbook-16');
     });
 
@@ -173,6 +189,11 @@ describe('<RegisterChallengePayment>', () => {
       });
       cy.mount(RegisterChallengePayment, {
         props: {},
+      });
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
       });
       cy.viewport('iphone-6');
     });

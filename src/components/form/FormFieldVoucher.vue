@@ -52,9 +52,14 @@ export default defineComponent({
   setup() {
     const formFieldTextRequiredRef = ref(null);
     const challengeStore = useChallengeStore();
-    const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-    const defaultPaymentAmountMin =
-      currentPriceLevels[PriceLevelCategory.basic].price;
+    const defaultPaymentAmountMin = computed(() => {
+      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+      if (!currentPriceLevels) return 0;
+      const currentPriceLevelsBasic =
+        currentPriceLevels[PriceLevelCategory.basic];
+      if (!currentPriceLevelsBasic) return 0;
+      return currentPriceLevelsBasic.price;
+    });
 
     const registerChallengeStore = useRegisterChallengeStore();
 
@@ -118,7 +123,7 @@ export default defineComponent({
 
       // calculate discount from min payment amount
       const discountAmountInt: number = Math.round(
-        (defaultPaymentAmountMin * discount) / 100,
+        (defaultPaymentAmountMin.value * discount) / 100,
       );
 
       if (discount === 100) {

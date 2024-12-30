@@ -6,6 +6,9 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { couponAdapter } from '../../adapters/couponAdapter';
 import { useFormatPrice, Currency } from 'src/composables/useFormatPrice';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
+import { useChallengeStore } from '../../stores/challenge';
+import { getCurrentPriceLevelsUtil } from '../../utils/price-levels';
+import { PriceLevelCategory } from '../../components/enums/Challenge';
 
 // colors
 const { getPaletteColor } = colors;
@@ -22,13 +25,20 @@ const selectorVoucherButtonRemove = 'voucher-button-remove';
 const selectorVoucherWidget = 'voucher-widget';
 
 // variables
-const defaultPaymentAmountMin = parseInt(
-  rideToWorkByBikeConfig.entryFeePaymentMin,
-);
+let defaultPaymentAmountMin = 0;
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const { formatPriceCurrency } = useFormatPrice();
 
 describe('<FormFieldVoucher>', () => {
+  before(() => {
+    cy.fixture('apiGetThisCampaign.json').then((response) => {
+      const priceLevels = response.results[0].price_level;
+      const currentPriceLevels = getCurrentPriceLevelsUtil(priceLevels);
+      defaultPaymentAmountMin =
+        currentPriceLevels[PriceLevelCategory.basic].price;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       ['buttonVoucherSubmit', 'labelVoucher', 'textVoucher'],
@@ -50,8 +60,12 @@ describe('<FormFieldVoucher>', () => {
         props: {},
       });
       cy.viewport('macbook-16');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
-
     coreTests();
   });
 
@@ -62,6 +76,11 @@ describe('<FormFieldVoucher>', () => {
         props: {},
       });
       cy.viewport('iphone-6');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
     coreTests();
@@ -74,6 +93,11 @@ describe('<FormFieldVoucher>', () => {
         props: {},
       });
       cy.viewport('macbook-16');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
     it('allows to use and then remove coupon FULL', () => {
@@ -100,6 +124,11 @@ describe('<FormFieldVoucher>', () => {
         props: {},
       });
       cy.viewport('macbook-16');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
     it('allows to use and then remove coupon HALF', () => {
@@ -130,6 +159,11 @@ describe('<FormFieldVoucher>', () => {
         props: {},
       });
       cy.viewport('macbook-16');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
     it('renders active voucher if passed in', () => {
@@ -168,6 +202,11 @@ describe('<FormFieldVoucher>', () => {
         props: {},
       });
       cy.viewport('macbook-16');
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
+      });
     });
 
     it('renders active voucher if passed in', () => {

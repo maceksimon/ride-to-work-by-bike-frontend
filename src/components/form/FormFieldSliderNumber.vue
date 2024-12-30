@@ -35,9 +35,6 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useChallengeStore } from '../../stores/challenge';
 
 // variables
-const challengeStore = useChallengeStore();
-const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-const defaultMin = currentPriceLevels[PriceLevelCategory.basic].price;
 const defaultMax = parseInt(rideToWorkByBikeConfig.entryFeePaymentMax);
 
 export default defineComponent({
@@ -47,12 +44,10 @@ export default defineComponent({
     modelValue: {
       type: Number,
       required: true,
-      default: defaultMin,
     },
     min: {
       type: Number,
       required: false,
-      default: defaultMin,
     },
     max: {
       type: Number,
@@ -61,13 +56,29 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    // compute default min from store
+    const challengeStore = useChallengeStore();
+    const defaultMin = computed(() => {
+      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+      if (!currentPriceLevels) return 0;
+      const currentPriceLevelsBasic =
+        currentPriceLevels[PriceLevelCategory.basic];
+      if (!currentPriceLevelsBasic) return 0;
+      return currentPriceLevelsBasic.price;
+    });
+
+    // compute final min value from props or default min
+    const computedMin = computed(() => {
+      return props.min || defaultMin.value;
+    });
+
     const model = computed({
       get: (): number => {
         return props.modelValue;
       },
       set: (value: number) => {
-        if (value < props.min) {
-          value = props.min;
+        if (value < computedMin.value) {
+          value = computedMin.value;
         }
         if (value > props.max) {
           value = props.max;
@@ -78,6 +89,7 @@ export default defineComponent({
 
     return {
       model,
+      computedMin,
     };
   },
 });
@@ -91,7 +103,7 @@ export default defineComponent({
     <div class="col-7 col-sm flex items-center">
       <q-slider
         v-model="model"
-        :min="min"
+        :min="computedMin"
         :max="max"
         color="primary"
         data-cy="form-field-slider-number-slider"
@@ -103,7 +115,7 @@ export default defineComponent({
         outlined
         type="number"
         v-model.number="model"
-        :min="min"
+        :min="computedMin"
         :max="max"
         data-cy="form-field-slider-number-input"
       >

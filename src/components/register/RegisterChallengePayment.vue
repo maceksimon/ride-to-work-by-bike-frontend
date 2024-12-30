@@ -86,12 +86,17 @@ export default defineComponent({
       rideToWorkByBikeConfig.entryFeePaymentMax,
     );
     logger?.debug(`Default max. payment amount <${defaultPaymentAmountMax}>.`);
-    // get prices for each category
-    const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-    const defaultPaymentAmountMin =
-      currentPriceLevels[PriceLevelCategory.basic].price;
+    // get default min price from store
+    const defaultPaymentAmountMin = computed(() => {
+      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+      if (!currentPriceLevels) return 0;
+      const currentPriceLevelsBasic =
+        currentPriceLevels[PriceLevelCategory.basic];
+      if (!currentPriceLevelsBasic) return 0;
+      return currentPriceLevelsBasic.price;
+    });
     logger?.debug(
-      `Default min. payment amount basic <${defaultPaymentAmountMin}>.`,
+      `Default min. payment amount basic <${defaultPaymentAmountMin.value}>.`,
     );
 
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
@@ -126,15 +131,6 @@ export default defineComponent({
     );
 
     const { formatPriceCurrency } = useFormatPrice();
-    const defaultPaymentOption = {
-      label: formatPriceCurrency(defaultPaymentAmountMin, Currency.CZK),
-      value: String(defaultPaymentAmountMin),
-    };
-    logger?.debug(
-      `Default payment options <${JSON.stringify(defaultPaymentOption, null, 2)}>` +
-        ` for <${i18n.global.t('register.challenge.labelPaymentAmount')}>` +
-        ' radio button element.',
-    );
 
     // Build the optionsPaymentAmount array dynamically
     let paymentOptions: FormOption[] = [];
@@ -173,12 +169,16 @@ export default defineComponent({
       return registerChallengeStore.getVoucher;
     });
     // Model for 'Entry fee amount' radio button element must be string type (options values '390', ..., 'custom')
-    const selectedPaymentAmount = ref<string>(String(defaultPaymentAmountMin));
+    const selectedPaymentAmount = ref<string>(
+      String(defaultPaymentAmountMin.value),
+    );
     // Model for 'Entry fee amount' radio button element custom option slider element
-    const selectedPaymentAmountCustom = ref<number>(defaultPaymentAmountMin);
+    const selectedPaymentAmountCustom = ref<number>(
+      defaultPaymentAmountMin.value,
+    );
     const donationAmount = ref<number>(0);
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
-    const paymentAmountMin = ref<number>(defaultPaymentAmountMin);
+    const paymentAmountMin = ref<number>(defaultPaymentAmountMin.value);
 
     const registerChallengeStore = useRegisterChallengeStore();
 
@@ -289,7 +289,7 @@ export default defineComponent({
         activeVoucher.value?.discount
       ) {
         const discountAmount: number =
-          (defaultPaymentAmountMin * activeVoucher.value?.discount) / 100;
+          (defaultPaymentAmountMin.value * activeVoucher.value?.discount) / 100;
         logger?.debug(
           `Selected payment subject <${selectedPaymentSubject.value}>,` +
             ` is voucher valid <${isVoucherValid.value}>,` +
@@ -325,7 +325,13 @@ export default defineComponent({
         );
         opts = [
           // min option
-          defaultPaymentOption,
+          {
+            label: formatPriceCurrency(
+              defaultPaymentAmountMin.value,
+              Currency.CZK,
+            ),
+            value: String(defaultPaymentAmountMin.value),
+          },
           // other options
           ...paymentOptions,
           // custom option
