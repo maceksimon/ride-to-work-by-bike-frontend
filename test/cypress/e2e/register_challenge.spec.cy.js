@@ -8,6 +8,9 @@ import { routesConf } from '../../../src/router/routes_conf';
 import { OrganizationType } from '../../../src/components/types/Organization';
 import { getRadioOption } from 'test/cypress/utils';
 import { PaymentSubject } from 'src/components/enums/Payment';
+import { defLocale } from '../../../src/i18n/def_locale';
+import { getCurrentPriceLevelsUtil } from '../../../src/utils/price-levels';
+import { PriceLevelCategory } from '../../../src/components/enums/Challenge';
 
 const doneIcon = new URL(
   '../../../src/assets/svg/check.svg',
@@ -85,14 +88,28 @@ const activeIconImgSrcStepper7 = new URL(
 const doneIconImgSrcStepper7 = doneIcon;
 
 describe('Register Challenge page', () => {
+  let defaultPaymentAmountMin = 0;
+
+  before(() => {
+    // dynamically load default payment amount from fixture
+    cy.fixture('apiGetThisCampaign.json').then((response) => {
+      const priceLevels = response.results[0].price_level;
+      const currentPriceLevels = getCurrentPriceLevelsUtil(priceLevels);
+      defaultPaymentAmountMin =
+        currentPriceLevels[PriceLevelCategory.basic].price;
+    });
+  });
+
   context('desktop', () => {
     beforeEach(() => {
-      // config is defined without hash in the URL
-      cy.visit('#' + routesConf['register_challenge']['path']);
-      cy.viewport('macbook-16');
-
-      // load config an i18n objects as aliases
       cy.task('getAppConfig', process).then((config) => {
+        cy.interceptThisCampaignGetApi(config, defLocale);
+        // visit challenge inactive page to load campaign data
+        cy.visit('#' + routesConf['challenge_inactive']['path']);
+        cy.waitForThisCampaignApi();
+        // config is defined without hash in the URL
+        cy.visit('#' + routesConf['register_challenge']['path']);
+        cy.viewport('macbook-16');
         // alias config
         cy.wrap(config).as('config');
         cy.window().should('have.property', 'i18n');
@@ -692,8 +709,6 @@ describe('Register Challenge page', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           passToStep2();
-          // get default payment amount min
-          const defaultPaymentAmountMin = parseInt(config.entryFeePaymentMin);
           // switch to paying via voucher
           cy.dataCy(getRadioOption(PaymentSubject.voucher))
             .should('be.visible')
