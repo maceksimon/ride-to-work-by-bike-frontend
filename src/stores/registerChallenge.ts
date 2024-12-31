@@ -88,7 +88,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isLoadingTeams: false,
     isLoadingMerchandise: false,
     isLoadingFilteredMerchandise: false,
-    isLoadingIpAddress: false,
   }),
 
   getters: {
