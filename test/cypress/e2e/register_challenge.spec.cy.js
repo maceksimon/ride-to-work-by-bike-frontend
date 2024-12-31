@@ -1255,6 +1255,110 @@ describe('Register Challenge page', () => {
         },
       );
     });
+
+    it.only('displays correct nav buttons on payment step based on payment configuration', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // pass to step 2 (payment)
+          passToStep2();
+
+          // case 1: individual payment
+          cy.dataCy(getRadioOption(PaymentSubject.individual))
+            .should('be.visible')
+            .click();
+          // submit payment button should be visible and enabled
+          cy.dataCy('step-2-submit-payment')
+            .should('be.visible')
+            .and('not.be.disabled');
+          // next step button should not be visible
+          cy.dataCy('step-2-continue').should('not.exist');
+
+          // case 2: voucher payment with no entered voucher
+          cy.dataCy(getRadioOption(PaymentSubject.voucher))
+            .should('be.visible')
+            .click();
+          // submit payment button should be hidden
+          cy.dataCy('step-2-submit-payment').should('not.exist');
+          // next step button should be visible and enabled
+          cy.dataCy('step-2-continue').should('be.visible').and('be.disabled');
+
+          // case 3: voucher payment with voucher FULL
+          cy.applyFullVoucher(config, i18n);
+          // submit payment button should be hidden
+          cy.dataCy('step-2-submit-payment').should('not.exist');
+          // next step button should be visible and enabled
+          cy.dataCy('step-2-continue')
+            .should('be.visible')
+            .and('not.be.disabled');
+
+          // remove voucher
+          cy.dataCy('voucher-button-remove').should('be.visible').click();
+
+          // case 4: voucher payment with voucher HALF
+          cy.applyHalfVoucher(config, i18n);
+          // submit payment button should be visible and enabled
+          cy.dataCy('step-2-submit-payment')
+            .should('be.visible')
+            .and('not.be.disabled');
+          // next step button should not be visible
+          cy.dataCy('step-2-continue').should('not.exist');
+
+          // case 5: company payment with no donation
+          cy.dataCy(getRadioOption(PaymentSubject.company))
+            .should('be.visible')
+            .click();
+          // submit payment button should be hidden
+          cy.dataCy('step-2-submit-payment').should('not.exist');
+          // next step button should be visible and enabled
+          cy.dataCy('step-2-continue')
+            .should('be.visible')
+            .and('not.be.disabled');
+
+          // case 6: company payment with donation
+          cy.dataCy('form-field-donation-checkbox')
+            .should('be.visible')
+            .click();
+          cy.dataCy('form-field-donation-slider').should('be.visible');
+          // submit payment button should be visible and enabled
+          cy.dataCy('step-2-submit-payment')
+            .should('be.visible')
+            .and('not.be.disabled');
+          // next step button should not be visible
+          cy.dataCy('step-2-continue').should('not.exist');
+          // disable donation checkbox
+          cy.dataCy('form-field-donation-checkbox')
+            .should('be.visible')
+            .click();
+
+          // case 7: school payment with no donation
+          cy.dataCy(getRadioOption(PaymentSubject.school))
+            .should('be.visible')
+            .click();
+          // submit payment button should be hidden
+          cy.dataCy('step-2-submit-payment').should('not.exist');
+          // next step button should be visible and enabled
+          cy.dataCy('step-2-continue')
+            .should('be.visible')
+            .and('not.be.disabled');
+
+          // case 8: company payment with donation
+          cy.dataCy('form-field-donation-checkbox')
+            .should('be.visible')
+            .click();
+          cy.dataCy('form-field-donation-slider').should('be.visible');
+          // submit payment button should be visible and enabled
+          cy.dataCy('step-2-submit-payment')
+            .should('be.visible')
+            .and('not.be.disabled');
+          // next step button should not be visible
+          cy.dataCy('step-2-continue').should('not.exist');
+          // disable donation checkbox
+          cy.dataCy('form-field-donation-checkbox')
+            .should('be.visible')
+            .click();
+        });
+      });
+    });
   });
 
   context('registration in progress', () => {
