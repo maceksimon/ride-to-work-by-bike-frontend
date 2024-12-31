@@ -144,6 +144,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     /**
      * Get default payment amount for company registration
+     * Used when saving challenge registration with company payment.
      * @returns {number} - Default company payment amount
      */
     getDefaultPaymentAmountCompany(): number {
