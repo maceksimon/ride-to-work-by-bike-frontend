@@ -74,6 +74,7 @@ export const useApiPostPayuCreateOrder = (
       translationKey: 'createPayuOrder',
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       payload,
+      showSuccessMessage: false,
       logger,
     });
 

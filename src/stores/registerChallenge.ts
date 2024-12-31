@@ -88,6 +88,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isLoadingTeams: false,
     isLoadingMerchandise: false,
     isLoadingFilteredMerchandise: false,
+    isLoadingPayuOrder: false,
   }),
 
   getters: {
@@ -442,6 +443,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
      */
     async createPayuOrder(): Promise<void> {
       this.$log?.debug('Creating PayU order.');
+      this.isLoadingPayuOrder = true;
       // get client IP
       const clientIp = await this.loadIpAddress();
       if (!clientIp) {
@@ -450,6 +452,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           color: 'negative',
         });
         this.$log?.debug('Failed to get client IP address.');
+        this.isLoadingPayuOrder = false;
         return;
       }
       // check payment amount
@@ -461,6 +464,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.$log?.debug(
           `Payment amount <${this.paymentAmount}>, skipping PayU order creation.`,
         );
+        this.isLoadingPayuOrder = false;
         return;
       }
       // create order
@@ -476,10 +480,15 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         );
         window.location.href = response.redirectUri;
       } else {
+        Notify.create({
+          message: i18n.global.t('createPayuOrder.apiMessageError'),
+          color: 'negative',
+        });
         this.$log?.error(
           'Failed to create PayU order or missing redirect URI.',
         );
       }
+      this.isLoadingPayuOrder = false;
     },
   },
 
