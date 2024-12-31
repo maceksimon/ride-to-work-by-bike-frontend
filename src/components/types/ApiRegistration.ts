@@ -59,8 +59,8 @@ export type RegisterChallengePostPayload = {
 
 export type RegisterChallengePostResponse = {
   personal_details?: Partial<CorePersonalDetails>;
-  team_id?: number;
-  organization_id?: number;
-  subsidiary_id?: number;
-  t_shirt_size_id?: number;
+  team_id?: number | null;
+  organization_id?: number | null;
+  subsidiary_id?: number | null;
+  t_shirt_size_id?: number | null;
 };
