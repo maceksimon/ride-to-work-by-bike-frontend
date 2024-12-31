@@ -468,6 +468,7 @@ export default defineComponent({
             // entry is not free so user selects amount
             return selectedPaymentAmountCustom.value || 0;
           } else {
+            // if there is no valid voucher, amount to pay is 0
             return 0;
           }
         case PaymentSubject.company:
