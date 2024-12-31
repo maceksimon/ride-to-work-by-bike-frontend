@@ -1187,7 +1187,7 @@ describe('Register Challenge page', () => {
         });
       // go to next step
       cy.dataCy('step-4-continue').should('be.visible').click();
-      // select first team
+      // select first available team (this is the second team, first is full)
       cy.dataCy('form-select-table-team')
         .should('be.visible')
         .find('.q-radio:not(.disabled)')
