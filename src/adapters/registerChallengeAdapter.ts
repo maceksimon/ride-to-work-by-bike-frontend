@@ -137,16 +137,16 @@ export const registerChallengeAdapter = {
     if (!newsletters?.length) return '';
     // sort newsletter types (challenge, event, mobility)
     const sorted = [...newsletters].sort();
-    // if there is only one newsletter type, return it
-    if (sorted.length === 1) return sorted[0];
-    // if there are two newsletter types, return them separated by a dash
-    if (sorted.length === 2) {
-      return `${sorted[0]}-${sorted[1]}`;
+    // use switch statement to handle different lengths
+    switch (sorted.length) {
+      case 1:
+        return sorted[0];
+      case 2:
+        return `${sorted[0]}-${sorted[1]}`;
+      case 3:
+        return `${sorted[0]}-${sorted[1]}-${sorted[2]}`;
+      default:
+        return '';
     }
-    // if there are three newsletter types, return them separated by a dash
-    if (sorted.length === 3) {
-      return `${sorted[0]}-${sorted[1]}-${sorted[2]}`;
-    }
-    return '';
   },
 };
