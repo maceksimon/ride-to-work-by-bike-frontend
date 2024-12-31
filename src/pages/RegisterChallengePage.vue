@@ -408,7 +408,7 @@ export default defineComponent({
                 unelevated
                 rounded
                 color="primary"
-                :disabled="!isEnabledPaymentNextStepButton"
+                :disable="!isEnabledPaymentNextStepButton"
                 :label="$t('navigation.continue')"
                 @click="onContinue"
                 class="q-ml-sm"
