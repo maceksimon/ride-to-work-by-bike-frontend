@@ -31,6 +31,12 @@ apiMessageError = "Potvrdenie emailu zlyhalo."
 apiMessageErrorWithMessage = "Potvrdenie emailu zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Email bol úspešne potvrdený."
 
+[createPayuOrder]
+apiMessageError = "Vytvorenie objednávky zlyhalo."
+apiMessageErrorWithMessage = "Vytvorenie objednávky zlyhalo. Chyba: {error}"
+apiMessageNoPaymentAmount = "Nie je vyplnená suma."
+apiMessageSuccess = "Objednávka bola úspešne vytvorená."
+
 [createTeam]
 apiMessageError = "Vytvorenie tímu zlyhalo."
 apiMessageErrorWithMessage = "Vytvorenie tímu zlyhalo. Chyba: {error}"
@@ -723,6 +729,7 @@ buttonFacebook = "Registrácia cez Facebook"
 
 [register.challenge]
 buttonAddCompany = "Pridanie novej"
+buttonSubmitPayment = "Pokračovať k platbe"
 labelCompanyOrSchool = "Názov spoločnosti alebo školy"
 labelGender = "Výkonnostná kategória"
 labelPaymentSubject = "Platba vstupného poplatku"

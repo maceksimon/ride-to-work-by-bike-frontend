@@ -146,6 +146,9 @@ export const useApi = (
       if (isLocalized) {
         // Inject Axios base API URL with lang (internationalization)
         injectAxioBaseApiUrlWithLang(baseUrl, logger);
+      } else {
+        api.defaults.baseURL = baseUrl;
+        logger?.debug(`Base API URL <${api.defaults.baseURL}>.`);
       }
       const startTime = performance.now();
       const data: apiData = {
