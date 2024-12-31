@@ -31,7 +31,7 @@ interface UseApiPostPayuCreateOrderReturn {
 /**
  * Post PayU create order composable
  * Used to enable calling the API to create PayU payment order
- * @param logger - Logger
+ * @param {Logger | null} logger - Logger
  * @returns {UseApiPostPayuCreateOrderReturn}
  */
 export const useApiPostPayuCreateOrder = (
