@@ -486,10 +486,14 @@ export default defineComponent({
       }
     });
     // track current computed value in store
-    watch(computedCurrentValue, (newVal) => {
-      logger?.debug(`Setting store payment amount to <${newVal}>.`);
-      registerChallengeStore.setPaymentAmount(newVal);
-    });
+    watch(
+      computedCurrentValue,
+      (newVal) => {
+        logger?.debug(`Setting store payment amount to <${newVal}>.`);
+        registerChallengeStore.setPaymentAmount(newVal);
+      },
+      { immediate: true },
+    );
 
     const showVoucherElement = () => {
       const show = selectedPaymentSubject.value === PaymentSubject.voucher;
