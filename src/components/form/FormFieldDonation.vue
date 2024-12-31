@@ -58,7 +58,7 @@ export default defineComponent({
           emit('update:donation', amount.value);
         } else {
           // deselecting donation resets donation amount to default
-          amount.value = defaultPaymentAmountMin;
+          amount.value = defaultPaymentAmountMin.value;
           emit('update:donation', 0);
         }
       },
