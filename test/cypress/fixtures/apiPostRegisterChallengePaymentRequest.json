@@ -1,5 +1,5 @@
 {
   "discount_coupon": "",
-  "payment_amount": "0",
+  "payment_amount": 0,
   "payment_subject": "company"
 }
