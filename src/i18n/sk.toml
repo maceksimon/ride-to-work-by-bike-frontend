@@ -76,6 +76,11 @@ apiMessageError = "Načítanie miest zlyhalo."
 apiMessageErrorWithMessage = "Načítanie miest zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Mestá boli úspešne načítané."
 
+[getIpAddress]
+apiMessageError = "Načítanie IP adresy zlyhalo."
+apiMessageErrorWithMessage = "Načítanie IP adresy zlyhalo. Chyba: {error}"
+apiMessageSuccess = "IP adresa bola úspešne načítaná."
+
 [getMerchandise]
 apiMessageError = "Načítanie startovních balíčkov zlyhalo."
 apiMessageErrorWithMessage = "Načítanie startovních balíčkov zlyhalo. Chyba: {error}"

@@ -76,6 +76,11 @@ apiMessageError = "Voucher could not be applied."
 apiMessageErrorWithMessage = "Voucher could not be applied. Error: {error}"
 apiMessageSuccess = "Voucher applied successfully."
 
+[getIpAddress]
+apiMessageError = "Fetching IP address failed."
+apiMessageErrorWithMessage = "Fetching IP address failed. Error: {error}"
+apiMessageSuccess = "IP address fetched successfully."
+
 [getMerchandise]
 apiMessageError = "Fetching merchandise failed."
 apiMessageErrorWithMessage = "Fetching merchandise failed. Error: {error}"
