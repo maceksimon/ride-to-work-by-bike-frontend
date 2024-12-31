@@ -29,12 +29,13 @@ import { i18n } from '../../boot/i18n';
 import { useFormatPrice } from '../../composables/useFormatPrice';
 import { useApiGetDiscountCoupon } from '../../composables/useApiGetDiscountCoupon';
 
+import { defaultPaymentAmountMinComputed } from '../../utils/price_levels.ts';
+
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // enums
 import { Currency } from '../../composables/useFormatPrice';
-import { PriceLevelCategory } from '../enums/Challenge';
 
 // stores
 import { useChallengeStore } from '../../stores/challenge';
@@ -53,12 +54,9 @@ export default defineComponent({
     const formFieldTextRequiredRef = ref(null);
     const challengeStore = useChallengeStore();
     const defaultPaymentAmountMin = computed(() => {
-      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-      if (!currentPriceLevels) return 0;
-      const currentPriceLevelsBasic =
-        currentPriceLevels[PriceLevelCategory.basic];
-      if (!currentPriceLevelsBasic) return 0;
-      return currentPriceLevelsBasic.price;
+      return defaultPaymentAmountMinComputed(
+        challengeStore.getCurrentPriceLevels,
+      );
     });
 
     const registerChallengeStore = useRegisterChallengeStore();

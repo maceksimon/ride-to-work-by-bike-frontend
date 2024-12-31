@@ -49,6 +49,8 @@ import FormFieldSliderNumber from '../form/FormFieldSliderNumber.vue';
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 
+import { defaultPaymentAmountMinComputed } from '../../utils/price_levels.ts';
+
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
@@ -56,7 +58,6 @@ import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { Currency } from '../../composables/useFormatPrice';
 import { PaymentAmount, PaymentSubject } from '../enums/Payment';
 import { OrganizationType } from '../types/Organization';
-import { PriceLevelCategory } from '../enums/Challenge';
 
 // stores
 import { useChallengeStore } from '../../stores/challenge';
@@ -88,12 +89,9 @@ export default defineComponent({
     logger?.debug(`Default max. payment amount <${defaultPaymentAmountMax}>.`);
     // get default min price from store
     const defaultPaymentAmountMin = computed(() => {
-      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-      if (!currentPriceLevels) return 0;
-      const currentPriceLevelsBasic =
-        currentPriceLevels[PriceLevelCategory.basic];
-      if (!currentPriceLevelsBasic) return 0;
-      return currentPriceLevelsBasic.price;
+      return defaultPaymentAmountMinComputed(
+        challengeStore.getCurrentPriceLevels,
+      );
     });
     logger?.debug(
       `Default min. payment amount basic <${defaultPaymentAmountMin.value}>.`,

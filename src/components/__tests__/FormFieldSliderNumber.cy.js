@@ -5,7 +5,7 @@ import FormFieldSliderNumber from 'components/form/FormFieldSliderNumber.vue';
 import { i18n } from '../../boot/i18n';
 import { useChallengeStore } from '../../stores/challenge';
 import { vModelAdapter } from '../../../test/cypress/utils';
-import { getCurrentPriceLevelsUtil } from '../../utils/price-levels';
+import { getCurrentPriceLevelsUtil } from '../../utils/price_levels';
 import { PriceLevelCategory } from '../enums/Challenge';
 
 // colors

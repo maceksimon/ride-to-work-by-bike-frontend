@@ -25,10 +25,8 @@
 // libraries
 import { computed, defineComponent } from 'vue';
 
-// enums
-import { PriceLevelCategory } from '../enums/Challenge';
+import { defaultPaymentAmountMinComputed } from '../../utils/price_levels.ts';
 
-// config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // stores
@@ -59,12 +57,9 @@ export default defineComponent({
     // compute default min from store
     const challengeStore = useChallengeStore();
     const defaultMin = computed(() => {
-      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-      if (!currentPriceLevels) return 0;
-      const currentPriceLevelsBasic =
-        currentPriceLevels[PriceLevelCategory.basic];
-      if (!currentPriceLevelsBasic) return 0;
-      return currentPriceLevelsBasic.price;
+      return defaultPaymentAmountMinComputed(
+        challengeStore.getCurrentPriceLevels,
+      );
     });
 
     // compute final min value from props or default min

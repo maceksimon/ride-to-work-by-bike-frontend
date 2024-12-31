@@ -10,7 +10,7 @@ import { useChallengeStore } from 'stores/challenge';
 import { getRadioOption } from '../../../test/cypress/utils';
 import { interceptOrganizationsApi } from '../../../test/cypress/support/commonTests';
 import { OrganizationType } from '../types/Organization';
-import { getCurrentPriceLevelsUtil } from '../../utils/price-levels';
+import { getCurrentPriceLevelsUtil } from '../../utils/price_levels';
 import { PriceLevelCategory } from '../../components/enums/Challenge';
 
 // selectors

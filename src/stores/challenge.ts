@@ -7,7 +7,7 @@ import { useApiGetCampaign } from '../composables/useApiGetCampaign';
 
 // utils
 import { timestampToDatetimeString } from 'src/utils';
-import { getCurrentPriceLevelsUtil } from '../utils/price-levels';
+import { getCurrentPriceLevelsUtil } from '../utils/price_levels';
 
 // enums
 import {

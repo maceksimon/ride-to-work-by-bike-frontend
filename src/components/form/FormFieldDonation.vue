@@ -21,8 +21,7 @@
 // libraries
 import { computed, defineComponent, onUnmounted, ref, watch } from 'vue';
 
-// enums
-import { PriceLevelCategory } from '../enums/Challenge';
+import { defaultPaymentAmountMinComputed } from '../../utils/price_levels.ts';
 
 // components
 import FormFieldSliderNumber from './FormFieldSliderNumber.vue';
@@ -39,12 +38,9 @@ export default defineComponent({
   setup(props, { emit }) {
     const challengeStore = useChallengeStore();
     const defaultPaymentAmountMin = computed(() => {
-      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-      if (!currentPriceLevels) return 0;
-      const currentPriceLevelsBasic =
-        currentPriceLevels[PriceLevelCategory.basic];
-      if (!currentPriceLevelsBasic) return 0;
-      return currentPriceLevelsBasic.price;
+      return defaultPaymentAmountMinComputed(
+        challengeStore.getCurrentPriceLevels,
+      );
     });
     watch(defaultPaymentAmountMin, () => {
       amount.value = defaultPaymentAmountMin.value;

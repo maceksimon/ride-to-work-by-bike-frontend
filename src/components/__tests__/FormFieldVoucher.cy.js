@@ -7,7 +7,7 @@ import { couponAdapter } from '../../adapters/couponAdapter';
 import { useFormatPrice, Currency } from 'src/composables/useFormatPrice';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 import { useChallengeStore } from '../../stores/challenge';
-import { getCurrentPriceLevelsUtil } from '../../utils/price-levels';
+import { getCurrentPriceLevelsUtil } from '../../utils/price_levels';
 import { PriceLevelCategory } from '../../components/enums/Challenge';
 
 // colors
