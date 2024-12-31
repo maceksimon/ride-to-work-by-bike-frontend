@@ -1,5 +1,7 @@
+import { setActivePinia, createPinia } from 'pinia';
 import FormFieldDonation from 'components/form/FormFieldDonation.vue';
 import { i18n } from '../../boot/i18n';
+import { useChallengeStore } from '../../stores/challenge';
 
 // selectors
 const selectorFormFieldDonation = 'form-field-donation';
@@ -17,8 +19,14 @@ describe('<FormFieldDonation>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormFieldDonation, {
         props: {},
+      });
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
       });
       cy.viewport('macbook-16');
     });
@@ -28,8 +36,14 @@ describe('<FormFieldDonation>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormFieldDonation, {
         props: {},
+      });
+      cy.fixture('apiGetThisCampaign.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((storeChallenge) => {
+          storeChallenge.setPriceLevel(response.results[0].price_level);
+        });
       });
       cy.viewport('iphone-6');
     });

@@ -19,7 +19,7 @@
  */
 
 // libraries
-import { defineComponent, onUnmounted, ref, watch } from 'vue';
+import { computed, defineComponent, onUnmounted, ref, watch } from 'vue';
 
 // enums
 import { PriceLevelCategory } from '../enums/Challenge';
@@ -38,10 +38,18 @@ export default defineComponent({
   emits: ['update:donation'],
   setup(props, { emit }) {
     const challengeStore = useChallengeStore();
-    const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-    const defaultPaymentAmountMin =
-      currentPriceLevels[PriceLevelCategory.basic].price;
-    const amount = ref<number>(defaultPaymentAmountMin);
+    const defaultPaymentAmountMin = computed(() => {
+      const currentPriceLevels = challengeStore.getCurrentPriceLevels;
+      if (!currentPriceLevels) return 0;
+      const currentPriceLevelsBasic =
+        currentPriceLevels[PriceLevelCategory.basic];
+      if (!currentPriceLevelsBasic) return 0;
+      return currentPriceLevelsBasic.price;
+    });
+    watch(defaultPaymentAmountMin, () => {
+      amount.value = defaultPaymentAmountMin.value;
+    });
+    const amount = ref<number>(0);
     const isDonation = ref<boolean>(false);
 
     /**
