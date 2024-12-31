@@ -319,7 +319,6 @@ export default defineComponent({
         class="q-mx-auto q-mt-xl"
         :style="{ 'max-width': containerFormWidth }"
       >
-        {{ registerChallengeStore.getPaymentAmount }}
         <show-organization-ids />
         <!-- Page title -->
         <h1
