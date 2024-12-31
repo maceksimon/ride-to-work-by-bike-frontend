@@ -1295,7 +1295,7 @@ describe('Register Challenge page', () => {
           cy.dataCy('voucher-button-remove').should('be.visible').click();
 
           // case 4: voucher payment with voucher HALF
-          cy.applyHalfVoucher(config, i18n);
+          cy.applyHalfVoucher(config, i18n, defaultPaymentAmountMin);
           // submit payment button should be visible and enabled
           cy.dataCy('step-2-submit-payment')
             .should('be.visible')
