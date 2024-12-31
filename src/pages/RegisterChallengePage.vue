@@ -258,6 +258,10 @@ export default defineComponent({
       registerChallengeStore.createPayuOrder();
     };
 
+    const isLoadingPayuOrder = computed(() => {
+      return registerChallengeStore.isLoadingPayuOrder;
+    });
+
     return {
       challengeMonth,
       containerFormWidth,
@@ -296,6 +300,7 @@ export default defineComponent({
       isShownCreateOrderButton,
       isShownPaymentNextStepButton,
       isEnabledPaymentNextStepButton,
+      isLoadingPayuOrder,
       onSubmitPayment,
       organizationType,
       organizationStepTitle,
@@ -399,6 +404,7 @@ export default defineComponent({
                 color="primary"
                 :disable="!isPaymentAmount"
                 :label="$t('register.challenge.buttonSubmitPayment')"
+                :loading="isLoadingPayuOrder"
                 @click="onSubmitPayment"
                 class="q-ml-sm"
                 data-cy="step-2-submit-payment"
