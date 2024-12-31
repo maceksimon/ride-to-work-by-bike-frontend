@@ -13,7 +13,7 @@
         "telephone_opt_in": false,
         "language": "cs",
         "occupation": "",
-        "age_group": "",
+        "age_group": null,
         "newsletter": "challenge",
         "personal_data_opt_in": true,
         "discount_coupon": "",

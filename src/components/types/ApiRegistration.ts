@@ -8,12 +8,12 @@ export type CorePersonalDetails = {
   telephone_opt_in: boolean;
   language: string;
   occupation: string;
-  age_group: string;
+  age_group: number | null;
   newsletter: string;
   personal_data_opt_in: boolean;
   discount_coupon: string;
   payment_subject: string;
-  payment_amount: number;
+  payment_amount: number | null;
 };
 
 // all personal details including server-side fields
@@ -24,10 +24,10 @@ export type PersonalDetails = CorePersonalDetails & {
 
 export type RegisterChallengeResult = {
   personal_details: PersonalDetails;
-  team_id: number;
-  organization_id: number;
-  subsidiary_id: number;
-  t_shirt_size_id: number;
+  team_id: number | null;
+  organization_id: number | null;
+  subsidiary_id: number | null;
+  t_shirt_size_id: number | null;
   organization_type: string;
 };
 
@@ -47,12 +47,12 @@ export type RegisterChallengePostPayload = {
   telephone_opt_in?: boolean;
   language?: string;
   occupation?: string;
-  age_group?: string;
+  age_group?: number | null;
   newsletter?: string;
   personal_data_opt_in?: boolean;
   discount_coupon?: string;
   payment_subject?: string;
-  payment_amount?: number;
+  payment_amount?: number | null;
   team_id?: number | null;
   t_shirt_size_id?: number | null;
 };
