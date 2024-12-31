@@ -38,9 +38,7 @@ export const registerChallengeAdapter = {
       organizationId: apiData.organization_id,
       paymentSubject: apiData.personal_details
         .payment_subject as PaymentSubject,
-      paymentAmount: apiData.personal_details.payment_amount
-        ? parseInt(apiData.personal_details.payment_amount)
-        : 0,
+      paymentAmount: apiData.personal_details.payment_amount,
       organizationType: apiData.organization_type as OrganizationType,
       subsidiaryId: apiData.subsidiary_id,
       teamId: apiData.team_id,
@@ -99,7 +97,7 @@ export const registerChallengeAdapter = {
       payload.payment_subject = storeState.paymentSubject;
 
       if (storeState.paymentAmount !== undefined) {
-        payload.payment_amount = storeState.paymentAmount.toString();
+        payload.payment_amount = storeState.paymentAmount;
       }
     }
 

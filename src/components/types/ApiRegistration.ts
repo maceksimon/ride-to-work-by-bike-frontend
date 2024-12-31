@@ -13,7 +13,7 @@ export type CorePersonalDetails = {
   personal_data_opt_in: boolean;
   discount_coupon: string;
   payment_subject: string;
-  payment_amount: string;
+  payment_amount: number;
 };
 
 // all personal details including server-side fields
@@ -52,7 +52,7 @@ export type RegisterChallengePostPayload = {
   personal_data_opt_in?: boolean;
   discount_coupon?: string;
   payment_subject?: string;
-  payment_amount?: string;
+  payment_amount?: number;
   team_id?: number | null;
   t_shirt_size_id?: number | null;
 };
