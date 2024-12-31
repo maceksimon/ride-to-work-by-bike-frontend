@@ -1,5 +1,6 @@
 // libraries
 import { defineStore } from 'pinia';
+import { Notify } from 'quasar';
 
 // adapters
 import { subsidiaryAdapter } from 'src/adapters/subsidiaryAdapter';
@@ -14,6 +15,7 @@ import { useApiGetMerchandise } from 'src/composables/useApiGetMerchandise';
 import { useApiGetFilteredMerchandise } from 'src/composables/useApiGetFilteredMerchandise';
 import { useApiPostRegisterChallenge } from '../composables/useApiPostRegisterChallenge';
 import { useApiGetIpAddress } from '../composables/useApiGetIpAddress';
+import { useApiPostPayuCreateOrder } from '../composables/useApiPostPayuCreateOrder';
 
 // enums
 import { Gender } from '../components/types/Profile';
@@ -423,20 +425,63 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.isLoadingFilteredMerchandise = false;
     },
     /**
-     * Load IP address data from API and save to store
+     * Load IP address data from API
+     * @returns {Promise<string>} - IP address
      */
-    async loadIpAddressToStore(): Promise<void> {
+    async loadIpAddress(): Promise<string> {
       const { ipAddressData, loadIpAddress } = useApiGetIpAddress(this.$log);
-      this.$log?.debug('Loading IP address data into store.');
-      this.isLoadingIpAddress = true;
+      this.$log?.debug('Loading IP address data.');
       await loadIpAddress();
-      if (ipAddressData.value) {
-        this.ipAddressData = ipAddressData.value;
+      return ipAddressData.value?.ip || '';
+    },
+    /**
+     * Create PayU order and redirect to payment
+     * @returns {Promise<void>}
+     */
+    async createPayuOrder(): Promise<void> {
+      this.$log?.debug('Creating PayU order.');
+
+      // get client IP
+      const clientIp = await this.loadIpAddress();
+      if (!clientIp) {
+        Notify.create({
+          message: i18n.global.t('createPayuOrder.apiMessageError'),
+          color: 'negative',
+        });
+        this.$log?.debug('Failed to get client IP address.');
+        return;
+      }
+
+      // check payment amount
+      if (this.paymentAmount <= 0) {
+        Notify.create({
+          message: i18n.global.t('createPayuOrder.apiMessageNoPaymentAmount'),
+          color: 'negative',
+        });
         this.$log?.debug(
-          `IP address data <${JSON.stringify(this.ipAddressData, null, 2)}> saved into store.`,
+          `Payment amount <${this.paymentAmount}>, skipping PayU order creation.`,
+        );
+        return;
+      }
+
+      // create order
+      const { createOrder } = useApiPostPayuCreateOrder(this.$log);
+      this.$log?.debug(
+        `Creating PayU order with amount <${this.paymentAmount}> and client IP <${clientIp}>.`,
+      );
+      const response = await createOrder(this.paymentAmount, clientIp);
+
+      // check response and redirect
+      if (response?.status.statusCode === 'SUCCESS' && response.redirectUri) {
+        this.$log?.debug(
+          `Redirecting to PayU payment page: ${response.redirectUri}`,
+        );
+        window.location.href = response.redirectUri;
+      } else {
+        this.$log?.error(
+          'Failed to create PayU order or missing redirect URI.',
         );
       }
-      this.isLoadingIpAddress = false;
     },
   },
 

@@ -212,6 +212,10 @@ export default defineComponent({
     //   }
     // });
 
+    const onSubmitPayment = () => {
+      registerChallengeStore.createPayuOrder();
+    };
+
     return {
       challengeMonth,
       containerFormWidth,
@@ -245,6 +249,7 @@ export default defineComponent({
       activeIconImgSrcStepper7,
       doneIconImgSrcStepper7,
       merchId,
+      onSubmitPayment,
       organizationType,
       organizationStepTitle,
       onBack,
@@ -338,6 +343,15 @@ export default defineComponent({
                 :label="$t('navigation.back')"
                 @click="onBack"
                 data-cy="step-2-back"
+              />
+              <q-btn
+                unelevated
+                rounded
+                color="primary"
+                :label="$t('register.challenge.buttonSubmitPayment')"
+                @click="onSubmitPayment"
+                class="q-ml-sm"
+                data-cy="step-2-submit-payment"
               />
               <q-btn
                 unelevated

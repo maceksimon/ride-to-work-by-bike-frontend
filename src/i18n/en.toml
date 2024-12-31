@@ -31,6 +31,12 @@ apiMessageError = "Email confirmation failed."
 apiMessageErrorWithMessage = "Email confirmation failed. Error: {error}"
 apiMessageSuccess = "Email was successfully confirmed."
 
+[createPayuOrder]
+apiMessageError = "Order creation failed."
+apiMessageErrorWithMessage = "Order creation failed. Error: {error}"
+apiMessageNoPaymentAmount = "No payment amount selected."
+apiMessageSuccess = "Order was successfully created."
+
 [createTeam]
 apiMessageError = "Team creation failed."
 apiMessageErrorWithMessage = "Team creation failed. Error: {error}"
@@ -723,6 +729,7 @@ buttonFacebook = "Register via Facebook"
 
 [register.challenge]
 buttonAddCompany = "Add new"
+buttonSubmitPayment = "Submit payment"
 labelCompanyOrSchool = "Name of company or school"
 labelGender = "Performance category"
 labelPaymentSubject = "Entry fee payment"
