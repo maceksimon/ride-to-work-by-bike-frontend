@@ -1707,6 +1707,37 @@ Cypress.Commands.add(
 );
 
 /**
+ * Intercept PayU create order API
+ * Provides `@postPayuCreateOrder` alias
+ * @param {Config} config - App global config
+ * @param {I18n|String} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptPayuCreateOrderPostApi',
+  (config, i18n, responseBody = null, responseStatusCode = null) => {
+    const { apiBase, apiDefaultLang, urlApiPayuCreateOrder } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiPayuCreateOrderLocalized = `${apiBaseUrl}${urlApiPayuCreateOrder}`;
+
+    cy.fixture('apiPostPayuCreateOrderResponse.json').then(
+      (apiPostPayuCreateOrderResponse) => {
+        cy.intercept('POST', urlApiPayuCreateOrderLocalized, {
+          statusCode: responseStatusCode || httpSuccessfullStatus,
+          body: responseBody || apiPostPayuCreateOrderResponse,
+        }).as('postPayuCreateOrder');
+      },
+    );
+  },
+);
+
+/**
  * Wait for intercept register challenge GET API call and compare response object
  * Wait for `@getRegisterChallenge` intercept
  */
@@ -1773,3 +1804,48 @@ Cypress.Commands.add('waitForMerchandiseNoneApi', () => {
     },
   );
 });
+
+/**
+ * Wait for PayU create order API call and compare request/response object
+ * Wait for `@postPayuCreateOrder` intercept
+ * @param {Object} requestBody - Expected request body override
+ * @param {Object} responseBody - Expected response body override
+ */
+Cypress.Commands.add(
+  'waitForPayuCreateOrderPostApi',
+  (requestBody = null, responseBody = null) => {
+    cy.fixture('apiPostPayuCreateOrderRequest.json').then(
+      (apiPostPayuCreateOrderRequest) => {
+        cy.wait('@postPayuCreateOrder').then(({ request, response }) => {
+          expect(request.headers.authorization).to.include(bearerTokeAuth);
+
+          // verify request body
+          if (requestBody) {
+            expect(request.body.amount).to.equal(requestBody.amount);
+            expect(request.body).to.haveOwnProperty('client_ip');
+          } else {
+            expect(request.body.amount).to.equal(
+              apiPostPayuCreateOrderRequest.amount,
+            );
+            expect(request.body).to.haveOwnProperty('client_ip');
+          }
+
+          cy.fixture('apiPostPayuCreateOrderResponse.json').then(
+            (apiPostPayuCreateOrderResponse) => {
+              // verify response
+              if (responseBody) {
+                expect(response.statusCode).to.equal(httpSuccessfullStatus);
+                expect(response.body).to.deep.equal(responseBody);
+              } else {
+                expect(response.statusCode).to.equal(httpSuccessfullStatus);
+                expect(response.body).to.deep.equal(
+                  apiPostPayuCreateOrderResponse,
+                );
+              }
+            },
+          );
+        });
+      },
+    );
+  },
+);

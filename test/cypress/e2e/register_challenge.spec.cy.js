@@ -193,6 +193,7 @@ describe('Register Challenge page', () => {
               // intercept without specific response (it is not used)
               cy.interceptRegisterChallengePostApi(config, win.i18n);
               cy.interceptMerchandiseNoneGetApi(config, win.i18n);
+              cy.interceptPayuCreateOrderPostApi(config, win.i18n);
             },
           );
         });
@@ -885,21 +886,26 @@ describe('Register Challenge page', () => {
     /**
      * TODO: Find out how to test with payment subject individual
      */
-    it.skip('when individual payment - all participation options are enabled', () => {
+    it('when individual payment - all participation options are enabled', () => {
       // go to payment step
       passToStep2();
       // select individual
       cy.dataCy(getRadioOption(PaymentSubject.individual))
         .should('be.visible')
         .click();
-      // go to next step
-      cy.dataCy('step-2-continue').should('be.visible').click();
-      // verify step 3
-      cy.dataCy('step-3').find('.q-stepper__step-content').should('be.visible');
-      // all options are enabled
-      cy.dataCy('form-field-option-group').within(() => {
-        cy.get('.q-radio:not(.disabled)').should('have.length', 3);
-      });
+      cy.dataCy(getRadioOption(500)).click();
+      // submit payment
+      cy.dataCy('step-2-submit-payment').should('be.visible').click();
+      cy.url().should('include', routesConf['register_challenge']['path']);
+      cy.waitForPayuCreateOrderPostApi();
+      // window is redirected to given url
+      cy.url().should('not.include', routesConf['register_challenge']['path']);
+      /**
+       * TODO: Intercept register-challenge get
+       * Go back to the register-challenge page
+       * Verify that the payment is successful (in GET response)
+       * Allow user to pass to the next step
+       */
     });
 
     it('when voucher payment - all participation options are enabled', () => {
