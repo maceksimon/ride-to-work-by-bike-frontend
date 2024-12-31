@@ -49,7 +49,7 @@ import { useOrganizations } from 'src/composables/useOrganizations';
 
 // enums
 import { OrganizationType } from 'src/components/types/Organization';
-// import { PaymentState } from 'src/components/enums/Payment';
+import { PaymentState, PaymentSubject } from 'src/components/enums/Payment';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
@@ -197,20 +197,62 @@ export default defineComponent({
     //   }
     // });
 
-    // const isShownPaymentNextStepButton = computed(() => {
-    //   switch (registerChallengeStore.getPaymentState) {
-    //     case PaymentState.done: // Allow to pass always
-    //       return true;
-    //     case PaymentState.none: // Allow to pass if subject is `organization`
-    //       return false;
-    //     case PaymentState.noAdmission: // TODO: determine UI for no_admission
-    //       return true;
-    //     case PaymentState.waiting: // Allow to pass if subject is `organization`
-    //       return true;
-    //     case PaymentState.unknown:
-    //       return false;
-    //   }
-    // });
+    // Payment-related logic
+    const isPaymentAmount = computed<boolean>((): boolean => {
+      return !!registerChallengeStore.getPaymentAmount && registerChallengeStore.getPaymentAmount > 0;
+    });
+
+    /**
+     * Show payment form if payment state is not `done` or `unknown`.
+     * Also hide it if payment state is `unknown` as this is a non-valid state
+     * and needs to be fixed by admin.
+     */
+    const isShownPaymentForm = computed<boolean>((): boolean => {
+      return registerChallengeStore.getPaymentState !== PaymentState.done;
+    });
+
+    /**
+     * Show create order button if:
+     * - payment state is not `done` and paymentAmount > 0
+     */
+    const isShownCreateOrderButton = computed<boolean>((): boolean => {
+      return (
+        registerChallengeStore.getPaymentState !== PaymentState.done &&
+        !!isPaymentAmount.value
+      );
+    });
+
+    const isShownPaymentNextStepButton = computed<boolean>((): boolean => {
+      return !isShownCreateOrderButton.value;
+    });
+
+    /**
+     * Explicit conditions for enabling a pass
+     * - payment_state = `done`
+     * - payment_subject = company or school
+     * - payment_subject = voucher && discount = 100
+     */
+    const isEnabledPaymentNextStepButton = computed(() => {
+      const paymentSubject = registerChallengeStore.getPaymentSubject;
+      const voucher = registerChallengeStore.getVoucher;
+      // conditions
+      const isPaymentDone =
+        registerChallengeStore.getPaymentState === PaymentState.done;
+      const isPaymentCompanyOrSchool = [
+        PaymentSubject.company,
+        PaymentSubject.school,
+      ].includes(paymentSubject);
+      const isVoucherFreeEntry =
+        paymentSubject === PaymentSubject.voucher &&
+        voucher?.valid &&
+        voucher?.discount === 100;
+      // composite condition
+      return (
+        isPaymentDone ||
+        (isPaymentCompanyOrSchool && !isPaymentAmount.value) ||
+        isVoucherFreeEntry
+      );
+    });
 
     const onSubmitPayment = () => {
       registerChallengeStore.createPayuOrder();
@@ -249,6 +291,11 @@ export default defineComponent({
       activeIconImgSrcStepper7,
       doneIconImgSrcStepper7,
       merchId,
+      isPaymentAmount,
+      isShownPaymentForm,
+      isShownCreateOrderButton,
+      isShownPaymentNextStepButton,
+      isEnabledPaymentNextStepButton,
       onSubmitPayment,
       organizationType,
       organizationStepTitle,
@@ -345,18 +392,22 @@ export default defineComponent({
                 data-cy="step-2-back"
               />
               <q-btn
+                v-if="isShownCreateOrderButton"
                 unelevated
                 rounded
                 color="primary"
+                :disable="!isPaymentAmount"
                 :label="$t('register.challenge.buttonSubmitPayment')"
                 @click="onSubmitPayment"
                 class="q-ml-sm"
                 data-cy="step-2-submit-payment"
               />
               <q-btn
+                v-if="isShownPaymentNextStepButton"
                 unelevated
                 rounded
                 color="primary"
+                :disabled="!isEnabledPaymentNextStepButton"
                 :label="$t('navigation.continue')"
                 @click="onContinue"
                 class="q-ml-sm"

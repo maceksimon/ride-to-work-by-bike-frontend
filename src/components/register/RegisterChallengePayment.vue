@@ -236,6 +236,8 @@ export default defineComponent({
         'Set store organization type to' +
           ` <${registerChallengeStore.getOrganizationType}>.`,
       );
+      // when switching payment subject, always clear the organizationId
+      selectedCompany.value = null;
     });
     const organizationType = computed<OrganizationType>(() => {
       return registerChallengeStore.getOrganizationType;
@@ -458,13 +460,15 @@ export default defineComponent({
                 ` computed current value <${donationAmount.value || 0}>.`,
             );
             return donationAmount.value || 0;
-          } else {
+          } else if (isVoucherValid.value) {
             logger?.debug(
               `Selected payment subject <${selectedPaymentSubject.value}>,` +
                 ` computed current value <${selectedPaymentAmountCustom.value || 0}>.`,
             );
             // entry is not free so user selects amount
             return selectedPaymentAmountCustom.value || 0;
+          } else {
+            return 0;
           }
         case PaymentSubject.company:
         case PaymentSubject.school:
@@ -567,6 +571,7 @@ export default defineComponent({
     return {
       borderRadius,
       computedCurrentValue,
+      donationAmount,
       formRegisterCoordinator,
       hasOrganizationAdmin,
       isRegistrationCoordinator,

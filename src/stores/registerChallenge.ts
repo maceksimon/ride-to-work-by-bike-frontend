@@ -19,6 +19,7 @@ import { useApiPostPayuCreateOrder } from '../composables/useApiPostPayuCreateOr
 
 // enums
 import { Gender } from '../components/types/Profile';
+import { PaymentState } from '../components/enums/Payment';
 import { NewsletterType } from '../components/types/Newsletter';
 import {
   OrganizationSubsidiary,
@@ -66,13 +67,14 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     $log: null as Logger | null,
     personalDetails: emptyFormPersonalDetails,
     payment: null, // TODO: add data type options
+    paymentAmount: null as number | null,
+    paymentState: PaymentState.none,
+    paymentSubject: PaymentSubject.individual,
     organizationType: OrganizationType.none,
     organizationId: null as number | null,
     subsidiaryId: null as number | null,
     teamId: null as number | null,
     merchId: null as number | null,
-    paymentSubject: PaymentSubject.individual,
-    paymentAmount: null as number | null,
     voucher: null as ValidatedCoupon | null,
     subsidiaries: [] as OrganizationSubsidiary[],
     organizations: [] as OrganizationOption[],
@@ -99,6 +101,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getMerchId: (state): number | null => state.merchId,
     getPaymentSubject: (state): PaymentSubject => state.paymentSubject,
     getPaymentAmount: (state): number | null => state.paymentAmount,
+    getPaymentState: (state): PaymentState => state.paymentState,
     getVoucher: (state): ValidatedCoupon | null => state.voucher,
     getSubsidiaries: (state): OrganizationSubsidiary[] => state.subsidiaries,
     getOrganizations: (state): OrganizationOption[] => state.organizations,
@@ -440,7 +443,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
      */
     async createPayuOrder(): Promise<void> {
       this.$log?.debug('Creating PayU order.');
-
       // get client IP
       const clientIp = await this.loadIpAddress();
       if (!clientIp) {
@@ -451,9 +453,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.$log?.debug('Failed to get client IP address.');
         return;
       }
-
       // check payment amount
-      if (this.paymentAmount <= 0) {
+      if (!this.paymentAmount || this.paymentAmount <= 0) {
         Notify.create({
           message: i18n.global.t('createPayuOrder.apiMessageNoPaymentAmount'),
           color: 'negative',
@@ -463,14 +464,12 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         );
         return;
       }
-
       // create order
       const { createOrder } = useApiPostPayuCreateOrder(this.$log);
       this.$log?.debug(
         `Creating PayU order with amount <${this.paymentAmount}> and client IP <${clientIp}>.`,
       );
       const response = await createOrder(this.paymentAmount, clientIp);
-
       // check response and redirect
       if (response?.status.statusCode === 'SUCCESS' && response.redirectUri) {
         this.$log?.debug(
