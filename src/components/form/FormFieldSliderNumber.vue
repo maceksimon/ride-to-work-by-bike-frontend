@@ -8,10 +8,10 @@
  * Used in `RegisterChallengePayment`, `FormFieldDonation`.
  *
  * @props
- * - `modelValue` (number, required): The number value.
+ * - `modelValue` (number, required) - The number value.
  *   It should be of type `number`.
- * - `min` (number, required): The minimum value.
- * - `max` (number, required): The maximum value.
+ * - `min` (number) - The minimum value.
+ * - `max` (number) - The maximum value. Default from config.
  *
  * @events
  * - `update:modelValue`: Emitted as a part of v-model structure.
