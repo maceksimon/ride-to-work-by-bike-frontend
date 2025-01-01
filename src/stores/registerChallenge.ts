@@ -293,7 +293,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         },
         [RegisterChallengeStep.payment]: {
           paymentSubject: this.paymentSubject,
-          paymentAmount: this.paymentAmount,
+          // we send only the default payment amount for organization
+          paymentAmount: this.getDefaultPaymentAmountCompany,
           voucher: this.voucher,
         },
         [RegisterChallengeStep.participation]: {},

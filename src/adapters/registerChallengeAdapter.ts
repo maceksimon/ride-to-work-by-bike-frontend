@@ -101,8 +101,8 @@ export const registerChallengeAdapter = {
       }
     }
 
-    if (storeState.voucher !== undefined) {
-      payload.discount_coupon = storeState.voucher?.name || '';
+    if (storeState.voucher) {
+      payload.discount_coupon = storeState.voucher?.name;
     }
     if (storeState.teamId !== undefined) {
       payload.team_id = storeState.teamId;
