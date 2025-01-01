@@ -220,7 +220,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       if (registrations.value.length > 0) {
         this.setRegisterChallengeFromApi(registrations.value[0]);
       } else {
-        this.$log?.debug('No registration data available to set store state');
+        this.$log?.info(
+          'No registration challenge data available to set store state.',
+        );
       }
       this.isLoadingRegisterChallenge = false;
     },
@@ -230,17 +232,17 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
      */
     setRegisterChallengeFromApi(registration: RegisterChallengeResult): void {
       this.$log?.debug(
-        `Setting store state from registration data <${JSON.stringify(
+        `Setting store state from registration challenge data <${JSON.stringify(
           registration,
           null,
           2,
-        )}>`,
+        )}>.`,
       );
       const parsedResponse = registerChallengeAdapter.toStoreData(registration);
       // update store state
       this.setPersonalDetails(parsedResponse.personalDetails);
       this.$log?.debug(
-        `Personal details updated to <${JSON.stringify(this.personalDetails, null, 2)}>`,
+        `Personal details updated to <${JSON.stringify(this.getPersonalDetails, null, 2)}>.`,
       );
       /**
        * The paymentAmount value is sent for subject = 'company' or 'school'.
@@ -253,7 +255,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
        * as the payment must be made immediately.
        */
       this.setPaymentSubject(parsedResponse.paymentSubject);
-      this.$log?.debug(`Payment subject updated to <${this.paymentSubject}>`);
+      this.$log?.debug(
+        `Payment subject strore updated to <${this.getPaymentSubject}>.`,
+      );
       /**
        * In case the payment subject has been selected but the organizationType
        * has not been set by completing the step "Participation", we set
@@ -268,16 +272,20 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.setOrganizationType(parsedResponse.organizationType);
       }
       this.$log?.debug(
-        `Organization type updated to <${this.organizationType}>`,
+        `Organization type strore updated to <${this.getOrganizationType}>.`,
       );
       this.setOrganizationId(parsedResponse.organizationId);
-      this.$log?.debug(`Organization ID updated to <${this.organizationId}>`);
+      this.$log?.debug(
+        `Organization ID strore updated to <${this.getOrganizationId}>.`,
+      );
       this.setSubsidiaryId(parsedResponse.subsidiaryId);
-      this.$log?.debug(`Subsidiary ID updated to <${this.subsidiaryId}>`);
+      this.$log?.debug(
+        `Subsidiary ID store updated to <${this.getSubsidiaryId}>.`,
+      );
       this.setTeamId(parsedResponse.teamId);
-      this.$log?.debug(`Team ID updated to <${this.teamId}>`);
+      this.$log?.debug(`Team ID store updated to <${this.getTeamId}>.`);
       this.setMerchId(parsedResponse.merchId);
-      this.$log?.debug(`Merch ID updated to <${this.merchId}>`);
+      this.$log?.debug(`Merch ID store updated to <${this.getMerchId}>.`);
     },
     /**
      * Submit a registration step
@@ -304,9 +312,18 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         [RegisterChallengeStep.summary]: {},
       };
       // convert store state to API payload
-      const payload = registerChallengeAdapter.toApiPayload(payloadMap[step]);
+      const payload = registerChallengeAdapter.toApiPayload(
+        payloadMap[step] as {
+          personalDetails?: Partial<RegisterChallengePersonalDetailsForm>;
+          paymentSubject?: PaymentSubject;
+          paymentAmount?: number | null;
+          teamId?: number | null;
+          merchId?: number | null;
+          voucher?: ValidatedCoupon | null;
+        },
+      );
       this.$log?.debug(
-        `Submitting ${step} payload <${JSON.stringify(payload, null, 2)}>`,
+        `Submitting <${step}> payload <${JSON.stringify(payload, null, 2)}>.`,
       );
       // post payload to API
       return this.postRegisterChallenge(payload);
@@ -323,7 +340,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.isLoadingRegisterChallenge = true;
 
       this.$log?.debug(
-        `Posting registration data to API <${JSON.stringify(payload, null, 2)}>`,
+        `Posting registration challenge data to API <${JSON.stringify(payload, null, 2)}>.`,
       );
 
       const response = await registerChallenge(payload);
@@ -335,14 +352,14 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       const { subsidiaries, loadSubsidiaries } = useApiGetSubsidiaries(logger);
       if (this.organizationId) {
         logger?.debug(
-          `Load organization ID <${this.organizationId}>` +
+          `Load organization ID <${this.getOrganizationId}>` +
             ' subsidiaries and save them into store.',
         );
         this.isLoadingSubsidiaries = true;
         await loadSubsidiaries(this.organizationId);
         this.subsidiaries = subsidiaries.value;
         logger?.debug(
-          `Loaded subsidiaries <${this.subsidiaries}> saved into store.`,
+          `Loaded subsidiaries <${this.getSubsidiaries}> saved into store.`,
         );
         this.isLoadingSubsidiaries = false;
       }
