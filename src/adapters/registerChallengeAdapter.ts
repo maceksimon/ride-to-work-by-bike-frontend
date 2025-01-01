@@ -10,7 +10,7 @@ import type {
   RegisterChallengePostPayload,
 } from '../components/types/ApiRegistration';
 import type { RegisterChallengePersonalDetailsForm } from '../components/types/RegisterChallenge';
-import type { ValidatedCoupon } from '../components/types/Coupon';
+import type { ToApiPayloadStoreState } from '../components/types/ApiRegistration';
 
 /**
  * Adapter for converting between API and store registration data formats
@@ -52,14 +52,9 @@ export const registerChallengeAdapter = {
    * @param {object} storeState - Partial store state with properties to send
    * @returns {RegisterChallengePostPayload} API-compatible payload
    */
-  toApiPayload(storeState: {
-    personalDetails?: Partial<RegisterChallengePersonalDetailsForm>;
-    paymentSubject?: PaymentSubject;
-    paymentAmount?: number | null;
-    teamId?: number | null;
-    merchId?: number | null;
-    voucher?: ValidatedCoupon | null;
-  }): RegisterChallengePostPayload {
+  toApiPayload(
+    storeState: ToApiPayloadStoreState,
+  ): RegisterChallengePostPayload {
     const payload: RegisterChallengePostPayload = {};
 
     if (storeState.personalDetails) {

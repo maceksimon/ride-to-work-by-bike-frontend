@@ -1,3 +1,7 @@
+import type { ValidatedCoupon } from './Coupon';
+import type { RegisterChallengePersonalDetailsForm } from './RegisterChallenge';
+import type { PaymentSubject } from '../enums/Payment';
+
 // subset of personal details that can be sent in POST requests
 export type CorePersonalDetails = {
   first_name: string;
@@ -64,3 +68,12 @@ export type RegisterChallengePostResponse = {
   subsidiary_id?: number | null;
   t_shirt_size_id?: number | null;
 };
+
+export interface ToApiPayloadStoreState {
+  personalDetails?: Partial<RegisterChallengePersonalDetailsForm>;
+  paymentSubject?: PaymentSubject;
+  paymentAmount?: number | null;
+  teamId?: number | null;
+  merchId?: number | null;
+  voucher?: ValidatedCoupon | null;
+}

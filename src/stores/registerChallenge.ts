@@ -41,6 +41,7 @@ import type {
   RegisterChallengePostPayload,
   RegisterChallengePostResponse,
   RegisterChallengeResult,
+  ToApiPayloadStoreState,
 } from '../components/types/ApiRegistration';
 
 const emptyFormPersonalDetails: RegisterChallengePersonalDetailsForm = {
@@ -313,14 +314,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       };
       // convert store state to API payload
       const payload = registerChallengeAdapter.toApiPayload(
-        payloadMap[step] as {
-          personalDetails?: Partial<RegisterChallengePersonalDetailsForm>;
-          paymentSubject?: PaymentSubject;
-          paymentAmount?: number | null;
-          teamId?: number | null;
-          merchId?: number | null;
-          voucher?: ValidatedCoupon | null;
-        },
+        payloadMap[step] as ToApiPayloadStoreState,
       );
       this.$log?.debug(
         `Submitting <${step}> payload <${JSON.stringify(payload, null, 2)}>.`,
