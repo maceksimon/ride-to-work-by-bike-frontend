@@ -1222,6 +1222,10 @@ describe('Register Challenge page', () => {
   context('registration in progress', () => {
     beforeEach(() => {
       cy.task('getAppConfig', process).then((config) => {
+        cy.interceptThisCampaignGetApi(config, defLocale);
+        // visit challenge inactive page to load campaign data
+        cy.visit('#' + routesConf['challenge_inactive']['path']);
+        cy.waitForThisCampaignApi();
         cy.fixture('apiGetRegisterChallenge.json').then((response) => {
           cy.interceptRegisterChallengeGetApi(config, defLocale, response);
         });
