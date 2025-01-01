@@ -67,7 +67,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     teamId: null as number | null,
     merchId: null as number | null,
     paymentSubject: PaymentSubject.individual,
-    paymentAmount: 0,
+    paymentAmount: 0 as number | null,
     voucher: null as ValidatedCoupon | null,
     subsidiaries: [] as OrganizationSubsidiary[],
     organizations: [] as OrganizationOption[],
@@ -91,7 +91,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getTeamId: (state): number | null => state.teamId,
     getMerchId: (state): number | null => state.merchId,
     getPaymentSubject: (state): PaymentSubject => state.paymentSubject,
-    getPaymentAmount: (state): number => state.paymentAmount,
+    getPaymentAmount: (state): number | null => state.paymentAmount,
     getVoucher: (state): ValidatedCoupon | null => state.voucher,
     getSubsidiaries: (state): OrganizationSubsidiary[] => state.subsidiaries,
     getOrganizations: (state): OrganizationOption[] => state.organizations,
@@ -187,7 +187,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setPaymentSubject(paymentSubject: PaymentSubject) {
       this.paymentSubject = paymentSubject;
     },
-    setPaymentAmount(paymentAmount: number) {
+    setPaymentAmount(paymentAmount: number | null) {
       this.paymentAmount = paymentAmount;
     },
     setVoucher(voucher: ValidatedCoupon | null) {

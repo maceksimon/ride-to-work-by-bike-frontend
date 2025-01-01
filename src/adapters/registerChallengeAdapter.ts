@@ -55,7 +55,7 @@ export const registerChallengeAdapter = {
   toApiPayload(storeState: {
     personalDetails?: Partial<RegisterChallengePersonalDetailsForm>;
     paymentSubject?: PaymentSubject;
-    paymentAmount?: number;
+    paymentAmount?: number | null;
     teamId?: number | null;
     merchId?: number | null;
     voucher?: ValidatedCoupon | null;
