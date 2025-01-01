@@ -35,9 +35,11 @@ import {
   httpTooManyRequestsStatus,
   httpTooManyRequestsStatusMessage,
   userAgentHeader,
+  interceptOrganizationsApi,
 } from './commonTests';
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 import { bearerTokeAuth } from '../../../src/utils';
+import { OrganizationType } from '../../../src/components/types/Organization';
 
 // Fix for ResizeObserver loop issue in Firefox
 // see https://stackoverflow.com/questions/74947338/i-keep-getting-error-resizeobserver-loop-limit-exceeded-in-cypress
@@ -1847,5 +1849,53 @@ Cypress.Commands.add(
         });
       },
     );
+  },
+);
+
+Cypress.Commands.add(
+  'interceptRegisterChallengeCoreApiRequests',
+  (config, i18n) => {
+    cy.fixture('formOrganizationOptions').then((formOrganizationOptions) => {
+      cy.fixture('formFieldCompany').then((formFieldCompanyResponse) => {
+        // intercept organizations API
+        interceptOrganizationsApi(config, i18n, OrganizationType.company);
+        interceptOrganizationsApi(config, i18n, OrganizationType.school);
+        // for first organization, intercept API call with response true
+        cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
+          (response) => {
+            cy.interceptHasOrganizationAdminGetApi(
+              config,
+              i18n,
+              formFieldCompanyResponse.results[0].id,
+              response,
+            );
+          },
+        );
+        // for second organization, intercept API call with response false
+        cy.fixture('apiGetHasOrganizationAdminResponseFalse').then(
+          (response) => {
+            cy.interceptHasOrganizationAdminGetApi(
+              config,
+              i18n,
+              formFieldCompanyResponse.results[1].id,
+              response,
+            );
+          },
+        );
+        // intercept subsidiary API
+        cy.interceptSubsidiariesGetApi(
+          config,
+          i18n,
+          formOrganizationOptions[0].id,
+        );
+        // intercept teams for first subsidiary
+        cy.interceptTeamsGetApi(
+          config,
+          i18n,
+          formOrganizationOptions[0].subsidiaries[0].id,
+        );
+        cy.interceptMerchandiseGetApi(config, i18n);
+      });
+    });
   },
 );

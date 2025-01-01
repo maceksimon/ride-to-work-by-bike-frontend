@@ -1375,7 +1375,7 @@ describe('Register Challenge page', () => {
     });
   });
 
-  context('registration in progress', () => {
+  context('registration in progress (payment company - waiting)', () => {
     beforeEach(() => {
       cy.task('getAppConfig', process).then((config) => {
         cy.interceptThisCampaignGetApi(config, defLocale);
@@ -1387,25 +1387,7 @@ describe('Register Challenge page', () => {
         });
         // intercept common response (not currently used)
         cy.interceptRegisterChallengePostApi(config, defLocale);
-        // intercept organizations API
-        interceptOrganizationsApi(config, defLocale, OrganizationType.company);
-        cy.fixture('formOrganizationOptions').then(
-          (formOrganizationOptions) => {
-            // intercept subsidiary API
-            cy.interceptSubsidiariesGetApi(
-              config,
-              defLocale,
-              formOrganizationOptions[0].id,
-            );
-            // intercept teams for first subsidiary
-            cy.interceptTeamsGetApi(
-              config,
-              defLocale,
-              formOrganizationOptions[0].subsidiaries[0].id,
-            );
-          },
-        );
-        cy.interceptMerchandiseGetApi(config, defLocale);
+        cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
       });
       // config is defined without hash in the URL
       cy.visit('#' + routesConf['register_challenge']['path']);
@@ -1560,6 +1542,186 @@ describe('Register Challenge page', () => {
             );
           },
         );
+      });
+    });
+  });
+
+  context('registration in progress (payment individual - paid)', () => {
+    beforeEach(() => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
+        cy.interceptThisCampaignGetApi(config, defLocale);
+        // visit challenge inactive page to load campaign data
+        cy.visit('#' + routesConf['challenge_inactive']['path']);
+        cy.waitForThisCampaignApi();
+        cy.fixture('apiGetRegisterChallengeIndividualPaid.json').then(
+          (response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          },
+        );
+        // intercept common response (not currently used)
+        cy.interceptRegisterChallengePostApi(config, defLocale);
+        cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+      });
+      // config is defined without hash in the URL
+      cy.visit('#' + routesConf['register_challenge']['path']);
+      cy.viewport('macbook-16');
+    });
+
+    it.only('fetches the registration status on load', () => {
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
+        cy.get('@config').then((config) => {
+          cy.fixture('apiGetRegisterChallengeIndividualPaid.json').then(
+            (registerChallengeResponse) => {
+              cy.waitForRegisterChallengeGetApi(registerChallengeResponse);
+              // opens first step
+              cy.dataCy('step-1')
+                .find('.q-stepper__step-content')
+                .should('be.visible');
+              // form contains data from fixture
+              cy.dataCy('form-firstName-input').should(
+                'have.value',
+                registerChallengeResponse.results[0].personal_details
+                  .first_name,
+              );
+              cy.dataCy('form-lastName-input').should(
+                'have.value',
+                registerChallengeResponse.results[0].personal_details.last_name,
+              );
+              cy.dataCy('form-nickname-input').should(
+                'have.value',
+                registerChallengeResponse.results[0].personal_details.nickname,
+              );
+              // male sex is selected
+              cy.dataCy('form-personal-details-gender')
+                .find('.q-radio__inner')
+                .first()
+                .should('have.class', 'q-radio__inner--truthy');
+              // newsletter challenge is selected
+              cy.dataCy('newsletter-options').within(() => {
+                cy.get('.q-checkbox__inner')
+                  .first()
+                  .should('have.class', 'q-checkbox__inner--truthy');
+              });
+              // checkbox terms is checked
+              cy.dataCy('form-terms-input')
+                .find('.q-checkbox__inner')
+                .should('have.class', 'q-checkbox__inner--truthy');
+              // go to next step
+              cy.dataCy('step-1-continue').should('be.visible').click();
+              // check that the "paid" message is visible
+              cy.dataCy('step-2-paid-message')
+                .should('be.visible')
+                .then(($el) => {
+                  const content = $el.text();
+                  cy.stripHtmlTags(
+                    win.i18n.global.t(
+                      'register.challenge.textRegistrationPaid',
+                      { contactEmail: config.contactEmail },
+                    ),
+                  ).then((text) => {
+                    expect(content).to.equal(text);
+                  });
+                });
+              // go to next step
+              cy.dataCy('step-2-continue')
+                .should('be.visible')
+                .and('not.be.disabled')
+                .click();
+              // check that participation is selected
+              cy.dataCy('form-field-option-group').within(() => {
+                cy.get('.q-radio__inner.q-radio__inner--truthy')
+                  .siblings('.q-radio__label')
+                  .should(
+                    'contain',
+                    win.i18n.global.t('form.participation.labelColleagues'),
+                  );
+              });
+              // go to next step
+              cy.dataCy('step-3-continue').should('be.visible').click();
+              // debug component contains correct data
+              cy.dataCy('debug-register-challenge-ids')
+                .should('be.visible')
+                .within(() => {
+                  cy.dataCy('debug-organization-id-value')
+                    .should('not.be.empty')
+                    .and(
+                      'contain',
+                      registerChallengeResponse.results[0].organization_id,
+                    );
+                  cy.dataCy('debug-subsidiary-id-value')
+                    .should('not.be.empty')
+                    .and(
+                      'contain',
+                      registerChallengeResponse.results[0].subsidiary_id,
+                    );
+                  cy.dataCy('debug-team-id-value')
+                    .should('not.be.empty')
+                    .and(
+                      'contain',
+                      registerChallengeResponse.results[0].team_id,
+                    );
+                });
+              // company is preselected
+              cy.dataCy('form-select-table-company')
+                .should('be.visible')
+                .find('.q-radio__inner')
+                .first()
+                .should('have.class', 'q-radio__inner--truthy');
+              // address is preselected
+              cy.fixture('apiGetSubsidiariesResponse').then(
+                (subsidiariesResponse) => {
+                  cy.dataCy('form-company-address-input').should(
+                    'contain',
+                    subsidiariesResponse.results[0].address.street,
+                  );
+                  // go to next step
+                  cy.dataCy('step-4-continue').should('be.visible').click();
+                  // team is preselected
+                  cy.dataCy('form-select-table-team')
+                    .should('be.visible')
+                    .find('.q-radio__inner')
+                    .first()
+                    .should('have.class', 'q-radio__inner--truthy');
+                  // go to next step
+                  cy.dataCy('step-5-continue').should('be.visible').click();
+                  // correct merch card is preselected
+                  cy.dataCy('form-card-merch-female')
+                    .first()
+                    .find('[data-cy="button-selected"]')
+                    .should('be.visible');
+                  // correct size is preselected
+                  cy.fixture('apiGetMerchandiseResponse').then(
+                    (merchandiseResponse) => {
+                      // select our test item (Triko 2024, female, size M)
+                      cy.wrap(
+                        merchandiseResponse.results.find(
+                          (item) =>
+                            item.id ===
+                            registerChallengeResponse.results[0]
+                              .t_shirt_size_id,
+                        ),
+                      ).then((item) => {
+                        // same size is selected
+                        cy.dataCy('form-field-merch-size')
+                          .find('.q-radio__inner.q-radio__inner--truthy')
+                          .siblings('.q-radio__label')
+                          .should('contain', item.size);
+                      });
+                    },
+                  );
+                  // go to next step
+                  cy.dataCy('step-6-continue').should('be.visible').click();
+                  // verify step 7 is active
+                  cy.dataCy('step-7')
+                    .find('.q-stepper__step-content')
+                    .should('be.visible');
+                },
+              );
+            },
+          );
+        });
       });
     });
   });

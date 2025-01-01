@@ -199,7 +199,10 @@ export default defineComponent({
 
     // Payment-related logic
     const isPaymentAmount = computed<boolean>((): boolean => {
-      return !!registerChallengeStore.getPaymentAmount && registerChallengeStore.getPaymentAmount > 0;
+      return (
+        !!registerChallengeStore.getPaymentAmount &&
+        registerChallengeStore.getPaymentAmount > 0
+      );
     });
 
     /**
@@ -333,6 +336,9 @@ export default defineComponent({
         :style="{ 'max-width': containerFormWidth }"
       >
         <show-organization-ids />
+        <span class="text-white">{{
+          registerChallengeStore.getPaymentState
+        }}</span>
         <!-- Page title -->
         <h1
           class="text-h5 text-bold text-white q-my-none"
@@ -403,6 +409,7 @@ export default defineComponent({
                     contactEmail,
                   })
                 "
+                data-cy="step-2-paid-message"
               />
             </q-form>
             <q-stepper-navigation class="flex justify-end">
