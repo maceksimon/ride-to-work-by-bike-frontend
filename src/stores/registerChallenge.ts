@@ -475,6 +475,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       const response = await createOrder(this.paymentAmount, clientIp);
       // check response and redirect
       if (response?.status.statusCode === 'SUCCESS' && response.redirectUri) {
+        Notify.create({
+          message: i18n.global.t('createPayuOrder.apiMessageSuccess'),
+          color: 'positive',
+        });
         this.$log?.debug(
           `Redirecting to PayU payment page: ${response.redirectUri}`,
         );
