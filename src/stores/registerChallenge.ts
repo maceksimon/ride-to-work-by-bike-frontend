@@ -196,6 +196,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setMerchId(merchId: number | null) {
       this.merchId = merchId;
     },
+    setPaymentState(paymentState: PaymentState) {
+      this.paymentState = paymentState;
+    },
     setPaymentSubject(paymentSubject: PaymentSubject) {
       this.paymentSubject = paymentSubject;
     },
@@ -269,6 +272,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.setPaymentSubject(parsedResponse.paymentSubject);
       this.$log?.debug(
         `Payment subject strore updated to <${this.getPaymentSubject}>.`,
+      );
+      this.setPaymentState(parsedResponse.paymentState);
+      this.$log?.debug(
+        `Payment state strore updated to <${this.getPaymentState}>.`,
       );
       /**
        * In case the payment subject has been selected but the organizationType
