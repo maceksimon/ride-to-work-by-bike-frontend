@@ -211,6 +211,10 @@ export default defineComponent({
       return registerChallengeStore.getPaymentState !== PaymentState.done;
     });
 
+    const isShownRegistrationPaidMessage = computed<boolean>((): boolean => {
+      return registerChallengeStore.getPaymentState === PaymentState.done;
+    });
+
     /**
      * Show create order button if:
      * - payment state is not `done` and paymentAmount > 0
@@ -254,15 +258,18 @@ export default defineComponent({
       );
     });
 
-    const onSubmitPayment = () => {
-      registerChallengeStore.createPayuOrder();
-    };
-
     const isLoadingPayuOrder = computed(() => {
       return registerChallengeStore.isLoadingPayuOrder;
     });
 
+    const onSubmitPayment = () => {
+      registerChallengeStore.createPayuOrder();
+    };
+
+    const contactEmail = rideToWorkByBikeConfig.contactEmail;
+
     return {
+      contactEmail,
       challengeMonth,
       containerFormWidth,
       step,
@@ -299,6 +306,7 @@ export default defineComponent({
       isShownPaymentForm,
       isShownCreateOrderButton,
       isShownPaymentNextStepButton,
+      isShownRegistrationPaidMessage,
       isEnabledPaymentNextStepButton,
       isLoadingPayuOrder,
       onSubmitPayment,
@@ -384,8 +392,18 @@ export default defineComponent({
             class="bg-white q-mt-lg"
             data-cy="step-2"
           >
+            <!-- Form: Payment -->
             <q-form ref="stepPaymentRef">
-              <register-challenge-payment />
+              <register-challenge-payment v-if="isShownPaymentForm" />
+              <!-- Message: Registration paid (displayed after PayU payment has been made) -->
+              <div
+                v-if="isShownRegistrationPaidMessage"
+                v-html="
+                  $t('register.challenge.textRegistrationPaid', {
+                    contactEmail,
+                  })
+                "
+              />
             </q-form>
             <q-stepper-navigation class="flex justify-end">
               <q-btn
