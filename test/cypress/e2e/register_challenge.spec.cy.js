@@ -1568,7 +1568,7 @@ describe('Register Challenge page', () => {
       cy.viewport('macbook-16');
     });
 
-    it.only('fetches the registration status on load', () => {
+    it('fetches the registration status on load', () => {
       cy.window().should('have.property', 'i18n');
       cy.window().then((win) => {
         cy.get('@config').then((config) => {
