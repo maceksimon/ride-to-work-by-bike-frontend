@@ -179,24 +179,6 @@ export default defineComponent({
       router.push(routesConf['home']['path']);
     };
 
-    /**
-     * Payment-related logic
-     */
-    // const isShownPaymentForm = computed(() => {
-    //   switch (registerChallengeStore.getPaymentState) {
-    //     case PaymentState.done:
-    //       return false;
-    //     case PaymentState.none:
-    //       return true;
-    //     case PaymentState.noAdmission:
-    //       return true;
-    //     case PaymentState.waiting:
-    //       return true;
-    //     case PaymentState.unknown:
-    //       return false;
-    //   }
-    // });
-
     // Payment-related logic
     const isPaymentAmount = computed<boolean>((): boolean => {
       return (
@@ -217,6 +199,14 @@ export default defineComponent({
     const isShownRegistrationPaidMessage = computed<boolean>((): boolean => {
       return registerChallengeStore.getPaymentState === PaymentState.done;
     });
+
+    const isShownRegistrationNoAdmissionMessage = computed<boolean>(
+      (): boolean => {
+        return (
+          registerChallengeStore.getPaymentState === PaymentState.noAdmission
+        );
+      },
+    );
 
     /**
      * Show create order button if:
@@ -270,8 +260,10 @@ export default defineComponent({
     };
 
     const contactEmail = rideToWorkByBikeConfig.contactEmail;
+    const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
     return {
+      borderRadius,
       contactEmail,
       challengeMonth,
       containerFormWidth,
@@ -309,6 +301,7 @@ export default defineComponent({
       isShownPaymentForm,
       isShownCreateOrderButton,
       isShownPaymentNextStepButton,
+      isShownRegistrationNoAdmissionMessage,
       isShownRegistrationPaidMessage,
       isEnabledPaymentNextStepButton,
       isLoadingPayuOrder,
@@ -400,6 +393,14 @@ export default defineComponent({
           >
             <!-- Form: Payment -->
             <q-form ref="stepPaymentRef">
+              <q-banner
+                v-if="isShownRegistrationNoAdmissionMessage"
+                class="bg-negative text-white q-mb-md"
+                :style="{ borderRadius }"
+                data-cy="step-2-no-admission-message"
+              >
+                {{ $t('register.challenge.textRegistrationNoAdmission') }}
+              </q-banner>
               <register-challenge-payment v-if="isShownPaymentForm" />
               <!-- Message: Registration paid (displayed after PayU payment has been made) -->
               <div
