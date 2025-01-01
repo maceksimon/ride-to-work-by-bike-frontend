@@ -67,7 +67,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     teamId: null as number | null,
     merchId: null as number | null,
     paymentSubject: PaymentSubject.individual,
-    paymentAmount: 0 as number | null,
+    paymentAmount: null as number | null,
     voucher: null as ValidatedCoupon | null,
     subsidiaries: [] as OrganizationSubsidiary[],
     organizations: [] as OrganizationOption[],
