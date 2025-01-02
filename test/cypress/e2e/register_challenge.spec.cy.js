@@ -1301,6 +1301,19 @@ describe('Register Challenge page', () => {
               .parents('.q-radio__label')
               .siblings('.q-radio__inner')
               .should('have.class', 'q-radio__inner--truthy');
+            cy.fixture('formFieldCompany').then((responseCompanies) => {
+              cy.wrap(
+                responseCompanies.results.find(
+                  (company) =>
+                    company.id ===
+                    registerChallengeResponse.results[0].organization_id,
+                ),
+              ).then((company) => {
+                cy.dataCy('form-company-input')
+                  .should('be.visible')
+                  .and('have.value', company.name);
+              });
+            });
             // go to next step
             cy.dataCy('step-2-continue').should('be.visible').click();
             // check that participation is selected

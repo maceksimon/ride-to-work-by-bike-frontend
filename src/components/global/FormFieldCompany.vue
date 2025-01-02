@@ -86,7 +86,7 @@ export default defineComponent({
   },
   props: {
     modelValue: {
-      type: [Number, String],
+      type: [Number],
       required: true,
     },
     label: {
@@ -113,17 +113,37 @@ export default defineComponent({
     );
 
     // load options on component mount
-    onMounted(() => {
-      loadOrganizations(props.organizationType);
+    onMounted(async () => {
+      await loadOrganizations(props.organizationType);
+      setSelectedOrganization();
     });
 
-    // company v-model
-    const company = computed<number | string>({
-      get: (): number | string => props.modelValue,
-      set: (value: number | string) => {
-        logger?.debug(`Company set to <${value}>.`);
+    const organizationId = computed<number | null>({
+      get: (): number | null => props.modelValue,
+      set: (value: number | null) => {
+        logger?.debug(`Organization ID set to <${value}>.`);
         emit('update:modelValue', value);
       },
+    });
+
+    const selectedOrganization = ref<FormSelectOption | null>(null);
+    const setSelectedOrganization = (): void => {
+      if (options.value?.length) {
+        selectedOrganization.value =
+          options.value.find(
+            (option) => option.value === organizationId.value,
+          ) || null;
+      }
+    };
+    watch(selectedOrganization, (newValue, oldValue) => {
+      logger?.debug(
+        `Selected organization changed from <${oldValue}> to <${newValue}>.`,
+      );
+      if (newValue) {
+        organizationId.value = Number(newValue.value);
+      } else {
+        organizationId.value = null;
+      }
     });
 
     /**
@@ -203,7 +223,7 @@ export default defineComponent({
               value: data.id,
             };
             optionsFiltered.value.push(newCompanyOption);
-            company.value = newCompanyOption.value;
+            selectedOrganization.value = newCompanyOption;
             logger?.debug(
               `Append newly created organization <${JSON.stringify(
                 newCompanyOption,
@@ -254,9 +274,9 @@ export default defineComponent({
         `New organization type was selected, new value is  <${newValue}>, old value was <${oldValue}>.`,
       );
       // Erase select organization widget value
-      company.value = '';
+      selectedOrganization.value = null;
       logger?.debug(
-        `Erase select organization widget value <${company.value}>.`,
+        `Erase select organization widget value <${selectedOrganization.value}>.`,
       );
       // Organization type changed, load new options
       loadOrganizations(newValue);
@@ -265,7 +285,6 @@ export default defineComponent({
     return {
       addNewOrganizationDialogTitle,
       addNewOrganizationDialogBtn,
-      company,
       companyNew,
       formFieldLabel,
       formRef,
@@ -282,6 +301,7 @@ export default defineComponent({
       organizationFieldValidationTransStrings,
       FormAddCompanyVariantProp,
       OrganizationType,
+      selectedOrganization,
     };
   },
 });
@@ -304,14 +324,12 @@ export default defineComponent({
           dense
           outlined
           use-input
-          emit-value
-          map-options
           hide-selected
           fill-input
           hide-bottom-space
           input-debounce="0"
           :lazy-rules="true"
-          v-model="company"
+          v-model="selectedOrganization"
           :options="optionsFiltered"
           :loading="isLoadingGetOrganization"
           class="q-mt-sm"

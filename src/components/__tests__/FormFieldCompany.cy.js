@@ -60,6 +60,16 @@ describe('<FormFieldCompany>', () => {
         i18n,
         OrganizationType.company,
       );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.family,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -227,6 +237,16 @@ describe('<FormFieldCompany>', () => {
         i18n,
         OrganizationType.company,
       );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.family,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -247,7 +267,21 @@ describe('<FormFieldCompany>', () => {
 
   context('organization type - company', () => {
     beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.family,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -294,7 +328,21 @@ describe('<FormFieldCompany>', () => {
 
   context('organization type - school', () => {
     beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.family,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -341,7 +389,21 @@ describe('<FormFieldCompany>', () => {
 
   context('organization type - family', () => {
     beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.family,
+      );
       // reset model value
       model.value = '';
       // mount component
@@ -388,7 +450,21 @@ describe('<FormFieldCompany>', () => {
 
   context('custom label', () => {
     beforeEach(() => {
-      interceptOrganizationsApi(rideToWorkByBikeConfig, i18n);
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.school,
+      );
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.family,
+      );
       // reset model value
       model.value = '';
       // mount component
