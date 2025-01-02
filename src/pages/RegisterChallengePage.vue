@@ -329,9 +329,6 @@ export default defineComponent({
         :style="{ 'max-width': containerFormWidth }"
       >
         <show-organization-ids />
-        <span class="text-white">{{
-          registerChallengeStore.getPaymentState
-        }}</span>
         <!-- Page title -->
         <h1
           class="text-h5 text-bold text-white q-my-none"
