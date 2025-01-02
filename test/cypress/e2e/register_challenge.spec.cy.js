@@ -1302,7 +1302,7 @@ describe('Register Challenge page', () => {
     });
   });
 
-  context.only(
+  context(
     'registration in progress (payment individual/voucher - paid)',
     () => {
       beforeEach(() => {
@@ -1369,7 +1369,7 @@ describe('Register Challenge page', () => {
     },
   );
 
-  context.only('registration in progress (payment company - waiting)', () => {
+  context('registration in progress (payment company - waiting)', () => {
     beforeEach(() => {
       cy.task('getAppConfig', process).then((config) => {
         cy.interceptThisCampaignGetApi(config, defLocale);
@@ -1422,98 +1422,95 @@ describe('Register Challenge page', () => {
     });
   });
 
-  context.only(
-    'registration in progress (payment company - no_admission)',
-    () => {
-      beforeEach(() => {
-        cy.task('getAppConfig', process).then((config) => {
-          cy.wrap(config).as('config');
-          cy.interceptThisCampaignGetApi(config, defLocale);
-          // visit challenge inactive page to load campaign data
-          cy.visit('#' + routesConf['challenge_inactive']['path']);
-          cy.waitForThisCampaignApi();
-          cy.fixture('apiGetRegisterChallengeCompanyNoAdmission.json').then(
-            (response) => {
-              cy.interceptRegisterChallengeGetApi(config, defLocale, response);
-            },
-          );
-          // intercept common response (not currently used)
-          cy.interceptRegisterChallengePostApi(config, defLocale);
-          cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
-        });
-        // config is defined without hash in the URL
-        cy.visit('#' + routesConf['register_challenge']['path']);
-        cy.viewport('macbook-16');
+  context('registration in progress (payment company - no_admission)', () => {
+    beforeEach(() => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
+        cy.interceptThisCampaignGetApi(config, defLocale);
+        // visit challenge inactive page to load campaign data
+        cy.visit('#' + routesConf['challenge_inactive']['path']);
+        cy.waitForThisCampaignApi();
+        cy.fixture('apiGetRegisterChallengeCompanyNoAdmission.json').then(
+          (response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          },
+        );
+        // intercept common response (not currently used)
+        cy.interceptRegisterChallengePostApi(config, defLocale);
+        cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
       });
+      // config is defined without hash in the URL
+      cy.visit('#' + routesConf['register_challenge']['path']);
+      cy.viewport('macbook-16');
+    });
 
-      it('fetches the registration status on load', () => {
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          cy.fixture('apiGetRegisterChallengeCompanyNoAdmission.json').then(
-            (registerChallengeResponse) => {
-              cy.testRegisterChallengeLoadedStepOne(
-                win.i18n,
-                registerChallengeResponse,
-              );
-              // go to next step
-              cy.dataCy('step-1-continue').should('be.visible').click();
-              // check that the "no admission" message is visible
-              cy.dataCy('step-2-no-admission-message')
-                .should('be.visible')
-                .and('have.class', 'q-mb-md')
-                .then(($el) => {
-                  const content = $el.text();
-                  cy.stripHtmlTags(
-                    win.i18n.global.t(
-                      'register.challenge.textRegistrationNoAdmission',
-                    ),
-                  ).then((text) => {
-                    expect(content).to.equal(text);
-                  });
+    it('fetches the registration status on load', () => {
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
+        cy.fixture('apiGetRegisterChallengeCompanyNoAdmission.json').then(
+          (registerChallengeResponse) => {
+            cy.testRegisterChallengeLoadedStepOne(
+              win.i18n,
+              registerChallengeResponse,
+            );
+            // go to next step
+            cy.dataCy('step-1-continue').should('be.visible').click();
+            // check that the "no admission" message is visible
+            cy.dataCy('step-2-no-admission-message')
+              .should('be.visible')
+              .and('have.class', 'q-mb-md')
+              .then(($el) => {
+                const content = $el.text();
+                cy.stripHtmlTags(
+                  win.i18n.global.t(
+                    'register.challenge.textRegistrationNoAdmission',
+                  ),
+                ).then((text) => {
+                  expect(content).to.equal(text);
                 });
-              /**
-               * User is allowed to change payment method to individual or voucher
-               * or select a different paying organization.
-               */
-              // switch to individual payment
-              cy.dataCy(getRadioOption(PaymentSubject.individual))
-                .should('be.visible')
-                .click();
-              // submit payment button should be visible and enabled
-              cy.dataCy('step-2-submit-payment')
-                .should('be.visible')
-                .and('not.be.disabled');
-              // switch to voucher payment
-              cy.dataCy(getRadioOption(PaymentSubject.voucher))
-                .should('be.visible')
-                .click();
-              // input voucher should be visible
-              cy.dataCy('form-field-voucher-input').should('be.visible');
-              // switch to company payment
-              cy.dataCy(getRadioOption(PaymentSubject.company))
-                .should('be.visible')
-                .click();
-              /**
-               * Reselect paying company
-               * TODO: add function that will clear subsidiary and team IDs on
-               * organization change.
-               */
-              cy.selectRegisterChallengePayingOrganization();
-              // go to next step
-              cy.dataCy('step-2-continue')
-                .should('be.visible')
-                .and('not.be.disabled')
-                .click();
-              cy.testRegisterChallengeLoadedStepsThreeToSeven(
-                win.i18n,
-                registerChallengeResponse,
-              );
-            },
-          );
-        });
+              });
+            /**
+             * User is allowed to change payment method to individual or voucher
+             * or select a different paying organization.
+             */
+            // switch to individual payment
+            cy.dataCy(getRadioOption(PaymentSubject.individual))
+              .should('be.visible')
+              .click();
+            // submit payment button should be visible and enabled
+            cy.dataCy('step-2-submit-payment')
+              .should('be.visible')
+              .and('not.be.disabled');
+            // switch to voucher payment
+            cy.dataCy(getRadioOption(PaymentSubject.voucher))
+              .should('be.visible')
+              .click();
+            // input voucher should be visible
+            cy.dataCy('form-field-voucher-input').should('be.visible');
+            // switch to company payment
+            cy.dataCy(getRadioOption(PaymentSubject.company))
+              .should('be.visible')
+              .click();
+            /**
+             * Reselect paying company
+             * TODO: add function that will clear subsidiary and team IDs on
+             * organization change.
+             */
+            cy.selectRegisterChallengePayingOrganization();
+            // go to next step
+            cy.dataCy('step-2-continue')
+              .should('be.visible')
+              .and('not.be.disabled')
+              .click();
+            cy.testRegisterChallengeLoadedStepsThreeToSeven(
+              win.i18n,
+              registerChallengeResponse,
+            );
+          },
+        );
       });
-    },
-  );
+    });
+  });
 });
 
 function passToStep2() {
