@@ -118,21 +118,12 @@ export default defineComponent({
       setSelectedOrganization();
     });
 
-    const organizationId = computed<number | null>({
-      get: (): number | null => props.modelValue,
-      set: (value: number | null) => {
-        logger?.debug(`Organization ID set to <${value}>.`);
-        emit('update:modelValue', value);
-      },
-    });
-
     const selectedOrganization = ref<FormSelectOption | null>(null);
     const setSelectedOrganization = (): void => {
       if (options.value?.length) {
         selectedOrganization.value =
-          options.value.find(
-            (option) => option.value === organizationId.value,
-          ) || null;
+          options.value.find((option) => option.value === props.modelValue) ||
+          null;
       }
     };
     watch(selectedOrganization, (newValue, oldValue) => {
@@ -140,9 +131,9 @@ export default defineComponent({
         `Selected organization changed from <${oldValue}> to <${newValue}>.`,
       );
       if (newValue) {
-        organizationId.value = Number(newValue.value);
+        emit('update:modelValue', Number(newValue.value));
       } else {
-        organizationId.value = null;
+        emit('update:modelValue', null);
       }
     });
 
