@@ -23,8 +23,7 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 interface UseApiPostPayuCreateOrderReturn {
   isLoading: Ref<boolean>;
   createOrder: (
-    amount: number,
-    clientIp: string,
+    payload: PayuCreateOrderPayload,
   ) => Promise<PayuCreateOrderResponse | null>;
 }
 
@@ -44,28 +43,20 @@ export const useApiPostPayuCreateOrder = (
   /**
    * Create PayU order
    * Creates a new payment order
-   * @param {number} amount - Payment amount
-   * @param {string} clientIp - Client IP address
+   * @param {PayuCreateOrderPayload} payload - Payment order data
    * @returns {Promise<PayuCreateOrderResponse | null>} - Promise
    */
   const createOrder = async (
-    amount: number,
-    clientIp: string,
+    payload: PayuCreateOrderPayload,
   ): Promise<PayuCreateOrderResponse | null> => {
     logger?.debug(
-      `Create new PayU order with amount <${amount}> and client IP <${clientIp}>.`,
+      `Create new PayU order with payload <${JSON.stringify(payload, null, 2)}>.`,
     );
     isLoading.value = true;
 
     // append access token into HTTP header
     const requestTokenHeader_ = { ...requestTokenHeader };
     requestTokenHeader_.Authorization += loginStore.getAccessToken;
-
-    // data
-    const payload: PayuCreateOrderPayload = {
-      amount,
-      client_ip: clientIp,
-    };
 
     // post order
     const { data } = await apiFetch<PayuCreateOrderResponse>({
