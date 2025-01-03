@@ -1710,6 +1710,24 @@ Cypress.Commands.add(
 );
 
 /**
+ * Wait for intercept register challenge GET API call and compare response object
+ * Wait for `@getRegisterChallenge` intercept
+ */
+Cypress.Commands.add('waitForRegisterChallengeGetApi', (response) => {
+  cy.wait('@getRegisterChallenge').then((getRegisterChallenge) => {
+    expect(getRegisterChallenge.request.headers.authorization).to.include(
+      bearerTokeAuth,
+    );
+    if (getRegisterChallenge.response) {
+      expect(getRegisterChallenge.response.statusCode).to.equal(
+        httpSuccessfullStatus,
+      );
+      expect(getRegisterChallenge.response.body).to.deep.equal(response);
+    }
+  });
+});
+
+/**
  * Intercept PayU create order API
  * Provides `@postPayuCreateOrder` alias
  * @param {Config} config - App global config
@@ -1739,24 +1757,6 @@ Cypress.Commands.add(
     );
   },
 );
-
-/**
- * Wait for intercept register challenge GET API call and compare response object
- * Wait for `@getRegisterChallenge` intercept
- */
-Cypress.Commands.add('waitForRegisterChallengeGetApi', (response) => {
-  cy.wait('@getRegisterChallenge').then((getRegisterChallenge) => {
-    expect(getRegisterChallenge.request.headers.authorization).to.include(
-      bearerTokeAuth,
-    );
-    if (getRegisterChallenge.response) {
-      expect(getRegisterChallenge.response.statusCode).to.equal(
-        httpSuccessfullStatus,
-      );
-      expect(getRegisterChallenge.response.body).to.deep.equal(response);
-    }
-  });
-});
 
 /**
  * Intercept "I don't want merchandise" GET API call
