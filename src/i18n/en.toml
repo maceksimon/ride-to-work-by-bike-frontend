@@ -36,6 +36,7 @@ apiMessageError = "Order creation failed."
 apiMessageErrorWithMessage = "Order creation failed. Error: {error}"
 apiMessageNoPaymentAmount = "No payment amount selected."
 apiMessageSuccess = "Order was successfully created."
+payloadCreateError = "Invalid data for create order request."
 
 [createTeam]
 apiMessageError = "Team creation failed."
