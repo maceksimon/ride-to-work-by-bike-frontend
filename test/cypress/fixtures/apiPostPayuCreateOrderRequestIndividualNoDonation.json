@@ -1,0 +1,13 @@
+{
+  "amount": 390,
+  "client_ip": "185.250.215.37",
+  "payment_subject": "individual",
+  "payment_category": "entry_fee",
+  "products": [
+    {
+      "name": "RTWBB challenge entry fee",
+      "unitPrice": 390,
+      "quantity": 1
+    }
+  ]
+}
