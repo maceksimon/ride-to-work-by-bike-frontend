@@ -40,6 +40,8 @@ export interface ConfigGlobal {
   defaultDistanceZero: string;
   entryFeePaymentMax: string;
   entryFeePaymentOptions: string;
+  rtwbbChallengeEntryFeeOrderedProductName: string;
+  rtwbbDonationOrderedProductName: string;
   iDontWantMerchandiseItemCode: string;
   notifyMessagePosition: string;
   apiBase: string;

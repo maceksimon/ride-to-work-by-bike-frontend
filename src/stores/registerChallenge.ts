@@ -3,6 +3,7 @@ import { defineStore } from 'pinia';
 import { Notify } from 'quasar';
 
 // adapters
+import { payuAdapter } from 'src/adapters/payuAdapter';
 import { subsidiaryAdapter } from 'src/adapters/subsidiaryAdapter';
 import { registerChallengeAdapter } from '../adapters/registerChallengeAdapter';
 
@@ -479,7 +480,26 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Creating PayU order with amount <${this.paymentAmount}> and client IP <${clientIp}>.`,
       );
-      const response = await createOrder(this.paymentAmount, clientIp);
+      this.$log?.debug(
+        'Creating payment with:' +
+          ` Payment subject <${this.paymentSubject}>` +
+          ` Payment amount <${this.paymentAmount}>` +
+          ` Client IP <${clientIp}>`,
+      );
+      const payload = payuAdapter.toPayuOrderPayload(
+        this.paymentSubject,
+        this.paymentAmount,
+        clientIp,
+      );
+      this.$log?.debug(`Payload created <${JSON.stringify(payload, null, 2)}>`);
+      if (!payload) {
+        Notify.create({
+          message: i18n.global.t('createPayuOrder.payloadCreateError'),
+          color: 'positive',
+        });
+        return;
+      }
+      const response = await createOrder(payload);
       // check response and redirect
       if (response?.status.statusCode === 'SUCCESS' && response.redirectUri) {
         Notify.create({
