@@ -132,7 +132,7 @@ export default defineComponent({
           ` to <${JSON.stringify(newValue, 2, null)}>.`,
       );
       if (newValue) {
-        emit('update:modelValue', Number(newValue.value));
+        emit('update:modelValue', parseInt(newValue.value));
       } else {
         emit('update:modelValue', null);
       }
