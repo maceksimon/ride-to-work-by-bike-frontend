@@ -128,7 +128,8 @@ export default defineComponent({
     };
     watch(selectedOrganization, (newValue, oldValue) => {
       logger?.debug(
-        `Selected organization changed from <${oldValue}> to <${newValue}>.`,
+        `Selected organization changed from <${JSON.stringify(oldValue, 2, null)}>` +
+          ` to <${JSON.stringify(newValue, 2, null)}>.`,
       );
       if (newValue) {
         emit('update:modelValue', Number(newValue.value));
