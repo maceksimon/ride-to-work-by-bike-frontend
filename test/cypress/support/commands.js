@@ -2048,3 +2048,38 @@ Cypress.Commands.add('selectRegisterChallengePayingOrganization', () => {
     });
   });
 });
+
+/**
+ * Intercept IP address GET API call
+ * Provides `@getIpAddress` alias
+ * @param {Config} config - global configuration
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptIpAddressGetApi',
+  (config, responseBody = null, responseStatusCode = null) => {
+    const { apiBaseIpAddress } = config;
+    cy.fixture('apiGetIpAddressResponse.json').then((ipAddressResponse) => {
+      cy.intercept('GET', apiBaseIpAddress, {
+        statusCode: responseStatusCode || httpSuccessfullStatus,
+        body: responseBody || ipAddressResponse,
+      }).as('getIpAddress');
+    });
+  },
+);
+
+/**
+ * Wait for IP address API call and compare response object
+ * Wait for `@getIpAddress` intercept
+ */
+Cypress.Commands.add('waitForIpAddressGetApi', () => {
+  cy.fixture('apiGetIpAddressResponse.json').then((ipAddressResponse) => {
+    cy.wait('@getIpAddress').then(({ response }) => {
+      if (response) {
+        expect(response.statusCode).to.equal(httpSuccessfullStatus);
+        expect(response.body).to.deep.equal(ipAddressResponse);
+      }
+    });
+  });
+});

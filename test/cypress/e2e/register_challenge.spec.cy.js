@@ -192,6 +192,7 @@ describe('Register Challenge page', () => {
               // intercept without specific response (it is not used)
               cy.interceptRegisterChallengePostApi(config, win.i18n);
               cy.interceptMerchandiseNoneGetApi(config, win.i18n);
+              cy.interceptIpAddressGetApi(config);
               cy.interceptPayuCreateOrderPostApi(config, win.i18n);
             },
           );
