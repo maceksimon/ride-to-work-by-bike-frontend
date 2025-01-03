@@ -36,6 +36,7 @@ apiMessageError = "Vytvorenie objednávky zlyhalo."
 apiMessageErrorWithMessage = "Vytvorenie objednávky zlyhalo. Chyba: {error}"
 apiMessageNoPaymentAmount = "Nie je vyplnená suma."
 apiMessageSuccess = "Objednávka bola úspešne vytvorená."
+payloadCreateError = "Neplatné údaje pre odoslanie platby."
 
 [createTeam]
 apiMessageError = "Vytvorenie tímu zlyhalo."
