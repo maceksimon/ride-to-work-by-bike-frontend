@@ -290,15 +290,17 @@ export default defineComponent({
       ) {
         const discountAmount: number =
           (defaultPaymentAmountMin.value * activeVoucher.value?.discount) / 100;
+        const discountedAmount: number =
+          defaultPaymentAmountMin.value - discountAmount;
         logger?.debug(
           `Selected payment subject <${selectedPaymentSubject.value}>,` +
             ` is voucher valid <${isVoucherValid.value}>,` +
-            ` active voucher amount <${discountAmount}>.`,
+            ` active voucher amount <${discountedAmount}>.`,
         );
         opts = [
           {
-            label: formatPriceCurrency(discountAmount, Currency.CZK),
-            value: String(discountAmount),
+            label: formatPriceCurrency(discountedAmount, Currency.CZK),
+            value: String(discountedAmount),
           },
           // other options
           ...paymentOptions,

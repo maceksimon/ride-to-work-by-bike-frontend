@@ -428,16 +428,16 @@ describe('Register Challenge page', () => {
                * Case voucher HALF + donation
                */
               // select higher amount
-              // cy.dataCy(getRadioOption(paymentAmountDonation))
-              //   .should('be.visible')
-              //   .click();
+              cy.dataCy(getRadioOption(paymentAmountDonation))
+                .should('be.visible')
+                .click();
               // submit payment
-              // cy.dataCy('step-2-submit-payment').should('be.visible').click();
-              // cy.fixture('apiPostPayuCreateOrderRequestVoucherHalfWithDonation.json').then(
-              //   (requestBody) => {
-              //     cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
-              //   }
-              // );
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestVoucherHalfWithDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
               /**
                * Case voucher FULL + donation
                */
