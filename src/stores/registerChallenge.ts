@@ -489,6 +489,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       const payload = payuAdapter.toPayuOrderPayload(
         this.paymentSubject,
         this.paymentAmount,
+        this.voucher,
         clientIp,
       );
       this.$log?.debug(`Payload created <${JSON.stringify(payload, null, 2)}>`);

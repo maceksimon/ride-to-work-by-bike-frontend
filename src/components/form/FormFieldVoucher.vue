@@ -121,7 +121,8 @@ export default defineComponent({
 
       // calculate discount from min payment amount
       const discountAmountInt: number = Math.round(
-        (defaultPaymentAmountMin.value * discount) / 100,
+        defaultPaymentAmountMin.value -
+          (defaultPaymentAmountMin.value * discount) / 100,
       );
 
       if (discount === 100) {

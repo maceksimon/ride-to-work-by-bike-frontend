@@ -13,6 +13,7 @@ import type {
   PayuCreateOrderPayload,
   PayuProduct,
 } from '../components/types/ApiPayu';
+import type { ValidatedCoupon } from 'src/components/types/Coupon';
 
 // utils
 import { defaultPaymentAmountMinComputed } from '../utils/price_levels';
@@ -32,6 +33,7 @@ export const payuAdapter = {
   toPayuOrderPayload(
     paymentSubject: PaymentSubject,
     paymentAmount: number,
+    voucher: ValidatedCoupon | null,
     clientIp: string,
   ): PayuCreateOrderPayload | null {
     // get default payment amount from store
@@ -39,6 +41,12 @@ export const payuAdapter = {
     const priceLevels = challengeStore.getCurrentPriceLevels;
     const defaultPaymentAmountBasic =
       defaultPaymentAmountMinComputed(priceLevels);
+    let defaultPaymentAmountCoupon = defaultPaymentAmountBasic;
+    if (voucher?.valid && voucher.discount) {
+      defaultPaymentAmountCoupon =
+        defaultPaymentAmountBasic -
+        (defaultPaymentAmountBasic * voucher.discount) / 100;
+    }
 
     const products: PayuProduct[] = [];
     let paymentCategory: PaymentCategory;
@@ -64,11 +72,14 @@ export const payuAdapter = {
       }
       case PaymentSubject.voucher: {
         // voucher allows discounted payment
-        if (paymentAmount <= defaultPaymentAmountBasic) {
+        if (paymentAmount < defaultPaymentAmountCoupon) {
+          // invalid - coupon payment must be at least the value of coupon
+          return null;
+        } else if (paymentAmount === defaultPaymentAmountCoupon) {
           amountEntryFee = paymentAmount;
-        } else if (paymentAmount > defaultPaymentAmountBasic) {
-          amountEntryFee = defaultPaymentAmountBasic;
-          amountDonation = paymentAmount - defaultPaymentAmountBasic;
+        } else if (paymentAmount > defaultPaymentAmountCoupon) {
+          amountEntryFee = defaultPaymentAmountCoupon;
+          amountDonation = paymentAmount - defaultPaymentAmountCoupon;
         } else {
           // invalid - no comparable value
           return null;
