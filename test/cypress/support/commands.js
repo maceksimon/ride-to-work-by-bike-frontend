@@ -1824,8 +1824,7 @@ Cypress.Commands.add(
 
           // verify request body
           if (requestBody) {
-            expect(request.body.amount).to.equal(requestBody.amount);
-            expect(request.body).to.haveOwnProperty('client_ip');
+            expect(request.body).to.deep.equal(requestBody);
           } else {
             expect(request.body.amount).to.equal(
               apiPostPayuCreateOrderRequest.amount,

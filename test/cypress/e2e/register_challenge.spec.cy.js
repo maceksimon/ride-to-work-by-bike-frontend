@@ -86,6 +86,8 @@ const activeIconImgSrcStepper7 = new URL(
 ).href;
 const doneIconImgSrcStepper7 = doneIcon;
 
+const paymentAmountDonation = 500;
+
 describe('Register Challenge page', () => {
   let defaultPaymentAmountMin = 0;
 
@@ -353,6 +355,108 @@ describe('Register Challenge page', () => {
       // on step 2
       cy.dataCy('step-2').find('.q-stepper__step-content').should('be.visible');
       checkActiveIcon(2);
+    });
+
+    it('sends correct create order request for different payment configurations', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.fixture('apiPostPayuCreateOrderResponseNoRedirect.json').then(
+            (responseBody) => {
+              /**
+               * Intercept create order with no redirect so that we can test all
+               * options in a single test.
+               */
+              cy.fixture('apiPostPayuCreateOrderResponseNoRedirect.json').then(
+                (responseBody) => {
+                  cy.interceptPayuCreateOrderPostApi(
+                    config,
+                    i18n,
+                    responseBody,
+                  );
+                },
+              );
+              /**
+               * Case: Individual payment - min amount
+               */
+              passToStep2();
+              // select individual payment
+              cy.dataCy(getRadioOption(PaymentSubject.individual))
+                .should('be.visible')
+                .click();
+              // select default amount
+              cy.dataCy(getRadioOption(defaultPaymentAmountMin))
+                .should('be.visible')
+                .click();
+              // click submit payment
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              // wait for request and check payload
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestIndividualNoDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
+              /**
+               * Case: Individual payment + donation
+               */
+              cy.dataCy(getRadioOption(paymentAmountDonation))
+                .should('be.visible')
+                .click();
+              // click submit payment
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestIndividualWithDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
+              /**
+               * Case voucher HALF - min amount
+               */
+              // select voucher payment
+              cy.dataCy(getRadioOption(PaymentSubject.voucher))
+                .should('be.visible')
+                .click();
+              // apply voucher HALF
+              cy.applyHalfVoucher(config, i18n, defaultPaymentAmountMin);
+              // min amount is selected - submit payment
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestVoucherHalfNoDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
+              /**
+               * Case voucher HALF + donation
+               */
+              // select higher amount
+              // cy.dataCy(getRadioOption(paymentAmountDonation))
+              //   .should('be.visible')
+              //   .click();
+              // submit payment
+              // cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              // cy.fixture('apiPostPayuCreateOrderRequestVoucherHalfWithDonation.json').then(
+              //   (requestBody) => {
+              //     cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              //   }
+              // );
+              /**
+               * Case voucher FULL + donation
+               */
+              // remove voucher
+              // cy.dataCy('voucher-button-remove').should('be.visible').click()
+              // apply voucher FULL
+              // cy.applyFullVoucher(config, i18n);
+              // add donation
+              // submit payment
+              // cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              // cy.fixture('apiPostPayuCreateOrderRequestVoucherHalfWithDonation.json').then(
+              //   (requestBody) => {
+              //     cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              //   }
+              // );
+            },
+          );
+        });
+      });
     });
 
     it('validates third step (organization type)', () => {
