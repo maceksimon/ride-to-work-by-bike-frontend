@@ -442,17 +442,47 @@ describe('Register Challenge page', () => {
                * Case voucher FULL + donation
                */
               // remove voucher
-              // cy.dataCy('voucher-button-remove').should('be.visible').click()
+              cy.dataCy('voucher-button-remove').should('be.visible').click();
               // apply voucher FULL
-              // cy.applyFullVoucher(config, i18n);
-              // add donation
+              cy.applyFullVoucher(config, i18n);
+              // add donation (default donation = defaultPaymentAmountMin)
+              cy.dataCy('form-field-donation-checkbox').click();
               // submit payment
-              // cy.dataCy('step-2-submit-payment').should('be.visible').click();
-              // cy.fixture('apiPostPayuCreateOrderRequestVoucherHalfWithDonation.json').then(
-              //   (requestBody) => {
-              //     cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
-              //   }
-              // );
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestVoucherFullWithDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
+              /**
+               * Case company + donation
+               */
+              // select company payment
+              cy.dataCy(getRadioOption(PaymentSubject.company))
+                .should('be.visible')
+                .click();
+              // default donation stays - submit payment
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestCompanyWithDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
+              /**
+               * Case school + donation
+               */
+              // select school payment
+              cy.dataCy(getRadioOption(PaymentSubject.school))
+                .should('be.visible')
+                .click();
+              // default donation stays - submit payment
+              cy.dataCy('step-2-submit-payment').should('be.visible').click();
+              // should be identical to company request
+              cy.fixture(
+                'apiPostPayuCreateOrderRequestSchoolWithDonation.json',
+              ).then((requestBody) => {
+                cy.waitForPayuCreateOrderPostApi(requestBody, responseBody);
+              });
             },
           );
         });
