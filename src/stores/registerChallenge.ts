@@ -1,3 +1,6 @@
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // libraries
 import { defineStore } from 'pinia';
 import { Notify } from 'quasar';
@@ -90,6 +93,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isLoadingMerchandise: false,
     isLoadingFilteredMerchandise: false,
     isLoadingPayuOrder: false,
+    isPaidFromUi: false,
+    checkPaymentStatusIntervalId: null as ReturnType<typeof setInterval> | null,
+    checkPaymentStatusRepetitionCount: 0,
   }),
 
   getters: {
@@ -176,6 +182,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     getIpAddressData: (state): IpAddressResponse | null => state.ipAddressData,
     getIpAddress: (state): string => state.ipAddressData?.ip || '',
+    getIsPaidFromUi: (state): boolean => state.isPaidFromUi,
   },
 
   actions: {
@@ -223,6 +230,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setMerchandiseCards(cards: Record<Gender, MerchandiseCard[]>) {
       this.merchandiseCards = cards;
+    },
+    setIsPaidFromUi(isPaidFromUi: boolean) {
+      this.isPaidFromUi = isPaidFromUi;
     },
     /**
      * Load registration data from API and set store state
@@ -510,6 +520,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.$log?.debug(
           `Redirecting to PayU payment page: ${response.redirectUri}`,
         );
+        this.isPaidFromUi = true;
+        this.$log?.debug(`Paid from UI flag set to ${this.isPaidFromUi}.`);
         window.location.href = response.redirectUri;
       } else {
         Notify.create({
@@ -521,6 +533,66 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         );
       }
       this.isLoadingPayuOrder = false;
+    },
+    /**
+     * Start periodic check of register challenge data with max repetitions
+     * Used when payment is in progress to detect when it's completed
+     */
+    startRegisterChallengePeriodicCheck(): void {
+      this.$log?.debug(
+        'Start periodic check of registration status with interval' +
+          ` <${rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds}> seconds` +
+          ` and max repetitions <${rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions}>.`,
+      );
+
+      this.checkPaymentStatusIntervalId = setInterval(
+        this.checkRegisterChallenge,
+        rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds *
+          1000,
+      );
+    },
+    async checkRegisterChallenge(): Promise<void> {
+      this.$log?.debug('Check payment status.');
+      // before each call, check if paymentState is done
+      if (this.isPaidFromUi && this.paymentState !== PaymentState.done) {
+        this.$log?.debug(
+          'Payment is in progress, refresh registration data from the API.',
+        );
+        await this.loadRegisterChallengeToStore();
+        // increment counter
+        this.checkPaymentStatusRepetitionCount++;
+        // check that we have not reached max iterations count
+        if (
+          this.checkPaymentStatusRepetitionCount >=
+          rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions
+        ) {
+          this.$log?.debug(
+            `Maximum number of payment status checks reached (${rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions}), stopping periodic check.`,
+          );
+          // if we do reach max iterations count, stop loop
+          this.stopPaymentStatusCheck();
+          return;
+        }
+      } else {
+        this.$log?.debug(
+          'Payment is either not started from UI or already done,' +
+            ' disable periodic check.',
+        );
+        this.stopPaymentStatusCheck();
+      }
+    },
+    /**
+     * Stop periodic check of registration status and reset repetition count
+     */
+    stopPaymentStatusCheck(): void {
+      if (this.checkPaymentStatusIntervalId) {
+        this.$log?.debug('Stop periodic check of registration status.');
+        // clear interval
+        clearInterval(this.checkPaymentStatusIntervalId);
+        // reset local state
+        this.checkPaymentStatusIntervalId = null;
+        this.checkPaymentStatusRepetitionCount = 0;
+      }
     },
   },
 

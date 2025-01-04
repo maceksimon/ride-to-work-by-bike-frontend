@@ -133,8 +133,29 @@ export default defineComponent({
 
     const registerChallengeStore = useRegisterChallengeStore();
 
-    onMounted(() => {
-      registerChallengeStore.loadRegisterChallengeToStore();
+    onMounted(async () => {
+      await registerChallengeStore.loadRegisterChallengeToStore();
+      /**
+       * Depending on the paymentState, and isPaidFromUi flag
+       * we determine if situation is:
+       * - refreshing page after returning from payment
+       * - returning to a started payment
+       */
+      const isPaidFromUi = registerChallengeStore.getIsPaidFromUi;
+      const paymentState = registerChallengeStore.getPaymentState;
+
+      if (isPaidFromUi && paymentState === PaymentState.done) {
+        // entry-fee/donation was paid - go to payment step
+        onContinue();
+      } else if (isPaidFromUi && paymentState !== PaymentState.done) {
+        // trigger a periodic registration data refetch + display message
+        registerChallengeStore.startRegisterChallengePeriodicCheck();
+        // go to payment step
+        onContinue();
+      } else if (!isPaidFromUi && paymentState === PaymentState.done) {
+        // if payment is done, it should always be safe to continue
+        onContinue();
+      }
     });
 
     const organizationType = computed({

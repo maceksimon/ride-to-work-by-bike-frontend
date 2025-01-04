@@ -42,6 +42,8 @@ export interface ConfigGlobal {
   entryFeePaymentOptions: string;
   rtwbbChallengeEntryFeeOrderedProductName: string;
   rtwbbDonationOrderedProductName: string;
+  checkRegisterChallengeStatusIntervalSeconds: number;
+  checkRegisterChallengeStatusMaxRepetitions: number;
   iDontWantMerchandiseItemCode: string;
   notifyMessagePosition: string;
   apiBase: string;

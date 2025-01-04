@@ -72,6 +72,9 @@ entryFeePaymentMax = "2000"
 entryFeePaymentOptions = "500,700"
 rtwbbChallengeEntryFeeOrderedProductName = "RTWBB challenge entry fee"
 rtwbbDonationOrderedProductName = "RTWBB donation"
+checkRegisterChallengeStatusIntervalSeconds = 20
+checkRegisterChallengeStatusMaxRepetitions = 5
+
 
 # Merchandise
 iDontWantMerchandiseItemCode = "nic"
