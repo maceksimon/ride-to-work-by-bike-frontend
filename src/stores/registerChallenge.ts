@@ -524,7 +524,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         );
         this.isPaidFromUi = true;
         this.$log?.debug(`Paid from UI flag set to ${this.isPaidFromUi}.`);
-        window.location.href = response.redirectUri;
+        // localize the URI
+        const redirectUriLocalized = `${response.redirectUri}&lang=${i18n.global.locale}`;
+        window.location.href = redirectUriLocalized;
       } else {
         Notify.create({
           message: i18n.global.t('createPayuOrder.apiMessageError'),
