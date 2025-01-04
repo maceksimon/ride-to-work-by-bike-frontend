@@ -1427,6 +1427,96 @@ describe('Register Challenge page', () => {
     });
   });
 
+  context('registration in progress, individual payment done', () => {
+    beforeEach(() => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
+        cy.interceptThisCampaignGetApi(config, defLocale);
+        // visit challenge inactive page to load campaign data
+        cy.visit('#' + routesConf['challenge_inactive']['path']);
+        cy.waitForThisCampaignApi();
+        cy.fixture('apiGetRegisterChallengeIndividualPaid.json').then(
+          (response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          },
+        );
+        // intercept common response (not currently used)
+        cy.interceptRegisterChallengePostApi(config, defLocale);
+        cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('loads payment page - payment status "done" (set-is-paid-from-ui-true)', () => {
+      // visit page
+      cy.visit('#' + routesConf['register_challenge']['path']);
+      // !isPaidFromUi is set via test title
+      cy.dataCy('debug-is-paid-from-ui-value').should('contain', 'true');
+      // intercept "individual paid" registration data
+      cy.fixture('apiGetRegisterChallengeIndividualPaid.json').then(
+        (response) => {
+          cy.waitForRegisterChallengeGetApi(response);
+          // we get moved to step 2
+          cy.dataCy('step-2')
+            .find('.q-stepper__step-content')
+            .should('be.visible');
+          // message "paid" is displayed
+          cy.dataCy('step-2-paid-message').should('be.visible');
+        },
+      );
+    });
+  });
+
+  context('registration in progress, individual payment not done', () => {
+    beforeEach(() => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
+        cy.interceptThisCampaignGetApi(config, defLocale);
+        // visit challenge inactive page to load campaign data
+        cy.visit('#' + routesConf['challenge_inactive']['path']);
+        cy.waitForThisCampaignApi();
+        cy.fixture('apiGetRegisterChallengeIndividualNotPaid.json').then(
+          (response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          },
+        );
+        cy.interceptRegisterChallengePostApi(config, defLocale);
+        cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('loads payment page - payment status "none" (set-is-paid-from-ui-true)', () => {
+      cy.get('@config').then((config) => {
+        // visit URL
+        cy.visit('#' + routesConf['register_challenge']['path']);
+        // !isPaidFromUi is set via test title
+        cy.dataCy('debug-is-paid-from-ui-value').should('contain', 'true');
+        // intercept "individual paid" registration data
+        cy.fixture('apiGetRegisterChallengeIndividualNotPaid.json').then(
+          (response) => {
+            cy.waitForRegisterChallengeGetApi(response);
+            // we get moved to step 2
+            cy.dataCy('step-2')
+              .find('.q-stepper__step-content')
+              .should('be.visible');
+            // message "waiting for payment" is displayed
+            cy.dataCy('step-2-waiting-for-payment-message').should(
+              'be.visible',
+            );
+            // within timeout window, getRegisterChallenge will be called again
+            cy.get('@getRegisterChallenge.all', {
+              // custom timeout for interval + 1s
+              timeout:
+                config.checkRegisterChallengeStatusIntervalSeconds * 1000 +
+                1000,
+            }).should('have.length', 2);
+          },
+        );
+      });
+    });
+  });
+
   context(
     'registration in progress (payment individual/voucher - paid)',
     () => {
@@ -1451,7 +1541,7 @@ describe('Register Challenge page', () => {
         cy.viewport('macbook-16');
       });
 
-      it('fetches the registration status on load', () => {
+      it('fetches the registration status on load (set-is-paid-from-ui-true)', () => {
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           cy.get('@config').then((config) => {
@@ -1461,8 +1551,6 @@ describe('Register Challenge page', () => {
                   win.i18n,
                   registerChallengeResponse,
                 );
-                // go to next step
-                cy.dataCy('step-1-continue').should('be.visible').click();
                 // check that the "paid" message is visible
                 cy.dataCy('step-2-paid-message')
                   .should('be.visible')
