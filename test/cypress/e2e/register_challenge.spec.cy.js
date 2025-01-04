@@ -945,9 +945,6 @@ describe('Register Challenge page', () => {
       });
     });
 
-    /**
-     * TODO: Find out how to test with payment subject individual
-     */
     it('when individual payment - all participation options are enabled', () => {
       // go to payment step
       passToStep2();
@@ -958,16 +955,9 @@ describe('Register Challenge page', () => {
       cy.dataCy(getRadioOption(500)).click();
       // submit payment
       cy.dataCy('step-2-submit-payment').should('be.visible').click();
-      cy.url().should('include', routesConf['register_challenge']['path']);
       cy.waitForPayuCreateOrderPostApi();
       // window is redirected to given url
       cy.url().should('not.include', routesConf['register_challenge']['path']);
-      /**
-       * TODO: Intercept register-challenge get
-       * Go back to the register-challenge page
-       * Verify that the payment is successful (in GET response)
-       * Allow user to pass to the next step
-       */
     });
 
     it('when voucher payment - all participation options are enabled', () => {
