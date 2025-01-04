@@ -546,9 +546,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           ` <${rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds}> seconds` +
           ` and max repetitions <${rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions}>.`,
       );
-
       let intervalId: ReturnType<typeof setInterval> | null = null;
 
+      // function to clear interval
       const stopCheck = (): void => {
         if (intervalId) {
           this.$log?.debug('Stop periodic check of registration status.');
@@ -560,6 +560,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         }
       };
 
+      // function to run at the interval
       const checkRegisterChallenge = async (): Promise<void> => {
         this.$log?.debug('Check payment status.');
         // before each call, check if paymentState is done
@@ -568,14 +569,12 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
             'Payment is in progress, refresh registration data from the API.',
           );
           await this.loadRegisterChallengeToStore();
-
-          // If payment is now done after the refresh, stop checking
+          // if payment is now done after the refresh, stop checking
           if ((this.paymentState as PaymentState) === PaymentState.done) {
             this.$log?.debug('Payment is now done, stopping periodic check.');
             stopCheck();
             return;
           }
-
           // increment counter
           this.checkPaymentStatusRepetitionCount++;
           // check that we have not reached max iterations count
@@ -605,7 +604,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Set interval to ${rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds * 1000}`,
       );
-      // Start the interval
+      // start interval
       intervalId = setInterval(
         checkRegisterChallenge,
         rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds *
@@ -622,6 +621,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       'merchandiseItems',
       'merchandiseCards',
       'ipAddressData',
+      'checkPaymentStatusRepetitionCount',
     ],
   },
 });
