@@ -133,6 +133,9 @@ export default defineComponent({
 
     const registerChallengeStore = useRegisterChallengeStore();
 
+    const isPaidFromUi = computed(() => registerChallengeStore.getIsPaidFromUi);
+    const paymentState = computed(() => registerChallengeStore.getPaymentState);
+
     onMounted(async () => {
       await registerChallengeStore.loadRegisterChallengeToStore();
       /**
@@ -141,18 +144,29 @@ export default defineComponent({
        * - refreshing page after returning from payment
        * - returning to a started payment
        */
-      const isPaidFromUi = registerChallengeStore.getIsPaidFromUi;
-      const paymentState = registerChallengeStore.getPaymentState;
 
-      if (isPaidFromUi && paymentState === PaymentState.done) {
+      // set isPaidFromUi to `true` for specific set of tests
+      if (
+        window.Cypress.currentTest.title.includes('set-is-paid-from-ui-true')
+      ) {
+        registerChallengeStore.setIsPaidFromUi(true);
+      }
+
+      if (isPaidFromUi.value && paymentState.value === PaymentState.done) {
         // entry-fee/donation was paid - go to payment step
         onContinue();
-      } else if (isPaidFromUi && paymentState !== PaymentState.done) {
+      } else if (
+        isPaidFromUi.value &&
+        paymentState.value !== PaymentState.done
+      ) {
         // trigger a periodic registration data refetch + display message
         registerChallengeStore.startRegisterChallengePeriodicCheck();
         // go to payment step
         onContinue();
-      } else if (!isPaidFromUi && paymentState === PaymentState.done) {
+      } else if (
+        !isPaidFromUi.value &&
+        paymentState.value === PaymentState.done
+      ) {
         // if payment is done, it should always be safe to continue
         onContinue();
       }
@@ -219,6 +233,13 @@ export default defineComponent({
 
     const isShownRegistrationPaidMessage = computed<boolean>((): boolean => {
       return registerChallengeStore.getPaymentState === PaymentState.done;
+    });
+
+    const isWaitingForPayamentConfirmation = computed<boolean>((): boolean => {
+      return (
+        isPaidFromUi.value &&
+        registerChallengeStore.getPaymentState === PaymentState.none
+      );
     });
 
     const isShownRegistrationNoAdmissionMessage = computed<boolean>(
@@ -322,6 +343,7 @@ export default defineComponent({
       isShownPaymentForm,
       isShownCreateOrderButton,
       isShownPaymentNextStepButton,
+      isWaitingForPayamentConfirmation,
       isShownRegistrationNoAdmissionMessage,
       isShownRegistrationPaidMessage,
       isEnabledPaymentNextStepButton,
@@ -411,6 +433,14 @@ export default defineComponent({
           >
             <!-- Form: Payment -->
             <q-form ref="stepPaymentRef">
+              <q-banner
+                v-if="isWaitingForPayamentConfirmation"
+                class="bg-warning text-grey-10 q-mb-md"
+                :style="{ borderRadius }"
+                data-cy="step-2-waiting-for-payment-message"
+              >
+                {{ $t('register.challenge.textRegistrationWaitingForPayment') }}
+              </q-banner>
               <q-banner
                 v-if="isShownRegistrationNoAdmissionMessage"
                 class="bg-negative text-white q-mb-md"
