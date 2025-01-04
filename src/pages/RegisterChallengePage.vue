@@ -250,6 +250,10 @@ export default defineComponent({
       },
     );
 
+    const isShownRegistrationWaitingMessage = computed<boolean>((): boolean => {
+      return registerChallengeStore.getPaymentState === PaymentState.waiting;
+    });
+
     /**
      * Show create order button if:
      * - payment state is not `done` and paymentAmount > 0
@@ -304,6 +308,10 @@ export default defineComponent({
     const contactEmail = rideToWorkByBikeConfig.contactEmail;
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
+    const isRegistrationComplete = computed(
+      () => paymentState.value === PaymentState.done,
+    );
+
     return {
       borderRadius,
       contactEmail,
@@ -340,12 +348,14 @@ export default defineComponent({
       doneIconImgSrcStepper7,
       merchId,
       isPaymentAmount,
+      isRegistrationComplete,
       isShownPaymentForm,
       isShownCreateOrderButton,
       isShownPaymentNextStepButton,
-      isWaitingForPayamentConfirmation,
       isShownRegistrationNoAdmissionMessage,
       isShownRegistrationPaidMessage,
+      isShownRegistrationWaitingMessage,
+      isWaitingForPayamentConfirmation,
       isEnabledPaymentNextStepButton,
       isLoadingPayuOrder,
       onSubmitPayment,
@@ -673,6 +683,16 @@ export default defineComponent({
             class="bg-white q-mt-lg"
             data-cy="step-7"
           >
+            <q-banner
+              v-if="isShownRegistrationWaitingMessage"
+              class="bg-warning text-grey-10 q-mb-md"
+              :style="{ borderRadius }"
+              data-cy="step-7-registration-waiting-message"
+            >
+              {{
+                $t('register.challenge.textRegistrationWaitingForConfirmation')
+              }}
+            </q-banner>
             <!-- Content: Summary -->
             <register-challenge-summary />
             <!-- Buttons: Summary -->
@@ -692,6 +712,7 @@ export default defineComponent({
                 unelevated
                 rounded
                 color="primary"
+                :disable="!isRegistrationComplete"
                 :label="$t('form.buttonCompleteRegistration')"
                 @click="onCompleteRegistration"
                 class="q-ml-sm"

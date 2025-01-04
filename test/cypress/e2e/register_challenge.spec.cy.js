@@ -1629,6 +1629,17 @@ describe('Register Challenge page', () => {
               win.i18n,
               registerChallengeResponse,
             );
+            cy.dataCy('step-7-registration-waiting-message')
+              .should('be.visible')
+              .and(
+                'contain',
+                win.i18n.global.t(
+                  'register.challenge.textRegistrationWaitingForConfirmation',
+                ),
+              );
+            cy.dataCy('step-7-continue')
+              .should('be.visible')
+              .and('be.disabled');
           },
         );
       });
