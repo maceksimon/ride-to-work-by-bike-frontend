@@ -178,7 +178,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getDefaultPaymentAmountCompany(): number {
       const challengeStore = useChallengeStore();
       const currentPriceLevels = challengeStore.getCurrentPriceLevels;
-      return currentPriceLevels[PriceLevelCategory.company].price;
+      if (currentPriceLevels) {
+        return currentPriceLevels[PriceLevelCategory.company].price;
+      }
+      return 0;
     },
     getIpAddressData: (state): IpAddressResponse | null => state.ipAddressData,
     getIpAddress: (state): string => state.ipAddressData?.ip || '',
