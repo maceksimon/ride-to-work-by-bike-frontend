@@ -147,7 +147,7 @@ export default defineComponent({
 
       // set isPaidFromUi to `true` for specific set of tests
       if (
-        window.Cypress.currentTest.title.includes('set-is-paid-from-ui-true')
+        window.Cypress?.currentTest?.title.includes('set-is-paid-from-ui-true')
       ) {
         registerChallengeStore.setIsPaidFromUi(true);
       }

@@ -94,7 +94,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isLoadingFilteredMerchandise: false,
     isLoadingPayuOrder: false,
     isPaidFromUi: false,
-    checkPaymentStatusIntervalId: null as ReturnType<typeof setInterval> | null,
     checkPaymentStatusRepetitionCount: 0,
   }),
 
@@ -548,54 +547,70 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           ` and max repetitions <${rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions}>.`,
       );
 
-      this.checkPaymentStatusIntervalId = setInterval(
-        this.checkRegisterChallenge,
+      let intervalId: ReturnType<typeof setInterval> | null = null;
+
+      const stopCheck = (): void => {
+        if (intervalId) {
+          this.$log?.debug('Stop periodic check of registration status.');
+          clearInterval(intervalId);
+          this.$log?.debug(`Cleared interval ID <${intervalId}>.`);
+          intervalId = null;
+          this.checkPaymentStatusRepetitionCount = 0;
+          this.$log?.debug('Reset interval ID and repetition count.');
+        }
+      };
+
+      const checkRegisterChallenge = async (): Promise<void> => {
+        this.$log?.debug('Check payment status.');
+        // before each call, check if paymentState is done
+        if (this.isPaidFromUi && this.paymentState !== PaymentState.done) {
+          this.$log?.debug(
+            'Payment is in progress, refresh registration data from the API.',
+          );
+          await this.loadRegisterChallengeToStore();
+
+          // If payment is now done after the refresh, stop checking
+          if ((this.paymentState as PaymentState) === PaymentState.done) {
+            this.$log?.debug('Payment is now done, stopping periodic check.');
+            stopCheck();
+            return;
+          }
+
+          // increment counter
+          this.checkPaymentStatusRepetitionCount++;
+          // check that we have not reached max iterations count
+          const maxRepetitions =
+            rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions;
+          if (
+            !maxRepetitions ||
+            this.checkPaymentStatusRepetitionCount >= maxRepetitions
+          ) {
+            this.$log?.debug(
+              `Maximum number of payment status checks reached (${maxRepetitions}), stopping periodic check.`,
+            );
+            // if we do reach max iterations count, stop loop
+            stopCheck();
+            return;
+          }
+        } else {
+          this.$log?.debug(
+            'Payment is either not started from UI or already done,' +
+              ' disable periodic check.',
+          );
+          stopCheck();
+          return;
+        }
+      };
+
+      this.$log?.debug(
+        `Set interval to ${rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds * 1000}`,
+      );
+      // Start the interval
+      intervalId = setInterval(
+        checkRegisterChallenge,
         rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds *
           1000,
       );
-    },
-    async checkRegisterChallenge(): Promise<void> {
-      this.$log?.debug('Check payment status.');
-      // before each call, check if paymentState is done
-      if (this.isPaidFromUi && this.paymentState !== PaymentState.done) {
-        this.$log?.debug(
-          'Payment is in progress, refresh registration data from the API.',
-        );
-        await this.loadRegisterChallengeToStore();
-        // increment counter
-        this.checkPaymentStatusRepetitionCount++;
-        // check that we have not reached max iterations count
-        if (
-          this.checkPaymentStatusRepetitionCount >=
-          rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions
-        ) {
-          this.$log?.debug(
-            `Maximum number of payment status checks reached (${rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions}), stopping periodic check.`,
-          );
-          // if we do reach max iterations count, stop loop
-          this.stopPaymentStatusCheck();
-          return;
-        }
-      } else {
-        this.$log?.debug(
-          'Payment is either not started from UI or already done,' +
-            ' disable periodic check.',
-        );
-        this.stopPaymentStatusCheck();
-      }
-    },
-    /**
-     * Stop periodic check of registration status and reset repetition count
-     */
-    stopPaymentStatusCheck(): void {
-      if (this.checkPaymentStatusIntervalId) {
-        this.$log?.debug('Stop periodic check of registration status.');
-        // clear interval
-        clearInterval(this.checkPaymentStatusIntervalId);
-        // reset local state
-        this.checkPaymentStatusIntervalId = null;
-        this.checkPaymentStatusRepetitionCount = 0;
-      }
     },
   },
 
