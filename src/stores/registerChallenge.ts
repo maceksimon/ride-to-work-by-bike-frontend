@@ -186,6 +186,44 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getIpAddress: (state): string => state.ipAddressData?.ip || '',
     getIsPayuTransactionInitiated: (state): boolean =>
       state.isPayuTransactionInitiated,
+    getIsPersonalDetailsComplete(): boolean {
+      return (
+        this.personalDetails.firstName !== '' &&
+        this.personalDetails.lastName !== '' &&
+        this.personalDetails.nickname !== '' &&
+        this.personalDetails.gender !== Gender.none &&
+        this.personalDetails.terms === true
+      );
+    },
+    getIsPaymentComplete(): boolean {
+      return this.paymentState === PaymentState.done;
+    },
+    getIsOrganizationTypeComplete(): boolean {
+      return this.organizationType !== OrganizationType.none;
+    },
+    getIsOrganizationIdComplete(): boolean {
+      return this.organizationId !== null;
+    },
+    getIsSubsidiaryIdComplete(): boolean {
+      return this.subsidiaryId !== null;
+    },
+    getIsTeamIdComplete(): boolean {
+      return this.teamId !== null;
+    },
+    getIsMerchIdComplete(): boolean {
+      return this.merchId !== null;
+    },
+    getIsRegistrationComplete(): boolean {
+      return (
+        this.getIsPersonalDetailsComplete &&
+        this.getIsPaymentComplete &&
+        this.getIsOrganizationTypeComplete &&
+        this.getIsOrganizationIdComplete &&
+        this.getIsSubsidiaryIdComplete &&
+        this.getIsTeamIdComplete &&
+        this.getIsMerchIdComplete
+      );
+    },
   },
 
   actions: {

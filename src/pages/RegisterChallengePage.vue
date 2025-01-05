@@ -140,6 +140,8 @@ export default defineComponent({
     );
     const paymentState = computed(() => registerChallengeStore.getPaymentState);
 
+    const router = useRouter();
+
     onMounted(async () => {
       // make sure price level is loaded
       if (!challengeStore.getPriceLevel.length) {
@@ -182,6 +184,12 @@ export default defineComponent({
         // if payment is done, it should always be safe to continue
         onContinue();
       }
+      // handle redirect for completed registration
+      if (registerChallengeStore.getIsRegistrationComplete) {
+        if (router) {
+          router.push(routesConf['home']['path']);
+        }
+      }
     });
 
     const organizationType = computed({
@@ -221,9 +229,10 @@ export default defineComponent({
       stepMerchRef,
     });
 
-    const router = useRouter();
     const onCompleteRegistration = () => {
-      router.push(routesConf['home']['path']);
+      if (router) {
+        router.push(routesConf['home']['path']);
+      }
     };
 
     // Payment-related logic

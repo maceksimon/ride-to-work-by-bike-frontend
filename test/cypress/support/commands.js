@@ -41,6 +41,7 @@ import {
 import { getApiBaseUrlWithLang } from '../../../src/utils/get_api_base_url_with_lang';
 import { bearerTokeAuth } from '../../../src/utils';
 import { OrganizationType } from '../../../src/components/types/Organization';
+import { routesConf } from '../../../src/router/routes_conf';
 
 // Fix for ResizeObserver loop issue in Firefox
 // see https://stackoverflow.com/questions/74947338/i-keep-getting-error-resizeobserver-loop-limit-exceeded-in-cypress
@@ -2174,3 +2175,34 @@ Cypress.Commands.add(
     );
   },
 );
+
+/**
+ * Test that user cannot access any page except register-challenge
+ */
+Cypress.Commands.add('testAccessRegisterChallengeOnly', () => {
+  // not allowed to access home page
+  cy.visit('#' + routesConf['home']['path']);
+  // test home page with title element because url `/` is included in all paths
+  cy.dataCy('index-title').should('not.exist');
+  cy.url().should('include', routesConf['register_challenge']['path']);
+  // not allowed to access routes page
+  cy.visit('#' + routesConf['routes']['path']);
+  cy.url().should('not.include', routesConf['routes']['path']);
+  cy.url().should('include', routesConf['register_challenge']['path']);
+  // not allowed to access results page
+  cy.visit('#' + routesConf['results']['path']);
+  cy.url().should('not.include', routesConf['results']['path']);
+  cy.url().should('include', routesConf['register_challenge']['path']);
+  // not allowed to access prizes page
+  cy.visit('#' + routesConf['prizes']['path']);
+  cy.url().should('not.include', routesConf['prizes']['path']);
+  cy.url().should('include', routesConf['register_challenge']['path']);
+  // not allowed to access coordinator page
+  cy.visit('#' + routesConf['coordinator']['path']);
+  cy.url().should('not.include', routesConf['coordinator']['path']);
+  cy.url().should('include', routesConf['register_challenge']['path']);
+  // not allowed to access profile page
+  cy.visit('#' + routesConf['profile']['path']);
+  cy.url().should('not.include', routesConf['profile']['path']);
+  cy.url().should('include', routesConf['register_challenge']['path']);
+});
