@@ -24,7 +24,7 @@ export default defineComponent({
     let subsidiaryId;
     let teamId;
     let paymentState;
-    let isPaidFromUi;
+    let isPayuTransactionInitiated;
 
     const showComponent = computed(() => !!window.Cypress);
 
@@ -35,7 +35,9 @@ export default defineComponent({
       subsidiaryId = computed(() => registerChallengeStore.getSubsidiaryId);
       teamId = computed(() => registerChallengeStore.getTeamId);
       paymentState = computed(() => registerChallengeStore.getPaymentState);
-      isPaidFromUi = computed(() => registerChallengeStore.getIsPaidFromUi);
+      isPayuTransactionInitiated = computed(
+        () => registerChallengeStore.getIsPayuTransactionInitiated,
+      );
     }
 
     return {
@@ -44,7 +46,7 @@ export default defineComponent({
       teamId,
       showComponent,
       paymentState,
-      isPaidFromUi,
+      isPayuTransactionInitiated,
     };
   },
 });
@@ -70,7 +72,9 @@ export default defineComponent({
       </div>
       <div data-cy="debug-is-paid-from-ui">
         DEBUG: is paid from UI
-        <span data-cy="debug-is-paid-from-ui-value">{{ isPaidFromUi }}</span>
+        <span data-cy="debug-is-paid-from-ui-value">{{
+          isPayuTransactionInitiated
+        }}</span>
       </div>
     </div>
   </div>

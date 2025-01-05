@@ -93,7 +93,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isLoadingMerchandise: false,
     isLoadingFilteredMerchandise: false,
     isLoadingPayuOrder: false,
-    isPaidFromUi: false,
+    isPayuTransactionInitiated: false,
     checkPaymentStatusRepetitionCount: 0,
   }),
 
@@ -184,7 +184,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     getIpAddressData: (state): IpAddressResponse | null => state.ipAddressData,
     getIpAddress: (state): string => state.ipAddressData?.ip || '',
-    getIsPaidFromUi: (state): boolean => state.isPaidFromUi,
+    getIsPayuTransactionInitiated: (state): boolean =>
+      state.isPayuTransactionInitiated,
   },
 
   actions: {
@@ -233,8 +234,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setMerchandiseCards(cards: Record<Gender, MerchandiseCard[]>) {
       this.merchandiseCards = cards;
     },
-    setIsPaidFromUi(isPaidFromUi: boolean) {
-      this.isPaidFromUi = isPaidFromUi;
+    setIsPayuTransactionInitiated(isPayuTransactionInitiated: boolean) {
+      this.isPayuTransactionInitiated = isPayuTransactionInitiated;
     },
     /**
      * Load registration data from API and set store state
@@ -522,8 +523,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         this.$log?.debug(
           `Redirecting to PayU payment page: ${response.redirectUri}`,
         );
-        this.isPaidFromUi = true;
-        this.$log?.debug(`Paid from UI flag set to ${this.isPaidFromUi}.`);
+        this.isPayuTransactionInitiated = true;
+        this.$log?.debug(
+          `PayU transaction initiated flag set to ${this.isPayuTransactionInitiated}.`,
+        );
         // localize the URI
         const redirectUriLocalized = `${response.redirectUri}&lang=${i18n.global.locale}`;
         window.location.href = redirectUriLocalized;
@@ -566,7 +569,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       const checkRegisterChallenge = async (): Promise<void> => {
         this.$log?.debug('Check payment status.');
         // before each call, check if paymentState is done
-        if (this.isPaidFromUi && this.paymentState !== PaymentState.done) {
+        if (
+          this.isPayuTransactionInitiated &&
+          this.paymentState !== PaymentState.done
+        ) {
           this.$log?.debug(
             'Payment is in progress, refresh registration data from the API.',
           );

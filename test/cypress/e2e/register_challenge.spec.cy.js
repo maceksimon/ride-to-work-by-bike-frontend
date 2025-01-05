@@ -1450,7 +1450,7 @@ describe('Register Challenge page', () => {
     it('loads payment page - payment status "done" (set-is-paid-from-ui-true)', () => {
       // visit page
       cy.visit('#' + routesConf['register_challenge']['path']);
-      // !isPaidFromUi is set via test title
+      // !isPayuTransactionInitiated is set via test title
       cy.dataCy('debug-is-paid-from-ui-value').should('contain', 'true');
       // intercept "individual paid" registration data
       cy.fixture('apiGetRegisterChallengeIndividualPaid.json').then(
@@ -1490,7 +1490,7 @@ describe('Register Challenge page', () => {
       cy.get('@config').then((config) => {
         // visit URL
         cy.visit('#' + routesConf['register_challenge']['path']);
-        // !isPaidFromUi is set via test title
+        // !isPayuTransactionInitiated is set via test title
         cy.dataCy('debug-is-paid-from-ui-value').should('contain', 'true');
         // intercept "individual paid" registration data
         cy.fixture('apiGetRegisterChallengeIndividualNotPaid.json').then(

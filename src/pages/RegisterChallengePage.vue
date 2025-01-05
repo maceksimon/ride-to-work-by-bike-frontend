@@ -133,30 +133,35 @@ export default defineComponent({
 
     const registerChallengeStore = useRegisterChallengeStore();
 
-    const isPaidFromUi = computed(() => registerChallengeStore.getIsPaidFromUi);
+    const isPayuTransactionInitiated = computed(
+      () => registerChallengeStore.getIsPayuTransactionInitiated,
+    );
     const paymentState = computed(() => registerChallengeStore.getPaymentState);
 
     onMounted(async () => {
       await registerChallengeStore.loadRegisterChallengeToStore();
       /**
-       * Depending on the paymentState, and isPaidFromUi flag
+       * Depending on the paymentState, and isPayuTransactionInitiated flag
        * we determine if situation is:
        * - refreshing page after returning from payment
        * - returning to a started payment
        */
 
-      // set isPaidFromUi to `true` for specific set of tests
+      // set isPayuTransactionInitiated to `true` for specific set of tests
       if (
         window.Cypress?.currentTest?.title.includes('set-is-paid-from-ui-true')
       ) {
-        registerChallengeStore.setIsPaidFromUi(true);
+        registerChallengeStore.setIsPayuTransactionInitiated(true);
       }
 
-      if (isPaidFromUi.value && paymentState.value === PaymentState.done) {
+      if (
+        isPayuTransactionInitiated.value &&
+        paymentState.value === PaymentState.done
+      ) {
         // entry-fee/donation was paid - go to payment step
         onContinue();
       } else if (
-        isPaidFromUi.value &&
+        isPayuTransactionInitiated.value &&
         paymentState.value !== PaymentState.done
       ) {
         // trigger a periodic registration data refetch + display message
@@ -164,7 +169,7 @@ export default defineComponent({
         // go to payment step
         onContinue();
       } else if (
-        !isPaidFromUi.value &&
+        !isPayuTransactionInitiated.value &&
         paymentState.value === PaymentState.done
       ) {
         // if payment is done, it should always be safe to continue
@@ -237,7 +242,7 @@ export default defineComponent({
 
     const isWaitingForPayamentConfirmation = computed<boolean>((): boolean => {
       return (
-        isPaidFromUi.value &&
+        isPayuTransactionInitiated.value &&
         registerChallengeStore.getPaymentState === PaymentState.none
       );
     });
