@@ -138,6 +138,8 @@ export default defineComponent({
     );
     const paymentState = computed(() => registerChallengeStore.getPaymentState);
 
+    const router = useRouter();
+
     onMounted(async () => {
       await registerChallengeStore.loadRegisterChallengeToStore();
       /**
@@ -174,6 +176,12 @@ export default defineComponent({
       ) {
         // if payment is done, it should always be safe to continue
         onContinue();
+      }
+      // handle redirect for completed registration
+      if (registerChallengeStore.getIsRegistrationComplete) {
+        if (router) {
+          router.push(routesConf['home']['path']);
+        }
       }
     });
 
@@ -214,9 +222,10 @@ export default defineComponent({
       stepMerchRef,
     });
 
-    const router = useRouter();
     const onCompleteRegistration = () => {
-      router.push(routesConf['home']['path']);
+      if (router) {
+        router.push(routesConf['home']['path']);
+      }
     };
 
     // Payment-related logic
