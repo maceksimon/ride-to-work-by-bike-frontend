@@ -160,7 +160,7 @@ describe('Router rules', () => {
     it('when individual registration is complete, allows to access all pages but not register-challenge', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          cy.fixture('apiGetRegisterChallengeIndividualPaid').then(
+          cy.fixture('apiGetRegisterChallengeIndividualPaidComplete').then(
             (response) => {
               cy.interceptRegisterChallengeGetApi(config, i18n, response, null);
             },
