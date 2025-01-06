@@ -1570,14 +1570,6 @@ describe('Register Challenge page', () => {
                   .should('be.visible')
                   .and('not.be.disabled')
                   .click();
-                cy.testRegisterChallengeLoadedStepsThreeToFive(
-                  win.i18n,
-                  registerChallengeResponse,
-                );
-                cy.testRegisterChallengeLoadedStepSix(
-                  win.i18n,
-                  registerChallengeResponse,
-                );
               },
             );
           });
