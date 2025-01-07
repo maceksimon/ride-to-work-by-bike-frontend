@@ -70,7 +70,6 @@ export default route(function (/* { store, ssrContext } */) {
         `Router is registration complete <${isRegistrationComplete}>.`,
       );
 
-      // if authenticated and not verified email, redirect to confirm email page
       if (
         isAuthenticated &&
         !isEmailVerified &&
@@ -97,6 +96,7 @@ export default route(function (/* { store, ssrContext } */) {
         logger?.debug(
           `Router path redirect to page URL <${routesConf['verify_email']['path']}>.`,
         );
+        // redirect to verify email page
         next({ path: routesConf['verify_email']['path'] });
       } else if (
         isAuthenticated &&
@@ -136,6 +136,7 @@ export default route(function (/* { store, ssrContext } */) {
         logger?.debug(
           `Router path redirect to page URL <${routesConf['home']['path']}>.`,
         );
+        // redirect to home page
         next({ path: routesConf['home']['path'] });
       } else if (
         isAuthenticated &&
@@ -162,10 +163,9 @@ export default route(function (/* { store, ssrContext } */) {
         logger?.debug(
           `Router path redirect to page URL <${routesConf['challenge_inactive']['path']}>.`,
         );
+        // redirect to challenge inactive page
         next({ path: routesConf['challenge_inactive']['path'] });
-      }
-      // if authenticated and verified but registration is not complete
-      else if (
+      } else if (
         isAuthenticated &&
         isEmailVerified &&
         isChallengeActive &&
@@ -194,6 +194,7 @@ export default route(function (/* { store, ssrContext } */) {
         logger?.debug(
           `Router path redirect to page URL <${routesConf['register_challenge']['path']}>.`,
         );
+        // redirect to register challenge page
         next({ path: routesConf['register_challenge']['path'] });
       } else if (
         /**
@@ -225,6 +226,7 @@ export default route(function (/* { store, ssrContext } */) {
         logger?.debug(
           `Router path redirect to page URL <${routesConf['login']['path']}>.`,
         );
+        // redirect to login page
         next({ path: routesConf['login']['path'] });
       }
       // pass
