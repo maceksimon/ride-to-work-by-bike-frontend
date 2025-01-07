@@ -98,14 +98,19 @@ export default route(function (/* { store, ssrContext } */) {
           `Router path redirect to page URL <${routesConf['verify_email']['path']}>.`,
         );
         next({ path: routesConf['verify_email']['path'] });
-      }
-      // if authenticated and on login page or register page or confirm email page, redirect to home page
-      else if (
+      } else if (
+      /**
+       * If authenticated and on login page or register page or confirm email
+       * page, redirect to home page.
+       */
         isAuthenticated &&
         isEmailVerified &&
         isChallengeActive &&
         isRegistrationComplete &&
-        // these pages are not accessible when authenticated and verified
+        /**
+         * These pages are not accessible when authenticated and verified and
+         * registration is complete.
+         */
         to.matched.some(
           (record) =>
             record.path === routesConf['login']['path'] ||
@@ -142,8 +147,8 @@ export default route(function (/* { store, ssrContext } */) {
         !isChallengeActive &&
         !to.matched.some(
           /**
-           * only these pages are accessible when authenticated, verified email
-           * and challenge is not active
+           * Only these pages are accessible when authenticated, verified email
+           * and challenge is not active.
            */
           (record) => record.path === routesConf['challenge_inactive']['path'],
         )
@@ -170,8 +175,8 @@ export default route(function (/* { store, ssrContext } */) {
         isChallengeActive &&
         !isRegistrationComplete &&
         /**
-         * only these pages are accessible when authenticated, verified email
-         * challenge is active and registration is not complete
+         * Only these pages are accessible when authenticated, verified email
+         * challenge is active and registration is not complete.
          */
         !to.matched.some(
           (record) => record.path === routesConf['register_challenge']['path'],
@@ -194,9 +199,11 @@ export default route(function (/* { store, ssrContext } */) {
           `Router path redirect to page URL <${routesConf['register_challenge']['path']}>.`,
         );
         next({ path: routesConf['register_challenge']['path'] });
-      }
-      // if not authenticated and not on pages: login, register, confirm_email redirect to login page.
-      else if (
+      } else if (
+      /**
+       * If not authenticated and not on pages: login, register, confirm_email
+       * redirect to login page.
+       */
         !isAuthenticated &&
         !to.matched.some(
           (record) =>
