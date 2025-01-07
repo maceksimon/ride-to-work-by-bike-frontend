@@ -16,8 +16,6 @@ import { defLocale } from '../../../src/i18n/def_locale';
 
 // selectors
 const selectorLogoutButton = 'logout-button';
-const selectorUserSelectDesktop = 'user-select-desktop';
-const selectorUserSelectInput = 'user-select-input';
 const selectorEmailVerificationRegisterLink =
   'email-verification-register-link';
 const selectorChallengeInactiveInfo = 'challenge-inactive-info';
@@ -395,16 +393,14 @@ describe('Register page', () => {
             });
           });
 
-          // redirected to home page
-          cy.url().should('contain', routesConf['home']['path']);
-          // click user select
-          cy.dataCy(selectorUserSelectDesktop).within(() => {
-            cy.dataCy(selectorUserSelectInput).should('be.visible').click();
-          });
-          // logout
-          cy.dataCy('menu-item')
-            .contains(win.i18n.global.t('userSelect.logout'))
-            .click();
+          // challenge is active - redirect to register challenge page
+          cy.url().should('contain', routesConf['register_challenge']['path']);
+          // logout via header button
+          cy.dataCy('login-register-header')
+            .should('be.visible')
+            .within(() => {
+              cy.dataCy('logout-button').click();
+            });
           // redirected to login page
           cy.url().should('include', routesConf['login']['path']);
         });
