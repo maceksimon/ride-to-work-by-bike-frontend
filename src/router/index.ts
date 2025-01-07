@@ -99,17 +99,13 @@ export default route(function (/* { store, ssrContext } */) {
         );
         next({ path: routesConf['verify_email']['path'] });
       } else if (
-      /**
-       * If authenticated and on login page or register page or confirm email
-       * page, redirect to home page.
-       */
         isAuthenticated &&
         isEmailVerified &&
         isChallengeActive &&
         isRegistrationComplete &&
         /**
-         * These pages are not accessible when authenticated and verified and
-         * registration is complete.
+         * These pages are not accessible when authenticated and verified,
+         * challenge is active and registration is complete.
          */
         to.matched.some(
           (record) =>
@@ -200,10 +196,10 @@ export default route(function (/* { store, ssrContext } */) {
         );
         next({ path: routesConf['register_challenge']['path'] });
       } else if (
-      /**
-       * If not authenticated and not on pages: login, register, confirm_email
-       * redirect to login page.
-       */
+        /**
+         * If not authenticated and not on pages: login, register, confirm_email
+         * redirect to login page.
+         */
         !isAuthenticated &&
         !to.matched.some(
           (record) =>
