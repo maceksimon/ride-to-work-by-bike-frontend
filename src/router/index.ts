@@ -180,7 +180,7 @@ export default route(function (/* { store, ssrContext } */) {
       ) {
         logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
         logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(`Router challenge is active <${isChallengeActive}>`);
+        logger?.debug(`Router challenge is active <${isChallengeActive}>.`);
         logger?.debug(
           `Router registration is not complete <${!isRegistrationComplete}>.`,
         );
