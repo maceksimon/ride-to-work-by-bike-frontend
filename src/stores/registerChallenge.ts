@@ -188,30 +188,31 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       state.isPayuTransactionInitiated,
     getIsPersonalDetailsComplete(): boolean {
       return (
-        this.personalDetails.firstName !== '' &&
-        this.personalDetails.lastName !== '' &&
-        this.personalDetails.nickname !== '' &&
-        this.personalDetails.gender !== Gender.none &&
-        this.personalDetails.terms === true
+        this.getPersonalDetails.firstName !== '' &&
+        this.getPersonalDetails.lastName !== '' &&
+        this.getPersonalDetails.nickname !== '' &&
+        this.getPersonalDetails.gender !== Gender.none &&
+        this.getPersonalDetails.terms === true
       );
     },
     getIsPaymentComplete(): boolean {
-      return this.paymentState === PaymentState.done;
+      return this.getPaymentState === PaymentState.done;
     },
     getIsOrganizationTypeComplete(): boolean {
-      return this.organizationType !== OrganizationType.none;
+      return this.getOrganizationType !== OrganizationType.none;
     },
+
     getIsOrganizationIdComplete(): boolean {
-      return this.organizationId !== null;
+      return this.getOrganizationId !== null;
     },
     getIsSubsidiaryIdComplete(): boolean {
-      return this.subsidiaryId !== null;
+      return this.getSubsidiaryId !== null;
     },
     getIsTeamIdComplete(): boolean {
-      return this.teamId !== null;
+      return this.getTeamId !== null;
     },
     getIsMerchIdComplete(): boolean {
-      return this.merchId !== null;
+      return this.getMerchId !== null;
     },
     getIsRegistrationComplete(): boolean {
       return (
