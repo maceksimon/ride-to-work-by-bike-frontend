@@ -94,6 +94,11 @@ export const useValidation = () => {
     return isLong && allNumbers;
   };
 
+  /**
+   * Check if the value is a valid zip code
+   * @param {string} value - The value to check
+   * @returns {boolean} True if the value is a valid zip code, false otherwise
+   */
   const isZip = (value: string): boolean => {
     // remove all whitespace and convert to number
     const cleanNumber = Number(value.replace(/\s/g, ''));
