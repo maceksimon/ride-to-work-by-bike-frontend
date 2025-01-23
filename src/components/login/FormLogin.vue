@@ -22,8 +22,8 @@
  */
 
 // libraries
-import { colors } from 'quasar';
-import { computed, defineComponent, ref, reactive } from 'vue';
+import { colors, setCssVar } from 'quasar';
+import { computed, defineComponent, onMounted, ref, reactive } from 'vue';
 
 // components
 import BannerAppButtons from './BannerAppButtons.vue';
@@ -52,6 +52,7 @@ export default defineComponent({
   emits: ['formSubmit'],
   setup() {
     const loginStore = useLoginStore();
+    const formLoginRef = ref<HTMLElement | null>(null);
     const formLogin = reactive({
       username: '',
       password: '',
@@ -90,6 +91,13 @@ export default defineComponent({
       getPaletteColor('white'),
       rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
     );
+    const red2 = getPaletteColor('red-2');
+    onMounted(() => {
+      // rebrand color negative to red-2 for specific section of UI
+      if (formLoginRef.value) {
+        setCssVar('negative', red2, formLoginRef.value);
+      }
+    });
 
     return {
       contactEmail,
@@ -99,6 +107,7 @@ export default defineComponent({
       LoginFormState,
       loginLoading,
       formLogin,
+      formLoginRef,
       whiteOpacity,
       isEmail,
       isFilled,
@@ -111,223 +120,226 @@ export default defineComponent({
 </script>
 
 <template>
-  <!-- State: Login -->
-  <div
-    v-if="formState === LoginFormState.login"
-    class="bg-primary text-white"
-    data-cy="form-login"
-  >
-    <div class="q-mb-lg">
-      <h1 class="text-h5 text-bold q-my-none" data-cy="form-title-login">
-        {{ $t('login.form.titleLogin') }}
-      </h1>
-    </div>
-    <!-- Form: login -->
-    <q-form @submit.prevent="onSubmitLogin">
-      <!-- Input: email -->
-      <form-field-email
-        dark
-        color="white"
-        bg-color="transparent"
-        v-model="formLogin.username"
-        data-cy="form-login-email"
-      />
-      <!-- Input: password -->
-      <div data-cy="form-login-password">
-        <!-- Label -->
-        <label for="form-login-password" class="text-caption text-bold">
-          {{ $t('login.form.labelPassword') }}
-        </label>
-        <!-- Input -->
-        <q-input
+  <div ref="formLoginRef">
+    <!-- State: Login -->
+    <div
+      v-if="formState === LoginFormState.login"
+      class="bg-primary text-white"
+      data-cy="form-login"
+    >
+      <div class="q-mb-lg">
+        <h1 class="text-h5 text-bold q-my-none" data-cy="form-title-login">
+          {{ $t('login.form.titleLogin') }}
+        </h1>
+      </div>
+      <!-- Form: login -->
+      <q-form @submit.prevent="onSubmitLogin">
+        <!-- Input: email -->
+        <form-field-email
           dark
-          dense
-          outlined
-          hide-bottom-space
-          bg-color="transparent"
           color="white"
-          v-model="formLogin.password"
-          id="form-login-password"
-          :type="isPassword ? 'password' : 'text'"
-          :rules="[
-            (val) => isFilled(val) || $t('login.form.messagePasswordRequired'),
-          ]"
-          class="q-mt-sm"
-          data-cy="form-login-password-input"
-        >
-          <!-- Icon: show password -->
-          <template v-slot:append>
-            <q-icon
-              color="white"
-              :name="isPassword ? 'visibility_off' : 'visibility'"
-              class="cursor-pointer"
-              size="18px"
-              @click="isPassword = !isPassword"
-              data-cy="form-login-password-icon"
-            />
-          </template>
-        </q-input>
-        <!-- Link: fogotten password -->
-        <div class="flex justify-end q-mt-sm">
-          <a
-            href="#"
-            class="text-white text-caption"
-            @click.prevent="setFormState(LoginFormState.passwordReset)"
-            data-cy="form-login-forgotten-password"
-          >
-            {{ $t('login.form.forgottenPassword') }}
-          </a>
-        </div>
-      </div>
-      <!-- Button: submit -->
-      <q-btn
-        unelevated
-        rounded
-        class="full-width q-mt-lg"
-        type="submit"
-        color="secondary"
-        text-color="primary"
-        :loading="loginLoading"
-        :label="$t('login.form.submitLogin')"
-        data-cy="form-login-submit-login"
-      />
-    </q-form>
-    <!-- Separator -->
-    <q-separator
-      :style="{ backgroundColor: whiteOpacity }"
-      class="q-my-lg"
-      data-cy="form-login-separator"
-    />
-    <!-- Buttons: Login with 3rd party -->
-    <login-register-buttons variant="login" />
-    <!-- Link: Register -->
-    <div class="text-white q-mt-lg">
-      <p data-cy="login-prompt-no-account">
-        {{ $t('login.form.promptNoAccount') }}
-        <router-link
-          :to="{ name: 'register' }"
-          class="text-white"
-          data-cy="login-link-register"
-        >
-          {{ $t('login.form.linkRegister') }} </router-link
-        >.
-      </p>
-    </div>
-    <!-- Links: Mobile app -->
-    <div class="q-mt-xl">
-      <banner-app-buttons />
-    </div>
-  </div>
-  <!-- State: Forgotten password -->
-  <div
-    v-else-if="formState === LoginFormState.passwordReset"
-    class="bg-primary text-white"
-    data-cy="form-password-reset"
-  >
-    <div class="q-my-lg">
-      <q-btn
-        round
-        outline
-        color="white"
-        size="13px"
-        @click.prevent="setFormState(LoginFormState.login)"
-        data-cy="form-password-reset-button-back"
-      >
-        <q-icon name="arrow_back" size="24px" />
-      </q-btn>
-    </div>
-    <div class="q-my-sm">
-      <h1
-        class="text-h5 text-bold q-my-none"
-        data-cy="form-password-reset-title"
-      >
-        {{ $t('login.form.titlePasswordReset') }}
-      </h1>
-    </div>
-    <div class="q-mt-sm q-mb-lg">
-      <p data-cy="form-password-reset-description">
-        {{ $t('login.form.descriptionPasswordReset') }}
-      </p>
-    </div>
-    <!-- Form: password reset -->
-    <q-form @submit.prevent="onSubmitPasswordReset">
-      <!-- Input: email -->
-      <form-field-email
-        dark
-        outlined
-        v-model="formPasswordReset.email"
-        color="white"
-        bg-color="transparent"
-        data-cy="form-password-reset-email"
-      />
-      <!-- Button: submit -->
-      <q-btn
-        unelevated
-        rounded
-        class="full-width q-mt-lg"
-        type="submit"
-        color="secondary"
-        text-color="primary"
-        :label="$t('login.form.submitPasswordReset')"
-        data-cy="form-password-reset-submit"
-      />
-    </q-form>
-  </div>
-  <!-- State: Password reset finished -->
-  <div
-    v-else-if="formState === LoginFormState.resetFinished"
-    class="bg-primary text-white"
-    data-cy="form-reset-finished"
-  >
-    <div class="q-my-lg">
-      <!-- Icon: Email -->
-      <div class="flex">
-        <q-avatar
-          size="64px"
-          :style="{ backgroundColor: whiteOpacity }"
-          data-cy="form-reset-finished-icon-wrapper"
-        >
-          <q-icon
-            name="mdi-email-outline"
-            size="40px"
+          bg-color="transparent"
+          v-model="formLogin.username"
+          data-cy="form-login-email"
+        />
+        <!-- Input: password -->
+        <div data-cy="form-login-password">
+          <!-- Label -->
+          <label for="form-login-password" class="text-caption text-bold">
+            {{ $t('login.form.labelPassword') }}
+          </label>
+          <!-- Input -->
+          <q-input
+            dark
+            dense
+            outlined
+            hide-bottom-space
+            bg-color="transparent"
             color="white"
-            class="q-ma-xs"
-            data-cy="form-reset-finished-icon"
-          />
-        </q-avatar>
-      </div>
-      <!-- Title -->
-      <h2
-        class="text-h5 text-bold q-my-none q-mt-lg"
-        data-cy="form-reset-finished-title"
-      >
-        {{ $t('login.form.titleResetFinished') }}
-      </h2>
-      <!-- Description -->
-      <p
-        v-html="$t('login.form.descriptionResetFinished', { contactEmail })"
-        class="text-body1 q-my-none q-mt-sm"
-        data-cy="form-reset-finished-description"
-      ></p>
-      <!-- Prompt: wrong email -->
-      <p
-        v-html="$t('login.form.promptWrongEmail')"
-        class="text-body1 q-my-none q-mt-lg"
-        data-cy="form-reset-finished-prompt"
-      ></p>
-      <!-- Button: new password -->
-      <q-btn
-        unelevated
-        rounded
-        outline
-        class="full-width q-mt-lg"
-        type="submit"
-        color="white"
-        text-color="white"
-        :label="$t('login.form.submitNewPassword')"
-        @click="setFormState(LoginFormState.passwordReset)"
-        data-cy="form-reset-finished-submit"
+            v-model="formLogin.password"
+            id="form-login-password"
+            :type="isPassword ? 'password' : 'text'"
+            :rules="[
+              (val) =>
+                isFilled(val) || $t('login.form.messagePasswordRequired'),
+            ]"
+            class="q-mt-sm"
+            data-cy="form-login-password-input"
+          >
+            <!-- Icon: show password -->
+            <template v-slot:append>
+              <q-icon
+                color="white"
+                :name="isPassword ? 'visibility_off' : 'visibility'"
+                class="cursor-pointer"
+                size="18px"
+                @click="isPassword = !isPassword"
+                data-cy="form-login-password-icon"
+              />
+            </template>
+          </q-input>
+          <!-- Link: fogotten password -->
+          <div class="flex justify-end q-mt-sm">
+            <a
+              href="#"
+              class="text-white text-caption"
+              @click.prevent="setFormState(LoginFormState.passwordReset)"
+              data-cy="form-login-forgotten-password"
+            >
+              {{ $t('login.form.forgottenPassword') }}
+            </a>
+          </div>
+        </div>
+        <!-- Button: submit -->
+        <q-btn
+          unelevated
+          rounded
+          class="full-width q-mt-lg"
+          type="submit"
+          color="secondary"
+          text-color="primary"
+          :loading="loginLoading"
+          :label="$t('login.form.submitLogin')"
+          data-cy="form-login-submit-login"
+        />
+      </q-form>
+      <!-- Separator -->
+      <q-separator
+        :style="{ backgroundColor: whiteOpacity }"
+        class="q-my-lg"
+        data-cy="form-login-separator"
       />
+      <!-- Buttons: Login with 3rd party -->
+      <login-register-buttons variant="login" />
+      <!-- Link: Register -->
+      <div class="text-white q-mt-lg">
+        <p data-cy="login-prompt-no-account">
+          {{ $t('login.form.promptNoAccount') }}
+          <router-link
+            :to="{ name: 'register' }"
+            class="text-white"
+            data-cy="login-link-register"
+          >
+            {{ $t('login.form.linkRegister') }} </router-link
+          >.
+        </p>
+      </div>
+      <!-- Links: Mobile app -->
+      <div class="q-mt-xl">
+        <banner-app-buttons />
+      </div>
+    </div>
+    <!-- State: Forgotten password -->
+    <div
+      v-else-if="formState === LoginFormState.passwordReset"
+      class="bg-primary text-white"
+      data-cy="form-password-reset"
+    >
+      <div class="q-my-lg">
+        <q-btn
+          round
+          outline
+          color="white"
+          size="13px"
+          @click.prevent="setFormState(LoginFormState.login)"
+          data-cy="form-password-reset-button-back"
+        >
+          <q-icon name="arrow_back" size="24px" />
+        </q-btn>
+      </div>
+      <div class="q-my-sm">
+        <h1
+          class="text-h5 text-bold q-my-none"
+          data-cy="form-password-reset-title"
+        >
+          {{ $t('login.form.titlePasswordReset') }}
+        </h1>
+      </div>
+      <div class="q-mt-sm q-mb-lg">
+        <p data-cy="form-password-reset-description">
+          {{ $t('login.form.descriptionPasswordReset') }}
+        </p>
+      </div>
+      <!-- Form: password reset -->
+      <q-form @submit.prevent="onSubmitPasswordReset">
+        <!-- Input: email -->
+        <form-field-email
+          dark
+          outlined
+          v-model="formPasswordReset.email"
+          color="white"
+          bg-color="transparent"
+          data-cy="form-password-reset-email"
+        />
+        <!-- Button: submit -->
+        <q-btn
+          unelevated
+          rounded
+          class="full-width q-mt-lg"
+          type="submit"
+          color="secondary"
+          text-color="primary"
+          :label="$t('login.form.submitPasswordReset')"
+          data-cy="form-password-reset-submit"
+        />
+      </q-form>
+    </div>
+    <!-- State: Password reset finished -->
+    <div
+      v-else-if="formState === LoginFormState.resetFinished"
+      class="bg-primary text-white"
+      data-cy="form-reset-finished"
+    >
+      <div class="q-my-lg">
+        <!-- Icon: Email -->
+        <div class="flex">
+          <q-avatar
+            size="64px"
+            :style="{ backgroundColor: whiteOpacity }"
+            data-cy="form-reset-finished-icon-wrapper"
+          >
+            <q-icon
+              name="mdi-email-outline"
+              size="40px"
+              color="white"
+              class="q-ma-xs"
+              data-cy="form-reset-finished-icon"
+            />
+          </q-avatar>
+        </div>
+        <!-- Title -->
+        <h2
+          class="text-h5 text-bold q-my-none q-mt-lg"
+          data-cy="form-reset-finished-title"
+        >
+          {{ $t('login.form.titleResetFinished') }}
+        </h2>
+        <!-- Description -->
+        <p
+          v-html="$t('login.form.descriptionResetFinished', { contactEmail })"
+          class="text-body1 q-my-none q-mt-sm"
+          data-cy="form-reset-finished-description"
+        ></p>
+        <!-- Prompt: wrong email -->
+        <p
+          v-html="$t('login.form.promptWrongEmail')"
+          class="text-body1 q-my-none q-mt-lg"
+          data-cy="form-reset-finished-prompt"
+        ></p>
+        <!-- Button: new password -->
+        <q-btn
+          unelevated
+          rounded
+          outline
+          class="full-width q-mt-lg"
+          type="submit"
+          color="white"
+          text-color="white"
+          :label="$t('login.form.submitNewPassword')"
+          @click="setFormState(LoginFormState.passwordReset)"
+          data-cy="form-reset-finished-submit"
+        />
+      </div>
     </div>
   </div>
 </template>

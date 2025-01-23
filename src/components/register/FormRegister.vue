@@ -26,7 +26,7 @@
  */
 
 // libraries
-import { colors } from 'quasar';
+import { colors, setCssVar } from 'quasar';
 import { defineComponent, onMounted, ref, reactive, computed } from 'vue';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
@@ -54,6 +54,7 @@ export default defineComponent({
   },
   emits: ['formSubmit'],
   setup() {
+    const formRegisterRef = ref<HTMLElement | null>(null);
     const defaultFormRegisterValue = '';
     const formRegister = reactive({
       email: defaultFormRegisterValue,
@@ -93,12 +94,18 @@ export default defineComponent({
       getPaletteColor('white'),
       rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
     );
+    const red2 = getPaletteColor('red-2');
 
     onMounted(() => {
       challengeStore.loadPhaseSet();
+      // rebrand color negative to red-2 for specific section of UI
+      if (formRegisterRef.value) {
+        setCssVar('negative', red2, formRegisterRef.value);
+      }
     });
 
     return {
+      formRegisterRef,
       whiteOpacity,
       formRegister,
       isActiveChallenge,
@@ -119,7 +126,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-primary text-white" data-cy="form-register">
+  <div
+    ref="formRegisterRef"
+    class="bg-primary text-white"
+    data-cy="form-register"
+  >
     <!-- Show current debug date time message during Cypress tests required
          to indentify if this campaign competition phase is active/inactive
     -->
