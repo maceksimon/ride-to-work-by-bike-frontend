@@ -78,7 +78,7 @@ export default defineComponent({
       loadCities();
     });
 
-    const { isFilled } = useValidation();
+    const { isFilled, isZip } = useValidation();
 
     const registerChallengeStore = useRegisterChallengeStore();
     const organizationType = computed<OrganizationType>(() => {
@@ -101,6 +101,7 @@ export default defineComponent({
       hintCityChallenge,
       isFilled,
       isLoading,
+      isZip,
       labelCityChallenge,
       options,
       FormSubsidiaryAddressFields,
@@ -140,12 +141,37 @@ export default defineComponent({
     </div>
     <div class="col-12 col-sm-6">
       <!-- Zip -->
-      <form-field-text-required
-        v-model="subsidiary.zip"
-        :name="FormSubsidiaryAddressFields.zip"
-        label="form.labelZip"
-        data-cy="form-add-subsidiary-zip"
-      />
+      <div data-cy="form-add-subsidiary-zip">
+        <div :data-cy="`form-${FormSubsidiaryAddressFields.zip}`">
+          <!-- Label -->
+          <label
+            :for="`form-${FormSubsidiaryAddressFields.zip}`"
+            class="text-grey-10 text-caption text-bold"
+          >
+            {{ $t('form.labelZip') }}
+          </label>
+          <!-- Input -->
+          <q-input
+            dense
+            outlined
+            v-model="subsidiary.zip"
+            lazy-rules
+            :rules="[
+              (val) =>
+                isFilled(val) ||
+                $t('form.messageFieldRequired', {
+                  fieldName: $t('form.labelZip'),
+                }),
+              (val) => isZip(val) || $t('form.messageZipInvalid'),
+            ]"
+            class="q-mt-sm"
+            :id="`form-${FormSubsidiaryAddressFields.zip}`"
+            :name="FormSubsidiaryAddressFields.zip"
+            :data-cy="`form-${FormSubsidiaryAddressFields.zip}-input`"
+            ref="inputRef"
+          />
+        </div>
+      </div>
     </div>
     <div class="col-12" data-cy="form-widget-subsidiary-city-challenge">
       <!-- City challenge -->

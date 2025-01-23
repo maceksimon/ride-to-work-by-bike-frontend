@@ -104,6 +104,41 @@ function coreTests() {
     cy.dataCy(selectorFormDepartment).should('be.visible');
   });
 
+  it('validates zip code', () => {
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('01234');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('be.visible');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('a2345');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('be.visible');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('9999');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('be.visible');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('11000%');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('be.visible');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('9999');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('be.visible');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('10000');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('not.exist');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type('500 02');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('not.exist');
+    cy.dataCy(selectorFormZip).find('input').clear();
+    cy.dataCy(selectorFormZip).find('input').type(' 999 99');
+    cy.dataCy(selectorFormZip).find('input').blur();
+    cy.contains(i18n.global.t('form.messageZipInvalid')).should('not.exist');
+  });
+
   it('renders correct labels for organization type company', () => {
     cy.wrap(useRegisterChallengeStore()).then((store) => {
       cy.wrap(store.setOrganizationType(OrganizationType.company));

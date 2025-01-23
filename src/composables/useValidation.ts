@@ -94,6 +94,13 @@ export const useValidation = () => {
     return isLong && allNumbers;
   };
 
+  const isZip = (value: string): boolean => {
+    // remove all whitespace and convert to number
+    const cleanNumber = Number(value.replace(/\s/g, ''));
+    // check if value is number and in range
+    return !isNaN(cleanNumber) && cleanNumber >= 10000 && cleanNumber <= 99999;
+  };
+
   return {
     isEmail,
     isEmailList,
@@ -103,5 +110,6 @@ export const useValidation = () => {
     isPhone,
     isStrongPassword,
     isBusinessId,
+    isZip,
   };
 };
