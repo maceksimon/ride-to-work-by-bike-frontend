@@ -169,6 +169,8 @@ export default defineComponent({
             :name="FormSubsidiaryAddressFields.zip"
             :data-cy="`form-${FormSubsidiaryAddressFields.zip}-input`"
             ref="inputRef"
+            mask="### ##"
+            fill-mask="_"
           />
         </div>
       </div>
