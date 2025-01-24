@@ -171,6 +171,7 @@ export default defineComponent({
             ref="inputRef"
             mask="### ##"
             fill-mask="_"
+            unmasked-value
           />
         </div>
       </div>
