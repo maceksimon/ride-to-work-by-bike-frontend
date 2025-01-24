@@ -95,9 +95,9 @@ export const useValidation = () => {
   };
 
   /**
-   * Check if the value is a valid zip code
+   * Check if the value is a valid ZIP code
    * @param {string} value - The value to check
-   * @returns {boolean} True if the value is a valid zip code, false otherwise
+   * @returns {boolean} - True if the value is a valid ZIP code, false otherwise
    */
   const isZip = (value: string): boolean => {
     // remove all whitespace and convert to number
