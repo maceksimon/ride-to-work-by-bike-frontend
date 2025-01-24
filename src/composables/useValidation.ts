@@ -100,10 +100,9 @@ export const useValidation = () => {
    * @returns {boolean} - True if the value is a valid ZIP code, false otherwise
    */
   const isZip = (value: string): boolean => {
-    // remove all whitespace and convert to number
-    const cleanNumber = Number(value.replace(/\s/g, ''));
+    const zipNumber = Number(value);
     // check if value is number and in range
-    return !isNaN(cleanNumber) && cleanNumber >= 10000 && cleanNumber <= 99999;
+    return !isNaN(zipNumber) && zipNumber >= 10000 && zipNumber <= 99999;
   };
 
   return {
