@@ -11,8 +11,8 @@
  */
 
 // libraries
-import { colors, Notify } from 'quasar';
-import { defineComponent, inject, ref } from 'vue';
+import { colors, Notify, setCssVar } from 'quasar';
+import { defineComponent, inject, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 // composables
@@ -37,6 +37,7 @@ export default defineComponent({
   name: 'ResetPassword',
 
   setup() {
+    const resetPasswordRef = ref<HTMLElement | null>(null);
     const logger = inject('vuejs3-logger') as Logger | null;
     const loginStore = useLoginStore();
     const router = useRouter();
@@ -67,6 +68,12 @@ export default defineComponent({
       getPaletteColor('white'),
       rideToWorkByBikeConfig.colorWhiteBackgroundOpacity,
     );
+    const red2 = getPaletteColor('red-2');
+    onMounted(() => {
+      if (resetPasswordRef.value) {
+        setCssVar('negative', red2, resetPasswordRef.value);
+      }
+    });
 
     /**
      * Submit reset password and handles response
@@ -123,6 +130,7 @@ export default defineComponent({
       isPasswordConfirm,
       password1,
       password2,
+      resetPasswordRef,
       whiteOpacity,
       onSubmitResetPassword,
       isLoading,
@@ -132,7 +140,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="bg-primary text-white" data-cy="reset-password">
+  <div
+    ref="resetPasswordRef"
+    class="bg-primary text-white"
+    data-cy="reset-password"
+  >
     <!-- Graphics -->
     <div class="q-mb-lg" data-cy="reset-password-graphics">
       <q-avatar
