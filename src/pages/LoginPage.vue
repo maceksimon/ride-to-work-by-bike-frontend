@@ -44,7 +44,7 @@ export default defineComponent({
       <!-- Page header -->
       <login-register-header data-cy="login-register-header" />
 
-      <div class="row">
+      <div class="row q-mt-xl">
         <div class="col-12 col-md-4">
           <form-login useFormFieldValidationErrorCssClass />
         </div>

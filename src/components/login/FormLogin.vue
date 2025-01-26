@@ -15,9 +15,9 @@
  * - `formSubmit`: Emitted on form submit.
  *
  * @components
+ * - `FormFieldEmail`: Component to render email form field.
  * - `LoginRegisterButtons`: Component to render third-party authentication
  * buttons.
- * - `BannerAppButtons`: Component to render download links for RTWBB app.
  *
  * @example
  * <form-login />
@@ -30,7 +30,6 @@ import { colors } from 'quasar';
 import { computed, defineComponent, ref, reactive } from 'vue';
 
 // components
-import BannerAppButtons from './BannerAppButtons.vue';
 import FormFieldEmail from '../global/FormFieldEmail.vue';
 import LoginRegisterButtons from '../global/LoginRegisterButtons.vue';
 
@@ -58,7 +57,6 @@ export default defineComponent({
     },
   },
   components: {
-    BannerAppButtons,
     FormFieldEmail,
     LoginRegisterButtons,
   },
@@ -236,10 +234,6 @@ export default defineComponent({
           {{ $t('login.form.linkRegister') }} </router-link
         >.
       </p>
-    </div>
-    <!-- Links: Mobile app -->
-    <div class="q-mt-xl">
-      <banner-app-buttons />
     </div>
   </div>
   <!-- State: Forgotten password -->
