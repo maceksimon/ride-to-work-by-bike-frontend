@@ -57,10 +57,6 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      if (!registrationId.value) {
-        registerChallengeStore.loadRegisterChallengeToStore();
-        return;
-      }
       if (registerChallengeStore.getLanguage) {
         i18n.global.locale = registerChallengeStore.getLanguage;
       } else {

@@ -4,6 +4,7 @@ import LanguageSwitcher from '../global/LanguageSwitcher.vue';
 import { i18n } from '../../boot/i18n';
 import { defaultLocale } from 'src/i18n/def_locale';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
@@ -183,8 +184,13 @@ describe('<LanguageSwitcher>', () => {
                   (requestPostEn) => {
                     cy.fixture('apiPostRegisterChallengeLanguageSk.json').then(
                       (requestPostSk) => {
+                        // set manually as data will be loaded by other components
+                        cy.wrap(useRegisterChallengeStore()).then((store) => {
+                          store.setRegisterChallengeFromApi(
+                            response.results[0],
+                          );
+                        });
                         // wait for initial GET request
-                        cy.waitForRegisterChallengeGetApi(response);
                         const personalDetails =
                           response.results[0].personal_details;
                         // switch to English
