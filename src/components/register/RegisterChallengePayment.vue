@@ -599,6 +599,9 @@ export default defineComponent({
       () => registerChallengeStore.getSelectedOrganizationLabel,
     );
 
+    const urlAppDataPrivacyPolicy =
+      rideToWorkByBikeConfig.urlAppDataPrivacyPolicy;
+
     return {
       borderRadius,
       computedCurrentValue,
@@ -618,6 +621,7 @@ export default defineComponent({
       selectedPaymentAmount,
       selectedPaymentAmountCustom,
       selectedPaymentSubject,
+      urlAppDataPrivacyPolicy,
       Currency,
       formatPriceCurrency,
       onUpdateDonation,
@@ -829,10 +833,14 @@ export default defineComponent({
               <span>
                 {{ $t('register.coordinator.form.labelPrivacyConsent') }}
                 <!-- Link: terms -->
-                <!-- TODO: Link to terms page -->
-                <a href="#" target="_blank" class="text-primary">{{
-                  $t('register.coordinator.form.linkPrivacyConsent')
-                }}</a
+                <a
+                  :href="urlAppDataPrivacyPolicy"
+                  target="_blank"
+                  class="text-primary"
+                  @click.stop
+                  data-cy="form-terms-link"
+                >
+                  {{ $t('register.coordinator.form.linkPrivacyConsent') }} </a
                 >.
               </span>
             </q-checkbox>

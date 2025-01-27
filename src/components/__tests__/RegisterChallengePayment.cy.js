@@ -13,6 +13,13 @@ import { OrganizationType } from '../types/Organization';
 import { getCurrentPriceLevelsUtil } from '../../utils/price_levels';
 import { PriceLevelCategory } from '../../components/enums/Challenge';
 import { Currency, useFormatPrice } from '../../composables/useFormatPrice';
+import {
+  failOnStatusCode,
+  httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+  userAgentHeader,
+} from '../../../test/cypress/support/commonTests';
 
 // selectors
 const selectorBannerPaymentMinimum = 'banner-payment-minimum';
@@ -901,6 +908,40 @@ function coreTests() {
     cy.dataCy(selectorCoordinatorResponsibility).should('be.visible');
     // checkbox terms
     cy.dataCy(selectorCoordinatorTerms).should('be.visible');
+    // checkbox is unchecked by default
+    cy.dataCy(selectorCoordinatorTerms)
+      .find('.q-checkbox__inner')
+      .should('have.class', 'q-checkbox__inner--falsy');
+    // click the terms link
+    cy.dataCy(selectorCoordinatorTerms).within(() => {
+      cy.dataCy('form-terms-link').should('be.visible').click();
+      cy.dataCy('form-terms-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          // test link
+          cy.request({
+            url: href,
+            failOnStatusCode: failOnStatusCode,
+            headers: { ...userAgentHeader },
+          }).then((resp) => {
+            if (resp.status === httpTooManyRequestsStatus) {
+              cy.log(httpTooManyRequestsStatusMessage);
+              return;
+            }
+            expect(resp.status).to.eq(httpSuccessfullStatus);
+          });
+        });
+    });
+    // checkbox is still unchecked
+    cy.dataCy(selectorCoordinatorTerms)
+      .find('.q-checkbox__inner')
+      .should('have.class', 'q-checkbox__inner--falsy');
+    // click the checkbox
+    cy.dataCy(selectorCoordinatorTerms).find('.q-checkbox__inner').click();
+    // checkbox is checked
+    cy.dataCy(selectorCoordinatorTerms)
+      .find('.q-checkbox__inner')
+      .should('have.class', 'q-checkbox__inner--truthy');
   });
 }
 
