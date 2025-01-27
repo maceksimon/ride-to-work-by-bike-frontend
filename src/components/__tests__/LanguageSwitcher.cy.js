@@ -1,7 +1,9 @@
+import { createPinia, setActivePinia } from 'pinia';
 import { colors } from 'quasar';
 import LanguageSwitcher from '../global/LanguageSwitcher.vue';
 import { i18n } from '../../boot/i18n';
 import { defaultLocale } from 'src/i18n/def_locale';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 const { getPaletteColor } = colors;
 const white = getPaletteColor('white');
@@ -153,6 +155,82 @@ describe('<LanguageSwitcher>', () => {
     it('highlights the active language', () => {
       const activeLocale = defaultLocale;
       cy.dataCy('switcher-' + activeLocale).should('be.visible');
+    });
+  });
+
+  context('api integration', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+        cy.interceptRegisterChallengeGetApi(
+          rideToWorkByBikeConfig,
+          defaultLocale,
+          response,
+        );
+      });
+      cy.mount(LanguageSwitcher, {
+        props: {},
+      });
+    });
+
+    it('sends correct API requests when switching language', () => {
+      cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+        cy.fixture('apiGetRegisterChallengeProfileLanguageEn.json').then(
+          (responseEn) => {
+            cy.fixture('apiGetRegisterChallengeProfileLanguageSk.json').then(
+              (responseSk) => {
+                cy.fixture('apiPostRegisterChallengeLanguageEn.json').then(
+                  (requestPostEn) => {
+                    cy.fixture('apiPostRegisterChallengeLanguageSk.json').then(
+                      (requestPostSk) => {
+                        // wait for initial GET request
+                        cy.waitForRegisterChallengeGetApi(response);
+                        const personalDetails =
+                          response.results[0].personal_details;
+                        // switch to English
+                        // intercept PUT request for English
+                        cy.interceptRegisterChallengePutApi(
+                          rideToWorkByBikeConfig,
+                          responseEn.results[0].personal_details.language,
+                          personalDetails.id,
+                          responseEn,
+                        );
+                        // override intercept GET request for English
+                        cy.interceptRegisterChallengeGetApi(
+                          rideToWorkByBikeConfig,
+                          responseEn.results[0].personal_details.language,
+                          responseEn,
+                        );
+                        cy.dataCy('switcher-button-en').click();
+                        cy.waitForRegisterChallengePutApi(requestPostEn);
+                        cy.waitForRegisterChallengeGetApi(responseEn);
+                        // switch to Slovak
+                        // intercept PUT request for Slovak
+                        cy.interceptRegisterChallengePutApi(
+                          rideToWorkByBikeConfig,
+                          responseSk.results[0].personal_details.language,
+                          personalDetails.id,
+                          responseSk,
+                        );
+                        // override intercept GET request for Slovak
+                        cy.interceptRegisterChallengeGetApi(
+                          rideToWorkByBikeConfig,
+                          responseSk.results[0].personal_details.language,
+                          responseSk,
+                        );
+                        cy.dataCy('switcher-button-sk').click();
+                        cy.waitForRegisterChallengePutApi(requestPostSk);
+                        // wait for GET request for Slovak
+                        cy.waitForRegisterChallengeGetApi(responseSk);
+                      },
+                    );
+                  },
+                );
+              },
+            );
+          },
+        );
+      });
     });
   });
 });
