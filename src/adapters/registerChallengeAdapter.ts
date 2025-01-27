@@ -82,6 +82,9 @@ export const registerChallengeAdapter = {
       if (storePersonalDetails.gender !== undefined) {
         payload.sex = storePersonalDetails.gender as Gender;
       }
+      if (storePersonalDetails.language !== undefined) {
+        payload.language = storePersonalDetails.language;
+      }
       if (storePersonalDetails.newsletter !== undefined) {
         if (storePersonalDetails.newsletter?.length) {
           payload.newsletter = newsletterAdapter.combineNewsletterValues(

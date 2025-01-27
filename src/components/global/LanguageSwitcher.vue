@@ -28,6 +28,12 @@ import { computed, defineComponent, onMounted, watch } from 'vue';
 import { i18n } from '../../boot/i18n';
 import { defaultLocale } from 'src/i18n/def_locale';
 
+// adapters
+import { registerChallengeAdapter } from '../../adapters/registerChallengeAdapter';
+
+// composables
+import { useApiPutRegisterChallenge } from '../../composables/useApiPutRegisterChallenge';
+
 // stores
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
@@ -46,7 +52,14 @@ export default defineComponent({
       return Object.keys(i18n.global.messages);
     });
 
-    onMounted(() => {
+    const registrationId = computed(() => {
+      return registerChallengeStore.getRegistrationId;
+    });
+
+    onMounted(async () => {
+      if (!registrationId.value) {
+        await registerChallengeStore.loadRegisterChallengeToStore();
+      }
       if (registerChallengeStore.getLanguage) {
         i18n.global.locale = registerChallengeStore.getLanguage;
       } else {
@@ -84,14 +97,27 @@ export default defineComponent({
       return extendedCssClass;
     };
 
-    const onSetLanguage = (item: string) => {
+    const { isLoading, updateChallenge } = useApiPutRegisterChallenge(
+      registerChallengeStore.$log,
+    );
+    const onSetLanguage = async (item: string) => {
       i18n.global.locale = item;
       registerChallengeStore.setLanguage(item);
+      if (registrationId.value) {
+        const payload = registerChallengeAdapter.toApiPayload({
+          personalDetails: {
+            language: item,
+          },
+        });
+        await updateChallenge(registrationId.value, payload);
+        registerChallengeStore.loadRegisterChallengeToStore();
+      }
     };
 
     return {
       locales,
       isActive,
+      isLoading,
       getButtonClasses,
       onSetLanguage,
     };
