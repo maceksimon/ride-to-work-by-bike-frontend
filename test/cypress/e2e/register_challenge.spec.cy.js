@@ -1588,6 +1588,50 @@ describe('Register Challenge page', () => {
       });
     });
 
+    it('when voucher FULL and payment subject is changed to organization, voucher is reset', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.passToStep2();
+          // wait for personal details POST request
+          cy.fixture(
+            'apiPostRegisterChallengePersonalDetailsRequest.json',
+          ).then((request) => {
+            cy.waitForRegisterChallengePostApi(request);
+          });
+          // select voucher payment
+          cy.dataCy(getRadioOption(PaymentSubject.voucher))
+            .should('be.visible')
+            .click();
+          // apply voucher FULL
+          cy.applyFullVoucher(config, i18n);
+          // go to next step
+          cy.dataCy('step-2-continue').should('be.visible').click();
+          // wait for payment POST request
+          cy.fixture('apiPostRegisterChallengeVoucherFullRequest.json').then(
+            (request) => {
+              cy.waitForRegisterChallengePostApi(request);
+            },
+          );
+          // go back
+          cy.dataCy('step-2-back').should('be.visible').click();
+          // select company pays
+          cy.dataCy(getRadioOption(PaymentSubject.company))
+            .should('be.visible')
+            .click();
+          // select paying company (required)
+          cy.selectRegisterChallengePayingOrganization();
+          // go to next step
+          cy.dataCy('step-2-continue').should('be.visible').click();
+          // voucher is reset
+          cy.fixture('apiPostRegisterChallengeVoucherNoneRequest.json').then(
+            (request) => {
+              cy.waitForRegisterChallengePostApi(request);
+            },
+          );
+        });
+      });
+    });
+
     it('submits form state on 1st 2nd, 5th and 6th step (voucher payment)', () => {
       cy.window().should('have.property', 'i18n');
       cy.get('@i18n').then((i18n) => {
@@ -1714,6 +1758,12 @@ describe('Register Challenge page', () => {
       });
       // go to next step
       cy.dataCy('step-2-continue').should('be.visible').click();
+      // test API post request (empty voucher)
+      cy.fixture('apiPostRegisterChallengeVoucherNoneRequest.json').then(
+        (request) => {
+          cy.waitForRegisterChallengePostApi(request);
+        },
+      );
       // participation is preselected - continue
       cy.dataCy('step-3-continue').should('be.visible').click();
       // organization is preselected - select address

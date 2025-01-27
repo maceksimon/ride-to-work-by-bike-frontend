@@ -524,6 +524,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     async submitStep(
       step: RegisterChallengeStep,
     ): Promise<RegisterChallengePostResponse | null | true> {
+      // clear voucher on step change if payment subject is not voucher
+      if (this.voucher && this.paymentSubject !== PaymentSubject.voucher) {
+        this.setVoucher(null);
+      }
       // payload map defines what data is sent to the API for each step
       const isPaymentOrganization = this.getIsPaymentSubjectOrganization;
       /**

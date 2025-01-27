@@ -53,7 +53,7 @@ export const registerChallengeAdapter = {
       telephone: apiData.personal_details.telephone,
       telephoneOptIn: apiData.personal_details.telephone_opt_in,
       language: apiData.personal_details.language,
-      voucher: apiData.personal_details.discount_coupon,
+      voucher: apiData.personal_details.discount_coupon || '',
     };
   },
 
@@ -117,6 +117,10 @@ export const registerChallengeAdapter = {
     }
     if (storeState.voucher) {
       payload.discount_coupon = storeState.voucher?.name;
+    }
+    // if voucher is empty make sure it is reset
+    if (storeState.voucher === null) {
+      payload.discount_coupon = '';
     }
     if (storeState.teamId !== undefined) {
       payload.team_id = storeState.teamId;

@@ -17,7 +17,7 @@ export type CorePersonalDetails = {
   age_group: number | null;
   newsletter: string;
   personal_data_opt_in: boolean;
-  discount_coupon: string;
+  discount_coupon: string | null;
   payment_subject: string;
   payment_amount: number | null;
 };
