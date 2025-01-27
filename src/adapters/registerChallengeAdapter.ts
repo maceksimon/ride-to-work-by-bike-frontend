@@ -53,7 +53,7 @@ export const registerChallengeAdapter = {
       telephone: apiData.personal_details.telephone,
       telephoneOptIn: apiData.personal_details.telephone_opt_in,
       language: apiData.personal_details.language,
-      voucher: apiData.personal_details.discount_coupon || '',
+      voucher: apiData.personal_details.discount_coupon,
     };
   },
 
