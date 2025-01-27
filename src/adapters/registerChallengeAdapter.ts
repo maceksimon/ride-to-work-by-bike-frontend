@@ -81,10 +81,14 @@ export const registerChallengeAdapter = {
       if (storePersonalDetails.gender !== undefined) {
         payload.sex = storePersonalDetails.gender as Gender;
       }
-      if (storePersonalDetails.newsletter?.length) {
-        payload.newsletter = newsletterAdapter.combineNewsletterValues(
-          storePersonalDetails.newsletter,
-        );
+      if (storePersonalDetails.newsletter !== undefined) {
+        if (storePersonalDetails.newsletter?.length) {
+          payload.newsletter = newsletterAdapter.combineNewsletterValues(
+            storePersonalDetails.newsletter,
+          );
+        } else {
+          payload.newsletter = '';
+        }
       }
       if (storePersonalDetails.terms !== undefined) {
         payload.personal_data_opt_in = storePersonalDetails.terms;

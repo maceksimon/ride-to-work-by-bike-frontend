@@ -1769,6 +1769,65 @@ describe('Register Challenge page', () => {
       );
     });
 
+    it('submits personal details with empty newsletter', () => {
+      cy.fixture('apiPostRegisterChallengePersonalDetailsRequest').then(
+        (personalDetailsRequest) => {
+          // fill in name and nickname
+          cy.dataCy('form-firstName-input').type(
+            personalDetailsRequest.first_name,
+          );
+          cy.dataCy('form-lastName-input').type(
+            personalDetailsRequest.last_name,
+          );
+          cy.dataCy('form-nickname-input').type(
+            personalDetailsRequest.nickname,
+          );
+          // select first newsletter option
+          cy.dataCy('newsletter-option').first().click();
+          // select gender
+          cy.dataCy('form-personal-details-gender')
+            .find('.q-radio__label')
+            .first()
+            .click();
+          // agree with terms
+          cy.dataCy('form-personal-details-terms')
+            .find('.q-checkbox__inner')
+            .first()
+            .click();
+          // continue to step 2
+          cy.dataCy('step-1-continue').should('be.visible').click();
+          cy.dataCy('step-1-continue').find('.q-spinner').should('be.visible');
+          // test API POST request
+          cy.fixture(
+            'apiPostRegisterChallengePersonalDetailsChallengeNewsletter.json',
+          ).then((request) => {
+            cy.waitForRegisterChallengePostApi(request);
+          });
+          // on step 2
+          cy.dataCy('step-2')
+            .find('.q-stepper__step-content')
+            .should('be.visible');
+          // go back
+          cy.dataCy('step-2-back').should('be.visible').click();
+          // on step 1
+          cy.dataCy('step-1')
+            .find('.q-stepper__step-content')
+            .should('be.visible');
+          // deselect newsletter option
+          cy.dataCy('newsletter-option').first().click();
+          // continue to step 2
+          cy.dataCy('step-1-continue').should('be.visible').click();
+          cy.dataCy('step-1-continue').find('.q-spinner').should('be.visible');
+          // test API POST request
+          cy.fixture(
+            'apiPostRegisterChallengePersonalDetailsNoNewsletter.json',
+          ).then((request) => {
+            cy.waitForRegisterChallengePostApi(request);
+          });
+        },
+      );
+    });
+
     it('displays correct nav buttons on payment step based on payment configuration', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
