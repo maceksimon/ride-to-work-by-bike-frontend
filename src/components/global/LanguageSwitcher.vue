@@ -57,9 +57,6 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-      if (!registrationId.value) {
-        await registerChallengeStore.loadRegisterChallengeToStore();
-      }
       if (registerChallengeStore.getLanguage) {
         i18n.global.locale = registerChallengeStore.getLanguage;
       } else {
@@ -103,6 +100,11 @@ export default defineComponent({
     const onSetLanguage = async (item: string) => {
       i18n.global.locale = item;
       registerChallengeStore.setLanguage(item);
+      /**
+       * Registraion ID may not be available (if user is not logged in)
+       * or registred. In this case, the settings will be saved in local
+       * storage.
+       */
       if (registrationId.value) {
         const payload = registerChallengeAdapter.toApiPayload({
           personalDetails: {
