@@ -5,8 +5,12 @@ import FormRegisterCoordinator from 'components/register/FormRegisterCoordinator
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import {
-  fillFormRegisterCoordinator,
+  failOnStatusCode,
   httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+  userAgentHeader,
+  fillFormRegisterCoordinator,
   interceptOrganizationsApi,
   interceptRegisterCoordinatorApi,
   waitForOrganizationsApi,
@@ -184,6 +188,7 @@ describe('<FormRegisterCoordinator>', () => {
     });
 
     it('renders checkbox terms', () => {
+      // checkbox visible
       cy.dataCy('form-register-coordinator-terms')
         .should('be.visible')
         .find('.q-checkbox__label')
@@ -193,6 +198,52 @@ describe('<FormRegisterCoordinator>', () => {
           'contain',
           i18n.global.t('register.coordinator.form.labelPrivacyConsent'),
         );
+      // checkbox unchecked
+      cy.dataCy('form-register-coordinator-terms')
+        .find('.q-checkbox__inner')
+        .should('have.class', 'q-checkbox__inner--falsy');
+      // click link in checkbox label
+      cy.dataCy('form-register-coordinator-terms').within(() => {
+        cy.dataCy('form-terms-link')
+          .should('be.visible')
+          .and(
+            'have.attr',
+            'href',
+            rideToWorkByBikeConfig.urlAppDataPrivacyPolicy,
+          )
+          .click();
+      });
+      // checkbox unchecked
+      cy.dataCy('form-register-coordinator-terms')
+        .find('.q-checkbox__inner')
+        .should('have.class', 'q-checkbox__inner--falsy');
+      // test link in checkbox label
+      cy.dataCy('form-register-coordinator-terms').within(() => {
+        cy.dataCy('form-terms-link')
+          .invoke('attr', 'href')
+          .then((href) => {
+            // test link
+            cy.request({
+              url: href,
+              failOnStatusCode: failOnStatusCode,
+              headers: { ...userAgentHeader },
+            }).then((resp) => {
+              if (resp.status === httpTooManyRequestsStatus) {
+                cy.log(httpTooManyRequestsStatusMessage);
+                return;
+              }
+              expect(resp.status).to.eq(httpSuccessfullStatus);
+            });
+          });
+      });
+      // test checking the checkbox
+      cy.dataCy('form-register-coordinator-terms')
+        .find('.q-checkbox__inner')
+        .click();
+      // checkbox checked
+      cy.dataCy('form-register-coordinator-terms')
+        .find('.q-checkbox__inner')
+        .should('have.class', 'q-checkbox__inner--truthy');
     });
 
     it('validates checkboxes correctly', () => {

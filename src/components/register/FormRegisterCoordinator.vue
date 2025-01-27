@@ -39,6 +39,9 @@ import FormFieldNewsletter from '../form/FormFieldNewsletter.vue';
 import { i18n } from '../../boot/i18n';
 import { useOrganizations } from 'src/composables/useOrganizations';
 
+// config
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
 // enums
 import { OrganizationType } from '../types/Organization';
 import { NewsletterType } from '../types/Newsletter';
@@ -124,10 +127,14 @@ export default defineComponent({
       // noop
     };
 
+    const urlAppDataPrivacyPolicy =
+      rideToWorkByBikeConfig.urlAppDataPrivacyPolicy;
+
     return {
       fieldOrganizationLabel,
       formRegisterCoordinator,
       optionsOrganizationType,
+      urlAppDataPrivacyPolicy,
       onReset,
       onSubmit,
     };
@@ -247,8 +254,13 @@ export default defineComponent({
             >
               {{ $t('register.coordinator.form.labelPrivacyConsent') }}
               <!-- Link: terms -->
-              <!-- TODO: Link to terms page -->
-              <a href="#" target="_blank" class="text-primary">
+              <a
+                :href="urlAppDataPrivacyPolicy"
+                target="_blank"
+                class="text-primary"
+                @click.stop
+                data-cy="form-terms-link"
+              >
                 {{ $t('register.coordinator.form.linkPrivacyConsent') }} </a
               >.
             </form-field-checkbox-required>
