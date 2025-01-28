@@ -130,7 +130,9 @@ describe('<LanguageSwitcher>', () => {
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(LanguageSwitcher, {
-        props: {},
+        props: {
+          variant: 'light',
+        },
       });
       cy.viewport('iphone-6');
     });
@@ -170,7 +172,9 @@ describe('<LanguageSwitcher>', () => {
         );
       });
       cy.mount(LanguageSwitcher, {
-        props: {},
+        props: {
+          variant: 'light',
+        },
       });
     });
 
