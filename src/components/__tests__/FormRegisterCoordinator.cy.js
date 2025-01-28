@@ -85,272 +85,280 @@ describe('<FormRegisterCoordinator>', () => {
       });
       cy.viewport('macbook-16');
     });
+    coreTests();
+  });
 
-    it('renders title', () => {
-      cy.window().then(() => {
-        cy.dataCy('register-coordinator-form-title')
-          .should('have.css', 'font-size', '16px')
-          .and('have.css', 'font-weight', '700')
-          .and('have.color', grey10)
-          .and('contain', i18n.global.t('register.coordinator.form.title'))
-          .then(($title) => {
-            expect($title.text()).to.equal(
-              i18n.global.t('register.coordinator.form.title'),
-            );
-          });
-      });
-    });
-
-    it('renders first name field', () => {
-      cy.dataCy('form-register-coordinator-first-name').should('be.visible');
-    });
-
-    it('renders last name field', () => {
-      cy.dataCy('form-register-coordinator-last-name').should('be.visible');
-    });
-
-    it('renders company field', () => {
-      // input label
-      cy.dataCy('form-register-coordinator-company').should('be.visible');
-      cy.dataCy('form-register-coordinator-company').should(
-        'contain',
-        i18n.global.t('form.labelCompanyForCoordinator'),
+  context('mobile', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      // intercept organizations API call (before mounting component)
+      interceptOrganizationsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        OrganizationType.company,
       );
-    });
-
-    it('renders job title field', () => {
-      // input label
-      cy.dataCy('form-register-coordinator-job-title').should('be.visible');
-    });
-
-    it('renders correct company field label based on organization type', () => {
-      // select organization type
-      cy.dataCy('form-organization-type').within(() => {
-        cy.contains(i18n.global.t('form.labelCompanyShort')).click();
-      });
-      // organization field label
-      cy.dataCy('form-register-coordinator-company').should(
-        'contain',
-        i18n.global.t('form.labelCompanyForCoordinator'),
+      // intercept register coordinator API call (before mounting component)
+      interceptRegisterCoordinatorApi(rideToWorkByBikeConfig, i18n);
+      cy.fixture('apiGetIsUserOrganizationAdminResponseTrue').then(
+        (response) => {
+          cy.interceptIsUserOrganizationAdminGetApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            response,
+          );
+        },
       );
-      // select school organization type
-      cy.dataCy('form-organization-type').within(() => {
-        cy.contains(i18n.global.t('form.labelSchoolShort')).click();
+      cy.mount(FormRegisterCoordinator, {
+        props: {},
       });
-      // organization field label
-      cy.dataCy('form-register-coordinator-company').should(
-        'contain',
-        i18n.global.t('form.labelSchoolForCoordinator'),
-      );
-      // select family organization type
-      cy.dataCy('form-organization-type').within(() => {
-        cy.contains(i18n.global.t('form.labelFamilyShort')).click();
-      });
-      // organization field label
-      cy.dataCy('form-register-coordinator-company').should(
-        'contain',
-        i18n.global.t('form.labelFamilyForCoordinator'),
-      );
+      cy.viewport('iphone-6');
     });
+    coreTests();
+  });
+});
 
-    it('renders phone field', () => {
-      // input label
-      cy.dataCy('form-register-coordinator-phone')
-        .should('be.visible')
-        .find('label')
-        .should('be.visible')
+function coreTests() {
+  it('renders title', () => {
+    cy.window().then(() => {
+      cy.dataCy('register-coordinator-form-title')
+        .should('have.css', 'font-size', '16px')
+        .and('have.css', 'font-weight', '700')
         .and('have.color', grey10)
-        .and(
-          'have.text',
-          i18n.global.t('register.coordinator.form.labelPhone'),
-        );
-      // input wrapper
-      cy.dataCy('form-register-coordinator-phone')
-        .find('.q-field__control')
-        .should('be.visible')
-        .and('have.css', 'border-radius', '8px');
-      // input
-      cy.dataCy('form-register-coordinator-phone')
-        .find('input')
-        .should('be.visible');
+        .and('contain', i18n.global.t('register.coordinator.form.title'))
+        .then(($title) => {
+          expect($title.text()).to.equal(
+            i18n.global.t('register.coordinator.form.title'),
+          );
+        });
     });
+  });
 
-    it('renders checkbox responsibility', () => {
-      cy.dataCy('form-register-coordinator-responsibility')
-        .should('be.visible')
-        .find('.q-checkbox__label')
-        .should('be.visible')
-        .and('have.color', grey10)
-        .and(
-          'contain',
-          i18n.global.t('register.coordinator.form.labelResponsibility'),
-        );
+  it('renders first name field', () => {
+    cy.dataCy('form-register-coordinator-first-name').should('be.visible');
+  });
+
+  it('renders last name field', () => {
+    cy.dataCy('form-register-coordinator-last-name').should('be.visible');
+  });
+
+  it('renders company field', () => {
+    // input label
+    cy.dataCy('form-register-coordinator-company').should('be.visible');
+    cy.dataCy('form-register-coordinator-company').should(
+      'contain',
+      i18n.global.t('form.labelCompanyForCoordinator'),
+    );
+  });
+
+  it('renders job title field', () => {
+    // input label
+    cy.dataCy('form-register-coordinator-job-title').should('be.visible');
+  });
+
+  it('renders correct company field label based on organization type', () => {
+    // select organization type
+    cy.dataCy('form-organization-type').within(() => {
+      cy.contains(i18n.global.t('form.labelCompanyShort')).click();
     });
+    // organization field label
+    cy.dataCy('form-register-coordinator-company').should(
+      'contain',
+      i18n.global.t('form.labelCompanyForCoordinator'),
+    );
+    // select school organization type
+    cy.dataCy('form-organization-type').within(() => {
+      cy.contains(i18n.global.t('form.labelSchoolShort')).click();
+    });
+    // organization field label
+    cy.dataCy('form-register-coordinator-company').should(
+      'contain',
+      i18n.global.t('form.labelSchoolForCoordinator'),
+    );
+    // select family organization type
+    cy.dataCy('form-organization-type').within(() => {
+      cy.contains(i18n.global.t('form.labelFamilyShort')).click();
+    });
+    // organization field label
+    cy.dataCy('form-register-coordinator-company').should(
+      'contain',
+      i18n.global.t('form.labelFamilyForCoordinator'),
+    );
+  });
 
-    it('renders checkbox terms', () => {
-      // checkbox visible
-      cy.dataCy('form-register-coordinator-terms')
+  it('renders phone field', () => {
+    // input label
+    cy.dataCy('form-register-coordinator-phone')
+      .should('be.visible')
+      .find('label')
+      .should('be.visible')
+      .and('have.color', grey10)
+      .and('have.text', i18n.global.t('register.coordinator.form.labelPhone'));
+    // input wrapper
+    cy.dataCy('form-register-coordinator-phone')
+      .find('.q-field__control')
+      .should('be.visible')
+      .and('have.css', 'border-radius', '8px');
+    // input
+    cy.dataCy('form-register-coordinator-phone')
+      .find('input')
+      .should('be.visible');
+  });
+
+  it('renders checkbox responsibility', () => {
+    cy.dataCy('form-register-coordinator-responsibility')
+      .should('be.visible')
+      .find('.q-checkbox__label')
+      .should('be.visible')
+      .and('have.color', grey10)
+      .and(
+        'contain',
+        i18n.global.t('register.coordinator.form.labelResponsibility'),
+      );
+  });
+
+  it('renders checkbox terms', () => {
+    // checkbox visible
+    cy.dataCy('form-register-coordinator-terms')
+      .should('be.visible')
+      .find('.q-checkbox__label')
+      .should('be.visible')
+      .and('have.color', grey10)
+      .and(
+        'contain',
+        i18n.global.t('register.coordinator.form.labelPrivacyConsent'),
+      );
+    // checkbox unchecked
+    cy.dataCy('form-register-coordinator-terms')
+      .find('.q-checkbox__inner')
+      .should('have.class', 'q-checkbox__inner--falsy');
+    // click link in checkbox label
+    cy.dataCy('form-register-coordinator-terms').within(() => {
+      cy.dataCy('form-terms-link')
         .should('be.visible')
-        .find('.q-checkbox__label')
-        .should('be.visible')
-        .and('have.color', grey10)
         .and(
-          'contain',
-          i18n.global.t('register.coordinator.form.labelPrivacyConsent'),
-        );
-      // checkbox unchecked
-      cy.dataCy('form-register-coordinator-terms')
-        .find('.q-checkbox__inner')
-        .should('have.class', 'q-checkbox__inner--falsy');
-      // click link in checkbox label
-      cy.dataCy('form-register-coordinator-terms').within(() => {
-        cy.dataCy('form-terms-link')
-          .should('be.visible')
-          .and(
-            'have.attr',
-            'href',
-            rideToWorkByBikeConfig.urlAppDataPrivacyPolicy,
-          )
-          .click();
-      });
-      // checkbox unchecked
-      cy.dataCy('form-register-coordinator-terms')
-        .find('.q-checkbox__inner')
-        .should('have.class', 'q-checkbox__inner--falsy');
-      // test link in checkbox label
-      cy.dataCy('form-register-coordinator-terms').within(() => {
-        cy.dataCy('form-terms-link')
-          .invoke('attr', 'href')
-          .then((href) => {
-            // test link
-            cy.request({
-              url: href,
-              failOnStatusCode: failOnStatusCode,
-              headers: { ...userAgentHeader },
-            }).then((resp) => {
-              if (resp.status === httpTooManyRequestsStatus) {
-                cy.log(httpTooManyRequestsStatusMessage);
-                return;
-              }
-              expect(resp.status).to.eq(httpSuccessfullStatus);
-            });
-          });
-      });
-      // test checking the checkbox
-      cy.dataCy('form-register-coordinator-terms')
-        .find('.q-checkbox__inner')
+          'have.attr',
+          'href',
+          rideToWorkByBikeConfig.urlAppDataPrivacyPolicy,
+        )
         .click();
-      // checkbox checked
-      cy.dataCy('form-register-coordinator-terms')
-        .find('.q-checkbox__inner')
-        .should('have.class', 'q-checkbox__inner--truthy');
     });
+    // checkbox unchecked
+    cy.dataCy('form-register-coordinator-terms')
+      .find('.q-checkbox__inner')
+      .should('have.class', 'q-checkbox__inner--falsy');
+    // test link in checkbox label
+    cy.dataCy('form-register-coordinator-terms').within(() => {
+      cy.dataCy('form-terms-link')
+        .invoke('attr', 'href')
+        .then((href) => {
+          // test link
+          cy.request({
+            url: href,
+            failOnStatusCode: failOnStatusCode,
+            headers: { ...userAgentHeader },
+          }).then((resp) => {
+            if (resp.status === httpTooManyRequestsStatus) {
+              cy.log(httpTooManyRequestsStatusMessage);
+              return;
+            }
+            expect(resp.status).to.eq(httpSuccessfullStatus);
+          });
+        });
+    });
+    // test checking the checkbox
+    cy.dataCy('form-register-coordinator-terms')
+      .find('.q-checkbox__inner')
+      .click();
+    // checkbox checked
+    cy.dataCy('form-register-coordinator-terms')
+      .find('.q-checkbox__inner')
+      .should('have.class', 'q-checkbox__inner--truthy');
+  });
 
-    it('validates checkboxes correctly', () => {
+  it('validates checkboxes correctly', () => {
+    // wait for organizations API call
+    cy.fixture('formFieldCompany').then((formFieldCompany) => {
+      cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
+        waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
+      });
+    });
+    // fill in other parts of the form to be able to test password
+    fillFormRegisterCoordinator();
+    // test responsibility checkbox unchecked
+    cy.dataCy('form-register-coordinator-submit').should('be.visible').click();
+    // responsibility - required message shown
+    cy.contains(
+      i18n.global.t('register.coordinator.form.messageResponsibilityRequired'),
+    ).should('be.visible');
+    // test responsibility checkbox checked
+    cy.dataCy('form-register-coordinator-responsibility')
+      .find('.q-checkbox')
+      .click();
+    // responsibility - required message hidden
+    cy.contains(
+      i18n.global.t('register.coordinator.form.messageResponsibilityRequired'),
+    ).should('not.exist');
+    // test terms checkbox unchecked
+    cy.dataCy('form-register-coordinator-submit').should('be.visible').click();
+    // terms - required message shown
+    cy.contains(
+      i18n.global.t('register.coordinator.form.messageTermsRequired'),
+    ).should('be.visible');
+    // test terms checkbox checked
+    cy.dataCy('form-register-coordinator-terms').find('.q-checkbox').click();
+    // terms - required message hidden
+    cy.contains(
+      i18n.global.t('register.coordinator.form.messageTermsRequired'),
+    ).should('not.exist');
+  });
+
+  it('submits form correctly', () => {
+    cy.fixture('registerResponse').then(() => {
       // wait for organizations API call
       cy.fixture('formFieldCompany').then((formFieldCompany) => {
         cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
           waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
         });
       });
-      // fill in other parts of the form to be able to test password
+      // fill in the form
       fillFormRegisterCoordinator();
-      // test responsibility checkbox unchecked
-      cy.dataCy('form-register-coordinator-submit')
-        .should('be.visible')
-        .click();
-      // responsibility - required message shown
-      cy.contains(
-        i18n.global.t(
-          'register.coordinator.form.messageResponsibilityRequired',
-        ),
-      ).should('be.visible');
-      // test responsibility checkbox checked
+      // check responsibility checkbox
       cy.dataCy('form-register-coordinator-responsibility')
         .find('.q-checkbox')
         .click();
-      // responsibility - required message hidden
-      cy.contains(
-        i18n.global.t(
-          'register.coordinator.form.messageResponsibilityRequired',
-        ),
-      ).should('not.exist');
-      // test terms checkbox unchecked
-      cy.dataCy('form-register-coordinator-submit')
-        .should('be.visible')
-        .click();
-      // terms - required message shown
-      cy.contains(
-        i18n.global.t('register.coordinator.form.messageTermsRequired'),
-      ).should('be.visible');
-      // test terms checkbox checked
+      // check terms checkbox
       cy.dataCy('form-register-coordinator-terms').find('.q-checkbox').click();
-      // terms - required message hidden
-      cy.contains(
-        i18n.global.t('register.coordinator.form.messageTermsRequired'),
-      ).should('not.exist');
-    });
-
-    it('submits form correctly', () => {
-      cy.fixture('registerResponse').then(() => {
-        // wait for organizations API call
-        cy.fixture('formFieldCompany').then((formFieldCompany) => {
-          cy.fixture('formFieldCompanyNext').then((formFieldCompanyNext) => {
-            waitForOrganizationsApi(formFieldCompany, formFieldCompanyNext);
-          });
+      // submit form
+      cy.dataCy('form-register-coordinator-submit').click();
+      // wait for API call to finish
+      cy.wait('@registerCoordinator')
+        .then((interception) => {
+          cy.fixture('apiPostRegisterCoordinatorRequest').then(
+            (registerRequestBody) => {
+              expect(interception.request.body).to.deep.equal(
+                registerRequestBody,
+              );
+              expect(interception.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+            },
+          );
+        })
+        .then(() => {
+          // check success message
+          cy.contains(
+            i18n.global.t('registerCoordinator.apiMessageSuccess'),
+          ).should('be.visible');
+          // check user coordinator status in `registerChallenge` store
+          cy.wrap(useRegisterChallengeStore()).then(
+            (registerChallengeStore) => {
+              const isUserOrganizationAdmin = computed(
+                () => registerChallengeStore.getIsUserOrganizationAdmin,
+              );
+              cy.wrap(isUserOrganizationAdmin).its('value').should('be.true');
+            },
+          );
         });
-        // fill in the form
-        fillFormRegisterCoordinator();
-        // check responsibility checkbox
-        cy.dataCy('form-register-coordinator-responsibility')
-          .find('.q-checkbox')
-          .click();
-        // check terms checkbox
-        cy.dataCy('form-register-coordinator-terms')
-          .find('.q-checkbox')
-          .click();
-        // submit form
-        cy.dataCy('form-register-coordinator-submit').click();
-        // wait for API call to finish
-        cy.wait('@registerCoordinator')
-          .then((interception) => {
-            cy.fixture('apiPostRegisterCoordinatorRequest').then(
-              (registerRequestBody) => {
-                expect(interception.request.body).to.deep.equal(
-                  registerRequestBody,
-                );
-                expect(interception.response.statusCode).to.equal(
-                  httpSuccessfullStatus,
-                );
-              },
-            );
-          })
-          .then(() => {
-            // check success message
-            cy.contains(
-              i18n.global.t('registerCoordinator.apiMessageSuccess'),
-            ).should('be.visible');
-            // check user coordinator status in `registerChallenge` store
-            cy.wrap(useRegisterChallengeStore()).then(
-              (registerChallengeStore) => {
-                const isUserOrganizationAdmin = computed(
-                  () => registerChallengeStore.getIsUserOrganizationAdmin,
-                );
-                cy.wrap(isUserOrganizationAdmin).its('value').should('be.true');
-              },
-            );
-          });
-      });
     });
   });
-
-  context('mobile', () => {
-    beforeEach(() => {
-      setActivePinia(createPinia());
-      cy.mount(FormRegisterCoordinator, {
-        props: {},
-      });
-      cy.viewport('iphone-6');
-    });
-  });
-});
+}
