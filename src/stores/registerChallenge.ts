@@ -23,6 +23,7 @@ import { useApiGetIpAddress } from '../composables/useApiGetIpAddress';
 import { useApiPostPayuCreateOrder } from '../composables/useApiPostPayuCreateOrder';
 import { useApiGetHasOrganizationAdmin } from '../composables/useApiGetHasOrganizationAdmin';
 import { useApiIsUserOrganizationAdmin } from '../composables/useApiIsUserOrganizationAdmin';
+import { useApiGetDiscountCoupon } from '../composables/useApiGetDiscountCoupon';
 
 // enums
 import { Gender } from '../components/types/Profile';
@@ -389,7 +390,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.isLoadingRegisterChallenge = true;
       await loadRegistrations();
       if (registrations.value.length > 0) {
-        this.setRegisterChallengeFromApi(registrations.value[0]);
+        await this.setRegisterChallengeFromApi(registrations.value[0]);
       } else {
         this.$log?.info(
           'No registration challenge data available to set store state.',
@@ -401,7 +402,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
      * Set store state from API registration data
      * @param registration - Registration data from API
      */
-    setRegisterChallengeFromApi(registration: RegisterChallengeResult): void {
+    async setRegisterChallengeFromApi(
+      registration: RegisterChallengeResult,
+    ): Promise<void> {
       this.$log?.debug(
         `Setting store state from registration challenge data <${JSON.stringify(
           registration,
@@ -417,29 +420,27 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       );
       /**
        * The paymentAmount value is sent for subject = 'company' or 'school'.
-       * TODO: It is sent to the API after the TEAM step is completed.
+       * !It is sent to the API after the TEAM step is completed.
        * If sent earlier, we cannot determine the right coordinator.
        * paymentAmount indicates what was the price for which the user
        * registered. We store the amount because the price changes.
        */
       /**
-       * The paymentVoucher value is sent when discounted payment is made.
-       * We do not need the name value (unless for information purposes)
-       * as the payment must be made immediately.
-       * If voucher is saved and paymentAmount is null, we set the voucher
-       * as a full discount voucher.
+       * Re-validate `voucher` value over API every time registration is loaded
+       * to prevent incorrect voucher value from being set.
        */
-      const isVoucherFullDiscount =
-        parsedResponse.voucher &&
-        parsedResponse.paymentSubject === PaymentSubject.voucher &&
-        (!parsedResponse.paymentAmount ||
-          parsedResponse.paymentCategory === PaymentCategory.donation);
-      if (isVoucherFullDiscount) {
-        this.setVoucher({
-          valid: true,
-          discount: 100,
-          name: parsedResponse.voucher,
-        });
+      if (parsedResponse.voucher) {
+        const { validateCoupon } = useApiGetDiscountCoupon(null);
+        const validatedCoupon = await validateCoupon(parsedResponse.voucher);
+        if (validatedCoupon.valid) {
+          this.setVoucher(validatedCoupon);
+        } else {
+          Notify.create({
+            type: 'negative',
+            message: i18n.global.t('notify.voucherApplyError'),
+          });
+          this.setVoucher(null);
+        }
       }
       /**
        * Update payment subject to API response value if not exception case
