@@ -430,7 +430,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
        * to prevent incorrect voucher value from being set.
        */
       if (parsedResponse.voucher) {
-        const { validateCoupon } = useApiGetDiscountCoupon(null);
+        const { validateCoupon } = useApiGetDiscountCoupon(this.$log);
         const validatedCoupon = await validateCoupon(parsedResponse.voucher);
         if (validatedCoupon.valid) {
           this.setVoucher(validatedCoupon);
