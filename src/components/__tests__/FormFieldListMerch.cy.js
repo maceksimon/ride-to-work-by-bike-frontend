@@ -6,6 +6,13 @@ import { i18n } from '../../boot/i18n';
 import { Gender } from 'components/types/Profile';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
+import {
+  failOnStatusCode,
+  httpSuccessfullStatus,
+  httpTooManyRequestsStatus,
+  httpTooManyRequestsStatusMessage,
+  userAgentHeader,
+} from '../../../test/cypress/support/commonTests';
 
 const { getPaletteColor } = colors;
 const grey8 = getPaletteColor('grey-8');
@@ -149,6 +156,8 @@ describe('<FormFieldListMerch>', () => {
     it('allows user to select merch option (button click)', () => {
       cy.fixture('apiGetMerchandiseResponse').then((response) => {
         const item = response.results[0];
+        // sizes table (same as size input) not visible before selecting item
+        cy.dataCy('sizes-table-link').should('not.exist');
         // open dialog
         cy.dataCy('form-card-merch-female')
           .first()
@@ -172,6 +181,29 @@ describe('<FormFieldListMerch>', () => {
           .first()
           .find('[data-cy="button-more-info"]')
           .should('not.exist');
+        // sizes table link is visible
+        cy.dataCy('sizes-table-link')
+          .should('be.visible')
+          .and('contain', i18n.global.t('form.merch.linkSizesTable'));
+        cy.dataCy('sizes-table-link')
+          .find('a')
+          .should('have.attr', 'target', '_blank')
+          .invoke('attr', 'href')
+          .should('contain', rideToWorkByBikeConfig.urlMerchSizesTable)
+          .then((href) => {
+            // test link
+            cy.request({
+              url: href,
+              failOnStatusCode: failOnStatusCode,
+              headers: { ...userAgentHeader },
+            }).then((resp) => {
+              if (resp.status === httpTooManyRequestsStatus) {
+                cy.log(httpTooManyRequestsStatusMessage);
+                return;
+              }
+              expect(resp.status).to.eq(httpSuccessfullStatus);
+            });
+          });
       });
     });
 

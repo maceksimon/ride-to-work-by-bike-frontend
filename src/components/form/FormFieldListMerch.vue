@@ -75,6 +75,8 @@ export default defineComponent({
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
+    // sizes table link
+    const urlMerchSizesTable = rideToWorkByBikeConfig.urlMerchSizesTable;
     // show merch checkbox
     const isNotMerch = ref<boolean>(false);
 
@@ -361,6 +363,7 @@ export default defineComponent({
       selectedOption,
       selectedSize,
       selectedGender,
+      urlMerchSizesTable,
       currentGenderOptions,
       currentSizeOptions,
       onSelectCardOption,
@@ -496,6 +499,12 @@ export default defineComponent({
         class="q-mt-sm"
         data-cy="form-field-merch-size"
       />
+
+      <div class="q-mb-md" data-cy="sizes-table-link">
+        <a :href="urlMerchSizesTable" target="_blank">{{
+          $t('form.merch.linkSizesTable')
+        }}</a>
+      </div>
     </div>
 
     <!-- Input: Phone number -->
