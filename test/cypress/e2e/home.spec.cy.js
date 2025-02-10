@@ -207,6 +207,47 @@ describe('Home page', () => {
         });
     });
 
+    it('renders newsletter labels in correct language', () => {
+      cy.get('@i18n').then((i18n) => {
+        Object.keys(i18n.global.messages).forEach((key) => {
+          // set language to given locale
+          cy.dataCy(`switcher-button-${key}`).click();
+          // test newsletter labels for selected locale
+          cy.dataCy('newsletter-feature-item')
+            .should(
+              'contain',
+              i18n.global.t(
+                'index.newsletterFeature.aboutChallenges',
+                {},
+                {
+                  locale: key,
+                },
+              ),
+            )
+            .and(
+              'contain',
+              i18n.global.t(
+                'index.newsletterFeature.aboutEvents',
+                {},
+                {
+                  locale: key,
+                },
+              ),
+            )
+            .and(
+              'contain',
+              i18n.global.t(
+                'index.newsletterFeature.aboutMobility',
+                {},
+                {
+                  locale: key,
+                },
+              ),
+            );
+        });
+      });
+    });
+
     it(failTestTitle, () => {
       cy.dataCy('footer-top-button').should('be.visible').click();
       cy.window().its('scrollY').should('equal', 0);

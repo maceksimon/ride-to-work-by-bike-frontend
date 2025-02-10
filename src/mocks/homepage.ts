@@ -1,3 +1,4 @@
+import { computed } from 'vue';
 import { i18n } from 'src/boot/i18n';
 
 // types
@@ -298,7 +299,7 @@ export const cardsProgress: CardProgress[] = [
   },
 ];
 
-export const newsletterItems: Partial<NewsletterItem>[] = [
+export const newsletterItems = computed<NewsletterItem[]>(() => [
   {
     id: NewsletterType.challenge,
     title: i18n.global.t('index.newsletterFeature.aboutChallenges'),
@@ -314,7 +315,7 @@ export const newsletterItems: Partial<NewsletterItem>[] = [
     title: i18n.global.t('index.newsletterFeature.aboutMobility'),
     icon: 'svguse:icons/newsletter_item/icons.svg#tabler-leaf',
   },
-];
+]);
 
 export const badgeList: ItemBadge[] = [
   {

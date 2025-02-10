@@ -3,7 +3,7 @@ import { colors } from 'quasar';
 import NewsletterItem from '../homepage/NewsletterItem.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
-import { newsletterItems as newsletterItemsFixture } from '../../mocks/homepage';
+import { newsletterItems } from '../../mocks/homepage';
 import { vModelAdapter } from '../../../test/cypress/utils';
 
 // colors
@@ -28,7 +28,7 @@ const colorPrimaryOpacity = changeAlpha(
   rideToWorkByBikeConfig.colorPrimaryOpacity,
 );
 
-const model = ref([newsletterItemsFixture[0].id]);
+const model = ref([newsletterItems.value[0].id]);
 const modelEmpty = ref([]);
 
 describe('<NewsletterItem>', () => {
@@ -36,7 +36,7 @@ describe('<NewsletterItem>', () => {
     beforeEach(() => {
       cy.mount(NewsletterItem, {
         props: {
-          item: newsletterItemsFixture[0],
+          item: newsletterItems.value[0],
           ...vModelAdapter(model),
         },
       });
@@ -84,7 +84,7 @@ describe('<NewsletterItem>', () => {
     beforeEach(() => {
       cy.mount(NewsletterItem, {
         props: {
-          item: newsletterItemsFixture[0],
+          item: newsletterItems.value[0],
           ...vModelAdapter(model),
         },
       });
@@ -134,7 +134,7 @@ describe('<NewsletterItem>', () => {
     beforeEach(() => {
       cy.mount(NewsletterItem, {
         props: {
-          item: newsletterItemsFixture[0],
+          item: newsletterItems.value[0],
           ...vModelAdapter(modelEmpty),
         },
       });
@@ -162,9 +162,9 @@ describe('<NewsletterItem>', () => {
           .should('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '400')
           .and('have.color', grey10)
-          .and('contain', newsletterItemsFixture[0].title)
+          .and('contain', newsletterItems.value[0].title)
           .then(($title) => {
-            expect($title.text()).to.equal(newsletterItemsFixture[0].title);
+            expect($title.text()).to.equal(newsletterItems.value[0].title);
           });
       });
     });

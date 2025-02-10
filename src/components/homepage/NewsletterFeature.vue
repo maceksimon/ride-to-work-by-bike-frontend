@@ -36,14 +36,14 @@ import { i18n } from '../../boot/i18n';
 import { useApiPutRegisterChallenge } from '../../composables/useApiPutRegisterChallenge';
 
 // mocks
-import { newsletterItems as newsletterItemsFixture } from '../../mocks/homepage';
+import { newsletterItems } from '../../mocks/homepage';
 
 // stores
 import { useLoginStore } from '../../stores/login';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 // types
-import { NewsletterItem as NewsletterItemType, NewsletterType } from '../types';
+import { NewsletterType } from '../types';
 
 export default defineComponent({
   name: 'NewsletterFeature',
@@ -113,8 +113,6 @@ export default defineComponent({
             email: user?.email ? ` <b>${user.email}</b>` : '',
           });
     });
-
-    const newsletterItems = newsletterItemsFixture as NewsletterItemType[];
 
     const headingMaxWidth = Screen.sizes.sm;
 
