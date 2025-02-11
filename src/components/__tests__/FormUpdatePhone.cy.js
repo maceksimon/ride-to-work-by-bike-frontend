@@ -76,7 +76,7 @@ function coreTests() {
     cy.testElementsSideBySide(selectorFormButtonCancel, selectorFormButtonSave);
   });
 
-  it('validates form on submit and allows enter key submission', () => {
+  it('updates form validation messages on submit and input blur', () => {
     // save
     cy.dataCy(selectorFormButtonSave).should('be.visible').click();
     // validate phone required
