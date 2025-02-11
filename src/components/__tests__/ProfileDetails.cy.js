@@ -934,6 +934,120 @@ function coreTests() {
     });
   });
 
+  it('allows to edit telephone', () => {
+    cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+      cy.fixture('apiGetRegisterChallengeProfileUpdatedTelephone.json').then(
+        (responseNew) => {
+          // wait for GET request
+          cy.waitForRegisterChallengeGetApi(response);
+          const personalDetails = response.results[0].personal_details;
+          const personalDetailsNew = responseNew.results[0].personal_details;
+          // get initial phone value
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorValue)
+            .should('be.visible')
+            .and('have.text', personalDetails.telephone);
+          // click edit phone button
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorEdit)
+            .should('be.visible')
+            .click();
+          // verify phone edit form
+          cy.dataCy('profile-details-form-phone').should('be.visible');
+          // intercept POST request
+          cy.interceptRegisterChallengePutApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            personalDetails.id,
+            responseNew,
+          );
+          // override intercept GET request
+          cy.interceptRegisterChallengeGetApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            responseNew,
+          );
+          // change phone to new value
+          cy.dataCy('profile-details-form-phone')
+            .find('input')
+            .should('be.visible')
+            .clear();
+          cy.dataCy('profile-details-form-phone')
+            .find('input')
+            .type(personalDetailsNew.telephone);
+          // cancel
+          cy.dataCy('profile-details-form-phone')
+            .find(dataSelectorButtonCancel)
+            .click();
+          // phone stays the same
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorValue)
+            .should('be.visible')
+            .and('have.text', personalDetails.telephone);
+          // click edit phone button
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorEdit)
+            .should('be.visible')
+            .click();
+          // verify phone edit form
+          cy.dataCy('profile-details-form-phone').should('be.visible');
+          // change phone to new value
+          cy.dataCy('profile-details-form-phone')
+            .find('input')
+            .should('be.visible')
+            .clear();
+          cy.dataCy('profile-details-form-phone')
+            .find('input')
+            .type(personalDetailsNew.telephone);
+          // save
+          cy.dataCy('profile-details-form-phone')
+            .find(dataSelectorButtonSave)
+            .click();
+          // phone is different
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorValue)
+            .should('be.visible')
+            .and('have.text', personalDetailsNew.telephone);
+          // click edit phone button
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorEdit)
+            .should('be.visible')
+            .click();
+          // verify phone edit form
+          cy.dataCy('profile-details-form-phone').should('be.visible');
+          // change phone to old value
+          cy.dataCy('profile-details-form-phone')
+            .find('input')
+            .should('be.visible')
+            .clear();
+          cy.dataCy('profile-details-form-phone')
+            .find('input')
+            .type(personalDetails.telephone);
+          // intercept POST request
+          cy.interceptRegisterChallengePutApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            personalDetails.id,
+            response,
+          );
+          // override intercept GET request
+          cy.interceptRegisterChallengeGetApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            response,
+          );
+          // save (enter)
+          cy.dataCy('profile-details-form-phone').find('input').type('{enter}');
+          // phone is original value
+          cy.dataCy(selectorPhone)
+            .find(dataSelectorValue)
+            .should('be.visible')
+            .and('have.text', personalDetails.telephone);
+        },
+      );
+    });
+  });
+
   it('allows to edit telephone opt-in setting', () => {
     cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
       cy.fixture(

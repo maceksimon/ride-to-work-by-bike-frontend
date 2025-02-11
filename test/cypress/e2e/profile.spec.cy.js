@@ -15,6 +15,7 @@ const selectorGender = 'profile-details-gender';
 const selectorFormNickname = 'profile-details-form-nickname';
 // const selectorFormEmail = 'profile-details-form-email';
 const selectorFormGender = 'profile-details-form-gender';
+const selectorTelephone = 'profile-details-phone';
 const selectorTelephoneOptIn = 'profile-details-telephone-opt-in';
 const dataSelectorEdit = '[data-cy="details-item-edit"]';
 const dataSelectorInput = '[data-cy="form-input"]';
@@ -103,7 +104,7 @@ function coreTests() {
     });
   });
 
-  it('allows user to change nickname, and gender', () => {
+  it('allows user to change nickname, gender and telephone opt-in', () => {
     cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
       cy.fixture('apiGetRegisterChallengeProfileUpdatedNickname.json').then(
         (responseNickname) => {
@@ -209,6 +210,60 @@ function coreTests() {
               });
             },
           );
+        },
+      );
+    });
+  });
+
+  it('allows user to change telephone', () => {
+    cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+      cy.fixture('apiGetRegisterChallengeProfileUpdatedTelephone.json').then(
+        (responseTelephone) => {
+          cy.get('@config').then((config) => {
+            cy.get('@i18n').then((i18n) => {
+              // wait for GET request
+              cy.waitForRegisterChallengeGetApi(response);
+              const personalDetails = response.results[0].personal_details;
+              const newTelephone =
+                responseTelephone.results[0].personal_details.telephone;
+              // telephone value
+              cy.dataCy(selectorTelephone)
+                .find(dataSelectorValue)
+                .should('have.text', personalDetails.telephone);
+              // telephone edit button
+              cy.dataCy(selectorTelephone).find(dataSelectorEdit).click();
+              // telephone edit form
+              cy.dataCy('profile-details-form-phone').should('be.visible');
+              // intercept POST request
+              cy.interceptRegisterChallengePutApi(
+                config,
+                i18n,
+                personalDetails.id,
+                responseTelephone,
+              );
+              // override intercept GET request
+              cy.interceptRegisterChallengeGetApi(
+                config,
+                i18n,
+                responseTelephone,
+              );
+              // change telephone
+              cy.dataCy('profile-details-form-phone').find('input').clear();
+              cy.dataCy('profile-details-form-phone')
+                .find('input')
+                .type(newTelephone);
+              // save
+              cy.dataCy('profile-details-form-phone')
+                .find(dataSelectorButtonSave)
+                .click();
+              // wait for GET request
+              cy.waitForRegisterChallengeGetApi(responseTelephone);
+              // telephone value
+              cy.dataCy(selectorTelephone)
+                .find(dataSelectorValue)
+                .should('have.text', newTelephone);
+            });
+          });
         },
       );
     });
