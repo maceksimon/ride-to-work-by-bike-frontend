@@ -17,7 +17,7 @@
  * - `FormFieldPhone` - Component to render phone number field.
  *
  * @example
- * <form-update-phone :value="phone" @update:value="onUpdatePhone">
+ * <form-update-phone :value="phone" :loading="isLoading" :on-close="close" @update:value="onUpdatePhone">
  *
  */
 
