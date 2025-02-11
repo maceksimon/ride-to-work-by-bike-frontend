@@ -711,6 +711,7 @@ titleStarterPackage = "Soutěžní balíček"
 titleUpdateEmail = "Upravit e-mail"
 titleUpdateGender = "Upravit výkonnostní kategorii"
 titleUpdateNickname = "Upravit přezdívku"
+titleUpdatePhone = "Upravit telefonní číslo"
 
 [putRegisterChallenge]
 apiMessageError = "Chyba při aktualizaci profilu."

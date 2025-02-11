@@ -33,6 +33,7 @@ import { subsidiaryAdapter } from '../../adapters/subsidiaryAdapter';
 import DetailsItem from '../profile/DetailsItem.vue';
 import FormUpdateGender from '../form/FormUpdateGender.vue';
 import FormUpdateNickname from '../form/FormUpdateNickname.vue';
+import FormUpdatePhone from '../form/FormUpdatePhone.vue';
 import LanguageSwitcher from '../global/LanguageSwitcher.vue';
 import ProfileCoordinatorContact from './ProfileCoordinatorContact.vue';
 import SectionHeading from '../global/SectionHeading.vue';
@@ -67,6 +68,7 @@ export default defineComponent({
     DetailsItem,
     FormUpdateGender,
     FormUpdateNickname,
+    FormUpdatePhone,
     LanguageSwitcher,
     ProfileCoordinatorContact,
     SectionHeading,
@@ -460,11 +462,28 @@ export default defineComponent({
         />
         <!-- Phone number -->
         <details-item
+          editable
           :label="$t('profile.labelPhone')"
+          :dialog-title="$t('profile.titleUpdatePhone')"
           :value="phone"
           class="col-12 col-sm-6"
           data-cy="profile-details-phone"
-        />
+        >
+          <template #form="{ close }">
+            <!-- Form: Update phone number -->
+            <form-update-phone
+              :on-close="close"
+              :value="profile.phone"
+              :loading="isLoading"
+              @update:value="
+                onUpdateRegisterChallengeDetails({
+                  telephone: $event,
+                })
+              "
+              data-cy="profile-details-form-phone"
+            />
+          </template>
+        </details-item>
       </div>
     </div>
 

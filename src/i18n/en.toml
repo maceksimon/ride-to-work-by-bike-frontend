@@ -707,6 +707,7 @@ titleStarterPackage = "Starter Package"
 titleUpdateEmail = "Edit e-mail"
 titleUpdateGender = "Edit performance category"
 titleUpdateNickname = "Edit nickname"
+titleUpdatePhone = "Edit phone number"
 
 [putRegisterChallenge]
 apiMessageError = "Error updating profile."
