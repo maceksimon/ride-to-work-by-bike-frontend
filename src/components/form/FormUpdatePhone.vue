@@ -75,7 +75,11 @@ export default defineComponent({
 <template>
   <q-form @submit.prevent="onUpdatePhone" data-cy="form-update-phone">
     <!-- Input: Phone -->
-    <form-field-phone v-model="inputValue" data-cy="form-phone" />
+    <form-field-phone
+      v-model="inputValue"
+      :required="false"
+      data-cy="form-phone"
+    />
     <div class="q-mt-xl flex justify-end gap-8">
       <!-- Button: Cancel -->
       <q-btn
