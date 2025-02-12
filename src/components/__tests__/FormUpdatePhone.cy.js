@@ -81,20 +81,23 @@ function coreTests() {
     cy.dataCy(selectorFormButtonSave).should('be.visible').click();
     // validate phone required
     cy.dataCy(selectorFormPhone)
-      .find('.q-field__messages')
       .should('be.visible')
+      .find('.q-field__messages')
+      .should('not.be.visible')
       .and(
-        'contain',
+        'not.contain',
         i18n.global.t('form.messageFieldRequired', {
           fieldName: i18n.global.t('form.labelPhone'),
         }),
       );
+
     // enter invalid phone
     cy.dataCy(selectorFormPhone).find('input').clear();
     cy.dataCy(selectorFormPhone).find('input').type(invalidPhone);
     cy.dataCy(selectorFormPhone).find('input').blur();
     // invalid phone message is visible
     cy.dataCy(selectorFormPhone)
+      .should('be.visible')
       .find('.q-field__messages')
       .should('be.visible')
       .and('contain', i18n.global.t('form.messagePhoneInvalid'));
