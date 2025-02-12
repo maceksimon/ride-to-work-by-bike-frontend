@@ -473,7 +473,7 @@ export default defineComponent({
             <!-- Form: Update phone number -->
             <form-update-phone
               :on-close="close"
-              :value="profile.phone"
+              :value="phone"
               :loading="isLoading"
               @update:value="
                 onUpdateRegisterChallengeDetails({
