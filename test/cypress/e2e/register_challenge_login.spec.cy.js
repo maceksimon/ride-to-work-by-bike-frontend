@@ -83,12 +83,6 @@ describe('Register Challenge registration with login', () => {
         cy.dataCy('dialog-merch').should('not.exist');
         // refresh page
         cy.visit('#' + routesConf['home']['children']['fullPath']);
-        // wait for register challenge GET API endpoint
-        cy.fixture('apiGetRegisterChallengeMissingMerch.json').then(
-          (response) => {
-            cy.waitForRegisterChallengeGetApi(response);
-          },
-        );
         // wait for register challenge page to load
         cy.url().should(
           'include',

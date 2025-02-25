@@ -116,6 +116,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isSelectedRegisterCoordinator: false,
     hasOrganizationAdmin: null as boolean | null,
     isUserOrganizationAdmin: null as boolean | null,
+    isRegistrationInProgress: true as boolean,
   }),
 
   getters: {
@@ -293,6 +294,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getIsMerchIdComplete(): boolean {
       return this.getMerchId !== null;
     },
+    getIsRegistrationInProgress: (state): boolean =>
+      state.isRegistrationInProgress,
     getIsRegistrationComplete(): boolean {
       return (
         this.getIsPersonalDetailsComplete &&
@@ -368,6 +371,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setTelephoneOptIn(telephoneOptIn: boolean) {
       this.telephoneOptIn = telephoneOptIn;
+    },
+    setIsRegistrationInProgress(isRegistrationInProgress: boolean) {
+      this.isRegistrationInProgress = isRegistrationInProgress;
     },
     setLanguage(language: string) {
       this.language = language;
@@ -524,6 +530,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Telephone opt-in store updated to <${this.getTelephoneOptIn}>.`,
       );
+      // if registration is complete after setting data from API, set isRegistrationInProgress to false
+      if (this.getIsRegistrationComplete) {
+        this.setIsRegistrationInProgress(false);
+      }
       if (parsedResponse.language) {
         this.setLanguage(parsedResponse.language);
         this.$log?.debug(`Language store updated to <${this.getLanguage}>.`);

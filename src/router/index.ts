@@ -59,8 +59,18 @@ export default route(function (/* { store, ssrContext } */) {
       const isEmailVerified: boolean = registerStore.getIsEmailVerified;
       const isRegistrationPhaseActive: boolean =
         challengeStore.getIsChallengeInPhase(PhaseType.registration);
-      const isRegistrationComplete: boolean =
+      /**
+       * Due to saving registration data in local storage,
+       * we need a local flag to confirm completing the registration.
+       * Otherwise, data from local storage may take precedence over
+       * data from API in enforcing router rules.
+       */
+      const isRegistrationInProgress: boolean =
+        registerChallengeStore.getIsRegistrationInProgress;
+      const isRegistrationCompleteInStore: boolean =
         registerChallengeStore.getIsRegistrationComplete;
+      const isRegistrationComplete: boolean =
+        isRegistrationCompleteInStore && !isRegistrationInProgress;
       const isUserOrganizationAdmin: boolean =
         registerChallengeStore.getIsUserOrganizationAdmin || false;
 
@@ -70,6 +80,12 @@ export default route(function (/* { store, ssrContext } */) {
       logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
       logger?.debug(
         `Router registration phase is active <${isRegistrationPhaseActive}>.`,
+      );
+      logger?.debug(
+        `Router registration is in progress <${isRegistrationInProgress}>.`,
+      );
+      logger?.debug(
+        `Router registration is complete in store <${isRegistrationCompleteInStore}>.`,
       );
       logger?.debug(
         `Router registration is complete <${isRegistrationComplete}>.`,
