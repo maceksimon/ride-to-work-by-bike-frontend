@@ -13,7 +13,7 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, onMounted } from 'vue';
 
 // stores
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
@@ -47,6 +47,13 @@ export default defineComponent({
     const subsidiaryAddress = computed(
       () => registerChallengeStore.getSelectedSubsidiaryAddress,
     );
+
+    // confirm registration is complete by setting local flag
+    onMounted(() => {
+      if (registerChallengeStore.getIsRegistrationComplete) {
+        registerChallengeStore.setIsRegistrationInProgress(false);
+      }
+    });
 
     return {
       personalDetails,
