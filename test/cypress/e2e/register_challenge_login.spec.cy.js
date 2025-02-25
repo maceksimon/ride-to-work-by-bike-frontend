@@ -62,6 +62,15 @@ describe('Register Challenge registration with login', () => {
   context('login and registration with refresh on merch step', () => {
     it('should be redirect to homepage after refreshing on step merch', () => {
       cy.get('@config').then((config) => {
+        cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
+          cy.waitForRegisterChallengeGetApi(response);
+        });
+        // intercept register challenge GET API based on filled data
+        cy.fixture('apiGetRegisterChallengeMissingMerch.json').then(
+          (response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          },
+        );
         cy.passToStep6();
         // select merch
         cy.dataCy('form-card-merch-female')
@@ -72,18 +81,12 @@ describe('Register Challenge registration with login', () => {
         cy.dataCy('dialog-close').click();
         // verify dialog is closed
         cy.dataCy('dialog-merch').should('not.exist');
-        // intercept register challenge GET API based on filled data
-        cy.fixture('apiGetRegisterChallengeMissingMerch.json').then(
-          (response) => {
-            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
-          },
-        );
         // refresh page
-        cy.reload();
+        cy.visit('#' + routesConf['home']['children']['fullPath']);
         // wait for register challenge GET API endpoint
         cy.fixture('apiGetRegisterChallengeMissingMerch.json').then(
           (response) => {
-            cy.waitForRegisterChallengeGetApi(config, defLocale, response);
+            cy.waitForRegisterChallengeGetApi(response);
           },
         );
         // wait for register challenge page to load
