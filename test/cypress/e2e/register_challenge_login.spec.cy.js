@@ -59,8 +59,17 @@ describe('Register Challenge registration with login', () => {
     });
   });
 
-  context('login and registration with refresh on merch step', () => {
-    it('should be redirect to homepage after refreshing on step merch', () => {
+  context('login and registration', () => {
+    it('allows register from blank state and redirect to homepage', () => {
+      cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
+        cy.waitForRegisterChallengeGetApi(response);
+      });
+      cy.passToStep7();
+      cy.dataCy('step-7-continue').should('be.visible').click();
+      cy.dataCy('index-title').should('be.visible');
+    });
+
+    it('should not be redirected to homepage after refreshing on step merch', () => {
       cy.get('@config').then((config) => {
         cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
           cy.waitForRegisterChallengeGetApi(response);
