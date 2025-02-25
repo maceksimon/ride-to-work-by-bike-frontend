@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { HttpStatusCode } from 'axios';
 import { nextTick } from 'vue';
 import { colors } from 'quasar';
 import { i18n } from '../../boot/i18n';
@@ -82,7 +83,11 @@ describe('<MenuLinks>', () => {
                   cy.log(httpTooManyRequestsStatusMessage);
                   return;
                 }
-                expect(resp.status).to.eq(httpSuccessfullStatus);
+                // Accept 200 and 400 because of strict Twitter/X bot detection
+                expect(resp.status).to.oneOf([
+                  httpSuccessfullStatus,
+                  HttpStatusCode.BadRequest,
+                ]);
               });
             });
         });
