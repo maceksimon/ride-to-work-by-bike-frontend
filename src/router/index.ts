@@ -46,7 +46,8 @@ export default route(function (/* { store, ssrContext } */) {
   if (
     !window.Cypress ||
     window.Cypress.spec.name === 'register.spec.cy.js' ||
-    window.Cypress.spec.name === 'router_rules.cy.js'
+    window.Cypress.spec.name === 'router_rules.cy.js' ||
+    window.Cypress.spec.name === 'register_challenge_login.spec.cy.js'
   ) {
     Router.beforeEach(async (to, from, next) => {
       const logger = inject('vuejs3-logger') as Logger | null;
