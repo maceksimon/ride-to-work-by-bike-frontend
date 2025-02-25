@@ -56,14 +56,14 @@ export default defineComponent({
     onMounted(() => {
       if (
         registerChallengeStore.getIsRegistrationComplete &&
-        registerChallengeStore.getIsRegistrationInProgress
+        registerChallengeStore.getIsRegistrationInProgressLocalFlag
       ) {
         logger?.debug(
-          `Setting current isRegistrationInProgress state from <${registerChallengeStore.getIsRegistrationInProgress}> to <false>.`,
+          `Setting current isRegistrationInProgress state from <${registerChallengeStore.getIsRegistrationInProgressLocalFlag}> to <false>.`,
         );
         registerChallengeStore.setIsRegistrationInProgress(false);
         logger?.debug(
-          `Current isRegistrationInProgress state set to <${registerChallengeStore.getIsRegistrationInProgress}>.`,
+          `Current isRegistrationInProgress state set to <${registerChallengeStore.getIsRegistrationInProgressLocalFlag}>.`,
         );
       }
     });

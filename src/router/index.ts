@@ -66,7 +66,7 @@ export default route(function (/* { store, ssrContext } */) {
        * data from API in enforcing router rules.
        */
       const isRegistrationInProgress: boolean =
-        registerChallengeStore.getIsRegistrationInProgress;
+        registerChallengeStore.getIsRegistrationInProgressLocalFlag;
       const isRegistrationCompleteInStore: boolean =
         registerChallengeStore.getIsRegistrationComplete;
       const isRegistrationComplete: boolean =

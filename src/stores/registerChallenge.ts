@@ -294,7 +294,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getIsMerchIdComplete(): boolean {
       return this.getMerchId !== null;
     },
-    getIsRegistrationInProgress: (state): boolean =>
+    getIsRegistrationInProgressLocalFlag: (state): boolean =>
       state.isRegistrationInProgress,
     getIsRegistrationComplete(): boolean {
       return (
@@ -531,13 +531,16 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         `Telephone opt-in store updated to <${this.getTelephoneOptIn}>.`,
       );
       // if registration is complete after setting data from API, set isRegistrationInProgress to false
-      if (this.getIsRegistrationComplete && this.getIsRegistrationInProgress) {
+      if (
+        this.getIsRegistrationComplete &&
+        this.getIsRegistrationInProgressLocalFlag
+      ) {
         this.$log?.debug(
-          `Setting current isRegistrationInProgress state from <${this.getIsRegistrationInProgress}> to <false>.`,
+          `Setting current isRegistrationInProgress state from <${this.getIsRegistrationInProgressLocalFlag}> to <false>.`,
         );
         this.setIsRegistrationInProgress(false);
         this.$log?.debug(
-          `Current isRegistrationInProgress state set to <${this.getIsRegistrationInProgress}>.`,
+          `Current isRegistrationInProgress state set to <${this.getIsRegistrationInProgressLocalFlag}>.`,
         );
       }
       if (parsedResponse.language) {
