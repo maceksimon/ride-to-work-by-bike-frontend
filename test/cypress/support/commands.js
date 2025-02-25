@@ -293,7 +293,7 @@ Cypress.Commands.add('testSoacialMediaUrlRequest', (rideToWorkByBikeConfig) => {
       cy.log(httpTooManyRequestsStatusMessage);
       return;
     }
-    // Twitter/X is very strict with bot detection, so we accept 200 and 400
+    // Accept 200 and 400 because of strict Twitter/X bot detection
     expect(resp.status).to.be.oneOf([
       httpSuccessfullStatus,
       HttpStatusCode.BadRequest,
