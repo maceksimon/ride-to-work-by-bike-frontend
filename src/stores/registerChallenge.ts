@@ -116,7 +116,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isSelectedRegisterCoordinator: false,
     hasOrganizationAdmin: null as boolean | null,
     isUserOrganizationAdmin: null as boolean | null,
-    isRegistrationInProgress: true as boolean,
+    isRegistrationInProgressLocalFlag: true as boolean,
   }),
 
   getters: {
@@ -295,7 +295,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       return this.getMerchId !== null;
     },
     getIsRegistrationInProgressLocalFlag: (state): boolean =>
-      state.isRegistrationInProgress,
+      state.isRegistrationInProgressLocalFlag,
     getIsRegistrationComplete(): boolean {
       return (
         this.getIsPersonalDetailsComplete &&
@@ -372,8 +372,11 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     setTelephoneOptIn(telephoneOptIn: boolean) {
       this.telephoneOptIn = telephoneOptIn;
     },
-    setIsRegistrationInProgress(isRegistrationInProgress: boolean) {
-      this.isRegistrationInProgress = isRegistrationInProgress;
+    setIsRegistrationInProgressLocalFlag(
+      isRegistrationInProgressLocalFlag: boolean,
+    ) {
+      this.isRegistrationInProgressLocalFlag =
+        isRegistrationInProgressLocalFlag;
     },
     setLanguage(language: string) {
       this.language = language;
@@ -530,17 +533,17 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Telephone opt-in store updated to <${this.getTelephoneOptIn}>.`,
       );
-      // if registration is complete after setting data from API, set isRegistrationInProgress to false
+      // if registration is complete after setting data from API, set isRegistrationInProgressLocalFlag to false
       if (
         this.getIsRegistrationComplete &&
         this.getIsRegistrationInProgressLocalFlag
       ) {
         this.$log?.debug(
-          `Setting current isRegistrationInProgress state from <${this.getIsRegistrationInProgressLocalFlag}> to <false>.`,
+          `Setting current isRegistrationInProgressLocalFlag state from <${this.getIsRegistrationInProgressLocalFlag}> to <false>.`,
         );
-        this.setIsRegistrationInProgress(false);
+        this.setIsRegistrationInProgressLocalFlag(false);
         this.$log?.debug(
-          `Current isRegistrationInProgress state set to <${this.getIsRegistrationInProgressLocalFlag}>.`,
+          `Current isRegistrationInProgressLocalFlag state set to <${this.getIsRegistrationInProgressLocalFlag}>.`,
         );
       }
       if (parsedResponse.language) {

@@ -65,12 +65,12 @@ export default route(function (/* { store, ssrContext } */) {
        * Otherwise, data from local storage may take precedence over
        * data from API in enforcing router rules.
        */
-      const isRegistrationInProgress: boolean =
+      const isRegistrationInProgressLocalFlag: boolean =
         registerChallengeStore.getIsRegistrationInProgressLocalFlag;
       const isRegistrationCompleteInStore: boolean =
         registerChallengeStore.getIsRegistrationComplete;
       const isRegistrationComplete: boolean =
-        isRegistrationCompleteInStore && !isRegistrationInProgress;
+        isRegistrationCompleteInStore && !isRegistrationInProgressLocalFlag;
       const isUserOrganizationAdmin: boolean =
         registerChallengeStore.getIsUserOrganizationAdmin || false;
 
@@ -82,7 +82,7 @@ export default route(function (/* { store, ssrContext } */) {
         `Router registration phase is active <${isRegistrationPhaseActive}>.`,
       );
       logger?.debug(
-        `Router registration is in progress <${isRegistrationInProgress}>.`,
+        `Router registration is in progress local flag <${isRegistrationInProgressLocalFlag}>.`,
       );
       logger?.debug(
         `Router registration is complete in store <${isRegistrationCompleteInStore}>.`,

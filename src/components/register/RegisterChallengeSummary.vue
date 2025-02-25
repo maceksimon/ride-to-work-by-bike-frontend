@@ -59,11 +59,11 @@ export default defineComponent({
         registerChallengeStore.getIsRegistrationInProgressLocalFlag
       ) {
         logger?.debug(
-          `Setting current isRegistrationInProgress state from <${registerChallengeStore.getIsRegistrationInProgressLocalFlag}> to <false>.`,
+          `Setting current isRegistrationInProgressLocalFlag state from <${registerChallengeStore.getIsRegistrationInProgressLocalFlag}> to <false>.`,
         );
-        registerChallengeStore.setIsRegistrationInProgress(false);
+        registerChallengeStore.setIsRegistrationInProgressLocalFlag(false);
         logger?.debug(
-          `Current isRegistrationInProgress state set to <${registerChallengeStore.getIsRegistrationInProgressLocalFlag}>.`,
+          `Current isRegistrationInProgressLocalFlag state set to <${registerChallengeStore.getIsRegistrationInProgressLocalFlag}>.`,
         );
       }
     });
