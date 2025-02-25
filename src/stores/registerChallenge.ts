@@ -531,8 +531,14 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         `Telephone opt-in store updated to <${this.getTelephoneOptIn}>.`,
       );
       // if registration is complete after setting data from API, set isRegistrationInProgress to false
-      if (this.getIsRegistrationComplete) {
+      if (this.getIsRegistrationComplete && this.getIsRegistrationInProgress) {
+        this.$log?.debug(
+          `Setting current isRegistrationInProgress state from <${this.getIsRegistrationInProgress}> to <false>.`,
+        );
         this.setIsRegistrationInProgress(false);
+        this.$log?.debug(
+          `Current isRegistrationInProgress state set to <${this.getIsRegistrationInProgress}>.`,
+        );
       }
       if (parsedResponse.language) {
         this.setLanguage(parsedResponse.language);

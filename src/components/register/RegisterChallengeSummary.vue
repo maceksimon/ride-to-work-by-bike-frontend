@@ -13,15 +13,19 @@
  */
 
 // libraries
-import { computed, defineComponent, onMounted } from 'vue';
+import { computed, defineComponent, inject, onMounted } from 'vue';
 
 // stores
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 import { useLoginStore } from '../../stores/login';
 
+// types
+import type { Logger } from '../types/Logger';
+
 export default defineComponent({
   name: 'RegisterChallengeSummary',
   setup() {
+    const logger = inject('vuejs3-logger') as Logger | null;
     const registerChallengeStore = useRegisterChallengeStore();
     const loginStore = useLoginStore();
 
@@ -50,8 +54,17 @@ export default defineComponent({
 
     // confirm registration is complete by setting local flag
     onMounted(() => {
-      if (registerChallengeStore.getIsRegistrationComplete) {
+      if (
+        registerChallengeStore.getIsRegistrationComplete &&
+        registerChallengeStore.getIsRegistrationInProgress
+      ) {
+        logger?.debug(
+          `Setting current isRegistrationInProgress state from <${registerChallengeStore.getIsRegistrationInProgress}> to <false>.`,
+        );
         registerChallengeStore.setIsRegistrationInProgress(false);
+        logger?.debug(
+          `Current isRegistrationInProgress state set to <${registerChallengeStore.getIsRegistrationInProgress}>.`,
+        );
       }
     });
 
