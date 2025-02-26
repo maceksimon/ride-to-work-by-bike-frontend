@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { HttpStatusCode } from 'axios';
 import { nextTick } from 'vue';
 import { colors } from 'quasar';
 import { i18n } from '../../boot/i18n';
