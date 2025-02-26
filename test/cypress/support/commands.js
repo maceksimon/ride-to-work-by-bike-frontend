@@ -29,7 +29,6 @@
 import { registerCommands } from '@quasar/quasar-app-extension-testing-e2e-cypress';
 registerCommands();
 
-import { HttpStatusCode } from 'axios';
 import {
   failOnStatusCode,
   httpSuccessfullStatus,
@@ -294,10 +293,7 @@ Cypress.Commands.add('testSoacialMediaUrlRequest', (rideToWorkByBikeConfig) => {
       return;
     }
     // Accept 200 and 400 because of strict Twitter/X bot detection
-    expect(resp.status).to.be.oneOf([
-      httpSuccessfullStatus,
-      HttpStatusCode.BadRequest,
-    ]);
+    expect(resp.status).to.eq(httpSuccessfullStatus);
   });
   cy.request({
     url: rideToWorkByBikeConfig.urlYoutube,

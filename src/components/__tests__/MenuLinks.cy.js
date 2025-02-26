@@ -83,15 +83,7 @@ describe('<MenuLinks>', () => {
                   cy.log(httpTooManyRequestsStatusMessage);
                   return;
                 }
-                if (href === rideToWorkByBikeConfig.urlTwitter) {
-                  // Accept 200 and 400 because of strict Twitter/X bot detection
-                  expect(resp.status).to.oneOf([
-                    httpSuccessfullStatus,
-                    HttpStatusCode.BadRequest,
-                  ]);
-                } else {
-                  expect(resp.status).to.eq(httpSuccessfullStatus);
-                }
+                expect(resp.status).to.eq(httpSuccessfullStatus);
               });
             });
         });
