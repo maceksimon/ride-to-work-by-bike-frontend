@@ -2828,6 +2828,61 @@ Cypress.Commands.add('waitForMyTeamGetApi', (expectedResponse = null) => {
 });
 
 /**
+ * Intercept my organization admin API call
+ * Creates `@getMyOrganizationAdmin` intercept
+ * @param {Config} config - App global config
+ * @param {I18n|String} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptMyOrganizationAdminGetApi',
+  (config, i18n, responseBody = null, responseStatusCode = null) => {
+    const { apiBase, apiDefaultLang, urlApiMyOrganizationAdmin } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiMyOrganizationAdminLocalized = `${apiBaseUrl}${urlApiMyOrganizationAdmin}`;
+
+    cy.fixture('apiGetMyOrganizationAdmin.json').then((defaultResponse) => {
+      cy.intercept('GET', urlApiMyOrganizationAdminLocalized, {
+        statusCode: responseStatusCode || httpSuccessfullStatus,
+        body: responseBody || defaultResponse,
+      }).as('getMyOrganizationAdmin');
+    });
+  },
+);
+
+/**
+* Wait for intercept my organization admin API call and compare response object
+* Wait for `@getMyOrganizationAdmin` intercept
+* @param {Object} expectedResponse - Expected response body
+*/
+Cypress.Commands.add(
+ 'waitForMyOrganizationAdminGetApi',
+ (expectedResponse = null) => {
+   cy.fixture('apiGetMyOrganizationAdmin.json').then((defaultResponse) => {
+     cy.wait('@getMyOrganizationAdmin').then((getMyOrganizationAdmin) => {
+       expect(getMyOrganizationAdmin.request.headers.authorization).to.include(
+         bearerTokeAuth,
+       );
+       if (getMyOrganizationAdmin.response) {
+         expect(getMyOrganizationAdmin.response.statusCode).to.equal(
+           httpSuccessfullStatus,
+         );
+         expect(getMyOrganizationAdmin.response.body).to.deep.equal(
+           expectedResponse || defaultResponse,
+         );
+       }
+     });
+   });
+ },
+);
+
+/**
  * Intercept my team PUT API call
  * Provides `@putMyTeam` alias
  * @param {Config} config - App global config

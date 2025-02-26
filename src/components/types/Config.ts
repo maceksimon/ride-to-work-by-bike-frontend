@@ -71,6 +71,7 @@ export interface ConfigGlobal {
   urlApiLoginFacebook: string;
   urlApiMerchandise: string;
   urlApiMyTeam: string;
+  urlApiMyOrganizationAdmin: string;
   urlApiPayuCreateOrder: string;
   urlAppDataPrivacyPolicy: string;
   urlAppDataTermsOfService: string;

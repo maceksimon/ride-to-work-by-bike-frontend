@@ -59,7 +59,7 @@ const timestampToDatetimeString = (timestamp: number): string => {
 
 const bearerTokeAuth = 'Bearer';
 
-const requestDefaultHeader = (version: string): AxiosRequestHeaders => {
+const requestDefaultHeader = (version?: string): AxiosRequestHeaders => {
   if (!version) version = getAppConfig().apiDefaultVersion;
   return {
     Accept: `application/json; version=${version}`,

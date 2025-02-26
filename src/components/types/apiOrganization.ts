@@ -28,3 +28,17 @@ export interface UseApiGetHasOrganizationAdminReturn {
 export interface HasOrganizationAdminResponse {
   has_organization_admin: boolean;
 }
+
+export interface OrganizationAdmin {
+  admin_name: string;
+  admin_email: string;
+}
+
+export interface OrganizationAdminResponse {
+  organization_admin: OrganizationAdmin[];
+}
+
+export interface UseApiGetMyOrganizationAdminReturn {
+  isLoading: Ref<boolean>;
+  getMyOrganizationAdmin: () => Promise<OrganizationAdmin[]>;
+}
