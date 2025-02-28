@@ -1,6 +1,7 @@
 import { createPinia, setActivePinia } from 'pinia';
 import RegisterChallengePaymentMessages from 'components/register/RegisterChallengePaymentMessages.vue';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { i18n } from '../../boot/i18n';
 
 describe('<RegisterChallengePaymentMessages>', () => {
@@ -13,6 +14,7 @@ describe('<RegisterChallengePaymentMessages>', () => {
         'textRegistrationWaitingForConfirmation',
         'textRegistrationWaitingForConfirmationNoCoordinator',
         'textRegistrationWaitingForCoordinator',
+        'textYourCoordinator',
       ],
       'register.challenge',
       i18n,
@@ -216,13 +218,62 @@ describe('<RegisterChallengePaymentMessages>', () => {
       });
     });
 
-    it('renders message waiting for company coordinator approval', () => {
+    it('renders message waiting for company coordinator approval with name and email', () => {
+      cy.fixture('apiGetMyOrganizationAdmin.json').then((data) => {
+        cy.interceptMyOrganizationAdminGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          data,
+        );
+      });
       cy.fixture('apiGetRegisterChallengeCompanyWaiting.json').then((data) => {
         cy.wrap(useRegisterChallengeStore()).then((store) => {
           store.setRegisterChallengeFromApi(data.results[0]);
           store.setHasOrganizationAdmin(true);
         });
       });
+      // wait for my organization admin API call
+      cy.waitForMyOrganizationAdminGetApi();
+      // check that the message is visible
+      cy.fixture('apiGetMyOrganizationAdmin.json').then((data) => {
+        cy.dataCy('registration-waiting-for-coordinator')
+          .should('be.visible')
+          .and(
+            'contain',
+            i18n.global.t(
+              'register.challenge.textRegistrationWaitingForCoordinator',
+            ),
+          );
+        cy.dataCy('registration-coordinator-details')
+          .should('be.visible')
+          .and(
+            'contain',
+            i18n.global.t('register.challenge.textYourCoordinator'),
+          )
+          .and('contain', data.organization_admin[0].admin_name)
+          .and('contain', data.organization_admin[0].admin_email);
+      });
+    });
+
+    it('renders message waiting for company coordinator approval and hides name and email if not available', () => {
+      cy.fixture('apiGetMyOrganizationAdminEmpty.json').then((data) => {
+        cy.interceptMyOrganizationAdminGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          data,
+        );
+      });
+      cy.fixture('apiGetRegisterChallengeCompanyWaiting.json').then((data) => {
+        cy.wrap(useRegisterChallengeStore()).then((store) => {
+          store.setRegisterChallengeFromApi(data.results[0]);
+          store.setHasOrganizationAdmin(true);
+        });
+      });
+      // wait for my organization admin API call
+      cy.fixture('apiGetMyOrganizationAdminEmpty.json').then((data) => {
+        cy.waitForMyOrganizationAdminGetApi(data);
+      });
+      // check that the message is visible
       cy.dataCy('registration-waiting-for-coordinator')
         .should('be.visible')
         .and(
@@ -230,7 +281,12 @@ describe('<RegisterChallengePaymentMessages>', () => {
           i18n.global.t(
             'register.challenge.textRegistrationWaitingForCoordinator',
           ),
+        )
+        .and(
+          'not.contain',
+          i18n.global.t('register.challenge.textYourCoordinator'),
         );
+      cy.dataCy('registration-coordinator-details').should('not.exist');
     });
 
     it('renders message company has no coordinator', () => {

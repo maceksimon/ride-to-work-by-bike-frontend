@@ -13,7 +13,10 @@
  */
 
 // libraries
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, inject, ref, watch } from 'vue';
+
+// composables
+import { useApiGetMyOrganizationAdmin } from '../../composables/useApiGetMyOrganizationAdmin';
 
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
@@ -25,6 +28,10 @@ import { PaymentCategory } from '../types/ApiPayu';
 // stores
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
+// types
+import type { Logger } from '../types/Logger';
+import type { OrganizationAdmin } from '../types/apiOrganization';
+
 export default defineComponent({
   name: 'RegisterChallengePaymentMessages',
   props: {
@@ -34,6 +41,7 @@ export default defineComponent({
     },
   },
   setup(props) {
+    const logger = inject('vuejs3-logger') as Logger | null;
     const registerChallengeStore = useRegisterChallengeStore();
 
     const isDonationPaidViaPayu = computed<boolean>((): boolean => {
@@ -94,10 +102,32 @@ export default defineComponent({
       },
     );
 
+    const organizationAdminArray = ref<OrganizationAdmin[]>([]);
+
+    const { getMyOrganizationAdmin } = useApiGetMyOrganizationAdmin(logger);
+    // if we are waiting for coordinator approval, fetch coordinator details
+    watch(
+      () => isWaitingForCoordinator.value,
+      async () => {
+        if (isWaitingForCoordinator.value) {
+          organizationAdminArray.value = await getMyOrganizationAdmin();
+        }
+      },
+      { immediate: true },
+    );
+
+    const organizationAdmin = computed<OrganizationAdmin>(() => {
+      if (organizationAdminArray.value.length > 0) {
+        return organizationAdminArray.value[0];
+      }
+      return null;
+    });
+
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
     return {
       borderRadius,
+      organizationAdmin,
       isDonationPaidViaPayu,
       isPayuPaymentFailed,
       isWaitingForConfirmationAndNoCoordinator,
@@ -160,6 +190,24 @@ export default defineComponent({
       data-cy="registration-waiting-for-coordinator"
     >
       {{ $t('register.challenge.textRegistrationWaitingForCoordinator') }}
+      <!-- Coordinator details -->
+      <div
+        v-if="organizationAdmin?.admin_name"
+        data-cy="registration-coordinator-details"
+      >
+        <!-- Label: Your coordinator -->
+        {{ $t('register.challenge.textYourCoordinator') }}:
+        <!-- Coordinator name -->
+        {{ organizationAdmin.admin_name }}
+        <!-- Coordinator email -->
+        <span
+          v-if="organizationAdmin?.admin_email"
+          data-cy="registration-coordinator-email"
+          >(<a :href="`mailto:${organizationAdmin.admin_email}`">
+            {{ organizationAdmin.admin_email }} </a
+          >)</span
+        >.
+      </div>
     </q-banner>
 
     <!-- Summary step message: Waiting for confirmation + organization has no coordinator -->

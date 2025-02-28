@@ -3036,6 +3036,7 @@ describe('Register Challenge page', () => {
   context('registration in progress, company payment "waiting"', () => {
     beforeEach(() => {
       cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
         cy.interceptThisCampaignGetApi(config, defLocale);
         // visit challenge inactive page to load campaign data
         cy.visit('#' + routesConf['challenge_inactive']['path']);
@@ -3063,59 +3064,75 @@ describe('Register Challenge page', () => {
     });
 
     it('fetches the registration status on load', () => {
-      cy.window().should('have.property', 'i18n');
-      cy.window().then((win) => {
-        cy.fixture('apiGetRegisterChallengeCompanyWaiting.json').then(
-          (registerChallengeResponse) => {
-            cy.testRegisterChallengeLoadedStepOne(
-              win.i18n,
-              registerChallengeResponse,
-            );
-            // go to next step
-            cy.dataCy('step-1-continue').should('be.visible').click();
-            // TODO: check if we can change company before approval
-            // check that the company options is selected
-            cy.dataCy(getRadioOption(PaymentSubject.company))
-              .parents('.q-radio__label')
-              .siblings('.q-radio__inner')
-              .should('have.class', 'q-radio__inner--truthy');
-            // shows waiting for confirmation message
-            cy.dataCy('registration-waiting-for-confirmation').should(
-              'be.visible',
-            );
-            // go to next step
-            cy.dataCy('step-2-continue')
-              .should('be.visible')
-              .and('not.be.disabled')
-              .click();
-            // wait for hasOrganizationAdmin API call
-            cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
-              (response) => {
-                cy.waitForHasOrganizationAdminApi(response);
-              },
-            );
-            cy.testRegisterChallengeLoadedStepsThreeToFive(
-              win.i18n,
-              registerChallengeResponse,
-            );
-            cy.testRegisterChallengeLoadedStepSix(
-              win.i18n,
-              registerChallengeResponse,
-            );
-            cy.dataCy('step-7-continue')
-              .should('be.visible')
-              .and('be.disabled');
-            // check that the "waiting for coordinator" message is visible
-            cy.dataCy('registration-waiting-for-coordinator')
-              .should('be.visible')
-              .and(
-                'contain',
-                win.i18n.global.t(
-                  'register.challenge.textRegistrationWaitingForCoordinator',
-                ),
-              );
-          },
-        );
+      cy.get('@config').then((config) => {
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          cy.fixture('apiGetRegisterChallengeCompanyWaiting.json').then(
+            (registerChallengeResponse) => {
+              // intercept GET API for coordinator details
+              cy.fixture('apiGetMyOrganizationAdmin.json').then((data) => {
+                cy.interceptMyOrganizationAdminGetApi(config, win.i18n, data);
+                cy.testRegisterChallengeLoadedStepOne(
+                  win.i18n,
+                  registerChallengeResponse,
+                );
+                // go to next step
+                cy.dataCy('step-1-continue').should('be.visible').click();
+                // TODO: check if we can change company before approval
+                // check that the company options is selected
+                cy.dataCy(getRadioOption(PaymentSubject.company))
+                  .parents('.q-radio__label')
+                  .siblings('.q-radio__inner')
+                  .should('have.class', 'q-radio__inner--truthy');
+                // shows waiting for confirmation message
+                cy.dataCy('registration-waiting-for-confirmation').should(
+                  'be.visible',
+                );
+                // go to next step
+                cy.dataCy('step-2-continue')
+                  .should('be.visible')
+                  .and('not.be.disabled')
+                  .click();
+                // wait for hasOrganizationAdmin API call
+                cy.fixture('apiGetHasOrganizationAdminResponseTrue').then(
+                  (response) => {
+                    cy.waitForHasOrganizationAdminApi(response);
+                  },
+                );
+                cy.testRegisterChallengeLoadedStepsThreeToFive(
+                  win.i18n,
+                  registerChallengeResponse,
+                );
+                cy.testRegisterChallengeLoadedStepSix(
+                  win.i18n,
+                  registerChallengeResponse,
+                );
+                cy.dataCy('step-7-continue')
+                  .should('be.visible')
+                  .and('be.disabled');
+                // wait for my organization admin API call
+                cy.waitForMyOrganizationAdminGetApi();
+                // check that the "waiting for coordinator" message is visible
+                cy.dataCy('registration-waiting-for-coordinator')
+                  .should('be.visible')
+                  .and(
+                    'contain',
+                    win.i18n.global.t(
+                      'register.challenge.textRegistrationWaitingForCoordinator',
+                    ),
+                  );
+                cy.dataCy('registration-coordinator-details')
+                  .should('be.visible')
+                  .and(
+                    'contain',
+                    win.i18n.global.t('register.challenge.textYourCoordinator'),
+                  )
+                  .and('contain', data.organization_admin[0].admin_name)
+                  .and('contain', data.organization_admin[0].admin_email);
+              });
+            },
+          );
+        });
       });
     });
   });

@@ -828,6 +828,7 @@ textRegistrationPaid = "Štartovné máte uhradené a po dokončení registráci
 textRegistrationWaitingForConfirmation = "Platbu vášho štartovného musí schváliť koordinátor vybranej organizácie. Prosím, zadejte adresu a tím, aby sme mohli identifikovať vášho koordinátora."
 textRegistrationWaitingForConfirmationNoCoordinator = "Vaša organizácia ešte nemá firemného koordinátora, ktorý by schválil vašu platbu. Skúste proces popohnať, alebo sa môžete stať koordinátorom sami."
 textRegistrationWaitingForCoordinator = "Platbu ešte musí schváliť koordinátor vašej organizácie."
+textYourCoordinator = "Váš koordinátor"
 textPayuWaitingForPayment = "Vašu platbu stále spracovávame. Prosím skontrolujte stav registrácie o niekoľko minút."
 textTeamInfo = "V jednom tíme může být max. 5 členů."
 titleDeliveryAddress = "Doručovacia adresa"
