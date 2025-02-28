@@ -19,6 +19,11 @@ describe('<RegisterChallengePaymentMessages>', () => {
       'register.challenge',
       i18n,
     );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'getMyOrganizationAdmin',
+      i18n,
+    );
   });
 
   context('payment step', () => {

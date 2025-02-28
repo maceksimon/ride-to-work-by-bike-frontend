@@ -104,6 +104,11 @@ apiMessageError = "Fetching merchandise failed."
 apiMessageErrorWithMessage = "Fetching merchandise failed. Error: {error}"
 apiMessageSuccess = "Merchandise fetched successfully."
 
+[getMyOrganizationAdmin]
+apiMessageError = "Failed to load organization coordinator."
+apiMessageErrorWithMessage = "Failed to load organization coordinator. Error: {error}"
+apiMessageSuccess = "Organization coordinator was successfully loaded."
+
 [getMyTeam]
 apiMessageError = "Failed to load team."
 apiMessageErrorWithMessage = "Failed to load team. Error: {error}"

@@ -104,6 +104,11 @@ apiMessageError = "Načítanie startovních balíčkov zlyhalo."
 apiMessageErrorWithMessage = "Načítanie startovních balíčkov zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Startovní balíčky boli úspešne načítané."
 
+[getMyOrganizationAdmin]
+apiMessageError = "Načítanie koordinátora organizácie zlyhalo."
+apiMessageErrorWithMessage = "Načítanie koordinátora organizácie zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Koordinátor organizácie bol úspešne načítaný."
+
 [getMyTeam]
 apiMessageError = "Načítanie tímu zlyhalo."
 apiMessageErrorWithMessage = "Načítanie tímu zlyhalo. Chyba: {error}"
