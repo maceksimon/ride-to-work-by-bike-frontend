@@ -155,7 +155,8 @@ export default defineComponent({
       }
       await registerChallengeStore.loadRegisterChallengeToStore();
       /**
-       * Depending on the paymentState, and isPayuTransactionInitiated flag
+       * Depending on whether payment is successful,
+       * and isPayuTransactionInitiated flag
        * we determine if situation is:
        * - refreshing page after returning from payment
        * - returning to a started payment
