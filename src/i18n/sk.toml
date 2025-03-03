@@ -830,6 +830,7 @@ textRegistrationWaitingForConfirmationNoCoordinator = "Vaša organizácia ešte 
 textRegistrationWaitingForCoordinator = "Platbu ešte musí schváliť koordinátor vašej organizácie."
 textPayuWaitingForPayment = "Vašu platbu stále spracovávame. Prosím skontrolujte stav registrácie o niekoľko minút."
 textTeamInfo = "V jednom tíme může být max. 5 členů."
+textWaitingForPaymentLoader = "Čakáme na spracovanie vašej platby. V prípade, že ste platbu zrušili zámerne, prosím počkajte {seconds} sekúnd, než budete môcť pokračovať v registrácii."
 titleDeliveryAddress = "Doručovacia adresa"
 titleRegisterToChallenge.may = "Registrácia na májovú výzvu"
 titleRegisterToChallenge.october = "Registrácia na októbrovú výzvu"

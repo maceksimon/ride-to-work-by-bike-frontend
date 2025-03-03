@@ -289,6 +289,10 @@ export default defineComponent({
       );
     });
 
+    const isPeriodicCheckInProgress = computed<boolean>(
+      () => registerChallengeStore.getIsPeriodicCheckInProgress,
+    );
+
     const isLoadingPayuOrder = computed(() => {
       return registerChallengeStore.isLoadingPayuOrder;
     });
@@ -333,6 +337,10 @@ export default defineComponent({
       () => registerChallengeStore.getIsRegistrationComplete,
     );
 
+    const secondsToWait =
+      rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions *
+      rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds;
+
     return {
       borderRadius,
       contactEmail,
@@ -369,6 +377,7 @@ export default defineComponent({
       doneIconImgSrcStepper7,
       merchId,
       isPaymentAmount,
+      isPeriodicCheckInProgress,
       isRegistrationComplete,
       isRegistrationEntryFeePaidViaPayu,
       isShownCreateOrderButton,
@@ -384,6 +393,7 @@ export default defineComponent({
       onCompleteRegistration,
       registerChallengeStore,
       competitionStart,
+      secondsToWait,
     };
   },
 });
@@ -462,7 +472,7 @@ export default defineComponent({
             :done-icon="doneIconImgSrcStepper2"
             :done="step > 2"
             :header-nav="step > 2"
-            class="bg-white q-mt-lg"
+            class="relative-position bg-white q-mt-lg"
             data-cy="step-2"
           >
             <!-- Form: Payment -->
@@ -487,6 +497,7 @@ export default defineComponent({
                 v-if="!isRegistrationEntryFeePaidViaPayu"
               />
             </q-form>
+            <!-- Navigation -->
             <q-stepper-navigation class="flex justify-end">
               <q-btn
                 unelevated
@@ -523,6 +534,19 @@ export default defineComponent({
                 data-cy="step-2-continue"
               />
             </q-stepper-navigation>
+            <!-- Loader -->
+            <q-inner-loading
+              :showing="isPeriodicCheckInProgress"
+              color="primary"
+              :label="
+                $t('register.challenge.textWaitingForPaymentLoader', {
+                  seconds: secondsToWait,
+                })
+              "
+              label-class="text-primary"
+              label-style="max-width: 200px; font-weight: 600;"
+              data-cy="waiting-for-payment-loader"
+            />
           </q-step>
           <!-- Step: Organization type -->
           <q-step

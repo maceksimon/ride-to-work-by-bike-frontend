@@ -112,6 +112,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     isLoadingPayuOrder: false,
     isLoadingUserOrganizationAdmin: false,
     isPayuTransactionInitiated: false,
+    isPeriodicCheckInProgress: false,
     checkPaymentStatusRepetitionCount: 0,
     isSelectedRegisterCoordinator: false,
     hasOrganizationAdmin: null as boolean | null,
@@ -317,6 +318,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getIsUserStaff: (state): boolean | null => state.personalDetails.isStaff,
     getIsMerchandiseSavedIntoDb: (state): boolean =>
       state.isMerchandiseSavedIntoDb,
+    getIsPeriodicCheckInProgress(): boolean {
+      return this.isPeriodicCheckInProgress;
+    },
   },
 
   actions: {
@@ -399,6 +403,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     },
     setIsMerchandiseSavedIntoDb(isMerchandiseSavedIntoDb: boolean) {
       this.isMerchandiseSavedIntoDb = isMerchandiseSavedIntoDb;
+    },
+    setIsPeriodicCheckInProgress(isPeriodicCheckInProgress: boolean) {
+      this.isPeriodicCheckInProgress = isPeriodicCheckInProgress;
     },
     /**
      * Load registration data from API and set store state
@@ -923,7 +930,10 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           this.$log?.debug(`Cleared interval ID <${intervalId}>.`);
           intervalId = null;
           this.checkPaymentStatusRepetitionCount = 0;
-          this.$log?.debug('Reset interval ID and repetition count.');
+          this.setIsPeriodicCheckInProgress(false);
+          this.$log?.debug(
+            'Reset interval ID, repetition count, and periodic check status.',
+          );
         }
       };
 
@@ -973,6 +983,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       };
 
       // start interval
+      this.setIsPeriodicCheckInProgress(true);
       intervalId = setInterval(
         checkRegisterChallenge,
         rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds *
@@ -1083,6 +1094,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       'isLoadingMerchandise',
       'isLoadingFilteredMerchandise',
       'isLoadingPayuOrder',
+      'isPeriodicCheckInProgress',
       'checkPaymentStatusRepetitionCount',
       'isLoadingUserOrganizationAdmin',
     ],

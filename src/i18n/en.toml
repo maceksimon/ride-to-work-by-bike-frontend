@@ -830,6 +830,7 @@ textRegistrationWaitingForConfirmationNoCoordinator = "Your organization does no
 textRegistrationWaitingForCoordinator = "Your payment still needs to be approved by your organization's coordinator."
 textPayuWaitingForPayment = "We are still processing your payment. Please check your registration status in a few minutes."
 textTeamInfo = "In one team, there can be a maximum of 5 members."
+textWaitingForPaymentLoader = "We are waiting for your payment to be processed. If you intentionally cancelled the payment, please wait {seconds} seconds before you can continue with the registration."
 titleDeliveryAddress = "Delivery address"
 titleRegisterToChallenge.may = "Register for May challenge"
 titleRegisterToChallenge.october = "Register for October challenge"

@@ -3876,6 +3876,146 @@ describe('Register Challenge page', () => {
       });
     });
   });
+
+  /**
+   * This test check behavior after going to PayU payment,
+   * and clicking back button in browser.
+   * UI initiates a periodic check for payment status, during which
+   * other UI elements on payment step need to be disabled and an info
+   * message needs to be displayed.
+   */
+  context('registration in process, waiting for individual payment', () => {
+    beforeEach(() => {
+      cy.viewport('macbook-16');
+      cy.clock(systemTimeChallengeActive, [
+        'Date',
+        'setInterval',
+        'clearInterval',
+      ]).then((clock) => {
+        cy.wrap(clock).as('clock');
+        cy.task('getAppConfig', process).then((config) => {
+          cy.wrap(config).as('config');
+          // intercept register challenge API
+          cy.fixture('refreshTokensResponseChallengeActive').then(
+            (refreshTokensResponseChallengeActive) => {
+              cy.fixture('loginRegisterResponseChallengeActive').then(
+                (loginRegisterResponseChallengeActive) => {
+                  cy.interceptLoginRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi(
+                    config,
+                    defLocale,
+                    loginRegisterResponseChallengeActive,
+                    null,
+                    refreshTokensResponseChallengeActive,
+                    null,
+                    { has_user_verified_email_address: true },
+                  );
+                },
+              );
+            },
+          );
+          cy.interceptThisCampaignGetApi(config, defLocale);
+          cy.fixture(
+            'apiGetRegisterChallengeIndividualWaitingMinAmount.json',
+          ).then((response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          });
+          cy.fixture('apiPostRegisterChallengeResponsePaymentNone.json').then(
+            (responseBody) => {
+              cy.interceptRegisterChallengePostApi(
+                config,
+                defLocale,
+                responseBody,
+              );
+            },
+          );
+          cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+          cy.interceptMyTeamGetApi(config, defLocale);
+          cy.fixture('apiGetIsUserOrganizationAdminResponseFalse').then(
+            (response) => {
+              cy.interceptIsUserOrganizationAdminGetApi(
+                config,
+                defLocale,
+                response,
+              );
+            },
+          );
+          cy.fixture('apiGetDiscountCouponResponseFull.json').then(
+            (response) => {
+              cy.interceptDiscountCouponGetApi(
+                config,
+                defLocale,
+                response.results[0].name,
+                response,
+              );
+            },
+          );
+          cy.fixture('apiPostPayuCreateOrderResponse.json').then(
+            (responseBody) => {
+              cy.interceptPayuCreateOrderPostApi(
+                config,
+                defLocale,
+                responseBody,
+              );
+            },
+          );
+        });
+      });
+    });
+
+    it.only('after going to PayU payment, runs periodic check for payment status (set-is-paid-from-ui-true)', () => {
+      cy.get('@config').then((config) => {
+        cy.visit('#' + routesConf['register_challenge']['path']);
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          // go to register challenge page
+          // wait for register challenge GET API
+          cy.fixture(
+            'apiGetRegisterChallengeIndividualWaitingMinAmount.json',
+          ).then((response) => {
+            cy.waitForRegisterChallengeGetApi(response);
+          });
+          // UI loader is visible
+          cy.dataCy('waiting-for-payment-loader')
+            .should('be.visible')
+            .and(
+              'contain',
+              win.i18n.global.t(
+                'register.challenge.textWaitingForPaymentLoader',
+                {
+                  seconds:
+                    config.checkRegisterChallengeStatusMaxRepetitions *
+                    config.checkRegisterChallengeStatusIntervalSeconds,
+                },
+              ),
+            );
+          // move clock forward by 1 minute
+          cy.get('@clock').then((clock) => {
+            clock.tick(
+              1000 * 20 * config.checkRegisterChallengeStatusMaxRepetitions +
+                1000,
+            );
+          });
+          // check that total number of requests to register challenge GET API is 4
+          cy.get('@getRegisterChallenge.all').should(
+            'have.length',
+            1 + config.checkRegisterChallengeStatusMaxRepetitions,
+          );
+          // after the check, loader is not visible
+          cy.dataCy('waiting-for-payment-loader').should('not.exist');
+          // messages are visible
+          cy.dataCy('payment-messages').should('be.visible');
+          // UI shows message "waiting for payment"
+          cy.dataCy('registration-payu-waiting-for-payment').should(
+            'be.visible',
+          );
+          // UI does NOT show message "waiting for coordinator"
+          cy.dataCy('registration-waiting-for-confirmation').should(
+            'not.exist',
+          );
+        });
+      });
+    });
+  });
 });
 
 function checkActiveIcon(activeStep) {
