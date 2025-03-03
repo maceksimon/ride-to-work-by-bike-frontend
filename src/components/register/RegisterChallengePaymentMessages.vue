@@ -62,6 +62,7 @@ export default defineComponent({
 
     const isWaitingForConfirmation = computed<boolean>((): boolean => {
       const isStateWaiting =
+        registerChallengeStore.getIsPaymentSubjectOrganization &&
         registerChallengeStore.getPaymentState === PaymentState.waiting;
       const isPaymentDonationWithSubjectOrganization =
         registerChallengeStore.getIsPaymentSubjectOrganization &&

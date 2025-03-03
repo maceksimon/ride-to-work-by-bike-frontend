@@ -142,7 +142,6 @@ export default defineComponent({
     const isPayuTransactionInitiated = computed(
       () => registerChallengeStore.getIsPayuTransactionInitiated,
     );
-    const paymentState = computed(() => registerChallengeStore.getPaymentState);
 
     const router = useRouter();
 
@@ -171,13 +170,13 @@ export default defineComponent({
 
       if (
         isPayuTransactionInitiated.value &&
-        paymentState.value === PaymentState.done
+        registerChallengeStore.getIsPaymentSuccessful
       ) {
         // entry-fee/donation was paid - go to payment step
         onContinue();
       } else if (
         isPayuTransactionInitiated.value &&
-        paymentState.value !== PaymentState.done
+        !registerChallengeStore.getIsPaymentSuccessful
       ) {
         // trigger a periodic registration data refetch + display message
         registerChallengeStore.startRegisterChallengePeriodicCheck();
@@ -185,7 +184,7 @@ export default defineComponent({
         onContinue();
       } else if (
         !isPayuTransactionInitiated.value &&
-        paymentState.value === PaymentState.done
+        registerChallengeStore.getIsPaymentSuccessful
       ) {
         // if payment is done, it should always be safe to continue
         onContinue();

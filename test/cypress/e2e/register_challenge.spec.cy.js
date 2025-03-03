@@ -3962,7 +3962,7 @@ describe('Register Challenge page', () => {
       });
     });
 
-    it.only('after going to PayU payment, runs periodic check for payment status (set-is-paid-from-ui-true)', () => {
+    it('after going to PayU payment, runs periodic check for payment status (set-is-paid-from-ui-true)', () => {
       cy.get('@config').then((config) => {
         cy.visit('#' + routesConf['register_challenge']['path']);
         cy.window().should('have.property', 'i18n');
@@ -3988,6 +3988,15 @@ describe('Register Challenge page', () => {
                 },
               ),
             );
+          // messages are visible
+          cy.dataCy('payment-messages').should('be.visible');
+          // UI shows message "waiting for payment"
+          cy.dataCy('registration-payu-waiting-for-payment')
+            .should('be.visible')
+            .and(
+              'contain',
+              win.i18n.global.t('register.challenge.textPayuWaitingForPayment'),
+            );
           // move clock forward by 1 minute
           cy.get('@clock').then((clock) => {
             clock.tick(
@@ -4002,11 +4011,9 @@ describe('Register Challenge page', () => {
           );
           // after the check, loader is not visible
           cy.dataCy('waiting-for-payment-loader').should('not.exist');
-          // messages are visible
-          cy.dataCy('payment-messages').should('be.visible');
-          // UI shows message "waiting for payment"
+          // UI does NOT show message "waiting for payment"
           cy.dataCy('registration-payu-waiting-for-payment').should(
-            'be.visible',
+            'not.exist',
           );
           // UI does NOT show message "waiting for coordinator"
           cy.dataCy('registration-waiting-for-confirmation').should(
