@@ -3509,6 +3509,7 @@ describe('Register Challenge page', () => {
 
   context('registration with payment voucher 95% discount', () => {
     beforeEach(() => {
+      cy.clock(systemTimeRegistrationPhase1May, ['Date']);
       cy.task('getAppConfig', process).then((config) => {
         cy.wrap(config).as('config');
         cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
@@ -3536,6 +3537,11 @@ describe('Register Challenge page', () => {
         cy.interceptIpAddressGetApi(config);
         cy.interceptPayuCreateOrderPostApi(config, defLocale);
         cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+        cy.fixture('apiPostPayuCreateOrderResponseNoRedirect.json').then(
+          (responseBody) => {
+            cy.interceptPayuCreateOrderPostApi(config, defLocale, responseBody);
+          },
+        );
       });
       cy.visit('#' + routesConf['register_challenge']['path']);
       cy.viewport('macbook-16');
@@ -3610,7 +3616,11 @@ describe('Register Challenge page', () => {
             cy.fixture(
               'apiPostPayuCreateOrderRequestVoucher95NoDonation.json',
             ).then((request) => {
-              cy.waitForPayuCreateOrderPostApi(request);
+              cy.fixture('apiPostPayuCreateOrderResponseNoRedirect.json').then(
+                (response) => {
+                  cy.waitForPayuCreateOrderPostApi(request, response);
+                },
+              );
             });
           });
         });
@@ -3620,6 +3630,7 @@ describe('Register Challenge page', () => {
 
   context('registration with payment voucher 95% discount', () => {
     beforeEach(() => {
+      cy.clock(systemTimeRegistrationPhase1May, ['Date']);
       cy.task('getAppConfig', process).then((config) => {
         cy.wrap(config).as('config');
         cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
@@ -3649,6 +3660,11 @@ describe('Register Challenge page', () => {
         cy.interceptIpAddressGetApi(config);
         cy.interceptPayuCreateOrderPostApi(config, defLocale);
         cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+        cy.fixture('apiPostPayuCreateOrderResponseNoRedirect.json').then(
+          (responseBody) => {
+            cy.interceptPayuCreateOrderPostApi(config, defLocale, responseBody);
+          },
+        );
       });
       cy.visit('#' + routesConf['register_challenge']['path']);
       cy.viewport('macbook-16');
@@ -3717,7 +3733,11 @@ describe('Register Challenge page', () => {
                   cy.fixture(
                     'apiPostPayuCreateOrderRequestVoucher95NoDonation.json',
                   ).then((request) => {
-                    cy.waitForPayuCreateOrderPostApi(request);
+                    cy.fixture(
+                      'apiPostPayuCreateOrderResponseNoRedirect.json',
+                    ).then((response) => {
+                      cy.waitForPayuCreateOrderPostApi(request, response);
+                    });
                   });
                 },
               );
