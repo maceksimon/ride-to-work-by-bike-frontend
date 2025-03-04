@@ -337,9 +337,21 @@ export default defineComponent({
       () => registerChallengeStore.getIsRegistrationComplete,
     );
 
-    const secondsToWait =
+    const secondsToWaitDef = ref(
       rideToWorkByBikeConfig.checkRegisterChallengeStatusMaxRepetitions *
-      rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds;
+        rideToWorkByBikeConfig.checkRegisterChallengeStatusIntervalSeconds,
+    );
+
+    const secondsToWait = computed(() => {
+      return secondsToWaitDef;
+    });
+
+    const payCheckWaitLoadingTimer = setInterval(() => {
+      if (secondsToWaitDef.value <= 0 || !isPeriodicCheckInProgress.value) {
+        clearInterval(payCheckWaitLoadingTimer);
+      }
+      secondsToWaitDef.value -= 1;
+    }, 1000);
 
     return {
       borderRadius,
@@ -540,7 +552,7 @@ export default defineComponent({
               color="primary"
               :label="
                 $t('register.challenge.textWaitingForPaymentLoader', {
-                  seconds: secondsToWait,
+                  seconds: secondsToWait.value,
                 })
               "
               label-class="text-primary"
