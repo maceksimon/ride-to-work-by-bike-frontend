@@ -931,7 +931,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           intervalId = null;
           this.checkPaymentStatusRepetitionCount = 0;
           this.setIsPeriodicCheckInProgress(false);
-          this.$log?.debug(
+          this.$log?.info(
             'Reset interval ID, repetition count, and periodic check status.',
           );
         }
