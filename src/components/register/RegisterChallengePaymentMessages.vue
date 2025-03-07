@@ -190,7 +190,7 @@ export default defineComponent({
       :style="{ borderRadius }"
       data-cy="registration-waiting-for-coordinator"
     >
-      <!-- Coordinator details -->
+      <!-- Message: Coordinator (details available) -->
       <div
         v-if="organizationAdmin?.admin_name && organizationAdmin?.admin_email"
         data-cy="registration-coordinator-details"
@@ -205,6 +205,7 @@ export default defineComponent({
           )
         }}
       </div>
+      <!-- Message: Coordinator (details not available) -->
       <div v-else data-cy="registration-coordinator-details-not-available">
         {{ $t('register.challenge.textRegistrationWaitingForCoordinator') }}
       </div>
