@@ -2,8 +2,9 @@
 import { i18n } from 'src/boot/i18n';
 
 // enums
+import { Colors } from '../components/enums/Colors';
+import { Icons } from '../components/enums/Icons';
 import { TeamMemberStatus } from '../components/enums/TeamMember';
-
 // types
 import type { ExtendedMemberResults } from 'src/components/types/Results';
 
@@ -22,22 +23,22 @@ export const useTeamMemberApprovalStatus = () => {
   const getStatusColor = (member: ExtendedMemberResults): string => {
     switch (member.approved_for_team) {
       case TeamMemberStatus.approved:
-        return 'positive';
+        return Colors.positive;
       case TeamMemberStatus.undecided:
-        return 'warning';
+        return Colors.warning;
       case TeamMemberStatus.denied:
-        return 'negative';
+        return Colors.negative;
     }
   };
 
   const getStatusIcon = (member: ExtendedMemberResults): string => {
     switch (member.approved_for_team) {
       case TeamMemberStatus.approved:
-        return 'check';
+        return Icons.check;
       case TeamMemberStatus.undecided:
-        return 'help';
+        return Icons.help;
       case TeamMemberStatus.denied:
-        return 'close';
+        return Icons.close;
     }
   };
 
