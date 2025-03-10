@@ -194,8 +194,7 @@ export default defineComponent({
       <div
         v-if="organizationAdmin?.admin_name && organizationAdmin?.admin_email"
         data-cy="registration-coordinator-details"
-      >
-        {{
+        v-html="
           $t(
             'register.challenge.textRegistrationWaitingForCoordinatorWithNameAndEmail',
             {
@@ -203,8 +202,8 @@ export default defineComponent({
               email: organizationAdmin?.admin_email,
             },
           )
-        }}
-      </div>
+        "
+      />
       <!-- Message: Coordinator (details not available) -->
       <div v-else data-cy="registration-coordinator-details-not-available">
         {{ $t('register.challenge.textRegistrationWaitingForCoordinator') }}
