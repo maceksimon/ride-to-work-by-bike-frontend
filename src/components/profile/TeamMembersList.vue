@@ -85,7 +85,12 @@ export default defineComponent({
           </div>
           <!-- Email -->
           <div class="col-12 col-lg-4">
-            <span data-cy="team-member-email">{{ member.email }}</span>
+            <a
+              data-cy="team-member-email"
+              href="mailto:{{ member.email }}"
+              class="text-primary"
+              >{{ member.email }}</a
+            >
           </div>
           <!-- Gender -->
           <div v-if="member.sex" class="col-12 col-sm">
