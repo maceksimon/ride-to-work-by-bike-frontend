@@ -89,9 +89,13 @@ export default defineComponent({
           </div>
           <!-- Gender -->
           <div v-if="member.sex" class="col-12 col-sm">
-            <span data-cy="team-member-gender">{{
-              getGenderLabel(member.sex, i18n)
-            }}</span>
+            <q-icon
+              v-if="member.sex"
+              :name="member.sex"
+              :color="member.sex == 'male' ? 'blue' : 'red'"
+              size="xs"
+              data-cy="team-member-gender"
+            ></q-icon>
           </div>
           <!-- Approval status -->
           <div class="col-12 col-sm-auto">

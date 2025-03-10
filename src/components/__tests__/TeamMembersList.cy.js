@@ -5,7 +5,6 @@ import TeamMembersList from 'components/profile/TeamMembersList.vue';
 import { i18n } from '../../boot/i18n';
 import { useRegisterChallengeStore } from 'stores/registerChallenge';
 import { TeamMemberStatus } from 'components/enums/TeamMember';
-import { getGenderLabel } from '../../utils/get_gender_label';
 
 // colors
 const { getPaletteColor } = colors;
@@ -117,7 +116,7 @@ function coreTests() {
         // gender
         cy.wrap(item).should(
           'contain',
-          getGenderLabel(responseMyTeam.results[0].members[index].sex, i18n),
+          responseMyTeam.results[0].members[index].sex,
         );
         // approval status
         if (
