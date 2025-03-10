@@ -16,6 +16,7 @@ import { defineComponent, computed } from 'vue';
 
 // composables
 import { useTeamMemberApprovalStatus } from '../../composables/useTeamMemberApprovalStatus';
+import { i18n } from '../../boot/i18n';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -25,6 +26,9 @@ import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 // types
 import type { ExtendedMemberResults } from '../types/Results';
+
+// utils
+import { getGenderLabel } from '../../utils/get_gender_label';
 
 export default defineComponent({
   name: 'TeamMembersList',
@@ -46,9 +50,11 @@ export default defineComponent({
 
     return {
       borderRadius,
+      getGenderLabel,
       getStatusLabel,
       getStatusColor,
       getStatusIcon,
+      i18n,
       teamMembers,
     };
   },
@@ -74,8 +80,18 @@ export default defineComponent({
       >
         <div class="full-width row gap-4 items-center">
           <!-- Name -->
-          <div class="col-12 col-sm">
+          <div class="col-12 col-lg-3">
             <b data-cy="team-member-name">{{ member.name }}</b>
+          </div>
+          <!-- Email -->
+          <div class="col-12 col-lg-4">
+            <span data-cy="team-member-email">{{ member.email }}</span>
+          </div>
+          <!-- Gender -->
+          <div v-if="member.sex" class="col-12 col-sm">
+            <span data-cy="team-member-gender">{{
+              getGenderLabel(member.sex, i18n)
+            }}</span>
           </div>
           <!-- Approval status -->
           <div class="col-12 col-sm-auto">
