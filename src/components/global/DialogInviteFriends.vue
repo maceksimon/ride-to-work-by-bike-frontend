@@ -14,7 +14,7 @@
  */
 
 // libraries
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 // components
 import FormInviteFriends from '../form/FormInviteFriends.vue';
@@ -32,18 +32,23 @@ export default defineComponent({
   setup() {
     const inviteFriendsStore = useInviteFriendsStore();
 
+    const isDialogOpen = computed({
+      get: () => inviteFriendsStore.getIsDialogOpen,
+      set: (value) =>
+        value
+          ? inviteFriendsStore.openDialog()
+          : inviteFriendsStore.closeDialog(),
+    });
+
     return {
-      inviteFriendsStore,
+      isDialogOpen,
     };
   },
 });
 </script>
 
 <template>
-  <dialog-default
-    v-model="inviteFriendsStore.isDialogOpen"
-    data-cy="dialog-invite-friends"
-  >
+  <dialog-default v-model="isDialogOpen" data-cy="dialog-invite-friends">
     <template #title>
       {{ $t('drawerMenu.inviteFriends') }}
     </template>

@@ -1,20 +1,22 @@
 import { defineStore } from 'pinia';
-import { ref } from 'vue';
 
-export const useInviteFriendsStore = defineStore('inviteFriends', () => {
-  const isDialogOpen = ref<boolean>(false);
+export const useInviteFriendsStore = defineStore('inviteFriends', {
+  state: () => ({
+    isDialogOpen: false,
+  }),
 
-  const openDialog = (): void => {
-    isDialogOpen.value = true;
-  };
+  getters: {
+    getIsDialogOpen(): boolean {
+      return this.isDialogOpen;
+    },
+  },
 
-  const closeDialog = (): void => {
-    isDialogOpen.value = false;
-  };
-
-  return {
-    isDialogOpen,
-    openDialog,
-    closeDialog,
-  };
+  actions: {
+    openDialog(): void {
+      this.isDialogOpen = true;
+    },
+    closeDialog(): void {
+      this.isDialogOpen = false;
+    },
+  },
 });
