@@ -1,8 +1,8 @@
 {
-  "id": "2024-08-14-fromWork",
+  "id": "2024-08-14-trip_from",
   "date": "2024-08-14",
   "transport": "bike",
   "distance": "0.00",
-  "direction": "fromWork",
+  "direction": "trip_from",
   "dirty": false
 }

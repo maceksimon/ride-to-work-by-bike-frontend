@@ -108,7 +108,7 @@ export const useRoutes = () => {
         days.push({
           id: date.formatDate(currentDate, routeDateFormat),
           date: date.formatDate(currentDate, routeDateFormat),
-          fromWork: fromWork
+          [TransportDirection.fromWork]: fromWork
             ? fromWork
             : ({
                 id: `${date.formatDate(currentDate, routeDateFormat)}-${TransportDirection.fromWork}`,
@@ -119,7 +119,7 @@ export const useRoutes = () => {
                 dirty: false,
                 inputType: 'input-number',
               } as RouteItem),
-          toWork: toWork
+          [TransportDirection.toWork]: toWork
             ? toWork
             : ({
                 id: `${date.formatDate(currentDate, routeDateFormat)}-${TransportDirection.toWork}`,

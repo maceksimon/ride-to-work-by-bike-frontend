@@ -5,6 +5,7 @@ import { i18n } from '../../boot/i18n';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useRoutes } from 'src/composables/useRoutes';
+import { TransportDirection } from 'src/components/types/Route';
 
 // composables
 const { getPaletteColor } = colors;
@@ -60,7 +61,7 @@ describe('<RouteItemDisplay>', () => {
   context('to work - with distance', () => {
     beforeEach(() => {
       cy.fixture('routeListItem').then((routes) => {
-        const route = routes.toWork;
+        const route = routes[TransportDirection.toWork];
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {
@@ -78,7 +79,7 @@ describe('<RouteItemDisplay>', () => {
   context('from work - with distance', () => {
     beforeEach(() => {
       cy.fixture('routeListItem').then((routes) => {
-        const route = routes.fromWork;
+        const route = routes[TransportDirection.fromWork];
         cy.wrap(route).as('route');
         cy.mount(RouteItemDisplay, {
           props: {

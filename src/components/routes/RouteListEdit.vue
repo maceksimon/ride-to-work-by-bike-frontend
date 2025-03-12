@@ -32,6 +32,9 @@ import { useRoutes } from 'src/composables/useRoutes';
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
+// enums
+import { TransportDirection } from '../types/Route';
+
 // types
 import type { RouteItem, RouteDay } from '../types/Route';
 
@@ -65,7 +68,10 @@ export default defineComponent({
     const dirtyCount = computed((): number => {
       let count = 0;
       days.value.forEach((day) => {
-        if (day.fromWork?.dirty || day.toWork?.dirty) {
+        if (
+          day[TransportDirection.fromWork]?.dirty ||
+          day[TransportDirection.toWork]?.dirty
+        ) {
           count += 1;
         }
       });
@@ -77,6 +83,7 @@ export default defineComponent({
       dirtyCount,
       formatDate,
       formatDateName,
+      TransportDirection,
     };
   },
 });
@@ -100,21 +107,21 @@ export default defineComponent({
           <!-- Item: Route to work -->
           <div class="col-12 col-sm-6" data-cy="route-list-item-wrapper">
             <route-item-edit
-              :route="day.toWork"
+              :route="day[TransportDirection.toWork]"
               class="full-height"
               data-cy="route-list-item"
-              :data-id="day.toWork?.id"
-              @update:route="day.toWork.dirty = $event"
+              :data-id="day[TransportDirection.toWork]?.id"
+              @update:route="day[TransportDirection.toWork].dirty = $event"
             />
           </div>
           <!-- Item: Route from work -->
           <div class="col-12 col-sm-6" data-cy="route-list-item-wrapper">
             <route-item-edit
-              :route="day.fromWork"
+              :route="day[TransportDirection.fromWork]"
               class="full-height"
               data-cy="route-list-item"
-              :data-id="day.fromWork?.id"
-              @update:route="day.fromWork.dirty = $event"
+              :data-id="day[TransportDirection.fromWork]?.id"
+              @update:route="day[TransportDirection.fromWork].dirty = $event"
             />
           </div>
         </div>

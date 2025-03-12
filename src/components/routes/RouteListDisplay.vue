@@ -31,6 +31,9 @@ import { useRoutes } from '../../composables/useRoutes';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// enums
+import { TransportDirection } from '../types/Route';
+
 // types
 import type { RouteItem, RouteDay } from '../types/Route';
 
@@ -68,6 +71,7 @@ export default defineComponent({
       days,
       formatDate,
       formatDateName,
+      TransportDirection,
     };
   },
 });
@@ -90,26 +94,26 @@ export default defineComponent({
         <div class="row q-col-gutter-lg">
           <!-- Item: Route to work -->
           <div
-            v-if="day.toWork"
+            v-if="day[TransportDirection.toWork]"
             class="col-12 col-sm-6"
             data-cy="route-list-item-wrapper"
           >
             <route-item-display
-              :route="day.toWork"
+              :route="day[TransportDirection.toWork]"
               data-cy="route-list-item"
-              :data-id="day.toWork.id"
+              :data-id="day[TransportDirection.toWork].id"
             />
           </div>
           <!-- Item: Route from work -->
           <div
-            v-if="day.fromWork"
+            v-if="day[TransportDirection.fromWork]"
             class="col-12 col-sm-6"
             data-cy="route-list-item-wrapper"
           >
             <route-item-display
-              :route="day.fromWork"
+              :route="day[TransportDirection.fromWork]"
               data-cy="route-list-item"
-              :data-id="day.fromWork.id"
+              :data-id="day[TransportDirection.fromWork].id"
             />
           </div>
         </div>

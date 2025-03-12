@@ -24,7 +24,7 @@
  *
  * @example
  * <calendar-item
- *  direction="toWork"
+ *  direction="trip_to"
  *  :day="routeCalendarDay"
  *  :timestamp="timestamp"
  * />

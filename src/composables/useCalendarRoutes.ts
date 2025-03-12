@@ -55,13 +55,13 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
           activeRoute.direction === TransportDirection.toWork
         ) {
           // Route is already logged - load data.
-          routes.push({ ...day.toWork });
+          routes.push({ ...day[TransportDirection.toWork] });
         } else if (
           dayHasFromWorkRoute(day) &&
           activeRoute.direction === TransportDirection.fromWork
         ) {
           // Route is already logged - load data.
-          routes.push({ ...day.fromWork });
+          routes.push({ ...day[TransportDirection.fromWork] });
         } else {
           // Route is not logged - create empty route.
           routes.push({
@@ -71,6 +71,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
             transport: TransportType.bike,
             distance: defaultDistanceZero,
             inputType: 'input-number',
+            routeFeature: null,
           });
         }
       }
@@ -113,7 +114,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
    * @return {boolean}
    */
   function dayHasToWorkRoute(day: RouteDay | null): boolean {
-    return !!day?.toWork;
+    return !!day?.[TransportDirection.toWork];
   }
 
   /**
@@ -122,7 +123,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
    * @return {boolean}
    */
   function dayHasFromWorkRoute(day: RouteDay | null): boolean {
-    return !!day?.fromWork;
+    return !!day?.[TransportDirection.fromWork];
   }
 
   /**

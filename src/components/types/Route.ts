@@ -40,8 +40,8 @@ export type RouteInputType = 'input-number' | 'input-map';
 export type RouteDay = {
   id: string;
   date: string;
-  fromWork: RouteItem;
-  toWork: RouteItem;
+  [TransportDirection.toWork]: RouteItem;
+  [TransportDirection.fromWork]: RouteItem;
 };
 
 export type RouteCalendarActive = {

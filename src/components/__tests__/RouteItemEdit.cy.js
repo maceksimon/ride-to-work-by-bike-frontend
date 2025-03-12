@@ -3,6 +3,7 @@ import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import RouteItemEdit from 'components/routes/RouteItemEdit.vue';
 import { i18n } from '../../boot/i18n';
+import { TransportDirection } from 'src/components/types/Route';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -21,7 +22,7 @@ describe('<RouteItemEdit>', () => {
       cy.fixture('routeListItem').then((routes) => {
         cy.mount(RouteItemEdit, {
           props: {
-            route: routes.toWork,
+            route: routes[TransportDirection.toWork],
           },
         });
         cy.viewport('macbook-16');
@@ -37,7 +38,7 @@ describe('<RouteItemEdit>', () => {
       cy.fixture('routeListItem').then((routes) => {
         cy.mount(RouteItemEdit, {
           props: {
-            route: routes.toWork,
+            route: routes[TransportDirection.toWork],
             displayLabel: true,
           },
         });
@@ -56,7 +57,7 @@ describe('<RouteItemEdit>', () => {
         cy.dataCy('input-distance')
           .should('be.visible')
           .invoke('val')
-          .should('eq', routes.toWork.distance.toString());
+          .should('eq', routes[TransportDirection.toWork].distance.toString());
       });
     });
 
@@ -66,7 +67,9 @@ describe('<RouteItemEdit>', () => {
           .should('be.visible')
           .and(
             'contain',
-            i18n.global.t(`routes.transport.${routes.toWork.transport}`),
+            i18n.global.t(
+              `routes.transport.${routes[TransportDirection.toWork].transport}`,
+            ),
           );
       });
     });
@@ -77,7 +80,7 @@ describe('<RouteItemEdit>', () => {
       cy.fixture('routeListItem').then((routes) => {
         cy.mount(RouteItemEdit, {
           props: {
-            route: routes.fromWork,
+            route: routes[TransportDirection.fromWork],
             displayLabel: true,
           },
         });
@@ -94,7 +97,7 @@ describe('<RouteItemEdit>', () => {
       cy.fixture('routeListItem').then((routes) => {
         cy.mount(RouteItemEdit, {
           props: {
-            route: routes.toWork,
+            route: routes[TransportDirection.toWork],
             displayLabel: true,
           },
         });

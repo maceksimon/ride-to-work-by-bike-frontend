@@ -74,7 +74,7 @@ export default defineComponent({
         data-cy="label-direction"
       >
         <!-- From work -->
-        <span v-if="route.direction === 'fromWork'">
+        <span v-if="route.direction === TransportDirection.fromWork">
           <q-icon
             name="arrow_back"
             color="grey-10"

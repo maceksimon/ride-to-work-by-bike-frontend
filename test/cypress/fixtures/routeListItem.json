@@ -1,16 +1,16 @@
 {
-  "toWork": {
+  "trip_to": {
     "id": "00001",
     "date": "2024-10-01",
     "transport": "bike",
     "distance": "20.00",
-    "direction": "toWork"
+    "direction": "trip_to"
   },
-  "fromWork": {
+  "trip_from": {
     "id": "00002",
     "date": "2024-10-01",
     "transport": "bike",
     "distance": "19.20",
-    "direction": "fromWork"
+    "direction": "trip_from"
   }
 }
