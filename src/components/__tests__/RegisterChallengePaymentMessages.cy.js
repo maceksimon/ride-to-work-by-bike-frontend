@@ -243,16 +243,30 @@ describe('<RegisterChallengePaymentMessages>', () => {
       cy.fixture('apiGetMyOrganizationAdmin.json').then((data) => {
         cy.dataCy('registration-coordinator-details')
           .should('be.visible')
-          .and(
-            'contain',
-            i18n.global.t(
-              'register.challenge.textRegistrationWaitingForCoordinatorWithNameAndEmail',
-              {
-                name: data.organization_admin[0].admin_name,
-                email: data.organization_admin[0].admin_email,
-              },
-            ),
-          );
+          .then(($el) => {
+            // element contains text
+            const textContent = $el.text();
+            cy.stripHtmlTags(
+              i18n.global.t(
+                'register.challenge.textRegistrationWaitingForCoordinatorWithNameAndEmail',
+                {
+                  name: data.organization_admin[0].admin_name,
+                  email: data.organization_admin[0].admin_email,
+                },
+              ),
+            ).then((text) => {
+              expect(textContent).to.contain(text);
+            });
+            // element has a mailto href attribute with email
+            cy.wrap($el)
+              .find('a')
+              .should('have.attr', 'href')
+              .should(
+                'include',
+                `mailto:${data.organization_admin[0].admin_email}`,
+              );
+          });
+
         cy.dataCy('registration-coordinator-details-not-available').should(
           'not.exist',
         );
