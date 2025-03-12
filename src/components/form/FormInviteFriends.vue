@@ -18,21 +18,24 @@
 
 // libraries
 import { QForm } from 'quasar';
-import { computed, defineComponent, ref, onMounted } from 'vue';
+import { computed, defineComponent, inject, ref, onMounted } from 'vue';
 
 // composables
 import { i18n } from 'src/boot/i18n';
 import { useValidation } from 'src/composables/useValidation';
 import { useMyTeam } from 'src/composables/useMyTeam';
+import { useApiPostSendTeamMembershipInvitationEmail } from 'src/composables/useApiPostSendTeamMembershipInvitationEmail';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+import { useInviteFriendsStore } from 'src/stores/inviteFriends';
 
 // components
 import FormFieldEmail from '../global/FormFieldEmail.vue';
 
 // types
 import type { FormOption } from '../types/Form';
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'FormInviteFriends',
@@ -40,10 +43,12 @@ export default defineComponent({
     FormFieldEmail,
   },
   setup() {
+    const logger = inject('vuejs3-logger') as Logger | null;
     const emailAddresses = ref<string[]>(['']);
     const language = ref<string>('');
     const formInviteRef = ref<typeof QForm | null>(null);
     const registerChallengeStore = useRegisterChallengeStore();
+    const { closeDialog } = useInviteFriendsStore();
     const { remainingSlots } = useMyTeam();
 
     // load initial language from store
@@ -77,8 +82,21 @@ export default defineComponent({
       return null;
     });
 
-    const onSubmit = () => {
-      formInviteRef.value?.validate();
+    const { postSendTeamMembershipInvitationEmail, isLoading } =
+      useApiPostSendTeamMembershipInvitationEmail(logger);
+    const onSubmit = async () => {
+      const valid = await formInviteRef.value?.validate();
+      if (valid) {
+        await postSendTeamMembershipInvitationEmail({
+          email: emailAddresses.value.join(','),
+        });
+      }
+      // clear form
+      emailAddresses.value = [''];
+      language.value = registerChallengeStore.getLanguage;
+      formInviteRef.value?.resetValidation();
+      // close dialog
+      closeDialog();
     };
 
     const { isEmail, isFilled } = useValidation();
@@ -102,6 +120,7 @@ export default defineComponent({
       selectedLanguage,
       isEmail,
       isFilled,
+      isLoading,
       onSubmit,
       remainingSlots,
       addEmailField,
