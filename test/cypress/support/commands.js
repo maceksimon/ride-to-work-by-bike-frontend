@@ -158,21 +158,21 @@ Cypress.Commands.add('testMessageLanguageSelect', (i18n) => {
       .should('be.visible')
       .then(($el) => {
         const textContent = $el.text();
-        cy.stripHtmlTags(i18n.global.t('onboarding.titleMessage', locale)).then(
-          (text) => {
-            expect(textContent).to.contain(text);
-          },
-        );
+        cy.stripHtmlTags(
+          i18n.global.t('onboarding.titleMessage', {}, { locale }),
+        ).then((text) => {
+          expect(textContent).to.contain(text);
+        });
       });
     cy.dataCy('text-message')
       .should('be.visible')
       .then(($el) => {
         const textContent = $el.text();
-        cy.stripHtmlTags(i18n.global.t('onboarding.textMessage', locale)).then(
-          (text) => {
-            expect(textContent).to.contain(text);
-          },
-        );
+        cy.stripHtmlTags(
+          i18n.global.t('onboarding.textMessage', {}, { locale }),
+        ).then((text) => {
+          expect(textContent).to.contain(text);
+        });
       });
   });
 });
@@ -2857,29 +2857,29 @@ Cypress.Commands.add(
 );
 
 /**
-* Wait for intercept my organization admin API call and compare response object
-* Wait for `@getMyOrganizationAdmin` intercept
-* @param {Object} expectedResponse - Expected response body
-*/
+ * Wait for intercept my organization admin API call and compare response object
+ * Wait for `@getMyOrganizationAdmin` intercept
+ * @param {Object} expectedResponse - Expected response body
+ */
 Cypress.Commands.add(
- 'waitForMyOrganizationAdminGetApi',
- (expectedResponse = null) => {
-   cy.fixture('apiGetMyOrganizationAdmin.json').then((defaultResponse) => {
-     cy.wait('@getMyOrganizationAdmin').then((getMyOrganizationAdmin) => {
-       expect(getMyOrganizationAdmin.request.headers.authorization).to.include(
-         bearerTokeAuth,
-       );
-       if (getMyOrganizationAdmin.response) {
-         expect(getMyOrganizationAdmin.response.statusCode).to.equal(
-           httpSuccessfullStatus,
-         );
-         expect(getMyOrganizationAdmin.response.body).to.deep.equal(
-           expectedResponse || defaultResponse,
-         );
-       }
-     });
-   });
- },
+  'waitForMyOrganizationAdminGetApi',
+  (expectedResponse = null) => {
+    cy.fixture('apiGetMyOrganizationAdmin.json').then((defaultResponse) => {
+      cy.wait('@getMyOrganizationAdmin').then((getMyOrganizationAdmin) => {
+        expect(getMyOrganizationAdmin.request.headers.authorization).to.include(
+          bearerTokeAuth,
+        );
+        if (getMyOrganizationAdmin.response) {
+          expect(getMyOrganizationAdmin.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getMyOrganizationAdmin.response.body).to.deep.equal(
+            expectedResponse || defaultResponse,
+          );
+        }
+      });
+    });
+  },
 );
 
 /**

@@ -257,11 +257,11 @@ export default defineComponent({
           class="text-subtitle2 text-weight-bold q-my-none"
           data-cy="title-message"
         >
-          {{ $t('onboarding.titleMessage', language) }}
+          {{ $t('onboarding.titleMessage', {}, { locale: language }) }}
         </h3>
         <!-- Text -->
         <div
-          v-html="$t('onboarding.textMessage', language)"
+          v-html="$t('onboarding.textMessage', {}, { locale: language })"
           class="q-mt-lg"
           data-cy="text-message"
         />
