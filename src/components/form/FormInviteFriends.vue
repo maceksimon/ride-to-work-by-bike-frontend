@@ -120,7 +120,11 @@ export default defineComponent({
 </script>
 
 <template>
-  <div class="row q-col-gutter-md" data-cy="form-invite-friends">
+  <div
+    v-if="remainingSlots > 0"
+    class="row q-col-gutter-md"
+    data-cy="form-invite-friends"
+  >
     <!-- Description text -->
     <q-form ref="formInviteRef" class="col-12 col-sm-6" data-cy="column-1">
       <div
@@ -270,6 +274,11 @@ export default defineComponent({
           data-cy="text-message"
         />
       </div>
+    </div>
+  </div>
+  <div v-else>
+    <div class="text-grey-10 q-mb-md" data-cy="message-team-full">
+      {{ $t('onboarding.messageTeamFull') }}
     </div>
   </div>
 </template>
