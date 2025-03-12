@@ -7,10 +7,12 @@ import { useMyTeam } from './useMyTeam';
 // config
 import { routesConf } from 'src/router/routes_conf';
 
+// stores
+import { useInviteFriendsStore } from '../stores/inviteFriends';
+
 // types
 import type { ComputedRef } from 'vue';
 import type { Link } from 'src/components/types';
-import { useInviteFriendsStore } from '../stores/inviteFriends';
 
 export const useMenu = () => {
   /**

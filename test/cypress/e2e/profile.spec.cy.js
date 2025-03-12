@@ -655,6 +655,54 @@ function coreTests() {
     });
   });
 
+  it('allows user to invite friends', () => {
+    cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // wait for GET request
+          cy.waitForRegisterChallengeGetApi(response);
+          cy.waitForMyTeamGetApi();
+          // intercept POST request
+          cy.fixture(
+            'apiPostSendTeamMembershipInvitationEmailResponse.json',
+          ).then((response) => {
+            cy.interceptSendTeamMembershipInvitationEmailApi(
+              config,
+              defLocale,
+              response,
+            );
+            // open invite friends dialog
+            cy.dataCy('drawer-menu-item')
+              .contains(i18n.global.t('drawerMenu.inviteFriends'))
+              .click();
+            // verify invite friends dialog
+            cy.dataCy('dialog-invite-friends').should('be.visible');
+            // verify form
+            cy.dataCy('form-invite-friends').should('be.visible');
+            // verify form fields
+            cy.dataCy('invite-email-addresses-input')
+              .should('be.visible')
+              .find('input')
+              .should('be.visible')
+              .clear();
+            // put in email address
+            cy.dataCy('invite-email-addresses-input')
+              .find('input')
+              .type(response.team_membership_invitation_email_sended[0]);
+            // click invite friends button
+            cy.dataCy('form-invite-submit').click();
+            // wait for POST request
+            cy.fixture(
+              'apiPostSendTeamMembershipInvitationEmailRequest.json',
+            ).then((request) => {
+              cy.waitForSendTeamMembershipInvitationEmailApi(request, response);
+            });
+          });
+        });
+      });
+    });
+  });
+
   it.skip('navigates to notifications tab and marks a notification as read', () => {
     cy.fixture('notifications').then((notifications) => {
       cy.get('@i18n').then((i18n) => {
