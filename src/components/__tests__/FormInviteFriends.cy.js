@@ -202,14 +202,14 @@ describe('<FormInviteFriends>', () => {
         .first()
         .find('input')
         .type('invalid-email');
-      cy.dataCy('invite-email-addresses-input').first().find('input').blur();
+      cy.dataCy('form-invite-submit').click();
       cy.get('.q-field__messages').should(
         'contain',
         i18n.global.t('form.messageEmailInvalid'),
       );
       // validates required field
       cy.dataCy('invite-email-addresses-input').first().find('input').clear();
-      cy.dataCy('invite-email-addresses-input').first().find('input').blur();
+      cy.dataCy('form-invite-submit').click();
       cy.get('.q-field__messages').should(
         'contain',
         i18n.global.t('form.messageFieldRequired', {

@@ -97,13 +97,13 @@ export default defineComponent({
         await postSendTeamMembershipInvitationEmail({
           email: emailAddresses.value.join(','),
         });
+        // clear form
+        emailAddresses.value = [''];
+        language.value = registerChallengeStore.getLanguage;
+        formInviteRef.value?.resetValidation();
+        // close dialog
+        closeDialog();
       }
-      // clear form
-      emailAddresses.value = [''];
-      language.value = registerChallengeStore.getLanguage;
-      formInviteRef.value?.resetValidation();
-      // close dialog
-      closeDialog();
     };
 
     const { isEmail, isFilled } = useValidation();
