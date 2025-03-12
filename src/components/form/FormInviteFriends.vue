@@ -7,7 +7,7 @@
  * Note: This component is commonly used in `OnboardingStepper`.
  *
  * Component uses lazy-rules="ondemand" which means that validation will be
- * triggered only when component’s validate() method is manually called or
+ * triggered only when component's validate() method is manually called or
  * when the wrapper QForm submits itself.
  *
  * @example
@@ -18,20 +18,46 @@
 
 // libraries
 import { QForm } from 'quasar';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref, onMounted } from 'vue';
 
 // composables
 import { i18n } from 'src/boot/i18n';
 import { useValidation } from 'src/composables/useValidation';
+
+// stores
+import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+import { useChallengeStore } from 'src/stores/challenge';
+
+// components
+import FormFieldEmail from '../global/FormFieldEmail.vue';
 
 // types
 import type { FormOption } from '../types/Form';
 
 export default defineComponent({
   name: 'FormInviteFriends',
+  components: {
+    FormFieldEmail,
+  },
   setup() {
-    const emailAddresses = ref<string>('');
-    const language = ref<string>(i18n.global.locale);
+    const emailAddresses = ref<string[]>(['']);
+    const language = ref<string>('');
+    const formInviteRef = ref<typeof QForm | null>(null);
+    const registerChallengeStore = useRegisterChallengeStore();
+    const challengeStore = useChallengeStore();
+
+    // load initial language from store
+    onMounted(() => {
+      language.value = registerChallengeStore.getLanguage;
+    });
+
+    // compute remaining slots in team
+    const remainingSlots = computed((): number => {
+      const maxTeamMembers = challengeStore.getMaxTeamMembers || 0;
+      const myTeam = registerChallengeStore.getMyTeam;
+      if (!myTeam) return maxTeamMembers;
+      return maxTeamMembers - myTeam.member_count;
+    });
 
     // dynamically build array of language options
     const optionsLanguage = computed((): FormOption[] => {
@@ -48,6 +74,7 @@ export default defineComponent({
       });
       return options;
     });
+
     const selectedLanguage = computed((): FormOption | null => {
       const languageObject: FormOption | undefined = optionsLanguage.value.find(
         (option) => option.value === language?.value,
@@ -58,12 +85,22 @@ export default defineComponent({
       return null;
     });
 
-    const formInviteRef = ref<typeof QForm | null>(null);
     const onSubmit = () => {
       formInviteRef.value?.validate();
     };
 
-    const { isEmailList, isFilled } = useValidation();
+    const { isEmail, isFilled } = useValidation();
+
+    // handle adding/removing email fields
+    const addEmailField = () => {
+      if (emailAddresses.value.length < remainingSlots.value) {
+        emailAddresses.value.push('');
+      }
+    };
+
+    const removeEmailField = (index: number) => {
+      emailAddresses.value.splice(index, 1);
+    };
 
     return {
       emailAddresses,
@@ -71,9 +108,12 @@ export default defineComponent({
       language,
       optionsLanguage,
       selectedLanguage,
-      isEmailList,
+      isEmail,
       isFilled,
       onSubmit,
+      remainingSlots,
+      addEmailField,
+      removeEmailField,
     };
   },
 });
@@ -88,34 +128,60 @@ export default defineComponent({
         class="text-grey-10 q-mb-lg"
         data-cy="invite-description"
       />
-      <!-- Input widget: Email addresses -->
+      <!-- Email address fields -->
       <div class="q-my-md" data-cy="invite-email-addresses">
-        <label
-          for="invite-email-addresses"
-          class="text-caption text-bold text-grey-10"
-        >
+        <label class="text-caption text-bold text-grey-10">
           {{ $t('onboarding.labelInviteEmailAddresses') }}
         </label>
-        <q-input
-          dense
-          outlined
-          hide-bottom-space
-          lazy-rules="ondemand"
-          v-model="emailAddresses"
-          id="invite-email-addresses"
-          name="email-addresses"
-          type="textarea"
-          :rules="[
-            (val) => isFilled(val) || $t('onboarding.messageRequiredEmailList'),
-            (val) =>
-              isEmailList(val) || $t('onboarding.messageInvalidEmailList'),
-          ]"
+        <div
+          v-for="(email, index) in emailAddresses"
+          :key="index"
           class="q-mt-sm"
-          data-cy="invite-email-addresses-input"
-        />
+        >
+          <div class="row">
+            <div class="col">
+              <form-field-email
+                hide-label
+                v-model="emailAddresses[index]"
+                :required="true"
+                :testing="false"
+                data-cy="invite-email-addresses-input"
+              />
+            </div>
+            <div class="col-auto">
+              <q-btn
+                v-if="index > 0"
+                round
+                unelevated
+                outline
+                text-color="negative"
+                icon="close"
+                size="8px"
+                :title="$t('onboarding.buttonRemoveEmailField')"
+                class="q-mt-md q-ml-sm"
+                @click="removeEmailField(index)"
+                data-cy="remove-email-field"
+              />
+            </div>
+          </div>
+        </div>
+        <q-btn
+          v-if="emailAddresses.length < remainingSlots"
+          unelevated
+          rounded
+          outline
+          class="q-mt-md"
+          color="primary"
+          size="12px"
+          @click="addEmailField"
+          data-cy="add-email-field"
+        >
+          <q-icon name="add" size="18px" class="q-mr-xs" />
+          {{ $t('onboarding.buttonAddEmailField') }}
+        </q-btn>
       </div>
       <!-- Input widget: Language select -->
-      <div class="q-my-md" data-cy="invite-language">
+      <div class="q-my-lg" data-cy="invite-language">
         <label
           for="select-language"
           class="text-caption text-bold text-grey-10"
