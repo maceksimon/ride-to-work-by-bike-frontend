@@ -10,6 +10,7 @@ import AutomatLogoBanner from 'components/global/AutomatLogoBanner.vue';
 import DrawerHeader from 'components/global/DrawerHeader.vue';
 import DrawerMenu from 'components/global/DrawerMenu.vue';
 import FooterBar from 'components/global/FooterBar.vue';
+import DialogInviteFriends from 'components/global/DialogInviteFriends.vue';
 import MobileBottomPanel from 'components/global/MobileBottomPanel.vue';
 import UserSelect from 'components/global/UserSelect.vue';
 
@@ -50,6 +51,7 @@ export default defineComponent({
     DrawerHeader,
     DrawerMenu,
     FooterBar,
+    DialogInviteFriends,
     MobileBottomPanel,
     UserSelect,
   },
@@ -169,6 +171,9 @@ export default defineComponent({
     <q-footer class="position-static md-position-absolute bg-transparent">
       <mobile-bottom-panel />
     </q-footer>
+
+    <!-- Invite friends dialog -->
+    <dialog-invite-friends />
   </q-layout>
 </template>
 

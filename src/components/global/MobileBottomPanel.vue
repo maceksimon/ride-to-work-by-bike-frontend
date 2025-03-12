@@ -119,7 +119,7 @@ export default defineComponent({
         v-ripple
         v-for="item in menuPanel"
         :key="item.name"
-        :to="item.disabled ? '' : item.url"
+        :to="item.disabled || item.onClick ? '' : item.url"
         :disable="item.disabled"
         v-bind="{
           ...(item.href ? { href: item.href } : {}),
@@ -127,6 +127,7 @@ export default defineComponent({
         }"
         class="q-pa-sm"
         active-class="text-grey-10"
+        @click="item.onClick && item.onClick()"
       >
         <div class="text-center">
           <!-- Icon -->
@@ -171,7 +172,7 @@ export default defineComponent({
         v-ripple
         v-for="item in menuTop.slice(mobileBottomPanelVisibleItems)"
         :key="item.name"
-        :to="item.disabled ? '' : item.url"
+        :to="item.disabled || item.onClick ? '' : item.url"
         :disable="item.disabled"
         v-bind="{
           ...(item.href ? { href: item.href } : {}),
@@ -179,6 +180,7 @@ export default defineComponent({
         }"
         class="q-py-sm q-px-md"
         active-class="text-grey-10"
+        @click="item.onClick && item.onClick()"
       >
         <!-- Icon -->
         <q-item-section avatar>
@@ -200,7 +202,7 @@ export default defineComponent({
         v-ripple
         v-for="item in menuBottom"
         :key="item.name"
-        :to="item.disabled ? '' : item.url"
+        :to="item.disabled || item.onClick ? '' : item.url"
         :disable="item.disabled"
         v-bind="{
           ...(item.href ? { href: item.href } : {}),
@@ -208,6 +210,7 @@ export default defineComponent({
         }"
         class="q-py-sm q-px-md items-center"
         active-class="text-grey-10"
+        @click="item.onClick && item.onClick()"
       >
         <!-- Icon -->
         <q-item-section avatar>

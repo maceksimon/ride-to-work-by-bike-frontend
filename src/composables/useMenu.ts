@@ -7,6 +7,7 @@ import { routesConf } from 'src/router/routes_conf';
 // types
 import type { ComputedRef } from 'vue';
 import type { Link } from 'src/components/types';
+import { useInviteFriendsStore } from '../stores/inviteFriends';
 
 export const useMenu = () => {
   /**
@@ -95,7 +96,16 @@ export const useMenu = () => {
    * @returns {Link[]} - Array of bottom menu items
    */
   const getMenuBottom = (urlDonate: string): Link[] => {
+    const { openDialog } = useInviteFriendsStore();
+
     const menuBottom: Link[] = [
+      {
+        url: '',
+        icon: 'svguse:icons/drawer_menu/icons.svg#lucide-mail',
+        name: 'inviteFriends',
+        title: 'inviteFriends',
+        onClick: () => openDialog(),
+      },
       {
         url: '',
         icon: 'svguse:icons/drawer_menu/icons.svg#lucide-gift',
