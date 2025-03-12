@@ -33,44 +33,42 @@ describe('<FormInviteFriends>', () => {
     cy.testLanguageStringsInContext(['cs', 'en', 'sk'], 'language', i18n);
   });
 
+  beforeEach(() => {
+    setActivePinia(createPinia());
+    cy.mount(FormInviteFriends, {
+      props: {},
+    });
+    // Set initial store state
+    cy.fixture('apiGetThisCampaign.json').then((thisCampaignResponse) => {
+      cy.wrap(useChallengeStore()).then((challengeStore) => {
+        const maxTeamMembers = computed(() => challengeStore.getMaxTeamMembers);
+        challengeStore.setMaxTeamMembers(
+          thisCampaignResponse.results[0].max_team_members,
+        );
+        // test max team members number in store
+        cy.wrap(maxTeamMembers)
+          .its('value')
+          .should('be.equal', thisCampaignResponse.results[0].max_team_members);
+      });
+    });
+    cy.fixture('apiGetMyTeamResponseApproved.json').then((responseMyTeam) => {
+      cy.wrap(useRegisterChallengeStore()).then((registerChallengeStore) => {
+        // set myTeam in store
+        const myTeam = computed(() => registerChallengeStore.getMyTeam);
+        registerChallengeStore.setMyTeam(responseMyTeam.results[0]);
+        cy.wrap(myTeam)
+          .its('value')
+          .should('deep.equal', responseMyTeam.results[0]);
+        // set language in store
+        const language = computed(() => registerChallengeStore.getLanguage);
+        registerChallengeStore.setLanguage(defLocale);
+        cy.wrap(language).its('value').should('equal', defLocale);
+      });
+    });
+  });
+
   context('desktop', () => {
     beforeEach(() => {
-      setActivePinia(createPinia());
-      cy.mount(FormInviteFriends, {
-        props: {},
-      });
-      // Set initial store state
-      cy.fixture('apiGetThisCampaign.json').then((thisCampaignResponse) => {
-        cy.wrap(useChallengeStore()).then((challengeStore) => {
-          const maxTeamMembers = computed(
-            () => challengeStore.getMaxTeamMembers,
-          );
-          challengeStore.setMaxTeamMembers(
-            thisCampaignResponse.results[0].max_team_members,
-          );
-          // test max team members number in store
-          cy.wrap(maxTeamMembers)
-            .its('value')
-            .should(
-              'be.equal',
-              thisCampaignResponse.results[0].max_team_members,
-            );
-        });
-      });
-      cy.fixture('apiGetMyTeamResponseApproved.json').then((responseMyTeam) => {
-        cy.wrap(useRegisterChallengeStore()).then((registerChallengeStore) => {
-          // set myTeam in store
-          const myTeam = computed(() => registerChallengeStore.getMyTeam);
-          registerChallengeStore.setMyTeam(responseMyTeam.results[0]);
-          cy.wrap(myTeam)
-            .its('value')
-            .should('deep.equal', responseMyTeam.results[0]);
-          // set language in store
-          const language = computed(() => registerChallengeStore.getLanguage);
-          registerChallengeStore.setLanguage(defLocale);
-          cy.wrap(language).its('value').should('equal', defLocale);
-        });
-      });
       cy.viewport('macbook-16');
     });
 
@@ -84,42 +82,6 @@ describe('<FormInviteFriends>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      setActivePinia(createPinia());
-      cy.mount(FormInviteFriends, {
-        props: {},
-      });
-      // Set initial store state
-      cy.fixture('apiGetThisCampaign.json').then((thisCampaignResponse) => {
-        cy.wrap(useChallengeStore()).then((challengeStore) => {
-          const maxTeamMembers = computed(
-            () => challengeStore.getMaxTeamMembers,
-          );
-          challengeStore.setMaxTeamMembers(
-            thisCampaignResponse.results[0].max_team_members,
-          );
-          // test max team members number in store
-          cy.wrap(maxTeamMembers)
-            .its('value')
-            .should(
-              'be.equal',
-              thisCampaignResponse.results[0].max_team_members,
-            );
-        });
-      });
-      cy.fixture('apiGetMyTeamResponseApproved.json').then((responseMyTeam) => {
-        cy.wrap(useRegisterChallengeStore()).then((registerChallengeStore) => {
-          // set myTeam in store
-          const myTeam = computed(() => registerChallengeStore.getMyTeam);
-          registerChallengeStore.setMyTeam(responseMyTeam.results[0]);
-          cy.wrap(myTeam)
-            .its('value')
-            .should('deep.equal', responseMyTeam.results[0]);
-          // set language in store
-          const language = computed(() => registerChallengeStore.getLanguage);
-          registerChallengeStore.setLanguage(defLocale);
-          cy.wrap(language).its('value').should('equal', defLocale);
-        });
-      });
       cy.viewport('iphone-6');
     });
 
@@ -136,24 +98,6 @@ describe('<FormInviteFriends>', () => {
       setActivePinia(createPinia());
       cy.mount(FormInviteFriends, {
         props: {},
-      });
-      // Set initial store state
-      cy.fixture('apiGetThisCampaign.json').then((thisCampaignResponse) => {
-        cy.wrap(useChallengeStore()).then((challengeStore) => {
-          const maxTeamMembers = computed(
-            () => challengeStore.getMaxTeamMembers,
-          );
-          challengeStore.setMaxTeamMembers(
-            thisCampaignResponse.results[0].max_team_members,
-          );
-          // test max team members number in store
-          cy.wrap(maxTeamMembers)
-            .its('value')
-            .should(
-              'be.equal',
-              thisCampaignResponse.results[0].max_team_members,
-            );
-        });
       });
       cy.fixture('apiGetMyTeamResponseFullTeam.json').then((responseMyTeam) => {
         cy.wrap(useRegisterChallengeStore()).then((registerChallengeStore) => {
@@ -258,14 +202,14 @@ describe('<FormInviteFriends>', () => {
         .first()
         .find('input')
         .type('invalid-email');
-      cy.dataCy('form-invite-submit').click();
+      cy.dataCy('invite-email-addresses-input').first().find('input').blur();
       cy.get('.q-field__messages').should(
         'contain',
         i18n.global.t('form.messageEmailInvalid'),
       );
       // validates required field
       cy.dataCy('invite-email-addresses-input').first().find('input').clear();
-      cy.dataCy('form-invite-submit').click();
+      cy.dataCy('invite-email-addresses-input').first().find('input').blur();
       cy.get('.q-field__messages').should(
         'contain',
         i18n.global.t('form.messageFieldRequired', {

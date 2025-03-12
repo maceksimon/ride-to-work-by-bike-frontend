@@ -30,6 +30,8 @@ import { useMenu } from 'src/composables/useMenu';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // stores
+import { useChallengeStore } from 'src/stores/challenge';
+import { useInviteFriendsStore } from 'src/stores/inviteFriends';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 // types
@@ -42,6 +44,7 @@ import { getApiBaseUrlWithLang } from '../../utils/get_api_base_url_with_lang';
 export default defineComponent({
   name: 'MobileBottomPanel',
   setup() {
+    const challengeStore = useChallengeStore();
     const registerChallengeStore = useRegisterChallengeStore();
     const isUserOrganizationAdmin = computed(
       () => registerChallengeStore.isUserOrganizationAdmin,
@@ -86,8 +89,15 @@ export default defineComponent({
         i18n,
       );
     });
+    const remainingSlots = computed((): number => {
+      const maxTeamMembers = challengeStore.getMaxTeamMembers;
+      const myTeam = registerChallengeStore.getMyTeam;
+      if (!myTeam || !maxTeamMembers) return 0;
+      return maxTeamMembers - myTeam.member_count;
+    });
+    const { openDialog } = useInviteFriendsStore();
     const menuBottom = computed(() => {
-      return getMenuBottom(urlDonate.value);
+      return getMenuBottom(urlDonate.value, remainingSlots.value, openDialog);
     });
 
     return {

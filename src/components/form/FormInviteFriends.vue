@@ -23,10 +23,10 @@ import { computed, defineComponent, inject, ref, onMounted } from 'vue';
 // composables
 import { i18n } from 'src/boot/i18n';
 import { useValidation } from 'src/composables/useValidation';
-import { useMyTeam } from 'src/composables/useMyTeam';
 import { useApiPostSendTeamMembershipInvitationEmail } from 'src/composables/useApiPostSendTeamMembershipInvitationEmail';
 
 // stores
+import { useChallengeStore } from 'src/stores/challenge';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 import { useInviteFriendsStore } from 'src/stores/inviteFriends';
 
@@ -47,9 +47,16 @@ export default defineComponent({
     const emailAddresses = ref<string[]>(['']);
     const language = ref<string>('');
     const formInviteRef = ref<typeof QForm | null>(null);
+    const challengeStore = useChallengeStore();
     const registerChallengeStore = useRegisterChallengeStore();
     const { closeDialog } = useInviteFriendsStore();
-    const { remainingSlots } = useMyTeam();
+
+    const remainingSlots = computed((): number => {
+      const maxTeamMembers = challengeStore.getMaxTeamMembers;
+      const myTeam = registerChallengeStore.getMyTeam;
+      if (!myTeam || !maxTeamMembers) return 0;
+      return maxTeamMembers - myTeam.member_count;
+    });
 
     // load initial language from store
     onMounted(() => {

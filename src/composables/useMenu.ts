@@ -1,14 +1,8 @@
 // libraries
 import { unref } from 'vue';
 
-// composables
-import { useMyTeam } from './useMyTeam';
-
 // config
 import { routesConf } from 'src/router/routes_conf';
-
-// stores
-import { useInviteFriendsStore } from '../stores/inviteFriends';
 
 // types
 import type { ComputedRef } from 'vue';
@@ -98,12 +92,15 @@ export const useMenu = () => {
   /**
    * Get the bottom menu items
    * @param {string} urlDonate - The URL of the donate page
+   * @param {ComputedRef<number> | number} remainingSlots - Number of slots
+   *   remaining in my team
    * @returns {Link[]} - Array of bottom menu items
    */
-  const getMenuBottom = (urlDonate: string): Link[] => {
-    const { openDialog } = useInviteFriendsStore();
-    const { remainingSlots } = useMyTeam();
-
+  const getMenuBottom = (
+    urlDonate: string,
+    remainingSlots: ComputedRef<number> | number,
+    openDialog: () => void,
+  ): Link[] => {
     const menuBottom: Link[] = [
       {
         url: '',
@@ -111,7 +108,7 @@ export const useMenu = () => {
         name: 'inviteFriends',
         title: 'inviteFriends',
         onClick: () => openDialog(),
-        disabled: remainingSlots.value <= 0,
+        disabled: unref(remainingSlots) <= 0,
       },
       {
         url: '',

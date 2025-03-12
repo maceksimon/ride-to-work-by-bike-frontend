@@ -30,17 +30,18 @@ export default defineComponent({
     DialogDefault,
   },
   setup() {
-    const { getIsDialogOpen, openDialog, closeDialog } =
-      useInviteFriendsStore();
+    const inviteFriendsStore = useInviteFriendsStore();
 
     const isDialogOpen = computed({
-      get: () => getIsDialogOpen,
-      set: (value) => (value ? openDialog() : closeDialog()),
+      get: () => inviteFriendsStore.getIsDialogOpen,
+      set: (value) =>
+        value
+          ? inviteFriendsStore.openDialog()
+          : inviteFriendsStore.closeDialog(),
     });
 
     return {
       isDialogOpen,
-      closeDialog,
     };
   },
 });

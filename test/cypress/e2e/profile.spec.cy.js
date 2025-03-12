@@ -2,6 +2,8 @@ import { routesConf } from '../../../src/router/routes_conf';
 import { testDesktopSidebar } from '../support/commonTests';
 import { defLocale } from '../../../src/i18n/def_locale';
 import { getGenderLabel } from '../../../src/utils/get_gender_label';
+import { interceptOrganizationsApi } from '../support/commonTests';
+import { OrganizationType } from 'src/components/types/Organization';
 
 // selectors
 const classSelectorToggleInner = '.q-toggle__inner';
@@ -83,6 +85,12 @@ describe('Profile page', () => {
                 responseHasOrganizationAdmin,
               );
             },
+          );
+          // intercept organizations API
+          interceptOrganizationsApi(
+            config,
+            defLocale,
+            OrganizationType.company,
           );
           // intercept subsidiaries API
           cy.interceptSubsidiariesGetApi(
@@ -672,9 +680,7 @@ function coreTests() {
               response,
             );
             // open invite friends dialog
-            cy.dataCy('drawer-menu-item')
-              .contains(i18n.global.t('drawerMenu.inviteFriends'))
-              .click();
+            cy.contains(i18n.global.t('drawerMenu.inviteFriends')).click();
             // verify invite friends dialog
             cy.dataCy('dialog-invite-friends').should('be.visible');
             // verify form
@@ -694,6 +700,47 @@ function coreTests() {
             // wait for POST request
             cy.fixture(
               'apiPostSendTeamMembershipInvitationEmailRequest.json',
+            ).then((request) => {
+              cy.waitForSendTeamMembershipInvitationEmailApi(request, response);
+            });
+            // verify invite dialog closed
+            cy.dataCy('dialog-invite-friends').should('not.exist');
+          });
+          // intercept POST request with multiple emails
+          cy.fixture(
+            'apiPostSendTeamMembershipInvitationEmailResponseMultiple.json',
+          ).then((response) => {
+            cy.interceptSendTeamMembershipInvitationEmailApi(
+              config,
+              defLocale,
+              response,
+            );
+            // open invite friends dialog
+            cy.contains(i18n.global.t('drawerMenu.inviteFriends')).click();
+            // verify invite friends dialog
+            cy.dataCy('dialog-invite-friends').should('be.visible');
+            // verify form fields
+            cy.dataCy('invite-email-addresses-input')
+              .should('be.visible')
+              .find('input')
+              .should('be.visible')
+              .clear();
+            // put in email address
+            cy.dataCy('invite-email-addresses-input')
+              .find('input')
+              .type(response.team_membership_invitation_email_sended[0]);
+            // click add email address button
+            cy.dataCy('add-email-field').click();
+            // put in email address
+            cy.dataCy('invite-email-addresses-input')
+              .last()
+              .find('input')
+              .type(response.team_membership_invitation_email_sended[1]);
+            // click invite friends button
+            cy.dataCy('form-invite-submit').click();
+            // wait for POST request
+            cy.fixture(
+              'apiPostSendTeamMembershipInvitationEmailRequestMultiple.json',
             ).then((request) => {
               cy.waitForSendTeamMembershipInvitationEmailApi(request, response);
             });
