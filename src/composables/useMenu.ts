@@ -1,6 +1,9 @@
 // libraries
 import { unref } from 'vue';
 
+// composables
+import { useMyTeam } from './useMyTeam';
+
 // config
 import { routesConf } from 'src/router/routes_conf';
 
@@ -97,6 +100,7 @@ export const useMenu = () => {
    */
   const getMenuBottom = (urlDonate: string): Link[] => {
     const { openDialog } = useInviteFriendsStore();
+    const { remainingSlots } = useMyTeam();
 
     const menuBottom: Link[] = [
       {
@@ -105,6 +109,7 @@ export const useMenu = () => {
         name: 'inviteFriends',
         title: 'inviteFriends',
         onClick: () => openDialog(),
+        disabled: remainingSlots.value <= 0,
       },
       {
         url: '',

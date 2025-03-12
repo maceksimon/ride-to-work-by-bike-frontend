@@ -23,10 +23,10 @@ import { computed, defineComponent, ref, onMounted } from 'vue';
 // composables
 import { i18n } from 'src/boot/i18n';
 import { useValidation } from 'src/composables/useValidation';
+import { useMyTeam } from 'src/composables/useMyTeam';
 
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
-import { useChallengeStore } from 'src/stores/challenge';
 
 // components
 import FormFieldEmail from '../global/FormFieldEmail.vue';
@@ -44,19 +44,11 @@ export default defineComponent({
     const language = ref<string>('');
     const formInviteRef = ref<typeof QForm | null>(null);
     const registerChallengeStore = useRegisterChallengeStore();
-    const challengeStore = useChallengeStore();
+    const { remainingSlots } = useMyTeam();
 
     // load initial language from store
     onMounted(() => {
       language.value = registerChallengeStore.getLanguage;
-    });
-
-    // compute remaining slots in team
-    const remainingSlots = computed((): number => {
-      const maxTeamMembers = challengeStore.getMaxTeamMembers || 0;
-      const myTeam = registerChallengeStore.getMyTeam;
-      if (!myTeam) return maxTeamMembers;
-      return maxTeamMembers - myTeam.member_count;
     });
 
     // dynamically build array of language options
