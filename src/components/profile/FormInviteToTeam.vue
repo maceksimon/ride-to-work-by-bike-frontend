@@ -13,7 +13,7 @@
  * - `update:value`: Emitted when value successfully changes.
  *
  * @example
- * <form-invite-to-team :value="emails" @update:value="onUpdateEmails">
+ * <form-invite-to-team :value="emails" :remaining-slots="remainingSlots" @update:value="onUpdateEmails">
  */
 
 // libraries
