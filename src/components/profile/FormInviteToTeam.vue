@@ -16,14 +16,17 @@
  */
 
 // libraries
-import { computed, defineComponent, ref } from 'vue';
+import { QForm } from 'quasar';
+import { defineComponent, inject, ref } from 'vue';
 
 // components
 import FormFieldEmail from '../global/FormFieldEmail.vue';
 
-// stores
-import { useRegisterChallengeStore } from '../../stores/registerChallenge';
-import { useChallengeStore } from '../../stores/challenge';
+// composables
+import { useApiPostSendTeamMembershipInvitationEmail } from 'src/composables/useApiPostSendTeamMembershipInvitationEmail';
+
+// types
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'FormInviteToTeam',
@@ -35,35 +38,43 @@ export default defineComponent({
       type: Function,
       required: true,
     },
+    remainingSlots: {
+      type: Number,
+      required: true,
+    },
   },
-  emits: ['update:value', 'close'],
-  setup(props, { emit }) {
+  emits: ['close'],
+  setup(props) {
+    const logger = inject('vuejs3-logger') as Logger | null;
     const emailAddresses = ref<string[]>(['']);
-
+    const formRef = ref<InstanceType<typeof QForm> | null>(null);
     const closeDialog = (): void => {
       props.onClose();
     };
 
-    const onUpdateEmails = (): void => {
-      emit('update:value', emailAddresses.value);
-      props.onClose();
+    const { isLoading, postSendTeamMembershipInvitationEmail } =
+      useApiPostSendTeamMembershipInvitationEmail(logger);
+    const onUpdateEmails = async (): Promise<void> => {
+      if (!formRef.value) return;
+      const valid = await formRef.value.validate();
+      if (!valid) return;
+      const response = await postSendTeamMembershipInvitationEmail({
+        email: emailAddresses.value.join(','),
+      });
+      // if success
+      if (response?.team_membership_invitation_email_sended) {
+        // clear form
+        emailAddresses.value = [''];
+        // reset form validation
+        formRef.value.resetValidation();
+        // close dialog
+        props.onClose();
+      }
     };
-
-    const registerChallengeStore = useRegisterChallengeStore();
-    const challengeStore = useChallengeStore();
-    const remainingSlots = computed<number>((): number => {
-      const myTeam = registerChallengeStore.getMyTeam;
-      if (!myTeam) return 0;
-
-      const maxTeamMembers = challengeStore.getMaxTeamMembers;
-      if (!maxTeamMembers) return 0;
-
-      return maxTeamMembers - myTeam.member_count;
-    });
 
     // handle adding/removing email fields
     const addEmailField = (): void => {
-      if (emailAddresses.value.length < remainingSlots.value) {
+      if (emailAddresses.value.length < props.remainingSlots) {
         emailAddresses.value.push('');
       }
     };
@@ -78,15 +89,19 @@ export default defineComponent({
       onUpdateEmails,
       addEmailField,
       removeEmailField,
-      remainingSlots,
       isLoading,
+      formRef,
     };
   },
 });
 </script>
 
 <template>
-  <q-form @submit.prevent="onUpdateEmails" data-cy="form-invite-to-team">
+  <q-form
+    ref="formRef"
+    @submit.prevent="onUpdateEmails"
+    data-cy="form-invite-to-team"
+  >
     <!-- Label -->
     <label class="text-grey-10 text-caption text-bold" data-cy="form-label">
       {{ $t('form.labelEmailAddresses') }}
@@ -117,7 +132,7 @@ export default defineComponent({
               text-color="negative"
               icon="close"
               size="8px"
-              :title="$t('onboarding.buttonRemoveEmailField')"
+              :title="$t('form.buttonRemoveEmailField')"
               class="q-mt-md q-ml-sm"
               @click="removeEmailField(index)"
               data-cy="remove-email-field"
@@ -137,7 +152,7 @@ export default defineComponent({
         data-cy="add-email-field"
       >
         <q-icon name="add" size="18px" class="q-mr-xs" />
-        {{ $t('onboarding.buttonAddEmailField') }}
+        {{ $t('form.buttonAddEmailField') }}
       </q-btn>
     </div>
     <div class="q-mt-xl flex justify-end gap-8">
@@ -147,7 +162,8 @@ export default defineComponent({
         unelevated
         outline
         color="primary"
-        :label="$t('navigation.discardChanges')"
+        :label="$t('navigation.back')"
+        :disable="isLoading"
         @click.prevent="closeDialog"
         data-cy="form-button-cancel"
       />
@@ -157,7 +173,7 @@ export default defineComponent({
         unelevated
         type="submit"
         color="primary"
-        :label="$t('navigation.save')"
+        :label="$t('navigation.submit')"
         :loading="isLoading"
         data-cy="form-button-save"
       />

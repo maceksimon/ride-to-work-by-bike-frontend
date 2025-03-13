@@ -276,6 +276,7 @@ save = "Save"
 select = "Select"
 selected = "Selected"
 skip = "Skip"
+submit = "Submit"
 
 [form]
 buttonCompleteRegistration = "Complete registration"
@@ -687,11 +688,13 @@ messageTeamMaxMembersUnavailable = "Failed to get team members count. Please try
 messageTeamMaxMembersReached = "Team is full. You cannot add more members."
 
 [profile]
+buttonAddEmailField = "Add another email"
 buttonDeleteAccount = "Delete"
 buttonDownloadInvoice = "Download payment confirmation"
 buttonFillQuestionnaire = "Fill in questionnaire"
-buttonInviteTeamMembers = "Invite team members"
+buttonRemoveEmailField = "Remove email"
 descriptionNickname = "Appears in public results instead of your name"
+inviteTeamMembers = "Invite team members"
 labelAddressSubsidiary = "Address / Subsidiary:"
 labelDeleteAccount = "Delete account and all associated data"
 labelDeleteAccountDescription = "Deleting your account will delete all your data. Do you want to continue?"

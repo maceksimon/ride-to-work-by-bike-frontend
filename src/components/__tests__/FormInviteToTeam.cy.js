@@ -15,29 +15,23 @@ const selectorAddEmailField = 'add-email-field';
 const selectorRemoveEmailField = 'remove-email-field';
 
 // variables
-const initialValue = ['initial@email.com'];
 const remainingSlots = 4;
 
 describe('<FormInviteToTeam>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(['labelEmailAddresses'], 'form', i18n);
     cy.testLanguageStringsInContext(
-      ['buttonAddEmailField', 'buttonRemoveEmailField'],
-      'onboarding',
+      ['buttonAddEmailField', 'buttonRemoveEmailField', 'inviteTeamMembers'],
+      'profile',
       i18n,
     );
-    cy.testLanguageStringsInContext(
-      ['discardChanges', 'save'],
-      'navigation',
-      i18n,
-    );
+    cy.testLanguageStringsInContext(['back', 'submit'], 'navigation', i18n);
   });
 
   context('desktop', () => {
     beforeEach(() => {
       cy.mount(FormInviteToTeam, {
         props: {
-          value: initialValue,
           onClose: () => {},
           remainingSlots,
         },
@@ -52,7 +46,6 @@ describe('<FormInviteToTeam>', () => {
     beforeEach(() => {
       cy.mount(FormInviteToTeam, {
         props: {
-          value: initialValue,
           onClose: () => {},
           remainingSlots,
         },
@@ -76,18 +69,15 @@ function coreTests() {
       .and('have.color', grey10)
       .and('contain', i18n.global.t('form.labelEmailAddresses'));
     // input
-    cy.dataCy(selectorInput)
-      .should('be.visible')
-      .find('input')
-      .should('have.value', initialValue[0]);
+    cy.dataCy(selectorInput).should('be.visible');
     // cancel
     cy.dataCy(selectorButtonCancel)
       .should('be.visible')
-      .and('contain', i18n.global.t('navigation.discardChanges'));
+      .and('contain', i18n.global.t('navigation.back'));
     // save
     cy.dataCy(selectorButtonSave)
       .should('be.visible')
-      .and('contain', i18n.global.t('navigation.save'));
+      .and('contain', i18n.global.t('navigation.submit'));
   });
 
   it('renders buttons side by side', () => {

@@ -260,6 +260,15 @@ export default defineComponent({
     });
 
     const isDialogInviteTeamMembersOpen = ref(false);
+    const remainingSlots = computed<number>((): number => {
+      const myTeam = registerChallengeStore.getMyTeam;
+      if (!myTeam) return 0;
+
+      const maxTeamMembers = challengeStore.getMaxTeamMembers;
+      if (!maxTeamMembers) return 0;
+
+      return maxTeamMembers - myTeam.member_count;
+    });
 
     // update register challenge data
     const { isLoading, updateChallenge } = useApiPutRegisterChallenge(
@@ -348,6 +357,7 @@ export default defineComponent({
       organizationType,
       phone,
       profile,
+      remainingSlots,
       subsidiary,
       team,
       teamId,
@@ -477,76 +487,86 @@ export default defineComponent({
     <div class="q-mt-lg">
       <div class="row q-col-gutter-lg">
         <!-- Organization type -->
-        <details-item
-          :label="$t('profile.labelOrganizationType')"
-          :value="organizationType"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-organization-type"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            :label="$t('profile.labelOrganizationType')"
+            :value="organizationType"
+            data-cy="profile-details-organization-type"
+          />
+        </div>
         <!-- Organization -->
-        <details-item
-          :label="$t('profile.labelOrganization')"
-          :value="organization"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-organization"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            :label="$t('profile.labelOrganization')"
+            :value="organization"
+            data-cy="profile-details-organization"
+          />
+        </div>
         <!-- Address / Subsidiary -->
-        <details-item
-          :label="$t('profile.labelAddressSubsidiary')"
-          :value="subsidiary"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-address-subsidiary"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            :label="$t('profile.labelAddressSubsidiary')"
+            :value="subsidiary"
+            data-cy="profile-details-address-subsidiary"
+          />
+        </div>
         <!-- Team -->
-        <details-item
-          editable
-          :label="$t('profile.labelTeam')"
-          :dialog-title="$t('profile.titleUpdateTeam')"
-          :value="team"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-team"
-        >
-          <template #form="{ close }">
-            <!-- Form: Update team -->
-            <form-update-team
-              :model-value="teamId"
-              @close="close"
-              @update:model-value="onUpdateTeam"
-              data-cy="profile-details-form-team"
-            />
-          </template>
-        </details-item>
-        <!-- Team members list -->
-        <team-members-list class="col-12 col-sm-6 q-mt-lg" />
-        <div class="col-12 col-sm-6 flex items-end justify-end">
-          <q-btn
-            rounded
-            unelevated
-            outline
-            color="primary"
-            class="q-mb-sm"
-            data-cy="details-item-edit"
-            @click.prevent="isDialogInviteTeamMembersOpen = true"
+        <div class="col-12 col-sm-6">
+          <details-item
+            editable
+            :label="$t('profile.labelTeam')"
+            :dialog-title="$t('profile.titleUpdateTeam')"
+            :value="team"
+            data-cy="profile-details-team"
           >
-            <q-icon name="send" size="18px" class="q-mr-sm" />
-            {{ $t('profile.buttonInviteTeamMembers') }}
-          </q-btn>
-          <!-- Dialog: Edit -->
-          <dialog-default
-            v-model="isDialogInviteTeamMembersOpen"
-            data-cy="dialog-edit"
-          >
-            <!-- Dialog title -->
-            <template #title>
-              {{ $t('profile.titleInviteTeamMembers') }}
-            </template>
-            <!-- Dialog content -->
-            <template #content>
-              <form-invite-to-team
-                :on-close="() => (isDialogInviteTeamMembersOpen = false)"
+            <template #form="{ close }">
+              <!-- Form: Update team -->
+              <form-update-team
+                :model-value="teamId"
+                @close="close"
+                @update:model-value="onUpdateTeam"
+                data-cy="profile-details-form-team"
               />
             </template>
-          </dialog-default>
+          </details-item>
+        </div>
+        <!-- Team members list -->
+        <div class="col-12 col-sm-6 q-mt-lg">
+          <team-members-list />
+        </div>
+        <div class="col-12 col-sm-6">
+          <div class="full-width full-height flex items-end justify-end">
+            <q-btn
+              rounded
+              unelevated
+              outline
+              color="primary"
+              class="q-mb-sm"
+              data-cy="details-item-edit"
+              :disable="remainingSlots === 0"
+              @click.prevent="isDialogInviteTeamMembersOpen = true"
+            >
+              <q-icon name="send" size="18px" class="q-mr-sm" />
+              {{ $t('profile.inviteTeamMembers') }}
+            </q-btn>
+            <!-- Dialog: Edit -->
+            <dialog-default
+              v-model="isDialogInviteTeamMembersOpen"
+              data-cy="dialog-edit"
+            >
+              <!-- Dialog title -->
+              <template #title>
+                {{ $t('profile.inviteTeamMembers') }}
+              </template>
+              <!-- Dialog content -->
+              <template #content>
+                <form-invite-to-team
+                  :remaining-slots="remainingSlots"
+                  :on-close="() => (isDialogInviteTeamMembersOpen = false)"
+                />
+              </template>
+            </dialog-default>
+          </div>
         </div>
       </div>
     </div>

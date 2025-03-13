@@ -74,6 +74,10 @@ export default defineComponent({
       required: false,
       default: false,
     },
+    hideLabel: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: ['update:modelValue'],
   setup(props, { emit }) {
@@ -105,7 +109,7 @@ export default defineComponent({
 <template>
   <div class="col-12 col-sm-6" data-cy="form-email">
     <!-- Label -->
-    <label for="form-email" class="text-caption text-bold">
+    <label v-if="!hideLabel" for="form-email" class="text-caption text-bold">
       {{ $t('form.labelEmail') }}
     </label>
     <!-- Input -->
