@@ -967,6 +967,11 @@ apiMessageError = "Chyba při odesílání potvrzovacího e-mailu."
 apiMessageErrorWithMessage = "Chyba při odesílání potvrzovacího e-mailu. Chyba: {error}"
 apiMessageSuccess = "Potvrzovací e-mail byl úspěšně odeslán."
 
+[sendTeamMembershipInvitationEmail]
+apiMessageError = "Chyba při odesílání pozvánky. Zkontrolujte si prosím zadané adresy."
+apiMessageErrorWithMessage = "Chyba při odesílání pozvánky. Chyba: {error}"
+apiMessageSuccess = "Pozvánka byla úspěšně odeslána"
+
 [statsBar]
 labelFrequency = "pravidelnost"
 labelSustainableRoutes = "udržitelných cest"

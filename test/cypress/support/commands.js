@@ -2857,29 +2857,29 @@ Cypress.Commands.add(
 );
 
 /**
-* Wait for intercept my organization admin API call and compare response object
-* Wait for `@getMyOrganizationAdmin` intercept
-* @param {Object} expectedResponse - Expected response body
-*/
+ * Wait for intercept my organization admin API call and compare response object
+ * Wait for `@getMyOrganizationAdmin` intercept
+ * @param {Object} expectedResponse - Expected response body
+ */
 Cypress.Commands.add(
- 'waitForMyOrganizationAdminGetApi',
- (expectedResponse = null) => {
-   cy.fixture('apiGetMyOrganizationAdmin.json').then((defaultResponse) => {
-     cy.wait('@getMyOrganizationAdmin').then((getMyOrganizationAdmin) => {
-       expect(getMyOrganizationAdmin.request.headers.authorization).to.include(
-         bearerTokeAuth,
-       );
-       if (getMyOrganizationAdmin.response) {
-         expect(getMyOrganizationAdmin.response.statusCode).to.equal(
-           httpSuccessfullStatus,
-         );
-         expect(getMyOrganizationAdmin.response.body).to.deep.equal(
-           expectedResponse || defaultResponse,
-         );
-       }
-     });
-   });
- },
+  'waitForMyOrganizationAdminGetApi',
+  (expectedResponse = null) => {
+    cy.fixture('apiGetMyOrganizationAdmin.json').then((defaultResponse) => {
+      cy.wait('@getMyOrganizationAdmin').then((getMyOrganizationAdmin) => {
+        expect(getMyOrganizationAdmin.request.headers.authorization).to.include(
+          bearerTokeAuth,
+        );
+        if (getMyOrganizationAdmin.response) {
+          expect(getMyOrganizationAdmin.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getMyOrganizationAdmin.response.body).to.deep.equal(
+            expectedResponse || defaultResponse,
+          );
+        }
+      });
+    });
+  },
 );
 
 /**
@@ -2931,6 +2931,54 @@ Cypress.Commands.add(
         }
       });
     });
+  },
+);
+
+// intercept send team membership invitation email API request
+Cypress.Commands.add(
+  'interceptSendTeamMembershipInvitationEmailApi',
+  (config, i18n, responseBody = null, responseStatusCode = null) => {
+    const { apiBase, apiDefaultLang, urlApiSendTeamMembershipInvitationEmail } =
+      config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiSendTeamMembershipInvitationEmailLocalized = `${apiBaseUrl}${urlApiSendTeamMembershipInvitationEmail}`;
+
+    cy.fixture('apiPostSendTeamMembershipInvitationEmailResponse.json').then(
+      (defaultResponse) => {
+        cy.intercept('POST', urlApiSendTeamMembershipInvitationEmailLocalized, {
+          statusCode: responseStatusCode || httpSuccessfullStatus,
+          body: responseBody || defaultResponse,
+        }).as('sendTeamMembershipInvitationEmailApi');
+      },
+    );
+  },
+);
+
+// wait for send team membership invitation email API request
+Cypress.Commands.add(
+  'waitForSendTeamMembershipInvitationEmailApi',
+  (expectedRequest, expectedResponse = null) => {
+    cy.fixture('apiPostSendTeamMembershipInvitationEmailResponse.json').then(
+      (defaultResponse) => {
+        cy.wait('@sendTeamMembershipInvitationEmailApi').then(
+          ({ request, response }) => {
+            expect(request.headers.authorization).to.include(bearerTokeAuth);
+            expect(request.body).to.deep.equal(expectedRequest);
+            if (response) {
+              expect(response.statusCode).to.equal(httpSuccessfullStatus);
+              expect(response.body).to.deep.equal(
+                expectedResponse || defaultResponse,
+              );
+            }
+          },
+        );
+      },
+    );
   },
 );
 
