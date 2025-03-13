@@ -116,6 +116,7 @@ export default defineComponent({
       >
         <div class="row">
           <div class="col">
+            <!-- Input: Email -->
             <form-field-email
               hide-label
               v-model="emailAddresses[index]"
@@ -124,6 +125,7 @@ export default defineComponent({
               data-cy="invite-email-addresses-input"
             />
           </div>
+          <!-- Button: Remove email field -->
           <div class="col-auto">
             <q-btn
               v-if="index > 0"
@@ -141,6 +143,7 @@ export default defineComponent({
           </div>
         </div>
       </div>
+      <!-- Button: Add email field -->
       <q-btn
         v-if="emailAddresses.length < remainingSlots"
         unelevated
