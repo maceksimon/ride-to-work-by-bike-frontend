@@ -7,6 +7,7 @@
  *
  * @props
  * - `onClose` (function, required): Function to close the dialog.
+ * - `remainingSlots` (number, required): Number of remaining slots in the team.
  *
  * @events
  * - `update:value`: Emitted when value successfully changes.
