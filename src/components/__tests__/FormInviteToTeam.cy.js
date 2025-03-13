@@ -42,6 +42,18 @@ describe('<FormInviteToTeam>', () => {
     coreTests();
   });
 
+  context('desktop - my team has 1 slot remaining', () => {
+    beforeEach(() => {
+      cy.mount(FormInviteToTeam, {
+        props: { onClose: () => {}, remainingSlots: 1 },
+      });
+    });
+
+    it('does not allow to add more fields', () => {
+      cy.dataCy(selectorAddEmailField).should('not.exist');
+    });
+  });
+
   context('mobile', () => {
     beforeEach(() => {
       cy.mount(FormInviteToTeam, {
