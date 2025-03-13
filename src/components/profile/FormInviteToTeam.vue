@@ -6,10 +6,7 @@
  * Note: Used in `DetailsItem` component on `ProfilePage`.
  *
  * @props
- * - `value` (string[], required): Array of email addresses.
  * - `onClose` (function, required): Function to close the dialog.
- * - `loading` (boolean, optional): Loading state.
- * - `remainingSlots` (number, required): Number of empty slots in the team.
  *
  * @events
  * - `update:value`: Emitted when value successfully changes.
@@ -19,10 +16,14 @@
  */
 
 // libraries
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 
 // components
 import FormFieldEmail from '../global/FormFieldEmail.vue';
+
+// stores
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
+import { useChallengeStore } from '../../stores/challenge';
 
 export default defineComponent({
   name: 'FormInviteToTeam',
@@ -30,30 +31,14 @@ export default defineComponent({
     FormFieldEmail,
   },
   props: {
-    value: {
-      type: Array as () => string[],
-      required: true,
-    },
     onClose: {
       type: Function,
-      required: true,
-    },
-    loading: {
-      type: Boolean,
-      default: false,
-    },
-    remainingSlots: {
-      type: Number,
       required: true,
     },
   },
   emits: ['update:value', 'close'],
   setup(props, { emit }) {
     const emailAddresses = ref<string[]>(['']);
-
-    onMounted(() => {
-      emailAddresses.value = props.value.length ? props.value : [''];
-    });
 
     const closeDialog = (): void => {
       props.onClose();
@@ -64,9 +49,21 @@ export default defineComponent({
       props.onClose();
     };
 
+    const registerChallengeStore = useRegisterChallengeStore();
+    const challengeStore = useChallengeStore();
+    const remainingSlots = computed<number>((): number => {
+      const myTeam = registerChallengeStore.getMyTeam;
+      if (!myTeam) return 0;
+
+      const maxTeamMembers = challengeStore.getMaxTeamMembers;
+      if (!maxTeamMembers) return 0;
+
+      return maxTeamMembers - myTeam.member_count;
+    });
+
     // handle adding/removing email fields
     const addEmailField = (): void => {
-      if (emailAddresses.value.length < props.remainingSlots) {
+      if (emailAddresses.value.length < remainingSlots.value) {
         emailAddresses.value.push('');
       }
     };
@@ -81,6 +78,8 @@ export default defineComponent({
       onUpdateEmails,
       addEmailField,
       removeEmailField,
+      remainingSlots,
+      isLoading,
     };
   },
 });
@@ -159,7 +158,7 @@ export default defineComponent({
         type="submit"
         color="primary"
         :label="$t('navigation.save')"
-        :loading="loading"
+        :loading="isLoading"
         data-cy="form-button-save"
       />
     </div>

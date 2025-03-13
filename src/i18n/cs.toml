@@ -692,6 +692,7 @@ messageTeamMaxMembersReached = "Tým je plný. Nemůžete přidat další členy
 buttonDeleteAccount = "Smazat"
 buttonDownloadInvoice = "Stáhnout potvrzení o platbě"
 buttonFillQuestionnaire = "Vyplnit dotazník"
+buttonInviteTeamMembers = "Pozvat členy do týmu"
 descriptionNickname = "Zobrazí se ve veřejných výsledcích místo vašeho jména"
 labelAddressSubsidiary = "Adresa / pobočka:"
 labelDeleteAccount = "Smazat účet a všechny příslušné údaje"

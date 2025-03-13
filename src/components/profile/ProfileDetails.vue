@@ -26,7 +26,7 @@
 
 // libraries
 import { Notify } from 'quasar';
-import { computed, defineComponent, inject, onMounted } from 'vue';
+import { computed, defineComponent, inject, onMounted, ref } from 'vue';
 
 // adapters
 import { registerChallengeAdapter } from '../../adapters/registerChallengeAdapter';
@@ -45,6 +45,8 @@ import ProfileCoordinatorContact from './ProfileCoordinatorContact.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 import DeleteAccount from './DeleteAccount.vue';
 import TeamMembersList from './TeamMembersList.vue';
+import DialogDefault from '../global/DialogDefault.vue';
+import FormInviteToTeam from './FormInviteToTeam.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
@@ -86,6 +88,8 @@ export default defineComponent({
     SectionHeading,
     DeleteAccount,
     TeamMembersList,
+    DialogDefault,
+    FormInviteToTeam,
   },
   setup() {
     // TODO: Enable additional elements
@@ -255,6 +259,8 @@ export default defineComponent({
       },
     });
 
+    const isDialogInviteTeamMembersOpen = ref(false);
+
     // update register challenge data
     const { isLoading, updateChallenge } = useApiPutRegisterChallenge(
       registerChallengeStore.$log,
@@ -356,6 +362,7 @@ export default defineComponent({
       isEnabledDownloadInvoice,
       isEnabledPackageState,
       isEnabledTrackingNumber,
+      isDialogInviteTeamMembersOpen,
     };
   },
 });
@@ -510,7 +517,37 @@ export default defineComponent({
           </template>
         </details-item>
         <!-- Team members list -->
-        <team-members-list class="col-12 q-mt-lg" />
+        <team-members-list class="col-12 col-sm-6 q-mt-lg" />
+        <div class="col-12 col-sm-6 flex items-end justify-end">
+          <q-btn
+            rounded
+            unelevated
+            outline
+            color="primary"
+            class="q-mb-sm"
+            data-cy="details-item-edit"
+            @click.prevent="isDialogInviteTeamMembersOpen = true"
+          >
+            <q-icon name="send" size="18px" class="q-mr-sm" />
+            {{ $t('profile.buttonInviteTeamMembers') }}
+          </q-btn>
+          <!-- Dialog: Edit -->
+          <dialog-default
+            v-model="isDialogInviteTeamMembersOpen"
+            data-cy="dialog-edit"
+          >
+            <!-- Dialog title -->
+            <template #title>
+              {{ $t('profile.titleInviteTeamMembers') }}
+            </template>
+            <!-- Dialog content -->
+            <template #content>
+              <form-invite-to-team
+                :on-close="() => (isDialogInviteTeamMembersOpen = false)"
+              />
+            </template>
+          </dialog-default>
+        </div>
       </div>
     </div>
 
