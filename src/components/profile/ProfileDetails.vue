@@ -579,66 +579,72 @@ export default defineComponent({
     <div class="q-mt-lg">
       <div class="row q-col-gutter-lg">
         <!-- Package -->
-        <details-item
-          :label="$t('profile.labelPackage')"
-          :value="merchandiseItemLabel"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-package"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            :label="$t('profile.labelPackage')"
+            :value="merchandiseItemLabel"
+            data-cy="profile-details-package"
+          />
+        </div>
         <!-- Size -->
-        <details-item
-          :label="$t('profile.labelSize')"
-          :value="merchandiseItemSize"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-size"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            :label="$t('profile.labelSize')"
+            :value="merchandiseItemSize"
+            data-cy="profile-details-size"
+          />
+        </div>
         <!-- State -->
-        <details-item
-          v-if="isEnabledPackageState"
-          :label="$t('profile.labelState')"
-          :value="formPersonalDetails.package.state"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-state"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            v-if="isEnabledPackageState"
+            :label="$t('profile.labelState')"
+            :value="formPersonalDetails.package.state"
+            data-cy="profile-details-state"
+          />
+        </div>
         <!-- Tracking number -->
-        <details-item
-          v-if="isEnabledTrackingNumber"
-          :label="$t('profile.labelTrackingNumber')"
-          :value="formPersonalDetails.package.trackingNumber"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-tracking-number"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            v-if="isEnabledTrackingNumber"
+            :label="$t('profile.labelTrackingNumber')"
+            :value="formPersonalDetails.package.trackingNumber"
+            data-cy="profile-details-tracking-number"
+          />
+        </div>
         <!-- Delivery address -->
-        <details-item
-          :label="$t('profile.labelDeliveryAddress')"
-          :value="subsidiary"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-delivery-address"
-        />
+        <div class="col-12 col-sm-6">
+          <details-item
+            :label="$t('profile.labelDeliveryAddress')"
+            :value="subsidiary"
+            data-cy="profile-details-delivery-address"
+          />
+        </div>
         <!-- Phone number -->
-        <details-item
-          editable
-          :label="$t('profile.labelPhone')"
-          :dialog-title="$t('profile.titleUpdatePhone')"
-          :value="phone"
-          class="col-12 col-sm-6"
-          data-cy="profile-details-phone"
-        >
-          <template #form="{ close }">
-            <!-- Form: Update phone number -->
-            <form-update-phone
-              :on-close="close"
-              :value="phone"
-              :loading="isLoading"
-              @update:value="
-                onUpdateRegisterChallengeDetails({
-                  telephone: $event,
-                })
-              "
-              data-cy="profile-details-form-phone"
-            />
-          </template>
-        </details-item>
+        <div class="col-12 col-sm-6">
+          <details-item
+            editable
+            :label="$t('profile.labelPhone')"
+            :dialog-title="$t('profile.titleUpdatePhone')"
+            :value="phone"
+            data-cy="profile-details-phone"
+          >
+            <template #form="{ close }">
+              <!-- Form: Update phone number -->
+              <form-update-phone
+                :on-close="close"
+                :value="phone"
+                :loading="isLoading"
+                @update:value="
+                  onUpdateRegisterChallengeDetails({
+                    telephone: $event,
+                  })
+                "
+                data-cy="profile-details-form-phone"
+              />
+            </template>
+          </details-item>
+        </div>
       </div>
     </div>
 
