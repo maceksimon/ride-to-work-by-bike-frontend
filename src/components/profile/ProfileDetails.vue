@@ -542,9 +542,9 @@ export default defineComponent({
               outline
               color="primary"
               class="q-mb-sm"
-              data-cy="details-item-edit"
               :disable="remainingSlots === 0"
               @click.prevent="isDialogInviteTeamMembersOpen = true"
+              data-cy="profile-details-invite-team-members"
             >
               <q-icon name="send" size="18px" class="q-mr-sm" />
               {{ $t('profile.inviteTeamMembers') }}
@@ -552,7 +552,7 @@ export default defineComponent({
             <!-- Dialog: Edit -->
             <dialog-default
               v-model="isDialogInviteTeamMembersOpen"
-              data-cy="dialog-edit"
+              data-cy="profile-details-invite-team-members-dialog"
             >
               <!-- Dialog title -->
               <template #title>

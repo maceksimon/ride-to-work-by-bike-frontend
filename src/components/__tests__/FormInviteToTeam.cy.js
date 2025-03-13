@@ -10,7 +10,7 @@ const selectorFormInviteToTeam = 'form-invite-to-team';
 const selectorInput = 'invite-email-addresses-input';
 const selectorLabel = 'form-label';
 const selectorButtonCancel = 'form-button-cancel';
-const selectorButtonSave = 'form-button-save';
+const selectorButtonSubmit = 'form-button-submit';
 const selectorAddEmailField = 'add-email-field';
 const selectorRemoveEmailField = 'remove-email-field';
 
@@ -75,13 +75,13 @@ function coreTests() {
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.back'));
     // save
-    cy.dataCy(selectorButtonSave)
+    cy.dataCy(selectorButtonSubmit)
       .should('be.visible')
       .and('contain', i18n.global.t('navigation.submit'));
   });
 
   it('renders buttons side by side', () => {
-    cy.testElementsSideBySide(selectorButtonCancel, selectorButtonSave);
+    cy.testElementsSideBySide(selectorButtonCancel, selectorButtonSubmit);
   });
 
   it('validates email fields and allows adding/removing fields', () => {
@@ -107,14 +107,14 @@ function coreTests() {
     cy.dataCy(selectorInput).first().find('input').clear();
     // validates email format
     cy.dataCy(selectorInput).first().find('input').type('invalid-email');
-    cy.dataCy(selectorButtonSave).click();
+    cy.dataCy(selectorButtonSubmit).click();
     cy.get('.q-field__messages').should(
       'contain',
       i18n.global.t('form.messageEmailInvalid'),
     );
     // validates required field
     cy.dataCy(selectorInput).first().find('input').clear();
-    cy.dataCy(selectorButtonSave).click();
+    cy.dataCy(selectorButtonSubmit).click();
     cy.get('.q-field__messages').should(
       'contain',
       i18n.global.t('form.messageFieldRequired', {

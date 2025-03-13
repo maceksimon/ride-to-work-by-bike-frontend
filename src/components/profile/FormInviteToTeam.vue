@@ -167,7 +167,7 @@ export default defineComponent({
         @click.prevent="closeDialog"
         data-cy="form-button-cancel"
       />
-      <!-- Button: Save -->
+      <!-- Button: Submit -->
       <q-btn
         rounded
         unelevated
@@ -175,7 +175,7 @@ export default defineComponent({
         color="primary"
         :label="$t('navigation.submit')"
         :loading="isLoading"
-        data-cy="form-button-save"
+        data-cy="form-button-submit"
       />
     </div>
   </q-form>

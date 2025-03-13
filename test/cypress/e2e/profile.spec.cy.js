@@ -2,6 +2,8 @@ import { routesConf } from '../../../src/router/routes_conf';
 import { testDesktopSidebar } from '../support/commonTests';
 import { defLocale } from '../../../src/i18n/def_locale';
 import { getGenderLabel } from '../../../src/utils/get_gender_label';
+import { interceptOrganizationsApi } from '../support/commonTests';
+import { OrganizationType } from 'src/components/types/Organization';
 
 // selectors
 const classSelectorToggleInner = '.q-toggle__inner';
@@ -83,6 +85,12 @@ describe('Profile page', () => {
                 responseHasOrganizationAdmin,
               );
             },
+          );
+          // intercept organizations API
+          interceptOrganizationsApi(
+            config,
+            defLocale,
+            OrganizationType.company,
           );
           // intercept subsidiaries API
           cy.interceptSubsidiariesGetApi(
@@ -281,6 +289,35 @@ describe('Profile page', () => {
 
     it('allows user to approve max number of members and reject the rest', () => {
       cy.testApproveMaxTeamMembers();
+    });
+  });
+
+  context('desktop - my team is full', () => {
+    beforeEach(() => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.wrap(config).as('config');
+        cy.fixture('apiGetMyTeamResponseFullTeam.json').then(
+          (responseMyTeam) => {
+            cy.interceptMyTeamGetApi(config, defLocale, responseMyTeam);
+          },
+        );
+      });
+      cy.visit('#' + routesConf['profile']['children']['fullPath']);
+      // alias i18n
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
+        cy.wrap(win.i18n).as('i18n');
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('does not allow to invite members to team', () => {
+      cy.fixture('apiGetMyTeamResponseFullTeam.json').then((responseMyTeam) => {
+        cy.waitForMyTeamGetApi(responseMyTeam);
+      });
+      cy.dataCy('profile-details-invite-team-members')
+        .should('be.visible')
+        .and('be.disabled');
     });
   });
 });
@@ -652,6 +689,115 @@ function coreTests() {
           });
         },
       );
+    });
+  });
+
+  it('allows user to invite friends', () => {
+    cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // wait for GET request
+          cy.waitForRegisterChallengeGetApi(response);
+          cy.waitForMyTeamGetApi();
+          // intercept POST request
+          cy.fixture(
+            'apiPostSendTeamMembershipInvitationEmailResponse.json',
+          ).then((response) => {
+            cy.interceptSendTeamMembershipInvitationEmailApi(
+              config,
+              defLocale,
+              response,
+            );
+            // open dialog
+            cy.dataCy('profile-details-invite-team-members').click();
+            // verify dialog is visible
+            cy.dataCy('profile-details-invite-team-members-dialog')
+              .should('be.visible')
+              .within(() => {
+                // verify dialog title
+                cy.contains(i18n.global.t('profile.inviteTeamMembers')).should(
+                  'be.visible',
+                );
+              });
+            // verify form is visible
+            cy.dataCy('form-invite-to-team').should('be.visible');
+            // verify form has email input field
+            cy.dataCy('invite-email-addresses-input').should('have.length', 1);
+            // verify form has add email button
+            cy.dataCy('add-email-field').should('be.visible');
+            // verify form has cancel button
+            cy.dataCy('form-button-cancel')
+              .should('be.visible')
+              .and('contain', i18n.global.t('navigation.back'));
+            // verify form has submit button
+            cy.dataCy('form-button-submit')
+              .should('be.visible')
+              .and('contain', i18n.global.t('navigation.submit'));
+            cy.dataCy('invite-email-addresses-input')
+              .should('be.visible')
+              .find('input')
+              .should('be.visible')
+              .clear();
+            // put in email address
+            cy.dataCy('invite-email-addresses-input')
+              .find('input')
+              .type(response.team_membership_invitation_email_sended[0]);
+            // click invite friends button
+            cy.dataCy('form-button-submit').click();
+            // wait for POST request
+            cy.fixture(
+              'apiPostSendTeamMembershipInvitationEmailRequest.json',
+            ).then((request) => {
+              cy.waitForSendTeamMembershipInvitationEmailApi(request, response);
+            });
+            // verify invite dialog closed
+            cy.dataCy('profile-details-invite-team-members-dialog').should(
+              'not.exist',
+            );
+          });
+          // intercept POST request with multiple emails
+          cy.fixture(
+            'apiPostSendTeamMembershipInvitationEmailResponseMultiple.json',
+          ).then((response) => {
+            cy.interceptSendTeamMembershipInvitationEmailApi(
+              config,
+              defLocale,
+              response,
+            );
+            // open dialog
+            cy.dataCy('profile-details-invite-team-members').click();
+            // verify dialog is visible
+            cy.dataCy('profile-details-invite-team-members-dialog').should(
+              'be.visible',
+            );
+            // verify form fields
+            cy.dataCy('invite-email-addresses-input')
+              .should('be.visible')
+              .find('input')
+              .should('be.visible')
+              .clear();
+            // put in email address
+            cy.dataCy('invite-email-addresses-input')
+              .find('input')
+              .type(response.team_membership_invitation_email_sended[0]);
+            // click add email address button
+            cy.dataCy('add-email-field').click();
+            // put in email address
+            cy.dataCy('invite-email-addresses-input')
+              .last()
+              .find('input')
+              .type(response.team_membership_invitation_email_sended[1]);
+            // click submit button
+            cy.dataCy('form-button-submit').click();
+            // wait for POST request
+            cy.fixture(
+              'apiPostSendTeamMembershipInvitationEmailRequestMultiple.json',
+            ).then((request) => {
+              cy.waitForSendTeamMembershipInvitationEmailApi(request, response);
+            });
+          });
+        });
+      });
     });
   });
 
