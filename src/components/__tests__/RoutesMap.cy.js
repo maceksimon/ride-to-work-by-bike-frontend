@@ -1,6 +1,5 @@
 import RoutesMap from 'components/routes/RoutesMap.vue';
 import { i18n } from '../../boot/i18n';
-import { TransportType } from '../../components/types/Route';
 
 // selectors
 const selectorRoutesMap = 'routes-map';
@@ -33,14 +32,7 @@ describe('<RoutesMap>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
-      [
-        TransportType.bike,
-        TransportType.car,
-        TransportType.none,
-        TransportType.walk,
-        TransportType.bus,
-        'unknown',
-      ],
+      ['bike', 'car', 'none', 'walk', 'bus', 'unknown'],
       'routes.transport',
       i18n,
     );

@@ -1,8 +1,11 @@
 import { colors } from 'quasar';
+import { computed } from 'vue';
+import { createPinia, setActivePinia } from 'pinia';
 import FormFieldTestWrapper from 'components/global/FormFieldTestWrapper.vue';
 import RouteInputTransportType from '../routes/RouteInputTransportType.vue';
 import { i18n } from '../../boot/i18n';
 import { TransportType } from '../types/Route';
+import { useTripsStore } from '../../stores/trips';
 
 // composables
 const { getPaletteColor } = colors;
@@ -32,11 +35,23 @@ describe('<RouteInputTransportType>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'RouteInputTransportType',
           defaultValue: TransportType.bike,
         },
+      });
+      // setup store with commute modes
+      cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
+        cy.wrap(useTripsStore()).then((tripsStore) => {
+          const commuteModes = computed(() => tripsStore.getCommuteModes);
+          tripsStore.setCommuteModes(commuteModeResponse.results);
+          // verify store state
+          cy.wrap(commuteModes)
+            .its('value')
+            .should('deep.equal', commuteModeResponse.results);
+        });
       });
       cy.viewport('macbook-16');
     });
@@ -47,11 +62,23 @@ describe('<RouteInputTransportType>', () => {
 
   context('desktop - horizontal', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(RouteInputTransportType, {
         props: {
           horizontal: true,
           modelValue: TransportType.bike,
         },
+      });
+      // setup store with commute modes
+      cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
+        cy.wrap(useTripsStore()).then((tripsStore) => {
+          const commuteModes = computed(() => tripsStore.getCommuteModes);
+          tripsStore.setCommuteModes(commuteModeResponse.results);
+          // verify store state
+          cy.wrap(commuteModes)
+            .its('value')
+            .should('deep.equal', commuteModeResponse.results);
+        });
       });
       cy.viewport('macbook-16');
     });
@@ -79,11 +106,23 @@ describe('<RouteInputTransportType>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(FormFieldTestWrapper, {
         props: {
           component: 'RouteInputTransportType',
           defaultValue: TransportType.bike,
         },
+      });
+      // setup store with commute modes
+      cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
+        cy.wrap(useTripsStore()).then((tripsStore) => {
+          const commuteModes = computed(() => tripsStore.getCommuteModes);
+          tripsStore.setCommuteModes(commuteModeResponse.results);
+          // verify store state
+          cy.wrap(commuteModes)
+            .its('value')
+            .should('deep.equal', commuteModeResponse.results);
+        });
       });
       cy.viewport('iphone-6');
     });
@@ -157,36 +196,55 @@ function coreTests() {
 
 function interactionTests() {
   it('allows to change transport type', () => {
-    // make sure transport type is bike
-    cy.dataCy(selectorButtonToggleTransport).eq(0).click();
+    // make sure transport type is bicycle
+    cy.dataCy(selectorButtonToggleTransport)
+      .filter(`[data-value="${TransportType.bike}"]`)
+      .click();
     // description transport
     cy.dataCy(selectorDescriptionTransport).should(
       'contain',
       i18n.global.t('routes.transport.bike'),
     );
     // change transport type
-    cy.dataCy(selectorButtonToggleTransport).eq(1).click();
-    // transport on foot
+    cy.dataCy(selectorButtonToggleTransport)
+      .filter(`[data-value="${TransportType.walk}"]`)
+      .click();
+    // transport by foot
     cy.dataCy(selectorDescriptionTransport).should(
       'contain',
       i18n.global.t('routes.transport.walk'),
     );
     // change transport type
-    cy.dataCy(selectorButtonToggleTransport).eq(2).click();
+    cy.dataCy(selectorButtonToggleTransport)
+      .filter(`[data-value="${TransportType.bus}"]`)
+      .click();
     // transport by public transport
     cy.dataCy(selectorDescriptionTransport).should(
       'contain',
       i18n.global.t('routes.transport.bus'),
     );
     // change transport type
-    cy.dataCy(selectorButtonToggleTransport).eq(3).click();
+    cy.dataCy(selectorButtonToggleTransport)
+      .filter(`[data-value="${TransportType.home}"]`)
+      .click();
+    // transport home office
+    cy.dataCy(selectorDescriptionTransport).should(
+      'contain',
+      i18n.global.t('routes.transport.home'),
+    );
+    // change transport type
+    cy.dataCy(selectorButtonToggleTransport)
+      .filter(`[data-value="${TransportType.car}"]`)
+      .click();
     // transport by car
     cy.dataCy(selectorDescriptionTransport).should(
       'contain',
       i18n.global.t('routes.transport.car'),
     );
     // change transport type
-    cy.dataCy(selectorButtonToggleTransport).eq(4).click();
+    cy.dataCy(selectorButtonToggleTransport)
+      .filter(`[data-value="${TransportType.none}"]`)
+      .click();
     // transport none
     cy.dataCy(selectorDescriptionTransport).should(
       'contain',

@@ -12,6 +12,7 @@ export enum TransportType {
   car = 'by_other_vehicle',
   walk = 'by_foot',
   bus = 'hromadna',
+  home = 'telecommute',
   none = 'no_work',
 }
 
