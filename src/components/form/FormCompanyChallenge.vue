@@ -70,7 +70,7 @@ export default defineComponent({
       }
       // set default eco-friendly transport types
       challengeTransportType.value = tripsStore.getEcoCommuteModes.map(
-        (mode) => mode.slug as TransportType,
+        (mode) => mode.slug,
       );
     });
 
@@ -178,11 +178,11 @@ export default defineComponent({
             :data-cy="'form-acceptable-transport-' + mode.slug"
           >
             <q-icon
-              :name="getRouteIcon(mode.slug as TransportType)"
+              :name="getRouteIcon(mode.slug)"
               class="q-mr-xs text-grey-6"
               :size="iconSize"
             />
-            {{ getTransportLabel(mode.slug as TransportType) }}
+            {{ getTransportLabel(mode.slug) }}
           </q-checkbox>
         </template>
       </div>

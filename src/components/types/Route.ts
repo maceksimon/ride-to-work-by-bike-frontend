@@ -63,7 +63,7 @@ export interface RouteFeature {
 
 export interface CommuteMode {
   id: number;
-  slug: string;
+  slug: TransportType;
   does_count: boolean;
   eco: boolean;
   distance_important: boolean;

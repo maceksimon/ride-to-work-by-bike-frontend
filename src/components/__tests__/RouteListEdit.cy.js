@@ -1,3 +1,4 @@
+import { createPinia, setActivePinia } from 'pinia';
 import { date, colors } from 'quasar';
 import { computed } from 'vue';
 import RouteListEdit from 'components/routes/RouteListEdit.vue';
@@ -35,6 +36,7 @@ describe('<RouteListEdit>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.clock(new Date('2024-08-15').getTime());
       cy.fixture('routeList').then((routes) => {
         cy.mount(RouteListEdit, {
@@ -61,6 +63,7 @@ describe('<RouteListEdit>', () => {
   // cy.clock() interferes with select dropdown function
   context('desktop - current date', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.fixture('routeList').then((routes) => {
         cy.mount(RouteListEdit, {
           props: {
@@ -107,6 +110,7 @@ describe('<RouteListEdit>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.clock(new Date('2024-08-15').getTime());
       cy.fixture('routeList').then((routes) => {
         cy.mount(RouteListEdit, {
