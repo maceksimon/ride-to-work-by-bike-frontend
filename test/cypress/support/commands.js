@@ -29,6 +29,7 @@
 import { registerCommands } from '@quasar/quasar-app-extension-testing-e2e-cypress';
 registerCommands();
 
+import { computed } from 'vue';
 import {
   failOnStatusCode,
   httpSuccessfullStatus,
@@ -3340,3 +3341,27 @@ Cypress.Commands.add('waitForCommuteModeApi', (responseBody = null) => {
     });
   });
 });
+
+/**
+ * Set up trips store with commute modes from fixture
+ * @param {Object} store - Trips store instance
+ * @param {Object} responseBody - Override default response body from fixture
+ */
+Cypress.Commands.add(
+  'setupTripsStoreWithCommuteModes',
+  (useTripsStore, responseBody = null) => {
+    cy.fixture('apiGetCommuteMode').then((defaultResponseBody) => {
+      const commuteModeResponse = responseBody
+        ? responseBody
+        : defaultResponseBody;
+      cy.wrap(useTripsStore()).then((tripsStore) => {
+        const commuteModes = computed(() => tripsStore.getCommuteModes);
+        tripsStore.setCommuteModes(commuteModeResponse.results);
+        // verify store state
+        cy.wrap(commuteModes)
+          .its('value')
+          .should('deep.equal', commuteModeResponse.results);
+      });
+    });
+  },
+);

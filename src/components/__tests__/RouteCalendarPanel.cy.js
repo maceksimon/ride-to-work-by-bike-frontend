@@ -1,6 +1,7 @@
 import { colors } from 'quasar';
 import RouteCalendarPanel from 'components/routes/RouteCalendarPanel.vue';
 import { i18n } from '../../boot/i18n';
+import { useTripsStore } from 'src/stores/trips';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -36,6 +37,8 @@ describe('<RouteCalendarPanel>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -54,6 +57,8 @@ describe('<RouteCalendarPanel>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -72,6 +77,8 @@ describe('<RouteCalendarPanel>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -91,6 +98,8 @@ describe('<RouteCalendarPanel>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('iphone-6');
     });
 
@@ -109,6 +118,8 @@ describe('<RouteCalendarPanel>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('iphone-6');
     });
 
