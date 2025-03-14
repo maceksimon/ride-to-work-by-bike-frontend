@@ -59,30 +59,33 @@ export const useApiGetCommuteMode = (
     logger?.info('Get commute modes from the API.');
     isLoading.value = true;
 
-    try {
-      // fetch commute modes
-      const { data } = await apiFetch<CommuteModeResponse>({
-        endpoint: `${rideToWorkByBikeConfig.urlApiCommuteMode}`,
-        method: 'get',
-        translationKey: 'getCommuteModes',
-        showSuccessMessage: false,
-        headers: requestDefaultHeader(),
-        logger,
-      });
+    // append access token into HTTP header
+    const requestTokenHeader_ = { ...requestTokenHeader };
+    requestTokenHeader_.Authorization +=
+      await loginStore.getAccessTokenWithRefresh();
 
-      if (data?.results?.length) {
-        commuteModes.value.push(...data.results);
-      }
+    // fetch commute modes
+    const { data } = await apiFetch<CommuteModeResponse>({
+      endpoint: `${rideToWorkByBikeConfig.urlApiCommuteMode}`,
+      method: 'get',
+      translationKey: 'getCommuteModes',
+      showSuccessMessage: false,
+      headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
+      logger,
+    });
 
-      // if data has multiple pages, fetch all pages
-      if (data?.next) {
-        await fetchNextPage(data.next);
-      }
-
-      return commuteModes.value;
-    } finally {
-      isLoading.value = false;
+    if (data?.results?.length) {
+      commuteModes.value.push(...data.results);
     }
+
+    // if data has multiple pages, fetch all pages
+    if (data?.next) {
+      await fetchNextPage(data.next);
+    }
+
+    isLoading.value = false;
+
+    return commuteModes.value;
   };
 
   /**
