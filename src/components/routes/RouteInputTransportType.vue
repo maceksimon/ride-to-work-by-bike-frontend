@@ -57,8 +57,8 @@ export default defineComponent({
     const optionsTransport = computed(() => {
       const modes = tripsStore.getCommuteModes;
       return modes.map((mode) => ({
-        value: mode.slug as TransportType,
-        icon: getRouteIcon(mode.slug as TransportType),
+        value: mode.slug,
+        icon: getRouteIcon(mode.slug),
         eco: mode.eco,
       }));
     });

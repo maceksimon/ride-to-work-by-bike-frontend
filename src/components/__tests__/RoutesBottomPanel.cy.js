@@ -1,3 +1,4 @@
+import { createPinia, setActivePinia } from 'pinia';
 import RoutesBottomPanel from 'components/routes/RoutesBottomPanel.vue';
 import { i18n } from '../../boot/i18n';
 import { useTripsStore } from 'src/stores/trips';
@@ -12,6 +13,7 @@ describe('<RoutesBottomPanel>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(RoutesBottomPanel, {
         props: {
           isOpen: true,
@@ -28,6 +30,7 @@ describe('<RoutesBottomPanel>', () => {
 
   context('desktop multiple routes', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(RoutesBottomPanel, {
         props: {
           isOpen: true,
@@ -56,6 +59,7 @@ describe('<RoutesBottomPanel>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.mount(RoutesBottomPanel, {
         props: {
           isOpen: true,
