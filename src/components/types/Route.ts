@@ -59,3 +59,27 @@ export interface RouteFeature {
   feature: Feature | null;
   startName: string;
 }
+
+export interface CommuteMode {
+  id: number;
+  slug: string;
+  does_count: boolean;
+  eco: boolean;
+  distance_important: boolean;
+  duration_important: boolean;
+  minimum_distance: number;
+  minimum_duration: number;
+  description_en: string | null;
+  description_cs: string | null;
+  icon: string | null;
+  name_en: string;
+  name_cs: string;
+  points: number;
+}
+
+export interface CommuteModeResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: CommuteMode[];
+}
