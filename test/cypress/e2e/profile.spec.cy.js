@@ -317,7 +317,7 @@ describe('Profile page', () => {
       });
       cy.dataCy('profile-details-invite-team-members')
         .should('be.visible')
-        .and('be.disabled');
+        .and('not.be.enabled');
     });
   });
 });

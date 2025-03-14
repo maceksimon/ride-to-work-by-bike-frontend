@@ -125,6 +125,7 @@ module.exports = configure(function (ctx) {
         notify: {
           position: getAppConfig(process)['notifyMessagePosition'],
         },
+        screen: true,
       },
 
       iconSet: 'material-icons', // Quasar icon set

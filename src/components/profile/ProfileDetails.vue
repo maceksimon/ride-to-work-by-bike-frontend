@@ -26,7 +26,7 @@
 
 // libraries
 import { Notify } from 'quasar';
-import { computed, defineComponent, inject, onMounted, ref } from 'vue';
+import { computed, defineComponent, inject, onMounted } from 'vue';
 
 // adapters
 import { registerChallengeAdapter } from '../../adapters/registerChallengeAdapter';
@@ -45,8 +45,6 @@ import ProfileCoordinatorContact from './ProfileCoordinatorContact.vue';
 import SectionHeading from '../global/SectionHeading.vue';
 import DeleteAccount from './DeleteAccount.vue';
 import TeamMembersList from './TeamMembersList.vue';
-import DialogDefault from '../global/DialogDefault.vue';
-import FormInviteToTeam from './FormInviteToTeam.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
@@ -88,8 +86,6 @@ export default defineComponent({
     SectionHeading,
     DeleteAccount,
     TeamMembersList,
-    DialogDefault,
-    FormInviteToTeam,
   },
   setup() {
     // TODO: Enable additional elements
@@ -259,17 +255,6 @@ export default defineComponent({
       },
     });
 
-    const isDialogInviteTeamMembersOpen = ref(false);
-    const remainingSlots = computed<number>((): number => {
-      const myTeam = registerChallengeStore.getMyTeam;
-      if (!myTeam) return 0;
-
-      const maxTeamMembers = challengeStore.getMaxTeamMembers;
-      if (!maxTeamMembers) return 0;
-
-      return maxTeamMembers - myTeam.member_count;
-    });
-
     // update register challenge data
     const { isLoading, updateChallenge } = useApiPutRegisterChallenge(
       registerChallengeStore.$log,
@@ -357,7 +342,6 @@ export default defineComponent({
       organizationType,
       phone,
       profile,
-      remainingSlots,
       subsidiary,
       team,
       teamId,
@@ -372,7 +356,6 @@ export default defineComponent({
       isEnabledDownloadInvoice,
       isEnabledPackageState,
       isEnabledTrackingNumber,
-      isDialogInviteTeamMembersOpen,
     };
   },
 });
@@ -487,87 +470,47 @@ export default defineComponent({
     <div class="q-mt-lg">
       <div class="row q-col-gutter-lg">
         <!-- Organization type -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            :label="$t('profile.labelOrganizationType')"
-            :value="organizationType"
-            data-cy="profile-details-organization-type"
-          />
-        </div>
+        <details-item
+          :label="$t('profile.labelOrganizationType')"
+          :value="organizationType"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-organization-type"
+        />
         <!-- Organization -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            :label="$t('profile.labelOrganization')"
-            :value="organization"
-            data-cy="profile-details-organization"
-          />
-        </div>
+        <details-item
+          :label="$t('profile.labelOrganization')"
+          :value="organization"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-organization"
+        />
         <!-- Address / Subsidiary -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            :label="$t('profile.labelAddressSubsidiary')"
-            :value="subsidiary"
-            data-cy="profile-details-address-subsidiary"
-          />
-        </div>
+        <details-item
+          :label="$t('profile.labelAddressSubsidiary')"
+          :value="subsidiary"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-address-subsidiary"
+        />
         <!-- Team -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            editable
-            :label="$t('profile.labelTeam')"
-            :dialog-title="$t('profile.titleUpdateTeam')"
-            :value="team"
-            data-cy="profile-details-team"
-          >
-            <template #form="{ close }">
-              <!-- Form: Update team -->
-              <form-update-team
-                :model-value="teamId"
-                @close="close"
-                @update:model-value="onUpdateTeam"
-                data-cy="profile-details-form-team"
-              />
-            </template>
-          </details-item>
-        </div>
+        <details-item
+          editable
+          :label="$t('profile.labelTeam')"
+          :dialog-title="$t('profile.titleUpdateTeam')"
+          :value="team"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-team"
+        >
+          <template #form="{ close }">
+            <!-- Form: Update team -->
+            <form-update-team
+              :model-value="teamId"
+              @close="close"
+              @update:model-value="onUpdateTeam"
+              data-cy="profile-details-form-team"
+            />
+          </template>
+        </details-item>
         <!-- Team members list -->
-        <div class="col-12 col-sm-6 q-mt-lg">
-          <team-members-list />
-        </div>
-        <div class="col-12 col-sm-6">
-          <div class="full-width full-height flex items-end justify-end">
-            <q-btn
-              rounded
-              unelevated
-              outline
-              color="primary"
-              class="q-mb-sm"
-              :disable="remainingSlots === 0"
-              @click.prevent="isDialogInviteTeamMembersOpen = true"
-              data-cy="profile-details-invite-team-members"
-            >
-              <q-icon name="send" size="18px" class="q-mr-sm" />
-              {{ $t('profile.inviteTeamMembers') }}
-            </q-btn>
-            <!-- Dialog: Edit -->
-            <dialog-default
-              v-model="isDialogInviteTeamMembersOpen"
-              data-cy="profile-details-invite-team-members-dialog"
-            >
-              <!-- Dialog title -->
-              <template #title>
-                {{ $t('profile.inviteTeamMembers') }}
-              </template>
-              <!-- Dialog content -->
-              <template #content>
-                <form-invite-to-team
-                  :remaining-slots="remainingSlots"
-                  :on-close="() => (isDialogInviteTeamMembersOpen = false)"
-                />
-              </template>
-            </dialog-default>
-          </div>
-        </div>
+        <team-members-list class="col-12 q-mt-lg" />
       </div>
     </div>
 
@@ -579,72 +522,66 @@ export default defineComponent({
     <div class="q-mt-lg">
       <div class="row q-col-gutter-lg">
         <!-- Package -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            :label="$t('profile.labelPackage')"
-            :value="merchandiseItemLabel"
-            data-cy="profile-details-package"
-          />
-        </div>
+        <details-item
+          :label="$t('profile.labelPackage')"
+          :value="merchandiseItemLabel"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-package"
+        />
         <!-- Size -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            :label="$t('profile.labelSize')"
-            :value="merchandiseItemSize"
-            data-cy="profile-details-size"
-          />
-        </div>
+        <details-item
+          :label="$t('profile.labelSize')"
+          :value="merchandiseItemSize"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-size"
+        />
         <!-- State -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            v-if="isEnabledPackageState"
-            :label="$t('profile.labelState')"
-            :value="formPersonalDetails.package.state"
-            data-cy="profile-details-state"
-          />
-        </div>
+        <details-item
+          v-if="isEnabledPackageState"
+          :label="$t('profile.labelState')"
+          :value="formPersonalDetails.package.state"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-state"
+        />
         <!-- Tracking number -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            v-if="isEnabledTrackingNumber"
-            :label="$t('profile.labelTrackingNumber')"
-            :value="formPersonalDetails.package.trackingNumber"
-            data-cy="profile-details-tracking-number"
-          />
-        </div>
+        <details-item
+          v-if="isEnabledTrackingNumber"
+          :label="$t('profile.labelTrackingNumber')"
+          :value="formPersonalDetails.package.trackingNumber"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-tracking-number"
+        />
         <!-- Delivery address -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            :label="$t('profile.labelDeliveryAddress')"
-            :value="subsidiary"
-            data-cy="profile-details-delivery-address"
-          />
-        </div>
+        <details-item
+          :label="$t('profile.labelDeliveryAddress')"
+          :value="subsidiary"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-delivery-address"
+        />
         <!-- Phone number -->
-        <div class="col-12 col-sm-6">
-          <details-item
-            editable
-            :label="$t('profile.labelPhone')"
-            :dialog-title="$t('profile.titleUpdatePhone')"
-            :value="phone"
-            data-cy="profile-details-phone"
-          >
-            <template #form="{ close }">
-              <!-- Form: Update phone number -->
-              <form-update-phone
-                :on-close="close"
-                :value="phone"
-                :loading="isLoading"
-                @update:value="
-                  onUpdateRegisterChallengeDetails({
-                    telephone: $event,
-                  })
-                "
-                data-cy="profile-details-form-phone"
-              />
-            </template>
-          </details-item>
-        </div>
+        <details-item
+          editable
+          :label="$t('profile.labelPhone')"
+          :dialog-title="$t('profile.titleUpdatePhone')"
+          :value="phone"
+          class="col-12 col-sm-6"
+          data-cy="profile-details-phone"
+        >
+          <template #form="{ close }">
+            <!-- Form: Update phone number -->
+            <form-update-phone
+              :on-close="close"
+              :value="phone"
+              :loading="isLoading"
+              @update:value="
+                onUpdateRegisterChallengeDetails({
+                  telephone: $event,
+                })
+              "
+              data-cy="profile-details-form-phone"
+            />
+          </template>
+        </details-item>
       </div>
     </div>
 
