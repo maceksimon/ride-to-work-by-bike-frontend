@@ -33,6 +33,8 @@ export const useRoutes = () => {
         return `svguse:${customSVGIconsFilePath}#lucide-walk`;
       case TransportType.bus:
         return `svguse:${customSVGIconsFilePath}#lucide-bus`;
+      case TransportType.home:
+        return `svguse:${customSVGIconsFilePath}#lucide-home`;
       case TransportType.none:
         return `svguse:${customSVGIconsFilePath}#lucide-ban`;
       default:
@@ -58,6 +60,8 @@ export const useRoutes = () => {
         return i18n.global.t('routes.transport.walk');
       case TransportType.bus:
         return i18n.global.t('routes.transport.bus');
+      case TransportType.home:
+        return i18n.global.t('routes.transport.home');
       case TransportType.none:
         return i18n.global.t('routes.transport.none');
       default:

@@ -5,7 +5,6 @@ import { i18n } from '../../boot/i18n';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useRoutes } from 'src/composables/useRoutes';
-import { TransportType } from '../../components/types/Route';
 
 // composables
 const { getPaletteColor } = colors;
@@ -52,14 +51,7 @@ describe('<RouteItemDisplay>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
-      [
-        TransportType.bike,
-        TransportType.car,
-        TransportType.walk,
-        TransportType.bus,
-        TransportType.none,
-        'unknown',
-      ],
+      ['bike', 'car', 'walk', 'bus', 'none', 'unknown'],
       'routes.transport',
       i18n,
     );
