@@ -6,6 +6,7 @@ import { testRouteListDayDate } from '../../../test/cypress/support/commonTests'
 import { useRoutes } from '../../../src/composables/useRoutes';
 import { useLogRoutes } from '../../../src/composables/useLogRoutes';
 import { rideToWorkByBikeConfig } from '../../../src/boot/global_vars';
+import { useTripsStore } from '../../../src/stores/trips';
 
 const { getPaletteColor } = colors;
 
@@ -42,6 +43,8 @@ describe('<RouteListEdit>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -65,6 +68,8 @@ describe('<RouteListEdit>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -110,6 +115,8 @@ describe('<RouteListEdit>', () => {
           },
         });
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('iphone-6');
     });
 

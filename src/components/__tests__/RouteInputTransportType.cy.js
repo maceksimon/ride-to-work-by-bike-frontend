@@ -1,5 +1,4 @@
 import { colors } from 'quasar';
-import { computed } from 'vue';
 import { createPinia, setActivePinia } from 'pinia';
 import FormFieldTestWrapper from 'components/global/FormFieldTestWrapper.vue';
 import RouteInputTransportType from '../routes/RouteInputTransportType.vue';
@@ -43,16 +42,7 @@ describe('<RouteInputTransportType>', () => {
         },
       });
       // setup store with commute modes
-      cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
-        cy.wrap(useTripsStore()).then((tripsStore) => {
-          const commuteModes = computed(() => tripsStore.getCommuteModes);
-          tripsStore.setCommuteModes(commuteModeResponse.results);
-          // verify store state
-          cy.wrap(commuteModes)
-            .its('value')
-            .should('deep.equal', commuteModeResponse.results);
-        });
-      });
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -70,16 +60,7 @@ describe('<RouteInputTransportType>', () => {
         },
       });
       // setup store with commute modes
-      cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
-        cy.wrap(useTripsStore()).then((tripsStore) => {
-          const commuteModes = computed(() => tripsStore.getCommuteModes);
-          tripsStore.setCommuteModes(commuteModeResponse.results);
-          // verify store state
-          cy.wrap(commuteModes)
-            .its('value')
-            .should('deep.equal', commuteModeResponse.results);
-        });
-      });
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -114,16 +95,7 @@ describe('<RouteInputTransportType>', () => {
         },
       });
       // setup store with commute modes
-      cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
-        cy.wrap(useTripsStore()).then((tripsStore) => {
-          const commuteModes = computed(() => tripsStore.getCommuteModes);
-          tripsStore.setCommuteModes(commuteModeResponse.results);
-          // verify store state
-          cy.wrap(commuteModes)
-            .its('value')
-            .should('deep.equal', commuteModeResponse.results);
-        });
-      });
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('iphone-6');
     });
 

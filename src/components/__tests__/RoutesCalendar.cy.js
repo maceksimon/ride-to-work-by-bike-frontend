@@ -1,6 +1,7 @@
 import RoutesCalendar from 'components/routes/RoutesCalendar.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import { useTripsStore } from 'src/stores/trips';
 
 // selectors
 const classSelectorCurrentDay = '.q-current-day';
@@ -62,6 +63,8 @@ describe('<RoutesCalendar>', () => {
       cy.mount(RoutesCalendar, {
         props: {},
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -77,6 +80,8 @@ describe('<RoutesCalendar>', () => {
       cy.mount(RoutesCalendar, {
         props: {},
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -143,6 +148,8 @@ describe('<RoutesCalendar>', () => {
       cy.mount(RoutesCalendar, {
         props: {},
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 

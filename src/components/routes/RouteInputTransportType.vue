@@ -56,32 +56,6 @@ export default defineComponent({
 
     const optionsTransport = computed(() => {
       const modes = tripsStore.getCommuteModes;
-      if (!modes.length) {
-        // fallback to default options if modes not loaded yet
-        return [
-          {
-            value: TransportType.bike,
-            icon: getRouteIcon(TransportType.bike),
-          },
-          {
-            value: TransportType.walk,
-            icon: getRouteIcon(TransportType.walk),
-          },
-          {
-            value: TransportType.bus,
-            icon: getRouteIcon(TransportType.bus),
-          },
-          {
-            value: TransportType.car,
-            icon: getRouteIcon(TransportType.car),
-          },
-          {
-            value: TransportType.none,
-            icon: getRouteIcon(TransportType.none),
-          },
-        ];
-      }
-
       return modes.map((mode) => ({
         value: mode.slug as TransportType,
         icon: getRouteIcon(mode.slug as TransportType),

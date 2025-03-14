@@ -1,5 +1,4 @@
 import { createPinia, setActivePinia } from 'pinia';
-import { computed } from 'vue';
 import { colors } from 'quasar';
 import { hexToRgb } from 'app/test/cypress/utils';
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
@@ -29,19 +28,10 @@ describe('<RouteItemEdit>', () => {
             route: routes.toWork,
           },
         });
-        cy.viewport('macbook-16');
       });
       // setup store with commute modes
-      cy.wrap(useTripsStore()).then((tripsStore) => {
-        cy.fixture('apiGetCommuteMode').then((commuteModeResponse) => {
-          const commuteModes = computed(() => tripsStore.getCommuteModes);
-          tripsStore.setCommuteModes(commuteModeResponse.results);
-          // verify store state
-          cy.wrap(commuteModes)
-            .its('value')
-            .should('deep.equal', commuteModeResponse.results);
-        });
-      });
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
+      cy.viewport('macbook-16');
     });
 
     coreTests();
@@ -59,16 +49,7 @@ describe('<RouteItemEdit>', () => {
           },
         });
         // setup store with commute modes
-        cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
-          cy.wrap(useTripsStore()).then((tripsStore) => {
-            const commuteModes = computed(() => tripsStore.getCommuteModes);
-            tripsStore.setCommuteModes(commuteModeResponse.results);
-            // verify store state
-            cy.wrap(commuteModes)
-              .its('value')
-              .should('deep.equal', commuteModeResponse.results);
-          });
-        });
+        cy.setupTripsStoreWithCommuteModes(useTripsStore);
         cy.viewport('macbook-16');
       });
     });
@@ -106,16 +87,7 @@ describe('<RouteItemEdit>', () => {
           },
         });
         // setup store with commute modes
-        cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
-          cy.wrap(useTripsStore()).then((tripsStore) => {
-            const commuteModes = computed(() => tripsStore.getCommuteModes);
-            tripsStore.setCommuteModes(commuteModeResponse.results);
-            // verify store state
-            cy.wrap(commuteModes)
-              .its('value')
-              .should('deep.equal', commuteModeResponse.results);
-          });
-        });
+        cy.setupTripsStoreWithCommuteModes(useTripsStore);
         cy.viewport('macbook-16');
       });
     });
@@ -135,16 +107,7 @@ describe('<RouteItemEdit>', () => {
           },
         });
         // setup store with commute modes
-        cy.fixture('apiGetCommuteMode.json').then((commuteModeResponse) => {
-          cy.wrap(useTripsStore()).then((tripsStore) => {
-            const commuteModes = computed(() => tripsStore.getCommuteModes);
-            tripsStore.setCommuteModes(commuteModeResponse.results);
-            // verify store state
-            cy.wrap(commuteModes)
-              .its('value')
-              .should('deep.equal', commuteModeResponse.results);
-          });
-        });
+        cy.setupTripsStoreWithCommuteModes(useTripsStore);
         cy.viewport('iphone-6');
       });
     });

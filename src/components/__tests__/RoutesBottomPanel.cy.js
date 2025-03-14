@@ -1,5 +1,6 @@
 import RoutesBottomPanel from 'components/routes/RoutesBottomPanel.vue';
 import { i18n } from '../../boot/i18n';
+import { useTripsStore } from 'src/stores/trips';
 
 const routeSingle = 1;
 const routeMultiple = 2;
@@ -16,6 +17,8 @@ describe('<RoutesBottomPanel>', () => {
           isOpen: true,
         },
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -31,6 +34,8 @@ describe('<RoutesBottomPanel>', () => {
           routeCount: routeMultiple,
         },
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('macbook-16');
     });
 
@@ -56,6 +61,8 @@ describe('<RoutesBottomPanel>', () => {
           isOpen: true,
         },
       });
+      // setup store with commute modes
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
       cy.viewport('iphone-6');
     });
 
