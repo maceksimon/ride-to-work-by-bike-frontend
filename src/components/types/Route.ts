@@ -8,11 +8,11 @@ export enum TransportDirection {
 }
 
 export enum TransportType {
-  bike = 'bike',
-  car = 'car',
-  walk = 'walk',
-  bus = 'bus',
-  none = 'none',
+  bike = 'bicycle',
+  car = 'by_other_vehicle',
+  walk = 'by_foot',
+  bus = 'hromadna',
+  none = 'no_work',
 }
 
 export enum RouteTab {
