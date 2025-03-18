@@ -144,6 +144,11 @@ apiMessageError = "Načítání týmů selhalo."
 apiMessageErrorWithMessage = "Načítání týmů selhalo. Chyba: {error}"
 apiMessageSuccess = "Týmy byly úspěšně načteny."
 
+[getTrips]
+apiMessageError = "Načítání cest selhalo."
+apiMessageErrorWithMessage = "Načítání cest selhalo. Chyba: {error}"
+apiMessageSuccess = "Cesty byly úspěšně načteny."
+
 [global]
 all = "Všechny"
 and = "a"

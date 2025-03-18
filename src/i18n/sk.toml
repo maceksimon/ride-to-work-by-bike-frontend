@@ -144,6 +144,11 @@ apiMessageError = "Načítanie tímov zlyhalo."
 apiMessageErrorWithMessage = "Načítanie tímov zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Tímy boli úspešne načítané."
 
+[getTrips]
+apiMessageError = "Načítanie ciest zlyhalo."
+apiMessageErrorWithMessage = "Načítanie ciest zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Cesty boli úspešne načítané."
+
 [global]
 all = "Všetky"
 and = "a"

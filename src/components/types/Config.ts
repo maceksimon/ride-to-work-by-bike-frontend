@@ -90,6 +90,7 @@ export interface ConfigGlobal {
   urlApiSubsidiaries: string;
   urlApiThisCampaign: string;
   urlApiTeams: string;
+  urlApiTrips: string;
   urlLoginRegisterBackgroundImage: string;
   urlRTWBBLogo: string;
   urlBaseBackend: string;

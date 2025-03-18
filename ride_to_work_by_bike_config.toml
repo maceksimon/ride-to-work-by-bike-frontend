@@ -125,6 +125,7 @@ urlApiSendTeamMembershipInvitationEmail = "send-team-membership-invitation-email
 urlApiResetPasswordConfirm = "auth/password/reset/confirm/"
 urlApiSubsidiaries = "subsidiaries/"
 urlApiTeams = "teams/"
+urlApiTrips = "trips/"
 urlApiChallengeRegistrationUser = "challenge/registration/user/"
 urlApiCities = "cities/"
 urlApiThisCampaign = "this_campaign/"
