@@ -19,17 +19,36 @@
 
 <script lang="ts">
 // libraries
-import { defineComponent } from 'vue';
+import { defineComponent, inject, onMounted } from 'vue';
 
 // components
 import PageHeading from 'src/components/global/PageHeading.vue';
 import RouteTabs from 'src/components/routes/RouteTabs.vue';
+
+// composables
+import { useApiGetTrips } from 'src/composables/useApiGetTrips';
+
+// types
+import type { Logger } from 'src/components/types/Logger';
 
 export default defineComponent({
   name: 'RoutesPage',
   components: {
     RouteTabs,
     PageHeading,
+  },
+  setup() {
+    const logger = inject('vuejs3-logger') as Logger | null;
+    // TODO: Load trips in store and change this to store fetch function
+    const { trips, loadTrips } = useApiGetTrips(logger);
+
+    onMounted(async () => {
+      await loadTrips();
+    });
+
+    return {
+      trips,
+    };
   },
 });
 </script>
