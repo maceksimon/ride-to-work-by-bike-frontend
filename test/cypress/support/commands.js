@@ -3292,6 +3292,55 @@ Cypress.Commands.add('testApproveMaxTeamMembers', () => {
 });
 
 /**
+ * Intercept trips GET API calls
+ * Provides `@getTrips` and `@getTripsNextPage` aliases
+ * @param {object} config - App global config
+ * @param {object|string} i18n - i18n instance or locale lang string e.g. en
+ * @param {object} response - Override default response body
+ * @param {object} responseNext - Override default response body for next page
+ * @param {number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptTripsGetApi',
+  (
+    config,
+    i18n,
+    response = null,
+    responseNext = null,
+    responseStatusCode = null,
+  ) => {
+    const { apiBase, apiDefaultLang, urlApiTrips } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiTripsLocalized = `${apiBaseUrl}${urlApiTrips}`;
+
+    cy.fixture('apiGetTripsResponse').then((defaultResponse) => {
+      const responseBody = response || defaultResponse;
+      // intercept initial trips API call
+      cy.intercept('GET', urlApiTripsLocalized, {
+        statusCode: responseStatusCode || httpSuccessfullStatus,
+        body: responseBody,
+      }).as('getTrips');
+      // if fixture has next property
+      if (responseBody.next) {
+        cy.fixture('apiGetTripsResponseNext').then((defaultResponseNext) => {
+          const responseBodyNext = responseNext || defaultResponseNext;
+          // intercept next page API call
+          cy.intercept('GET', responseBody.next, {
+            statusCode: responseStatusCode || httpSuccessfullStatus,
+            body: responseBodyNext,
+          }).as('getTripsNextPage');
+        });
+      }
+    });
+  },
+);
+
+/**
  * Intercept commute mode GET API call
  * Provides `@commuteModeRequest` alias
  * @param {Object} config - App global config
@@ -3318,6 +3367,48 @@ Cypress.Commands.add(
           : httpSuccessfullStatus,
         body: responseBody ? responseBody : defaultResponseBody,
       }).as('commuteModeRequest');
+    });
+  },
+);
+
+/**
+ * Wait for intercept trips API calls and compare request/response object
+ * Wait for `@getTrips` and `@getTripsNextPage` intercepts
+ * @param {object} response - Override default response body
+ * @param {object} responseNext - Override default response body for next page
+ */
+Cypress.Commands.add(
+  'waitForTripsApi',
+  (response = null, responseNext = null) => {
+    cy.fixture('apiGetTripsResponse').then((defaultResponse) => {
+      cy.fixture('apiGetTripsResponseNext').then((defaultResponseNext) => {
+        cy.wait(['@getTrips', '@getTripsNextPage']).spread(
+          (getTrips, getTripsNextPage) => {
+            expect(getTrips.request.headers.authorization).to.include(
+              bearerTokeAuth,
+            );
+            if (getTrips.response) {
+              expect(getTrips.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(getTrips.response.body).to.deep.equal(
+                response || defaultResponse,
+              );
+            }
+            expect(getTripsNextPage.request.headers.authorization).to.include(
+              bearerTokeAuth,
+            );
+            if (getTripsNextPage.response) {
+              expect(getTripsNextPage.response.statusCode).to.equal(
+                httpSuccessfullStatus,
+              );
+              expect(getTripsNextPage.response.body).to.deep.equal(
+                responseNext || defaultResponseNext,
+              );
+            }
+          },
+        );
+      });
     });
   },
 );

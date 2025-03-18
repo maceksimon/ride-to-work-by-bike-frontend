@@ -11,6 +11,7 @@ describe('Routes page', () => {
         // alias config
         cy.wrap(config).as('config');
         cy.interceptCommuteModeGetApi(config, defLocale);
+        cy.interceptTripsGetApi(config, defLocale);
       });
       cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
       cy.window().should('have.property', 'i18n');
@@ -33,6 +34,7 @@ describe('Routes page', () => {
         // alias config
         cy.wrap(config).as('config');
         cy.interceptCommuteModeGetApi(config, defLocale);
+        cy.interceptTripsGetApi(config, defLocale);
       });
       cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
       cy.window().should('have.property', 'i18n');
@@ -79,6 +81,7 @@ function coreTests() {
 
   it('renders route tabs', () => {
     cy.window().then(() => {
+      cy.waitForTripsApi();
       cy.dataCy('route-tabs').should('be.visible');
       cy.dataCy('route-tabs-panel-calendar').should('be.visible');
     });
