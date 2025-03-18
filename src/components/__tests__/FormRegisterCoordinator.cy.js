@@ -371,7 +371,7 @@ function coreTests() {
     ).should('be.visible');
     // test responsibility checkbox checked
     cy.dataCy('form-register-coordinator-responsibility')
-      .find('.q-checkbox')
+      .find('.q-checkbox__inner')
       .click();
     // responsibility - required message hidden
     cy.contains(
@@ -384,7 +384,9 @@ function coreTests() {
       i18n.global.t('register.coordinator.form.messageTermsRequired'),
     ).should('be.visible');
     // test terms checkbox checked
-    cy.dataCy('form-register-coordinator-terms').find('.q-checkbox').click();
+    cy.dataCy('form-register-coordinator-terms')
+      .find('.q-checkbox__inner')
+      .click();
     // terms - required message hidden
     cy.contains(
       i18n.global.t('register.coordinator.form.messageTermsRequired'),
@@ -403,10 +405,12 @@ function coreTests() {
       fillFormRegisterCoordinator();
       // check responsibility checkbox
       cy.dataCy('form-register-coordinator-responsibility')
-        .find('.q-checkbox')
+        .find('.q-checkbox__inner')
         .click();
       // check terms checkbox
-      cy.dataCy('form-register-coordinator-terms').find('.q-checkbox').click();
+      cy.dataCy('form-register-coordinator-terms')
+        .find('.q-checkbox__inner')
+        .click();
       // submit form
       cy.dataCy('form-register-coordinator-submit').click();
       // wait for API call to finish
