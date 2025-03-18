@@ -144,6 +144,11 @@ apiMessageError = "Fetching teams failed."
 apiMessageErrorWithMessage = "Fetching teams failed. Error: {error}"
 apiMessageSuccess = "Teams fetched successfully."
 
+[getTrips]
+apiMessageError = "Failed to load trips."
+apiMessageErrorWithMessage = "Failed to load trips. Error: {error}"
+apiMessageSuccess = "Trips were successfully loaded."
+
 [global]
 all = "All"
 and = "and"
