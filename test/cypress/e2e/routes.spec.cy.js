@@ -1,21 +1,22 @@
 import { routesConf } from '../../../src/router/routes_conf';
 import { testDesktopSidebar, testMobileHeader } from '../support/commonTests';
+import { defLocale } from '../../../src/i18n/def_locale';
 
 describe('Routes page', () => {
   context('desktop', () => {
     beforeEach(() => {
-      cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
       cy.viewport('macbook-16');
-
       // load config an i18n objects as aliases
       cy.task('getAppConfig', process).then((config) => {
         // alias config
         cy.wrap(config).as('config');
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          // alias i18n
-          cy.wrap(win.i18n).as('i18n');
-        });
+        cy.interceptTripsGetApi(config, defLocale);
+      });
+      cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
+        // alias i18n
+        cy.wrap(win.i18n).as('i18n');
       });
     });
 
@@ -25,18 +26,18 @@ describe('Routes page', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
       cy.viewport('iphone-6');
-
       // load config an i18n objects as aliases
       cy.task('getAppConfig', process).then((config) => {
         // alias config
         cy.wrap(config).as('config');
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          // alias i18n
-          cy.wrap(win.i18n).as('i18n');
-        });
+        cy.interceptTripsGetApi(config, defLocale);
+      });
+      cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
+      cy.window().should('have.property', 'i18n');
+      cy.window().then((win) => {
+        // alias i18n
+        cy.wrap(win.i18n).as('i18n');
       });
     });
 
@@ -76,6 +77,7 @@ function coreTests() {
 
   it('renders route tabs', () => {
     cy.window().then(() => {
+      cy.waitForTripsApi();
       cy.dataCy('route-tabs').should('be.visible');
       cy.dataCy('route-tabs-panel-calendar').should('be.visible');
     });
