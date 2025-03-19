@@ -49,6 +49,12 @@ export const useMenu = () => {
         title: 'results',
         disabled: true,
       },
+      {
+        url: routesConf['prizes']['children']['fullPath'],
+        icon: 'svguse:icons/drawer_menu/icons.svg#lucide-badge-percent',
+        name: 'discounts',
+        title: 'discounts',
+      },
     ];
 
     if (unref(isUserOrganizationAdmin)) {
