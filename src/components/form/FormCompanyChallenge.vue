@@ -175,7 +175,7 @@ export default defineComponent({
           <q-checkbox
             v-model="challengeTransportType"
             :val="mode.slug"
-            :data-cy="'form-acceptable-transport-' + mode.slug"
+            :data-cy="`form-acceptable-transport-${mode.slug}`"
           >
             <q-icon
               :name="getRouteIcon(mode.slug)"
