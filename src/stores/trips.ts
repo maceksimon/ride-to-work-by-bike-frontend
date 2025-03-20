@@ -25,17 +25,17 @@ export const useTripsStore = defineStore('trips', {
   getters: {
     /**
      * Get all available commute modes
-     * @returns {CommuteMode[]} Array of commute modes
+     * @returns {CommuteMode[]} - Array of commute modes
      */
     getCommuteModes: (state): CommuteMode[] => state.commuteModes,
     /**
      * Get loading state
-     * @returns {boolean} Whether data is being loaded
+     * @returns {boolean} - Whether data is being loaded
      */
     getIsLoading: (state): boolean => state.isLoading,
     /**
      * Get commute mode by slug
-     * @returns {(slug: string) => CommuteMode | undefined} Function to get commute mode by slug
+     * @returns {(slug: string) => CommuteMode | undefined} - Function to get commute mode by slug
      */
     getCommuteModeBySlug:
       (state) =>
@@ -44,7 +44,7 @@ export const useTripsStore = defineStore('trips', {
       },
     /**
      * Get eco-friendly commute modes
-     * @returns {CommuteMode[]} Array of eco-friendly commute modes
+     * @returns {CommuteMode[]} - Array of eco-friendly commute modes
      */
     getEcoCommuteModes: (state): CommuteMode[] => {
       return state.commuteModes.filter((mode) => mode.eco);

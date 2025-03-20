@@ -43,7 +43,7 @@ export const useApiGetCommuteMode = (
   /**
    * Load commute modes
    * Fetches commute modes data and saves it
-   * @returns {Promise<CommuteMode[]>} Array of fetched commute modes
+   * @returns {Promise<CommuteMode[]>} - Array of fetched commute modes
    */
   const loadCommuteModes = async (): Promise<CommuteMode[]> => {
     // reset options
