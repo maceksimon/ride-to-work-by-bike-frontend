@@ -29,6 +29,26 @@ describe('<RegisterChallengePaymentMessages>', () => {
   context('payment step', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      // intercept coupon FULL endpoint
+      cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
+        cy.interceptDiscountCouponGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          apiResponse.results[0].name,
+          apiResponse,
+        );
+      });
+      // intercept coupon HALF endpoint
+      cy.fixture('apiGetDiscountCouponResponseHalfWithDonation').then(
+        (apiResponse) => {
+          cy.interceptDiscountCouponGetApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            apiResponse.results[0].name,
+            apiResponse,
+          );
+        },
+      );
       cy.mount(RegisterChallengePaymentMessages, {
         props: {
           isPaymentStep: true,
@@ -216,6 +236,26 @@ describe('<RegisterChallengePaymentMessages>', () => {
   context('summary step', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
+      // intercept coupon FULL endpoint
+      cy.fixture('apiGetDiscountCouponResponseFull').then((apiResponse) => {
+        cy.interceptDiscountCouponGetApi(
+          rideToWorkByBikeConfig,
+          i18n,
+          apiResponse.results[0].name,
+          apiResponse,
+        );
+      });
+      // intercept coupon HALF endpoint
+      cy.fixture('apiGetDiscountCouponResponseHalfWithDonation').then(
+        (apiResponse) => {
+          cy.interceptDiscountCouponGetApi(
+            rideToWorkByBikeConfig,
+            i18n,
+            apiResponse.results[0].name,
+            apiResponse,
+          );
+        },
+      );
       cy.mount(RegisterChallengePaymentMessages, {
         props: {
           isPaymentStep: false,
