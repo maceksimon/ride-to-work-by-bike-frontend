@@ -306,6 +306,18 @@ function coreTests() {
     });
   });
 
+  it('renders a list of events', () => {
+    cy.get('@i18n').then((i18n) => {
+      cy.dataCy('events-title')
+        .should('be.visible')
+        .then(($el) => {
+          cy.wrap(i18n.global.t('prizes.titleEvents')).then((translation) => {
+            expect($el.text()).to.equal(translation);
+          });
+        });
+    });
+  });
+
   it.skip('renders a list of partners', () => {
     cy.dataCy('list-partners').should('be.visible');
   });

@@ -70,7 +70,12 @@ export default defineComponent({
     const postsOffers = ref<Offer[]>([]);
     const postsPrizes = ref<Offer[]>([]);
     const { isLoading, loadPosts } = useApiGetPosts(logger);
-    const cards = computed(() => feedAdapter.toCardOffer(postsOffers.value));
+    const cardsOffer = computed(() =>
+      feedAdapter.toCardOffer(postsOffers.value),
+    );
+    const cardsEvent = computed(() =>
+      feedAdapter.toCardEvent(postsOffers.value),
+    );
     const prizesCards = computed(() =>
       feedAdapter.toCardPrize(postsPrizes.value),
     );
@@ -112,7 +117,8 @@ export default defineComponent({
 
     return {
       city,
-      cards,
+      cardsOffer,
+      cardsEvent,
       isLoading,
       prizesCards,
       enabledSelectCity,
@@ -146,7 +152,7 @@ export default defineComponent({
             {{ $t('prizes.textSpecialOffers') }}
           </template>
         </section-heading>
-        <div v-if="cards.length > 0 || isLoading" class="q-mt-lg">
+        <div v-if="cardsOffer.length > 0 || isLoading" class="q-mt-lg">
           <section-columns
             :columns="3"
             class="q-col-gutter-lg"
@@ -157,7 +163,7 @@ export default defineComponent({
             </template>
             <template v-else>
               <card-offer
-                v-for="card in cards"
+                v-for="card in cardsOffer"
                 :key="card.title"
                 :card="card"
                 data-cy="discount-offers-item"
@@ -167,6 +173,35 @@ export default defineComponent({
         </div>
         <div v-else class="q-mt-lg q-mb-xl text-grey-7">
           <span>{{ $t('prizes.textOffersEmpty') }}</span>
+        </div>
+      </div>
+
+      <!-- Section: Special events -->
+      <div class="q-mt-xl">
+        <section-heading data-cy="events-title">
+          {{ $t('prizes.titleEvents') }}
+        </section-heading>
+        <div v-if="cardsEvent.length > 0 || isLoading" class="q-mt-lg">
+          <section-columns
+            :columns="3"
+            class="q-col-gutter-lg"
+            data-cy="events-list"
+          >
+            <template v-if="isLoading">
+              <card-offer-skeleton v-for="i in 3" :key="i" />
+            </template>
+            <template v-else>
+              <card-offer
+                v-for="card in cardsEvent"
+                :key="card.title"
+                :card="card"
+                data-cy="events-item"
+              />
+            </template>
+          </section-columns>
+        </div>
+        <div v-else class="q-mt-lg q-mb-xl text-grey-7">
+          <span>{{ $t('prizes.textEventsEmpty') }}</span>
         </div>
       </div>
 

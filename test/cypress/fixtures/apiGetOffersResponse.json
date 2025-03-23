@@ -61,5 +61,131 @@
     "excerpt": "",
     "content": "",
     "image": "https://dopracenakole.cz/app/uploads/dpnksleva-600x400.jpg"
+  },
+  {
+    "id": 22403,
+    "title": "Ve\u0159ejn\u00e1 cyklod\u00edlna \u2013 duben",
+    "url": "https:\/\/dopracenakole.cz\/mesto\/plzen\/verejna-cyklodilna-2",
+    "published": "2025-03-10",
+    "voucher": "",
+    "voucher_url": "",
+    "akce_na_triko": "1",
+    "start_date": "2025-04-29 17:00",
+    "end_date": "",
+    "categories": [
+      {
+        "name": "cykloservis",
+        "slug": "cykloservis",
+        "url": "https:\/\/dopracenakole.cz\/kategorie\/cykloservis"
+      }
+    ],
+    "excerpt": "",
+    "content": "",
+    "image": "https:\/\/dopracenakole.cz\/app\/uploads\/IMG_1106-600x800.jpg"
+  },
+  {
+    "id": 32989,
+    "title": "Ve\u0159ejn\u00e1 cyklod\u00edlna \u2013 kv\u011bten",
+    "url": "https:\/\/dopracenakole.cz\/mesto\/plzen\/verejna-cyklodilna-kveten",
+    "published": "2025-03-10",
+    "voucher": "",
+    "voucher_url": "https:\/\/mestoplzen.cz\/mesto\/plzen\/verejna-cyklodilna-kveten",
+    "akce_na_triko": "1",
+    "start_date": "2025-05-27 17:00",
+    "end_date": "",
+    "categories": [
+      {
+        "name": "cykloservis",
+        "slug": "cykloservis",
+        "url": "https:\/\/dopracenakole.cz\/kategorie\/cykloservis"
+      }
+    ],
+    "excerpt": "",
+    "content": "<p>N\u011bco v\u00e1m na kole racht\u00e1 a pot\u0159ebovali byste to poladit? Zastavte se u kav\u00e1rny Dru\u017eba v Sedl\u00e1\u010dkov\u011b ul. 19. Na m\u00edst\u011b budou na\u0161i mechanici a kolo v\u00e1m omrknou, pomohou s opravami nebo porad\u00ed. Pokud pot\u0159ebujete vym\u011bnit du\u0161i, \u0159et\u011bz apod., p\u0159ivezte si pot\u0159ebn\u00e9 v\u011bci s sebou. T\u011b\u0161\u00edme se na v\u00e1s.<\/p>\n<p>Akce prob\u00edh\u00e1 od 17.00 do 18.30 h.<\/p>\n",
+    "image": "https:\/\/dopracenakole.cz\/app\/uploads\/cyklodilna-1-600x399.jpg"
+  },
+  {
+    "id": 12939,
+    "title": "Sn\u00eddan\u011b pro cyklist(k)y a p\u011b\u0161\u00ed",
+    "url": "https:\/\/dopracenakole.cz\/mesto\/plzen\/snidane-pro-cyklisty",
+    "published": "2025-03-10",
+    "voucher": "",
+    "voucher_url": "",
+    "akce_na_triko": "1",
+    "start_date": "2025-05-28 06:00",
+    "end_date": "",
+    "categories": [
+      {
+        "name": "sn\u00eddan\u011b, sva\u010dina, piknik",
+        "slug": "snidane",
+        "url": "https:\/\/dopracenakole.cz\/kategorie\/snidane"
+      }
+    ],
+    "excerpt": "",
+    "content": "",
+    "image": "https:\/\/dopracenakole.cz\/app\/uploads\/333077128-698885592032489-1048867389964207426-n-600x900.jpg"
+  },
+  {
+    "id": 26240,
+    "title": "Cyklop\u00e1rty \u2013 z\u00e1v\u011bre\u010dn\u00fd ve\u010d\u00edrek v Plzni",
+    "url": "https:\/\/dopracenakole.cz\/mesto\/plzen\/cykloparty-s-vyhlasenim-vysledku",
+    "published": "2025-03-10",
+    "voucher": "",
+    "voucher_url": "",
+    "akce_na_triko": "",
+    "start_date": "2025-06-18 17:00",
+    "end_date": "2025-06-18",
+    "categories": [
+      {
+        "name": "ve\u010d\u00edrek",
+        "slug": "vecirek",
+        "url": "https:\/\/dopracenakole.cz\/kategorie\/vecirek"
+      }
+    ],
+    "excerpt": "",
+    "content": "",
+    "image": "https:\/\/dopracenakole.cz\/app\/uploads\/2025\/03\/448881695-799908945578227-5050424772746097621-n-1-600x400.jpg"
+  },
+  {
+    "id": 26251,
+    "title": "Ve\u0159ejn\u00e1 cyklod\u00edlna \u2013 \u010derven",
+    "url": "https:\/\/dopracenakole.cz\/mesto\/plzen\/verejna-cyklodilna",
+    "published": "2025-03-10",
+    "voucher": "",
+    "voucher_url": "",
+    "akce_na_triko": "1",
+    "start_date": "2025-06-24 17:00",
+    "end_date": "",
+    "categories": [
+      {
+        "name": "cykloservis",
+        "slug": "cykloservis",
+        "url": "https:\/\/dopracenakole.cz\/kategorie\/cykloservis"
+      }
+    ],
+    "excerpt": "",
+    "content": "",
+    "image": "https:\/\/dopracenakole.cz\/app\/uploads\/IMG_1100-600x450.jpg"
+  },
+  {
+    "id": 26254,
+    "title": "Ve\u0159ejn\u00e1 cyklod\u00edlna \u2013 \u010dervenec",
+    "url": "https:\/\/dopracenakole.cz\/mesto\/plzen\/verejna-cyklodilna-3",
+    "published": "2025-03-10",
+    "voucher": "",
+    "voucher_url": "",
+    "akce_na_triko": "1",
+    "start_date": "2025-07-29 17:00",
+    "end_date": "",
+    "categories": [
+      {
+        "name": "cykloservis",
+        "slug": "cykloservis",
+        "url": "https:\/\/dopracenakole.cz\/kategorie\/cykloservis"
+      }
+    ],
+    "excerpt": "",
+    "content": "",
+    "image": "https:\/\/dopracenakole.cz\/app\/uploads\/IMG_1089-600x450.jpg"
   }
 ]
