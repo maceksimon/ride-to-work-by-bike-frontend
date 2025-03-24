@@ -105,6 +105,7 @@ export default defineComponent({
       data-cy="route-tabs"
     >
       <q-route-tab
+        v-if="!isHidden(RouteTab.calendar)"
         :to="routesConf['routes_calendar'].path"
         :name="RouteTab.calendar"
         icon="mdi-calendar-blank"
@@ -115,6 +116,7 @@ export default defineComponent({
         data-cy="route-tabs-button-calendar"
       />
       <q-route-tab
+        v-if="!isHidden(RouteTab.list)"
         :to="routesConf['routes_list'].path"
         :name="RouteTab.list"
         icon="mdi-format-list-bulleted"
@@ -153,13 +155,18 @@ export default defineComponent({
     <q-tab-panels v-model="activeTab" animated>
       <!-- Panel: Calendar -->
       <q-tab-panel
+        v-if="!isHidden(RouteTab.calendar)"
         :name="RouteTab.calendar"
         data-cy="route-tabs-panel-calendar"
       >
         <routes-calendar />
       </q-tab-panel>
       <!-- Panel: List -->
-      <q-tab-panel :name="RouteTab.list" data-cy="route-tabs-panel-list">
+      <q-tab-panel
+        v-if="!isHidden(RouteTab.list)"
+        :name="RouteTab.list"
+        data-cy="route-tabs-panel-list"
+      >
         <div class="text-h6">{{ $t('routes.tabList') }}</div>
         <route-list-edit :routes="routeList" data-cy="route-list-edit" />
         <route-list-display :routes="routeList" data-cy="route-list-display" />
