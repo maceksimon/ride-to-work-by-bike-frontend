@@ -315,6 +315,49 @@ function coreTests() {
             expect($el.text()).to.equal(translation);
           });
         });
+      cy.dataCy('events-list').should('be.visible');
+      cy.fixture('apiGetOffersResponse.json').then((offers) => {
+        // check if list has correct number of items
+        cy.wrap(
+          offers.filter((offer) => !isOfferValidMoreThanOneDay(offer)),
+        ).then((displayedOffers) => {
+          cy.dataCy('events-item')
+            .should('be.visible')
+            .and('have.length', displayedOffers.length);
+          // check that each item has correct data
+          cy.dataCy('events-item').each((item, index) => {
+            cy.wrap(item).should('contain', displayedOffers[index].title);
+          });
+        });
+      });
+    });
+  });
+
+  it('allows to filter the list of events by selecting a city', () => {
+    cy.waitForOffersApi();
+    cy.dataCy('form-field-select-city').should('be.visible');
+    cy.dataCy('form-field-select-city').find('.q-field__append').click();
+    cy.get('.q-menu')
+      .should('be.visible')
+      .within(() => {
+        cy.get('.q-item').first().click();
+      });
+    cy.fixture('apiGetOffersResponseAlternative.json').then((posts) => {
+      cy.waitForOffersApi(posts);
+      // display list of events
+      cy.dataCy('events-list').should('be.visible');
+      // check if list has correct number of items
+      cy.wrap(posts.filter((post) => !isOfferValidMoreThanOneDay(post))).then(
+        (displayedEvents) => {
+          cy.dataCy('events-item')
+            .should('be.visible')
+            .and('have.length', displayedEvents.length);
+          // check that each item has correct data
+          cy.dataCy('events-item').each((item, index) => {
+            cy.wrap(item).should('contain', displayedEvents[index].title);
+          });
+        },
+      );
     });
   });
 
