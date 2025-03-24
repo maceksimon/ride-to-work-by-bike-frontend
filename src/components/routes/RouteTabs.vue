@@ -4,6 +4,10 @@
  *
  * @description * Use this component to render tabs on the Routes page.
  *
+ * @props
+ * - `locked` (RouteTab[]): Array of tab names that are locked - disabled.
+ * - `hidden` (RouteTab[]): Array of tab names that are hidden - not displayed.
+ *
  * @slots
  * - `calendar`: For calendar view.
  * - `list`: For list view.
