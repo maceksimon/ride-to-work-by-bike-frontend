@@ -131,17 +131,14 @@ const buildOfferMetadata = (
   // format dates
   let startDateFormatted: string = '';
   startDateFormatted = post.start_date
-    ? i18n.global.d(date.extractDate(post.start_date, 'YYYY-MM-DD'), 'monthDay')
+    ? i18n.global.d(new Date(post.start_date), 'monthDay')
     : '';
   const endDateFormatted: string = post.end_date
-    ? i18n.global.d(date.extractDate(post.end_date, 'YYYY-MM-DD'), 'monthDay')
+    ? i18n.global.d(new Date(post.end_date), 'monthDay')
     : '';
   // format time for events (one-day offers)
   const startTimeFormatted: string = post.start_date
-    ? date.formatDate(
-        date.extractDate(post.start_date, 'YYYY-MM-DD HH:mm'),
-        'HH:mm',
-      )
+    ? date.formatDate(new Date(post.start_date), 'HH:mm')
     : '';
   // if post is event, use start date with time
   if (type === OfferEventType.oneDayEvent && post.start_date) {
