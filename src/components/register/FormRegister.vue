@@ -91,9 +91,15 @@ export default defineComponent({
 
     const registerStore = useRegisterStore();
     const challengeStore = useChallengeStore();
-    const isActiveChallenge = computed((): boolean =>
-      challengeStore.getIsChallengeInPhase(PhaseType.competition),
-    );
+    const isDisplayedTextNoActiveChallenge = computed((): boolean => {
+      const isInCompetitionPhase = challengeStore.getIsChallengeInPhase(
+        PhaseType.competition,
+      );
+      const isInRegistrationPhase = challengeStore.getIsChallengeInPhase(
+        PhaseType.registration,
+      );
+      return !isInCompetitionPhase && !isInRegistrationPhase;
+    });
     const isPassword = ref<boolean>(true);
     const isPasswordConfirm = ref<boolean>(true);
     const isPrivacyConsent = ref<boolean>(false);
@@ -146,7 +152,7 @@ export default defineComponent({
     return {
       whiteOpacity,
       formRegister,
-      isActiveChallenge,
+      isDisplayedTextNoActiveChallenge,
       isPassword,
       isPasswordConfirm,
       isPrivacyConsent,
@@ -178,7 +184,7 @@ export default defineComponent({
         {{ $t('register.form.titleRegister') }}
       </h1>
       <p
-        v-if="!isActiveChallenge"
+        v-if="isDisplayedTextNoActiveChallenge"
         class="q-mt-md q-mb-none"
         data-cy="form-register-text-no-active-challenge"
       >

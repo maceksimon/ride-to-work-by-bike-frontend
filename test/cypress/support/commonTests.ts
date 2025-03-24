@@ -658,6 +658,13 @@ export const systemTimeRegistrationPhaseInactive = new Date(
   '2024-07-14T23:59:00.000Z',
 );
 /**
+ * Time after `registration` phase starts
+ * @see apiGetThisCampaign.json fixture for example
+ */
+export const systemTimeRegistrationPhaseActive = new Date(
+  '2024-07-15T00:01:00.000Z',
+);
+/**
  * Time after `challenge` phase starts
  * @see apiGetThisCampaign.json fixture for example
  */

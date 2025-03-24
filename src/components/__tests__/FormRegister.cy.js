@@ -18,6 +18,7 @@ import {
   httpTooManyRequestsStatus,
   httpInternalServerErrorStatus,
   systemTimeChallengeActive,
+  systemTimeRegistrationPhaseActive,
   systemTimeRegistrationPhaseInactive,
   userAgentHeader,
 } from '../../../test/cypress/support/commonTests';
@@ -549,7 +550,34 @@ describe('<FormRegister>', () => {
     });
   });
 
-  context('active challenge', () => {
+  context('active challenge (registration phase)', () => {
+    beforeEach(() => {
+      cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
+      setActivePinia(createPinia());
+      cy.clock(new Date(systemTimeRegistrationPhaseActive), ['Date']).as(
+        'clock',
+      );
+      cy.mount(FormRegister, {
+        props: {},
+      });
+      cy.viewport('iphone-6');
+    });
+
+    it('does not show a text with no active challenge', () => {
+      cy.waitForThisCampaignApi();
+      cy.wrap(useChallengeStore()).then((store) => {
+        const isChallengeRegistration = computed(() =>
+          store.getIsChallengeInPhase(PhaseType.registration),
+        );
+        cy.wrap(isChallengeRegistration).its('value').should('equal', true);
+        cy.dataCy(selectorFormRegisterTextNoActiveChallenge).should(
+          'not.exist',
+        );
+      });
+    });
+  });
+
+  context('active challenge (competition phase)', () => {
     beforeEach(() => {
       cy.interceptThisCampaignGetApi(rideToWorkByBikeConfig, i18n);
       setActivePinia(createPinia());
