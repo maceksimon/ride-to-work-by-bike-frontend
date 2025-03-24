@@ -22,6 +22,31 @@ describe('<RouteTabs>', () => {
     coreTests();
   });
 
+  context('desktop - hidden tabs', () => {
+    beforeEach(() => {
+      cy.mount(RouteTabs, {
+        props: {
+          hidden: ['map', 'app'],
+        },
+      });
+      cy.viewport('macbook-16');
+    });
+
+    it('does not render tabs or panels marked as hidden', () => {
+      cy.dataCy('route-tabs-button-map').should('not.exist');
+      cy.dataCy('route-tabs-button-app').should('not.exist');
+      cy.dataCy('route-tabs-panel-map').should('not.exist');
+      cy.dataCy('route-tabs-panel-app').should('not.exist');
+    });
+
+    it('renders tabs and panels not marked as hidden', () => {
+      cy.dataCy('route-tabs-button-calendar').click();
+      cy.dataCy('route-tabs-panel-calendar').should('be.visible');
+      cy.dataCy('route-tabs-button-list').click();
+      cy.dataCy('route-tabs-panel-list').should('be.visible');
+    });
+  });
+
   context('desktop - locked tabs', () => {
     beforeEach(() => {
       cy.mount(RouteTabs, {

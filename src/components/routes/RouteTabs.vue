@@ -59,24 +59,30 @@ export default defineComponent({
       type: Array as () => RouteTab[],
       default: () => [],
     },
+    hidden: {
+      type: Array as () => RouteTab[],
+      default: () => [],
+    },
   },
   setup(props) {
     const activeTab = ref('');
-    // list locked tabs - exposed for testing and further logic
-    const lockedTabs = props.locked;
     // getter function for locked state
     const isLocked = (tab: RouteTab): boolean => {
-      if (!lockedTabs.length) return false;
-      return lockedTabs.includes(tab);
+      if (!props.locked.length) return false;
+      return props.locked.includes(tab);
+    };
+    const isHidden = (tab: RouteTab): boolean => {
+      if (!props.hidden.length) return false;
+      return props.hidden.includes(tab);
     };
 
     return {
       activeTab,
-      lockedTabs,
       routeList,
       routesConf,
       RouteTab,
       isLocked,
+      isHidden,
     };
   },
 });
@@ -115,6 +121,7 @@ export default defineComponent({
         data-cy="route-tabs-button-list"
       />
       <q-route-tab
+        v-if="!isHidden(RouteTab.map)"
         :to="routesConf['routes_map'].path"
         :name="RouteTab.map"
         icon="mdi-map"
@@ -125,6 +132,7 @@ export default defineComponent({
         data-cy="route-tabs-button-map"
       />
       <q-route-tab
+        v-if="!isHidden(RouteTab.app)"
         :to="routesConf['routes_app'].path"
         :name="RouteTab.app"
         icon="mdi-cellphone"
@@ -153,12 +161,20 @@ export default defineComponent({
         <route-list-display :routes="routeList" data-cy="route-list-display" />
       </q-tab-panel>
       <!-- Panel: Map -->
-      <q-tab-panel :name="RouteTab.map" data-cy="route-tabs-panel-map">
+      <q-tab-panel
+        v-if="!isHidden(RouteTab.map)"
+        :name="RouteTab.map"
+        data-cy="route-tabs-panel-map"
+      >
         <div class="text-h6">{{ $t('routes.tabMap') }}</div>
         <RoutesMap />
       </q-tab-panel>
       <!-- Panel: App -->
-      <q-tab-panel :name="RouteTab.app" data-cy="route-tabs-panel-app">
+      <q-tab-panel
+        v-if="!isHidden(RouteTab.app)"
+        :name="RouteTab.app"
+        data-cy="route-tabs-panel-app"
+      >
         <div class="text-h6">{{ $t('routes.tabApp') }}</div>
         <routes-apps data-cy="routes-apps" />
       </q-tab-panel>

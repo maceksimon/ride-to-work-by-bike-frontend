@@ -13,7 +13,7 @@
         </template>
       </page-heading>
     </div>
-    <route-tabs data-cy="route-tabs" />
+    <route-tabs :hidden="[RouteTab.map, RouteTab.app]" data-cy="route-tabs" />
   </q-page>
 </template>
 
@@ -24,6 +24,9 @@ import { defineComponent, onMounted } from 'vue';
 // components
 import PageHeading from 'src/components/global/PageHeading.vue';
 import RouteTabs from 'src/components/routes/RouteTabs.vue';
+
+// enums
+import { RouteTab } from 'src/components/types/Route';
 
 // stores
 import { useTripsStore } from 'src/stores/trips';
@@ -42,6 +45,10 @@ export default defineComponent({
         await tripsStore.loadCommuteModes();
       }
     });
+
+    return {
+      RouteTab,
+    };
   },
 });
 </script>
