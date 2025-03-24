@@ -144,7 +144,7 @@ const buildOfferMetadata = (
       )
     : '';
   // if post is event, use start date with time
-  if (type === OfferEventType.oneDayEvent) {
+  if (type === OfferEventType.oneDayEvent && post.start_date) {
     startDateFormatted += ` - ${startTimeFormatted}`;
     metadata.push({
       id: CardOfferMetadataKey.validity,
