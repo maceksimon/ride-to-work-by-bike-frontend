@@ -176,7 +176,7 @@ export default defineComponent({
         </div>
       </div>
 
-      <!-- Section: Special events -->
+      <!-- Section: Events -->
       <div class="q-mt-xl">
         <section-heading data-cy="events-title">
           {{ $t('prizes.titleEvents') }}
