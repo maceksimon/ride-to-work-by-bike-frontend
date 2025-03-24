@@ -21,6 +21,11 @@ export enum ApiOfferParamPageSubtype {
   prize = 'prize',
 }
 
+export enum OfferEventType {
+  oneDayEvent = 'one_day_event',
+  multiDayOffer = 'multi_day_offer',
+}
+
 export enum OfferCategorySlug {
   alcoDrinks = 'alko-napoje',
   bikeRide = 'cyklojizda',

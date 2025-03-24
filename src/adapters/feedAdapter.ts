@@ -7,12 +7,7 @@ import { isOfferValidMoreThanOneDay } from '../utils/get_offer_valid';
 
 // enums
 import { CardOfferMetadataKey } from '../components/enums/Card';
-import { OfferCategorySlug } from '../components/enums/Offers';
-
-export enum PostType {
-  offer = 'offer',
-  event = 'event',
-}
+import { OfferCategorySlug, OfferEventType } from '../components/enums/Offers';
 
 // types
 import type { CardOffer } from '../components/types/Card';
@@ -40,7 +35,9 @@ export const feedAdapter = {
         // first filter offers that last more than one day
         .filter((post) => isOfferValidMoreThanOneDay(post))
         // map posts to card offer format
-        .map((post) => this.mapPostsToCardOffer(post, PostType.offer))
+        .map((post) =>
+          this.mapPostsToCardOffer(post, OfferEventType.multiDayOffer),
+        )
     );
   },
 
@@ -55,17 +52,19 @@ export const feedAdapter = {
         // first filter one-day offers only
         .filter((post) => !isOfferValidMoreThanOneDay(post))
         // map posts to card offer format
-        .map((post) => this.mapPostsToCardOffer(post, PostType.event))
+        .map((post) =>
+          this.mapPostsToCardOffer(post, OfferEventType.oneDayEvent),
+        )
     );
   },
 
   /**
    * Map posts to CardOffer format
    * @param {Offer} post - Post from API
-   * @param {PostType} type - Post type
+   * @param {OfferEventType} type - Post type
    * @returns {CardOffer} - Post in card format
    */
-  mapPostsToCardOffer(post: Offer, type: PostType): CardOffer {
+  mapPostsToCardOffer(post: Offer, type: OfferEventType): CardOffer {
     // default icon slug
     let slug = OfferCategorySlug.discount;
     // if post has categories, use first category slug
@@ -123,7 +122,10 @@ export const feedAdapter = {
  * @param {Offer} post - Offer
  * @returns {CardMetadata[]} - Metadata
  */
-const buildOfferMetadata = (post: Offer, type: PostType): CardMetadata[] => {
+const buildOfferMetadata = (
+  post: Offer,
+  type: OfferEventType,
+): CardMetadata[] => {
   const icon = 'mdi-calendar';
   const metadata: CardMetadata[] = [];
   // format dates
@@ -142,7 +144,7 @@ const buildOfferMetadata = (post: Offer, type: PostType): CardMetadata[] => {
       )
     : '';
   // if post is event, use start date with time
-  if (type === PostType.event) {
+  if (type === OfferEventType.oneDayEvent) {
     startDateFormatted += ` - ${startTimeFormatted}`;
     metadata.push({
       id: CardOfferMetadataKey.validity,
