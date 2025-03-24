@@ -100,7 +100,7 @@ describe('Prizes page', () => {
       });
     });
 
-    it('renders empty state for offers and prizes', () => {
+    it('renders empty state for offers, prizes and events', () => {
       cy.get('@i18n').then((i18n) => {
         // empty offers
         cy.dataCy('discount-offers-title').should('be.visible');
@@ -114,6 +114,13 @@ describe('Prizes page', () => {
         cy.dataCy('available-prizes-list').should('not.exist');
         cy.dataCy('available-prizes-item').should('not.exist');
         cy.contains(i18n.global.t('prizes.textPrizesEmpty')).should(
+          'be.visible',
+        );
+        // empty events
+        cy.dataCy('events-title').should('be.visible');
+        cy.dataCy('events-list').should('not.exist');
+        cy.dataCy('events-item').should('not.exist');
+        cy.contains(i18n.global.t('prizes.textEventsEmpty')).should(
           'be.visible',
         );
       });
