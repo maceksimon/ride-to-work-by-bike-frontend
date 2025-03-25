@@ -33,7 +33,7 @@ import {
   QCalendarMonth,
   today,
 } from '@quasar/quasar-ui-qcalendar';
-import { defineComponent, computed, ref, watch } from 'vue';
+import { defineComponent, computed, inject, ref, watch } from 'vue';
 import { i18n } from '../../boot/i18n';
 
 // components
@@ -56,6 +56,7 @@ import { useTripsStore } from 'src/stores/trips';
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
 import type { RouteDay, RouteItem } from '../types/Route';
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'RoutesCalendar',
@@ -65,6 +66,7 @@ export default defineComponent({
     RouteCalendarPanel,
   },
   setup() {
+    const logger = inject('vuejs3-logger') as Logger | null;
     const challengeStore = useChallengeStore();
     const calendar = ref<typeof QCalendarMonth | null>(null);
     const selectedDate = ref<string>(today());
@@ -151,13 +153,16 @@ export default defineComponent({
     const tripsStore = useTripsStore();
     const { createDaysArrayWithRoutes } = useRoutes();
     const routesByDay = computed(() => {
+      // get route items from store
       const routeItems: RouteItem[] = tripsStore.getRouteItems;
+      // get competition phase dates
       const competitionPhaseDateTo = challengeStore.getPhaseFromSet(
         PhaseType.competition,
       )?.date_to;
       const competitionPhaseDateFrom = challengeStore.getPhaseFromSet(
         PhaseType.competition,
       )?.date_from;
+      // get dates
       const dateFrom = competitionPhaseDateFrom
         ? new Date(competitionPhaseDateFrom)
         : null;
@@ -167,7 +172,19 @@ export default defineComponent({
       if (!dateFrom || !dateTo) {
         return [];
       }
-      return createDaysArrayWithRoutes(dateFrom, dateTo, routeItems);
+      logger?.debug(
+        `Create days array with routes <${JSON.stringify(routeItems, null, 2)}>.`,
+      );
+      // create days array with routes
+      const daysWithRoutes = createDaysArrayWithRoutes(
+        dateFrom,
+        dateTo,
+        routeItems,
+      );
+      logger?.debug(
+        `Days with routes <${JSON.stringify(daysWithRoutes, null, 2)}>.`,
+      );
+      return daysWithRoutes;
     });
 
     // Define calendar CSS vars for calendar theme

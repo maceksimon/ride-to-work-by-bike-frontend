@@ -72,7 +72,7 @@ describe('<RoutesCalendar>', () => {
       cy.mount(RoutesCalendar, {
         props: {},
       });
-      cy.fixture('routeItemListCalendar.json').then((response) => {
+      cy.fixture('routeItemsCalendar.json').then((response) => {
         cy.wrap(useTripsStore()).then((store) => {
           store.setRouteItems(response);
         });
@@ -108,7 +108,7 @@ describe('<RoutesCalendar>', () => {
             },
           });
         });
-        cy.fixture('routeItemListCalendar.json').then((response) => {
+        cy.fixture('routeItemsCalendar.json').then((response) => {
           cy.wrap(useTripsStore()).then((store) => {
             store.setRouteItems(response);
           });
