@@ -148,6 +148,12 @@ dateTimeFormatsAllLocales = '''
   "monthDay": {
     "month": "numeric",
     "day": "numeric"
+  },
+  "monthDayHourMinute" : {
+    "month": "numeric",
+    "day": "numeric",
+    "hour": "numeric",
+    "minute": "numeric"
   }
 }
 '''

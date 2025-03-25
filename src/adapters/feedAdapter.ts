@@ -1,6 +1,3 @@
-// libraries
-import { date } from 'quasar';
-
 // composables
 import { i18n } from '../boot/i18n';
 import { isOfferValidMoreThanOneDay } from '../utils/get_offer_valid';
@@ -136,17 +133,15 @@ const buildOfferMetadata = (
   const endDateFormatted: string = post.end_date
     ? i18n.global.d(new Date(post.end_date), 'monthDay')
     : '';
-  // format time for events (one-day offers)
-  const startTimeFormatted: string = post.start_date
-    ? date.formatDate(new Date(post.start_date), 'HH:mm')
-    : '';
+
   // if post is event, use start date with time
   if (type === OfferEventType.oneDayEvent && post.start_date) {
-    startDateFormatted += ` - ${startTimeFormatted}`;
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidFrom', {
-        startDate: startDateFormatted,
+        startDate: post.start_date
+          ? i18n.global.d(new Date(post.start_date), 'monthDayHourMinute')
+          : '', // format time for events (one-day offers)
       }),
       icon: icon,
     });
