@@ -137,9 +137,7 @@ export default defineComponent({
         />
         <!-- Icon: To work - logged -->
         <q-icon
-          v-else-if="
-            route && route.id && route.transport !== TransportType.none
-          "
+          v-else-if="route && isLogged"
           color="secondary"
           class="full-width full-height absolute-full"
           :name="`svguse:${customSVGIconsFilePath}#route-bg-towork-logged|${customSVGIconViewPort}`"
@@ -168,9 +166,7 @@ export default defineComponent({
         />
         <!-- Icon: From work - logged -->
         <q-icon
-          v-else-if="
-            route && route.id && route.transport !== TransportType.none
-          "
+          v-else-if="route && isLogged"
           color="secondary"
           class="full-width full-height absolute-full"
           :name="`svguse:${customSVGIconsFilePath}#route-bg-fromwork-logged|${customSVGIconViewPort}`"
