@@ -6,19 +6,12 @@ export enum TripDirection {
   from = 'trip_from',
 }
 
-export enum TripSourceApplication {
-  app = 'app',
-  strava = 'strava',
-  garmin = 'garmin',
-  fitbit = 'fitbit',
-}
-
 export interface Trip {
   id: number;
   trip_date: string;
   direction: TripDirection;
   commuteMode: TransportType;
-  sourceApplication: TripSourceApplication;
+  sourceApplication: string;
   distanceMeters: number | null;
   durationSeconds: number | null;
   sourceId: string | null;
