@@ -385,7 +385,7 @@ labelAuthor = "Autor"
 labelMaterial = "Materiál"
 labelPhoneOptInNoMerch = "Účastnícky balíček nechcem, ale rád by som sa dozvedel viac informácií o udržateľnej mobilite a o tom, čo pre ňu môžem urobiť (môžete mi telefonovať)."
 labelPhoneOptInWithMerch = "Okrem informácií o doručení balíčka sa mi môžete ozvať aj ohľadom rozvoja udržateľnej mobility a verejného priestoru."
-labelNoMerch = "Nechcem košeľu ani nákrčník"
+labelNoMerch = "Nechcem tričko ani iný artikel"
 labelSizeFemale = "Veľkosť - dámska:"
 labelSizeMale = "Veľkosť - pánska:"
 labelSizeUnisex = "Veľkosť - unisex:"
@@ -666,7 +666,7 @@ textNoUnreadNotifications = "Nemáte žiadne neprečítané oznámenia"
 
 [offer]
 titleOfferValidation = "Chcete-li ji použít, stačí se na místě prokázat dokladem totožnosti:"
-labelOfferValidationTshirt = "Tričkom alebo iným merchom z tohtoročného ročníka"
+labelOfferValidationTshirt = "Tričkom alebo iným ročníkovým artiklom"
 labelOfferValidationAccount = "Aktivní profil zde v systému Pro práci na kole na mobilním telefonu nebo počítači"
 
 [onboarding]
