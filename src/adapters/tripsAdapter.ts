@@ -33,6 +33,7 @@ export const tripsAdapter = {
       direction,
       distance,
       transport,
+      // TODO: Handle the route feature data
       routeFeature: null as RouteFeature | null,
     };
   },
