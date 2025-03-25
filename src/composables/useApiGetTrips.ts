@@ -14,19 +14,16 @@ import { rideToWorkByBikeConfig } from '../boot/global_vars';
 import { useLoginStore } from '../stores/login';
 
 // types
-import type { Ref } from 'vue';
-import type { Trip, GetTripsResponse } from '../components/types/Trip';
+import type {
+  Trip,
+  GetTripsResponse,
+  UseApiGetTripsReturn,
+} from '../components/types/Trip';
 import type { Logger } from '../components/types/Logger';
 import type { RouteItem } from 'src/components/types/Route';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
-
-type UseApiGetTripsReturn = {
-  trips: Ref<Trip[]>;
-  isLoading: Ref<boolean>;
-  loadTrips: () => Promise<RouteItem[]>;
-};
 
 /**
  * Get trips composable

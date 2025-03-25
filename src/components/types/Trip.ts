@@ -1,6 +1,10 @@
 // enums
 import { TransportType } from './Route';
 
+// types
+import type { Ref } from 'vue';
+import type { RouteItem } from './Route';
+
 export enum TripDirection {
   to = 'trip_to',
   from = 'trip_from',
@@ -25,4 +29,10 @@ export interface GetTripsResponse {
   next: string | null;
   previous: string | null;
   results: Trip[];
+}
+
+export interface UseApiGetTripsReturn {
+  trips: Ref<Trip[]>;
+  isLoading: Ref<boolean>;
+  loadTrips: () => Promise<RouteItem[]>;
 }
