@@ -113,7 +113,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
    * @return {boolean}
    */
   function dayHasToWorkRoute(day: RouteDay | null): boolean {
-    return !!day?.toWork;
+    return !!day?.toWork && day?.toWork?.transport !== TransportType.none;
   }
 
   /**
@@ -122,7 +122,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
    * @return {boolean}
    */
   function dayHasFromWorkRoute(day: RouteDay | null): boolean {
-    return !!day?.fromWork;
+    return !!day?.fromWork && day?.fromWork?.transport !== TransportType.none;
   }
 
   /**

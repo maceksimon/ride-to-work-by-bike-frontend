@@ -1,6 +1,9 @@
 // libraries
 import { ref } from 'vue';
 
+// adapters
+import { tripsAdapter } from 'src/adapters/tripsAdapter';
+
 // composables
 import { useApi } from './useApi';
 
@@ -14,6 +17,7 @@ import { useLoginStore } from '../stores/login';
 import type { Ref } from 'vue';
 import type { Trip, GetTripsResponse } from '../components/types/Trip';
 import type { Logger } from '../components/types/Logger';
+import type { RouteItem } from 'src/components/types/Route';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
@@ -21,7 +25,7 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 type UseApiGetTripsReturn = {
   trips: Ref<Trip[]>;
   isLoading: Ref<boolean>;
-  loadTrips: () => Promise<Trip[]>;
+  loadTrips: () => Promise<RouteItem[]>;
 };
 
 /**
@@ -41,7 +45,7 @@ export const useApiGetTrips = (logger: Logger | null): UseApiGetTripsReturn => {
    * Fetches trips, saves and returns them
    * @returns {Promise<Trip[]>} - Promise
    */
-  const loadTrips = async (): Promise<Trip[]> => {
+  const loadTrips = async (): Promise<RouteItem[]> => {
     // reset data
     logger?.debug(
       `Reseting trips data <${JSON.stringify(trips.value, null, 2)}>.`,
@@ -79,8 +83,12 @@ export const useApiGetTrips = (logger: Logger | null): UseApiGetTripsReturn => {
       await fetchNextPage(data.next);
     }
 
+    const routeItems = trips.value.map((trip) => {
+      return tripsAdapter.toRouteItem(trip);
+    });
+
     isLoading.value = false;
-    return trips.value;
+    return routeItems;
   };
 
   /**

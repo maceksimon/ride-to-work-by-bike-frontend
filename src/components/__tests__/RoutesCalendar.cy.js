@@ -69,11 +69,12 @@ describe('<RoutesCalendar>', () => {
       const now = dateWithNoLoggedRoute;
       cy.clock(new Date(now), ['Date']);
       cy.wrap(now).as('now');
-      cy.fixture('routeListCalendar.json').then((response) => {
-        cy.mount(RoutesCalendar, {
-          props: {
-            routes: response,
-          },
+      cy.mount(RoutesCalendar, {
+        props: {},
+      });
+      cy.fixture('routeItemListCalendar.json').then((response) => {
+        cy.wrap(useTripsStore()).then((store) => {
+          store.setRouteItems(response);
         });
       });
       // setup store with commute modes
@@ -105,6 +106,11 @@ describe('<RoutesCalendar>', () => {
             props: {
               routes: response,
             },
+          });
+        });
+        cy.fixture('routeItemListCalendar.json').then((response) => {
+          cy.wrap(useTripsStore()).then((store) => {
+            store.setRouteItems(response);
           });
         });
         // setup store with commute modes

@@ -39,7 +39,7 @@ import { computed, defineComponent } from 'vue';
 import { useRoutes } from 'src/composables/useRoutes';
 
 // enums
-import { TransportDirection } from '../types/Route';
+import { TransportDirection, TransportType } from '../types/Route';
 
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
@@ -85,6 +85,14 @@ export default defineComponent({
       return props.day[props.direction] ? props.day[props.direction] : null;
     });
 
+    /**
+     * Determines if route should be displayed as logged.
+     * Routes with transport type `none` are displayed as empty.
+     */
+    const isLogged = computed((): boolean => {
+      return !!route.value?.id && route.value?.transport !== TransportType.none;
+    });
+
     const { getRouteDistance, getRouteIcon } = useRoutes();
 
     const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
@@ -96,9 +104,11 @@ export default defineComponent({
       iconSize,
       route,
       TransportDirection,
+      TransportType,
       getRouteDistance,
       getRouteIcon,
       onClick,
+      isLogged,
     };
   },
 });
@@ -127,7 +137,9 @@ export default defineComponent({
         />
         <!-- Icon: To work - logged -->
         <q-icon
-          v-else-if="route && route.id"
+          v-else-if="
+            route && route.id && route.transport !== TransportType.none
+          "
           color="secondary"
           class="full-width full-height absolute-full"
           :name="`svguse:${customSVGIconsFilePath}#route-bg-towork-logged|${customSVGIconViewPort}`"
@@ -156,7 +168,9 @@ export default defineComponent({
         />
         <!-- Icon: From work - logged -->
         <q-icon
-          v-else-if="route && route.id"
+          v-else-if="
+            route && route.id && route.transport !== TransportType.none
+          "
           color="secondary"
           class="full-width full-height absolute-full"
           :name="`svguse:${customSVGIconsFilePath}#route-bg-fromwork-logged|${customSVGIconViewPort}`"
@@ -175,7 +189,7 @@ export default defineComponent({
       </template>
 
       <!-- Content: Route logged -->
-      <template v-if="route && route.id">
+      <template v-if="route && isLogged">
         <!-- Icon: Transport type -->
         <q-icon
           :color="active ? 'white' : 'primary'"

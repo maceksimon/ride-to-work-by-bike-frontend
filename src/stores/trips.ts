@@ -3,14 +3,17 @@ import { defineStore } from 'pinia';
 
 // composables
 import { useApiGetCommuteMode } from '../composables/useApiGetCommuteMode';
+import { useApiGetTrips } from 'src/composables/useApiGetTrips';
 
 // types
 import type { CommuteMode } from '../components/types/Route';
 import type { Logger } from '../components/types/Logger';
+import type { RouteItem } from '../components/types/Route';
 
 interface TripsState {
   $log: Logger | null;
   commuteModes: CommuteMode[];
+  routeItems: RouteItem[];
   isLoading: boolean;
 }
 
@@ -19,6 +22,7 @@ export const useTripsStore = defineStore('trips', {
     // property set in pinia.js boot file
     $log: null as Logger | null,
     commuteModes: [],
+    routeItems: [],
     isLoading: false,
   }),
 
@@ -28,6 +32,11 @@ export const useTripsStore = defineStore('trips', {
      * @returns {CommuteMode[]} - Array of commute modes
      */
     getCommuteModes: (state): CommuteMode[] => state.commuteModes,
+    /**
+     * Get all available trips
+     * @returns {Trip[]} - Array of trips
+     */
+    getRouteItems: (state): RouteItem[] => state.routeItems as RouteItem[],
     /**
      * Get loading state
      * @returns {boolean} - Whether data is being loaded
@@ -69,6 +78,14 @@ export const useTripsStore = defineStore('trips', {
       this.commuteModes = modes;
     },
     /**
+     * Set route items
+     * @param {RouteItem[]} routeItems - Array of route items to set
+     * @returns {void}
+     */
+    setRouteItems(routeItems: RouteItem[]): void {
+      this.routeItems = routeItems;
+    },
+    /**
      * Load commute modes from API
      * @returns {Promise<void>}
      */
@@ -77,6 +94,17 @@ export const useTripsStore = defineStore('trips', {
       this.setIsLoading(true);
       const modes = await loadCommuteModes();
       this.setCommuteModes(modes);
+      this.setIsLoading(false);
+    },
+    /**
+     * Load trips from API
+     * @returns {Promise<void>}
+     */
+    async loadRoutesToStore(): Promise<void> {
+      const { loadTrips } = useApiGetTrips(this.$log);
+      this.setIsLoading(true);
+      const routeItems = await loadTrips();
+      this.setRouteItems(routeItems);
       this.setIsLoading(false);
     },
   },

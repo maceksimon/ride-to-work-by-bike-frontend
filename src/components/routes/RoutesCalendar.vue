@@ -43,6 +43,7 @@ import RouteCalendarPanel from './RouteCalendarPanel.vue';
 
 // composables
 import { useCalendarRoutes } from '../../composables/useCalendarRoutes';
+import { useRoutes } from 'src/composables/useRoutes';
 
 // enums
 import { TransportDirection } from '../types/Route';
@@ -50,10 +51,11 @@ import { PhaseType } from '../types/Challenge';
 
 // stores
 import { useChallengeStore } from '../../stores/challenge';
+import { useTripsStore } from 'src/stores/trips';
 
 // types
 import type { Timestamp } from '@quasar/quasar-ui-qcalendar';
-import type { RouteDay } from '../types/Route';
+import type { RouteDay, RouteItem } from '../types/Route';
 
 export default defineComponent({
   name: 'RoutesCalendar',
@@ -62,13 +64,7 @@ export default defineComponent({
     CalendarNavigation,
     RouteCalendarPanel,
   },
-  props: {
-    routes: {
-      type: Array as PropType<RouteDay[]>,
-      default: () => [],
-    },
-  },
-  setup(props) {
+  setup() {
     const challengeStore = useChallengeStore();
     const calendar = ref<typeof QCalendarMonth | null>(null);
     const selectedDate = ref<string>(today());
@@ -152,6 +148,28 @@ export default defineComponent({
         : getDate(prevDay(timestampCompetitionPhaseDateFrom));
     });
 
+    const tripsStore = useTripsStore();
+    const { createDaysArrayWithRoutes } = useRoutes();
+    const routesByDay = computed(() => {
+      const routeItems: RouteItem[] = tripsStore.getRouteItems;
+      const competitionPhaseDateTo = challengeStore.getPhaseFromSet(
+        PhaseType.competition,
+      )?.date_to;
+      const competitionPhaseDateFrom = challengeStore.getPhaseFromSet(
+        PhaseType.competition,
+      )?.date_from;
+      const dateFrom = competitionPhaseDateFrom
+        ? new Date(competitionPhaseDateFrom)
+        : null;
+      const dateTo = competitionPhaseDateTo
+        ? new Date(competitionPhaseDateTo)
+        : null;
+      if (!dateFrom || !dateTo) {
+        return [];
+      }
+      return createDaysArrayWithRoutes(dateFrom, dateTo, routeItems);
+    });
+
     // Define calendar CSS vars for calendar theme
     const { getPaletteColor } = colors;
     const theme = {
@@ -183,7 +201,7 @@ export default defineComponent({
     }
 
     // Get data
-    const days = ref<RouteDay[]>(props.routes);
+    const days = computed<RouteDay[]>(() => routesByDay.value);
 
     const {
       activeRoutes,
