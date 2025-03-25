@@ -72,11 +72,9 @@ export default defineComponent({
     const activeTab = ref('');
     // getter function for locked state
     const isLocked = (tab: RouteTab): boolean => {
-      if (!props.locked.length) return false;
       return props.locked.includes(tab);
     };
     const isHidden = (tab: RouteTab): boolean => {
-      if (!props.hidden.length) return false;
       return props.hidden.includes(tab);
     };
 
