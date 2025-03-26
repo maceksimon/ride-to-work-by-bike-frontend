@@ -145,9 +145,17 @@ export default defineComponent({
           v-if="card?.content || card?.description || card?.voucherUrl"
         >
           <!-- Content: Edited by Auto*Mat administrators -->
-          <div v-html="card.content" data-cy="dialog-content" />
+          <div
+            v-if="card?.content"
+            v-html="card.content"
+            data-cy="dialog-content"
+          />
           <!-- Description: Edited by City administrators -->
-          <div v-html="card.description" data-cy="dialog-description" />
+          <div
+            v-if="card?.description"
+            v-html="card.description"
+            data-cy="dialog-description"
+          />
           <!-- Voucher -->
           <div v-if="card?.voucher" class="q-mt-lg" data-cy="dialog-voucher">
             <h4
@@ -174,20 +182,16 @@ export default defineComponent({
           />
         </div>
         <!-- Right column: Image -->
-        <div
-          :class="{
-            'col-md-6': card?.content || card?.description || card?.voucherUrl,
-            'col-12 q-px-md q-py-md': true,
-          }"
-          data-cy="dialog-col-right"
-        >
-          <!-- Image -->
-          <q-img
-            :src="card.image.src"
-            :alt="card.image.alt"
-            data-cy="dialog-image"
-            ratio="1"
-          />
+        <div class="col-12 col-md-6" data-cy="dialog-col-right">
+          <div class="q-px-md q-py-md">
+            <!-- Image -->
+            <q-img
+              :src="card.image.src"
+              :alt="card.image.alt"
+              data-cy="dialog-image"
+              fit="contain"
+            />
+          </div>
         </div>
         <!-- Section: Validation -->
         <offer-validation

@@ -44,7 +44,7 @@ export default defineComponent({
     },
   },
   setup() {
-    const enabledCardPrizeDialog = false;
+    const enabledCardPrizeDialog = true;
 
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
     const cardMaxWidth = Screen.sizes.sm;
@@ -105,7 +105,10 @@ export default defineComponent({
       </template>
       <!-- Metadata -->
       <template #metadata>
-        <div class="flex flex-wrap items-center gap-x-32 gap-y-8 q-mt-sm">
+        <div
+          v-if="card?.metadata.length > 0"
+          class="flex flex-wrap items-center gap-x-32 gap-y-8 q-mt-sm"
+        >
           <div
             v-for="item in card.metadata"
             :key="item.id"
@@ -126,13 +129,24 @@ export default defineComponent({
       <!-- Content -->
       <template #content>
         <!-- Left column: Content -->
-        <div class="col-12 col-md-6" data-cy="dialog-col-left">
+        <div
+          v-if="card?.content || card?.description || card?.link"
+          class="col-12 col-md-6"
+          data-cy="dialog-col-left"
+        >
           <!-- Content -->
           <div
             v-if="card?.content"
             v-html="card.content"
             class="q-px-md q-py-md"
             data-cy="dialog-content"
+          />
+          <!-- Description -->
+          <div
+            v-if="card?.description"
+            v-html="card.description"
+            class="q-px-md q-py-md"
+            data-cy="dialog-description"
           />
           <!-- Buttons -->
           <q-btn
@@ -151,12 +165,13 @@ export default defineComponent({
         </div>
         <!-- Right column: Image -->
         <div class="col-12 col-md-6" data-cy="dialog-col-right">
-          <div clas="q-px-md q-py-md">
+          <div class="q-px-md q-py-md">
             <!-- Image -->
             <q-img
               :src="card.image.src"
               :alt="card.image.alt"
               data-cy="dialog-image"
+              fit="contain"
             />
           </div>
         </div>

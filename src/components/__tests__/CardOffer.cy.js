@@ -226,7 +226,9 @@ function coreTests() {
               .then(($el) => {
                 const textContent = $el.text();
                 cy.stripHtmlTags(card.content).then((text) => {
-                  expect(textContent).to.contain(text);
+                  cy.decodeHtmlEntities(text).then((elementText) => {
+                    expect(textContent).to.contain(elementText);
+                  });
                 });
               });
           });
@@ -241,7 +243,9 @@ function coreTests() {
               .then(($el) => {
                 const textContent = $el.text();
                 cy.stripHtmlTags(card.description).then((text) => {
-                  expect(textContent).to.contain(text);
+                  cy.decodeHtmlEntities(text).then((elementText) => {
+                    expect(textContent).to.contain(elementText);
+                  });
                 });
               });
           });

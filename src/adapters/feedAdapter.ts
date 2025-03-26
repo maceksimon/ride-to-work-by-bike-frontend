@@ -105,6 +105,7 @@ export const feedAdapter = {
       id: post.id.toString(),
       title: post.title,
       content: post.content,
+      description: post.mobileapppopismista,
       image: {
         src: post.image,
         alt: post.title,

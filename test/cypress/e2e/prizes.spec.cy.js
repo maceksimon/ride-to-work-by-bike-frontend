@@ -191,12 +191,9 @@ function coreTests() {
                     const textContent = $el.text();
                     cy.stripHtmlTags(displayedOffers[index].content).then(
                       (text) => {
-                        // decode html entities present in data
-                        const div = document.createElement('div');
-                        div.innerHTML = text;
-                        const elementText =
-                          div.textContent || div.innerText || '';
-                        expect(textContent).to.contain(elementText);
+                        cy.decodeHtmlEntities(text).then((elementText) => {
+                          expect(textContent).to.contain(elementText);
+                        });
                       },
                     );
                   });
@@ -209,12 +206,9 @@ function coreTests() {
                     cy.stripHtmlTags(
                       displayedOffers[index].mobileapppopismista,
                     ).then((text) => {
-                      // decode html entities present in data
-                      const div = document.createElement('div');
-                      div.innerHTML = text;
-                      const elementText =
-                        div.textContent || div.innerText || '';
-                      expect(textContent).to.contain(elementText);
+                      cy.decodeHtmlEntities(text).then((elementText) => {
+                        expect(textContent).to.contain(elementText);
+                      });
                     });
                   });
               }
@@ -325,6 +319,36 @@ function coreTests() {
         // check that cards show titles
         cy.dataCy('available-prizes-item').each((item, index) => {
           cy.wrap(item).should('contain', prizes[index].title);
+          cy.wrap(item).click();
+          // content
+          if (prizes[index].content) {
+            cy.dataCy('dialog-content')
+              .should('be.visible')
+              .then(($el) => {
+                const textContent = $el.text();
+                cy.stripHtmlTags(prizes[index].content).then((text) => {
+                  cy.decodeHtmlEntities(text).then((elementText) => {
+                    expect(textContent).to.contain(elementText);
+                  });
+                });
+              });
+          }
+          // description
+          if (prizes[index].mobileapppopismista) {
+            cy.dataCy('dialog-description')
+              .should('be.visible')
+              .then(($el) => {
+                const textContent = $el.text();
+                cy.stripHtmlTags(prizes[index].mobileapppopismista).then(
+                  (text) => {
+                    cy.decodeHtmlEntities(text).then((elementText) => {
+                      expect(textContent).to.contain(elementText);
+                    });
+                  },
+                );
+              });
+          }
+          cy.dataCy('dialog-close').should('be.visible').click();
         });
       });
     });

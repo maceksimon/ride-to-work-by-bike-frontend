@@ -47,6 +47,7 @@ export interface CardOffer {
 }
 export interface CardPrizeType {
   content: string;
+  description: string;
   id: string;
   image: Image;
   link?: Link;

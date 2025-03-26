@@ -232,6 +232,14 @@ Cypress.Commands.add('stripHtmlTags', (htmlString) => {
   cy.wrap(htmlString.replace(/<\/?[^>]+(>|$)/g, ''));
 });
 
+Cypress.Commands.add('decodeHtmlEntities', (htmlString) => {
+  cy.wrap(htmlString).then((str) => {
+    const div = document.createElement('div');
+    div.innerHTML = str;
+    return div.textContent || div.innerText || '';
+  });
+});
+
 Cypress.Commands.add(
   'testElementsSideBySide',
   (elementSelector, siblingElementSelector) => {

@@ -24,7 +24,7 @@ describe('<CardPrize>', () => {
 
     coreTests();
 
-    it.skip('shows dialog content in two columns', () => {
+    it('shows dialog content in two columns', () => {
       cy.window().then(() => {
         cy.dataCy('card-prize').click();
         cy.testElementPercentageWidth(cy.dataCy('dialog-col-left'), 50);
@@ -47,7 +47,7 @@ describe('<CardPrize>', () => {
 
     coreTests();
 
-    it.skip('shows modal content in one column', () => {
+    it('shows modal content in one column', () => {
       cy.window().then(() => {
         cy.dataCy('card-prize').click();
         cy.testElementPercentageWidth(cy.dataCy('dialog-col-left'), 100);
@@ -75,7 +75,7 @@ function coreTests() {
     });
   });
 
-  it.skip('shows modal dialog on click', () => {
+  it('shows modal dialog on click', () => {
     cy.window().then(() => {
       cy.get('@card').then((card) => {
         cy.dataCy('card-prize').click();
@@ -94,13 +94,34 @@ function coreTests() {
         // content
         cy.dataCy('dialog-body')
           .should('be.visible')
-          .and('have.css', 'font-size', '14px')
-          .and('have.css', 'font-weight', '400')
-          .then(($el) => {
-            const textContent = $el.text();
-            cy.stripHtmlTags(card.content).then((text) => {
-              expect(textContent).to.contain(text);
-            });
+          .within(() => {
+            cy.dataCy('dialog-content')
+              .should('have.css', 'font-size', '14px')
+              .and('have.css', 'font-weight', '400')
+              .then(($el) => {
+                const textContent = $el.text();
+                cy.stripHtmlTags(card.content).then((text) => {
+                  cy.decodeHtmlEntities(text).then((elementText) => {
+                    expect(textContent).to.contain(elementText);
+                  });
+                });
+              });
+          });
+        // description
+        cy.dataCy('dialog-body')
+          .should('be.visible')
+          .within(() => {
+            cy.dataCy('dialog-description')
+              .should('have.css', 'font-size', '14px')
+              .and('have.css', 'font-weight', '400')
+              .then(($el) => {
+                const textContent = $el.text();
+                cy.stripHtmlTags(card.description).then((text) => {
+                  cy.decodeHtmlEntities(text).then((elementText) => {
+                    expect(textContent).to.contain(elementText);
+                  });
+                });
+              });
           });
         // image
         cy.dataCy('dialog-body').scrollTo('bottom', {
