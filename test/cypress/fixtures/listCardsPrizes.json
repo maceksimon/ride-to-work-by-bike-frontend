@@ -21,7 +21,8 @@
     },
     "tShirtEvent": true,
     "icon": "mdi-trophy",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu, včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu, včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": "<p>Akce je pořádána v rámci projektu <strong>Do práce na kole</strong>.</p>"
   },
   {
     "title": "100 CZK voucher do <b>e-shopu Automatu</b>",
@@ -39,7 +40,8 @@
       "target": "_blank"
     },
     "icon": "pedal_bike",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": ""
   },
   {
     "title": "Jezděte na <b>sdílených kolech nextbike</b> zdarma",
@@ -57,7 +59,8 @@
       "target": "_blank"
     },
     "icon": "pedal_bike",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": ""
   },
   {
     "title": "100 CZK voucher do e-shopu Automatu",
@@ -74,7 +77,8 @@
       "target": "_blank"
     },
     "icon": "pedal_bike",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": ""
   },
   {
     "title": "100 CZK voucher do e-shopu Automatu",
@@ -91,7 +95,8 @@
       "target": "_blank"
     },
     "icon": "pedal_bike",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": ""
   },
   {
     "title": "100 CZK voucher do e-shopu Automatu",
@@ -108,7 +113,8 @@
       "target": "_blank"
     },
     "icon": "pedal_bike",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": ""
   },
   {
     "title": "100 CZK voucher do e-shopu Automatu",
@@ -125,6 +131,7 @@
       "target": "_blank"
     },
     "icon": "pedal_bike",
-    "content": "Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U."
+    "description": "<p>Výtěžek z prodeje benefičního e-shopu slouží k financování charitativní činnosti v rámci projektů Automatu,,včetně projektů jako Do práce na kole, Zažít město jinak a Generace U.</p>",
+    "content": ""
   }
 ]

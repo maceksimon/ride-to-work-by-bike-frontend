@@ -129,7 +129,7 @@ describe('Prizes page', () => {
 
   context('mobile', () => {
     beforeEach(() => {
-      cy.viewport('iphone-6');
+      cy.viewport(320, 2000);
       cy.visit('#' + routesConf['prizes']['path']);
       // alias i18n
       cy.window().should('have.property', 'i18n');
@@ -182,6 +182,43 @@ function coreTests() {
             // check that each item has correct data
             cy.dataCy('discount-offers-item').each((item, index) => {
               cy.wrap(item).should('contain', displayedOffers[index].title);
+              cy.wrap(item).click();
+              cy.dataCy('dialog-offer').should('be.visible');
+              if (displayedOffers[index].content) {
+                cy.dataCy('dialog-content')
+                  .should('be.visible')
+                  .then(($el) => {
+                    const textContent = $el.text();
+                    cy.stripHtmlTags(displayedOffers[index].content).then(
+                      (text) => {
+                        // decode html entities present in data
+                        const div = document.createElement('div');
+                        div.innerHTML = text;
+                        const elementText =
+                          div.textContent || div.innerText || '';
+                        expect(textContent).to.contain(elementText);
+                      },
+                    );
+                  });
+              }
+              if (displayedOffers[index].mobileapppopismista) {
+                cy.dataCy('dialog-description')
+                  .should('be.visible')
+                  .then(($el) => {
+                    const textContent = $el.text();
+                    cy.stripHtmlTags(
+                      displayedOffers[index].mobileapppopismista,
+                    ).then((text) => {
+                      // decode html entities present in data
+                      const div = document.createElement('div');
+                      div.innerHTML = text;
+                      const elementText =
+                        div.textContent || div.innerText || '';
+                      expect(textContent).to.contain(elementText);
+                    });
+                  });
+              }
+              cy.dataCy('dialog-close').should('be.visible').click();
             });
           },
         );
