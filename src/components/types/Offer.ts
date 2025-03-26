@@ -13,6 +13,7 @@ export interface Offer {
   end_date: string | '';
   excerpt: string;
   content: string;
+  mobileapppopismista: string;
   image: string;
   categories: OfferCategory[];
 }

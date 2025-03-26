@@ -35,7 +35,7 @@ export interface CardOffer {
   id: number;
   title: string;
   content: string;
-  excerpt: string;
+  description: string;
   voucher: string;
   voucherUrl: string;
   tShirtEvent: boolean;
