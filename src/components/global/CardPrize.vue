@@ -97,6 +97,7 @@ export default defineComponent({
       v-if="enabledCardPrizeDialog"
       v-model="modalOpened"
       :horizontal="true"
+      :minWidth="card?.content || card?.description ? '50vw' : '30vw'"
       data-cy="dialog-prize"
     >
       <!-- Title -->

@@ -109,8 +109,8 @@ export default defineComponent({
     <dialog-default
       v-model="modalOpened"
       :horizontal="true"
-      data-cy="dialog-offer"
       :minWidth="card?.content || card?.description ? '50vw' : '30vw'"
+      data-cy="dialog-offer"
     >
       <!-- Title -->
       <template #title>
