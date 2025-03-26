@@ -135,14 +135,14 @@ export default defineComponent({
           class="col-12 col-md-6"
           data-cy="dialog-col-left"
         >
-          <!-- Content -->
+          <!-- Content: Edited by Auto*Mat administrators -->
           <div
             v-if="card?.content"
             v-html="card.content"
             class="q-px-md q-py-md"
             data-cy="dialog-content"
           />
-          <!-- Description -->
+          <!-- Description: Edited by City administrators -->
           <div
             v-if="card?.description"
             v-html="card.description"
