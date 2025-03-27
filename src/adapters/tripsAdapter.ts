@@ -1,3 +1,5 @@
+import { i18n } from '../boot/i18n';
+
 // enums
 import { TransportDirection } from '../components/types/Route';
 import { TripDirection } from '../components/types/Trip';
@@ -25,9 +27,10 @@ export const tripsAdapter = {
         ? TransportDirection.toWork
         : TransportDirection.fromWork;
     const distance = (trip: Trip) =>
-      (trip.distanceMeters ? trip.distanceMeters / 1000.0 : 0).toLocaleString(
-        undefined,
-        { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+      i18n.global.n(
+        trip.distanceMeters ? trip.distanceMeters / 1000.0 : 0,
+        'routeDistanceDecimalNumber',
+        'en',
       );
     const transport = trip.commuteMode as TransportType;
 
