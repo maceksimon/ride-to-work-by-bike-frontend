@@ -212,6 +212,12 @@ function coreTests() {
                     });
                   });
               }
+              // validation
+              if (displayedOffers[index].akce_na_triko === '1') {
+                cy.dataCy('offer-validation').should('be.visible');
+              } else {
+                cy.dataCy('offer-validation').should('not.exist');
+              }
               cy.dataCy('dialog-close').should('be.visible').click();
             });
           },

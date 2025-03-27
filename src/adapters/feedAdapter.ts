@@ -81,7 +81,7 @@ export const feedAdapter = {
       title: post.title,
       voucher: post.voucher,
       voucherUrl,
-      tShirtEvent: post.akce_na_triko ? true : false,
+      tShirtEvent: post.akce_na_triko === '1' ? true : false,
       icon,
       startDate: post.start_date,
       endDate: post.end_date,
