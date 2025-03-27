@@ -30,7 +30,7 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 /**
  * Get trips composable
  * Used to getting API trips data
- * @param logger - Logger
+ * @param {Logger} logger - Logger
  * @returns {UseApiGetTripsReturn}
  */
 export const useApiGetTrips = (logger: Logger | null): UseApiGetTripsReturn => {

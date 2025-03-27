@@ -16,8 +16,8 @@ import type {
 export const tripsAdapter = {
   /**
    * Convert Trip to RouteItem format
-   * @param trip - Trip to convert
-   * @returns RouteItem
+   * @param {Trip} trip - Trip to convert
+   * @returns {RouteItem} - Route item
    */
   toRouteItem(trip: Trip): RouteItem {
     const direction =
