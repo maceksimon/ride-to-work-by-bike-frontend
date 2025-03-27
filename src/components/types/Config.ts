@@ -52,6 +52,8 @@ export interface ConfigGlobal {
   checkRegisterChallengeStatusIntervalSeconds: number;
   checkRegisterChallengeStatusMaxRepetitions: number;
   feedRefreshCachedPostsIntervalHours: number;
+  apiFeedMaxOffersNumber: number;
+  apiFeedMaxPrizesNumber: number;
   iDontWantMerchandiseItemCode: string;
   notifyMessagePosition: string;
   mobileBottomPanelVisibleItems: number;

@@ -547,7 +547,7 @@ Cypress.Commands.add(
       apiDefaultLang,
       i18n,
     );
-    const getOffersParams = getOffersFeedParamSet(citySlug);
+    const getOffersParams = getOffersFeedParamSet(citySlug, config);
     const objectToParams = (obj) => {
       return Object.keys(obj)
         .map((key) => `${key}=${obj[key]}`)
@@ -596,7 +596,7 @@ Cypress.Commands.add(
       apiDefaultLang,
       i18n,
     );
-    const getPrizesParams = getPrizesFeedParamSet(citySlug);
+    const getPrizesParams = getPrizesFeedParamSet(citySlug, config);
     const objectToParams = (obj) => {
       return Object.keys(obj)
         .map((key) => `${key}=${obj[key]}`)

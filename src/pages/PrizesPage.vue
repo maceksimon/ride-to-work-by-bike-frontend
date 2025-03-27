@@ -30,6 +30,9 @@ import PageHeading from 'components/global/PageHeading.vue';
 import SectionColumns from '../components/homepage/SectionColumns.vue';
 import SectionHeading from '../components/global/SectionHeading.vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // stores
 import { useRegisterChallengeStore } from '../stores/registerChallenge';
 import { useFeedStore } from '../stores/feed';
@@ -81,18 +84,36 @@ export default defineComponent({
       }
       // if citySlug is available, load posts, else we can't load posts
       if (registerChallengeStore.getCityWpSlug) {
-        // check if feed needs refresh
-        await feedStore.attemptFeedRefresh(
-          registerChallengeStore.getCityWpSlug,
-        );
+        // load offers and prizes in parallel
+        const [offers, prizes] = await Promise.all([
+          loadPosts(
+            getOffersFeedParamSet(
+              registerChallengeStore.getCityWpSlug,
+              rideToWorkByBikeConfig,
+            ),
+          ),
+          loadPosts(
+            getPrizesFeedParamSet(
+              registerChallengeStore.getCityWpSlug,
+              rideToWorkByBikeConfig,
+            ),
+          ),
+        ]);
+        postsOffers.value = offers;
+        postsPrizes.value = prizes;
         // set default value for city select
         city.value = registerChallengeStore.getCityWpSlug;
       }
       // initiate watcher after the citySlug is loaded
       watch(city, async (newSlug: string | null) => {
         if (newSlug) {
-          // force load new posts for the new city
-          await feedStore.loadPosts(newSlug);
+          // load offers and prizes in parallel
+          const [offers, prizes] = await Promise.all([
+            loadPosts(getOffersFeedParamSet(newSlug, rideToWorkByBikeConfig)),
+            loadPosts(getPrizesFeedParamSet(newSlug, rideToWorkByBikeConfig)),
+          ]);
+          postsOffers.value = offers;
+          postsPrizes.value = prizes;
         }
       });
     });
