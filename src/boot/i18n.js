@@ -2,11 +2,16 @@ import { boot } from 'quasar/wrappers';
 
 import { createI18n } from 'vue-i18n';
 
-import { getDateTimeFormats, loadLocaleMessages } from '../i18n';
+import {
+  getDateTimeFormats,
+  getNumberFormats,
+  loadLocaleMessages,
+} from '../i18n';
 import { defaultLocale, fallbackLocale } from 'src/i18n/def_locale';
 
 const messages = await loadLocaleMessages();
 const datetimeFormats = getDateTimeFormats(Object.keys(messages));
+const numberFormats = getNumberFormats(Object.keys(messages));
 
 // Create I18n instance
 export const i18n = createI18n({
@@ -15,6 +20,7 @@ export const i18n = createI18n({
   globalInjection: true,
   messages: messages,
   datetimeFormats,
+  numberFormats,
 });
 
 export default boot(({ app }) => {

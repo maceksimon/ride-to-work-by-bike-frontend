@@ -34,6 +34,10 @@ import { useValidation } from '../../composables/useValidation';
 // types
 import type { FormOption } from '../types/Form';
 
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
+const { defaultDistanceZero } = rideToWorkByBikeConfig;
+
 export default defineComponent({
   name: 'RouteInputDistance',
   props: {
@@ -68,6 +72,7 @@ export default defineComponent({
         return props.modelValue;
       },
       set(value: string): void {
+        value = value ? value : defaultDistanceZero;
         emit('update:modelValue', value);
       },
     });
@@ -92,6 +97,7 @@ export default defineComponent({
       customSVGIconsFilePath,
       distance,
       optionsAction,
+      i18n,
       isFilled,
       isAboveZero,
     };
@@ -132,8 +138,15 @@ export default defineComponent({
             dense
             outlined
             reverse-fill-mask
+            unmasked-value
             v-model="distance"
-            mask="#.##"
+            :mask="
+              i18n.global
+                .n(parseFloat(distance), 'routeDistanceDecimalNumber')
+                .includes(',')
+                ? '#,##'
+                : '#.##'
+            "
             fill-mask="0"
             :rules="[
               (val) =>

@@ -239,7 +239,13 @@ function coreTests() {
           .and('have.css', 'font-size', '14px')
           .and('have.css', 'font-weight', '700')
           .and('have.color', grey10)
-          .and('contain', route.distance)
+          .and(
+            'contain',
+            i18n.global.n(
+              parseFloat(route.distance),
+              'routeDistanceDecimalNumber',
+            ),
+          )
           .and('contain', i18n.global.t('global.routeLengthUnit'));
       }
     });

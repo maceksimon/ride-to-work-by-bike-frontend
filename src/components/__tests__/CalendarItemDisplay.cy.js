@@ -185,7 +185,6 @@ function loggedTests({ active, direction }) {
 
   it('renders distance', () => {
     cy.get('@day').then((day) => {
-      console.log(day[direction].distance);
       cy.dataCy('calendar-item-distance')
         .should('be.visible')
         .and('have.color', active ? white : primary)
@@ -193,7 +192,8 @@ function loggedTests({ active, direction }) {
         .and('have.css', 'font-weight', '500')
         .and(
           'contain',
-          `${day[direction].distance} ${i18n.global.t('global.routeLengthUnit')}`,
+          `${i18n.global.n(parseFloat(day[direction].distance), 'routeDistanceDecimalNumber')}` +
+            ` ${i18n.global.t('global.routeLengthUnit')}`,
         );
     });
   });

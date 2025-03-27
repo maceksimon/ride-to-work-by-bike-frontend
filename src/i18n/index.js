@@ -48,3 +48,32 @@ export const getDateTimeFormats = (locales) => {
   }
   return dateTimeFormats;
 };
+
+/*
+ * Set same number formats config (readed from global app TOML
+ * config file) for all available locales
+ *
+ * @params {array} locales: available locales array
+ *                          according locales TOML files
+ *                          names inside ./src/i18n/*.toml dir
+ *
+ * @returns {Object} numberFormats: number formats config
+ *                                  for every available locales
+ */
+export const getNumberFormats = (locales) => {
+  let numberFormats = {};
+
+  const numberFormatsAllLocales = JSON.parse(
+    rideToWorkByBikeConfig.numberFormatsAllLocales,
+  );
+  locales.forEach((locale) => {
+    numberFormats[locale] = numberFormatsAllLocales;
+  });
+  if (process.env.NODE_ENV === 'development') {
+    console.log(
+      `Set number formats for available locales <${locales.join(', ')}>.`,
+    );
+    console.log(`Number formats <${JSON.stringify(numberFormats, null, 2)}>.`);
+  }
+  return numberFormats;
+};

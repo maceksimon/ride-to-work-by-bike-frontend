@@ -24,14 +24,18 @@ export const tripsAdapter = {
       trip.direction === TripDirection.to
         ? TransportDirection.toWork
         : TransportDirection.fromWork;
-    const distance = trip.distanceMeters ? trip.distanceMeters.toString() : '0';
+    const distance = (trip: Trip) =>
+      (trip.distanceMeters ? trip.distanceMeters / 1000.0 : 0).toLocaleString(
+        undefined,
+        { minimumFractionDigits: 2, maximumFractionDigits: 2 },
+      );
     const transport = trip.commuteMode as TransportType;
 
     return {
       id: trip.id.toString(),
       date: trip.trip_date,
-      direction,
-      distance,
+      direction: direction,
+      distance: distance(trip),
       transport,
       // TODO: Handle the route feature data
       routeFeature: null as RouteFeature | null,

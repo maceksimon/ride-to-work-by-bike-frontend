@@ -102,6 +102,7 @@ export default defineComponent({
           data-cy="bottom-panel-close"
         />
       </div>
+
       <!-- Section: Main -->
       <div v-if="routeSource" class="row q-mt-lg">
         <div class="col-12 col-lg-11">

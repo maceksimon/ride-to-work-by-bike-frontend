@@ -65,7 +65,13 @@ describe('<RouteItemEdit>', () => {
         cy.dataCy('input-distance')
           .should('be.visible')
           .invoke('val')
-          .should('eq', routes.toWork.distance.toString());
+          .should(
+            'eq',
+            i18n.global.n(
+              parseFloat(routes.toWork.distance),
+              'routeDistanceDecimalNumber',
+            ),
+          );
       });
     });
 

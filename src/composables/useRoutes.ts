@@ -76,7 +76,10 @@ export const useRoutes = () => {
    */
   const getRouteDistance = (route: RouteItem | null): string => {
     if (!route?.distance || route?.distance === defaultDistanceZero) return '';
-    return `${route.distance} ${i18n.global.t('global.routeLengthUnit')}`;
+    return (
+      `${i18n.global.n(parseFloat(route.distance), 'routeDistanceDecimalNumber')}` +
+      ` ${i18n.global.t('global.routeLengthUnit')}`
+    );
   };
 
   /**
