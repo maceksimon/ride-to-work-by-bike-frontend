@@ -259,7 +259,7 @@ export default defineComponent({
         posts.value = await loadPosts(
           getOffersFeedParamSet(
             registerChallengeStore.getCityWpSlug,
-            rideToWorkByBikeConfig,
+            rideToWorkByBikeConfig.apiFeedMaxOffersNumber,
           ),
         );
       }

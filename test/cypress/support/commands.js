@@ -547,7 +547,10 @@ Cypress.Commands.add(
       apiDefaultLang,
       i18n,
     );
-    const getOffersParams = getOffersFeedParamSet(citySlug, config);
+    const getOffersParams = getOffersFeedParamSet(
+      citySlug,
+      config.apiFeedMaxOffersNumber,
+    );
     const objectToParams = (obj) => {
       return Object.keys(obj)
         .map((key) => `${key}=${obj[key]}`)
@@ -596,7 +599,10 @@ Cypress.Commands.add(
       apiDefaultLang,
       i18n,
     );
-    const getPrizesParams = getPrizesFeedParamSet(citySlug, config);
+    const getPrizesParams = getPrizesFeedParamSet(
+      citySlug,
+      config.apiFeedMaxPrizesNumber,
+    );
     const objectToParams = (obj) => {
       return Object.keys(obj)
         .map((key) => `${key}=${obj[key]}`)

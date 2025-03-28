@@ -8,7 +8,6 @@ import {
 } from '../components/enums/Offers';
 
 // types
-import type { ConfigGlobal } from 'src/components/types';
 import type { GetOffersParams } from '../components/types/Offer';
 
 /**
@@ -18,7 +17,7 @@ import type { GetOffersParams } from '../components/types/Offer';
  */
 export const getOffersFeedParamSet = (
   citySlug: string,
-  config: ConfigGlobal,
+  numberOfPosts: number,
 ): Partial<GetOffersParams> => {
   const currentYear = new Date().getFullYear();
 
@@ -29,7 +28,7 @@ export const getOffersFeedParamSet = (
     _post_type: ApiOfferParamPostType.locations,
     _page_subtype: ApiOfferParamPageSubtype.event,
     _post_parent: citySlug,
-    _number: config.apiFeedMaxOffersNumber.toString(),
+    _number: numberOfPosts.toString(),
     _year: currentYear.toString(),
   };
 };
@@ -41,7 +40,7 @@ export const getOffersFeedParamSet = (
  */
 export const getPrizesFeedParamSet = (
   citySlug: string,
-  config: ConfigGlobal,
+  numberOfPosts: number,
 ): Partial<GetOffersParams> => {
   const currentYear = new Date().getFullYear();
 
@@ -52,7 +51,7 @@ export const getPrizesFeedParamSet = (
     _post_type: ApiOfferParamPostType.locations,
     _page_subtype: ApiOfferParamPageSubtype.prize,
     _post_parent: citySlug,
-    _number: config.apiFeedMaxPrizesNumber.toString(),
+    _number: numberOfPosts.toString(),
     _year: currentYear.toString(),
   };
 };

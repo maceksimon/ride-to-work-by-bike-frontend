@@ -89,13 +89,13 @@ export default defineComponent({
           loadPosts(
             getOffersFeedParamSet(
               registerChallengeStore.getCityWpSlug,
-              rideToWorkByBikeConfig,
+              rideToWorkByBikeConfig.apiFeedMaxOffersNumber,
             ),
           ),
           loadPosts(
             getPrizesFeedParamSet(
               registerChallengeStore.getCityWpSlug,
-              rideToWorkByBikeConfig,
+              rideToWorkByBikeConfig.apiFeedMaxPrizesNumber,
             ),
           ),
         ]);
@@ -109,8 +109,18 @@ export default defineComponent({
         if (newSlug) {
           // load offers and prizes in parallel
           const [offers, prizes] = await Promise.all([
-            loadPosts(getOffersFeedParamSet(newSlug, rideToWorkByBikeConfig)),
-            loadPosts(getPrizesFeedParamSet(newSlug, rideToWorkByBikeConfig)),
+            loadPosts(
+              getOffersFeedParamSet(
+                newSlug,
+                rideToWorkByBikeConfig.apiFeedMaxOffersNumber,
+              ),
+            ),
+            loadPosts(
+              getPrizesFeedParamSet(
+                newSlug,
+                rideToWorkByBikeConfig.apiFeedMaxPrizesNumber,
+              ),
+            ),
           ]);
           postsOffers.value = offers;
           postsPrizes.value = prizes;
