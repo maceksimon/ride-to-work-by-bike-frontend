@@ -213,7 +213,7 @@ function coreTests() {
                   });
               }
               // validation
-              if (displayedOffers[index].akce_na_triko === '1') {
+              if (parseInt(displayedOffers[index].akce_na_triko)) {
                 cy.dataCy('offer-validation').should('be.visible');
               } else {
                 cy.dataCy('offer-validation').should('not.exist');
