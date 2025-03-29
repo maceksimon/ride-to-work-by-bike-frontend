@@ -18,7 +18,7 @@ const { apiDefaultLang, apiBase, apiBaseRtwbbFeed, apiBaseIpAddress } =
 import type { AxiosRequestHeaders, Method } from 'axios';
 import type { Logger } from '../components/types/Logger';
 
-interface ApiResponse<T> {
+export interface ApiResponse<T> {
   data: T | null;
   success: boolean;
 }

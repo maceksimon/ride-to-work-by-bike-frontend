@@ -14,13 +14,14 @@ import { useLoginStore } from '../stores/login';
 import type { Ref } from 'vue';
 import type { Logger } from '../components/types/Logger';
 import type { Trip, TripPostPayload } from '../components/types/Trip';
+import type { ApiResponse } from './useApi';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
 interface UseApiPostTripsReturn {
   isLoading: Ref<boolean>;
-  postTrips: (trips: TripPostPayload[]) => Promise<void>;
+  postTrips: (trips: TripPostPayload[]) => Promise<ApiResponse<Trip[]>>;
 }
 
 /**
@@ -41,7 +42,9 @@ export const useApiPostTrips = (
    * Creates multiple trips in a single request
    * @param {TripPostPayload[]} trips - Array of trips to create
    */
-  const postTrips = async (trips: TripPostPayload[]): Promise<void> => {
+  const postTrips = async (
+    trips: TripPostPayload[],
+  ): Promise<ApiResponse<Trip[]>> => {
     logger?.debug(`Creating trips <${JSON.stringify(trips)}>.`);
     isLoading.value = true;
 
@@ -57,7 +60,7 @@ export const useApiPostTrips = (
     );
 
     // create trips
-    await apiFetch<Trip[]>({
+    const response = await apiFetch<Trip[]>({
       endpoint: rideToWorkByBikeConfig.urlApiTrips,
       method: 'post',
       translationKey: 'postTrips',
@@ -67,6 +70,8 @@ export const useApiPostTrips = (
     });
 
     isLoading.value = false;
+
+    return response;
   };
 
   return {

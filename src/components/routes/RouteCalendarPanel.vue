@@ -28,7 +28,7 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, inject } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
@@ -36,12 +36,20 @@ import RouteInputTransportType from './RouteInputTransportType.vue';
 
 // composables
 import { useLogRoutes } from '../../composables/useLogRoutes';
+import { useApiPostTrips } from '../../composables/useApiPostTrips';
+
+// adapters
+import { tripsAdapter } from '../../adapters/tripsAdapter';
+
+// stores
+import { useTripsStore } from '../../stores/trips';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // types
 import type { RouteItem } from '../types/Route';
+import type { Logger } from '../types/Logger';
 
 export default defineComponent({
   name: 'RouteCalendarPanel',
@@ -61,6 +69,7 @@ export default defineComponent({
   },
   emits: ['save', 'update:modelValue'],
   setup(props, { emit }) {
+    const logger = inject('vuejs3-logger') as Logger | null;
     // styles
     const minWidth = '65vw';
 
@@ -79,12 +88,18 @@ export default defineComponent({
     const { action, distance, routesCount, transportType, isShownDistance } =
       useLogRoutes(routes);
 
+    // Initialize API composable
+    const { postTrips, isLoading } = useApiPostTrips(logger);
+
+    // Initialize trips store
+    const tripsStore = useTripsStore();
+
     // Determines if save button should be disabled.
     const isSaveBtnDisabled = computed((): boolean => {
       const noRoutes = routesCount.value === 0;
       const noDistance =
         isShownDistance.value && distance.value === defaultDistanceZero;
-      return noRoutes || noDistance;
+      return noRoutes || noDistance || isLoading.value;
     });
 
     /**
@@ -93,9 +108,38 @@ export default defineComponent({
      * If unsuccessful, it shows error message.
      * If successful, closes panel.
      */
-    const onSave = (): void => {
-      // TODO: send API request
-      emit('save');
+    const onSave = async (): Promise<void> => {
+      try {
+        // create route items with settings from panel
+        const routeItems: RouteItem[] = routes.value.map((route) => ({
+          ...route,
+          transport: transportType.value,
+          distance: isShownDistance.value ? distance.value : route.distance,
+        }));
+        // convert route items to trip payload
+        const tripPayload = routeItems.map((route) =>
+          tripsAdapter.toTripPostPayload(route),
+        );
+        // send to API
+        const response = await postTrips(tripPayload);
+        // handle success
+        if (response.success && response.data?.length) {
+          // convert saved trips to route items
+          const savedRouteItems = response.data.map((trip) =>
+            tripsAdapter.toRouteItem(trip),
+          );
+          // update store with new route items
+          tripsStore.setRouteItems([
+            ...tripsStore.getRouteItems,
+            ...savedRouteItems,
+          ]);
+          // emit save event
+          emit('save');
+        }
+      } catch (error) {
+        // TODO: handle error
+        console.error('Failed to save routes:', error);
+      }
     };
 
     return {

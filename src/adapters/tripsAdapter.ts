@@ -1,11 +1,14 @@
 import { i18n } from '../boot/i18n';
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // enums
 import { TransportDirection } from '../components/types/Route';
 import { TripDirection } from '../components/types/Trip';
 
 // types
-import type { Trip } from '../components/types/Trip';
+import type { Trip, TripPostPayload } from '../components/types/Trip';
 import type {
   RouteItem,
   TransportType,
@@ -43,5 +46,28 @@ export const tripsAdapter = {
       // TODO: Handle the route feature data
       routeFeature: null as RouteFeature | null,
     };
+  },
+
+  /**
+   * Convert RouteItem to TripPostPayload format
+   * @param {RouteItem} routeItem - Route item to convert
+   * @returns {TripPostPayload} - Trip post payload
+   */
+  toTripPostPayload(routeItem: RouteItem): TripPostPayload {
+    const direction =
+      routeItem.direction === TransportDirection.toWork
+        ? TripDirection.to
+        : TripDirection.from;
+
+    // create payload with required fields
+    const payload: TripPostPayload = {
+      trip_date: routeItem.date,
+      direction,
+      commuteMode: routeItem.transport,
+      distanceMeters: Number(routeItem.distance), // TODO: Convert distance string to meters
+      sourceApplication: rideToWorkByBikeConfig.apiTripsSourceApplicationId,
+    };
+
+    return payload;
   },
 };

@@ -54,6 +54,7 @@ export interface ConfigGlobal {
   feedRefreshCachedPostsIntervalHours: number;
   apiFeedMaxOffersNumber: number;
   apiFeedMaxPrizesNumber: number;
+  apiTripsSourceApplicationId: string;
   iDontWantMerchandiseItemCode: string;
   notifyMessagePosition: string;
   mobileBottomPanelVisibleItems: number;

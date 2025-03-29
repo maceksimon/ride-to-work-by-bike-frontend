@@ -26,11 +26,11 @@ export interface TripPostPayload {
   commuteMode: string;
   distanceMeters: number;
   sourceApplication: string;
-  file: string | null;
-  track: string | null;
-  durationSeconds: number | null;
-  sourceId: string;
-  description: string;
+  file?: string | null;
+  track?: string | null;
+  durationSeconds?: number | null;
+  sourceId?: string;
+  description?: string;
 }
 
 export interface GetTripsResponse {

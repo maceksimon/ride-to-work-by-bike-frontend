@@ -135,6 +135,7 @@ checkIsThisCampaignCompetitionPhaseTypeInterval = 20 # seconds
 feedRefreshCachedPostsIntervalHours = 24
 apiFeedMaxOffersNumber = 50
 apiFeedMaxPrizesNumber = 50
+apiTripsSourceApplicationId = 'RTWBB'
 
 # DATE TIME FORMATS
 
