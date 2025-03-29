@@ -20,6 +20,19 @@ export interface Trip {
   track: string | null;
 }
 
+export interface TripPostPayload {
+  trip_date: string;
+  direction: string;
+  commuteMode: string;
+  distanceMeters: number;
+  sourceApplication: string;
+  file: string | null;
+  track: string | null;
+  durationSeconds: number | null;
+  sourceId: string;
+  description: string;
+}
+
 export interface GetTripsResponse {
   count: number;
   next: string | null;
