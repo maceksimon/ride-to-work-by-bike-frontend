@@ -702,6 +702,11 @@ apiMessageSuccess = "Stav registrácie bol úspešne uložený."
 messageTeamMaxMembersUnavailable = "Nepodarilo sa zistiť počet členov tímu. Skúste to znovu později."
 messageTeamMaxMembersReached = "Tím je plný. Nemôžete pridať ďalšie členov."
 
+[postTrips]
+apiMessageError = "Chyba pri ukladaní jázd."
+apiMessageErrorWithMessage = "Chyba pri ukladaní jázd. Chyba: {error}"
+apiMessageSuccess = "Jázdy boli úspešne uložené."
+
 [profile]
 buttonDeleteAccount = "Zmazať"
 buttonDownloadInvoice = "Stiahnutie potvrzenia o platbe"

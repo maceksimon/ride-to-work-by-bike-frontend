@@ -700,6 +700,12 @@ apiMessageSuccess = "Registration status was successfully saved."
 messageTeamMaxMembersUnavailable = "Failed to get team members count. Please try again later."
 messageTeamMaxMembersReached = "Team is full. You cannot add more members."
 
+[postTrips]
+apiMessageError = "Error saving trips."
+apiMessageErrorWithMessage = "Error saving trips. Error: {error}"
+apiMessageSuccess = "Trips were successfully saved."
+
+
 [profile]
 buttonAddEmailField = "Add another email"
 buttonDeleteAccount = "Delete"

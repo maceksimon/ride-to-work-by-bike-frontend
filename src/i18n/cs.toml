@@ -703,6 +703,11 @@ apiMessageSuccess = "Stav registrace byl úspěšně uložen."
 messageTeamMaxMembersUnavailable = "Nepodařilo se zjistit počet členů týmu. Zkuste to znovu později."
 messageTeamMaxMembersReached = "Tým je plný. Nemůžete přidat další členy."
 
+[postTrips]
+apiMessageError = "Chyba při ukládání jízd."
+apiMessageErrorWithMessage = "Chyba při ukládání jízd. Chyba: {error}"
+apiMessageSuccess = "Jízdy byly úspěšně uloženy."
+
 [profile]
 buttonDeleteAccount = "Smazat"
 buttonDownloadInvoice = "Stáhnout potvrzení o platbě"

@@ -24,6 +24,11 @@ describe('<RouteCalendarPanel>', () => {
       'routes',
       i18n,
     );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'postTrips',
+      i18n,
+    );
   });
 
   context('desktop - logged route', () => {
