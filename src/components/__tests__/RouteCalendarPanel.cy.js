@@ -5,7 +5,6 @@ import { i18n } from '../../boot/i18n';
 import { useTripsStore } from 'src/stores/trips';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import testData from '../../../test/cypress/fixtures/routeCalendarPanelInputTest.json';
-
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
 
@@ -151,10 +150,7 @@ describe('<RouteCalendarPanel>', () => {
       it(`${testKey}: ${testCase.description}`, () => {
         // intercept API call with response matching the payload
         const responseBody = {
-          count: testCase.apiPayload.length,
-          next: null,
-          previous: null,
-          results: testCase.apiPayload.trips.map((trip, index) => ({
+          trips: testCase.apiPayload.trips.map((trip, index) => ({
             id: index + 1,
             ...trip,
             durationSeconds: null,

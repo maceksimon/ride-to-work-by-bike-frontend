@@ -122,8 +122,6 @@ export default defineComponent({
         );
         // send to API
         const response = await postTrips(tripPayload);
-        console.log('response', response);
-        console.log('response.data', response.data);
         // handle success
         if (
           response.success &&
