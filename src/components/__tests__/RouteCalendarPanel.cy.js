@@ -3,6 +3,8 @@ import { colors } from 'quasar';
 import RouteCalendarPanel from 'components/routes/RouteCalendarPanel.vue';
 import { i18n } from '../../boot/i18n';
 import { useTripsStore } from 'src/stores/trips';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import testData from '../../../test/cypress/fixtures/routeCalendarPanelInputTest.json';
 
 const { getPaletteColor } = colors;
 const grey10 = getPaletteColor('grey-10');
@@ -137,6 +139,61 @@ describe('<RouteCalendarPanel>', () => {
     coreTests();
     mobileTests();
     unloggedRouteTests();
+  });
+
+  context('API payloads for route entry', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.viewport('macbook-16');
+    });
+
+    Object.entries(testData).forEach(([testKey, testCase]) => {
+      it(`${testKey}: ${testCase.description}`, () => {
+        // intercept API call with response matching the payload
+        const responseBody = {
+          count: testCase.apiPayload.length,
+          next: null,
+          previous: null,
+          results: testCase.apiPayload.trips.map((trip, index) => ({
+            id: index + 1,
+            ...trip,
+            durationSeconds: null,
+            sourceId: null,
+            file: null,
+            description: '',
+            track: null,
+          })),
+        };
+        cy.interceptPostTripsApi(rideToWorkByBikeConfig, i18n, responseBody);
+        // mount component with test data
+        cy.mount(RouteCalendarPanel, {
+          props: {
+            modelValue: true,
+            routes: testCase.propRoutes,
+          },
+        });
+        cy.setupTripsStoreWithCommuteModes(useTripsStore);
+        // input transport type if provided
+        if (testCase.inputValues.transport) {
+          cy.dataCy('button-toggle-transport').should('be.visible');
+          cy.dataCy(selectorRouteInputTransportType)
+            .find(`[data-value="${testCase.inputValues.transport}"]`)
+            .click();
+        }
+        // input distance if provided
+        if (testCase.inputValues.distance) {
+          cy.dataCy('section-input-number').should('be.visible');
+          cy.dataCy('section-input-number').find('input').clear();
+          cy.dataCy('section-input-number')
+            .find('input')
+            .type(testCase.inputValues.distance);
+        }
+        // click save button
+        cy.dataCy(selectorDialogSaveButton).click();
+        // wait for API call and verify payload
+        cy.waitForPostTripsApi(testCase.apiPayload);
+      });
+    });
   });
 });
 

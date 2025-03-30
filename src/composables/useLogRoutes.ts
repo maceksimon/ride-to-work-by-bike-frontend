@@ -8,10 +8,13 @@ import { rideToWorkByBikeConfig } from '../boot/global_vars';
 import { TransportType } from 'src/components/types/Route';
 
 // types
-import type { ComputedRef } from 'vue';
+import type { Ref } from 'vue';
 import type { RouteInputType, RouteItem } from 'src/components/types/Route';
 
-export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
+// utils
+import { hasTransportDistance } from '../utils/has_transport_distance';
+
+export const useLogRoutes = (routes: Ref<RouteItem[]>) => {
   const { defaultDistanceZero } = rideToWorkByBikeConfig;
   const routesCount = computed((): number => routes.value.length);
 
@@ -46,25 +49,11 @@ export const useLogRoutes = (routes: ComputedRef<RouteItem[]>) => {
     return hasTransportDistance(transportType.value);
   });
 
-  /**
-   * Checks if the given transport type has distance.
-   * @param {TransportType} transport - The transport type to check.
-   * @return {boolean} Whether the transport has distance.
-   */
-  const hasTransportDistance = (transport: TransportType): boolean => {
-    return (
-      transport === TransportType.bike ||
-      transport === TransportType.walk ||
-      transport === TransportType.bus
-    );
-  };
-
   return {
     action,
     distance,
     routesCount,
     transportType,
     isShownDistance,
-    hasTransportDistance,
   };
 };

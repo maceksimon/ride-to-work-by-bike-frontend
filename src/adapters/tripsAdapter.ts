@@ -15,6 +15,9 @@ import type {
   RouteFeature,
 } from '../components/types/Route';
 
+// utils
+import { hasTransportDistance } from '../utils/has_transport_distance';
+
 /**
  * Adapter for converting between API and component trip data formats
  */
@@ -69,7 +72,7 @@ export const tripsAdapter = {
       trip_date: routeItem.date,
       direction,
       commuteMode: routeItem.transport,
-      distanceMeters: distance,
+      distanceMeters: hasTransportDistance(routeItem.transport) ? distance : 0,
       sourceApplication: rideToWorkByBikeConfig.apiTripsSourceApplicationId,
     };
 

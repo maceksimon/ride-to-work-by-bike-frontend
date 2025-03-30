@@ -71,6 +71,7 @@ export const useCalendarRoutes = (days: Ref<RouteDay[]>) => {
             transport: TransportType.bike,
             distance: defaultDistanceZero,
             inputType: 'input-number',
+            routeFeature: null,
           });
         }
       }

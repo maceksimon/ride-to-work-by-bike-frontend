@@ -3470,3 +3470,52 @@ Cypress.Commands.add(
     });
   },
 );
+
+/**
+ * Intercept post trips API
+ * Provides `@postTrips` alias
+ * @param {Config} config - App global config
+ * @param {I18n|String} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} responseBody - Override default response body
+ * @param {Number} responseStatusCode - Override default response HTTP status code
+ */
+Cypress.Commands.add(
+  'interceptPostTripsApi',
+  (config, i18n, responseBody, responseStatusCode = null) => {
+    const { apiBase, apiDefaultLang, urlApiTrips } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiTripsLocalized = `${apiBaseUrl}${urlApiTrips}`;
+
+    cy.intercept('POST', urlApiTripsLocalized, {
+      statusCode: responseStatusCode || httpSuccessfullStatus,
+      body: responseBody,
+    }).as('postTrips');
+  },
+);
+
+/**
+ * Wait for post trips API call and compare request/response object
+ * Wait for `@postTrips` intercept
+ * @param {Object} requestBody - Expected request body to compare against
+ * @param {Object} responseBody - Expected response body to compare against
+ */
+Cypress.Commands.add(
+  'waitForPostTripsApi',
+  (requestBody, responseBody = null) => {
+    cy.wait('@postTrips').then(({ request, response }) => {
+      // verify authorization header
+      expect(request.headers.authorization).to.include(bearerTokeAuth);
+      // verify request body
+      expect(request.body).to.deep.equal(requestBody);
+      // verify response body
+      if (responseBody) {
+        expect(response.body).to.deep.equal(responseBody);
+      }
+    });
+  },
+);
