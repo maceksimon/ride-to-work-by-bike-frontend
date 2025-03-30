@@ -1,0 +1,20 @@
+{
+  "count": 2,
+  "next": null,
+  "previous": "https://test.dopracenakole.cz/rest/trips/?limit=1&offset=0",
+  "results": [
+    {
+      "distanceMeters": 5000,
+      "durationSeconds": 1200,
+      "commuteMode": "by_foot",
+      "sourceApplication": "app",
+      "trip_date": "2025-05-24",
+      "sourceId": null,
+      "file": null,
+      "description": "Morning walk",
+      "id": 1771206,
+      "direction": "trip_to",
+      "track": null
+    }
+  ]
+}

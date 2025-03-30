@@ -4,7 +4,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -19,7 +19,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "bicycle",
           "distanceMeters": 10000,
@@ -33,7 +33,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -48,7 +48,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "bicycle",
           "distanceMeters": 10000,
@@ -62,7 +62,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -77,7 +77,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_foot",
           "distanceMeters": 5000,
@@ -91,7 +91,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -106,7 +106,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "by_foot",
           "distanceMeters": 5000,
@@ -120,7 +120,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -135,7 +135,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "hromadna",
           "distanceMeters": 8000,
@@ -149,7 +149,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -164,7 +164,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "hromadna",
           "distanceMeters": 8000,
@@ -178,7 +178,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -193,7 +193,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "telecommute",
           "distanceMeters": 0,
@@ -207,7 +207,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -222,7 +222,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "telecommute",
           "distanceMeters": 0,
@@ -236,7 +236,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -251,7 +251,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_other_vehicle",
           "distanceMeters": 0,
@@ -265,7 +265,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -280,7 +280,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "by_other_vehicle",
           "distanceMeters": 0,
@@ -294,7 +294,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -309,7 +309,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "no_work",
           "distanceMeters": 0,
@@ -323,7 +323,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -338,7 +338,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "no_work",
           "distanceMeters": 0,
@@ -352,7 +352,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "10.00",
         "transport": "bicycle",
@@ -367,7 +367,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_other_vehicle",
           "distanceMeters": 0,
@@ -381,7 +381,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "10.00",
         "transport": "bicycle",
@@ -396,7 +396,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_foot",
           "distanceMeters": 15000,
@@ -410,7 +410,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "by_other_vehicle",
@@ -425,7 +425,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_foot",
           "distanceMeters": 15000,
@@ -439,7 +439,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "14.00",
         "transport": "by_foot",
@@ -454,7 +454,7 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_foot",
           "distanceMeters": 5000,
@@ -468,7 +468,7 @@
     "propRoutes": [
       {
         "id": "1",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "toWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -477,7 +477,7 @@
       },
       {
         "id": "2",
-        "date": "2025-3-28",
+        "date": "2025-05-25",
         "direction": "fromWork",
         "distance": "0.00",
         "transport": "bicycle",
@@ -492,14 +492,14 @@
     "apiPayload": {
       "trips": [
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_to",
           "commuteMode": "by_foot",
           "distanceMeters": 15000,
           "sourceApplication": "RTWBB"
         },
         {
-          "trip_date": "2025-3-28",
+          "trip_date": "2025-05-25",
           "direction": "trip_from",
           "commuteMode": "by_foot",
           "distanceMeters": 15000,
