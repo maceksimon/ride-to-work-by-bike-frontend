@@ -59,12 +59,17 @@ export const tripsAdapter = {
         ? TripDirection.to
         : TripDirection.from;
 
+    // TODO: Cleanup the conversion of distance to meters
+    const distance =
+      (Number(routeItem.distance.replace('.', '').replace(',', '')) / 100) *
+      1000;
+
     // create payload with required fields
     const payload: TripPostPayload = {
       trip_date: routeItem.date,
       direction,
       commuteMode: routeItem.transport,
-      distanceMeters: Number(routeItem.distance), // TODO: Convert distance string to meters
+      distanceMeters: distance,
       sourceApplication: rideToWorkByBikeConfig.apiTripsSourceApplicationId,
     };
 
