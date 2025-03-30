@@ -86,6 +86,27 @@ export const useTripsStore = defineStore('trips', {
       this.routeItems = routeItems;
     },
     /**
+     * Update route items by merging new items with existing ones
+     * Routes are identified by date and direction combination
+     * @param {RouteItem[]} newRouteItems - Array of new route items to merge
+     * @returns {void}
+     */
+    updateRouteItems(newRouteItems: RouteItem[]): void {
+      // create a map of existing routes for easy lookup
+      const existingRoutesMap = new Map<string, RouteItem>();
+      this.routeItems.forEach((route) => {
+        const key = `${route.date}-${route.direction}`;
+        existingRoutesMap.set(key, route as RouteItem);
+      });
+      // update or add new routes
+      newRouteItems.forEach((newRoute) => {
+        const key = `${newRoute.date}-${newRoute.direction}`;
+        existingRoutesMap.set(key, newRoute as RouteItem);
+      });
+      // convert map back to array
+      this.routeItems = Array.from(existingRoutesMap.values());
+    },
+    /**
      * Load commute modes from API
      * @returns {Promise<void>}
      */

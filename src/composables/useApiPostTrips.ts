@@ -21,7 +21,9 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
 interface UseApiPostTripsReturn {
   isLoading: Ref<boolean>;
-  postTrips: (trips: TripPostPayload[]) => Promise<ApiResponse<Trip[]>>;
+  postTrips: (
+    trips: TripPostPayload[],
+  ) => Promise<ApiResponse<{ trips: Trip[] }>>;
 }
 
 /**
@@ -44,7 +46,7 @@ export const useApiPostTrips = (
    */
   const postTrips = async (
     trips: TripPostPayload[],
-  ): Promise<ApiResponse<Trip[]>> => {
+  ): Promise<ApiResponse<{ trips: Trip[] }>> => {
     logger?.debug(`Creating trips <${JSON.stringify(trips)}>.`);
     isLoading.value = true;
 
@@ -60,7 +62,7 @@ export const useApiPostTrips = (
     );
 
     // create trips
-    const response = await apiFetch<Trip[]>({
+    const response = await apiFetch<{ trips: Trip[] }>({
       endpoint: rideToWorkByBikeConfig.urlApiTrips,
       method: 'post',
       translationKey: 'postTrips',

@@ -122,22 +122,25 @@ export default defineComponent({
         );
         // send to API
         const response = await postTrips(tripPayload);
+        console.log('response', response);
+        console.log('response.data', response.data);
         // handle success
-        if (response.success && response.data?.length) {
+        if (
+          response.success &&
+          response.data?.trips &&
+          response.data.trips.length > 0
+        ) {
           logger?.info('Routes saved successfully');
           logger?.debug(
-            `Saved routes <${JSON.stringify(response.data, null, 2)}>.`,
+            `Saved trips <${JSON.stringify(response.data.trips, null, 2)}>.`,
           );
           // convert saved trips to route items
-          const savedRouteItems = response.data.map((trip) =>
+          const savedRouteItems = response.data.trips.map((trip) =>
             tripsAdapter.toRouteItem(trip),
           );
           logger?.debug('Saving new routes to store.');
           // update store with new route items
-          tripsStore.setRouteItems([
-            ...tripsStore.getRouteItems,
-            ...savedRouteItems,
-          ]);
+          tripsStore.updateRouteItems(savedRouteItems);
           logger?.debug(
             `Updated store route items <${JSON.stringify(tripsStore.getRouteItems, null, 2)}>.`,
           );
