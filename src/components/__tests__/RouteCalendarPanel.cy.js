@@ -146,6 +146,7 @@ describe('<RouteCalendarPanel>', () => {
       cy.viewport('macbook-16');
     });
 
+    // generate tests based on fixture routeCalendarPanelInputTest.json
     Object.entries(testData).forEach(([testKey, testCase]) => {
       it(`${testKey}: ${testCase.description}`, () => {
         // intercept API call with response matching the payload
