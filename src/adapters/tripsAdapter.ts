@@ -62,8 +62,15 @@ export const tripsAdapter = {
         ? TripDirection.to
         : TripDirection.from;
 
-    // TODO: Cleanup the conversion of distance to meters
-    const distance =
+    /**
+     * Distance can come either in the format with decimal point,
+     * or without a decimal point (due to the function of masked input).
+     * Example input distance: "12.50" or "1250"
+     * To handle both cases we remove the decimal point or comma from string,
+     * internally convert distance to km units (by dividing by 100),
+     * and then multiply by 1000 to get meters.
+     */
+    const distanceMeters =
       (Number(routeItem.distance.replace('.', '').replace(',', '')) / 100) *
       1000;
 
@@ -72,7 +79,9 @@ export const tripsAdapter = {
       trip_date: routeItem.date,
       direction,
       commuteMode: routeItem.transport,
-      distanceMeters: hasTransportDistance(routeItem.transport) ? distance : 0,
+      distanceMeters: hasTransportDistance(routeItem.transport)
+        ? distanceMeters
+        : 0,
       sourceApplication: rideToWorkByBikeConfig.apiTripsSourceApplicationId,
     };
 
