@@ -109,45 +109,40 @@ export default defineComponent({
      * If successful, closes panel.
      */
     const onSave = async (): Promise<void> => {
-      try {
-        // create route items with settings from panel
-        const routeItems: RouteItem[] = routes.value.map((route) => ({
-          ...route,
-          transport: transportType.value,
-          distance: isShownDistance.value ? distance.value : route.distance,
-        }));
-        // convert route items to trip payload
-        const tripPayload = routeItems.map((route) =>
-          tripsAdapter.toTripPostPayload(route),
+      // create route items with settings from panel
+      const routeItems: RouteItem[] = routes.value.map((route) => ({
+        ...route,
+        transport: transportType.value,
+        distance: isShownDistance.value ? distance.value : route.distance,
+      }));
+      // convert route items to trip payload
+      const tripPayload = routeItems.map((route) =>
+        tripsAdapter.toTripPostPayload(route),
+      );
+      // send to API
+      const response = await postTrips(tripPayload);
+      // handle success
+      if (
+        response.success &&
+        response.data?.trips &&
+        response.data.trips.length > 0
+      ) {
+        logger?.info('Routes saved successfully');
+        logger?.debug(
+          `Saved trips <${JSON.stringify(response.data.trips, null, 2)}>.`,
         );
-        // send to API
-        const response = await postTrips(tripPayload);
-        // handle success
-        if (
-          response.success &&
-          response.data?.trips &&
-          response.data.trips.length > 0
-        ) {
-          logger?.info('Routes saved successfully');
-          logger?.debug(
-            `Saved trips <${JSON.stringify(response.data.trips, null, 2)}>.`,
-          );
-          // convert saved trips to route items
-          const savedRouteItems = response.data.trips.map((trip) =>
-            tripsAdapter.toRouteItem(trip),
-          );
-          logger?.debug('Saving new routes to store.');
-          // update store with new route items
-          tripsStore.updateRouteItems(savedRouteItems);
-          logger?.debug(
-            `Updated store route items <${JSON.stringify(tripsStore.getRouteItems, null, 2)}>.`,
-          );
-          // emit save event
-          emit('save');
-        }
-      } catch (error) {
-        // TODO: handle error
-        console.error('Failed to save routes:', error);
+        // convert saved trips to route items
+        const savedRouteItems = response.data.trips.map((trip) =>
+          tripsAdapter.toRouteItem(trip),
+        );
+        logger?.debug('Saving new routes to store.');
+        // update store with new route items
+        tripsStore.updateRouteItems(savedRouteItems);
+        logger?.debug(
+          `Updated store route items <${JSON.stringify(tripsStore.getRouteItems, null, 2)}>.`,
+        );
+        // emit save event
+        emit('save');
       }
     };
 
