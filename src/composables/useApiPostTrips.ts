@@ -28,7 +28,7 @@ interface UseApiPostTripsReturn {
 
 /**
  * Post trips composable
- * Used to create new trips
+ * Used to create new trips or update existing trips
  * @param logger - Logger
  * @returns {UseApiPostTripsReturn}
  */
@@ -40,9 +40,9 @@ export const useApiPostTrips = (
   const { apiFetch } = useApi();
 
   /**
-   * Create new trips
-   * Creates multiple trips in a single request
-   * @param {TripPostPayload[]} trips - Array of trips to create
+   * Create new trips or update existing trips
+   * Can create or update multiple trips in a single request
+   * @param {TripPostPayload[]} trips - Array of trips to create or update
    */
   const postTrips = async (
     trips: TripPostPayload[],
@@ -61,7 +61,7 @@ export const useApiPostTrips = (
       requestTokenHeader_,
     );
 
-    // create trips
+    // post trips
     const response = await apiFetch<{ trips: Trip[] }>({
       endpoint: rideToWorkByBikeConfig.urlApiTrips,
       method: 'post',
