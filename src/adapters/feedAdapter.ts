@@ -128,14 +128,13 @@ const buildOfferMetadata = (
   const metadata: CardMetadata[] = [];
   // disregard timezone data
   const startDateLocal = post.start_date.replace('Z', '');
-  const endDateLocal = post.end_date.replace('Z', '');
   // format dates
   let startDateFormatted: string = '';
   startDateFormatted = startDateLocal
     ? i18n.global.d(new Date(startDateLocal), 'monthDay')
     : '';
-  const endDateFormatted: string = endDateLocal
-    ? i18n.global.d(new Date(endDateLocal), 'monthDay')
+  const endDateFormatted: string = post.end_date
+    ? i18n.global.d(new Date(post.end_date), 'monthDay')
     : '';
 
   // if post is event, use start date with time
@@ -149,7 +148,7 @@ const buildOfferMetadata = (
       }),
       icon: icon,
     });
-  } else if (startDateLocal && endDateLocal) {
+  } else if (startDateLocal && post.end_date) {
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidFromTo', {
@@ -166,7 +165,7 @@ const buildOfferMetadata = (
       }),
       icon: icon,
     });
-  } else if (endDateLocal) {
+  } else if (post.end_date) {
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidTo', {
