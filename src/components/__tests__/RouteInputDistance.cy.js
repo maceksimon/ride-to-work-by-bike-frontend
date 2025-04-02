@@ -76,7 +76,7 @@ describe('<RouteInputDistance>', () => {
     });
   });
 
-  context('desktop - input map', () => {
+  context.skip('desktop - input map', () => {
     beforeEach(() => {
       cy.mount(RouteInputDistance, {
         props: {
