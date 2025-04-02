@@ -126,27 +126,30 @@ const buildOfferMetadata = (
 ): CardMetadata[] => {
   const icon = 'mdi-calendar';
   const metadata: CardMetadata[] = [];
+  // disregard timezone data
+  const startDateLocal = post.start_date.replace('Z', '');
+  const endDateLocal = post.end_date.replace('Z', '');
   // format dates
   let startDateFormatted: string = '';
-  startDateFormatted = post.start_date
-    ? i18n.global.d(new Date(post.start_date), 'monthDay')
+  startDateFormatted = startDateLocal
+    ? i18n.global.d(new Date(startDateLocal), 'monthDay')
     : '';
-  const endDateFormatted: string = post.end_date
-    ? i18n.global.d(new Date(post.end_date), 'monthDay')
+  const endDateFormatted: string = endDateLocal
+    ? i18n.global.d(new Date(endDateLocal), 'monthDay')
     : '';
 
   // if post is event, use start date with time
-  if (type === OfferEventType.oneDayEvent && post.start_date) {
+  if (type === OfferEventType.oneDayEvent && startDateLocal) {
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidFrom', {
-        startDate: post.start_date
-          ? i18n.global.d(new Date(post.start_date), 'monthDayHourMinute')
+        startDate: startDateLocal
+          ? i18n.global.d(new Date(startDateLocal), 'monthDayHourMinute')
           : '', // format time for events (one-day offers)
       }),
       icon: icon,
     });
-  } else if (post.start_date && post.end_date) {
+  } else if (startDateLocal && endDateLocal) {
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidFromTo', {
@@ -155,7 +158,7 @@ const buildOfferMetadata = (
       }),
       icon: icon,
     });
-  } else if (post.start_date) {
+  } else if (startDateLocal) {
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidFrom', {
@@ -163,7 +166,7 @@ const buildOfferMetadata = (
       }),
       icon: icon,
     });
-  } else if (post.end_date) {
+  } else if (endDateLocal) {
     metadata.push({
       id: CardOfferMetadataKey.validity,
       text: i18n.global.t('index.cardOffer.offerValidTo', {
