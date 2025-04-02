@@ -4,6 +4,7 @@ import RoutesCalendar from 'components/routes/RoutesCalendar.vue';
 import { i18n } from '../../boot/i18n';
 import { useTripsStore } from 'src/stores/trips';
 import { useChallengeStore } from 'src/stores/challenge';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 // selectors
 const classSelectorCurrentDay = '.q-current-day';
@@ -499,50 +500,62 @@ function coreTests() {
   });
 
   it('renders inputs and allows saving when value is entered', () => {
-    cy.get(classSelectorCurrentDay).find(dataSelectorItemToWork).click();
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorDialogHeader)
-      .should('be.visible')
-      .and(
-        'contain',
-        i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
-          count: routeCountSingle,
-        }),
+    cy.fixture('routeCalendarInputTest.json').then((testData) => {
+      cy.get(`[data-date="${testData.test_1.inputValues.date}"]`)
+        .find(dataSelectorItemToWork)
+        .click();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorDialogHeader)
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('routes.titleBottomPanel', routeCountSingle, {
+            count: routeCountSingle,
+          }),
+        );
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputTransportType)
+        .should('be.visible');
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorRouteInputDistance)
+        .should('be.visible');
+      // save disabed
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorButtonSave)
+        .should('be.visible')
+        .and('be.disabled');
+      // fill in distance
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputDistance)
+        .should('be.visible')
+        .focus();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputDistance)
+        .should('be.visible')
+        .clear();
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorInputDistance)
+        .should('be.visible')
+        .type(testData.test_1.inputValues.distance);
+      // save enabled
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorButtonSave)
+        .should('not.be.disabled');
+      // intercept API call with response matching the payload
+      cy.interceptPostTripsApi(
+        rideToWorkByBikeConfig,
+        i18n,
+        testData.test_1.responseBody,
       );
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorInputTransportType)
-      .should('be.visible');
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorRouteInputDistance)
-      .should('be.visible');
-    // save disabed
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorButtonSave)
-      .should('be.visible')
-      .and('be.disabled');
-    // fill in distance
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorInputDistance)
-      .should('be.visible')
-      .focus();
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorInputDistance)
-      .should('be.visible')
-      .clear();
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorInputDistance)
-      .should('be.visible')
-      .type('10');
-    // save enabled
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorButtonSave)
-      .should('not.be.disabled');
-    // save
-    cy.dataCy(selectorRouteCalendarPanel).find(dataSelectorButtonSave).click();
-    // panel is closed
-    cy.dataCy(selectorRouteCalendarPanel)
-      .find(dataSelectorDialogHeader)
-      .should('not.be.visible');
+      // save
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorButtonSave)
+        .click();
+      // panel is closed
+      cy.dataCy(selectorRouteCalendarPanel)
+        .find(dataSelectorDialogHeader)
+        .should('not.be.visible');
+    });
   });
 
   it('allows to manually close panel and reopen on interaction', () => {
