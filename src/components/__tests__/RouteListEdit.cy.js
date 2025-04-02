@@ -252,7 +252,7 @@ function coreTests() {
       .blur();
     cy.dataCy(selectorButtonSave).should(
       'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
+      i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
     );
   });
 

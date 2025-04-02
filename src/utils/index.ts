@@ -165,6 +165,19 @@ const getAbsoluteUrlpath = (inputUrl: string): string => {
   return new URL(inputUrl, getAppConfig().urlBaseBackend).href;
 };
 
+/**
+ * Convert localized float number string into float number
+ *
+ * @param {string} numberStr - Localized float number sting e.g 6.10 or 6,10
+ *
+ * @returns {number} - Float number value
+ */
+
+const localizedFloatNumStrToFloatNumber = (numberStr: string): number => {
+  console.log('NUM STR', numberStr, typeof numberStr);
+  return parseFloat(numberStr.replace(',', '.'));
+};
+
 export {
   calculateCountdownIntervals,
   bearerTokeAuth,
@@ -172,6 +185,7 @@ export {
   getAbsoluteUrlpath,
   getCurrentDateTimeAccordingTimezone,
   formFieldCustomValidationErrCssClass,
+  localizedFloatNumStrToFloatNumber,
   requestDefaultHeader,
   requestTokenHeader,
   rgbaColorObjectToString,

@@ -63,16 +63,11 @@ export const tripsAdapter = {
         : TripDirection.from;
 
     /**
-     * Distance can come either in the format with decimal point,
-     * or without a decimal point (due to the function of masked input).
-     * Example input distance: "12.50" or "1250"
-     * To handle both cases we remove the decimal point or comma from string,
-     * internally convert distance to km units (by dividing by 100),
-     * and then multiply by 1000 to get meters.
+     * `routeItem.distance` value is in km unit as localized number string
+     * (with ',' or '.' decimal point)
      */
     const distanceMeters =
-      (Number(routeItem.distance.replace('.', '').replace(',', '')) / 100) *
-      1000;
+      parseFloat(routeItem.distance.replace(',', '.')) * 1000;
 
     // create payload with required fields
     const payload: TripPostPayload = {

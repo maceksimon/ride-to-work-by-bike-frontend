@@ -23,14 +23,13 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, inject } from 'vue';
 
 // components
 import RouteInputDistance from './RouteInputDistance.vue';
 import RouteInputTransportType from './RouteInputTransportType.vue';
 
 // composables
-import { i18n } from '../../boot/i18n';
 import { useLogRoutes } from '../../composables/useLogRoutes';
 
 // config
@@ -41,6 +40,9 @@ import { TransportDirection, TransportType } from '../types/Route';
 
 // stores
 import { useTripsStore } from 'src/stores/trips';
+
+// utils
+import { localizedFloatNumStrToFloatNumber } from 'src/utils';
 
 // types
 import type { RouteItem } from '../types/Route';
@@ -63,6 +65,7 @@ export default defineComponent({
   },
   emits: ['update:route'],
   setup(props, { emit }) {
+    const logger = inject('vuejs3-logger') as Logger | null;
     const tripsStore = useTripsStore();
     /**
      * Get route state from store.
@@ -100,24 +103,27 @@ export default defineComponent({
 
     const onUpdateDistance = (distanceNew: string): void => {
       /**
-       * Masked input returns a string with no decimal separator.
-       * We need to format it according to the mask settings.
-       * Mask in `RouteInputDistance` is `##.##`.
-       * Example: 1250 -> 12.50
+       * @params {string} distanceNew - Route distance in km unit as
+       *                                localized float number string
+       *                                e.g. '12.50' or '12,50'
        */
-      const distanceNewFormatted = i18n.global.n(
-        distanceNew ? distanceNew / 100.0 : 0,
-        'routeDistanceDecimalNumber',
-        'en',
+      logger?.debug(
+        `New route distance <${distanceNew}>,` +
+          ` value type <${typeof distanceNew}>` +
+          ` default route distance <${routeStateDefault.value?.distance}>` +
+          ` value type <${typeof routeStateDefault.value?.distance}>.`,
       );
+      const distanceNewFormatted =
+        localizedFloatNumStrToFloatNumber(distanceNew);
+
       // compare new distance with the distance from the store
       const dirty = distanceNewFormatted !== routeStateDefault.value?.distance;
       emit('update:route', {
         ...props.route,
-        distance: distanceNewFormatted,
+        distance: distanceNew,
         dirty,
       });
-      distance.value = distanceNewFormatted;
+      distance.value = distanceNew;
     };
 
     const onUpdateTransportType = (transportTypeNew: TransportType): void => {

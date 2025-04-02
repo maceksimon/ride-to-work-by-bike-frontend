@@ -34,6 +34,9 @@ import { useValidation } from '../../composables/useValidation';
 // types
 import type { FormOption } from '../types/Form';
 
+// utils
+import { localizedFloatNumStrToFloatNumber } from 'src/utils';
+
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
 const { defaultDistanceZero } = rideToWorkByBikeConfig;
@@ -100,6 +103,7 @@ export default defineComponent({
       i18n,
       isFilled,
       isAboveZero,
+      localizedFloatNumStrToFloatNumber,
     };
   },
 });
@@ -133,16 +137,22 @@ export default defineComponent({
           class="col-auto items-center"
           data-cy="section-input-number"
         >
-          <!-- Input: Distance -->
+          <!-- Input: Distance
+               with maxlength="6" max. allowed value is 999.99
+               according backend Trip DB model distance field max.
+               validator value
+          -->
           <q-input
             dense
             outlined
             reverse-fill-mask
-            unmasked-value
             v-model="distance"
             :mask="
               i18n.global
-                .n(parseFloat(distance), 'routeDistanceDecimalNumber')
+                .n(
+                  localizedFloatNumStrToFloatNumber(distance),
+                  'routeDistanceDecimalNumber',
+                )
                 .includes(',')
                 ? '#,##'
                 : '#.##'
@@ -150,17 +160,12 @@ export default defineComponent({
             fill-mask="0"
             :rules="[
               (val) =>
-                isFilled(val) ||
-                !hasValidation ||
-                $t('form.messageFieldRequired', {
-                  fieldName: $t('routes.labelValidationDistance'),
-                }),
-              (val) =>
-                isAboveZero(val) ||
+                isAboveZero(localizedFloatNumStrToFloatNumber(val)) ||
                 !hasValidation ||
                 $t('form.messageFieldAboveZero'),
             ]"
             data-cy="input-distance"
+            maxlength="6"
           >
             <template v-slot:append>
               <span
