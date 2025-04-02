@@ -174,7 +174,6 @@ const getAbsoluteUrlpath = (inputUrl: string): string => {
  */
 
 const localizedFloatNumStrToFloatNumber = (numberStr: string): number => {
-  console.log('NUM STR', numberStr, typeof numberStr);
   return parseFloat(numberStr.replace(',', '.'));
 };
 
