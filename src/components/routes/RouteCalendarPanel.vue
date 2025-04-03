@@ -127,7 +127,7 @@ export default defineComponent({
         response.data?.trips &&
         response.data.trips.length > 0
       ) {
-        logger?.info('Routes saved successfully');
+        logger?.info('Routes saved successfully.');
         logger?.debug(
           `Saved trips <${JSON.stringify(response.data.trips, null, 2)}>.`,
         );
@@ -135,7 +135,7 @@ export default defineComponent({
         const savedRouteItems = response.data.trips.map((trip) =>
           tripsAdapter.toRouteItem(trip),
         );
-        logger?.debug('Saving new routes to store.');
+        logger?.info('Saving new routes to store.');
         // update store with new route items
         tripsStore.updateRouteItems(savedRouteItems);
         logger?.debug(
