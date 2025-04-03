@@ -28,6 +28,7 @@
  */
 
 // libraries
+import { Notify } from 'quasar';
 import { computed, defineComponent, inject } from 'vue';
 
 // components
@@ -35,6 +36,8 @@ import RouteInputDistance from './RouteInputDistance.vue';
 import RouteInputTransportType from './RouteInputTransportType.vue';
 
 // composables
+import { i18n } from '../../boot/i18n';
+import { useRoutes } from 'src/composables/useRoutes';
 import { useLogRoutes } from '../../composables/useLogRoutes';
 import { useApiPostTrips } from '../../composables/useApiPostTrips';
 
@@ -94,6 +97,8 @@ export default defineComponent({
     // Initialize trips store
     const tripsStore = useTripsStore();
 
+    const { isEntryEnabled } = useRoutes();
+
     // Determines if save button should be disabled.
     const isSaveBtnDisabled = computed((): boolean => {
       const noTransport = transportType.value === null;
@@ -110,6 +115,14 @@ export default defineComponent({
      * If successful, closes panel.
      */
     const onSave = async (): Promise<void> => {
+      // if entry is not enabled, show notification
+      if (!isEntryEnabled.value) {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('postTrips.messageEntryNotEnabled'),
+        });
+        return;
+      }
       // create route items with settings from panel
       const routeItems: RouteItem[] = routes.value.map((route) => ({
         ...route,

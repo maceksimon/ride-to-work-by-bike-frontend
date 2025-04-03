@@ -87,6 +87,21 @@ export const useRoutes = () => {
     );
   };
 
+  /**
+   * Checks whether user is currently allowed to log routes.
+   * @return {boolean} - True if logging is allowed, false otherwise.
+   */
+  const isEntryEnabled = computed((): boolean => {
+    const challengeStore = useChallengeStore();
+    const isEntryPhase = challengeStore.getIsChallengeInPhase(
+      PhaseType.entryEnabled,
+    );
+    const isCompetitionPhase = challengeStore.getIsChallengeInPhase(
+      PhaseType.competition,
+    );
+    return isEntryPhase || isCompetitionPhase;
+  });
+
   const dateCompetitionPhaseFrom = computed((): Date | null => {
     const challengeStore = useChallengeStore();
     const dateString = challengeStore.getPhaseFromSet(
@@ -345,6 +360,7 @@ export const useRoutes = () => {
     dateLoggingEnd,
     dateCompetitionPhaseFrom,
     dateCompetitionPhaseTo,
+    isEntryEnabled,
     getLoggableDaysWithRoutes,
     getUnloggableDaysWithRoutes,
     getCompetitionDaysWithRoutes,

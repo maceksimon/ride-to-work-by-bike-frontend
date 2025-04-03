@@ -704,7 +704,7 @@ messageTeamMaxMembersReached = "Team is full. You cannot add more members."
 apiMessageError = "Error saving trips."
 apiMessageErrorWithMessage = "Error saving trips. Error: {error}"
 apiMessageSuccess = "Trips were successfully saved."
-
+messageEntryNotEnabled = "Trip logging is not currently allowed."
 
 [profile]
 buttonAddEmailField = "Add another email"

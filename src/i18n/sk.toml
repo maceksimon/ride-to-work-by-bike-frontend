@@ -706,6 +706,7 @@ messageTeamMaxMembersReached = "Tím je plný. Nemôžete pridať ďalšie člen
 apiMessageError = "Chyba pri ukladaní jázd."
 apiMessageErrorWithMessage = "Chyba pri ukladaní jázd. Chyba: {error}"
 apiMessageSuccess = "Jázdy boli úspešne uložené."
+messageEntryNotEnabled = "Zápis jázd nie je v súčasnosti povolený."
 
 [profile]
 buttonDeleteAccount = "Zmazať"

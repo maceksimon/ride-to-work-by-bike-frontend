@@ -707,6 +707,7 @@ messageTeamMaxMembersReached = "Tým je plný. Nemůžete přidat další členy
 apiMessageError = "Chyba při ukládání jízd."
 apiMessageErrorWithMessage = "Chyba při ukládání jízd. Chyba: {error}"
 apiMessageSuccess = "Jízdy byly úspěšně uloženy."
+messageEntryNotEnabled = "Zapisování jízd není v tuto chvíli povoleno."
 
 [profile]
 buttonDeleteAccount = "Smazat"
