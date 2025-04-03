@@ -168,7 +168,8 @@ const getAbsoluteUrlpath = (inputUrl: string): string => {
 /**
  * Convert localized float number string into float number
  *
- * @param {string} numberStr - Localized float number sting e.g 6.10 or 6,10
+ * @param {string} numberStr - Localized float number string
+ *                             e.g '6.10' or '6,10'
  *
  * @returns {number} - Float number value
  */
