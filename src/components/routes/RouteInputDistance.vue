@@ -82,6 +82,12 @@ export default defineComponent({
         label: i18n.global.t('routes.actionInputDistance'),
         value: 'input-number',
       },
+      /* Disable trace to map action option menu item
+      {
+        label: i18n.global.t('routes.actionTraceMap'),
+        value: 'input-map',
+      },
+      */
     ];
 
     const customSVGIconsFilePath = 'icons/routes_calendar/icons.svg';
