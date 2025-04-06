@@ -115,8 +115,6 @@ export default defineComponent({
      * If successful, closes panel.
      */
     const onSave = async (): Promise<void> => {
-      console.log('isEntryEnabled', isEntryEnabled.value);
-      console.log('date', new Date());
       // if entry is not enabled, show notification
       if (!isEntryEnabled.value) {
         Notify.create({
