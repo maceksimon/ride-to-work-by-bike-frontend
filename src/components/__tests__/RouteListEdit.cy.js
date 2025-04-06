@@ -325,6 +325,33 @@ function coreTests() {
     );
   });
 
+  it('shows notification when entry is not enabled', () => {
+    // pick one editable route
+    cy.get('[data-date="2025-05-12"]')
+      .should('be.visible')
+      .find('[data-direction="fromWork"]')
+      .should('be.visible')
+      .within(() => {
+        // input transport type if provided
+        cy.dataCy('button-toggle-transport').should('be.visible');
+        cy.dataCy('section-transport')
+          .find(`[data-value="${TransportType.bike}"]`)
+          .click();
+        // input distance if provided
+        cy.dataCy('section-input-number').should('be.visible');
+        cy.dataCy('section-input-number').find('input').clear();
+        cy.dataCy('section-input-number').find('input').type('10');
+      });
+    // wait 9 days (to get to a day when entry is not enabled)
+    cy.tick(9 * 24 * 60 * 60 * 1000);
+    // click save button
+    cy.dataCy(selectorButtonSave).click();
+    // check notification
+    cy.contains(i18n.global.t('postTrips.messageEntryNotEnabled')).should(
+      'be.visible',
+    );
+  });
+
   it.skip('tracks dirty state when input type changes (currently not used)', () => {
     // test changing input type
     cy.dataCy(selectorRouteListItem)

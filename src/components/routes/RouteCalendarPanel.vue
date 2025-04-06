@@ -105,7 +105,7 @@ export default defineComponent({
       const noRoutes = routesCount.value === 0;
       const noDistance =
         isShownDistance.value && distance.value === defaultDistanceZero;
-      return noRoutes || noDistance ||  noTransport || isLoading.value;
+      return noRoutes || noDistance || noTransport || isLoading.value;
     });
 
     /**
@@ -115,6 +115,8 @@ export default defineComponent({
      * If successful, closes panel.
      */
     const onSave = async (): Promise<void> => {
+      console.log('isEntryEnabled', isEntryEnabled.value);
+      console.log('date', new Date());
       // if entry is not enabled, show notification
       if (!isEntryEnabled.value) {
         Notify.create({

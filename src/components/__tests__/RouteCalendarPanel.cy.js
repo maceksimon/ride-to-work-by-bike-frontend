@@ -2,8 +2,10 @@ import { createPinia, setActivePinia } from 'pinia';
 import { colors } from 'quasar';
 import RouteCalendarPanel from 'components/routes/RouteCalendarPanel.vue';
 import { i18n } from '../../boot/i18n';
+import { useChallengeStore } from 'src/stores/challenge';
 import { useTripsStore } from 'src/stores/trips';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+import { systemTimeLoggingRoutes } from '../../../test/cypress/support/commonTests';
 import testData from '../../../test/cypress/fixtures/routeCalendarPanelInputTest.json';
 
 const { getPaletteColor } = colors;
@@ -165,6 +167,7 @@ describe('<RouteCalendarPanel>', () => {
 
   context('API payloads for route entry', () => {
     beforeEach(() => {
+      cy.clock(systemTimeLoggingRoutes, ['Date']);
       setActivePinia(createPinia());
       cy.viewport('macbook-16');
     });
@@ -192,6 +195,12 @@ describe('<RouteCalendarPanel>', () => {
             routes: testCase.propRoutes,
           },
         });
+        cy.fixture('apiGetThisCampaignMay.json').then((response) => {
+          cy.wrap(useChallengeStore()).then((store) => {
+            store.setDaysActive(response.results[0].days_active);
+            store.setPhaseSet(response.results[0].phase_set);
+          });
+        });
         cy.setupTripsStoreWithCommuteModes(useTripsStore);
         // input transport type if provided
         if (testCase.inputValues.transport) {
@@ -213,6 +222,41 @@ describe('<RouteCalendarPanel>', () => {
         // wait for API call and verify payload
         cy.waitForPostTripsApi(testCase.apiPayload);
       });
+    });
+
+    it('shows notification when entry is not enabled', () => {
+      cy.mount(RouteCalendarPanel, {
+        props: {
+          modelValue: true,
+          routes: testData.test_1.propRoutes,
+        },
+      });
+      cy.fixture('apiGetThisCampaignMay.json').then((response) => {
+        cy.wrap(useChallengeStore()).then((store) => {
+          store.setDaysActive(response.results[0].days_active);
+          store.setPhaseSet(response.results[0].phase_set);
+        });
+      });
+      cy.setupTripsStoreWithCommuteModes(useTripsStore);
+      // input transport type
+      cy.dataCy('button-toggle-transport').should('be.visible');
+      cy.dataCy(selectorRouteInputTransportType)
+        .find(`[data-value="${testData.test_1.inputValues.transport}"]`)
+        .click();
+      // input distance
+      cy.dataCy('section-input-number').should('be.visible');
+      cy.dataCy('section-input-number').find('input').clear();
+      cy.dataCy('section-input-number')
+        .find('input')
+        .type(testData.test_1.inputValues.distance);
+      // wait 9 days (to get to a day when entry is not enabled)
+      cy.tick(9 * 24 * 60 * 60 * 1000);
+      // click save button
+      cy.dataCy(selectorDialogSaveButton).click();
+      // check notification
+      cy.contains(i18n.global.t('postTrips.messageEntryNotEnabled')).should(
+        'be.visible',
+      );
     });
   });
 });
