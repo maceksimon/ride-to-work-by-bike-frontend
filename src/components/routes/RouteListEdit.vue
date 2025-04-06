@@ -20,6 +20,7 @@
  */
 
 // libraries
+import { Notify } from 'quasar';
 import { computed, defineComponent, inject, ref, watch } from 'vue';
 
 // adapters
@@ -29,6 +30,7 @@ import { tripsAdapter } from '../../adapters/tripsAdapter';
 import RouteItemEdit from './RouteItemEdit.vue';
 
 // composables
+import { i18n } from '../../boot/i18n';
 import { useApiPostTrips } from '../../composables/useApiPostTrips';
 import { useRoutes } from 'src/composables/useRoutes';
 
@@ -51,8 +53,12 @@ export default defineComponent({
     const logger = inject('vuejs3-logger') as Logger | null;
     const tripsStore = useTripsStore();
     // route composables
-    const { getLoggableDaysWithRoutes, formatDate, formatDateName } =
-      useRoutes();
+    const {
+      isEntryEnabled,
+      getLoggableDaysWithRoutes,
+      formatDate,
+      formatDateName,
+    } = useRoutes();
 
     // initialize API composable
     const { postTrips, isLoading: isLoadingPostTrips } =
@@ -82,6 +88,14 @@ export default defineComponent({
     const dirtyCount = computed((): number => routeItemsDirty.value.length);
 
     const onSave = async (): Promise<void> => {
+      // if entry is not enabled, show notification
+      if (!isEntryEnabled.value) {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('postTrips.messageEntryNotEnabled'),
+        });
+        return;
+      }
       // convert route items to trip payload
       const tripPayload = routeItemsDirty.value.map((route) =>
         tripsAdapter.toTripPostPayload(route),
