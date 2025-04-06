@@ -172,7 +172,7 @@ export default defineComponent({
         size="16px"
         class="text-weight-bold"
         :loading="isLoadingPostTrips"
-        :disable="isLoadingPostTrips"
+        :disable="isLoadingPostTrips || dirtyCount === 0"
         data-cy="button-save"
         @click="onSave"
       >

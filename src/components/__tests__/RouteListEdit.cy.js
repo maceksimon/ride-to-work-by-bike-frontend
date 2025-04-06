@@ -236,7 +236,8 @@ function coreTests() {
       .and(
         'contain',
         i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
-      );
+      )
+      .and('have.class', 'disabled');
     // check initial state for 1st route
     cy.dataCy(selectorRouteListItem)
       .first()
@@ -258,20 +259,24 @@ function coreTests() {
       .find(`[data-value="${TransportType.car}"]`)
       .click();
     // check save button with edit count
-    cy.dataCy(selectorButtonSave).should(
-      'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
-    );
+    cy.dataCy(selectorButtonSave)
+      .should(
+        'contain',
+        i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
+      )
+      .and('not.have.class', 'disabled');
     // revert change
     cy.dataCy(selectorRouteListItem)
       .first()
       .find(`[data-value="${TransportType.bike}"]`)
       .click();
     // check save button with edit count
-    cy.dataCy(selectorButtonSave).should(
-      'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
-    );
+    cy.dataCy(selectorButtonSave)
+      .should(
+        'contain',
+        i18n.global.tc('routes.buttonSaveChangesCount', 0, { count: 0 }),
+      )
+      .and('have.class', 'disabled');
     // introduce two changes
     // change first route
     cy.dataCy(selectorRouteListItem)
@@ -284,19 +289,23 @@ function coreTests() {
       .find(`[data-value="${TransportType.bike}"]`)
       .click();
     // count changes
-    cy.dataCy(selectorButtonSave).should(
-      'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 2, { count: 2 }),
-    );
+    cy.dataCy(selectorButtonSave)
+      .should(
+        'contain',
+        i18n.global.tc('routes.buttonSaveChangesCount', 2, { count: 2 }),
+      )
+      .and('not.have.class', 'disabled');
     // revert 1 change (other change cannot be reverted)
     cy.dataCy(selectorRouteListItem)
       .first()
       .find(`[data-value="${TransportType.bike}"]`)
       .click();
-    cy.dataCy(selectorButtonSave).should(
-      'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
-    );
+    cy.dataCy(selectorButtonSave)
+      .should(
+        'contain',
+        i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
+      )
+      .and('not.have.class', 'disabled');
     // test changing distance value by deleting '0'
     cy.dataCy(selectorRouteListItem)
       .first()
@@ -306,10 +315,12 @@ function coreTests() {
       .first()
       .find(dataSelectorInputDistance)
       .blur();
-    cy.dataCy(selectorButtonSave).should(
-      'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 2, { count: 2 }),
-    );
+    cy.dataCy(selectorButtonSave)
+      .should(
+        'contain',
+        i18n.global.tc('routes.buttonSaveChangesCount', 2, { count: 2 }),
+      )
+      .and('not.have.class', 'disabled');
     // reset distance value
     cy.dataCy(selectorRouteListItem)
       .first()
@@ -319,10 +330,12 @@ function coreTests() {
       .first()
       .find(dataSelectorInputDistance)
       .blur();
-    cy.dataCy(selectorButtonSave).should(
-      'contain',
-      i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
-    );
+    cy.dataCy(selectorButtonSave)
+      .should(
+        'contain',
+        i18n.global.tc('routes.buttonSaveChangesCount', 1, { count: 1 }),
+      )
+      .and('not.have.class', 'disabled');
   });
 
   it.skip('tracks dirty state when input type changes (currently not used)', () => {
