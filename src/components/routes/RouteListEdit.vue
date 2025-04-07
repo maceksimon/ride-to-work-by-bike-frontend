@@ -153,7 +153,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-form data-cy="route-list-edit" ref="formRef" @submit.prevent="onSave">
+  <q-form ref="formRef" data-cy="route-list-edit" @submit.prevent="onSave">
     <!-- Item: Day -->
     <div
       v-for="day in days"
