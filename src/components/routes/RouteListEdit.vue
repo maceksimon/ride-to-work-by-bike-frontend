@@ -22,6 +22,7 @@
 // libraries
 import { Notify } from 'quasar';
 import { computed, defineComponent, inject, ref, watch } from 'vue';
+import type { QForm } from 'quasar';
 
 // adapters
 import { tripsAdapter } from '../../adapters/tripsAdapter';
@@ -87,7 +88,19 @@ export default defineComponent({
     // dirty state will be tracked within UI to show change count
     const dirtyCount = computed((): number => routeItemsDirty.value.length);
 
+    const formRef = ref<QForm | null>(null);
+
     const onSave = async (): Promise<void> => {
+      logger?.info('Saving selected routes.');
+      // validate form before submitting
+      const isValid = await formRef.value?.validate();
+      if (!isValid) {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('postTrips.messageFormValidationFailed'),
+        });
+        return;
+      }
       // if entry is not enabled, show notification
       if (!isEntryEnabled.value) {
         Notify.create({
@@ -133,13 +146,14 @@ export default defineComponent({
       isLoadingPostTrips,
       onSave,
       TransportDirection,
+      formRef,
     };
   },
 });
 </script>
 
 <template>
-  <div data-cy="route-list-edit">
+  <q-form data-cy="route-list-edit" ref="formRef" @submit.prevent="onSave">
     <!-- Item: Day -->
     <div
       v-for="day in days"
@@ -182,6 +196,7 @@ export default defineComponent({
       <q-btn
         rounded
         unelevated
+        type="submit"
         color="primary"
         size="16px"
         class="text-weight-bold"
@@ -197,5 +212,5 @@ export default defineComponent({
         }}
       </q-btn>
     </div>
-  </div>
+  </q-form>
 </template>

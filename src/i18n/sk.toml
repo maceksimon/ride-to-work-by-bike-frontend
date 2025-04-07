@@ -707,6 +707,7 @@ apiMessageError = "Chyba pri ukladaní jázd."
 apiMessageErrorWithMessage = "Chyba pri ukladaní jázd. Chyba: {error}"
 apiMessageSuccess = "Jázdy boli úspešne uložené."
 messageEntryNotEnabled = "Zápis jázd nie je v súčasnosti povolený."
+messageFormValidationFailed = "Nemáte správne vyplnenú niektorú jazdu."
 
 [profile]
 buttonDeleteAccount = "Zmazať"

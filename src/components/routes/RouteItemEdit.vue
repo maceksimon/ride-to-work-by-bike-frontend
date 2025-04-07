@@ -49,6 +49,7 @@ import { useTripsStore } from 'src/stores/trips';
 import { localizedFloatNumStrToFloatNumber } from 'src/utils';
 
 // types
+import type { Logger } from '../types/Logger';
 import type { RouteItem } from '../types/Route';
 
 export default defineComponent({
@@ -236,7 +237,7 @@ export default defineComponent({
         />
         <!-- Section: Distance -->
         <route-input-distance
-          v-show="isShownDistance"
+          v-if="isShownDistance"
           :modelValue="distance"
           :modelAction="action"
           @update:modelValue="onUpdateDistance"

@@ -705,6 +705,7 @@ apiMessageError = "Error saving trips."
 apiMessageErrorWithMessage = "Error saving trips. Error: {error}"
 apiMessageSuccess = "Trips were successfully saved."
 messageEntryNotEnabled = "Trip logging is not currently allowed."
+messageFormValidationFailed = "Some of your trips are not filled in correctly."
 
 [profile]
 buttonAddEmailField = "Add another email"

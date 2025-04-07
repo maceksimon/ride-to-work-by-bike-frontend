@@ -708,6 +708,7 @@ apiMessageError = "Chyba při ukládání jízd."
 apiMessageErrorWithMessage = "Chyba při ukládání jízd. Chyba: {error}"
 apiMessageSuccess = "Jízdy byly úspěšně uloženy."
 messageEntryNotEnabled = "Zapisování jízd není v tuto chvíli povoleno."
+messageFormValidationFailed = "Nemáte správně vyplněnou některou jízdu."
 
 [profile]
 buttonDeleteAccount = "Smazat"
