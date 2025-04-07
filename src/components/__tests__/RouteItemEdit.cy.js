@@ -276,7 +276,7 @@ function coreTests() {
       i18n.global.t('routes.transport.car'),
     );
     // distance is not shown
-    cy.dataCy('section-distance').should('not.be.visible');
+    cy.dataCy('section-distance').should('not.exist');
     // change transport type - none
     cy.dataCy('button-toggle-transport')
       .filter(`[data-value="${TransportType.none}"]`)
@@ -286,7 +286,7 @@ function coreTests() {
       i18n.global.t('routes.transport.none'),
     );
     // distance is not shown
-    cy.dataCy('section-distance');
+    cy.dataCy('section-distance').should('not.exist');
     // change transport type -  bike
     cy.dataCy('button-toggle-transport')
       .filter(`[data-value="${TransportType.bike}"]`)

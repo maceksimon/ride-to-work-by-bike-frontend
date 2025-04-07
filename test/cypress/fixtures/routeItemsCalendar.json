@@ -19,7 +19,7 @@
     "id": "00001",
     "date": "2025-05-25",
     "direction": "toWork",
-    "distance": "0",
+    "distance": "18.00",
     "transport": "bicycle",
     "routeFeature": null
   },
@@ -37,14 +37,6 @@
     "direction": "toWork",
     "distance": "20.00",
     "transport": "bicycle",
-    "routeFeature": null
-  },
-  {
-    "id": "",
-    "date": "",
-    "direction": "fromWork",
-    "distance": "0.00",
-    "transport": "",
     "routeFeature": null
   }
 ]
