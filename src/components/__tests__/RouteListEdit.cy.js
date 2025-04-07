@@ -338,6 +338,64 @@ function coreTests() {
       .and('not.have.class', 'disabled');
   });
 
+  it('validates list on save and shows notification if distance is missing', () => {
+    const responseBody = {
+      trips: testData.test_2.apiPayload.trips.map((trip, index) => ({
+        id: index + 1,
+        ...trip,
+        durationSeconds: null,
+        sourceId: null,
+        file: null,
+        description: '',
+        track: null,
+      })),
+    };
+    cy.interceptPostTripsApi(rideToWorkByBikeConfig, i18n, responseBody);
+    // pick one editable route
+    cy.get(`[data-date="${testData.test_2.propRoutes[0].date}"]`)
+      .should('be.visible')
+      .find(`[data-direction="${testData.test_2.propRoutes[0].direction}"]`)
+      .should('be.visible')
+      .within(() => {
+        // input transport type
+        cy.dataCy('button-toggle-transport').should('be.visible');
+        cy.dataCy('section-transport')
+          .find(`[data-value="${testData.test_2.inputValues.transport}"]`)
+          .click();
+      });
+    // skip distance input and save
+    cy.dataCy(selectorButtonSave).click();
+    // check notification
+    cy.contains(i18n.global.t('postTrips.messageFormValidationFailed')).should(
+      'be.visible',
+    );
+    // input contains error
+    cy.get(`[data-date="${testData.test_2.propRoutes[0].date}"]`)
+      .should('be.visible')
+      .find(`[data-direction="${testData.test_2.propRoutes[0].direction}"]`)
+      .should('be.visible')
+      .within(() => {
+        // error message visible
+        cy.contains(i18n.global.t('form.messageFieldAboveZero')).should(
+          'be.visible',
+        );
+        // input distance
+        cy.dataCy('section-input-number').should('be.visible');
+        cy.dataCy('section-input-number').find('input').clear();
+        cy.dataCy('section-input-number')
+          .find('input')
+          .type(testData.test_2.inputValues.distance);
+        // error message not visible
+        cy.contains(i18n.global.t('form.messageFieldAboveZero')).should(
+          'not.exist',
+        );
+      });
+    // save
+    cy.dataCy(selectorButtonSave).click();
+    // wait for API call and verify payload
+    cy.waitForPostTripsApi(testData.test_2.apiPayload);
+  });
+
   it('shows notification when entry is not enabled', () => {
     // pick one editable route
     cy.get('[data-date="2025-05-12"]')
@@ -345,12 +403,12 @@ function coreTests() {
       .find('[data-direction="fromWork"]')
       .should('be.visible')
       .within(() => {
-        // input transport type if provided
+        // input transport type
         cy.dataCy('button-toggle-transport').should('be.visible');
         cy.dataCy('section-transport')
           .find(`[data-value="${TransportType.bike}"]`)
           .click();
-        // input distance if provided
+        // input distance
         cy.dataCy('section-input-number').should('be.visible');
         cy.dataCy('section-input-number').find('input').clear();
         cy.dataCy('section-input-number').find('input').type('10');
