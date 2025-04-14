@@ -7,6 +7,9 @@ import { useApi } from './useApi';
 // config
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
+// enums
+import { StravaScope } from '../components/enums/StravaScope';
+
 // stores
 import { useLoginStore } from '../stores/login';
 
@@ -20,7 +23,7 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 type UseApiGetStravaAuthUrlReturn = {
   authUrl: Ref<string | null>;
   isLoading: Ref<boolean>;
-  getAuthUrl: (scope: 'read' | 'read_all') => Promise<string | null>;
+  getAuthUrl: (scope: StravaScope) => Promise<string | null>;
 };
 
 /**
@@ -39,12 +42,10 @@ export const useApiGetStravaAuthUrl = (
 
   /**
    * Get Strava authorization URL
-   * @param {string} scope - Strava scope ('read' or 'read_all')
+   * @param {string} scope - Strava scope
    * @returns {Promise<string | null>} - Promise
    */
-  const getAuthUrl = async (
-    scope: 'read' | 'read_all',
-  ): Promise<string | null> => {
+  const getAuthUrl = async (scope: StravaScope): Promise<string | null> => {
     logger?.info(`Get Strava authorization URL from API. Scope <${scope}>.`);
     isLoading.value = true;
 
