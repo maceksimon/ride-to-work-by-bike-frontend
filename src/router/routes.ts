@@ -149,6 +149,11 @@ const routes: RouteRecordRaw[] = [
         name: routesConf['routes_app']['children']['name'],
         component: () => import('pages/RoutesPage.vue'),
       },
+      {
+        path: routesConf['routes_connect_apps']['path'],
+        name: routesConf['routes_connect_apps']['children']['name'],
+        component: () => import('pages/RoutesConnectAppsPage.vue'),
+      },
     ],
   },
   // register

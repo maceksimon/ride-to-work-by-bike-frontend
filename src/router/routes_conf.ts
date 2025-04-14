@@ -163,6 +163,13 @@ const routesConf: RoutesConf = {
       name: 'routes-app',
     },
   },
+  routes_connect_apps: {
+    path: 'connect-apps',
+    children: {
+      fullPath: '/routes/connect-apps',
+      name: 'routes-connect-apps',
+    },
+  },
   profile: {
     path: '/profile',
     children: {
