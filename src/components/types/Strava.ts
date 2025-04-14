@@ -1,0 +1,21 @@
+export interface StravaAccount {
+  strava_username: string;
+  first_name: string;
+  last_name: string;
+  user_sync_count: number;
+  errors: string;
+  warn_user_sync_count: number;
+  max_user_sync_count: number;
+  hashtag_from: string;
+  hashtag_to: string;
+  sync_outcome: {
+    result: {
+      synced_trips?: number;
+      new_trips?: number;
+      synced_activities?: number;
+      activities?: string[];
+      error?: string;
+    } | null;
+  };
+  last_sync_time: string | null;
+}

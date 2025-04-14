@@ -74,6 +74,16 @@ profile = "Profil"
 results = "Výsledky"
 routes = "Cesty"
 
+[authStravaAccount]
+apiMessageError = "Přihlášení k účtu aplikace Strava selhalo."
+apiMessageErrorWithMessage = "Přihlášení k účtu aplikace Strava selhalo. Chyba: {error}"
+apiMessageSuccess = "Úspěšně jste se přihlásili k účtu aplikace Strava."
+
+[disconnectStravaAccount]
+apiMessageError = "Odstranění účtu aplikace Strava selhalo."
+apiMessageErrorWithMessage = "Odstranění účtu aplikace Strava selhalo. Chyba: {error}"
+apiMessageSuccess = "Uživatelský účet aplikace Strava {account} byl úspěšně odstraněn."
+
 [getCampaign]
 apiMessageError = "Načítání fází výzvy selhalo."
 apiMessageErrorWithMessage = "Načítání fází výzvy selhalo. Chyba: {error}"
@@ -138,6 +148,16 @@ apiMessageSuccess = "Příspěvky byly úspěšně načteny."
 apiMessageError = "Načítání registrací selhalo."
 apiMessageErrorWithMessage = "Načítání registrací selhalo. Chyba: {error}"
 apiMessageSuccess = "Registrace byly úspěšně načteny."
+
+[getStravaAccount]
+apiMessageError = "Nepodařilo se načíst profil aplikace Strava."
+apiMessageErrorWithMessage = "Nepodařilo se načíst profil aplikace Strava. Chyba: {error}"
+apiMessageSuccess = "Profil aplikace Strava byl úspěšně načten."
+
+[getStravaAuthUrl]
+apiMessageError = "Nepodařilo se načíst přihlašovací URL pro aplikaci Strava."
+apiMessageErrorWithMessage = "Nepodařilo se načíst přihlašovací URL pro aplikaci Strava. Chyba: {error}"
+apiMessageSuccess = "Přihlašovací URL pro aplikaci Strava byla úspěšně načtena."
 
 [getSubsidiaries]
 apiMessageError = "Načítání poboček selhalo."

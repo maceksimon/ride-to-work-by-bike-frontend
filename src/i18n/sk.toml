@@ -74,6 +74,16 @@ profile = "Profil"
 results = "Výsledky"
 routes = "Cesty"
 
+[authStravaAccount]
+apiMessageError = "Prihlásenie do účtu Strava zlyhalo."
+apiMessageErrorWithMessage = "Prihlásenie do účtu Strava zlyhalo. Error: {error}"
+apiMessageSuccess = "Úspešne ste sa prihlásili do svojho účtu Strava."
+
+[disconnectStravaAccount]
+apiMessageError = "Odstránenie účtu Strava sa nepodarilo."
+apiMessageErrorWithMessage = "Odstránenie účtu Strava sa nepodarilo. Error: {error}"
+apiMessageSuccess = "Účet používateľa Strava {account} bol úspešne odstránený."
+
 [getCampaign]
 apiMessageError = "Načítanie fáz výzvy zlyhalo."
 apiMessageErrorWithMessage = "Načítanie fáz výzvy zlyhalo. Chyba: {error}"
@@ -138,6 +148,18 @@ apiMessageSuccess = "Príspevky boli úspešne načítané."
 apiMessageError = "Načítanie registrácií zlyhalo."
 apiMessageErrorWithMessage = "Načítanie registrácií zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Registrácie boli úspešne načítané."
+
+[getStravaAccount]
+apiMessageError = "Nepodarilo sa načítať profil Strava."
+apiMessageErrorWithMessage = "Failed to load Strava profile. Error: {error}"
+apiMessageSuccess = "Profil Strava bol úspešne načítaný."
+
+[getStravaAuthUrl]
+apiMessageError = "Nepodarilo sa načítať prihlasovaciu adresu URL aplikácie Strava."
+apiMessageErrorWithMessage = "Nepodarilo sa načítať prihlasovaciu adresu URL pre aplikáciu Strava. Error: {error}"
+apiMessageSuccess = "Prihlasovacia adresa URL pre aplikáciu Strava bola úspešne načítaná."
+
+Translated with DeepL.com (free version)
 
 [getSubsidiaries]
 apiMessageError = "Načítanie pobočiek zlyhalo."

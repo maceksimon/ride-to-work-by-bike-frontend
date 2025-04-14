@@ -74,6 +74,16 @@ profile = "Profile"
 results = "Results"
 routes = "Routes"
 
+[authStravaAccount]
+apiMessageError = "Login to Strava account failed."
+apiMessageErrorWithMessage = "Login to Strava account failed. Error: {error}"
+apiMessageSuccess = "You have successfully logged in to your Strava account."
+
+[disconnectStravaAccount]
+apiMessageError = "Deleting the Strava account failed."
+apiMessageErrorWithMessage = "Deleting the Strava account failed. Error: {error}"
+apiMessageSuccess = "The Strava user account {account} was successfully deleted."
+
 [getCampaign]
 apiMessageError = "Fetching campaign failed."
 apiMessageErrorWithMessage = "Fetching campaign failed. Error: {error}"
@@ -138,6 +148,16 @@ apiMessageSuccess = "Posts were successfully loaded."
 apiMessageError = "Fetching registrations failed."
 apiMessageErrorWithMessage = "Fetching registrations failed. Error: {error}"
 apiMessageSuccess = "Registrations fetched successfully."
+
+[getStravaAccount]
+apiMessageError = "Failed to load Strava profile."
+apiMessageErrorWithMessage = "Failed to load Strava profile. Error: {error}"
+apiMessageSuccess = "The Strava profile has been successfully loaded."
+
+[getStravaAuthUrl]
+apiMessageError = "Failed to retrieve the login URL for the Strava app."
+apiMessageErrorWithMessage = "Failed to retrieve the login URL for the Strava app. Error: {error}"
+apiMessageSuccess = "The login URL for the Strava app was successfully loaded."
 
 [getSubsidiaries]
 apiMessageError = "Fetching subsidiaries failed."

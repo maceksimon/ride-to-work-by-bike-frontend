@@ -93,6 +93,10 @@ export interface ConfigGlobal {
   urlApiOpenAppWithRestToken: string;
   urlApiSendRegistrationConfirmationEmail: string;
   urlApiSendTeamMembershipInvitationEmail: string;
+  urlApiStravaAuthAccount: string;
+  urlApiStravaConnectAccount: string;
+  urlApiStravaDisconnectAccount: string;
+  urlApiStravaGetAccount: string;
   urlApiSubsidiaries: string;
   urlApiThisCampaign: string;
   urlApiTeams: string;
