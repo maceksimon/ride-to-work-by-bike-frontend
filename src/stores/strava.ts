@@ -153,10 +153,12 @@ export const useStravaStore = defineStore('strava', {
      * @param {string} scope - Authorization scope
      * @returns {Promise<void>}
      */
-    async getAuthUrl(scope: StravaScope): Promise<void> {
-      const { authUrl, getAuthUrl } = useApiGetStravaAuthUrl(this.$log);
+    async loadAuthUrl(scope: StravaScope): Promise<void> {
+      const { authUrl, getAuthUrl: loadAuthUrl } = useApiGetStravaAuthUrl(
+        this.$log,
+      );
       this.setIsLoading(true);
-      await getAuthUrl(scope);
+      await loadAuthUrl(scope);
       this.setAuthUrl(authUrl.value);
       this.setIsLoading(false);
     },

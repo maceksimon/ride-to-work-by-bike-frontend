@@ -21,6 +21,7 @@ import { storeToRefs } from 'pinia';
 // components
 import BannerRoutesApp from './BannerRoutesApp.vue';
 import SectionHeading from '../global/SectionHeading.vue';
+import StravaApp from './StravaApp.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
@@ -37,6 +38,7 @@ export default defineComponent({
   components: {
     BannerRoutesApp,
     SectionHeading,
+    StravaApp,
   },
   setup() {
     const enabledAppsForManualLogging = false;
@@ -123,6 +125,7 @@ export default defineComponent({
           :loading="isLoading"
           data-cy="banner-routes-app"
         />
+        <strava-app />
       </div>
     </section>
     <!-- Section: Apps for manual logging (DISABLED) -->

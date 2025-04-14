@@ -159,8 +159,6 @@ apiMessageError = "Nepodarilo sa načítať prihlasovaciu adresu URL aplikácie 
 apiMessageErrorWithMessage = "Nepodarilo sa načítať prihlasovaciu adresu URL pre aplikáciu Strava. Error: {error}"
 apiMessageSuccess = "Prihlasovacia adresa URL pre aplikáciu Strava bola úspešne načítaná."
 
-Translated with DeepL.com (free version)
-
 [getSubsidiaries]
 apiMessageError = "Načítanie pobočiek zlyhalo."
 apiMessageErrorWithMessage = "Načítanie pobočiek zlyhalo. Chyba: {error}"
@@ -964,6 +962,7 @@ tabPerformance = "Výkonnosť"
 tabReport = "Data report"
 
 [routes]
+appStrava = "Strava"
 actionCopyYesterday = "Skopírovať predchádzajúci deň"
 actionInputDistance = "Zadať vzdialenosť"
 actionTraceMap = "Zakreslit"
@@ -988,6 +987,7 @@ labelDirectionFromWork = "Z práce"
 labelDirectionToWork = "Do práce"
 labelFinish = "Cieľ"
 labelStart = "Start"
+labelSyncAll = "Synchronizovať aj súkromné jazdy a zóny"
 labelTransportType = "Typ dopravy"
 labelUploadFile = "Súbor s trasou"
 labelValidationDistance = "Vzdialenosť"

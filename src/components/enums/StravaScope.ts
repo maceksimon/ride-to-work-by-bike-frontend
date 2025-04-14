@@ -1,4 +1,4 @@
 export enum StravaScope {
-  Read = 'read',
-  ReadAll = 'read_all',
+  read = 'read',
+  readAll = 'read_all',
 }
