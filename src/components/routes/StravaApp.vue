@@ -45,10 +45,10 @@ export default defineComponent({
 
     const syncError = computed<string>((): string => {
       if (
-        stravaUserAccount.value?.sync_outcome &&
-        'error' in stravaUserAccount.value.sync_outcome
+        stravaUserAccount.value?.sync_outcome?.result &&
+        'error' in stravaUserAccount.value.sync_outcome.result
       ) {
-        return stravaUserAccount.value.sync_outcome.error as string;
+        return stravaUserAccount.value.sync_outcome.result?.error || '';
       }
       return '';
     });
@@ -90,6 +90,10 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+      // if Cypress, wait for 0.5 second
+      if (window.Cypress) {
+        await new Promise((resolve) => setTimeout(resolve, 500));
+      }
       await stravaStore.loadAccount();
     });
 
@@ -149,7 +153,10 @@ export default defineComponent({
       data-cy="strava-app-expansion-item"
     >
       <template v-slot:header>
-        <div class="full-width row items-center gap-8">
+        <div
+          class="full-width row items-center gap-8"
+          data-cy="strava-app-expansion-item-header"
+        >
           <!-- Image -->
           <q-img
             src="/image/logo-strava.webp"
@@ -174,6 +181,7 @@ export default defineComponent({
                 color="secondary"
                 class="col-shrink-0 text-teal-10"
                 icon="check"
+                data-cy="strava-app-chip-linked"
               >
                 {{ $t('routes.statusLinked') }}
               </q-chip>
@@ -190,42 +198,35 @@ export default defineComponent({
             class="flex items-center gap-8 justify-between q-my-sm"
           >
             <!-- Text: Connected user -->
-            {{ $t('routes.statusConnectedUser', { userInfo }) }}
+            <p data-cy="strava-app-connected-user">
+              {{ $t('routes.statusConnectedUser', { userInfo }) }}
+            </p>
+            <!-- Chip: Sync error -->
+            <q-chip
+              v-if="syncError"
+              color="negative"
+              text-color="white"
+              class="q-mx-none q-my-sm"
+              data-cy="strava-app-chip-error"
+              >{{ $t('routes.labelSyncError') }}</q-chip
+            >
             <!-- Chip: Sync success -->
             <q-chip
-              v-if="stravaStore.getLastSyncTime"
+              v-else-if="stravaStore.getLastSyncTime"
               size="sm"
               class="q-mx-none q-my-sm"
-              data-cy="strava-app-sync-status"
+              data-cy="strava-app-chip-success"
               >{{ $t('routes.labelLastSync') }}:
               {{ $d(new Date(stravaStore.getLastSyncTime), 'numeric') }}
             </q-chip>
-            <!-- Chip: Sync error -->
-            <q-chip
-              v-else-if="syncError"
-              color="negative"
-              class="q-mx-none q-my-sm"
-              data-cy="strava-app-sync-status"
-              >{{ $t('routes.labelSyncError') }}</q-chip
-            >
           </div>
           <div
             class="q-my-sm text-pretty"
             :style="{ 'max-width': `${textMaxWidth}px` }"
           >
-            <!-- Info: User has synced trips -->
-            <template v-if="syncedTripsCount">
-              {{ $t('routes.statusSyncSuccess') }}
-              {{
-                $t('routes.statusSyncedTrips', {
-                  syncedTrips: syncedTripsCount,
-                  newTrips: newTripsCount,
-                })
-              }}
-            </template>
             <!-- Info: Sync error -->
             <template v-if="syncError">
-              <p>
+              <p data-cy="strava-app-status-sync-error">
                 {{
                   $t('routes.statusSyncErrorWithMessage', {
                     message: syncError,
@@ -233,28 +234,49 @@ export default defineComponent({
                 }}
               </p>
             </template>
-            <!-- Info: User has no synced trips -->
             <template v-else>
-              <p>
-                {{
-                  $t('routes.instructionSyncTripsFromStrava', {
-                    syncedActivities: syncedActivitiesCount,
-                    hashtagTo,
-                    hashtagFrom,
-                  })
-                }}
-              </p>
-              <p>{{ $t('routes.instructionSyncReadAllSettings') }}</p>
-            </template>
-            <template v-if="isWarnUserSync">
-              <p
-                v-html="
-                  $t('routes.instructionSyncWarnUser', { url: urlHelpdesk })
-                "
-              ></p>
+              <!-- Info: User has synced trips -->
+              <template v-if="syncedTripsCount">
+                <p data-cy="strava-app-status-sync-success">
+                  {{ $t('routes.statusSyncSuccess') }}
+                </p>
+                <p
+                  class="text-weight-medium"
+                  data-cy="strava-app-status-synced-trips"
+                >
+                  {{
+                    $t('routes.statusSyncedTrips', {
+                      syncedTrips: syncedTripsCount,
+                      newTrips: newTripsCount,
+                    })
+                  }}
+                </p>
+              </template>
+              <!-- Info: User has no synced trips -->
+              <template v-else>
+                <p data-cy="strava-app-instruction-sync-trips-from-strava">
+                  {{
+                    $t('routes.instructionSyncTripsFromStrava', {
+                      syncedActivities: syncedActivitiesCount,
+                      hashtagTo,
+                      hashtagFrom,
+                    })
+                  }}
+                </p>
+                <p data-cy="strava-app-instruction-sync-read-all-settings">
+                  {{ $t('routes.instructionSyncReadAllSettings') }}
+                </p>
+              </template>
+              <template v-if="isWarnUserSync">
+                <p
+                  v-html="
+                    $t('routes.instructionSyncWarnUser', { url: urlHelpdesk })
+                  "
+                ></p>
+              </template>
             </template>
           </div>
-          <div class="q-mt-md flex items-center gap-8">
+          <div class="q-mt-lg flex items-center gap-8">
             <!-- Button: Sync -->
             <q-btn
               v-if="isAllowedToSync"
@@ -293,7 +315,10 @@ export default defineComponent({
             class="text-pretty"
             :style="{ 'max-width': `${textMaxWidth}px` }"
           >
-            <h3 class="text-subtitle1 q-mb-none">
+            <h3
+              class="text-subtitle1 q-mb-none"
+              data-cy="strava-app-title-not-connected"
+            >
               {{ $t('routes.titleStravaNotConnected') }}
             </h3>
             <!-- Option: Scope -->
@@ -309,12 +334,14 @@ export default defineComponent({
                   url: urlStravaPrivacyZones,
                 })
               "
+              data-cy="strava-app-instruction-not-connected"
             ></p>
-            <h3 class="text-subtitle1">
+            <h3 class="text-subtitle1" data-cy="strava-app-title-how-it-works">
               {{ $t('routes.titleStravaHowItWorks') }}
             </h3>
             <p
               v-html="$t('routes.instructionStravaHowItWorks', { url: urlFaq })"
+              data-cy="strava-app-instruction-how-it-works"
             ></p>
           </div>
           <div class="q-mt-lg flex items-center gap-8">

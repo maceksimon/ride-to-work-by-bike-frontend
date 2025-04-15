@@ -133,6 +133,7 @@ export const useStravaStore = defineStore('strava', {
      * @returns {void}
      */
     setAccount(account: StravaAccount | null): void {
+      this.$log?.debug(`setAccount: ${JSON.stringify(account, null, 2)}`);
       this.account = account;
     },
     /**

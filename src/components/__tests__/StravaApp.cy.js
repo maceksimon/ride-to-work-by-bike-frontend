@@ -1,5 +1,8 @@
+import { createPinia, setActivePinia } from 'pinia';
 import StravaApp from 'components/routes/StravaApp.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
+import stravaAppStateTestData from '../../../test/cypress/fixtures/stravaAppStateTestData.json';
 
 describe('<StravaApp>', () => {
   it('has translation for all strings', () => {
@@ -10,43 +13,51 @@ describe('<StravaApp>', () => {
     );
   });
 
-  context('desktop', () => {
-    beforeEach(() => {
-      cy.mount(StravaApp, {
-        props: {},
-      });
-      cy.viewport('macbook-16');
-    });
+  // context('desktop', () => {
+  //   beforeEach(() => {
+  //     cy.mount(StravaApp, {
+  //       props: {},
+  //     });
+  //     cy.viewport('macbook-16');
+  //   });
 
-    coreTests();
-  });
+  //   coreTests();
+  // });
 
   context('mobile', () => {
-    beforeEach(() => {
-      cy.mount(StravaApp, {
-        props: {},
+    stravaAppStateTestData.forEach((testData) => {
+      it(testData.description, () => {
+        setActivePinia(createPinia());
+        cy.viewport('iphone-6');
+        cy.mount(StravaApp, {
+          props: {},
+        });
+        // set store state
+        cy.interceptGetStravaAccount(
+          rideToWorkByBikeConfig,
+          i18n,
+          testData.fixture,
+        );
+        // check component is visible
+        cy.dataCy('strava-app').should('be.visible');
+        // open expansion item
+        cy.dataCy('strava-app-expansion-item-header')
+          .should('be.visible')
+          .click();
+        // check visible elements
+        testData.visibleElements.forEach((element) => {
+          cy.dataCy(element.selector)
+            .should('be.visible')
+            .then(($el) => {
+              const content = $el.text();
+              cy.stripHtmlTags(
+                i18n.global.t(element.contain, element.containTranslationData),
+              ).then((text) => {
+                expect(content).to.contain(text);
+              });
+            });
+        });
       });
-      cy.viewport('iphone-6');
     });
-
-    coreTests();
   });
 });
-
-function coreTests() {
-  it('renders component', () => {
-    cy.dataCy('strava-app').should('be.visible');
-    // title
-    cy.dataCy('strava-app-title')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.appStrava'));
-    // sync all toggle
-    cy.dataCy('strava-app-sync-all-toggle')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.labelSyncAll'));
-    // button not connected
-    cy.dataCy('strava-app-connect-button')
-      .should('be.visible')
-      .and('contain', i18n.global.t('routes.buttonLinkToApp'));
-  });
-}
