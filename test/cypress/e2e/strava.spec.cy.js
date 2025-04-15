@@ -1,5 +1,6 @@
 // libraries
 import { routesConf } from '../../../src/router/routes_conf';
+import { StravaScope } from 'src/components/enums/StravaScope';
 
 const validCode = 'example_valid_code';
 const invalidCode = 'example_invalid_code';
@@ -17,15 +18,81 @@ describe('Strava Integration', () => {
     });
   });
 
+  describe('Make a connection to Strava account', () => {
+    it('should connect to Strava account (scope read)', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // intercept GET request for account
+          cy.interceptGetStravaAccount(
+            config,
+            i18n,
+            'apiGetStravaAccountEmpty.json',
+          );
+          // visit app page
+          cy.visit(`#${routesConf['routes_app']['children']['fullPath']}`);
+          // wait for GET request
+          cy.wait('@getStravaAccount');
+          // intercept GET request for connect with scope
+          // !auth_url in fixture response contains ?strava=test
+          cy.interceptGetStravaConnectAccount(
+            config,
+            i18n,
+            'apiGetStravaConnectExists.json',
+            StravaScope.read,
+          );
+          // shows connect button
+          cy.dataCy('strava-app-connect-button').should('be.visible').click();
+          // wait for GET request
+          cy.wait('@getStravaConnectAccount');
+          // validate redirect - url contains ?strava=test
+          cy.url().should('include', '?strava=test');
+        });
+      });
+    });
+
+    it('should connect to Strava account (scope read_all)', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // intercept GET request for account
+          cy.interceptGetStravaAccount(
+            config,
+            i18n,
+            'apiGetStravaAccountEmpty.json',
+          );
+          // visit app page
+          cy.visit(`#${routesConf['routes_app']['children']['fullPath']}`);
+          // wait for GET request
+          cy.wait('@getStravaAccount');
+          // intercept GET request for connect with scope
+          // !auth_url in fixture response contains ?strava=test
+          cy.interceptGetStravaConnectAccount(
+            config,
+            i18n,
+            'apiGetStravaConnectExists.json',
+            StravaScope.readAll,
+          );
+          // shows toggle button for scope
+          cy.dataCy('strava-app-sync-all-toggle').should('be.visible').check();
+          // shows connect button
+          cy.dataCy('strava-app-connect-button').should('be.visible').click();
+          // wait for GET request
+          cy.wait('@getStravaConnectAccount');
+          // validate redirect - url contains ?strava=test
+          cy.url().should('include', '?strava=test');
+        });
+      });
+    });
+  });
+
   describe('Successfully create new Strava account', () => {
     it('should successfully create new Strava account', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          // mock successful auth response
+          // intercept GET request for auth with valid code
           cy.interceptGetStravaAuthWithParam(
             config,
             i18n,
-            'apiGetStravaConnectCreated.json',
+            'apiGetStravaAuthCreated.json',
             validCode,
           );
           // visit connect-apps page with valid code
@@ -52,11 +119,11 @@ describe('Strava Integration', () => {
     it('should successfully update existing Strava account', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          // mock successful auth response
+          // intercept GET request for auth with valid code
           cy.interceptGetStravaAuthWithParam(
             config,
             i18n,
-            'apiGetStravaConnectUpdated.json',
+            'apiGetStravaAuthUpdated.json',
             validCode,
           );
           // visit connect-apps page with valid code
@@ -83,7 +150,7 @@ describe('Strava Integration', () => {
     it('should handle invalid auth code', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          // mock error response
+          // intercept GET request for auth with invalid code
           cy.interceptGetStravaAuthWithParam(
             config,
             i18n,
@@ -136,7 +203,7 @@ describe('Strava Integration', () => {
     beforeEach(() => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
-          // mock successful auth response
+          // intercept GET request for account
           cy.interceptGetStravaAccount(
             config,
             i18n,

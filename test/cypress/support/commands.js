@@ -3578,6 +3578,31 @@ Cypress.Commands.add('waitForOpenAppWithRestTokenApi', (responseBody) => {
 });
 
 /**
+ * Intercept GET urlApiStravaConnectAccount
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {String} fixture - Fixture name
+ */
+Cypress.Commands.add(
+  'interceptGetStravaConnectAccount',
+  (config, i18n, fixture, scope) => {
+    const { apiBase, apiDefaultLang, urlApiStravaConnectAccount } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiStravaConnect = `${apiBaseUrl}${urlApiStravaConnectAccount}${scope}`;
+
+    cy.intercept('GET', urlApiStravaConnect, {
+      fixture,
+      delay: interceptedRequestResponseDelay,
+    }).as('getStravaConnectAccount');
+  },
+);
+
+/**
  * Intercept GET request to Strava auth endpoint with code parameter
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
