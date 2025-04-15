@@ -76,41 +76,32 @@ export default defineComponent({
         <div class="flex items-center justify-between gap-8">
           <!-- Option: Sync All -->
           <q-toggle
+            v-if="!stravaStore.getIsConnected"
             v-model="isSyncAll"
             :label="$t('routes.labelSyncAll')"
             class="q-mr-md"
             data-cy="strava-app-sync-all-toggle"
           />
           <!-- Status (linked) -->
-          <div
+          <q-chip
+            color="secondary"
             v-if="stravaStore.getIsConnected"
-            class="col-shrink-0 flex items-center gap-8 q-mr-md"
+            class="col-shrink-0 text-teal-10"
+            icon="check"
           >
-            <q-avatar size="18px">
-              <q-icon
-                class="inline-block"
-                name="check"
-                size="18px"
-                data-cy="strava-app-icon"
-              />
-            </q-avatar>
-            <span
-              class="inline-block text-subtitle2 text-weight-bold"
-              data-cy="strava-app-status"
-              >{{ $t('routes.statusLinked') }}</span
-            >
-          </div>
+            {{ $t('routes.statusLinked') }}
+          </q-chip>
           <!-- Sync Status -->
           <div
             v-if="stravaStore.getIsConnected"
             class="col-shrink-0 flex items-center gap-8 q-mr-md"
           >
-            <span
-              class="inline-block text-subtitle2"
+            <q-chip
+              v-if="stravaStore.getLastSyncTime"
               data-cy="strava-app-sync-status"
-              >{{ $t('routes.lastSync') }}:
-              {{ stravaStore.getLastSyncTime }}</span
-            >
+              >{{ $t('routes.labelLastSync') }}:
+              {{ $d(new Date(stravaStore.getLastSyncTime), 'numeric') }}
+            </q-chip>
           </div>
           <!-- Buttons -->
           <div class="flex items-center gap-8">
