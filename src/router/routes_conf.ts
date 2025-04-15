@@ -164,9 +164,9 @@ const routesConf: RoutesConf = {
     },
   },
   routes_connect_apps: {
-    path: 'connect-apps',
+    path: '/connect-third-party-apps',
     children: {
-      fullPath: '/routes/connect-apps',
+      fullPath: '/connect-third-party-apps',
       name: 'routes-connect-apps',
     },
   },

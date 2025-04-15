@@ -57,7 +57,7 @@ export const useApiDisconnectStravaAccount = (
       endpoint: rideToWorkByBikeConfig.urlApiStravaDisconnectAccount,
       method: 'get',
       translationKey: 'disconnectStravaAccount',
-      showSuccessMessage: true,
+      showSuccessMessage: false,
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       logger,
     });

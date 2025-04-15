@@ -149,8 +149,14 @@ const routes: RouteRecordRaw[] = [
         name: routesConf['routes_app']['children']['name'],
         component: () => import('pages/RoutesPage.vue'),
       },
+    ],
+  },
+  {
+    path: routesConf['routes_connect_apps']['path'],
+    component: () => import('layouts/MainLayout.vue'),
+    children: [
       {
-        path: routesConf['routes_connect_apps']['path'],
+        path: '',
         name: routesConf['routes_connect_apps']['children']['name'],
         component: () => import('pages/RoutesConnectAppsPage.vue'),
       },
