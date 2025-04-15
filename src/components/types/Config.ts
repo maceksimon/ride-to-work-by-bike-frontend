@@ -28,7 +28,9 @@ export interface ConfigGlobal {
   urlDonate: string;
   urlFacebook: string;
   urlFacebookRideToWorkByBike: string;
+  urlFaq: string;
   urlGooglePlay: string;
+  urlHelpdesk: string;
   urlInstagram: string;
   urlProjectSourceCode: string;
   urlRideToWorkByBikeOldFrontendDjangoApp: string;
@@ -39,6 +41,7 @@ export interface ConfigGlobal {
   urlFreeSoftwareDefinition: string;
   urlYoutube: string;
   urlSizeConversionChart: string;
+  urlStravaPrivacyZones: string;
   challengeMonth: 'may' | 'october' | 'september';
   containerFormWidth: string;
   containerContentWidth: string;
