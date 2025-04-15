@@ -3,7 +3,11 @@ import { i18n } from '../../boot/i18n';
 
 describe('<StravaApp>', () => {
   it('has translation for all strings', () => {
-    cy.testLanguageStringsInContext(['labelSyncAll'], 'routes', i18n);
+    cy.testLanguageStringsInContext(
+      ['labelSyncAll', 'buttonLinkToApp', 'buttonDisconnect'],
+      'routes',
+      i18n,
+    );
   });
 
   context('desktop', () => {

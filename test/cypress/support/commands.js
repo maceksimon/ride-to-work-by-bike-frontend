@@ -3576,3 +3576,70 @@ Cypress.Commands.add('waitForOpenAppWithRestTokenApi', (responseBody) => {
     },
   );
 });
+
+/**
+ * Intercept GET request to Strava auth endpoint with code parameter
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {String} fixture - Fixture name
+ * @param {String} code - Code parameter value
+ */
+Cypress.Commands.add(
+  'interceptGetStravaAuthWithParam',
+  (config, i18n, fixture, code) => {
+    const { apiBase, apiDefaultLang, urlApiStravaAuthAccount } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiStravaAuth = `${apiBaseUrl}${urlApiStravaAuthAccount}${code}`;
+
+    cy.intercept('GET', urlApiStravaAuth, {
+      fixture,
+      delay: interceptedRequestResponseDelay,
+    }).as('getStravaAuthWithParam');
+  },
+);
+
+/**
+ * Intercept GET request to Strava account endpoint
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {String} fixture - Fixture name
+ */
+Cypress.Commands.add('interceptGetStravaAccount', (config, i18n, fixture) => {
+  const { apiBase, apiDefaultLang, urlApiStravaGetAccount } = config;
+  const apiBaseUrl = getApiBaseUrlWithLang(null, apiBase, apiDefaultLang, i18n);
+  const urlApiStravaAccountLocalized = `${apiBaseUrl}${urlApiStravaGetAccount}`;
+
+  cy.intercept('GET', urlApiStravaAccountLocalized, {
+    fixture,
+  }).as('getStravaAccount');
+});
+
+/**
+ * Intercept GET request to Strava disconnect endpoint
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {String} fixture - Fixture name
+ */
+Cypress.Commands.add(
+  'interceptGetStravaDisconnect',
+  (config, i18n, fixture) => {
+    const { apiBase, apiDefaultLang, urlApiStravaDisconnectAccount } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiStravaDisconnectLocalized = `${apiBaseUrl}${urlApiStravaDisconnectAccount}`;
+
+    cy.intercept('GET', urlApiStravaDisconnectLocalized, {
+      fixture,
+      delay: interceptedRequestResponseDelay,
+    }).as('getStravaDisconnect');
+  },
+);

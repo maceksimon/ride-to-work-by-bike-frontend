@@ -1,7 +1,9 @@
 // libraries
+import { Notify } from 'quasar';
 import { ref } from 'vue';
 
 // composables
+import { i18n } from '../boot/i18n';
 import { useApi } from './useApi';
 
 // config
@@ -17,6 +19,17 @@ import type { StravaAccount } from '../components/types/Strava';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
+
+type StravaAuthSuccessResponse = {
+  account_status: 'created' | 'updated';
+  account: StravaAccount;
+};
+
+type StravaAuthErrorResponse = {
+  error: string;
+};
+
+type StravaAuthResponse = StravaAuthSuccessResponse | StravaAuthErrorResponse;
 
 type UseApiAuthStravaAccountReturn = {
   account: Ref<StravaAccount | null>;
@@ -54,19 +67,26 @@ export const useApiAuthStravaAccount = (
     requestTokenHeader_.Authorization +=
       await loginStore.getAccessTokenWithRefresh();
 
-    const { data } = await apiFetch<{
-      account_status: 'created' | 'updated';
-      account: StravaAccount;
-    }>({
+    const { data } = await apiFetch<StravaAuthResponse>({
       endpoint: `${rideToWorkByBikeConfig.urlApiStravaAuthAccount}${code}/`,
       method: 'get',
       translationKey: 'authStravaAccount',
-      showSuccessMessage: false,
+      showSuccessMessage: true,
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       logger,
     });
 
-    if (data) {
+    // handle error response
+    if (data && 'error' in data) {
+      Notify.create({
+        type: 'negative',
+        message: i18n.global.t('authStravaAccount.apiMessageErrorWithMessage', {
+          message: data.error,
+        }),
+      });
+    }
+    // handle success response
+    else if (data && 'account_status' in data && 'account' in data) {
       accountStatus.value = data.account_status;
       account.value = data.account;
     }
