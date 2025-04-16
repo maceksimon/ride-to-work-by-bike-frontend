@@ -100,6 +100,7 @@ export interface ConfigGlobal {
   urlApiStravaConnectAccount: string;
   urlApiStravaDisconnectAccount: string;
   urlApiStravaGetAccount: string;
+  urlApiStravaGetAccountSync: string;
   urlApiSubsidiaries: string;
   urlApiThisCampaign: string;
   urlApiTeams: string;

@@ -53,52 +53,51 @@ export default defineComponent({
       return '';
     });
 
-    const isWarnUserSync = computed<boolean>((): boolean => {
-      return (
-        (stravaUserAccount.value?.user_sync_count || 0) >
-        (stravaUserAccount.value?.warn_user_sync_count || 0)
-      );
+    const showSyncLimitWarning = computed<boolean>((): boolean => {
+      return stravaStore.getIsNearSyncLimit;
     });
 
-    const isAllowedToSync = computed<boolean>((): boolean => {
-      return (
-        (stravaUserAccount.value?.user_sync_count || 0) <
-        (stravaUserAccount.value?.max_user_sync_count || 0)
-      );
+    const showSyncButton = computed<boolean>((): boolean => {
+      return !stravaStore.getHasReachedSyncLimit;
+    });
+
+    const hasSyncResult = computed<boolean>((): boolean => {
+      return !!stravaStore.getSyncResult;
     });
 
     const userActivities = computed<string[]>((): string[] => {
-      return stravaUserAccount.value?.sync_outcome?.result?.activities || [];
+      return stravaStore.getSyncResult?.activities || [];
     });
 
     const newTripsCount = computed<number>((): number => {
-      return stravaUserAccount.value?.sync_outcome?.result?.new_trips || 0;
+      return stravaStore.getSyncResult?.new_trips || 0;
     });
 
     const syncedTripsCount = computed<number>((): number => {
-      return stravaUserAccount.value?.sync_outcome?.result?.synced_trips || 0;
+      return stravaStore.getSyncResult?.synced_trips || 0;
     });
 
     const syncedActivitiesCount = computed<number>((): number => {
-      return (
-        stravaUserAccount.value?.sync_outcome?.result?.synced_activities || 0
-      );
+      return stravaStore.getSyncResult?.synced_activities || 0;
     });
 
     const hashtagTo = computed<string>((): string => {
-      return stravaUserAccount.value?.hashtag_to || '';
+      return stravaStore.getHashtagTo || '';
     });
 
     const hashtagFrom = computed<string>((): string => {
-      return stravaUserAccount.value?.hashtag_from || '';
+      return stravaStore.getHashtagFrom || '';
     });
 
     onMounted(async () => {
-      // if Cypress, wait for 0.5 second
+      // allows Cypress component test to register intercept
       if (window.Cypress) {
         await new Promise((resolve) => setTimeout(resolve, 500));
       }
-      await stravaStore.loadAccount();
+
+      if (!stravaStore.getAccount) {
+        await stravaStore.loadAccount();
+      }
     });
 
     const handleConnect = async (): Promise<void> => {
@@ -116,7 +115,7 @@ export default defineComponent({
     };
 
     const handleSync = async (): Promise<void> => {
-      await stravaStore.loadAccount();
+      await stravaStore.syncAccount();
     };
 
     const { urlFaq, urlHelpdesk, urlStravaPrivacyZones } =
@@ -137,10 +136,11 @@ export default defineComponent({
       syncedActivitiesCount,
       hashtagTo,
       hashtagFrom,
+      hasSyncResult,
       syncError,
       textMaxWidth,
-      isAllowedToSync,
-      isWarnUserSync,
+      showSyncButton,
+      showSyncLimitWarning,
       urlFaq,
       urlHelpdesk,
       urlStravaPrivacyZones,
@@ -203,7 +203,7 @@ export default defineComponent({
             class="flex items-center gap-8 justify-between q-my-sm"
           >
             <!-- Text: Connected user -->
-            <p data-cy="strava-app-connected-user">
+            <p data-cy="strava-app-connected-user" class="q-my-none">
               {{ $t('routes.statusConnectedUser', { userInfo }) }}
             </p>
             <!-- Chip: Sync error -->
@@ -239,7 +239,7 @@ export default defineComponent({
                 }}
               </p>
             </template>
-            <template v-else>
+            <template v-else-if="hasSyncResult">
               <!-- Info: User has synced trips -->
               <template v-if="syncedTripsCount">
                 <p data-cy="strava-app-status-sync-success">
@@ -258,7 +258,7 @@ export default defineComponent({
                 </p>
               </template>
               <!-- Info: User has no synced trips -->
-              <template v-else>
+              <template v-else-if="hasSyncResult">
                 <p data-cy="strava-app-instruction-sync-trips-from-strava">
                   {{
                     $t('routes.instructionSyncTripsFromStrava', {
@@ -282,7 +282,7 @@ export default defineComponent({
                   </li>
                 </ul>
               </template>
-              <template v-if="isWarnUserSync">
+              <template v-if="showSyncLimitWarning">
                 <p
                   data-cy="strava-app-instruction-sync-warn-user"
                   v-html="
@@ -295,7 +295,7 @@ export default defineComponent({
           <div class="q-mt-lg flex items-center gap-8">
             <!-- Button: Sync -->
             <q-btn
-              v-if="isAllowedToSync"
+              v-if="showSyncButton"
               unelevated
               outline
               rounded

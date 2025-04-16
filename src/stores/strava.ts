@@ -6,13 +6,14 @@ import { useApiAuthStravaAccount } from '../composables/useApiAuthStravaAccount'
 import { useApiDisconnectStravaAccount } from '../composables/useApiDisconnectStravaAccount';
 import { useApiGetStravaAccount } from '../composables/useApiGetStravaAccount';
 import { useApiGetStravaAuthUrl } from '../composables/useApiGetStravaAuthUrl';
+import { useApiGetStravaAccountSync } from '../composables/useApiGetStravaAccountSync';
 
 // enums
 import { StravaScope } from '../components/enums/StravaScope';
 
 // types
 import type { Logger } from '../components/types/Logger';
-import type { StravaAccount } from '../components/types/Strava';
+import type { StravaAccount, SyncResult } from '../components/types/Strava';
 
 interface StravaState {
   $log: Logger | null;
@@ -52,11 +53,17 @@ export const useStravaStore = defineStore('strava', {
      */
     getIsConnected: (state): boolean => state.account !== null,
     /**
-     * Get sync status
-     * @returns {string | undefined} - Current sync status
+     * Get sync result from Strava account
+     * If it does not exist or is null, return null
+     * @returns {SyncResult | null} - Current sync result or null
      */
-    getSyncStatus: (state): string | undefined =>
-      state.account?.sync_outcome.result,
+    getSyncResult: (state): SyncResult | null => {
+      const syncResult = state.account?.sync_outcome?.result;
+      if (!syncResult) {
+        return null;
+      }
+      return syncResult;
+    },
     /**
      * Get last sync time
      * @returns {string | undefined} - Last sync time
@@ -65,38 +72,38 @@ export const useStravaStore = defineStore('strava', {
       state.account?.last_sync_time,
     /**
      * Get hashtag from
-     * @returns {string | undefined} - Hashtag from
+     * @returns {string} - Hashtag from
      */
-    getHashtagFrom: (state): string | undefined => state.account?.hashtag_from,
+    getHashtagFrom: (state): string => state.account?.hashtag_from || '',
     /**
      * Get hashtag to
-     * @returns {string | undefined} - Hashtag to
+     * @returns {string} - Hashtag to
      */
-    getHashtagTo: (state): string | undefined => state.account?.hashtag_to,
+    getHashtagTo: (state): string => state.account?.hashtag_to || '',
     /**
      * Get user sync count
      * @returns {number} - Current sync count
      */
-    getUserSyncCount: (state): number => state.account?.user_sync_count ?? 0,
+    getUserSyncCount: (state): number => state.account?.user_sync_count || 0,
     /**
      * Get warning sync count
      * @returns {number} - Warning sync count threshold
      */
     getWarnUserSyncCount: (state): number =>
-      state.account?.warn_user_sync_count ?? 0,
+      state.account?.warn_user_sync_count || 0,
     /**
      * Get max sync count
      * @returns {number} - Maximum sync count
      */
     getMaxUserSyncCount: (state): number =>
-      state.account?.max_user_sync_count ?? 0,
+      state.account?.max_user_sync_count || 0,
     /**
      * Check if near sync limit
      * @returns {boolean} - Whether near sync limit
      */
     getIsNearSyncLimit: (state): boolean => {
-      const userSyncCount = state.account?.user_sync_count ?? 0;
-      const warnUserSyncCount = state.account?.warn_user_sync_count ?? 0;
+      const userSyncCount = state.account?.user_sync_count || 0;
+      const warnUserSyncCount = state.account?.warn_user_sync_count || 0;
       return userSyncCount >= warnUserSyncCount;
     },
     /**
@@ -104,8 +111,8 @@ export const useStravaStore = defineStore('strava', {
      * @returns {boolean} - Whether reached sync limit
      */
     getHasReachedSyncLimit: (state): boolean => {
-      const userSyncCount = state.account?.user_sync_count ?? 0;
-      const maxUserSyncCount = state.account?.max_user_sync_count ?? 0;
+      const userSyncCount = state.account?.user_sync_count || 0;
+      const maxUserSyncCount = state.account?.max_user_sync_count || 0;
       return userSyncCount >= maxUserSyncCount;
     },
   },
@@ -146,6 +153,19 @@ export const useStravaStore = defineStore('strava', {
       );
       this.setIsLoading(true);
       await loadStravaAccount();
+      this.setAccount(stravaAccount.value);
+      this.setIsLoading(false);
+    },
+    /**
+     * Sync Strava account data
+     * @returns {Promise<void>}
+     */
+    async syncAccount(): Promise<void> {
+      const { stravaAccount, syncStravaAccount } = useApiGetStravaAccountSync(
+        this.$log,
+      );
+      this.setIsLoading(true);
+      await syncStravaAccount();
       this.setAccount(stravaAccount.value);
       this.setIsLoading(false);
     },
