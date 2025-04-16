@@ -67,6 +67,10 @@ export default defineComponent({
       );
     });
 
+    const userActivities = computed<string[]>((): string[] => {
+      return stravaUserAccount.value?.sync_outcome?.result?.activities || [];
+    });
+
     const newTripsCount = computed<number>((): number => {
       return stravaUserAccount.value?.sync_outcome?.result?.new_trips || 0;
     });
@@ -140,6 +144,7 @@ export default defineComponent({
       urlFaq,
       urlHelpdesk,
       urlStravaPrivacyZones,
+      userActivities,
     };
   },
 });
@@ -267,8 +272,19 @@ export default defineComponent({
                   {{ $t('routes.instructionSyncReadAllSettings') }}
                 </p>
               </template>
+              <template v-if="userActivities?.length">
+                <p data-cy="strava-app-user-activities-title">
+                  {{ $t('routes.titleUserActivities') }}:
+                </p>
+                <ul data-cy="strava-app-user-activities-list">
+                  <li v-for="activity in userActivities" :key="activity">
+                    {{ activity }}
+                  </li>
+                </ul>
+              </template>
               <template v-if="isWarnUserSync">
                 <p
+                  data-cy="strava-app-instruction-sync-warn-user"
                   v-html="
                     $t('routes.instructionSyncWarnUser', { url: urlHelpdesk })
                   "

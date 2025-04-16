@@ -1013,6 +1013,7 @@ instructionSyncWarnUser = "Zlobí Vám synchronizace? Pokud potřebujete pomoc <
 instructionStravaNotConnected = "Doporučujeme buď zadávat jízdy jako soukromé nebo <a href='{url}' target='_blank'>používat privátní zóny</a> ve Stravě, aby nedocházelo ke zveřejnění vašeho místa bydliště."
 titleStravaHowItWorks = "Jak to funguje"
 titleStravaNotConnected = "Ještě nejste propojeni se Stravou."
+titleUserActivities = "Našli jsme následující aktivity"
 tabCalendar = "Kalendář"
 tabList = "Seznam"
 tabMap = "Mapa"

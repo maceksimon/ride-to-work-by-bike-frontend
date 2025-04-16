@@ -30,7 +30,7 @@
     ]
   },
   {
-    "description": "User is connected to Strava no synced items",
+    "description": "User connected - no synced items",
     "fixture": "apiGetStravaAccountExists.json",
     "visibleElements": [
       {
@@ -72,7 +72,7 @@
     ]
   },
   {
-    "description": "User is connected to Strava with synced items",
+    "description": "User connected - activities + synced items",
     "fixture": "apiGetStravaAccountHasSyncedItems.json",
     "visibleElements": [
       {
@@ -103,6 +103,14 @@
         }
       },
       {
+        "selector": "strava-app-user-activities-title",
+        "contain": "routes.titleUserActivities"
+      },
+      {
+        "selector": "strava-app-user-activities-list",
+        "contain": ""
+      },
+      {
         "selector": "strava-app-sync-button",
         "contain": "routes.buttonSync"
       },
@@ -113,7 +121,7 @@
     ]
   },
   {
-    "description": "User is connected to Strava no trips but some activities",
+    "description": "User connected - activities but no synced items",
     "fixture": "apiGetStravaAccountHasActivitiesNoSyncedItems.json",
     "visibleElements": [
       {
@@ -145,6 +153,14 @@
         "contain": "routes.instructionSyncReadAllSettings"
       },
       {
+        "selector": "strava-app-user-activities-title",
+        "contain": "routes.titleUserActivities"
+      },
+      {
+        "selector": "strava-app-user-activities-list",
+        "contain": ""
+      },
+      {
         "selector": "strava-app-sync-button",
         "contain": "routes.buttonSync"
       },
@@ -155,7 +171,7 @@
     ]
   },
   {
-    "description": "User is connected to Strava with sync error",
+    "description": "User connected - sync error",
     "fixture": "apiGetStravaAccountHasSyncError.json",
     "visibleElements": [
       {
@@ -179,6 +195,59 @@
         "containTranslationData": {
           "message": "Sync error"
         }
+      },
+      {
+        "selector": "strava-app-sync-button",
+        "contain": "routes.buttonSync"
+      },
+      {
+        "selector": "strava-app-disconnect-button",
+        "contain": "routes.buttonDisconnect"
+      }
+    ]
+  },
+  {
+    "description": "User connected- sync count warning",
+    "fixture": "apiGetStravaAccountHasSyncCountWarning.json",
+    "visibleElements": [
+      {
+        "selector": "strava-app-chip-linked",
+        "contain": "routes.statusLinked"
+      },
+      {
+        "selector": "strava-app-connected-user",
+        "contain": "routes.statusConnectedUser",
+        "containTranslationData": {
+          "userInfo": "Foo Bar (foobar)"
+        }
+      },
+      {
+        "selector": "strava-app-chip-success",
+        "contain": "routes.labelLastSync"
+      },
+      {
+        "selector": "strava-app-status-sync-success",
+        "contain": "routes.statusSyncSuccess"
+      },
+      {
+        "selector": "strava-app-status-synced-trips",
+        "contain": "routes.statusSyncedTrips",
+        "containTranslationData": {
+          "syncedTrips": 1,
+          "newTrips": 1
+        }
+      },
+      {
+        "selector": "strava-app-user-activities-title",
+        "contain": "routes.titleUserActivities"
+      },
+      {
+        "selector": "strava-app-user-activities-list",
+        "contain": ""
+      },
+      {
+        "selector": "strava-app-instruction-sync-warn-user",
+        "contain": "routes.instructionSyncWarnUser"
       },
       {
         "selector": "strava-app-sync-button",

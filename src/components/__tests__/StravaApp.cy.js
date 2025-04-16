@@ -7,7 +7,26 @@ import stravaAppStateTestData from '../../../test/cypress/fixtures/stravaAppStat
 describe('<StravaApp>', () => {
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
-      ['labelLastSync', 'labelSyncAll', 'buttonLinkToApp', 'buttonDisconnect'],
+      [
+        'labelLastSync',
+        'labelSyncAll',
+        'buttonLinkToApp',
+        'buttonDisconnect',
+        'buttonSync',
+        'labelSyncError',
+        'statusSyncErrorWithMessage',
+        'statusConnectedUser',
+        'statusSyncSuccess',
+        'statusSyncedTrips',
+        'instructionStravaHowItWorks',
+        'instructionSyncTripsFromStrava',
+        'instructionSyncReadAllSettings',
+        'instructionSyncWarnUser',
+        'instructionStravaNotConnected',
+        'titleStravaHowItWorks',
+        'titleStravaNotConnected',
+        'titleUserActivities',
+      ],
       'routes',
       i18n,
     );
@@ -26,6 +45,9 @@ describe('<StravaApp>', () => {
 
   context('mobile', () => {
     stravaAppStateTestData.forEach((testData) => {
+      // if (testData.description !== 'User is connected to Strava no trips but some activities') {
+      //   return;
+      // }
       it(testData.description, () => {
         setActivePinia(createPinia());
         cy.viewport('iphone-6');

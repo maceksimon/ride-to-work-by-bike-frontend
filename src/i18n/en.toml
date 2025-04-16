@@ -1012,6 +1012,7 @@ instructionSyncWarnUser = "Having trouble with synchronization? If you need help
 instructionStravaNotConnected = "We recommend either marking rides as private or <a href='{url}' target='_blank'>using privacy zones</a> in Strava to prevent your home location from being published."
 titleStravaHowItWorks = "How it works"
 titleStravaNotConnected = "You are not yet connected to Strava."
+titleUserActivities = "We found the following activities"
 tabCalendar = "Calendar"
 tabList = "List"
 tabMap = "Map"
