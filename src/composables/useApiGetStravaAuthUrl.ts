@@ -20,11 +20,11 @@ import type { Logger } from '../components/types/Logger';
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
-interface UseApiGetStravaAuthUrlReturn {
+type UseApiGetStravaAuthUrlReturn = {
   authUrl: Ref<string | null>;
   isLoading: Ref<boolean>;
   getAuthUrl: (scope: StravaScope) => Promise<string | null>;
-}
+};
 
 /**
  * Get Strava auth URL composable
