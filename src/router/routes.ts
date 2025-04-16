@@ -151,17 +151,6 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
-  {
-    path: routesConf['routes_connect_apps']['path'],
-    component: () => import('layouts/MainLayout.vue'),
-    children: [
-      {
-        path: '',
-        name: routesConf['routes_connect_apps']['children']['name'],
-        component: () => import('pages/RoutesConnectAppsPage.vue'),
-      },
-    ],
-  },
   // register
   {
     path: routesConf['register']['path'],

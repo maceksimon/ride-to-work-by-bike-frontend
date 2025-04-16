@@ -15,8 +15,9 @@
  */
 
 // libraries
-import { computed, defineComponent, onMounted } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { storeToRefs } from 'pinia';
+import { useRoute } from 'vue-router';
 
 // components
 import BannerRoutesApp from './BannerRoutesApp.vue';
@@ -25,10 +26,13 @@ import StravaApp from './StravaApp.vue';
 
 // composables
 import { i18n } from '../../boot/i18n';
-import { useTripsStore } from '../../stores/trips';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
+// stores
+import { useStravaStore } from 'src/stores/strava';
+import { useTripsStore } from '../../stores/trips';
 
 // types
 import type { BannerRoutesAppType } from '../types/Banner';
@@ -44,8 +48,11 @@ export default defineComponent({
     const enabledAppsForManualLogging = false;
     const urlAppStore = rideToWorkByBikeConfig.urlAppStore;
     const urlGooglePlay = rideToWorkByBikeConfig.urlGooglePlay;
-
+    const route = useRoute();
+    const stravaStore = useStravaStore();
     const tripsStore = useTripsStore();
+    const isLoadingAuthStrava = ref<boolean>(false);
+
     const {
       getUrlAppCyclers,
       getUrlAppNaKolePrahou,
@@ -53,6 +60,13 @@ export default defineComponent({
     } = storeToRefs(tripsStore);
 
     onMounted(async () => {
+      const code = route.query.code as string;
+      if (code) {
+        isLoadingAuthStrava.value = true;
+        await stravaStore.authAccount(code);
+        isLoadingAuthStrava.value = false;
+      }
+
       // load app URLs if not already loaded
       if (!getUrlAppCyclers.value && !getUrlAppNaKolePrahou.value) {
         await tripsStore.loadOpenAppWithRestToken();
@@ -98,6 +112,7 @@ export default defineComponent({
       apps,
       enabledAppsForManualLogging,
       isLoading: getIsLoadingOpenAppWithRestToken,
+      isLoadingAuthStrava,
       urlAppStore,
       urlGooglePlay,
     };
@@ -164,5 +179,11 @@ export default defineComponent({
         </a>
       </div>
     </section>
+    <q-inner-loading
+      :showing="isLoadingAuthStrava"
+      color="primary"
+      data-cy="spinner-auth-strava"
+      :label="$t('routes.titleRoutesConnectApps')"
+    />
   </div>
 </template>

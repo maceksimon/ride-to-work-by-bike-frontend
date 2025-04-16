@@ -107,21 +107,18 @@ describe('Strava Integration', () => {
             'apiGetStravaAuthCreated.json',
             validCode,
           );
-          // visit connect-apps page with valid code
+          // visit routes_app page with valid code
           cy.visit(
-            `#${routesConf['routes_connect_apps']['children']['fullPath']}?code=${validCode}`,
+            `#${routesConf['routes_app']['children']['fullPath']}?code=${validCode}`,
           );
           // verify loading state
-          cy.dataCy('spinner-routes-connect-apps-page').should('be.visible');
-          // await GET request
+          cy.dataCy('spinner-auth-strava')
+            .should('be.visible')
+            .and('contain', i18n.global.t('routes.titleRoutesConnectApps'));
+          // wait for GET request
           cy.wait('@getStravaAuthWithParam');
           // verify success notification
           cy.contains(i18n.global.t('authStravaAccount.apiMessageSuccess'));
-          // verify successful redirect
-          cy.url().should(
-            'include',
-            routesConf['routes_app']['children']['fullPath'],
-          );
           // check component is visible
           cy.dataCy('strava-app').should('be.visible');
           // open expansion item
@@ -156,19 +153,16 @@ describe('Strava Integration', () => {
           );
           // visit connect-apps page with valid code
           cy.visit(
-            `#${routesConf['routes_connect_apps']['children']['fullPath']}?code=${validCode}`,
+            `#${routesConf['routes_app']['children']['fullPath']}?code=${validCode}`,
           );
           // verify loading state
-          cy.dataCy('spinner-routes-connect-apps-page').should('be.visible');
+          cy.dataCy('spinner-auth-strava')
+            .should('be.visible')
+            .and('contain', i18n.global.t('routes.titleRoutesConnectApps'));
           // await GET request
           cy.wait('@getStravaAuthWithParam');
           // verify success notification
           cy.contains(i18n.global.t('authStravaAccount.apiMessageSuccess'));
-          // verify successful redirect
-          cy.url().should(
-            'include',
-            routesConf['routes_app']['children']['fullPath'],
-          );
           // check component is visible
           cy.dataCy('strava-app').should('be.visible');
           // open expansion item
@@ -203,42 +197,19 @@ describe('Strava Integration', () => {
           );
           // visit connect-apps page with invalid code
           cy.visit(
-            `#${routesConf['routes_connect_apps']['children']['fullPath']}?code=${invalidCode}`,
+            `#${routesConf['routes_app']['children']['fullPath']}?code=${invalidCode}`,
           );
           // verify loading state
-          cy.dataCy('spinner-routes-connect-apps-page').should('be.visible');
+          cy.dataCy('spinner-auth-strava')
+            .should('be.visible')
+            .and('contain', i18n.global.t('routes.titleRoutesConnectApps'));
           // await GET request
           cy.wait('@getStravaAuthWithParam');
           // verify error notification
           cy.contains(
             i18n.global.t('authStravaAccount.apiMessageErrorWithMessage'),
           );
-          // verify redirect to app page
-          cy.url().should(
-            'include',
-            routesConf['routes_app']['children']['fullPath'],
-          );
         });
-      });
-    });
-  });
-
-  describe('Error during auth to Strava account - missing code', () => {
-    it('should handle missing auth code', () => {
-      cy.get('@i18n').then((i18n) => {
-        // visit connect-apps page without code
-        cy.visit(
-          `#${routesConf['routes_connect_apps']['children']['fullPath']}`,
-        );
-        // verify error notification
-        cy.contains(i18n.global.t('routes.messageStravaNoAuthCode')).should(
-          'be.visible',
-        );
-        // verify redirect to app page
-        cy.url().should(
-          'include',
-          routesConf['routes_app']['children']['fullPath'],
-        );
       });
     });
   });
