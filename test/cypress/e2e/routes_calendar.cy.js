@@ -223,7 +223,7 @@ describe('Routes calendar page', () => {
           });
           cy.contains(
             i18n.global.t('routes.messageFileTooLarge', {
-              size: `${config.tripMaxFileUploadSizeMegabytes}MB`,
+              size: `${config.tripMaxFileUploadSizeMegabytes} MB`,
             }),
           ).should('be.visible');
           // test valid file
