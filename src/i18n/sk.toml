@@ -151,8 +151,13 @@ apiMessageSuccess = "Registrácie boli úspešne načítané."
 
 [getStravaAccount]
 apiMessageError = "Nepodarilo sa načítať profil Strava."
-apiMessageErrorWithMessage = "Failed to load Strava profile. Error: {error}"
+apiMessageErrorWithMessage = "Nepodarilo sa načítať profil Strava. Chyba: {error}"
 apiMessageSuccess = "Profil Strava bol úspešne načítaný."
+
+[getStravaAccountSync]
+apiMessageError = "Nepodarilo sa synchronizovať profil s aplikáciou Strava."
+apiMessageErrorWithMessage = "Nepodarilo sa synchronizovať profil s aplikáciou Strava. Chyba: {error}"
+apiMessageSuccess = "Profil aplikácie Strava bol úspešne synchronizovaný."
 
 [getStravaAuthUrl]
 apiMessageError = "Nepodarilo sa načítať prihlasovaciu adresu URL aplikácie Strava."

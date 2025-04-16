@@ -154,6 +154,11 @@ apiMessageError = "Nepodařilo se načíst profil aplikace Strava."
 apiMessageErrorWithMessage = "Nepodařilo se načíst profil aplikace Strava. Chyba: {error}"
 apiMessageSuccess = "Profil aplikace Strava byl úspěšně načten."
 
+[getStravaAccountSync]
+apiMessageError = "Nepodařilo se synchronizovat profil s aplikací Strava."
+apiMessageErrorWithMessage = "Nepodařilo se synchronizovat profil s aplikací Strava. Chyba: {error}"
+apiMessageSuccess = "Profil aplikace Strava byl úspěšně synchronizován."
+
 [getStravaAuthUrl]
 apiMessageError = "Nepodařilo se načíst přihlašovací URL pro aplikaci Strava."
 apiMessageErrorWithMessage = "Nepodařilo se načíst přihlašovací URL pro aplikaci Strava. Chyba: {error}"

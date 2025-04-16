@@ -154,6 +154,11 @@ apiMessageError = "Failed to load Strava profile."
 apiMessageErrorWithMessage = "Failed to load Strava profile. Error: {error}"
 apiMessageSuccess = "The Strava profile has been successfully loaded."
 
+[getStravaAccountSync]
+apiMessageError = "Failed to synchronize profile with Strava application."
+apiMessageErrorWithMessage = "Failed to synchronize profile with Strava application. Error: {error}"
+apiMessageSuccess = "Strava application profile was successfully synchronized."
+
 [getStravaAuthUrl]
 apiMessageError = "Failed to retrieve the login URL for the Strava app."
 apiMessageErrorWithMessage = "Failed to retrieve the login URL for the Strava app. Error: {error}"

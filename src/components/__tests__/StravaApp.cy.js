@@ -30,24 +30,35 @@ describe('<StravaApp>', () => {
       'routes',
       i18n,
     );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'getStravaAccount',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'getStravaAccountSync',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'getStravaAuthUrl',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'authStravaAccount',
+      i18n,
+    );
+    cy.testLanguageStringsInContext(
+      ['apiMessageError', 'apiMessageErrorWithMessage', 'apiMessageSuccess'],
+      'disconnectStravaAccount',
+      i18n,
+    );
   });
-
-  // context('desktop', () => {
-  //   beforeEach(() => {
-  //     cy.mount(StravaApp, {
-  //       props: {},
-  //     });
-  //     cy.viewport('macbook-16');
-  //   });
-
-  //   coreTests();
-  // });
 
   context('mobile', () => {
     stravaAppStateTestData.forEach((testData) => {
-      // if (testData.description !== 'User is connected to Strava no trips but some activities') {
-      //   return;
-      // }
       it(testData.description, () => {
         setActivePinia(createPinia());
         cy.viewport('iphone-6');

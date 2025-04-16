@@ -55,7 +55,7 @@ export const useApiGetStravaAccountSync = (
       endpoint: rideToWorkByBikeConfig.urlApiStravaGetAccountSync,
       method: 'get',
       translationKey: 'getStravaAccountSync',
-      showSuccessMessage: false,
+      showSuccessMessage: true,
       headers: Object.assign(requestDefaultHeader(), requestTokenHeader_),
       logger,
     });

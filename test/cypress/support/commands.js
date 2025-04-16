@@ -3645,6 +3645,31 @@ Cypress.Commands.add('interceptGetStravaAccount', (config, i18n, fixture) => {
 });
 
 /**
+ * Intercept GET request to Strava SYNC account endpoint
+ * @param {Object} config - App global config
+ * @param {Object} i18n - i18n instance
+ * @param {String} fixture - Fixture name
+ */
+Cypress.Commands.add(
+  'interceptGetStravaSyncAccount',
+  (config, i18n, fixture) => {
+    const { apiBase, apiDefaultLang, urlApiStravaGetAccountSync } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      i18n,
+    );
+    const urlApiStravaSyncLocalized = `${apiBaseUrl}${urlApiStravaGetAccountSync}`;
+
+    cy.intercept('GET', urlApiStravaSyncLocalized, {
+      fixture,
+      delay: interceptedRequestResponseDelay,
+    }).as('getStravaSyncAccount');
+  },
+);
+
+/**
  * Intercept GET request to Strava disconnect endpoint
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance

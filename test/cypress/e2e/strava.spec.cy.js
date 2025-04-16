@@ -40,6 +40,12 @@ describe('Strava Integration', () => {
             'apiGetStravaConnectExists.json',
             StravaScope.read,
           );
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
           // shows connect button
           cy.dataCy('strava-app-connect-button').should('be.visible').click();
           // wait for GET request
@@ -71,6 +77,12 @@ describe('Strava Integration', () => {
             'apiGetStravaConnectExists.json',
             StravaScope.readAll,
           );
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
           // shows toggle button for scope
           cy.dataCy('strava-app-sync-all-toggle').should('be.visible').check();
           // shows connect button
@@ -226,6 +238,12 @@ describe('Strava Integration', () => {
             'apiGetStravaDeleteAccountSuccess.json',
           );
           cy.wait('@getStravaAccount');
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
           // click disconnect button
           cy.dataCy('strava-app-disconnect-button')
             .should('be.visible')
@@ -249,6 +267,12 @@ describe('Strava Integration', () => {
             i18n,
             'apiGetStravaDeleteAccountError.json',
           );
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
           // click disconnect button
           cy.dataCy('strava-app-disconnect-button')
             .should('be.visible')
@@ -259,6 +283,120 @@ describe('Strava Integration', () => {
           cy.contains(
             i18n.global.t('disconnectStravaAccount.apiMessageError'),
           ).should('be.visible');
+        });
+      });
+    });
+  });
+
+  describe('Manually sync activities from Strava account', () => {
+    beforeEach(() => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // intercept GET request for account
+          cy.interceptGetStravaAccount(
+            config,
+            i18n,
+            'apiGetStravaAccountExists.json',
+          );
+        });
+      });
+    });
+
+    it('should successfully sync activities from Strava account', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // intercept GET request for sync account
+          cy.interceptGetStravaSyncAccount(
+            config,
+            i18n,
+            'apiGetStravaAccountHasSyncedItems.json',
+          );
+          // visit app page
+          cy.visit(`#${routesConf['routes_app']['children']['fullPath']}`);
+          // wait for GET request
+          cy.wait('@getStravaAccount');
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
+          // click sync button
+          cy.dataCy('strava-app-sync-button').should('be.visible').click();
+          // wait for sync request
+          cy.wait('@getStravaSyncAccount');
+          cy.get('@getStravaSyncAccount.all').should('have.length', 1);
+          // verify success notification
+          cy.contains(i18n.global.t('getStravaAccountSync.apiMessageSuccess'));
+          // verify UI sync message
+          cy.fixture('apiGetStravaAccountHasSyncedItems.json').then(
+            (response) => {
+              cy.dataCy('strava-app-status-sync-success')
+                .should('be.visible')
+                .and('contain', i18n.global.t('routes.statusSyncSuccess'));
+              cy.dataCy('strava-app-status-synced-trips')
+                .should('be.visible')
+                .and(
+                  'contain',
+                  i18n.global.t('routes.statusSyncedTrips', {
+                    syncedTrips:
+                      response.results[0].sync_outcome.result.synced_trips,
+                    newTrips: response.results[0].sync_outcome.result.new_trips,
+                  }),
+                );
+              cy.dataCy('strava-app-user-activities-title')
+                .should('be.visible')
+                .and('contain', i18n.global.t('routes.titleUserActivities'));
+              response.results[0].sync_outcome.result.activities.forEach(
+                (activity) => {
+                  cy.dataCy('strava-app-user-activities-list')
+                    .should('be.visible')
+                    .and('contain', activity);
+                },
+              );
+            },
+          );
+        });
+      });
+    });
+
+    it('displays warning when number of sync attempts is high', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // intercept GET request for sync account
+          cy.interceptGetStravaSyncAccount(
+            config,
+            i18n,
+            'apiGetStravaAccountHasSyncCountWarning.json',
+          );
+          // visit app page
+          cy.visit(`#${routesConf['routes_app']['children']['fullPath']}`);
+          // wait for GET request
+          cy.wait('@getStravaAccount');
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
+          // click sync button
+          cy.dataCy('strava-app-sync-button').should('be.visible').click();
+          // wait for sync request
+          cy.wait('@getStravaSyncAccount');
+          cy.get('@getStravaSyncAccount.all').should('have.length', 1);
+          // verify success notification
+          cy.contains(i18n.global.t('getStravaAccountSync.apiMessageSuccess'));
+          // verify UI warning
+          cy.dataCy('strava-app-instruction-sync-warn-user')
+            .should('be.visible')
+            .then(($el) => {
+              const content = $el.text();
+              cy.stripHtmlTags(
+                i18n.global.t('routes.instructionSyncWarnUser'),
+              ).then((text) => {
+                expect(content).to.contain(text);
+              });
+            });
         });
       });
     });

@@ -17,8 +17,8 @@
         "result": {
           "synced_trips": 1,
           "new_trips": 1,
-          "synced_activities": 1,
-          "activities": ["Evening ride"],
+          "synced_activities": 2,
+          "activities": ["Evening ride", "Morning ride"],
           "error": null
         }
       },
