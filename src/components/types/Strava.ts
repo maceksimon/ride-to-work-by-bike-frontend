@@ -1,3 +1,5 @@
+import { StravaAccountStatus } from '../enums/Strava';
+
 export interface SyncResult {
   synced_trips?: number;
   new_trips?: number;
@@ -21,3 +23,16 @@ export interface StravaAccount {
   } | null;
   last_sync_time: string | null;
 }
+
+export interface StravaAuthSuccessResponse {
+  account_status: StravaAccountStatus;
+  account: StravaAccount[];
+}
+
+export interface StravaAuthErrorResponse {
+  error: string;
+}
+
+export type StravaAuthResponse =
+  | StravaAuthSuccessResponse
+  | StravaAuthErrorResponse;

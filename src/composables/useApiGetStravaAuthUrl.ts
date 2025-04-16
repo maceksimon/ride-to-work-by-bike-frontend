@@ -8,7 +8,7 @@ import { useApi } from './useApi';
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
 // enums
-import { StravaScope } from '../components/enums/StravaScope';
+import { StravaScope } from '../components/enums/Strava';
 
 // stores
 import { useLoginStore } from '../stores/login';
@@ -20,11 +20,11 @@ import type { Logger } from '../components/types/Logger';
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
-type UseApiGetStravaAuthUrlReturn = {
+interface UseApiGetStravaAuthUrlReturn {
   authUrl: Ref<string | null>;
   isLoading: Ref<boolean>;
   getAuthUrl: (scope: StravaScope) => Promise<string | null>;
-};
+}
 
 /**
  * Get Strava auth URL composable

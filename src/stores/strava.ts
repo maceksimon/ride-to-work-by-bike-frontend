@@ -9,7 +9,7 @@ import { useApiGetStravaAuthUrl } from '../composables/useApiGetStravaAuthUrl';
 import { useApiGetStravaAccountSync } from '../composables/useApiGetStravaAccountSync';
 
 // enums
-import { StravaScope } from '../components/enums/StravaScope';
+import { StravaScope } from '../components/enums/Strava';
 
 // types
 import type { Logger } from '../components/types/Logger';

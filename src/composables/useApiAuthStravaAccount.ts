@@ -9,31 +9,26 @@ import { useApi } from './useApi';
 // config
 import { rideToWorkByBikeConfig } from '../boot/global_vars';
 
+// enums
+import { StravaAccountStatus } from '../components/enums/Strava';
+
 // stores
 import { useLoginStore } from '../stores/login';
 
 // types
 import type { Ref } from 'vue';
 import type { Logger } from '../components/types/Logger';
-import type { StravaAccount } from '../components/types/Strava';
+import type {
+  StravaAccount,
+  StravaAuthResponse,
+} from '../components/types/Strava';
 
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
-type StravaAuthSuccessResponse = {
-  account_status: 'created' | 'updated';
-  account: StravaAccount[];
-};
-
-type StravaAuthErrorResponse = {
-  error: string;
-};
-
-type StravaAuthResponse = StravaAuthSuccessResponse | StravaAuthErrorResponse;
-
 type UseApiAuthStravaAccountReturn = {
   account: Ref<StravaAccount | null>;
-  accountStatus: Ref<'created' | 'updated' | null>;
+  accountStatus: Ref<StravaAccountStatus | null>;
   isLoading: Ref<boolean>;
   authAccount: (code: string) => Promise<void>;
 };
@@ -48,7 +43,7 @@ export const useApiAuthStravaAccount = (
   logger: Logger | null,
 ): UseApiAuthStravaAccountReturn => {
   const account = ref<StravaAccount | null>(null);
-  const accountStatus = ref<'created' | 'updated' | null>(null);
+  const accountStatus = ref<StravaAccountStatus | null>(null);
   const isLoading = ref<boolean>(false);
   const loginStore = useLoginStore();
   const { apiFetch } = useApi();

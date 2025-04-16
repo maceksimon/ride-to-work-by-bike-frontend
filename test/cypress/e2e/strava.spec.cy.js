@@ -1,6 +1,6 @@
 // libraries
 import { routesConf } from '../../../src/router/routes_conf';
-import { StravaScope } from 'src/components/enums/StravaScope';
+import { StravaScope } from 'src/components/enums/Strava';
 
 const validCode = 'example_valid_code';
 const invalidCode = 'example_invalid_code';

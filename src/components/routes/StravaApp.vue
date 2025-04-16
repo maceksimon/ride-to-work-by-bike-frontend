@@ -21,7 +21,7 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 import { useStravaStore } from '../../stores/strava';
 
 // enums
-import { StravaScope } from '../enums/StravaScope';
+import { StravaScope } from '../enums/Strava';
 
 export default defineComponent({
   name: 'StravaApp',
