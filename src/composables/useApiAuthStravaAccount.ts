@@ -22,7 +22,7 @@ import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
 type StravaAuthSuccessResponse = {
   account_status: 'created' | 'updated';
-  account: StravaAccount;
+  account: StravaAccount[];
 };
 
 type StravaAuthErrorResponse = {
@@ -88,7 +88,7 @@ export const useApiAuthStravaAccount = (
     // handle success response
     else if (data && 'account_status' in data && 'account' in data) {
       accountStatus.value = data.account_status;
-      account.value = data.account;
+      account.value = data.account[0];
     }
 
     isLoading.value = false;

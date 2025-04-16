@@ -122,6 +122,22 @@ describe('Strava Integration', () => {
             'include',
             routesConf['routes_app']['children']['fullPath'],
           );
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
+          cy.fixture('apiGetStravaAuthCreated.json').then((response) => {
+            // verify UI info
+            cy.dataCy('strava-app-connected-user')
+              .should('be.visible')
+              .and('contain', response.account[0].strava_username)
+              .and(
+                'contain',
+                `${response.account[0].first_name} ${response.account[0].last_name}`,
+              );
+          });
         });
       });
     });
@@ -153,6 +169,22 @@ describe('Strava Integration', () => {
             'include',
             routesConf['routes_app']['children']['fullPath'],
           );
+          // check component is visible
+          cy.dataCy('strava-app').should('be.visible');
+          // open expansion item
+          cy.dataCy('strava-app-expansion-item-header')
+            .should('be.visible')
+            .click();
+          cy.fixture('apiGetStravaAuthUpdated.json').then((response) => {
+            // verify UI info
+            cy.dataCy('strava-app-connected-user')
+              .should('be.visible')
+              .and('contain', response.account[0].strava_username)
+              .and(
+                'contain',
+                `${response.account[0].first_name} ${response.account[0].last_name}`,
+              );
+          });
         });
       });
     });
