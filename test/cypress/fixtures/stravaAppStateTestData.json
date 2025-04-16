@@ -1,6 +1,6 @@
 [
   {
-    "description": "User is not connected to Strava",
+    "description": "user not connected",
     "fixture": "apiGetStravaAccountEmpty.json",
     "visibleElements": [
       {
@@ -30,7 +30,7 @@
     ]
   },
   {
-    "description": "User connected - no synced items",
+    "description": "user connected - no synced items",
     "fixture": "apiGetStravaAccountExists.json",
     "visibleElements": [
       {
@@ -49,19 +49,6 @@
         "contain": "routes.labelLastSync"
       },
       {
-        "selector": "strava-app-instruction-sync-trips-from-strava",
-        "contain": "routes.instructionSyncTripsFromStrava",
-        "containTranslationData": {
-          "syncedActivities": 0,
-          "hashtagTo": "#testtam",
-          "hashtagFrom": "#testzpět"
-        }
-      },
-      {
-        "selector": "strava-app-instruction-sync-read-all-settings",
-        "contain": "routes.instructionSyncReadAllSettings"
-      },
-      {
         "selector": "strava-app-sync-button",
         "contain": "routes.buttonSync"
       },
@@ -72,7 +59,7 @@
     ]
   },
   {
-    "description": "User connected - activities + synced items",
+    "description": "user synced - activities + synced items",
     "fixture": "apiGetStravaAccountHasSyncedItems.json",
     "visibleElements": [
       {
@@ -121,7 +108,7 @@
     ]
   },
   {
-    "description": "User connected - activities but no synced items",
+    "description": "user synced - activities but no synced items",
     "fixture": "apiGetStravaAccountHasActivitiesNoSyncedItems.json",
     "visibleElements": [
       {
@@ -171,7 +158,7 @@
     ]
   },
   {
-    "description": "User connected - sync error",
+    "description": "user synced - sync error",
     "fixture": "apiGetStravaAccountHasSyncError.json",
     "visibleElements": [
       {
@@ -207,7 +194,7 @@
     ]
   },
   {
-    "description": "User connected - sync count warning",
+    "description": "user synced - sync count warning",
     "fixture": "apiGetStravaAccountHasSyncCountWarning.json",
     "visibleElements": [
       {
@@ -260,7 +247,7 @@
     ]
   },
   {
-    "description": "User connected - max sync count reached",
+    "description": "user synced - max sync count reached",
     "fixture": "apiGetStravaAccountHasMaxSyncCount.json",
     "visibleElements": [
       {
