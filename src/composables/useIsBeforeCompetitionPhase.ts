@@ -19,6 +19,7 @@ export function useIsBeforeCompetitionPhase(): {
   isBeforeCompetitionStart: Ref<boolean>;
   competitionStart: Ref<string>;
 } {
+  const checkInterval = 5000;
   const challengeStore = useChallengeStore();
   const currentTime = ref<Date>(new Date());
   const isBeforeCompetitionStart = ref<boolean>(false);
@@ -46,7 +47,7 @@ export function useIsBeforeCompetitionPhase(): {
   // run immediately to set initial state
   updateTimeCheck();
   // set up interval
-  timeInterval.value = setInterval(updateTimeCheck, 5000);
+  timeInterval.value = setInterval(updateTimeCheck, checkInterval);
   onBeforeUnmount(() => {
     clearInterval(timeInterval.value);
   });
