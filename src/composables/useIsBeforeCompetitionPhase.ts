@@ -8,6 +8,13 @@ import { useChallengeStore } from 'src/stores/challenge';
 // types
 import type { Ref } from 'vue';
 
+/**
+ * Computes inputs for CountdownEvent component
+ * @returns {
+ *  isBeforeCompetitionStart: Ref<boolean> - True if before competition starts
+ *  competitionStart: Ref<string> - The competition start date string
+ * }
+ */
 export function useIsBeforeCompetitionPhase(): {
   isBeforeCompetitionStart: Ref<boolean>;
   competitionStart: Ref<string>;
