@@ -322,7 +322,7 @@ Cypress.Commands.add('testSoacialMediaUrlRequest', (rideToWorkByBikeConfig) => {
 
 /**
  * Test payment total price with donation
- * @param {object} i18n - i18n instance
+ * @param {Object} i18n - i18n instance
  * @param {number} defaultPaymentAmountMin - Default payment amount min
  * @param {number} testAmountValue - Alternative payment amount value
  */
@@ -417,11 +417,11 @@ Cypress.Commands.add('waitForCitiesApi', () => {
 /**
  * Intercept teams GET API calls
  * Provides `@getTeams` and `@getTeamsNextPage` aliases
- * @param {object} config - App global config
- * @param {object|string} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} config - App global config
+ * @param {Object|string} i18n - i18n instance or locale lang string e.g. en
  * @param {number} subsidiaryId - Subsidiary ID
- * @param {object} teamsResponse - Optional override for teams response data
- * @param {object} teamsResponseNext - Optional override for teams next page response data
+ * @param {Object} teamsResponse - Optional override for teams response data
+ * @param {Object} teamsResponseNext - Optional override for teams next page response data
  */
 Cypress.Commands.add(
   'interceptTeamsGetApi',
@@ -458,7 +458,7 @@ Cypress.Commands.add(
  * Provides `@getSubsidiaries` and `@getSubsidiariesNextPage` aliases
  * @param {Object} config - App global config
  * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
- * @param {Number} organizationId - Organization ID
+ * @param {number} organizationId - Organization ID
  */
 Cypress.Commands.add(
   'interceptSubsidiariesGetApi',
@@ -3309,10 +3309,10 @@ Cypress.Commands.add('testApproveMaxTeamMembers', () => {
 /**
  * Intercept trips GET API calls
  * Provides `@getTrips` and `@getTripsNextPage` aliases
- * @param {object} config - App global config
- * @param {object|string} i18n - i18n instance or locale lang string e.g. en
- * @param {object} response - Override default response body
- * @param {object} responseNext - Override default response body for next page
+ * @param {Object} config - App global config
+ * @param {Object|string} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} response - Override default response body
+ * @param {Object} responseNext - Override default response body for next page
  * @param {number} responseStatusCode - Override default response HTTP status code
  */
 Cypress.Commands.add(
@@ -3363,7 +3363,7 @@ Cypress.Commands.add(
  * @param {Object} config - App global config
  * @param {Object|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
- * @param {Number} responseStatusCode - Override default response HTTP status code
+ * @param {number} responseStatusCode - Override default response HTTP status code
  */
 Cypress.Commands.add(
   'interceptCommuteModeGetApi',
@@ -3391,8 +3391,8 @@ Cypress.Commands.add(
 /**
  * Wait for intercept trips API calls and compare request/response object
  * Wait for `@getTrips` and `@getTripsNextPage` intercepts
- * @param {object} response - Override default response body
- * @param {object} responseNext - Override default response body for next page
+ * @param {Object} response - Override default response body
+ * @param {Object} responseNext - Override default response body for next page
  */
 Cypress.Commands.add(
   'waitForTripsApi',
@@ -3433,7 +3433,7 @@ Cypress.Commands.add(
 /**
  * Wait for intercept commute mode API call and compare request/response object
  * Wait for `@commuteModeRequest` intercept
- * @param {object} responseBody - Override default response body from fixture
+ * @param {Object} responseBody - Override default response body from fixture
  */
 Cypress.Commands.add('waitForCommuteModeApi', (responseBody = null) => {
   cy.fixture('apiGetCommuteMode').then((commuteModeResponse) => {
@@ -3480,7 +3480,7 @@ Cypress.Commands.add(
  * @param {Config} config - App global config
  * @param {I18n|String} i18n - i18n instance or locale lang string e.g. en
  * @param {Object} responseBody - Override default response body
- * @param {Number} responseStatusCode - Override default response HTTP status code
+ * @param {number} responseStatusCode - Override default response HTTP status code
  */
 Cypress.Commands.add(
   'interceptPostTripsApi',
@@ -3530,10 +3530,10 @@ Cypress.Commands.add(
 /**
  * Intercept open app with rest token GET API call
  * Provides `@openAppWithRestTokenRequest` alias
- * @param {object} config - App global config
- * @param {object|string} i18n - i18n instance or locale lang string e.g. en
+ * @param {Object} config - App global config
+ * @param {Object|string} i18n - i18n instance or locale lang string e.g. en
  * @param {string} appId - App ID to fetch data for
- * @param {object} responseBody - Override default response body
+ * @param {Object} responseBody - Override default response body
  * @param {number} responseStatusCode - Override default response HTTP status code
  */
 Cypress.Commands.add(
@@ -3581,7 +3581,7 @@ Cypress.Commands.add('waitForOpenAppWithRestTokenApi', (responseBody) => {
  * Intercept GET urlApiStravaConnectAccount
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
- * @param {String} fixture - Fixture name
+ * @param {string} fixture - Fixture name
  */
 Cypress.Commands.add(
   'interceptGetStravaConnectAccount',
@@ -3606,8 +3606,8 @@ Cypress.Commands.add(
  * Intercept GET request to Strava auth endpoint with code parameter
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
- * @param {String} fixture - Fixture name
- * @param {String} code - Code parameter value
+ * @param {string} fixture - Fixture name
+ * @param {string} code - Code parameter value
  */
 Cypress.Commands.add(
   'interceptGetStravaAuthWithParam',
@@ -3632,7 +3632,7 @@ Cypress.Commands.add(
  * Intercept GET request to Strava account endpoint
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
- * @param {String} fixture - Fixture name
+ * @param {string} fixture - Fixture name
  */
 Cypress.Commands.add('interceptGetStravaAccount', (config, i18n, fixture) => {
   const { apiBase, apiDefaultLang, urlApiStravaGetAccount } = config;
@@ -3648,7 +3648,7 @@ Cypress.Commands.add('interceptGetStravaAccount', (config, i18n, fixture) => {
  * Intercept GET request to Strava SYNC account endpoint
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
- * @param {String} fixture - Fixture name
+ * @param {string} fixture - Fixture name
  */
 Cypress.Commands.add(
   'interceptGetStravaSyncAccount',
@@ -3673,7 +3673,7 @@ Cypress.Commands.add(
  * Intercept GET request to Strava disconnect endpoint
  * @param {Object} config - App global config
  * @param {Object} i18n - i18n instance
- * @param {String} fixture - Fixture name
+ * @param {string} fixture - Fixture name
  */
 Cypress.Commands.add(
   'interceptGetStravaDisconnect',
