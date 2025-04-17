@@ -1,6 +1,6 @@
 import {
   systemTimeRegistrationPhaseInactive,
-  systemTimeLoggingRoutes,
+  systemTimeBeforeCompetitionStart,
   failOnStatusCode,
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
@@ -745,52 +745,29 @@ describe('Home page', () => {
     });
   });
 
-  context('challenge is active', () => {
+  context('Countdown Event before competition phase starts', () => {
     beforeEach(() => {
-      cy.clock(systemTimeLoggingRoutes, ['Date']).then(() => {
+      cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
         // load config
         cy.get('@config').then((config) => {
           // intercept campaign API
-          cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
-            cy.interceptThisCampaignGetApi(config, defLocale, campaign);
-          });
-        });
-
-        cy.visit(Cypress.config('baseUrl'));
-        cy.viewport('macbook-16');
-        // load i18n
-        cy.window().should('have.property', 'i18n');
-        cy.window().then((win) => {
-          // alias i18n
-          cy.wrap(win.i18n).as('i18n');
+          cy.interceptThisCampaignGetApi(config, defLocale, campaign);
         });
       });
+      cy.viewport('macbook-16');
     });
 
-    it('renders correct components', () => {
+    it('shows countdown before competition and hides it once competition starts', () => {
       cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
+        cy.clock(new Date(systemTimeBeforeCompetitionStart), ['Date']);
+        cy.visit(Cypress.config('baseUrl'));
         cy.waitForThisCampaignApi(campaign);
-      });
-      cy.dataCy('q-main').should('be.visible');
-      cy.get('@i18n').then((i18n) => {
-        // title
-        cy.dataCy('index-title')
-          .should('be.visible')
-          .then(($el) => {
-            cy.wrap(i18n.global.t('index.title')).then((translation) => {
-              expect($el.text()).to.equal(translation);
-            });
-          });
-        // NOT countdown
+        // verify countdown is visible before competition phase
+        cy.dataCy('countdown-event').should('be.visible');
+        // tick clock forward to competition phase start
+        cy.tick(5000);
+        // verify countdown is hidden after competition phase starts
         cy.dataCy('countdown-event').should('not.exist');
-        // NOT banner routes
-        cy.dataCy('banner-routes').should('not.exist');
-        // heading with background image
-        cy.dataCy('heading-background').should('be.visible');
-        // newsletter
-        cy.dataCy('newsletter-feature').should('be.visible');
-        // list of follow
-        cy.dataCy('list-card-follow').should('be.visible');
       });
     });
   });

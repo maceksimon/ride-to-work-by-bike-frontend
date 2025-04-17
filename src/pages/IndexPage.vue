@@ -138,7 +138,7 @@
 
 <script lang="ts">
 // libraries
-import { colors, date } from 'quasar';
+import { colors } from 'quasar';
 import { computed, defineComponent, inject, onMounted } from 'vue';
 
 // adapters
@@ -162,6 +162,9 @@ import PageHeading from 'src/components/global/PageHeading.vue';
 import SectionColumns from 'components/homepage/SectionColumns.vue';
 import SectionHeading from 'src/components/global/SectionHeading.vue';
 import SliderProgress from 'components/homepage/SliderProgress.vue';
+
+// composables
+import { useIsBeforeCompetitionPhase } from '../composables/useIsBeforeCompetitionPhase';
 
 // config
 import { routesConf } from '../router/routes_conf';
@@ -264,18 +267,8 @@ export default defineComponent({
       }
     });
 
-    const competitionStart = computed<string>(
-      (): string => challengeStore.getCompetitionStart,
-    );
-    // check if competition start is before current date
-    const isBeforeCompetitionStart = computed<boolean>((): boolean => {
-      if (!competitionStart.value || !date.isValid(competitionStart.value)) {
-        return false;
-      }
-      const competitionStartDate: Date = new Date(competitionStart.value);
-      const now: Date = new Date();
-      return now < competitionStartDate;
-    });
+    const { isBeforeCompetitionStart, competitionStart } =
+      useIsBeforeCompetitionPhase();
 
     // colors
     const { getPaletteColor, changeAlpha } = colors;
