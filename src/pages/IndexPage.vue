@@ -10,6 +10,7 @@
         </page-heading>
         <!-- Countdown: Event -->
         <countdown-event
+          v-if="isBeforeCompetitionStart"
           :release-date="competitionStart"
           class="q-mb-xl"
           data-cy="countdown-event"
@@ -137,7 +138,7 @@
 
 <script lang="ts">
 // libraries
-import { colors } from 'quasar';
+import { colors, date } from 'quasar';
 import { computed, defineComponent, inject, onMounted } from 'vue';
 
 // adapters
@@ -263,7 +264,18 @@ export default defineComponent({
       }
     });
 
-    const competitionStart = computed(() => challengeStore.getCompetitionStart);
+    const competitionStart = computed<string>(
+      (): string => challengeStore.getCompetitionStart,
+    );
+    // check if competition start is before current date
+    const isBeforeCompetitionStart = computed<boolean>((): boolean => {
+      if (!competitionStart.value || !date.isValid(competitionStart.value)) {
+        return false;
+      }
+      const competitionStartDate: Date = new Date(competitionStart.value);
+      const now: Date = new Date();
+      return now < competitionStartDate;
+    });
 
     // colors
     const { getPaletteColor, changeAlpha } = colors;
@@ -295,6 +307,7 @@ export default defineComponent({
       urlCommunity,
       urlResults,
       isLoadingPosts,
+      isBeforeCompetitionStart,
       isBannerRoutesEnabled,
       isBannerAppEnabled,
       isSectionChallengesEnabled,

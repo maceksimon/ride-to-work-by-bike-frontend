@@ -1,5 +1,6 @@
 import {
   systemTimeRegistrationPhaseInactive,
+  systemTimeLoggingRoutes,
   failOnStatusCode,
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
@@ -740,6 +741,56 @@ describe('Home page', () => {
           cy.dataCy('countdown-minutes').contains(minutes.toString());
           cy.dataCy('countdown-seconds').contains(seconds.toString());
         });
+      });
+    });
+  });
+
+  context('challenge is active', () => {
+    beforeEach(() => {
+      cy.clock(systemTimeLoggingRoutes, ['Date']).then(() => {
+        // load config
+        cy.get('@config').then((config) => {
+          // intercept campaign API
+          cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
+            cy.interceptThisCampaignGetApi(config, defLocale, campaign);
+          });
+        });
+
+        cy.visit(Cypress.config('baseUrl'));
+        cy.viewport('macbook-16');
+        // load i18n
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          // alias i18n
+          cy.wrap(win.i18n).as('i18n');
+        });
+      });
+    });
+
+    it('renders correct components', () => {
+      cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
+        cy.waitForThisCampaignApi(campaign);
+      });
+      cy.dataCy('q-main').should('be.visible');
+      cy.get('@i18n').then((i18n) => {
+        // title
+        cy.dataCy('index-title')
+          .should('be.visible')
+          .then(($el) => {
+            cy.wrap(i18n.global.t('index.title')).then((translation) => {
+              expect($el.text()).to.equal(translation);
+            });
+          });
+        // NOT countdown
+        cy.dataCy('countdown-event').should('not.exist');
+        // NOT banner routes
+        cy.dataCy('banner-routes').should('not.exist');
+        // heading with background image
+        cy.dataCy('heading-background').should('be.visible');
+        // newsletter
+        cy.dataCy('newsletter-feature').should('be.visible');
+        // list of follow
+        cy.dataCy('list-card-follow').should('be.visible');
       });
     });
   });
