@@ -69,6 +69,7 @@ export const useApiDisconnectStravaAccount = (
         type: 'positive',
         message: i18n.global.t('disconnectStravaAccount.apiMessageSuccess'),
       });
+      logger?.info('User strava account was deleted successfully.');
     } else if (data?.error) {
       success.value = false;
       Notify.create({
@@ -78,6 +79,9 @@ export const useApiDisconnectStravaAccount = (
           { error: data.error },
         ),
       });
+      logger?.debug(
+        `User strava account was deleted unsuccessfully <${data.error}>.`,
+      );
     }
 
     isLoading.value = false;

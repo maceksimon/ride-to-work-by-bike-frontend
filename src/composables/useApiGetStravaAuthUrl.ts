@@ -46,7 +46,9 @@ export const useApiGetStravaAuthUrl = (
    * @returns {Promise<string | null>} - Promise
    */
   const getAuthUrl = async (scope: StravaScope): Promise<string | null> => {
-    logger?.info(`Get Strava authorization URL from API. Scope <${scope}>.`);
+    logger?.debug(
+      `Get Strava authorization URL from API with scope <${scope}>.`,
+    );
     isLoading.value = true;
 
     // append access token into HTTP header

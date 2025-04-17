@@ -54,7 +54,7 @@ export const useApiAuthStravaAccount = (
    * @returns {Promise<void>} - Promise
    */
   const authAccount = async (code: string): Promise<void> => {
-    logger?.info('Authenticating Strava account with code.');
+    logger?.debug(`Authenticating Strava account with code <${code}>.`);
     isLoading.value = true;
 
     // append access token into HTTP header
