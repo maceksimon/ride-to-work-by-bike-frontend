@@ -260,6 +260,8 @@ describe('Login page', () => {
       cy.wait('@thisCampaignRequest');
       // wait for register-challenge
       cy.wait('@getRegisterChallenge');
+      // wait for is-user-organization-admin
+      cy.wait('@getIsUserOrganizationAdmin');
       // above requests run while still on login page
       cy.url().should('include', routesConf['login']['path']);
     });

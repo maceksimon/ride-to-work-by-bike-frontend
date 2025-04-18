@@ -147,8 +147,9 @@ export default defineComponent({
 
     onMounted(async () => {
       // check if user is organization admin
-      registerChallengeStore.checkIsUserOrganizationAdmin();
-
+      // if (registerChallengeStore.getIsUserOrganizationAdmin === null) {
+      //   await registerChallengeStore.checkIsUserOrganizationAdmin();
+      // }
       // make sure price level is loaded
       if (!challengeStore.getPriceLevel.length) {
         await challengeStore.loadPhaseSet();

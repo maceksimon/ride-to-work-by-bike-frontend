@@ -63,7 +63,9 @@ export default defineComponent({
     const registerChallengeStore = useRegisterChallengeStore();
 
     onMounted(async () => {
-      await registerChallengeStore.loadRegisterChallengeToStore();
+      if (!registerChallengeStore.getRegistrationId) {
+        await registerChallengeStore.loadRegisterChallengeToStore();
+      }
     });
 
     const getRegistrationId = computed((): number | null => {

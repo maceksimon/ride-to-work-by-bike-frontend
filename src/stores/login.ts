@@ -192,14 +192,6 @@ export const useLoginStore = defineStore('login', {
 
       await this.processLoginData(data);
 
-      // force load this_campaign
-      const challengeStore = useChallengeStore();
-      await challengeStore.loadPhaseSet();
-
-      // force load register-challenge
-      const registerChallengeStore = useRegisterChallengeStore();
-      await registerChallengeStore.loadRegisterChallengeToStore();
-
       if (data && loginOptions.redirectAfterLogin) {
         await this.redirectHomeAfterLogin();
       }
@@ -324,6 +316,12 @@ export const useLoginStore = defineStore('login', {
       this.$log?.debug(
         `Login was successfull, redirect to <${routesConf['home']['path']}> URL.`,
       );
+      /**
+       * Load register-challenge from the API, to prevent
+       * showing register challenge page.
+       */
+      this.$log?.info('Check the register challenge from the API.');
+      await registerChallengeStore.loadRegisterChallengeToStore();
       /**
        * Load user coordinator status from the API
        * to prevent sending user to the register challenge page
