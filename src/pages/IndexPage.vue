@@ -242,9 +242,9 @@ export default defineComponent({
         await challengeStore.loadPhaseSet();
       }
       // if the information is not set, check if user is coordinator
-      // if (registerChallengeStore.getIsUserOrganizationAdmin === null) {
-      //   await registerChallengeStore.checkIsUserOrganizationAdmin();
-      // }
+      if (registerChallengeStore.getIsUserOrganizationAdmin === null) {
+        await registerChallengeStore.checkIsUserOrganizationAdmin();
+      }
       // load my team data if not available
       if (!registerChallengeStore.getMyTeam) {
         logger?.info('My team data is not available, loading my team data.');
