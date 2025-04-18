@@ -192,6 +192,14 @@ export const useLoginStore = defineStore('login', {
 
       await this.processLoginData(data);
 
+      // force load this_campaign
+      const challengeStore = useChallengeStore();
+      await challengeStore.loadPhaseSet();
+
+      // force load register-challenge
+      const registerChallengeStore = useRegisterChallengeStore();
+      await registerChallengeStore.loadRegisterChallengeToStore();
+
       if (data && loginOptions.redirectAfterLogin) {
         await this.redirectHomeAfterLogin();
       }
@@ -353,6 +361,9 @@ export const useLoginStore = defineStore('login', {
       // clear registerChallenge store
       const registerChallengeStore = useRegisterChallengeStore();
       registerChallengeStore.resetPersistentProperties();
+      // clear challenge store
+      const challengeStore = useChallengeStore();
+      challengeStore.resetPersistentProperties();
       // clear feed store on logout
       const feedStore = useFeedStore();
       feedStore.clearStore();

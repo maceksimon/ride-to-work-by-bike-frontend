@@ -176,6 +176,12 @@ export const useChallengeStore = defineStore('challenge', {
         null
       );
     },
+    resetPersistentProperties(): void {
+      this.phaseSet = [];
+      this.daysActive = null;
+      this.maxTeamMembers = null;
+      this.priceLevel = [];
+    },
   },
 
   persist: {

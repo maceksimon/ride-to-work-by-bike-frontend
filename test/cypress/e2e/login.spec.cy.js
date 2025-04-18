@@ -10,6 +10,7 @@ import {
 } from '../support/commonTests';
 import { routesConf } from '../../../src/router/routes_conf';
 import { httpSuccessfullStatus } from '../support/commonTests';
+import { defLocale } from '../../../src/i18n/def_locale';
 
 const { hexToRgb } = colors;
 const selectorFormLoginEmail = 'form-login-email';
@@ -198,7 +199,31 @@ describe('Login page', () => {
         cy.window().then((win) => {
           // alias i18n
           cy.wrap(win.i18n).as('i18n');
+          // intercept login API call
           setupApiChallengeActive(config, win.i18n, true);
+          // intercept campaign get API call
+          cy.interceptThisCampaignGetApi(config, defLocale);
+          // intercept register-challenge get API call
+          cy.fixture('apiGetRegisterChallengeIndividualPaid.json').then(
+            (response) => {
+              cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+            },
+          );
+          cy.fixture('apiGetIsUserOrganizationAdminResponseTrue').then(
+            (responseIsUserOrganizationAdmin) => {
+              cy.interceptIsUserOrganizationAdminGetApi(
+                config,
+                defLocale,
+                responseIsUserOrganizationAdmin,
+              );
+            },
+          );
+          // intercept my team API
+          cy.fixture('apiGetMyTeamResponseUndecided.json').then(
+            (responseMyTeam) => {
+              cy.interceptMyTeamGetApi(config, defLocale, responseMyTeam);
+            },
+          );
         });
       });
     });
@@ -224,6 +249,19 @@ describe('Login page', () => {
       cy.dataCy('form-login-password').should('be.visible');
       cy.dataCy('form-login-forgotten-password').should('be.visible');
       cy.dataCy('form-login-submit-login').should('be.visible');
+    });
+
+    it('loads this_campaign and register-challenge after login', () => {
+      // fill in and submit form
+      cy.fillAndSubmitLoginForm();
+      // wait for login API call
+      cy.wait('@loginRequest');
+      // wait for this_campaign
+      cy.wait('@thisCampaignRequest');
+      // wait for register-challenge
+      cy.wait('@getRegisterChallenge');
+      // above requests run while still on login page
+      cy.url().should('include', routesConf['login']['path']);
     });
 
     it('allows user to login and refreshes token 1 min before expiration', () => {
