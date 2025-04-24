@@ -12,30 +12,30 @@ import type { Ref } from 'vue';
  * Computes competition phase states and dates
  * @returns {
  *  isBeforeCompetitionStart: Ref<boolean> - True if before competition starts
- *  isAfterCompetitionEnd: Ref<boolean> - True if after competition ends
+ *  isAfterEntryPhaseEnd: Ref<boolean> - True if after competition ends
  *  competitionStart: Ref<string> - The competition start date string
- *  competitionEnd: Ref<string> - The competition end date string
+ *  entryPhaseEnd: Ref<string> - The competition end date string
  * }
  */
 export function useCompetitionPhase(): {
   isBeforeCompetitionStart: Ref<boolean>;
-  isAfterCompetitionEnd: Ref<boolean>;
+  isAfterEntryPhaseEnd: Ref<boolean>;
   competitionStart: Ref<string>;
-  competitionEnd: Ref<string>;
+  entryPhaseEnd: Ref<string>;
 } {
   const checkInterval = 5000;
   const challengeStore = useChallengeStore();
   const currentTime = ref<Date>(new Date());
   const isBeforeCompetitionStart = ref<boolean>(false);
-  const isAfterCompetitionEnd = ref<boolean>(false);
+  const isAfterEntryPhaseEnd = ref<boolean>(false);
   const timeInterval = ref<NodeJS.Timeout>();
 
   const competitionStart = computed<string>(
     (): string => challengeStore.getCompetitionStart,
   );
 
-  const competitionEnd = computed<string>(
-    (): string => challengeStore.getCompetitionEnd,
+  const entryPhaseEnd = computed<string>(
+    (): string => challengeStore.getEntryPhaseEnd,
   );
 
   const updateTimeCheck = (): void => {
@@ -44,16 +44,16 @@ export function useCompetitionPhase(): {
     if (
       !competitionStart.value ||
       !date.isValid(competitionStart.value) ||
-      !competitionEnd.value ||
-      !date.isValid(competitionEnd.value)
+      !entryPhaseEnd.value ||
+      !date.isValid(entryPhaseEnd.value)
     ) {
       clearInterval(timeInterval.value);
       return;
     }
     const competitionStartDate = new Date(competitionStart.value);
-    const competitionEndDate = new Date(competitionEnd.value);
+    const competitionEndDate = new Date(entryPhaseEnd.value);
     isBeforeCompetitionStart.value = currentTime.value < competitionStartDate;
-    isAfterCompetitionEnd.value = currentTime.value > competitionEndDate;
+    isAfterEntryPhaseEnd.value = currentTime.value > competitionEndDate;
     // clear interval if we're past competition end
     if (currentTime.value >= competitionEndDate) {
       clearInterval(timeInterval.value);
@@ -70,8 +70,8 @@ export function useCompetitionPhase(): {
 
   return {
     isBeforeCompetitionStart,
-    isAfterCompetitionEnd,
+    isAfterEntryPhaseEnd,
     competitionStart,
-    competitionEnd,
+    entryPhaseEnd,
   };
 }

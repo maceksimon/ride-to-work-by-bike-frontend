@@ -22,9 +22,9 @@
           v-if="
             isBannerRoutesEnabled &&
             !isBeforeCompetitionStart &&
-            !isAfterCompetitionEnd
+            !isAfterEntryPhaseEnd
           "
-          :date-end="competitionEnd"
+          :date-end="entryPhaseEnd"
           class="q-my-xl"
           data-cy="banner-routes"
         />
@@ -268,9 +268,9 @@ export default defineComponent({
 
     const {
       competitionStart,
-      competitionEnd,
+      entryPhaseEnd,
       isBeforeCompetitionStart,
-      isAfterCompetitionEnd,
+      isAfterEntryPhaseEnd,
     } = useCompetitionPhase();
 
     // colors
@@ -299,12 +299,12 @@ export default defineComponent({
       headingBgTitle: homepage.headingBgTitle,
       primaryOpacity,
       competitionStart,
-      competitionEnd,
+      entryPhaseEnd,
       urlCommunity,
       urlResults,
       isLoadingPosts,
       isBeforeCompetitionStart,
-      isAfterCompetitionEnd,
+      isAfterEntryPhaseEnd,
       isBannerRoutesEnabled,
       isBannerAppEnabled,
       isSectionChallengesEnabled,

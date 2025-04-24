@@ -1,7 +1,7 @@
 import {
   systemTimeRegistrationPhaseInactive,
   systemTimeBeforeCompetitionStart,
-  systemTimeBeforeCompetitionEnd,
+  systemTimeBeforeEntryPhaseEnd,
   failOnStatusCode,
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
@@ -887,7 +887,7 @@ describe('Home page', () => {
 
     it('shows Banner Routes during competition and hides it once competition ends', () => {
       cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
-        cy.clock(new Date(systemTimeBeforeCompetitionEnd), ['Date']);
+        cy.clock(new Date(systemTimeBeforeEntryPhaseEnd), ['Date']);
         cy.visit(Cypress.config('baseUrl'));
         cy.waitForThisCampaignApi(campaign);
         // verify banner is visible before competition phase ends
@@ -905,7 +905,7 @@ describe('Home page', () => {
         cy.interceptTripsGetApi(config, defLocale);
       });
       cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
-        cy.clock(new Date(systemTimeBeforeCompetitionEnd), ['Date']);
+        cy.clock(new Date(systemTimeBeforeEntryPhaseEnd), ['Date']);
         cy.visit(Cypress.config('baseUrl'));
         cy.waitForThisCampaignApi(campaign);
         // verify banner is visible
