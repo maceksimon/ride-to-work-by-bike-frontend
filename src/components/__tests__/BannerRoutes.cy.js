@@ -3,6 +3,7 @@ import BannerRoutes from '../homepage/BannerRoutes.vue';
 import { i18n } from '../../boot/i18n';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { routesConf } from '../../router/routes_conf';
+import { PhaseType } from '../types/Challenge';
 
 // colors
 const { getPaletteColor, changeAlpha } = colors;
@@ -27,13 +28,13 @@ const selectorSectionButton = 'banner-routes-section-button';
 // variables
 const { borderRadiusCard } = rideToWorkByBikeConfig;
 const iconSize = 24;
-let competitionDateEnd = '';
+let entryPhaseEnd = '';
 
 describe('<BannerRoutes>', () => {
   before(() => {
     cy.fixture('apiGetThisCampaignMay.json').then((thisCampaignResponse) => {
-      competitionDateEnd = thisCampaignResponse.results[0].phase_set.find(
-        (phase) => phase.phase_type === 'competition',
+      entryPhaseEnd = thisCampaignResponse.results[0].phase_set.find(
+        (phase) => phase.phase_type === PhaseType.entryEnabled,
       ).date_to;
     });
   });
@@ -50,7 +51,7 @@ describe('<BannerRoutes>', () => {
     beforeEach(() => {
       cy.mount(BannerRoutes, {
         props: {
-          dateEnd: competitionDateEnd,
+          dateEnd: entryPhaseEnd,
         },
       });
       cy.viewport('macbook-16');
@@ -63,7 +64,7 @@ describe('<BannerRoutes>', () => {
         cy.dataCy(selectorTitle).should(
           'contain',
           i18n.global.t('index.bannerRoutes.titleDefault', {
-            date: i18n.global.d(new Date(competitionDateEnd), 'numeric'),
+            date: i18n.global.d(new Date(entryPhaseEnd), 'numeric'),
           }),
         );
       });
@@ -129,7 +130,7 @@ describe('<BannerRoutes>', () => {
     beforeEach(() => {
       cy.mount(BannerRoutes, {
         props: {
-          dateEnd: competitionDateEnd,
+          dateEnd: entryPhaseEnd,
         },
       });
       cy.viewport('iphone-6');
@@ -142,7 +143,7 @@ describe('<BannerRoutes>', () => {
         cy.dataCy(selectorTitle).should(
           'contain',
           i18n.global.t('index.bannerRoutes.titleDefault', {
-            date: i18n.global.d(new Date(competitionDateEnd), 'numeric'),
+            date: i18n.global.d(new Date(entryPhaseEnd), 'numeric'),
           }),
         );
       });
