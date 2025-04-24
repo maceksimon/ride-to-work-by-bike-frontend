@@ -59,7 +59,7 @@ describe('<BannerRoutes>', () => {
 
     coreTests();
 
-    it('renders title with the date of the challenge end', () => {
+    it('renders title with the date of the entry phase end', () => {
       cy.window().then(() => {
         cy.dataCy(selectorTitle).should(
           'contain',
@@ -138,7 +138,7 @@ describe('<BannerRoutes>', () => {
 
     coreTests();
 
-    it('renders title with the date of the challenge end', () => {
+    it('renders title with the date of the entry phase end', () => {
       cy.window().then(() => {
         cy.dataCy(selectorTitle).should(
           'contain',

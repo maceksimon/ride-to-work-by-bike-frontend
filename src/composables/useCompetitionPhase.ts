@@ -9,7 +9,7 @@ import { useChallengeStore } from 'src/stores/challenge';
 import type { Ref } from 'vue';
 
 /**
- * Computes competition phase states and dates
+ * Computes competition/entry phase states and dates
  * @returns {
  *  isBeforeCompetitionStart: Ref<boolean> - True if before competition starts
  *  isAfterEntryPhaseEnd: Ref<boolean> - True if after competition ends

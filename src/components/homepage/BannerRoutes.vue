@@ -5,13 +5,13 @@
  * The `BannerRoutes` component acts as a reminder to log biking routes.
  *
  * @description
- * Displayed as a banner, this component highlights the date of the challenge end.
+ * Displayed as a banner, this component highlights the date of the entry phase end.
  *
  * @props
- * - `dateEnd` (String, required): The date of the challenge end.
+ * - `dateEnd` (String, required): The date of the entry phase end.
  *
  * @example
- * <banner-routes :date-end="competitionEnd" />
+ * <banner-routes :date-end="entryPhaseEnd" />
  */
 
 // libraries
