@@ -21,10 +21,10 @@
         <banner-routes
           v-if="
             isBannerRoutesEnabled &&
-            challengeStatus === ChallengeStatusEnum.during
+            !isBeforeCompetitionStart &&
+            !isAfterCompetitionEnd
           "
-          :routes-count="14"
-          :variant="BannerRoutesVariantsEnum.default"
+          :date-end="competitionEnd"
           class="q-my-xl"
           data-cy="banner-routes"
         />
@@ -164,7 +164,7 @@ import SectionHeading from 'src/components/global/SectionHeading.vue';
 import SliderProgress from 'components/homepage/SliderProgress.vue';
 
 // composables
-import { useIsBeforeCompetitionPhase } from '../composables/useIsBeforeCompetitionPhase';
+import { useCompetitionPhase } from '../composables/useIsBeforeCompetitionPhase';
 
 // config
 import { routesConf } from '../router/routes_conf';
@@ -267,8 +267,12 @@ export default defineComponent({
       }
     });
 
-    const { isBeforeCompetitionStart, competitionStart } =
-      useIsBeforeCompetitionPhase();
+    const {
+      competitionStart,
+      competitionEnd,
+      isBeforeCompetitionStart,
+      isAfterCompetitionEnd,
+    } = useCompetitionPhase();
 
     // colors
     const { getPaletteColor, changeAlpha } = colors;
@@ -297,10 +301,12 @@ export default defineComponent({
       headingBgTitle: homepage.headingBgTitle,
       primaryOpacity,
       competitionStart,
+      competitionEnd,
       urlCommunity,
       urlResults,
       isLoadingPosts,
       isBeforeCompetitionStart,
+      isAfterCompetitionEnd,
       isBannerRoutesEnabled,
       isBannerAppEnabled,
       isSectionChallengesEnabled,

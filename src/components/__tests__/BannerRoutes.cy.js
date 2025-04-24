@@ -26,10 +26,18 @@ const selectorSectionButton = 'banner-routes-section-button';
 
 // variables
 const { borderRadiusCard } = rideToWorkByBikeConfig;
-const routesCount = 3;
 const iconSize = 24;
+let competitionDateEnd = '';
 
 describe('<BannerRoutes>', () => {
+  before(() => {
+    cy.fixture('apiGetThisCampaignMay.json').then((thisCampaignResponse) => {
+      competitionDateEnd = thisCampaignResponse.results[0].phase_set.find(
+        (phase) => phase.phase_type === 'competition',
+      ).date_to;
+    });
+  });
+
   it('has translation for all strings', () => {
     cy.testLanguageStringsInContext(
       ['title', 'titleStart', 'addRoutes', 'addFirstRoutes'],
@@ -42,8 +50,7 @@ describe('<BannerRoutes>', () => {
     beforeEach(() => {
       cy.mount(BannerRoutes, {
         props: {
-          routesCount,
-          variant: 'default',
+          dateEnd: competitionDateEnd,
         },
       });
       cy.viewport('macbook-16');
@@ -51,9 +58,14 @@ describe('<BannerRoutes>', () => {
 
     coreTests();
 
-    it('renders title with the number of missing routes', () => {
+    it('renders title with the date of the challenge end', () => {
       cy.window().then(() => {
-        cy.dataCy(selectorTitle).should('contain', routesCount);
+        cy.dataCy(selectorTitle).should(
+          'contain',
+          i18n.global.t('index.bannerRoutes.titleDefault', {
+            date: i18n.global.d(new Date(competitionDateEnd), 'numeric'),
+          }),
+        );
       });
     });
 
@@ -74,7 +86,7 @@ describe('<BannerRoutes>', () => {
     });
   });
 
-  context('desktop start variant', () => {
+  context.skip('desktop start variant', () => {
     beforeEach(() => {
       cy.mount(BannerRoutes, {
         props: {
@@ -117,8 +129,7 @@ describe('<BannerRoutes>', () => {
     beforeEach(() => {
       cy.mount(BannerRoutes, {
         props: {
-          routesCount,
-          variant: 'default',
+          dateEnd: competitionDateEnd,
         },
       });
       cy.viewport('iphone-6');
@@ -126,9 +137,14 @@ describe('<BannerRoutes>', () => {
 
     coreTests();
 
-    it('renders title with the number of missing routes', () => {
+    it('renders title with the date of the challenge end', () => {
       cy.window().then(() => {
-        cy.dataCy(selectorTitle).should('contain', routesCount);
+        cy.dataCy(selectorTitle).should(
+          'contain',
+          i18n.global.t('index.bannerRoutes.titleDefault', {
+            date: i18n.global.d(new Date(competitionDateEnd), 'numeric'),
+          }),
+        );
       });
     });
 
@@ -184,6 +200,6 @@ function coreTests() {
   it('renders correct button link', () => {
     cy.dataCy(selectorButton)
       .invoke('attr', 'href')
-      .should('contain', routesConf['routes_list'].children.fullPath);
+      .should('contain', routesConf['routes'].children.fullPath);
   });
 }

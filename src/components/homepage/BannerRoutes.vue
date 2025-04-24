@@ -5,38 +5,24 @@
  * The `BannerRoutes` component acts as a reminder to log biking routes.
  *
  * @description
- * Displayed as a banner, this component highlights the number of biking routes
- * that have not been logged by the user.
- *
+ * Displayed as a banner, this component highlights the date of the challenge end.
  *
  * @props
- * - `routesCount` (Number, required): The number of biking routes that are yet
- *   to be logged by the user.
- * - `variant` (String: 'default' | 'start', required): Determines the
- *   appearance based on whether user has already started logging routes.
+ * - `dateEnd` (String, required): The date of the challenge end.
  *
  * @example
- * <banner-routes
- *   :routesCount="unloggedRoutesCount"
- * />
- *
- * @see
- * [Figma Design - default](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=6021%3A22990&mode=dev)
- * [Figma Design - start](https://www.figma.com/file/L8dVREySVXxh3X12TcFDdR/Do-pr%C3%A1ce-na-kole?type=design&node-id=4858%3A103951&mode=dev)
+ * <banner-routes :date-end="competitionEnd" />
  */
 
 // libraries
-import { colors, Screen } from 'quasar';
-import { defineComponent } from 'vue';
+import { colors, date, Screen } from 'quasar';
+import { computed, defineComponent } from 'vue';
+
+// composables
+import { i18n } from 'src/boot/i18n';
 
 // config
 import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
-
-// enums
-export enum BannerRoutesVariants {
-  default = 'default',
-  start = 'start',
-}
 
 // routes
 import { routesConf } from '../../router/routes_conf';
@@ -44,16 +30,12 @@ import { routesConf } from '../../router/routes_conf';
 export default defineComponent({
   name: 'BannerRoutes',
   props: {
-    routesCount: {
-      type: Number,
-      required: true,
-    },
-    variant: {
-      type: String as () => BannerRoutesVariants,
+    dateEnd: {
+      type: String,
       required: true,
     },
   },
-  setup() {
+  setup(props) {
     // colors
     const { getPaletteColor, changeAlpha } = colors;
     const secondary = getPaletteColor('secondary');
@@ -62,14 +44,21 @@ export default defineComponent({
       rideToWorkByBikeConfig.colorSecondaryBackgroundOpacity,
     );
 
+    const dateEndFormatted = computed<string>(() => {
+      if (props.dateEnd && date.isValid(props.dateEnd)) {
+        return i18n.global.d(new Date(props.dateEnd), 'numeric');
+      }
+      return '';
+    });
+
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCard;
 
     return {
       borderRadius,
+      dateEndFormatted,
       secondaryOpacity,
       routesConf,
       Screen,
-      BannerRoutesVariants,
     };
   },
 });
@@ -77,8 +66,7 @@ export default defineComponent({
 
 <template>
   <div
-    class="text-grey-10"
-    :class="[variant === BannerRoutesVariants.default ? 'q-py-sm' : 'q-py-lg']"
+    class="text-grey-10 q-py-sm"
     :style="{
       borderRadius,
       backgroundColor: secondaryOpacity,
@@ -88,13 +76,8 @@ export default defineComponent({
     <div class="row justify-between">
       <!-- Section: title -->
       <div
-        class="col-12 flex gap-24 items-center q-py-sm q-px-lg"
-        :class="[
-          variant === BannerRoutesVariants.default
-            ? 'col-md-6'
-            : 'justify-center',
-          Screen.lg ? 'no-wrap' : '',
-        ]"
+        class="col-12 col-md-6 flex gap-24 items-center q-py-sm q-px-lg"
+        :class="[Screen.gt.lg ? 'no-wrap' : '']"
         data-cy="banner-routes-section-title"
       >
         <!-- Image -->
@@ -112,21 +95,14 @@ export default defineComponent({
           class="col-12 col-sm text-h5 text-weight-bold q-my-none"
           data-cy="banner-routes-title"
         >
-          <span v-if="variant === BannerRoutesVariants.default">
-            <!-- TODO: fix conjugation in CZ and SK -->
-            {{
-              $t('index.bannerRoutes.title', routesCount, { n: routesCount })
-            }}
-          </span>
-          <span v-else-if="variant === BannerRoutesVariants.start">
-            {{ $t('index.bannerRoutes.titleStart') }}
-          </span>
+          {{
+            $t('index.bannerRoutes.titleDefault', { date: dateEndFormatted })
+          }}
         </h3>
       </div>
       <!-- Link to Routes list -->
       <div
-        class="col-12 flex items-center justify-end q-py-sm q-px-xl"
-        :class="[variant === 'default' ? 'col-md-6' : 'justify-center']"
+        class="col-12 col-md-6 flex items-center justify-end q-py-sm q-px-xl"
         data-cy="banner-routes-section-button"
       >
         <q-btn
@@ -135,7 +111,7 @@ export default defineComponent({
           color="primary"
           size="16px"
           text-color="white"
-          :to="routesConf['routes_list'].children.fullPath"
+          :to="routesConf['routes'].children.fullPath"
           class="q-pa-md text-weight-bold"
           data-cy="banner-routes-button-add-routes"
         >
@@ -148,14 +124,8 @@ export default defineComponent({
             data-cy="banner-routes-button-icon"
           />
           <!-- Button text -->
-          <span
-            v-if="variant === BannerRoutesVariants.default"
-            class="inline-block q-px-sm"
-          >
+          <span class="inline-block q-px-sm">
             {{ $t('index.bannerRoutes.addRoutes') }}
-          </span>
-          <span v-else-if="variant == BannerRoutesVariants.start">
-            {{ $t('index.bannerRoutes.addFirstRoutes') }}
           </span>
         </q-btn>
       </div>
