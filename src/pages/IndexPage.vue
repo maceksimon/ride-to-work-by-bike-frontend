@@ -164,7 +164,7 @@ import SectionHeading from 'src/components/global/SectionHeading.vue';
 import SliderProgress from 'components/homepage/SliderProgress.vue';
 
 // composables
-import { useCompetitionPhase } from '../composables/useIsBeforeCompetitionPhase';
+import { useCompetitionPhase } from '../composables/useCompetitionPhase';
 
 // config
 import { routesConf } from '../router/routes_conf';
@@ -172,7 +172,6 @@ import { rideToWorkByBikeConfig } from 'src/boot/global_vars';
 
 // enums
 import { ChallengeStatus as ChallengeStatusEnum } from 'src/components/enums/Challenge';
-import { BannerRoutesVariants as BannerRoutesVariantsEnum } from 'src/components/homepage/BannerRoutes.vue';
 
 // fixtures
 import listCardsFollow from '../../test/cypress/fixtures/listCardsFollow.json';
@@ -217,7 +216,7 @@ export default defineComponent({
     const feedStore = useFeedStore();
     const isLoadingPosts = computed(() => feedStore.getIsLoading);
 
-    const isBannerRoutesEnabled = false;
+    const isBannerRoutesEnabled = true;
     const isBannerAppEnabled = false;
     const isSectionChallengesEnabled = false;
     const isBannerQuestionnaireEnabled = false;
@@ -287,7 +286,6 @@ export default defineComponent({
       badgeList: homepage.badgeList,
       bannerAppData: homepage.bannerApp,
       bannerImageData: homepage.bannerImage,
-      BannerRoutesVariantsEnum,
       cardsChallenge: homepage.cardsChallenge,
       cardsEvent: homepage.cardsEvent,
       cardsFollow,

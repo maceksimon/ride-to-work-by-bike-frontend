@@ -102,7 +102,7 @@ export default defineComponent({
       </div>
       <!-- Link to Routes list -->
       <div
-        class="col-12 col-md-6 flex items-center justify-end q-py-sm q-px-xl"
+        class="col-12 col-md-6 flex items-center justify-end q-py-sm q-px-lg"
         data-cy="banner-routes-section-button"
       >
         <q-btn

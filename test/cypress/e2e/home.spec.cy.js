@@ -1,6 +1,7 @@
 import {
   systemTimeRegistrationPhaseInactive,
   systemTimeBeforeCompetitionStart,
+  systemTimeBeforeCompetitionEnd,
   failOnStatusCode,
   httpSuccessfullStatus,
   httpTooManyRequestsStatus,
@@ -34,6 +35,30 @@ describe('Home page', () => {
       cy.wrap(config).as('config');
       // intercept campaign API
       cy.interceptThisCampaignGetApi(config, defLocale);
+      // intercept register challenge API
+      cy.fixture('apiGetRegisterChallengeIndividualPaidCompleteStaff').then(
+        (responseRegisterChallenge) => {
+          cy.interceptRegisterChallengeGetApi(
+            config,
+            defLocale,
+            responseRegisterChallenge,
+          );
+        },
+      );
+      // intercept is user organization admin API
+      cy.fixture('apiGetIsUserOrganizationAdminResponseFalse').then(
+        (response) => {
+          cy.interceptIsUserOrganizationAdminGetApi(
+            config,
+            defLocale,
+            response,
+          );
+        },
+      );
+      // intercept my team GET API
+      cy.fixture('apiGetMyTeamResponseApproved.json').then((responseMyTeam) => {
+        cy.interceptMyTeamGetApi(config, defLocale, responseMyTeam);
+      });
     });
     cy.viewport('macbook-16');
   });
@@ -820,7 +845,7 @@ describe('Home page', () => {
     });
   });
 
-  context('Countdown Event before competition phase starts', () => {
+  context('Campaign-related banners Countdown Event and Banner Routes', () => {
     beforeEach(() => {
       cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
         // load config
@@ -843,6 +868,53 @@ describe('Home page', () => {
         cy.tick(5000);
         // verify countdown is hidden after competition phase starts
         cy.dataCy('countdown-event').should('not.exist');
+      });
+    });
+
+    it('shows Banner Routes once competition starts', () => {
+      cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
+        cy.clock(new Date(systemTimeBeforeCompetitionStart), ['Date']);
+        cy.visit(Cypress.config('baseUrl'));
+        cy.waitForThisCampaignApi(campaign);
+        // verify banner is hidden before competition phase begins
+        cy.dataCy('banner-routes').should('not.exist');
+        // tick clock forward to competition phase start
+        cy.tick(5000);
+        // verify banner is visible after competition phase starts
+        cy.dataCy('banner-routes').should('be.visible');
+      });
+    });
+
+    it('shows Banner Routes during competition and hides it once competition ends', () => {
+      cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
+        cy.clock(new Date(systemTimeBeforeCompetitionEnd), ['Date']);
+        cy.visit(Cypress.config('baseUrl'));
+        cy.waitForThisCampaignApi(campaign);
+        // verify banner is visible before competition phase ends
+        cy.dataCy('banner-routes').should('be.visible');
+        // tick clock forward to competition phase end
+        cy.tick(5000);
+        // verify banner is hidden after competition phase ends
+        cy.dataCy('banner-routes').should('not.exist');
+      });
+    });
+
+    it('redirects from Banner Routes to #/routes URL', () => {
+      cy.get('@config').then((config) => {
+        cy.interceptCommuteModeGetApi(config, defLocale);
+        cy.interceptTripsGetApi(config, defLocale);
+      });
+      cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
+        cy.clock(new Date(systemTimeBeforeCompetitionEnd), ['Date']);
+        cy.visit(Cypress.config('baseUrl'));
+        cy.waitForThisCampaignApi(campaign);
+        // verify banner is visible
+        cy.dataCy('banner-routes').should('be.visible');
+        cy.dataCy('banner-routes-button-add-routes')
+          .should('be.visible')
+          .click();
+        // verify redirect to #/routes URL
+        cy.url().should('include', routesConf['routes'].children.fullPath);
       });
     });
   });

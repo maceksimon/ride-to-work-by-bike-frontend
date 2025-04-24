@@ -47,7 +47,7 @@ import RegisterChallengePaymentMessages from '../components/register/RegisterCha
 // composables
 import { useStepperValidation } from 'src/composables/useStepperValidation';
 import { useOrganizations } from 'src/composables/useOrganizations';
-import { useIsBeforeCompetitionPhase } from 'src/composables/useIsBeforeCompetitionPhase';
+import { useCompetitionPhase } from 'src/composables/useCompetitionPhase';
 
 // enums
 import { OrganizationType } from 'src/components/types/Organization';
@@ -355,7 +355,7 @@ export default defineComponent({
       secondsToWaitDef.value -= 1;
     }, 1000);
 
-    const { isBeforeCompetitionStart } = useIsBeforeCompetitionPhase();
+    const { isBeforeCompetitionStart } = useCompetitionPhase();
 
     return {
       borderRadius,
