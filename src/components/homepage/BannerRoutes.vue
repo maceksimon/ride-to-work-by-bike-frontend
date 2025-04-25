@@ -75,14 +75,10 @@ export default defineComponent({
   >
     <div class="row justify-between">
       <!-- Section: title -->
-      <div
-        class="col-12 col-md-6 flex gap-24 items-center q-py-sm q-px-lg"
-        :class="[Screen.gt.lg ? 'no-wrap' : '']"
-        data-cy="banner-routes-section-title"
-      >
+      <div class="col-12 flex gap-24 items-center q-py-sm q-px-lg">
         <!-- Image -->
         <q-img
-          class="col-12 col-sm-auto"
+          class="col-12 col-md-auto"
           src="~assets/svg/banner-routes.svg"
           width="70px"
           height="102px"
@@ -92,42 +88,43 @@ export default defineComponent({
         />
         <!-- Title -->
         <h3
-          class="col-12 col-sm text-h5 text-weight-bold q-my-none"
+          class="col-12 col-md text-h5 text-weight-bold q-my-none"
+          style="text-wrap: balance"
           data-cy="banner-routes-title"
         >
           {{
             $t('index.bannerRoutes.titleDefault', { date: dateEndFormatted })
           }}
         </h3>
-      </div>
-      <!-- Link to Routes list -->
-      <div
-        class="col-12 col-md-6 flex items-center justify-end q-py-sm q-px-lg"
-        data-cy="banner-routes-section-button"
-      >
-        <q-btn
-          rounded
-          unelevated
-          color="primary"
-          size="16px"
-          text-color="white"
-          :to="routesConf['routes'].children.fullPath"
-          class="q-pa-md text-weight-bold"
-          data-cy="banner-routes-button-add-routes"
+        <!-- Link to Routes list -->
+        <div
+          class="col-12 col-md-auto flex items-center justify-end q-py-sm"
+          data-cy="banner-routes-section-button"
         >
-          <!-- Plus icon -->
-          <q-icon
-            name="add"
-            size="24px"
-            color="white"
-            class="q-mr-sm"
-            data-cy="banner-routes-button-icon"
-          />
-          <!-- Button text -->
-          <span class="inline-block q-px-sm">
-            {{ $t('index.bannerRoutes.addRoutes') }}
-          </span>
-        </q-btn>
+          <q-btn
+            rounded
+            unelevated
+            color="primary"
+            size="16px"
+            text-color="white"
+            :to="routesConf['routes'].children.fullPath"
+            class="q-pa-md text-weight-bold"
+            data-cy="banner-routes-button-add-routes"
+          >
+            <!-- Plus icon -->
+            <q-icon
+              name="add"
+              size="24px"
+              color="white"
+              class="q-mr-sm"
+              data-cy="banner-routes-button-icon"
+            />
+            <!-- Button text -->
+            <span class="inline-block q-px-sm">
+              {{ $t('index.bannerRoutes.addRoutes') }}
+            </span>
+          </q-btn>
+        </div>
       </div>
     </div>
   </div>

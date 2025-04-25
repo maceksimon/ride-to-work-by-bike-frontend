@@ -22,7 +22,6 @@ const selectorImage = 'banner-routes-image';
 const selectorTitle = 'banner-routes-title';
 const selectorButton = 'banner-routes-button-add-routes';
 const selectorButtonIcon = 'banner-routes-button-icon';
-const selectorSectionTitle = 'banner-routes-section-title';
 const selectorSectionButton = 'banner-routes-section-button';
 
 // variables
@@ -49,12 +48,12 @@ describe('<BannerRoutes>', () => {
 
   context('desktop default variant', () => {
     beforeEach(() => {
+      cy.viewport('macbook-16');
       cy.mount(BannerRoutes, {
         props: {
           dateEnd: entryPhaseEnd,
         },
       });
-      cy.viewport('macbook-16');
     });
 
     coreTests();
@@ -77,9 +76,7 @@ describe('<BannerRoutes>', () => {
     });
 
     it('renders title section and button section side to side', () => {
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 50);
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 50);
-      cy.testElementsSideBySide(selectorSectionTitle, selectorSectionButton);
+      cy.testElementsSideBySide(selectorTitle, selectorSectionButton);
     });
 
     it('renders image and title side to side', () => {
@@ -116,9 +113,7 @@ describe('<BannerRoutes>', () => {
     });
 
     it('renders title section and button section stacked', () => {
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 100);
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 100);
-      cy.testElementsStacked(selectorSectionTitle, selectorSectionButton);
+      cy.testElementsStacked(selectorTitle, selectorSectionButton);
     });
 
     it('renders image and title side to side', () => {
@@ -156,8 +151,7 @@ describe('<BannerRoutes>', () => {
     });
 
     it('renders title section and button section stacked', () => {
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionTitle), 100);
-      cy.testElementPercentageWidth(cy.dataCy(selectorSectionButton), 100);
+      cy.testElementsStacked(selectorTitle, selectorSectionButton);
     });
 
     it('renders image and title stacked', () => {
