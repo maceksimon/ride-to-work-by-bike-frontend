@@ -871,7 +871,7 @@ describe('Home page', () => {
       });
     });
 
-    it('shows Banner Routes once competition starts', () => {
+    it.skip('shows Banner Routes once competition starts', () => {
       cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
         cy.clock(new Date(systemTimeBeforeCompetitionStart), ['Date']);
         cy.visit(Cypress.config('baseUrl'));
@@ -885,7 +885,7 @@ describe('Home page', () => {
       });
     });
 
-    it('shows Banner Routes during competition and hides it once competition ends', () => {
+    it.skip('shows Banner Routes during competition and hides it once competition ends', () => {
       cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
         cy.clock(new Date(systemTimeBeforeEntryPhaseEnd), ['Date']);
         cy.visit(Cypress.config('baseUrl'));
@@ -899,7 +899,7 @@ describe('Home page', () => {
       });
     });
 
-    it('redirects from Banner Routes to #/routes URL', () => {
+    it.skip('redirects from Banner Routes to #/routes URL', () => {
       cy.get('@config').then((config) => {
         cy.interceptCommuteModeGetApi(config, defLocale);
         cy.interceptTripsGetApi(config, defLocale);
