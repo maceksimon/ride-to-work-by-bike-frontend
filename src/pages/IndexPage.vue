@@ -216,7 +216,7 @@ export default defineComponent({
     const feedStore = useFeedStore();
     const isLoadingPosts = computed(() => feedStore.getIsLoading);
 
-    const isBannerRoutesEnabled = true;
+    const isBannerRoutesEnabled = false;
     const isBannerAppEnabled = false;
     const isSectionChallengesEnabled = false;
     const isBannerQuestionnaireEnabled = false;
