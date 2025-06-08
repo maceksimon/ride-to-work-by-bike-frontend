@@ -71,7 +71,7 @@ describe('Routes page', () => {
           },
         );
       });
-      cy.visit('#' + routesConf['routes']['children']['fullPath']);
+      cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
       cy.waitForCommuteModeApi();
     });
 
