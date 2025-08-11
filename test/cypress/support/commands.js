@@ -2760,7 +2760,6 @@ Cypress.Commands.add(
           statusCode: responseStatusCode
             ? responseStatusCode
             : httpSuccessfullStatus,
-          delay: interceptedRequestResponseDelay,
           body: responseBody ? responseBody : defaultResponseBody,
         }).as('postResetPasswordConfirm');
       },
