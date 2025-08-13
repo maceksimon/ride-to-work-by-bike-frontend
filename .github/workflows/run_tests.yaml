@@ -58,7 +58,8 @@ jobs:
 
       - name: Run Cypress e2e test on Mozilla Firefox/OS ${{ matrix.os }}
         uses: cypress-io/github-action@v6
-        # env:
+        env:
+          FORCE_FIREFOX_CDP: 1
         #   DEBUG: "cypress:*"
         #   CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
         with:
@@ -94,7 +95,8 @@ jobs:
 
       - name: Run Cypress component test on Mozilla Firefox/OS ${{ matrix.os }}
         uses: cypress-io/github-action@v6
-        # env:
+        env:
+          FORCE_FIREFOX_CDP: 1
         #   DEBUG: "cypress:*"
         #   CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
         with:
