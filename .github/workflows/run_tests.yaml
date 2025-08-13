@@ -29,14 +29,20 @@ jobs:
     env:
       timeout: 720
       dev_server_url: 'http://localhost:9000'
-      # browser_connect_timeout: 180000
+      browser_connect_timeout: 180000
 
     steps:
       - name: Install Mozilla Firefox/Microsoft Edge
         run: |
           if [ "$RUNNER_OS" == 'macOS' ]; then
             brew update
-            brew install --cask firefox microsoft-edge
+            # Pin Firefox to version compatible with Cypress 13.2.0
+            brew install --cask firefox@esr
+            brew install --cask microsoft-edge
+          elif [ "$RUNNER_OS" == 'Linux' ]; then
+            # Install Firefox ESR (Extended Support Release) for better Cypress compatibility
+            sudo apt-get update
+            sudo apt-get install -y firefox-esr
           fi
         shell: bash
 
@@ -60,8 +66,8 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           FORCE_FIREFOX_CDP: 1
+          CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
         #   DEBUG: "cypress:*"
-        #   CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
         with:
           start: yarn dev
           browser: firefox
@@ -97,8 +103,8 @@ jobs:
         uses: cypress-io/github-action@v6
         env:
           FORCE_FIREFOX_CDP: 1
+          CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
         #   DEBUG: "cypress:*"
-        #   CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
         with:
           install: false
           browser: firefox
