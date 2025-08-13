@@ -36,13 +36,7 @@ jobs:
         run: |
           if [ "$RUNNER_OS" == 'macOS' ]; then
             brew update
-            # Pin Firefox to version compatible with Cypress 13.2.0
-            brew install --cask firefox@esr
-            brew install --cask microsoft-edge
-          elif [ "$RUNNER_OS" == 'Linux' ]; then
-            # Install Firefox ESR (Extended Support Release) for better Cypress compatibility
-            sudo apt-get update
-            sudo apt-get install -y firefox-esr
+            brew install --cask firefox microsoft-edge
           fi
         shell: bash
 
@@ -67,6 +61,7 @@ jobs:
       #   uses: cypress-io/github-action@v6
       #   env:
       #   #   DEBUG: "cypress:*"
+      #   #   CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
       #   with:
       #     start: yarn dev
       #     browser: firefox
@@ -103,6 +98,7 @@ jobs:
       #   uses: cypress-io/github-action@v6
       #   env:
       #   #   DEBUG: "cypress:*"
+      #   #   CYPRESS_INTERNAL_BROWSER_CONNECT_TIMEOUT: ${{ env.browser_connect_timeout }}
       #   with:
       #     install: false
       #     browser: firefox
