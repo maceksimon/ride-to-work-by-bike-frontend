@@ -2154,7 +2154,7 @@ describe('Register Challenge page', () => {
               );
             },
           );
-          // wait for address to be loaded
+          // wait for addresses to be loaded
           cy.dataCy('form-company-address')
             .find('.q-select')
             .should('not.contain', 'q-spinner');
