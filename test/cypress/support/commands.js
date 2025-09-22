@@ -2308,6 +2308,9 @@ Cypress.Commands.add(
 
 /**
  * Select element from dropdown menu
+ * @param {String} dataCy - data-cy selector for the dropdown menu
+ * @param {Number} index - index of the option to select
+ * @param {Number} length - length of the options
  */
 Cypress.Commands.add('selectDropdownMenu', (dataCy, index = 0, length = 0) => {
   // ensure dropdown icon is visible
