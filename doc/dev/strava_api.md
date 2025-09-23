@@ -23,7 +23,14 @@
 - **Step 3**: Browser redirects to `/routes/connect-third-party-apps` URL with `?code=xxx` param
   - `RoutesApps.vue` reads code param onMounted
 - **Step 4**: `GET /strava-auth/<auth_code>/` (via `stravaStore.authAccount()`)
-  - Purpose: Exchange OAuth code for account connection
+  - Purpose: Get User Strava account token (access, refresh), create User Strava account in our DB, synchronize User Strava account data if it exists.
+  - REST API URL endpoint return JSON with structure:
+    ```
+    response = {
+        "account_status": "created" if created else "updated",
+        "account": strava_account,
+    }
+    ```
   - Triggered when user returns from Strava with code parameter
 
 ### Sync Account Data
