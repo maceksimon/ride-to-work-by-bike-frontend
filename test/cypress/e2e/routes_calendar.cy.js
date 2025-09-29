@@ -399,28 +399,21 @@ describe('Routes calendar page', () => {
                   'test/cypress/fixtures/route.gpx',
                   { force: true },
                 );
-              } else if (inputValue.inputType === 'input-number') {
+              } else if (inputValue.inputType === RouteInputType.inputNumber) {
                 // select input number action
                 cy.dataCy('select-action').should('be.visible');
                 cy.dataCy('select-action').select(
                   i18n.global.t('routes.actionInputDistance'),
                 );
                 // input distance
-                cy.dataCy('section-input-number').should('be.visible');
-                cy.dataCy('section-input-number')
-                  .find('input')
-                  .should('be.visible')
-                  .clear();
-                cy.dataCy('section-input-number')
-                  .find('input')
-                  .then(($input) => {
-                    expect($input.val().replace(',', '.')).to.equal(
-                      config.defaultDistanceZero,
-                    );
-                  });
-                cy.dataCy('section-input-number')
-                  .find('input')
-                  .type(inputValue.inputValue);
+                cy.dataCy('input-distance').should('be.visible');
+                cy.dataCy('input-distance').clear();
+                cy.dataCy('input-distance').then(($input) => {
+                  expect($input.val().replace(',', '.')).to.equal(
+                    config.defaultDistanceZero,
+                  );
+                });
+                cy.dataCy('input-distance').type(inputValue.inputValue);
               }
             });
             // for number distance input, verify UI state before submitting
