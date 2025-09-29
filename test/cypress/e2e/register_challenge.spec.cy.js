@@ -1421,12 +1421,8 @@ describe('Register Challenge page', () => {
         cy.dataCy(getRadioOption(PaymentSubject.company))
           .should('be.visible')
           .click();
-        // open organization select
-        cy.dataCy('form-field-company').should('be.visible').click();
         // select second organization
-        cy.get('.q-menu').within(() => {
-          cy.get('.q-item').eq(1).click();
-        });
+        cy.selectDropdownMenu('form-field-company', 1);
         // checkbox become coordinator should be visible
         cy.dataCy('register-coordinator-checkbox').should('be.visible');
         // enable checkbox
@@ -1746,12 +1742,8 @@ describe('Register Challenge page', () => {
       cy.dataCy(getRadioOption(OrganizationType.company))
         .should('be.visible')
         .click();
-      // open organization select
-      cy.dataCy('form-field-company').should('be.visible').click();
-      // from menu select first organization
-      cy.get('.q-menu').within(() => {
-        cy.get('.q-item').first().click();
-      });
+      // select first organization
+      cy.selectDropdownMenu('form-field-company', 0);
       // go to next step
       cy.dataCy('step-2-continue').should('be.visible').click();
       // test API post request (empty voucher)
@@ -1840,12 +1832,8 @@ describe('Register Challenge page', () => {
       cy.dataCy(getRadioOption(OrganizationType.school))
         .should('be.visible')
         .click();
-      // open organization select
-      cy.dataCy('form-field-company').should('be.visible').click();
-      // from menu select first organization
-      cy.get('.q-menu').within(() => {
-        cy.get('.q-item').first().click();
-      });
+      // select first organization
+      cy.selectDropdownMenu('form-field-company', 0);
       // go to next step
       cy.dataCy('step-2-continue').should('be.visible').click();
       // test API post request (empty voucher)
