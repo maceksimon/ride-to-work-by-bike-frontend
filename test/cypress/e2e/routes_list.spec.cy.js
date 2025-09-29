@@ -38,6 +38,7 @@ describe('Routes list page', () => {
           },
         );
         cy.visit('#' + routesConf['home']['path']);
+        cy.dataCy('index-title').should('be.visible');
         cy.window().should('have.property', 'i18n');
         cy.window().then((win) => {
           // alias i18n
@@ -54,6 +55,7 @@ describe('Routes list page', () => {
         cy.interceptCommuteModeGetApi(config, defLocale);
         cy.interceptTripsGetApi(config, defLocale);
         cy.visit('#' + routesConf['routes_list']['children']['fullPath']);
+        cy.dataCy('routes-page-title').should('be.visible');
         cy.dataCy('spinner-route-list-edit').should('be.visible');
         cy.dataCy('spinner-route-list-display').should('be.visible');
         cy.waitForCommuteModeApi();
@@ -321,6 +323,7 @@ describe('Routes list page', () => {
             (tripsNext) => {
               cy.interceptTripsGetApi(config, defLocale, trips, tripsNext);
               cy.visit('#' + routesConf['routes_list']['children']['fullPath']);
+              cy.dataCy('routes-page-title').should('be.visible');
               cy.dataCy('spinner-route-list-edit').should('be.visible');
               cy.dataCy('spinner-route-list-display').should('be.visible');
               cy.waitForCommuteModeApi();
@@ -546,6 +549,7 @@ describe('Routes list page', () => {
         cy.interceptCommuteModeGetApi(config, defLocale);
         cy.interceptTripsGetApi(config, defLocale);
         cy.visit('#' + routesConf['routes_list']['children']['fullPath']);
+        cy.dataCy('routes-page-title').should('be.visible');
         cy.dataCy('spinner-route-list-edit').should('be.visible');
         cy.dataCy('spinner-route-list-display').should('be.visible');
         cy.waitForCommuteModeApi();
