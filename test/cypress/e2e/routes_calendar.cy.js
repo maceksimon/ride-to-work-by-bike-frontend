@@ -408,7 +408,7 @@ describe('Routes calendar page', () => {
                 // input distance
                 cy.dataCy('input-distance').should('be.visible');
                 cy.dataCy('input-distance').clear();
-                cy.dataCy('input-distance').then(($input) => {
+                cy.dataCy('input-distance').should(($input) => {
                   expect($input.val().replace(',', '.')).to.equal(
                     config.defaultDistanceZero,
                   );
