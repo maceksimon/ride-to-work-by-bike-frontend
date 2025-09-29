@@ -53,8 +53,9 @@ describe('Routes calendar page', () => {
         cy.interceptCommuteModeGetApi(config, defLocale);
         cy.interceptTripsGetApi(config, defLocale);
         cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
-        cy.waitForCommuteModeApi();
+        cy.dataCy('routes-page-title').should('be.visible');
         cy.dataCy('spinner-routes-calendar').should('be.visible');
+        cy.waitForCommuteModeApi();
         cy.waitForTripsApi();
       });
     });
@@ -280,8 +281,9 @@ describe('Routes calendar page', () => {
               cy.visit(
                 '#' + routesConf['routes_calendar']['children']['fullPath'],
               );
-              cy.waitForCommuteModeApi();
+              cy.dataCy('routes-page-title').should('be.visible');
               cy.dataCy('spinner-routes-calendar').should('be.visible');
+              cy.waitForCommuteModeApi();
               cy.waitForTripsApi(trips, tripsNext);
             },
           );
@@ -475,8 +477,9 @@ describe('Routes calendar page', () => {
         cy.interceptCommuteModeGetApi(config, defLocale);
         cy.interceptTripsGetApi(config, defLocale);
         cy.visit('#' + routesConf['routes_calendar']['children']['fullPath']);
-        cy.waitForCommuteModeApi();
+        cy.dataCy('routes-page-title').should('be.visible');
         cy.dataCy('spinner-routes-calendar').should('be.visible');
+        cy.waitForCommuteModeApi();
         cy.waitForTripsApi();
       });
     });
