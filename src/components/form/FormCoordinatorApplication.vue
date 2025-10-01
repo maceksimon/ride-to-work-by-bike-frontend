@@ -86,7 +86,7 @@ export default defineComponent({
         Notify.create({
           type: 'negative',
           message: i18n.global.t(
-            'form.messageCoordinatorMissingPersonalDetails',
+            'registerCoordinator.messageMissingPersonalDetails',
           ),
         });
         return;
@@ -94,7 +94,9 @@ export default defineComponent({
       if (!formCoordinatorData.organizationId) {
         Notify.create({
           type: 'negative',
-          message: i18n.global.t('form.messageCoordinatorMissingOrganization'),
+          message: i18n.global.t(
+            'registerCoordinator.messageMissingOrganizationId',
+          ),
         });
         return;
       }
