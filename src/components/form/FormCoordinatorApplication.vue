@@ -34,6 +34,7 @@ import { useValidation } from '../../composables/useValidation';
 // components
 import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 import FormFieldPhone from '../global/FormFieldPhone.vue';
+import ShowRegisterChallengeStoreValues from '../debug/ShowRegisterChallengeStoreValues.vue';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -53,6 +54,7 @@ export default defineComponent({
   components: {
     FormFieldTextRequired,
     FormFieldPhone,
+    ShowRegisterChallengeStoreValues,
   },
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
@@ -117,6 +119,16 @@ export default defineComponent({
       }
 
       await registerStore.registerCoordinator(payload, false);
+
+      // reset form
+      formCoordinatorApplicationRef.value?.reset();
+    };
+
+    const onReset = () => {
+      formCoordinatorData.jobTitle = '';
+      formCoordinatorData.phone = '';
+      formCoordinatorData.responsibility = false;
+      formCoordinatorData.terms = true;
     };
 
     return {
@@ -125,6 +137,7 @@ export default defineComponent({
       formCoordinatorData,
       isPhone,
       onSubmit,
+      onReset,
     };
   },
 });
@@ -134,6 +147,7 @@ export default defineComponent({
   <q-form
     autofocus
     @submit.prevent="onSubmit"
+    @reset="onReset"
     ref="formCoordinatorApplicationRef"
     data-cy="form-coordinator-application"
   >
@@ -247,5 +261,7 @@ export default defineComponent({
         />
       </div>
     </div>
+    <!-- Debug component: Show register challenge store values -->
+    <show-register-challenge-store-values :keys="['getTelephone']" />
   </q-form>
 </template>

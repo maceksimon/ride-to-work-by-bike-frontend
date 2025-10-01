@@ -70,26 +70,33 @@ describe('Become coordinator page', () => {
       });
     });
 
-    it('renders form with empty input fields and pre-filled terms when logged in', () => {
-      cy.dataCy('form-coordinator-position')
-        .find('input')
-        .should('have.value', '');
-      cy.dataCy('form-coordinator-phone')
-        .find('input')
-        .should('have.value', '');
-      cy.dataCy('form-coordinator-responsibility')
-        .find('.q-checkbox__inner')
-        .should('have.class', 'q-checkbox__inner--falsy');
-      // terms are checked based on registerChallenge data
-      cy.dataCy('form-coordinator-terms')
-        .find('.q-checkbox__inner')
-        .should('have.class', 'q-checkbox__inner--truthy');
-    });
-
     it('submits form successfully and updates coordinator status', () => {
       cy.window().should('have.property', 'i18n');
       cy.window().then((win) => {
         cy.fixture('formBecomeCoordinator').then((testData) => {
+          // check initial values in form
+          cy.dataCy('form-coordinator-position')
+            .find('input')
+            .should('have.value', '');
+          cy.dataCy('form-coordinator-phone')
+            .find('input')
+            .should('have.value', '');
+          cy.dataCy('form-coordinator-responsibility')
+            .find('.q-checkbox__inner')
+            .should('have.class', 'q-checkbox__inner--falsy');
+          // terms are checked based on registerChallenge data
+          cy.dataCy('form-coordinator-terms')
+            .find('.q-checkbox__inner')
+            .should('have.class', 'q-checkbox__inner--truthy');
+          // check initial telephone value in store
+          cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
+            cy.dataCy('debug-register-challenge-store').within(() => {
+              cy.dataCy('debug-telephone').should(
+                'contain',
+                response.results[0].personal_details.telephone,
+              );
+            });
+          });
           cy.dataCy('form-coordinator-position')
             .find('input')
             .type(testData.input.jobTitle);
@@ -107,6 +114,27 @@ describe('Become coordinator page', () => {
           cy.contains(
             win.i18n.global.t('registerCoordinator.apiMessageSuccess'),
           ).should('be.visible');
+          // check if telephone is set in store
+          cy.dataCy('debug-register-challenge-store').within(() => {
+            cy.dataCy('debug-telephone').should(
+              'contain',
+              testData.input.phone,
+            );
+          });
+          // check that the form is reset
+          cy.dataCy('form-coordinator-position')
+            .find('input')
+            .should('have.value', '');
+          cy.dataCy('form-coordinator-phone')
+            .find('input')
+            .should('have.value', '');
+          cy.dataCy('form-coordinator-responsibility')
+            .find('.q-checkbox__inner')
+            .should('have.class', 'q-checkbox__inner--falsy');
+          // terms are checked based on registerChallenge data
+          cy.dataCy('form-coordinator-terms')
+            .find('.q-checkbox__inner')
+            .should('have.class', 'q-checkbox__inner--truthy');
         });
       });
     });
