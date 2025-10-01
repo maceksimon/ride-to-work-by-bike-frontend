@@ -4074,7 +4074,9 @@ Cypress.Commands.add(
         cy.interceptIsUserOrganizationAdminGetApi(config, defLocale, response);
       },
     );
-    cy.interceptRegisterCoordinatorApi(config, i18n);
+    cy.fixture('formBecomeCoordinator').then((testData) => {
+      cy.interceptRegisterCoordinatorApi(config, i18n, testData.response);
+    });
     cy.performAuthenticatedLogin(config, i18n);
     cy.visit('#' + routesConf['become_coordinator']['path']);
     cy.dataCy('company-coordinator-title').should('be.visible');
