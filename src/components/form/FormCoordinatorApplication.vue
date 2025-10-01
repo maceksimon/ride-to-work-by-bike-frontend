@@ -22,8 +22,11 @@
  */
 
 // libraries
-import { QForm } from 'quasar';
-import { defineComponent, ref } from 'vue';
+import { QForm, Notify } from 'quasar';
+import { defineComponent, ref, inject, reactive } from 'vue';
+
+// adapters
+import { registerCoordinatorAdapter } from '../../adapters/registerCoordinatorAdapter';
 
 // composables
 import { useValidation } from '../../composables/useValidation';
@@ -35,6 +38,16 @@ import FormFieldPhone from '../global/FormFieldPhone.vue';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// i18n
+import { i18n } from '../../boot/i18n';
+
+// stores
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
+import { useRegisterStore } from '../../stores/register';
+
+// types
+import type { Logger } from '../types/Logger';
+
 export default defineComponent({
   name: 'FormCoordinatorApplication',
   components: {
@@ -42,26 +55,72 @@ export default defineComponent({
     FormFieldPhone,
   },
   setup() {
-    const phone = ref('');
-    const position = ref('');
-    const responsibility = ref(false);
-    const terms = ref(false);
+    const logger = inject('vuejs3-logger') as Logger | null;
+    const registerChallengeStore = useRegisterChallengeStore();
+    const registerStore = useRegisterStore();
 
-    const { isPhone } = useValidation();
-    const formCoordinatorApplicationRef = ref<typeof QForm | null>(null);
-    const onSubmit = () => {
-      formCoordinatorApplicationRef.value?.validate();
-    };
+    // Get initial values from store (create independent copies)
+    const personalDetails = registerChallengeStore.getPersonalDetails;
+    const organizationId = registerChallengeStore.getOrganizationId;
+
+    // Create reactive form data initialized from store with independent values
+    const formCoordinatorData = reactive({
+      firstName: personalDetails.firstName || '',
+      lastName: personalDetails.lastName || '',
+      organizationId: organizationId,
+      jobTitle: '',
+      newsletter: personalDetails.newsletter || [],
+      phone: '',
+      responsibility: false,
+      terms: personalDetails.terms || false,
+    });
 
     const { challengeMonth } = rideToWorkByBikeConfig;
+
+    const { isPhone } = useValidation();
+
+    const formCoordinatorApplicationRef = ref<typeof QForm | null>(null);
+    const onSubmit = async () => {
+      // check that internal values are loaded and not empty
+      if (!formCoordinatorData.firstName || !formCoordinatorData.lastName) {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t(
+            'form.messageCoordinatorMissingPersonalDetails',
+          ),
+        });
+        return;
+      }
+      if (!formCoordinatorData.organizationId) {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('form.messageCoordinatorMissingOrganization'),
+        });
+        return;
+      }
+      // create payload for submission
+      const payload =
+        registerCoordinatorAdapter.registerCoordinatorToApiPayload(
+          formCoordinatorData,
+        );
+      logger?.debug(
+        `Register coordinator payload <${JSON.stringify(payload)}>`,
+      );
+      if (!payload) {
+        Notify.create({
+          type: 'negative',
+          message: i18n.global.t('form.messageCoordinatorPayloadError'),
+        });
+        return;
+      }
+
+      await registerStore.registerCoordinator(payload, false);
+    };
 
     return {
       challengeMonth,
       formCoordinatorApplicationRef,
-      phone,
-      position,
-      responsibility,
-      terms,
+      formCoordinatorData,
       isPhone,
       onSubmit,
     };
@@ -71,6 +130,8 @@ export default defineComponent({
 
 <template>
   <q-form
+    autofocus
+    @submit.prevent="onSubmit"
     ref="formCoordinatorApplicationRef"
     data-cy="form-coordinator-application"
   >
@@ -78,7 +139,7 @@ export default defineComponent({
       <div class="col-12 col-sm-6">
         <!-- Input: Company job position -->
         <form-field-text-required
-          v-model="position"
+          v-model="formCoordinatorData.jobTitle"
           name="name"
           label="form.labelYourPosition"
           data-cy="form-coordinator-position"
@@ -87,7 +148,7 @@ export default defineComponent({
       <div class="col-12 col-sm-6">
         <!-- Input: Telephone number -->
         <form-field-phone
-          v-model="phone"
+          v-model="formCoordinatorData.phone"
           name="phone"
           label="form.labelYourPhone"
           data-cy="form-coordinator-phone"
@@ -99,14 +160,14 @@ export default defineComponent({
           dense
           borderless
           hide-bottom-space
-          :model-value="responsibility"
+          :model-value="formCoordinatorData.responsibility"
           :rules="[(val) => !!val || $t('form.messageResponsibilityRequired')]"
           data-cy="form-coordinator-responsibility"
         >
           <q-checkbox
             dense
-            id="form-coordinator-terms"
-            v-model="responsibility"
+            id="form-coordinator-responsibility"
+            v-model="formCoordinatorData.responsibility"
             color="primary"
             :true-value="true"
             :false-value="false"
@@ -127,14 +188,14 @@ export default defineComponent({
           dense
           borderless
           hide-bottom-space
-          :model-value="terms"
+          :model-value="formCoordinatorData.terms"
           :rules="[(val) => !!val || $t('form.messageTermsRequired')]"
           data-cy="form-coordinator-terms"
         >
           <q-checkbox
             dense
             id="form-coordinator-terms"
-            v-model="terms"
+            v-model="formCoordinatorData.terms"
             color="primary"
             :true-value="true"
             :false-value="false"
@@ -179,7 +240,6 @@ export default defineComponent({
           type="submit"
           color="primary"
           :label="$t('form.buttonCoordinatorApplication')"
-          @click.prevent="onSubmit"
           class="q-mt-lg"
           data-cy="form-coordinator-submit"
         />
