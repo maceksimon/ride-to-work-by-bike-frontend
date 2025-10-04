@@ -270,6 +270,7 @@ function coreTests() {
             ).then((responseUpdatedAll) => {
               // wait for register-challenge GET request
               cy.waitForRegisterChallengeGetApi(responseRegisterChallenge);
+              cy.get('@getRegisterChallenge.all').should('have.length', 1);
               // newsletter challenge is enabled
               cy.dataCy('newsletter-feature-item').each(($item) => {
                 const dataId = $item.attr('data-id');
@@ -300,8 +301,10 @@ function coreTests() {
               ).then((request) => {
                 cy.waitForRegisterChallengePutApi(request);
               });
+              cy.get('@putRegisterChallenge.all').should('have.length', 1);
               // wait for GET request
               cy.waitForRegisterChallengeGetApi(responseUpdated);
+              cy.get('@getRegisterChallenge.all').should('have.length', 2);
               // verify button state changed
               cy.dataCy('newsletter-feature-item')
                 .filter('[data-id="mobility"]')
@@ -324,8 +327,10 @@ function coreTests() {
               ).then((request) => {
                 cy.waitForRegisterChallengePutApi(request);
               });
+              cy.get('@putRegisterChallenge.all').should('have.length', 2);
               // wait for GET request
               cy.waitForRegisterChallengeGetApi(responseUpdatedAll);
+              cy.get('@getRegisterChallenge.all').should('have.length', 3);
               // verify button state changed
               cy.dataCy('newsletter-feature-item')
                 .filter('[data-id="events"]')
