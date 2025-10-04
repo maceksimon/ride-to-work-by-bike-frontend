@@ -449,7 +449,16 @@ describe('<FormLogin>', () => {
 
     it('shows error if API call fails (error has message)', () => {
       const store = useLoginStore();
-      cy.wrap(store.login({ username, password })).then((result) => {
+      cy.wrap(
+        store.login(
+          { username, password },
+          {
+            redirectAfterLogin: false,
+            showSuccessMessage: true,
+            showErrorMessage: true,
+          },
+        ),
+      ).then((result) => {
         expect(result).to.equal(null);
         cy.get(classSelectorQNotificationMessage)
           .should('be.visible')
