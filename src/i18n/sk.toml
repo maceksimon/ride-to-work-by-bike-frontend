@@ -836,7 +836,7 @@ apiMessageError = "Registrácia koordinátora sa nezdařila. Prosím, skúste to
 apiMessageErrorWithMessage = "Registrácia koordinátora sa nezdařila. Prosím, skúste to znovu později. Chyba: {error}"
 apiMessageSuccess = "Registrácia koordinátora bola úspešná"
 messageMissingPersonalDetails = "Formulár nemohol byť odoslaný. Vo vašom profile chýbajú dôležité informácie: meno, priezvisko."
-messageMissingOrganizationId = "Formulár nemohol byť odoslaný. Vo vašom profile chýba ID vašej organizácie."
+messageMissingOrganizationId = "Formulár nemohol byť odoslaný. Váš profil nemá priradenú organizáciu."
 messageNoOrganizationId = "Prosím vyberte organizáciu, pre ktorú chcete byť koordinátorom."
 
 [register.form]
