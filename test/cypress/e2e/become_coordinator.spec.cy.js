@@ -84,10 +84,6 @@ describe('Become coordinator page', () => {
           cy.dataCy('form-coordinator-responsibility')
             .find('.q-checkbox__inner')
             .should('have.class', 'q-checkbox__inner--falsy');
-          // terms are checked based on registerChallenge data
-          cy.dataCy('form-coordinator-terms')
-            .find('.q-checkbox__inner')
-            .should('have.class', 'q-checkbox__inner--truthy');
           // check initial telephone value in store
           cy.fixture('apiGetRegisterChallengeProfile.json').then((response) => {
             cy.dataCy('debug-register-challenge-store').within(() => {
@@ -131,10 +127,6 @@ describe('Become coordinator page', () => {
           cy.dataCy('form-coordinator-responsibility')
             .find('.q-checkbox__inner')
             .should('have.class', 'q-checkbox__inner--falsy');
-          // terms are checked based on registerChallenge data
-          cy.dataCy('form-coordinator-terms')
-            .find('.q-checkbox__inner')
-            .should('have.class', 'q-checkbox__inner--truthy');
         });
       });
     });

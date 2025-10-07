@@ -1,8 +1,5 @@
 import FormCoordinatorApplication from 'components/form/FormCoordinatorApplication.vue';
 import { i18n } from '../../boot/i18n';
-import { rideToWorkByBikeConfig } from '../../boot/global_vars';
-
-const { challengeMonth } = rideToWorkByBikeConfig;
 
 describe('<FormCoordinatorApplication>', () => {
   it('has translation for all strings', () => {
@@ -11,12 +8,7 @@ describe('<FormCoordinatorApplication>', () => {
         'labelYourPosition',
         'labelYourPhone',
         'labelCoordinatorResponsibility',
-        'labelPrivacyConsent',
-        'linkPrivacyConsent',
         'buttonCoordinatorApplication',
-        'labelTermsChallenge.may',
-        'labelTermsChallenge.september',
-        'labelTermsChallenge.october',
       ],
       'form',
       i18n,
@@ -67,17 +59,6 @@ function coreTests() {
       .find('.q-checkbox__label')
       .should('be.visible')
       .and('contain', i18n.global.t('form.labelCoordinatorResponsibility'));
-    // checkbox terms
-    cy.dataCy('form-coordinator-terms')
-      .should('be.visible')
-      .find('.q-checkbox__label')
-      .should('be.visible')
-      .and('contain', i18n.global.t('form.labelPrivacyConsent'))
-      .and('contain', i18n.global.t('form.linkPrivacyConsent'))
-      .and(
-        'contain',
-        i18n.global.t(`form.labelTermsChallenge.${challengeMonth}`),
-      );
     // submit button
     cy.dataCy('form-coordinator-submit')
       .should('be.visible')
@@ -97,15 +78,6 @@ function coreTests() {
     cy.dataCy('form-coordinator-responsibility').should(
       'contain',
       i18n.global.t('form.messageResponsibilityRequired'),
-    );
-    // terms checkbox
-    // tick box
-    cy.dataCy('form-coordinator-terms').find('.q-checkbox__inner').click();
-    // untick box (to trigger validation)
-    cy.dataCy('form-coordinator-terms').find('.q-checkbox__inner').click();
-    cy.dataCy('form-coordinator-terms').should(
-      'contain',
-      i18n.global.t('form.messageTermsRequired'),
     );
   });
 

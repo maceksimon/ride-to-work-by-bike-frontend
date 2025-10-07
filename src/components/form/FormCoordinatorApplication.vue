@@ -74,7 +74,7 @@ export default defineComponent({
       newsletter: personalDetails.newsletter || [],
       phone: '',
       responsibility: false,
-      terms: personalDetails.terms || false,
+      terms: personalDetails.terms || true,
     });
 
     const { challengeMonth } = rideToWorkByBikeConfig;
@@ -128,7 +128,6 @@ export default defineComponent({
       formCoordinatorData.jobTitle = '';
       formCoordinatorData.phone = '';
       formCoordinatorData.responsibility = false;
-      formCoordinatorData.terms = true;
     };
 
     return {
@@ -194,56 +193,6 @@ export default defineComponent({
             <!-- Default slot: label -->
             <span>
               {{ $t('form.labelCoordinatorResponsibility') }}
-            </span>
-          </q-checkbox>
-        </q-field>
-      </div>
-      <div class="col-12">
-        <!-- Input: Terms and conditions -->
-        <q-field
-          dense
-          borderless
-          hide-bottom-space
-          :model-value="formCoordinatorData.terms"
-          :rules="[(val) => !!val || $t('form.messageTermsRequired')]"
-          data-cy="form-coordinator-terms"
-        >
-          <q-checkbox
-            dense
-            id="form-coordinator-terms"
-            v-model="formCoordinatorData.terms"
-            color="primary"
-            :true-value="true"
-            :false-value="false"
-            rules="required"
-            class="text-grey-10"
-            data-cy="form-terms-input"
-          >
-            <!-- Link: consent -->
-            <span>
-              {{ $t('form.labelPrivacyConsent') }}
-              <!-- TODO: Link to privacy consent page -->
-              <a
-                href="#"
-                target="_blank"
-                class="text-primary"
-                @click.stop
-                data-cy="form-terms-link"
-                >{{ $t('form.linkPrivacyConsent') }}</a
-              >
-            </span>
-            {{ $t('global.and') }}
-            <!-- Link: terms -->
-            <span>
-              <!-- TODO: Link to terms page -->
-              <a
-                href="#"
-                target="_blank"
-                class="text-primary"
-                @click.stop
-                data-cy="form-terms-link"
-                >{{ $t(`form.labelTermsChallenge.${challengeMonth}`) }}</a
-              >.
             </span>
           </q-checkbox>
         </q-field>
