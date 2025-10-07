@@ -103,12 +103,18 @@ export default defineComponent({
               v-if="subsidiariesCount"
               color="transparent"
               icon="mdi-office-building"
+              data-cy="header-organization-branch-count"
             >
               {{ subsidiariesCount }}
               {{ $t('coordinator.labelBranches', subsidiariesCount) }}
             </q-chip>
             <!-- Members -->
-            <q-chip v-if="countMembers" color="transparent" icon="mdi-account">
+            <q-chip
+              v-if="countMembers"
+              color="transparent"
+              icon="mdi-account"
+              data-cy="header-organization-member-count"
+            >
               {{ countMembers }}
               {{ $t('coordinator.labelMembers', countMembers) }}
             </q-chip>
