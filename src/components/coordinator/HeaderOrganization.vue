@@ -71,16 +71,18 @@ export default defineComponent({
             height="96"
             :alt="organization.image.alt"
           />
-          <!-- Fallback icon -->
+          <!-- Fallback: Icon -->
           <q-icon
             v-else
+            color="secondary"
             name="svguse:icons/drawer_menu/icons.svg#lucide-building"
             size="96px"
+            data-cy="header-organization-image-icon"
           />
         </q-avatar>
       </div>
       <div class="col">
-        <div class="q-pt-sm">
+        <div class="q-pt-sm" data-cy="header-organization-data">
           <!-- Title -->
           <h3
             class="text-h5 text-weight-bold q-my-none"
