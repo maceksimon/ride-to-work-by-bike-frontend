@@ -235,7 +235,7 @@ titleLocations = "Points of interest along your way"
 
 [companyCoordinator]
 labelRegisterCoordinator = "I want to become a company coordinator"
-textBecomeCoordinator = "<p>Your organization <b>{organizationName}</b> has no coordinator yet. You can become one!</p><p>As coordinator you will be responsible for:</p><ul><li>Ask your employer to pay the entry fee.</li><li>Distribute start packages to participants.</li><li>List any internal challenges.</li><li>Approve payments for your employees on an ongoing basis and then generate an invoice.</li></ul><p>You will also have access to the Ride to Work by Bike system, where you will find information about your organisation's participation and results, including teams and individual participants.</p><p><b>You won't register participants yourself, you can just ask them to sign up.</b></p>"
+textBecomeCoordinator = "<p>Your organization <b>{organizationName}</b> has no coordinator yet. You can become one!</p><p>As coordinator you will be responsible for:</p><ul><li>Requesting employers or school directors to pay the entry fee.</li><li>Ensuring the accuracy and completeness of data in the system (billing information, addresses on packages/branches).</li><li>Distributing starter packs to participants.</li><li>Organizing any internal company challenges.</li><li>Regularly approving payments for your employees and subsequently generating an invoice.</li></ul><p>You will also have access to the Ride to Work by Bike system, where you will find information about your organisation's participation and results, including teams and individual participants.</p><p><b>You won't register participants yourself, you can just ask them to sign up.</b></p>"
 titleBecomeCoordinator = "Become a company coordinator"
 
 [coordinator]
@@ -926,7 +926,7 @@ parseEntryFeePaymentOptionsError = "Error parsing entry fee payment options {err
 title.may = "Coordinator registration for&nbsp;the&nbsp;May Challenge"
 title.october = "Coordinator registration for&nbsp;the&nbsp;October Challenge"
 titleInfo = "Duties of the coordinator"
-info = "<p>As a coordinator, you will be responsible for:</p><ul><li>Requesting employers or school directors to pay the entry fee.</li><li>Distributing starter packs to participants.</li><li>Organizing any internal company challenges.</li><li>Regularly approving payments for your employees and subsequently generating an invoice.</li></ul><p>You will also have access to the Bike to Work system, where you can find information about your organization's participation and results, including teams and individual participants.</p><p><strong>You will not register participants yourself, you can only approach them to sign up.</strong></p>"
+info = "<p>As a coordinator, you will be responsible for:</p><ul><li>Requesting employers or school directors to pay the entry fee.</li><li>Ensuring the accuracy and completeness of data in the system (billing information, addresses on packages/branches).</li><li>Distributing starter packs to participants.</li><li>Organizing any internal company challenges.</li><li>Regularly approving payments for your employees and subsequently generating an invoice.</li></ul><p>You will also have access to the Bike to Work system, where you can find information about your organization's participation and results, including teams and individual participants.</p><p><strong>You will not register participants yourself, you can only approach them to sign up.</strong></p>"
 
 [register.coordinator.form]
 title = "Registration"
