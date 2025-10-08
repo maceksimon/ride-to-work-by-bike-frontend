@@ -5,6 +5,8 @@ import {
   createRouter,
   createWebHashHistory,
   createWebHistory,
+  type RouteLocationNormalized,
+  type NavigationGuardNext,
 } from 'vue-router';
 import { useChallengeStore } from 'src/stores/challenge';
 import { useLoginStore } from 'src/stores/login';
@@ -15,6 +17,376 @@ import { routesConf } from './routes_conf';
 import { PhaseType } from '../components/types/Challenge';
 
 import type { Logger } from '../components/types/Logger';
+
+// defines important states for routing
+interface RouterState {
+  isAuthenticated: boolean;
+  isEmailVerified: boolean;
+  isAppAccessible: boolean;
+  isRegistrationComplete: boolean;
+  isUserOrganizationAdmin: boolean;
+  isRegistrationPhaseActive: boolean;
+}
+
+// defines commonly used route groups
+const ROUTE_GROUPS = {
+  LOGIN: ['login', 'register', 'confirm_email', 'reset_password'],
+  VERIFY_EMAIL: ['verify_email', 'confirm_email'],
+  CHALLENGE_INACTIVE: ['challenge_inactive'],
+  REGISTER_CHALLENGE: ['register_challenge', 'register_coordinator'],
+  FULL_APP_RESTRICTED: [
+    'login',
+    'register',
+    'verify_email',
+    'reset_password',
+    'challenge_inactive',
+    'register_challenge',
+    'register_coordinator',
+  ],
+  ADMIN_FULL_APP_RESTRICTED: [
+    'login',
+    'register',
+    'verify_email',
+    'reset_password',
+    'challenge_inactive',
+    'routes',
+    'register_coordinator',
+  ],
+} as const;
+
+/**
+ * Logs the current router state.
+ * @param {Logger | null} logger - logger instance
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {RouteLocationNormalized} from - from route location
+ * @param {RouterState} state - router state loaded from stores
+ */
+function logRouterState(
+  logger: Logger | null,
+  to: RouteLocationNormalized,
+  from: RouteLocationNormalized,
+  state: RouterState,
+): void {
+  logger?.debug(`Router path <${to.path}>.`);
+  logger?.debug(`Router from path <${from.path}>.`);
+  logger?.debug(`Router user is authenticated <${state.isAuthenticated}>.`);
+  logger?.debug(`Router user email is verified <${state.isEmailVerified}>.`);
+  logger?.debug(
+    `Router registration phase is active <${state.isRegistrationPhaseActive}>.`,
+  );
+  logger?.debug(
+    `Router registration app is accessible <${state.isAppAccessible}>`,
+  );
+  logger?.debug(
+    `Router registration is complete <${state.isRegistrationComplete}>.`,
+  );
+  logger?.debug(
+    `Router user is organization admin <${state.isUserOrganizationAdmin}>.`,
+  );
+}
+
+/**
+ * Checks if the current `to` route is accessing any of the given routes.
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {readonly string[]} routeNames - route names to check against
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @returns {boolean} - whether the route is matched
+ */
+function isAccessingRoutes(
+  to: RouteLocationNormalized,
+  routeNames: readonly string[],
+  routesConf: Record<string, { path: string }>,
+): boolean {
+  return to.matched.some((record) =>
+    routeNames.some(
+      (routeName) => record.path === routesConf[routeName]['path'],
+    ),
+  );
+}
+
+/**
+ * Logs if the current `to` route is accessing any of the given routes.
+ * @param {Logger | null} logger - logger instance
+ * @param {readonly string[]} routeNames - route names to check against
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {boolean} matched - whether the route is matched
+ */
+function logRouteCheck(
+  logger: Logger | null,
+  routeNames: readonly string[],
+  routesConf: Record<string, { path: string }>,
+  matched: boolean,
+): void {
+  const routePaths = routeNames
+    .map((name) => routesConf[name]['path'])
+    .join(', ');
+  logger?.debug(
+    `Router path <${routePaths}> is ${matched ? '' : 'not '}matched <${matched}>.`,
+  );
+}
+
+/**
+ * Redirects to the given path and logs the action.
+ * @param {Logger | null} logger - logger instance
+ * @param {string} path - path to redirect to
+ * @param {NavigationGuardNext} next - next function
+ */
+function redirectWithLogging(
+  logger: Logger | null,
+  path: string,
+  next: NavigationGuardNext,
+): void {
+  logger?.debug(`Router path redirect to page URL <${path}>.`);
+  next({ path });
+}
+
+/**
+ * Checks if user is attempting an unauthenticated access (not logged in)
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkUnauthenticatedAccess(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    !state.isAuthenticated &&
+    !isAccessingRoutes(to, ROUTE_GROUPS.LOGIN, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.LOGIN, routesConf, false);
+    redirectWithLogging(logger, routesConf['login']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if user is attempting an access without email verification
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkEmailVerificationAccess(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    !state.isEmailVerified &&
+    !isAccessingRoutes(to, ROUTE_GROUPS.VERIFY_EMAIL, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.VERIFY_EMAIL, routesConf, false);
+    redirectWithLogging(logger, routesConf['verify_email']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if user is attempting an access when app is not accessible
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkAppAccessibility(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    state.isEmailVerified &&
+    !state.isAppAccessible &&
+    !isAccessingRoutes(to, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf, false);
+    redirectWithLogging(logger, routesConf['challenge_inactive']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if user is attempting an access to routes restricted in "app full" access
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkRegistrationComplete(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    state.isEmailVerified &&
+    state.isAppAccessible &&
+    state.isRegistrationComplete &&
+    isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf, true);
+    redirectWithLogging(logger, routesConf['home']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if user is attempting an access to routes outside the "register challenge" access
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkRegisterChallenge(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    state.isEmailVerified &&
+    state.isAppAccessible &&
+    !state.isRegistrationComplete &&
+    !state.isUserOrganizationAdmin &&
+    state.isRegistrationPhaseActive &&
+    !isAccessingRoutes(to, ROUTE_GROUPS.REGISTER_CHALLENGE, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.REGISTER_CHALLENGE, routesConf, false);
+    redirectWithLogging(logger, routesConf['register_challenge']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if user is attempting an access to routes outside the "challenge inactive" access
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkChallengeInactiveForNonAdmin(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    state.isEmailVerified &&
+    state.isAppAccessible &&
+    !state.isRegistrationComplete &&
+    !state.isUserOrganizationAdmin &&
+    !state.isRegistrationPhaseActive &&
+    !isAccessingRoutes(to, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf, false);
+    redirectWithLogging(logger, routesConf['challenge_inactive']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if admin user is attempting an access to routes outside the "app full + register-challenge" access
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkAdminFullWithRegisterChallenge(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    state.isEmailVerified &&
+    state.isAppAccessible &&
+    !state.isRegistrationComplete &&
+    state.isUserOrganizationAdmin &&
+    state.isRegistrationPhaseActive &&
+    isAccessingRoutes(to, ROUTE_GROUPS.ADMIN_FULL_APP_RESTRICTED, routesConf)
+  ) {
+    logRouteCheck(
+      logger,
+      ROUTE_GROUPS.ADMIN_FULL_APP_RESTRICTED,
+      routesConf,
+      true,
+    );
+    redirectWithLogging(logger, routesConf['home']['path'], next);
+    return true;
+  }
+  return false;
+}
+
+/**
+ * Checks if admin user is attempting an access to routes outside the "app full" access
+ * @param {RouterState} state - router state
+ * @param {RouteLocationNormalized} to - to route location
+ * @param {Record<string, { path: string }>} routesConf - routes configuration
+ * @param {Logger | null} logger - logger instance
+ * @param {NavigationGuardNext} next - next function
+ * @returns {boolean} - whether user was redirected
+ */
+function checkAdminFullApp(
+  state: RouterState,
+  to: RouteLocationNormalized,
+  routesConf: Record<string, { path: string }>,
+  logger: Logger | null,
+  next: NavigationGuardNext,
+): boolean {
+  if (
+    state.isAuthenticated &&
+    state.isEmailVerified &&
+    state.isAppAccessible &&
+    !state.isRegistrationComplete &&
+    state.isUserOrganizationAdmin &&
+    !state.isRegistrationPhaseActive &&
+    isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf)
+  ) {
+    logRouteCheck(logger, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf, true);
+    redirectWithLogging(logger, routesConf['home']['path'], next);
+    return true;
+  }
+  return false;
+}
+
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -55,390 +427,46 @@ export default route(function (/* { store, ssrContext } */) {
       const registerStore = useRegisterStore();
       const registerChallengeStore = useRegisterChallengeStore();
 
-      const isAuthenticated: boolean = await loginStore.validateAccessToken();
-      const isEmailVerified: boolean = registerStore.getIsEmailVerified;
-      const isRegistrationPhaseActive: boolean =
-        challengeStore.getIsChallengeInPhase(PhaseType.registration);
-      const isAppAccessible: boolean =
-        challengeStore.getIsChallengeInPhase(PhaseType.registration) ||
-        challengeStore.getIsChallengeInPhase(PhaseType.entryEnabled) ||
-        challengeStore.getIsChallengeInPhase(PhaseType.results);
-      const isRegistrationComplete: boolean =
-        registerChallengeStore.getIsRegistrationComplete;
-      const isUserOrganizationAdmin: boolean =
-        registerChallengeStore.getIsUserOrganizationAdmin || false;
+      const state: RouterState = {
+        isAuthenticated: await loginStore.validateAccessToken(),
+        isEmailVerified: registerStore.getIsEmailVerified,
+        isRegistrationPhaseActive: challengeStore.getIsChallengeInPhase(
+          PhaseType.registration,
+        ),
+        isAppAccessible:
+          challengeStore.getIsChallengeInPhase(PhaseType.registration) ||
+          challengeStore.getIsChallengeInPhase(PhaseType.entryEnabled) ||
+          challengeStore.getIsChallengeInPhase(PhaseType.results),
+        isRegistrationComplete:
+          registerChallengeStore.getIsRegistrationComplete,
+        isUserOrganizationAdmin:
+          registerChallengeStore.getIsUserOrganizationAdmin || false,
+      };
 
-      logger?.debug(`Router path <${to.path}>.`);
-      logger?.debug(`Router from path <${from.path}>.`);
-      logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-      logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-      logger?.debug(
-        `Router registration phase is active <${isRegistrationPhaseActive}>.`,
-      );
-      logger?.debug(
-        `Router registration app is accessible <${isAppAccessible}>`,
-      );
-      logger?.debug(
-        `Router registration is complete <${isRegistrationComplete}>.`,
-      );
-      logger?.debug(
-        `Router user is organization admin <${isUserOrganizationAdmin}>.`,
-      );
+      logRouterState(logger, to, from, state);
 
+      // Check each routing condition in order
+      if (checkUnauthenticatedAccess(state, to, routesConf, logger, next))
+        return;
+      if (checkEmailVerificationAccess(state, to, routesConf, logger, next))
+        return;
+      if (checkAppAccessibility(state, to, routesConf, logger, next)) return;
+      if (checkRegistrationComplete(state, to, routesConf, logger, next))
+        return;
+      if (checkRegisterChallenge(state, to, routesConf, logger, next)) return;
       if (
-        !isAuthenticated &&
-        /**
-         * Only these pages are accessible when NOT authenticated
-         *
-         * Access: "login"
-         */
-        !to.matched.some(
-          (record) =>
-            record.path === routesConf['login']['path'] ||
-            record.path === routesConf['register']['path'] ||
-            record.path === routesConf['confirm_email']['path'] ||
-            record.path === routesConf['reset_password']['path'],
-        )
-      ) {
-        logger?.debug(
-          `Router user is not authenticated <${!isAuthenticated}>.`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['login']['path']}>,` +
-            ` <${routesConf['register']['path']}>,` +
-            ` <${routesConf['confirm_email']['path']}>,` +
-            ` <${routesConf['reset_password']['path']}>` +
-            ` is not matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['login']['path'] ||
-                record.path === routesConf['register']['path'] ||
-                record.path === routesConf['confirm_email']['path'] ||
-                record.path === routesConf['reset_password']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['login']['path']}>.`,
-        );
-        // redirect to login page
-        next({ path: routesConf['login']['path'] });
-      } else if (
-        isAuthenticated &&
-        !isEmailVerified &&
-        !to.matched.some(
-          /**
-           * Only these pages are accessible when authenticated
-           * and NOT verified email
-           *
-           * Access: "verify email"
-           */
-          (record) =>
-            record.path === routesConf['verify_email']['path'] ||
-            record.path === routesConf['confirm_email']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(
-          `Router user email is not verified <${!isEmailVerified}>.`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['verify_email']['path']}>,` +
-            ` <${routesConf['confirm_email']['path']}>` +
-            ` is not matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['verify_email']['path'] ||
-                record.path === routesConf['confirm_email']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['verify_email']['path']}>.`,
-        );
-        // redirect to verify email page
-        next({ path: routesConf['verify_email']['path'] });
-      } else if (
-        isAuthenticated &&
-        isEmailVerified &&
-        !isAppAccessible &&
-        !to.matched.some(
-          /**
-           * Only these pages are accessible when authenticated and verified
-           * and app is NOT accessible.
-           *
-           * Access: "challenge inactive"
-           */
-          (record) => record.path === routesConf['challenge_inactive']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(
-          `Router registration phase is not active <${!isRegistrationPhaseActive}>`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['challenge_inactive']['path']}>` +
-            ` is not matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['challenge_inactive']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['challenge_inactive']['path']}>.`,
-        );
-        // redirect to challenge inactive page
-        next({ path: routesConf['challenge_inactive']['path'] });
-      } else if (
-        isAuthenticated &&
-        isEmailVerified &&
-        isAppAccessible &&
-        isRegistrationComplete &&
-        to.matched.some(
-          /**
-           * These pages are NOT accessible when authenticated and verified,
-           * app is accessible and registration is complete.
-           *
-           * Access: "app full"
-           */
-          (record) =>
-            record.path === routesConf['login']['path'] ||
-            record.path === routesConf['register']['path'] ||
-            record.path === routesConf['verify_email']['path'] ||
-            record.path === routesConf['reset_password']['path'] ||
-            record.path === routesConf['challenge_inactive']['path'] ||
-            record.path === routesConf['register_challenge']['path'] ||
-            record.path === routesConf['register_coordinator']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(
-          `Router registration phase is active <${isRegistrationPhaseActive}>`,
-        );
-        logger?.debug(
-          `Router registration is complete <${isRegistrationComplete}>`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['login']['path']}>,` +
-            ` <${routesConf['register']['path']}>` +
-            ` <${routesConf['verify_email']['path']}>` +
-            ` <${routesConf['reset_password']['path']}>` +
-            ` <${routesConf['challenge_inactive']['path']}>` +
-            ` <${routesConf['register_challenge']['path']}>` +
-            ` <${routesConf['register_coordinator']['path']}>` +
-            ` is matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['login']['path'] ||
-                record.path === routesConf['register']['path'] ||
-                record.path === routesConf['verify_email']['path'] ||
-                record.path === routesConf['reset_password']['path'] ||
-                record.path === routesConf['challenge_inactive']['path'] ||
-                record.path === routesConf['register_challenge']['path'] ||
-                record.path === routesConf['register_coordinator']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['home']['path']}>.`,
-        );
-        // redirect to home page
-        next({ path: routesConf['home']['path'] });
-      } else if (
-        isAuthenticated &&
-        isEmailVerified &&
-        isAppAccessible &&
-        !isRegistrationComplete &&
-        !isUserOrganizationAdmin &&
-        isRegistrationPhaseActive &&
-        /**
-         * Only these pages are accessible when authenticated and verified,
-         * app is accessible, registration is NOT complete,
-         * user is NOT organization admin and registration phase is active.
-         *
-         * Access: "register challenge"
-         */
-        !to.matched.some(
-          (record) =>
-            record.path === routesConf['register_challenge']['path'] ||
-            record.path === routesConf['register_coordinator']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(
-          `Router registration phase is active <${isRegistrationPhaseActive}>.`,
-        );
-        logger?.debug(
-          `Router registration is not complete <${!isRegistrationComplete}>.`,
-        );
-        logger?.debug(
-          `Router user is not organization admin <${!isUserOrganizationAdmin}>.`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['register_challenge']['path']}>` +
-            ` <${routesConf['register_coordinator']['path']}>` +
-            ` is not matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['register_challenge']['path'] ||
-                record.path === routesConf['register_coordinator']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['register_challenge']['path']}>.`,
-        );
-        // redirect to register challenge page
-        next({ path: routesConf['register_challenge']['path'] });
-      } else if (
-        isAuthenticated &&
-        isEmailVerified &&
-        isAppAccessible &&
-        !isRegistrationComplete &&
-        !isUserOrganizationAdmin &&
-        !isRegistrationPhaseActive &&
-        /**
-         * Only these pages are accessible when authenticated, email
-         * is verified, app is accessible, registration is NOT complete,
-         * user is NOT organization admin and registration phase
-         * is NOT active.
-         *
-         * Access: "challenge inactive"
-         */
-        !to.matched.some(
-          (record) => record.path === routesConf['challenge_inactive']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(
-          `Router registration phase is not active <${!isRegistrationPhaseActive}>`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['challenge_inactive']['path']}>` +
-            ` is not matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['challenge_inactive']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['challenge_inactive']['path']}>.`,
-        );
-        // redirect to challenge inactive page
-        next({ path: routesConf['challenge_inactive']['path'] });
-      } else if (
-        isAuthenticated &&
-        isEmailVerified &&
-        isAppAccessible &&
-        !isRegistrationComplete &&
-        isUserOrganizationAdmin &&
-        isRegistrationPhaseActive &&
-        /**
-         * These pages are not accessible when authenticated and verified,
-         * registration phase is active, registration is not complete and user is
-         * organization admin.
-         *
-         * Access: "app full + register-challenge"
-         */
-        to.matched.some(
-          (record) =>
-            record.path === routesConf['login']['path'] ||
-            record.path === routesConf['register']['path'] ||
-            record.path === routesConf['verify_email']['path'] ||
-            record.path === routesConf['challenge_inactive']['path'] ||
-            record.path === routesConf['routes']['path'] ||
-            record.path === routesConf['register_coordinator']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(
-          `Router registration phase is active <${isRegistrationPhaseActive}>.`,
-        );
-        logger?.debug(
-          `Router registration is not complete <${!isRegistrationComplete}>.`,
-        );
-        logger?.debug(
-          `Router user is organization admin <${isUserOrganizationAdmin}>.`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['login']['path']}>,` +
-            ` <${routesConf['register']['path']}>` +
-            ` <${routesConf['verify_email']['path']}>` +
-            ` <${routesConf['challenge_inactive']['path']}>` +
-            ` <${routesConf['routes']['path']}>` +
-            ` <${routesConf['register_coordinator']['path']}>` +
-            ` is matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['login']['path'] ||
-                record.path === routesConf['register']['path'] ||
-                record.path === routesConf['verify_email']['path'] ||
-                record.path === routesConf['challenge_inactive']['path'] ||
-                record.path === routesConf['routes']['path'] ||
-                record.path === routesConf['register_coordinator']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['home']['path']}>.`,
-        );
-        // redirect to home page
-        next({ path: routesConf['home']['path'] });
-        // pass
-      } else if (
-        isAuthenticated &&
-        isEmailVerified &&
-        isAppAccessible &&
-        !isRegistrationComplete &&
-        isUserOrganizationAdmin &&
-        !isRegistrationPhaseActive &&
-        to.matched.some(
-          /**
-           * These pages are NOT accessible when authenticated,
-           * email is verified, app is accessible, registration is NOT complete
-           * user is organization admin and registration phase is NOT active.
-           *
-           * Access: "app full"
-           */
-          (record) =>
-            record.path === routesConf['login']['path'] ||
-            record.path === routesConf['register']['path'] ||
-            record.path === routesConf['verify_email']['path'] ||
-            record.path === routesConf['reset_password']['path'] ||
-            record.path === routesConf['challenge_inactive']['path'] ||
-            record.path === routesConf['register_challenge']['path'] ||
-            record.path === routesConf['register_coordinator']['path'],
-        )
-      ) {
-        logger?.debug(`Router user is authenticated <${isAuthenticated}>.`);
-        logger?.debug(`Router user email is verified <${isEmailVerified}>.`);
-        logger?.debug(
-          `Router registration phase is active <${isRegistrationPhaseActive}>`,
-        );
-        logger?.debug(
-          `Router registration is complete <${isRegistrationComplete}>`,
-        );
-        logger?.debug(
-          `Router path <${routesConf['login']['path']}>,` +
-            ` <${routesConf['register']['path']}>` +
-            ` <${routesConf['verify_email']['path']}>` +
-            ` <${routesConf['reset_password']['path']}>` +
-            ` <${routesConf['challenge_inactive']['path']}>` +
-            ` <${routesConf['register_challenge']['path']}>` +
-            ` <${routesConf['register_coordinator']['path']}>` +
-            ` is matched <${!to.matched.some(
-              (record) =>
-                record.path === routesConf['login']['path'] ||
-                record.path === routesConf['register']['path'] ||
-                record.path === routesConf['verify_email']['path'] ||
-                record.path === routesConf['reset_password']['path'] ||
-                record.path === routesConf['challenge_inactive']['path'] ||
-                record.path === routesConf['register_challenge']['path'] ||
-                record.path === routesConf['register_coordinator']['path'],
-            )}>.`,
-        );
-        logger?.debug(
-          `Router path redirect to page URL <${routesConf['home']['path']}>.`,
-        );
-        // redirect to home page
-        next({ path: routesConf['home']['path'] });
-      } else {
-        logger?.info('Router call <next()> function.');
-        next();
-      }
+        checkChallengeInactiveForNonAdmin(state, to, routesConf, logger, next)
+      )
+        return;
+      if (
+        checkAdminFullWithRegisterChallenge(state, to, routesConf, logger, next)
+      )
+        return;
+      if (checkAdminFullApp(state, to, routesConf, logger, next)) return;
+
+      // Allow navigation if no conditions matched
+      logger?.info('Router call <next()> function.');
+      next();
     });
   } else {
     logger?.info('Authentification was disabled for Cypress e2e tests.');
