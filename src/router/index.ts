@@ -197,8 +197,7 @@ export default route(function (/* { store, ssrContext } */) {
       };
 
       logRouterState(logger, to, from, state);
-
-      // Check each routing condition in order
+      // Login access: ONLY access LOGIN path group
       if (
         !state.isAuthenticated &&
         !isAccessingRoutes(to, ROUTE_GROUPS.LOGIN, routesConf)
@@ -207,7 +206,7 @@ export default route(function (/* { store, ssrContext } */) {
         redirectWithLogging(logger, routesConf['login']['path'], next);
         return;
       }
-
+      // Verify email access: ONLY access VERIFY_EMAIL path group
       if (
         state.isAuthenticated &&
         !state.isEmailVerified &&
@@ -217,7 +216,7 @@ export default route(function (/* { store, ssrContext } */) {
         redirectWithLogging(logger, routesConf['verify_email']['path'], next);
         return;
       }
-
+      // Challenge inactive access: ONLY access CHALLENGE_INACTIVE path group
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -237,7 +236,7 @@ export default route(function (/* { store, ssrContext } */) {
         );
         return;
       }
-
+      // Full app access: NO access FULL_APP_RESTRICTED path group
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -254,7 +253,7 @@ export default route(function (/* { store, ssrContext } */) {
         redirectWithLogging(logger, routesConf['home']['path'], next);
         return;
       }
-
+      // Register challenge access: ONLY access REGISTER_CHALLENGE path group
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -277,7 +276,7 @@ export default route(function (/* { store, ssrContext } */) {
         );
         return;
       }
-
+      // Challenge inactive access: ONLY access CHALLENGE_INACTIVE path group
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -300,7 +299,7 @@ export default route(function (/* { store, ssrContext } */) {
         );
         return;
       }
-
+      // Full app + Register challenge access: NO access ADMIN_FULL_APP_RESTRICTED path group
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -323,7 +322,7 @@ export default route(function (/* { store, ssrContext } */) {
         redirectWithLogging(logger, routesConf['home']['path'], next);
         return;
       }
-
+      // Full app access: NO access FULL_APP_RESTRICTED path group
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
