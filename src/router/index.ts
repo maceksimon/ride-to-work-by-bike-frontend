@@ -140,253 +140,6 @@ function redirectWithLogging(
   next({ path });
 }
 
-/**
- * Checks if user is attempting an unauthenticated access (not logged in)
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkUnauthenticatedAccess(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    !state.isAuthenticated &&
-    !isAccessingRoutes(to, ROUTE_GROUPS.LOGIN, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.LOGIN, routesConf, false);
-    redirectWithLogging(logger, routesConf['login']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if user is attempting an access without email verification
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkEmailVerificationAccess(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    !state.isEmailVerified &&
-    !isAccessingRoutes(to, ROUTE_GROUPS.VERIFY_EMAIL, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.VERIFY_EMAIL, routesConf, false);
-    redirectWithLogging(logger, routesConf['verify_email']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if user is attempting an access when app is not accessible
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkAppAccessibility(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    state.isEmailVerified &&
-    !state.isAppAccessible &&
-    !isAccessingRoutes(to, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf, false);
-    redirectWithLogging(logger, routesConf['challenge_inactive']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if user is attempting an access to routes restricted in "app full" access
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkRegistrationComplete(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    state.isEmailVerified &&
-    state.isAppAccessible &&
-    state.isRegistrationComplete &&
-    isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf, true);
-    redirectWithLogging(logger, routesConf['home']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if user is attempting an access to routes outside the "register challenge" access
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkRegisterChallenge(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    state.isEmailVerified &&
-    state.isAppAccessible &&
-    !state.isRegistrationComplete &&
-    !state.isUserOrganizationAdmin &&
-    state.isRegistrationPhaseActive &&
-    !isAccessingRoutes(to, ROUTE_GROUPS.REGISTER_CHALLENGE, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.REGISTER_CHALLENGE, routesConf, false);
-    redirectWithLogging(logger, routesConf['register_challenge']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if user is attempting an access to routes outside the "challenge inactive" access
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkChallengeInactiveForNonAdmin(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    state.isEmailVerified &&
-    state.isAppAccessible &&
-    !state.isRegistrationComplete &&
-    !state.isUserOrganizationAdmin &&
-    !state.isRegistrationPhaseActive &&
-    !isAccessingRoutes(to, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf, false);
-    redirectWithLogging(logger, routesConf['challenge_inactive']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if admin user is attempting an access to routes outside the "app full + register-challenge" access
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkAdminFullWithRegisterChallenge(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    state.isEmailVerified &&
-    state.isAppAccessible &&
-    !state.isRegistrationComplete &&
-    state.isUserOrganizationAdmin &&
-    state.isRegistrationPhaseActive &&
-    isAccessingRoutes(to, ROUTE_GROUPS.ADMIN_FULL_APP_RESTRICTED, routesConf)
-  ) {
-    logRouteCheck(
-      logger,
-      ROUTE_GROUPS.ADMIN_FULL_APP_RESTRICTED,
-      routesConf,
-      true,
-    );
-    redirectWithLogging(logger, routesConf['home']['path'], next);
-    return true;
-  }
-  return false;
-}
-
-/**
- * Checks if admin user is attempting an access to routes outside the "app full" access
- * @param {RouterState} state - router state
- * @param {RouteLocationNormalized} to - to route location
- * @param {Record<string, { path: string }>} routesConf - routes configuration
- * @param {Logger | null} logger - logger instance
- * @param {NavigationGuardNext} next - next function
- * @returns {boolean} - whether user was redirected
- */
-function checkAdminFullApp(
-  state: RouterState,
-  to: RouteLocationNormalized,
-  routesConf: Record<string, { path: string }>,
-  logger: Logger | null,
-  next: NavigationGuardNext,
-): boolean {
-  if (
-    state.isAuthenticated &&
-    state.isEmailVerified &&
-    state.isAppAccessible &&
-    !state.isRegistrationComplete &&
-    state.isUserOrganizationAdmin &&
-    !state.isRegistrationPhaseActive &&
-    isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf)
-  ) {
-    logRouteCheck(logger, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf, true);
-    redirectWithLogging(logger, routesConf['home']['path'], next);
-    return true;
-  }
-  return false;
-}
-
 /*
  * If not building with SSR mode, you can
  * directly export the Router instantiation;
@@ -446,23 +199,149 @@ export default route(function (/* { store, ssrContext } */) {
       logRouterState(logger, to, from, state);
 
       // Check each routing condition in order
-      if (checkUnauthenticatedAccess(state, to, routesConf, logger, next))
-        return;
-      if (checkEmailVerificationAccess(state, to, routesConf, logger, next))
-        return;
-      if (checkAppAccessibility(state, to, routesConf, logger, next)) return;
-      if (checkRegistrationComplete(state, to, routesConf, logger, next))
-        return;
-      if (checkRegisterChallenge(state, to, routesConf, logger, next)) return;
       if (
-        checkChallengeInactiveForNonAdmin(state, to, routesConf, logger, next)
-      )
+        !state.isAuthenticated &&
+        !isAccessingRoutes(to, ROUTE_GROUPS.LOGIN, routesConf)
+      ) {
+        logRouteCheck(logger, ROUTE_GROUPS.LOGIN, routesConf, false);
+        redirectWithLogging(logger, routesConf['login']['path'], next);
         return;
+      }
+
       if (
-        checkAdminFullWithRegisterChallenge(state, to, routesConf, logger, next)
-      )
+        state.isAuthenticated &&
+        !state.isEmailVerified &&
+        !isAccessingRoutes(to, ROUTE_GROUPS.VERIFY_EMAIL, routesConf)
+      ) {
+        logRouteCheck(logger, ROUTE_GROUPS.VERIFY_EMAIL, routesConf, false);
+        redirectWithLogging(logger, routesConf['verify_email']['path'], next);
         return;
-      if (checkAdminFullApp(state, to, routesConf, logger, next)) return;
+      }
+
+      if (
+        state.isAuthenticated &&
+        state.isEmailVerified &&
+        !state.isAppAccessible &&
+        !isAccessingRoutes(to, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf)
+      ) {
+        logRouteCheck(
+          logger,
+          ROUTE_GROUPS.CHALLENGE_INACTIVE,
+          routesConf,
+          false,
+        );
+        redirectWithLogging(
+          logger,
+          routesConf['challenge_inactive']['path'],
+          next,
+        );
+        return;
+      }
+
+      if (
+        state.isAuthenticated &&
+        state.isEmailVerified &&
+        state.isAppAccessible &&
+        state.isRegistrationComplete &&
+        isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf)
+      ) {
+        logRouteCheck(
+          logger,
+          ROUTE_GROUPS.FULL_APP_RESTRICTED,
+          routesConf,
+          true,
+        );
+        redirectWithLogging(logger, routesConf['home']['path'], next);
+        return;
+      }
+
+      if (
+        state.isAuthenticated &&
+        state.isEmailVerified &&
+        state.isAppAccessible &&
+        !state.isRegistrationComplete &&
+        !state.isUserOrganizationAdmin &&
+        state.isRegistrationPhaseActive &&
+        !isAccessingRoutes(to, ROUTE_GROUPS.REGISTER_CHALLENGE, routesConf)
+      ) {
+        logRouteCheck(
+          logger,
+          ROUTE_GROUPS.REGISTER_CHALLENGE,
+          routesConf,
+          false,
+        );
+        redirectWithLogging(
+          logger,
+          routesConf['register_challenge']['path'],
+          next,
+        );
+        return;
+      }
+
+      if (
+        state.isAuthenticated &&
+        state.isEmailVerified &&
+        state.isAppAccessible &&
+        !state.isRegistrationComplete &&
+        !state.isUserOrganizationAdmin &&
+        !state.isRegistrationPhaseActive &&
+        !isAccessingRoutes(to, ROUTE_GROUPS.CHALLENGE_INACTIVE, routesConf)
+      ) {
+        logRouteCheck(
+          logger,
+          ROUTE_GROUPS.CHALLENGE_INACTIVE,
+          routesConf,
+          false,
+        );
+        redirectWithLogging(
+          logger,
+          routesConf['challenge_inactive']['path'],
+          next,
+        );
+        return;
+      }
+
+      if (
+        state.isAuthenticated &&
+        state.isEmailVerified &&
+        state.isAppAccessible &&
+        !state.isRegistrationComplete &&
+        state.isUserOrganizationAdmin &&
+        state.isRegistrationPhaseActive &&
+        isAccessingRoutes(
+          to,
+          ROUTE_GROUPS.ADMIN_FULL_APP_RESTRICTED,
+          routesConf,
+        )
+      ) {
+        logRouteCheck(
+          logger,
+          ROUTE_GROUPS.ADMIN_FULL_APP_RESTRICTED,
+          routesConf,
+          true,
+        );
+        redirectWithLogging(logger, routesConf['home']['path'], next);
+        return;
+      }
+
+      if (
+        state.isAuthenticated &&
+        state.isEmailVerified &&
+        state.isAppAccessible &&
+        !state.isRegistrationComplete &&
+        state.isUserOrganizationAdmin &&
+        !state.isRegistrationPhaseActive &&
+        isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP_RESTRICTED, routesConf)
+      ) {
+        logRouteCheck(
+          logger,
+          ROUTE_GROUPS.FULL_APP_RESTRICTED,
+          routesConf,
+          true,
+        );
+        redirectWithLogging(logger, routesConf['home']['path'], next);
+        return;
+      }
 
       // Allow navigation if no conditions matched
       logger?.info('Router call <next()> function.');
