@@ -126,12 +126,12 @@ function logRouteCheck(
 }
 
 /**
- * Redirects to the given path and logs the action.
+ * Redirects to the given path.
  * @param {Logger | null} logger - logger instance
  * @param {string} path - path to redirect to
  * @param {NavigationGuardNext} next - next function
  */
-function redirectWithLogging(
+function redirect(
   logger: Logger | null,
   path: string,
   next: NavigationGuardNext,
@@ -203,7 +203,7 @@ export default route(function (/* { store, ssrContext } */) {
         !isAccessingRoutes(to, ROUTE_GROUPS.LOGIN, routesConf)
       ) {
         logRouteCheck(logger, ROUTE_GROUPS.LOGIN, routesConf, false);
-        redirectWithLogging(logger, routesConf['login']['path'], next);
+        redirect(logger, routesConf['login']['path'], next);
         return;
       }
       // Verify email access: ONLY access VERIFY_EMAIL path group
@@ -213,7 +213,7 @@ export default route(function (/* { store, ssrContext } */) {
         !isAccessingRoutes(to, ROUTE_GROUPS.VERIFY_EMAIL, routesConf)
       ) {
         logRouteCheck(logger, ROUTE_GROUPS.VERIFY_EMAIL, routesConf, false);
-        redirectWithLogging(logger, routesConf['verify_email']['path'], next);
+        redirect(logger, routesConf['verify_email']['path'], next);
         return;
       }
       // Challenge inactive access: ONLY access CHALLENGE_INACTIVE path group
@@ -229,11 +229,7 @@ export default route(function (/* { store, ssrContext } */) {
           routesConf,
           false,
         );
-        redirectWithLogging(
-          logger,
-          routesConf['challenge_inactive']['path'],
-          next,
-        );
+        redirect(logger, routesConf['challenge_inactive']['path'], next);
         return;
       }
       // Full app access: NO access FULL_APP_RESTRICTED path group
@@ -250,7 +246,7 @@ export default route(function (/* { store, ssrContext } */) {
           routesConf,
           true,
         );
-        redirectWithLogging(logger, routesConf['home']['path'], next);
+        redirect(logger, routesConf['home']['path'], next);
         return;
       }
       // Register challenge access: ONLY access REGISTER_CHALLENGE path group
@@ -269,11 +265,7 @@ export default route(function (/* { store, ssrContext } */) {
           routesConf,
           false,
         );
-        redirectWithLogging(
-          logger,
-          routesConf['register_challenge']['path'],
-          next,
-        );
+        redirect(logger, routesConf['register_challenge']['path'], next);
         return;
       }
       // Challenge inactive access: ONLY access CHALLENGE_INACTIVE path group
@@ -292,11 +284,7 @@ export default route(function (/* { store, ssrContext } */) {
           routesConf,
           false,
         );
-        redirectWithLogging(
-          logger,
-          routesConf['challenge_inactive']['path'],
-          next,
-        );
+        redirect(logger, routesConf['challenge_inactive']['path'], next);
         return;
       }
       // Full app + Register challenge access: NO access ADMIN_FULL_APP_RESTRICTED path group
@@ -319,7 +307,7 @@ export default route(function (/* { store, ssrContext } */) {
           routesConf,
           true,
         );
-        redirectWithLogging(logger, routesConf['home']['path'], next);
+        redirect(logger, routesConf['home']['path'], next);
         return;
       }
       // Full app access: NO access FULL_APP_RESTRICTED path group
@@ -338,7 +326,7 @@ export default route(function (/* { store, ssrContext } */) {
           routesConf,
           true,
         );
-        redirectWithLogging(logger, routesConf['home']['path'], next);
+        redirect(logger, routesConf['home']['path'], next);
         return;
       }
 
