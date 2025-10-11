@@ -23,16 +23,18 @@
 |     ✓     |       ✗        |       -        |           -           |     -      |          -          |       -       |    verify email    |
 |     ✓     |       ✓        |       ✗        |           -           |     -      |          -          |       -       | challenge inactive |
 |     ✓     |       ✓        |       ✓        |           ✓           |     ✓      |          -          |       -       |      FA + CO       |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✗       |      FA + BCO      |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✗       |      FA + CA       |
 |     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✓       |         FA         |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       -       |        RCH         |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✗       |      RCH + CO      |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✓       |        RCH         |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✗          |       -       | challenge inactive |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✓          |       -       |   FA + CO + RCH    |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✗          |       -       |      FA + CO       |
 
 - FA - full app access
 - RCH - register challenge
+- RCO - register coordinator
 - CO - coordinator
-- BCO - become coordinator (if organization has no admin)
+- CA - coordinator application (register as coordinator or become one)
 
 - Note: Full app access + register-challenge allows `/register-challenge` route but not `/register-coordinator` route.
