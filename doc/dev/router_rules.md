@@ -17,16 +17,22 @@
 - register challenge (register-challenge, register-coordinator)
 - full app (home, routes, prizes, results, profile)
 
-| Logged in | Email Verified | App Accessible | Registration Complete | User Admin | Registration Active |            Access             |
-| :-------: | :------------: | :------------: | :-------------------: | :--------: | :-----------------: | :---------------------------: |
-|     ✗     |       -        |       -        |           -           |     -      |          -          |             login             |
-|     ✓     |       ✗        |       -        |           -           |     -      |          -          |         verify email          |
-|     ✓     |       ✓        |       ✗        |           -           |     -      |          -          |      challenge inactive       |
-|     ✓     |       ✓        |       ✓        |           ✓           |     -      |          -          |           full app            |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |      register challenge       |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✗          |      challenge inactive       |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✓          | full app + register-challenge |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✗          |           full app            |
+| Logged in | Email Verified | App Accessible | Registration Complete | User Admin | Registration Active | Org has Admin |       Access       |
+| :-------: | :------------: | :------------: | :-------------------: | :--------: | :-----------------: | :-----------: | :----------------: |
+|     ✗     |       -        |       -        |           -           |     -      |          -          |       -       |       login        |
+|     ✓     |       ✗        |       -        |           -           |     -      |          -          |       -       |    verify email    |
+|     ✓     |       ✓        |       ✗        |           -           |     -      |          -          |       -       | challenge inactive |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✓      |          -          |       -       |      FA + CO       |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✗       |      FA + BCO      |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✓       |         FA         |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       -       |        RCH         |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✗          |       -       | challenge inactive |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✓          |       -       |   FA + CO + RCH    |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✗          |       -       |      FA + CO       |
 
-- User Admin decides on further access inside the full app access (company coordinator), but this is not yet implemented via router rules.
-- Access "full app + register-challenge" only allows register-challenge route (not register-coordinator).
+- FA - full app access
+- RCH - register challenge
+- CO - coordinator
+- BCO - become coordinator (if organization has no admin)
+
+- Note: Full app access + register-challenge allows `/register-challenge` route but not `/register-coordinator` route.
