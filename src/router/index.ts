@@ -39,11 +39,6 @@ const ROUTE_GROUPS = {
     'home',
     'community',
     'prizes',
-    'routes',
-    'routes_calendar',
-    'routes_list',
-    'routes_map',
-    'routes_app',
     'results',
     'results_detail',
     'results_report',
@@ -55,6 +50,13 @@ const ROUTE_GROUPS = {
     'profile_newsletter',
     'profile_notifications',
   ],
+  ROUTES: [
+    'routes',
+    'routes_calendar',
+    'routes_list',
+    'routes_map',
+    'routes_app',
+  ],
   COORDINATOR: [
     'coordinator',
     'coordinator_tasks',
@@ -65,7 +67,8 @@ const ROUTE_GROUPS = {
     'coordinator_challenges',
     'coordinator_results',
   ],
-  COORDINATOR_APPLICATION: ['register_coordinator', 'become_coordinator'],
+  REGISTER_COORDINATOR: ['register_coordinator'],
+  BECOME_COORDINATOR: ['become_coordinator'],
 } as const;
 
 /**
@@ -251,7 +254,7 @@ export default route(function (/* { store, ssrContext } */) {
         redirect(logger, routesConf['challenge_inactive']['path'], next);
         return;
       }
-      // Full app + Coordinator access: ONLY access FULL_APP and COORDINATOR path groups
+      // Full app + Routes + Coordinator access: ONLY access FULL_APP, ROUTES and COORDINATOR path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -260,20 +263,28 @@ export default route(function (/* { store, ssrContext } */) {
         state.isUserOrganizationAdmin &&
         !isAccessingRoutes(
           to,
-          [...ROUTE_GROUPS.FULL_APP, ...ROUTE_GROUPS.COORDINATOR],
+          [
+            ...ROUTE_GROUPS.FULL_APP,
+            ...ROUTE_GROUPS.ROUTES,
+            ...ROUTE_GROUPS.COORDINATOR,
+          ],
           routesConf,
         )
       ) {
         logRouteCheck(
           logger,
-          [...ROUTE_GROUPS.FULL_APP, ...ROUTE_GROUPS.COORDINATOR],
+          [
+            ...ROUTE_GROUPS.FULL_APP,
+            ...ROUTE_GROUPS.ROUTES,
+            ...ROUTE_GROUPS.COORDINATOR,
+          ],
           routesConf,
           true,
         );
         redirect(logger, routesConf['home']['path'], next);
         return;
       }
-      // Full app + Become Coordinator access: ONLY access FULL_APP and COORDINATOR_APPLICATION path groups
+      // Full app + Routes + Become Coordinator access: ONLY access FULL_APP, ROUTES and BECOME_COORDINATOR path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -283,20 +294,28 @@ export default route(function (/* { store, ssrContext } */) {
         !state.hasOrganizationAdmin &&
         !isAccessingRoutes(
           to,
-          [...ROUTE_GROUPS.FULL_APP, ...ROUTE_GROUPS.COORDINATOR_APPLICATION],
+          [
+            ...ROUTE_GROUPS.FULL_APP,
+            ...ROUTE_GROUPS.ROUTES,
+            ...ROUTE_GROUPS.BECOME_COORDINATOR,
+          ],
           routesConf,
         )
       ) {
         logRouteCheck(
           logger,
-          [...ROUTE_GROUPS.FULL_APP, ...ROUTE_GROUPS.COORDINATOR_APPLICATION],
+          [
+            ...ROUTE_GROUPS.FULL_APP,
+            ...ROUTE_GROUPS.ROUTES,
+            ...ROUTE_GROUPS.BECOME_COORDINATOR,
+          ],
           routesConf,
           true,
         );
         redirect(logger, routesConf['home']['path'], next);
         return;
       }
-      // Full app access: ONLY access FULL_APP path group
+      // Full app + Routes access: ONLY access FULL_APP and ROUTES path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -304,13 +323,22 @@ export default route(function (/* { store, ssrContext } */) {
         state.isRegistrationComplete &&
         !state.isUserOrganizationAdmin &&
         state.hasOrganizationAdmin &&
-        !isAccessingRoutes(to, ROUTE_GROUPS.FULL_APP, routesConf)
+        !isAccessingRoutes(
+          to,
+          [...ROUTE_GROUPS.FULL_APP, ...ROUTE_GROUPS.ROUTES],
+          routesConf,
+        )
       ) {
-        logRouteCheck(logger, ROUTE_GROUPS.FULL_APP, routesConf, true);
+        logRouteCheck(
+          logger,
+          [...ROUTE_GROUPS.FULL_APP, ...ROUTE_GROUPS.ROUTES],
+          routesConf,
+          true,
+        );
         redirect(logger, routesConf['home']['path'], next);
         return;
       }
-      // Register challenge + Coordinator application access: ONLY access REGISTER_CHALLENGE and COORDINATOR_APPLICATION path groups
+      // Register challenge + Coordinator application access: ONLY access REGISTER_CHALLENGE and REGISTER_COORDINATOR path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -323,7 +351,7 @@ export default route(function (/* { store, ssrContext } */) {
           to,
           [
             ...ROUTE_GROUPS.REGISTER_CHALLENGE,
-            ...ROUTE_GROUPS.COORDINATOR_APPLICATION,
+            ...ROUTE_GROUPS.REGISTER_COORDINATOR,
           ],
           routesConf,
         )
@@ -332,7 +360,7 @@ export default route(function (/* { store, ssrContext } */) {
           logger,
           [
             ...ROUTE_GROUPS.REGISTER_CHALLENGE,
-            ...ROUTE_GROUPS.COORDINATOR_APPLICATION,
+            ...ROUTE_GROUPS.REGISTER_COORDINATOR,
           ],
           routesConf,
           false,

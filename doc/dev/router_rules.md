@@ -22,19 +22,20 @@
 |     ✗     |       -        |       -        |           -           |     -      |          -          |       -       |       login        |
 |     ✓     |       ✗        |       -        |           -           |     -      |          -          |       -       |    verify email    |
 |     ✓     |       ✓        |       ✗        |           -           |     -      |          -          |       -       | challenge inactive |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✓      |          -          |       -       |      FA + CO       |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✗       |      FA + CA       |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✓       |         FA         |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✗       |      RCH + CO      |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✓      |          -          |       -       |      FAR + CO      |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✗       |      FAR + BC      |
+|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✓       |        FAR         |
+|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✗       |     RCH + RCO      |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✓       |        RCH         |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✗          |       -       | challenge inactive |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✓          |       -       |   FA + CO + RCH    |
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✗          |       -       |      FA + CO       |
 
-- FA - full app access
+- FAR - full app access with routes
+- FA - full app access without routes (admin who does not participate)
 - RCH - register challenge
 - RCO - register coordinator
 - CO - coordinator
-- CA - coordinator application (register as coordinator or become one)
+- BC - become coordinator
 
 - Note: Full app access + register-challenge allows `/register-challenge` route but not `/register-coordinator` route.
