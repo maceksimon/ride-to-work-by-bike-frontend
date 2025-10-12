@@ -37,5 +37,3 @@
 - RCO - register coordinator
 - CO - coordinator
 - BC - become coordinator
-
-- Note: Full app access + register-challenge allows `/register-challenge` route but not `/register-coordinator` route.
