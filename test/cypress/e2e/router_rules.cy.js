@@ -12,6 +12,7 @@ import {
 import { OrganizationType } from '../../../src/components/types/Organization';
 import loginTokensTestData from '../../../test/cypress/fixtures/loginTokensTestData.json';
 import AppAccessTestData from '../../../test/cypress/fixtures/appAccessTestData.json';
+import { ROUTE_GROUPS } from '../../../src/utils/get_route_groups';
 
 describe('Router rules', () => {
   context('challenge inactive', () => {
@@ -472,6 +473,18 @@ describe('Router rules', () => {
                   defLocale,
                   registerChallengeResponse,
                 );
+                if (registerChallengeResponse.results.length > 0) {
+                  cy.fixture(test.fixtureHasOrganizationAdmin).then(
+                    (hasOrganizationAdminResponse) => {
+                      cy.interceptHasOrganizationAdminGetApi(
+                        config,
+                        defLocale,
+                        registerChallengeResponse.results[0].organization_id,
+                        hasOrganizationAdminResponse,
+                      );
+                    },
+                  );
+                }
               },
             );
             cy.fixture(test.fixtureOrganizationAdmin).then(
@@ -492,74 +505,128 @@ describe('Router rules', () => {
               '@loginRequest',
               '@verifyEmailRequest',
               '@thisCampaignRequest',
+              '@getIsUserOrganizationAdmin',
             ]);
 
             // test access
             if (test.access === 'challenge_inactive') {
-              // test that we are on challenge inactive page
+              // test that we are on challenge inactive page (is accessible)
               cy.url().should(
                 'include',
                 routesConf['challenge_inactive']['path'],
               );
-              // test access to other pages
-              cy.verifyRouteAccessDeniedFromInitial(
-                'login',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'register',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'verify_email',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'reset_password',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'register_challenge',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'register_coordinator',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'routes_list',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'results',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'prizes',
-                'challenge_inactive',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'profile_details',
+              // test inaccessible paths
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                  ROUTE_GROUPS.FULL_APP,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.COORDINATOR,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
                 'challenge_inactive',
               );
             }
-            if (test.access === 'app_full') {
+            if (test.access === 'full_app_routes_coordinator') {
               // home page title
               cy.dataCy('index-title').should('be.visible');
-              cy.verifyRouteAccessDeniedFromInitial('login', 'home');
-              cy.verifyRouteAccessDeniedFromInitial('register', 'home');
-              cy.verifyRouteAccessDeniedFromInitial('verify_email', 'home');
-              cy.verifyRouteAccessDeniedFromInitial('reset_password', 'home');
-              cy.verifyRouteAccessDeniedFromInitial(
+              // test accessible paths
+              cy.testRouteGroupsAccessible(
+                [
+                  ROUTE_GROUPS.FULL_APP,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.COORDINATOR,
+                ],
+                'home',
+              );
+              // test inaccessible paths
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
+                'home',
+              );
+            }
+            if (test.access === 'full_app_routes_become_coordinator') {
+              // home page title
+              cy.dataCy('index-title').should('be.visible');
+              // test accessible paths
+              cy.testRouteGroupsAccessible(
+                [
+                  ROUTE_GROUPS.FULL_APP,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
+                'home',
+              );
+              // test inaccessible paths
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.COORDINATOR,
+                ],
+                'home',
+              );
+            }
+            if (test.access === 'full_app_routes') {
+              // home page title
+              cy.dataCy('index-title').should('be.visible');
+              // test accessible paths
+              cy.testRouteGroupsAccessible(
+                [ROUTE_GROUPS.FULL_APP, ROUTE_GROUPS.ROUTES],
+                'home',
+              );
+              // test inaccessible paths
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                  ROUTE_GROUPS.COORDINATOR,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
+                'home',
+              );
+            }
+            if (test.access === 'register_challenge_register_coordinator') {
+              // test that we are on register challenge page
+              cy.url().should(
+                'include',
+                routesConf['register_challenge']['path'],
+              );
+              cy.testRouteGroupsAccessible(
+                [
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                ],
                 'register_challenge',
-                'home',
               );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'register_coordinator',
-                'home',
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.FULL_APP,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
+                'register_challenge',
               );
-              cy.verifyRouteAccessAllowedFromInitial('prizes', 'home');
-              cy.verifyRouteAccessAllowedFromInitial('profile', 'prizes');
             }
             if (test.access === 'register_challenge') {
               // test that we are on register challenge page
@@ -567,60 +634,68 @@ describe('Router rules', () => {
                 'include',
                 routesConf['register_challenge']['path'],
               );
-              // test access to other pages
-              cy.verifyRouteAccessDeniedFromInitial(
-                'login',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'register',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'verify_email',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'reset_password',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'routes_list',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'results',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'prizes',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessDeniedFromInitial(
-                'profile_details',
-                'register_challenge',
-              );
-              cy.verifyRouteAccessAllowedFromInitial(
-                'register_coordinator',
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.FULL_APP,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.COORDINATOR,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
                 'register_challenge',
               );
             }
-            if (test.access === 'app_full_register-challenge') {
+            if (test.access === 'full_app_coordinator_register_challenge') {
               // home page title
               cy.dataCy('index-title').should('be.visible');
-              cy.verifyRouteAccessDeniedFromInitial('login', 'home');
-              cy.verifyRouteAccessDeniedFromInitial('register', 'home');
-              cy.verifyRouteAccessDeniedFromInitial('verify_email', 'home');
-              cy.verifyRouteAccessDeniedFromInitial(
-                'register_coordinator',
+              cy.testRouteGroupsAccessible(
+                [
+                  ROUTE_GROUPS.FULL_APP,
+                  ROUTE_GROUPS.COORDINATOR,
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                ],
                 'home',
               );
-              cy.verifyRouteAccessAllowedFromInitial('prizes', 'home');
-              cy.verifyRouteAccessAllowedFromInitial('profile', 'prizes');
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
+                'home',
+              );
+            }
+            if (test.access === 'full_app_coordinator') {
+              // home page title
+              cy.dataCy('index-title').should('be.visible');
+              cy.testRouteGroupsAccessible(
+                [ROUTE_GROUPS.FULL_APP, ROUTE_GROUPS.COORDINATOR],
+                'home',
+              );
+              cy.testRouteGroupsInaccessible(
+                [
+                  ROUTE_GROUPS.LOGIN,
+                  ROUTE_GROUPS.VERIFY_EMAIL,
+                  ROUTE_GROUPS.CHALLENGE_INACTIVE,
+                  ROUTE_GROUPS.REGISTER_CHALLENGE,
+                  ROUTE_GROUPS.ROUTES,
+                  ROUTE_GROUPS.REGISTER_COORDINATOR,
+                  ROUTE_GROUPS.BECOME_COORDINATOR,
+                ],
+                'home',
+              );
             }
             // test access to routes via checking menu item disabled state
             if (
-              ['app_full', 'app_full_register-challenge'].includes(test.access)
+              ['full_app', 'full_app_coordinator_register_challenge'].includes(
+                test.access,
+              )
             ) {
               cy.window().should('have.property', 'i18n');
               cy.window().then((win) => {

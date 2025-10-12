@@ -4082,3 +4082,41 @@ Cypress.Commands.add(
     cy.dataCy('company-coordinator-title').should('be.visible');
   },
 );
+
+/**
+ * Test that all routes in the given route groups are accessible
+ * @param {Array<Array<string>>} routeGroups - Array of route group arrays
+ * @param {string} initialRouteName - Initial route to return to after each test (default: 'home')
+ */
+Cypress.Commands.add(
+  'testRouteGroupsAccessible',
+  (routeGroups, initialRouteName = 'home') => {
+    routeGroups.forEach((group) => {
+      group.forEach((route) => {
+        if (route !== initialRouteName) {
+          cy.verifyRouteAccessAllowedFromInitial(route, initialRouteName);
+        }
+        cy.visit('#' + routesConf[initialRouteName]['path']);
+        if (initialRouteName === 'home') {
+          cy.dataCy('index-title').should('be.visible');
+        }
+      });
+    });
+  },
+);
+
+/**
+ * Test that all routes in the given route groups are inaccessible/redirected
+ * @param {Array<Array<string>>} routeGroups - Array of route group arrays
+ * @param {string} redirectTo - Route that access should redirect to (default: 'home')
+ */
+Cypress.Commands.add(
+  'testRouteGroupsInaccessible',
+  (routeGroups, redirectTo = 'home') => {
+    routeGroups.forEach((group) => {
+      group.forEach((route) => {
+        cy.verifyRouteAccessDeniedFromInitial(route, redirectTo);
+      });
+    });
+  },
+);

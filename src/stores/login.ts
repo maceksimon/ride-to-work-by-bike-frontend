@@ -332,6 +332,13 @@ export const useLoginStore = defineStore('login', {
        */
       this.$log?.info('Check the user coordinator status from the API.');
       await registerChallengeStore.checkIsUserOrganizationAdmin();
+      /**
+       * Check if organization has a coordinator
+       */
+      this.$log?.info(
+        'Check the organization coordinator status from the API.',
+      );
+      await registerChallengeStore.checkOrganizationHasCoordinator();
       // redirect to home page
       if (this.$router) {
         this.$router.push(routesConf['home']['path']);

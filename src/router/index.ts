@@ -15,6 +15,7 @@ import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 import routes from './routes';
 import { routesConf } from './routes_conf';
 import { PhaseType } from '../components/types/Challenge';
+import { ROUTE_GROUPS } from '../utils/get_route_groups';
 
 import type { Logger } from '../components/types/Logger';
 
@@ -28,48 +29,6 @@ interface RouterState {
   isRegistrationPhaseActive: boolean;
   hasOrganizationAdmin: boolean;
 }
-
-// defines commonly used route groups
-const ROUTE_GROUPS = {
-  LOGIN: ['login', 'register', 'confirm_email', 'reset_password'],
-  VERIFY_EMAIL: ['verify_email', 'confirm_email'],
-  CHALLENGE_INACTIVE: ['challenge_inactive'],
-  REGISTER_CHALLENGE: ['register_challenge'],
-  FULL_APP: [
-    'home',
-    'community',
-    'prizes',
-    'results',
-    'results_detail',
-    'results_report',
-    'results_regularity',
-    'results_performance',
-    'profile',
-    'profile_details',
-    'profile_forms',
-    'profile_newsletter',
-    'profile_notifications',
-  ],
-  ROUTES: [
-    'routes',
-    'routes_calendar',
-    'routes_list',
-    'routes_map',
-    'routes_app',
-  ],
-  COORDINATOR: [
-    'coordinator',
-    'coordinator_tasks',
-    'coordinator_fees',
-    'coordinator_invoices',
-    'coordinator_packages',
-    'coordinator_attendance',
-    'coordinator_challenges',
-    'coordinator_results',
-  ],
-  REGISTER_COORDINATOR: ['register_coordinator'],
-  BECOME_COORDINATOR: ['become_coordinator'],
-} as const;
 
 /**
  * Logs the current router state.
