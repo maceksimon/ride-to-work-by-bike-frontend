@@ -515,7 +515,6 @@ describe('Router rules', () => {
                 'include',
                 routesConf['challenge_inactive']['path'],
               );
-              // test inaccessible paths
               cy.testRouteGroupsInaccessible(
                 [
                   ROUTE_GROUPS.LOGIN,
@@ -533,7 +532,6 @@ describe('Router rules', () => {
             if (test.access === 'full_app_routes_coordinator') {
               // home page title
               cy.dataCy('index-title').should('be.visible');
-              // test accessible paths
               cy.testRouteGroupsAccessible(
                 [
                   ROUTE_GROUPS.FULL_APP,
@@ -542,7 +540,6 @@ describe('Router rules', () => {
                 ],
                 'home',
               );
-              // test inaccessible paths
               cy.testRouteGroupsInaccessible(
                 [
                   ROUTE_GROUPS.LOGIN,
@@ -558,7 +555,6 @@ describe('Router rules', () => {
             if (test.access === 'full_app_routes_become_coordinator') {
               // home page title
               cy.dataCy('index-title').should('be.visible');
-              // test accessible paths
               cy.testRouteGroupsAccessible(
                 [
                   ROUTE_GROUPS.FULL_APP,
@@ -567,7 +563,6 @@ describe('Router rules', () => {
                 ],
                 'home',
               );
-              // test inaccessible paths
               cy.testRouteGroupsInaccessible(
                 [
                   ROUTE_GROUPS.LOGIN,
@@ -583,12 +578,10 @@ describe('Router rules', () => {
             if (test.access === 'full_app_routes') {
               // home page title
               cy.dataCy('index-title').should('be.visible');
-              // test accessible paths
               cy.testRouteGroupsAccessible(
                 [ROUTE_GROUPS.FULL_APP, ROUTE_GROUPS.ROUTES],
                 'home',
               );
-              // test inaccessible paths
               cy.testRouteGroupsInaccessible(
                 [
                   ROUTE_GROUPS.LOGIN,
