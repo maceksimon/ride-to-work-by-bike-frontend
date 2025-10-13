@@ -17,19 +17,19 @@
 - register challenge (register-challenge, register-coordinator)
 - full app (home, routes, prizes, results, profile)
 
-| Logged in | Email Verified | App Accessible | Registration Complete | User Admin | Registration Active | Org has Admin |       Access       |
-| :-------: | :------------: | :------------: | :-------------------: | :--------: | :-----------------: | :-----------: | :----------------: |
-|     ✗     |       -        |       -        |           -           |     -      |          -          |       -       |       login        |
-|     ✓     |       ✗        |       -        |           -           |     -      |          -          |       -       |    verify email    |
-|     ✓     |       ✓        |       ✗        |           -           |     -      |          -          |       -       | challenge inactive |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✓      |          -          |       -       |      FAR + CO      |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✗       |      FAR + BC      |
-|     ✓     |       ✓        |       ✓        |           ✓           |     ✗      |          -          |       ✓       |        FAR         |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✗       |     RCH + RCO      |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✓          |       ✓       |        RCH         |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✗      |          ✗          |       -       | challenge inactive |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✓          |       -       |   FA + CO + RCH    |
-|     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✗          |       -       |      FA + CO       |
+| Logged in | Email Verified | App Accessible | Registration Complete | Org. coordinator user | Registration Active | Org. has coordinator |       Access       |
+| :-------: | :------------: | :------------: | :-------------------: | :-------------------: | :-----------------: | :------------------: | :----------------: |
+|     ✗     |       -        |       -        |           -           |           -           |          -          |          -           |       login        |
+|     ✓     |       ✗        |       -        |           -           |           -           |          -          |          -           |    verify email    |
+|     ✓     |       ✓        |       ✗        |           -           |           -           |          -          |          -           | challenge inactive |
+|     ✓     |       ✓        |       ✓        |           ✓           |           ✓           |          -          |          -           |      FAR + CO      |
+|     ✓     |       ✓        |       ✓        |           ✓           |           ✗           |          -          |          ✗           |      FAR + BC      |
+|     ✓     |       ✓        |       ✓        |           ✓           |           ✗           |          -          |          ✓           |        FAR         |
+|     ✓     |       ✓        |       ✓        |           ✗           |           ✗           |          ✓          |          ✗           |     RCH + RCO      |
+|     ✓     |       ✓        |       ✓        |           ✗           |           ✗           |          ✓          |          ✓           |        RCH         |
+|     ✓     |       ✓        |       ✓        |           ✗           |           ✗           |          ✗          |          -           | challenge inactive |
+|     ✓     |       ✓        |       ✓        |           ✗           |           ✓           |          ✓          |          -           |   FA + CO + RCH    |
+|     ✓     |       ✓        |       ✓        |           ✗           |           ✓           |          ✗          |          -           |      FA + CO       |
 
 - FAR - full app access with routes
 - FA - full app access without routes (organization coordinator who does not participate)
