@@ -32,8 +32,8 @@
 |     ✓     |       ✓        |       ✓        |           ✗           |     ✓      |          ✗          |       -       |      FA + CO       |
 
 - FAR - full app access with routes
-- FA - full app access without routes (admin who does not participate)
+- FA - full app access without routes (organization coordinator who does not participate)
 - RCH - register challenge
-- RCO - register coordinator
-- CO - coordinator
-- BC - become coordinator
+- RCO - register organization coordinator
+- CO - organization coordinator
+- BC - become organization coordinator
