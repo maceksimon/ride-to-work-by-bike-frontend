@@ -213,7 +213,8 @@ export default route(function (/* { store, ssrContext } */) {
         redirect(logger, routesConf['challenge_inactive']['path'], next);
         return;
       }
-      // Full app + Routes + Coordinator access: ONLY access FULL_APP, ROUTES and COORDINATOR path groups
+      // Full app + Routes + Coordinator access:
+      // ONLY access FULL_APP, ROUTES and COORDINATOR path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -243,7 +244,8 @@ export default route(function (/* { store, ssrContext } */) {
         redirect(logger, routesConf['home']['path'], next);
         return;
       }
-      // Full app + Routes + Become Coordinator access: ONLY access FULL_APP, ROUTES and BECOME_COORDINATOR path groups
+      // Full app + Routes + Become Coordinator access:
+      // ONLY access FULL_APP, ROUTES and BECOME_COORDINATOR path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -297,7 +299,8 @@ export default route(function (/* { store, ssrContext } */) {
         redirect(logger, routesConf['home']['path'], next);
         return;
       }
-      // Register challenge + Coordinator application access: ONLY access REGISTER_CHALLENGE and REGISTER_COORDINATOR path groups
+      // Register challenge + Coordinator application access:
+      // ONLY access REGISTER_CHALLENGE and REGISTER_COORDINATOR path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
@@ -366,7 +369,8 @@ export default route(function (/* { store, ssrContext } */) {
         redirect(logger, routesConf['challenge_inactive']['path'], next);
         return;
       }
-      // Full app + Coordinator + Register challenge access: ONLY access FULL_APP, COORDINATOR and REGISTER_CHALLENGE path groups
+      // Full app + Coordinator + Register challenge access:
+      // ONLY access FULL_APP, COORDINATOR and REGISTER_CHALLENGE path groups
       if (
         state.isAuthenticated &&
         state.isEmailVerified &&
