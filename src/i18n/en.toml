@@ -10,6 +10,12 @@ labelCity = "Your city"
 [header]
 siteTitle = "Ride to Work by Bike"
 
+[approvePayments]
+apiMessageError = "Payment confirmation failed."
+apiMessageErrorWithMessage = "Payment confirmation failed. Error: {error}"
+apiMessageSuccess = "Payments were successfully confirmed."
+apiMessageSuccessWithCount = "Payment confirmed for {count} participant. | Payments confirmed for {count} participants."
+
 [bannerChallengeDescription]
 period = "Challenge period"
 transportType = "Means of transport"

@@ -100,6 +100,7 @@ export interface ConfigGlobal {
   urlApiCities: string;
   urlApiOpenAppWithRestToken: string;
   urlApiOrganizationAdminOrganizationStructure: string;
+  urlApiCoordinatorApprovePayments: string;
   urlApiSendRegistrationConfirmationEmail: string;
   urlApiSendTeamMembershipInvitationEmail: string;
   urlApiStravaAuthAccount: string;
