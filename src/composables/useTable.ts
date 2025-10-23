@@ -437,6 +437,15 @@ export const useTableAttendance = () => {
     },
     {
       align: 'center',
+      field: AttendanceTableColumns.approvedForTeam,
+      format: (val: number | string | null): string => (val ? `${val}` : ''),
+      label: i18n.global.t('table.labelApprovedForTeam'),
+      name: AttendanceTableColumns.approvedForTeam,
+      required: true,
+      sortable: true,
+    },
+    {
+      align: 'center',
       field: AttendanceTableColumns.isFeeApproved,
       format: (val: boolean): boolean => val,
       label: i18n.global.t('table.labelFeeApproved'),
@@ -485,6 +494,7 @@ export const useTableAttendance = () => {
     AttendanceTableColumns.name,
     AttendanceTableColumns.nickname,
     AttendanceTableColumns.contact,
+    AttendanceTableColumns.approvedForTeam,
     AttendanceTableColumns.isFeeApproved,
     AttendanceTableColumns.paymentType,
     AttendanceTableColumns.paymentState,

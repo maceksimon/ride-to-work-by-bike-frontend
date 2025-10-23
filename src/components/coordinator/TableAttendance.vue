@@ -22,6 +22,7 @@ import {
 } from '../../composables/useTable';
 import { useTableAttendanceData } from '../../composables/useTableAttendanceData';
 import { useCopyToClipboard } from '../../composables/useCopyToClipboard';
+import { useTeamMemberApprovalStatus } from '../../composables/useTeamMemberApprovalStatus';
 
 // enums
 import { PaymentState } from '../enums/Payment';
@@ -73,6 +74,8 @@ export default defineComponent({
       getPaymentStateLabel,
       getPaymentTypeLabel,
     } = useTableAttendance();
+    const { getStatusLabel, getStatusColor, getStatusIcon } =
+      useTeamMemberApprovalStatus();
     const { sortByTeam } = useTable();
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 
@@ -104,6 +107,9 @@ export default defineComponent({
       getPaymentStateIcon,
       getPaymentStateLabel,
       getPaymentTypeLabel,
+      getStatusLabel,
+      getStatusColor,
+      getStatusIcon,
       paginationLabel,
       sortByTeam,
       PaymentState,
@@ -172,7 +178,7 @@ export default defineComponent({
             class="bg-primary text-weight-bold text-white"
             data-cy="table-attendance-team-header"
           >
-            <q-td colspan="7">
+            <q-td colspan="8">
               {{ props.row.team }}
             </q-td>
           </q-tr>
@@ -243,6 +249,22 @@ export default defineComponent({
                   name="svguse:icons/profile_coordinator_contact/icons.svg#email"
                 />
               </q-btn>
+            </q-td>
+            <!-- Team Approval Status -->
+            <q-td
+              auto-width
+              key="approvedForTeam"
+              :props="props"
+              data-cy="table-attendance-approved-for-team"
+            >
+              <q-icon
+                :size="iconSize"
+                :color="getStatusColor(props.row.approvedForTeam)"
+                :name="getStatusIcon(props.row.approvedForTeam)"
+                class="q-mr-xs"
+                data-cy="table-attendance-approved-for-team-icon"
+              />
+              {{ getStatusLabel(props.row.approvedForTeam) }}
             </q-td>
             <!-- Fee Approved -->
             <q-td

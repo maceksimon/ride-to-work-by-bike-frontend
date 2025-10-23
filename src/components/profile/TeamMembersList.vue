@@ -191,11 +191,11 @@ export default defineComponent({
                     <!-- Team membership status -->
                     <q-item-section side>
                       <q-chip
-                        :color="getStatusColor(member)"
-                        :icon="getStatusIcon(member)"
+                        :color="getStatusColor(member.approved_for_team)"
+                        :icon="getStatusIcon(member.approved_for_team)"
                         data-cy="team-member-status-chip"
                       >
-                        {{ getStatusLabel(member) }}
+                        {{ getStatusLabel(member.approved_for_team) }}
                       </q-chip>
                     </q-item-section>
                   </div>

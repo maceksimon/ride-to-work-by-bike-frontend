@@ -46,6 +46,7 @@ export enum AttendanceTableColumns {
   name = 'name',
   nickname = 'nickname',
   contact = 'contact',
+  approvedForTeam = 'approvedForTeam',
   isFeeApproved = 'isFeeApproved',
   paymentType = 'paymentType',
   paymentState = 'paymentState',
