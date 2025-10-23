@@ -467,59 +467,57 @@ function dataDisplayTests() {
           .should('deep.equal', tableAttendanceTestData.storeData);
       });
       const display = tableAttendanceTestData.displayData;
-      // test clipboard functionality
-      cy.dataCy(selectorTableRow).each((table, index) => {
-        // only test first two rows for speed
-        if (index > 1) {
-          return;
-        }
-        if (display.orderedMembers[index]) {
-          if (display.orderedMembers[index].telephone) {
-            cy.wrap(table).within(() => {
-              cy.dataCy(selectorTableContact).within(() => {
-                cy.dataCy(selectorTablePhoneIcon)
-                  .should('not.have.class', 'disabled')
-                  .click();
-                cy.window().then((win) => {
-                  expect(
-                    win.navigator.clipboard.writeText,
-                  ).to.have.been.calledWith(
-                    display.orderedMembers[index].telephone,
-                  );
+      // test clipboard functionality (only first row for speed)
+      cy.dataCy(selectorTableRow)
+        .first()
+        .each((table, index) => {
+          if (display.orderedMembers[index]) {
+            if (display.orderedMembers[index].telephone) {
+              cy.wrap(table).within(() => {
+                cy.dataCy(selectorTableContact).within(() => {
+                  cy.dataCy(selectorTablePhoneIcon)
+                    .should('not.have.class', 'disabled')
+                    .click();
+                  cy.window().then((win) => {
+                    expect(
+                      win.navigator.clipboard.writeText,
+                    ).to.have.been.calledWith(
+                      display.orderedMembers[index].telephone,
+                    );
+                  });
                 });
               });
-            });
-            cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
-              'be.visible',
-            );
-            cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
-              'not.be.visible',
-            );
-          }
-          if (display.orderedMembers[index].email) {
-            cy.wrap(table).within(() => {
-              cy.dataCy(selectorTableContact).within(() => {
-                cy.dataCy(selectorTableEmailIcon)
-                  .should('not.have.class', 'disabled')
-                  .click();
-                cy.window().then((win) => {
-                  expect(
-                    win.navigator.clipboard.writeText,
-                  ).to.have.been.calledWith(
-                    display.orderedMembers[index].email,
-                  );
+              cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
+                'be.visible',
+              );
+              cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
+                'not.be.visible',
+              );
+            }
+            if (display.orderedMembers[index].email) {
+              cy.wrap(table).within(() => {
+                cy.dataCy(selectorTableContact).within(() => {
+                  cy.dataCy(selectorTableEmailIcon)
+                    .should('not.have.class', 'disabled')
+                    .click();
+                  cy.window().then((win) => {
+                    expect(
+                      win.navigator.clipboard.writeText,
+                    ).to.have.been.calledWith(
+                      display.orderedMembers[index].email,
+                    );
+                  });
                 });
               });
-            });
-            cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
-              'be.visible',
-            );
-            cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
-              'not.be.visible',
-            );
+              cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
+                'be.visible',
+              );
+              cy.contains(i18n.global.t('notify.copiedToClipboard')).should(
+                'not.be.visible',
+              );
+            }
           }
-        }
-      });
+        });
     });
   });
 }
