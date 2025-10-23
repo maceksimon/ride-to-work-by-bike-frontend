@@ -34,25 +34,31 @@ export interface TableAttendanceSubsidiaryData {
   members: TableAttendanceRow[];
 }
 
+interface TransformMemberParams {
+  member: AdminTeamMember;
+  teamName: string;
+  paymentType: PaymentType;
+  isFeeApproved: boolean;
+}
+
 /**
  * Transforms AdminTeamMember to TableAttendanceRow
- * @param {AdminTeamMember} member - Team member from API
- * @param {string} teamName - Name of the team
- * @param {PaymentType} paymentType - Payment type derived from member source array
+ * @param {TransformMemberParams} params - Parameters object
  * @returns {TableAttendanceRow} - Flattened row for table
  */
-function transformMemberToRow(
-  member: AdminTeamMember,
-  teamName: string,
-  paymentType: PaymentType,
-): TableAttendanceRow {
+function transformMemberToRow({
+  member,
+  teamName,
+  paymentType,
+  isFeeApproved,
+}: TransformMemberParams): TableAttendanceRow {
   return {
     name: member.name,
     nickname: member.nickname,
     email: member.email,
     telephone: member.telephone,
     approvedForTeam: member.approved_for_team,
-    isFeeApproved: member.approved_for_team === TeamMemberStatus.approved,
+    isFeeApproved,
     paymentType,
     paymentState: member.payment_status,
     team: teamName,
@@ -82,7 +88,12 @@ export const useTableAttendanceData = (): {
         team.members_with_paid_entry_fee_by_org_coord.forEach(
           (member: AdminTeamMember) => {
             allMembers.push(
-              transformMemberToRow(member, team.name, PaymentType.organization),
+              transformMemberToRow({
+                member,
+                teamName: team.name,
+                paymentType: PaymentType.organization,
+                isFeeApproved: true,
+              }),
             );
           },
         );
@@ -90,14 +101,24 @@ export const useTableAttendanceData = (): {
         team.members_without_paid_entry_fee_by_org_coord.forEach(
           (member: AdminTeamMember) => {
             allMembers.push(
-              transformMemberToRow(member, team.name, PaymentType.organization),
+              transformMemberToRow({
+                member,
+                teamName: team.name,
+                paymentType: PaymentType.organization,
+                isFeeApproved: false,
+              }),
             );
           },
         );
         // process other_members who pay their entry fee themselves
         team.other_members.forEach((member: AdminTeamMember) => {
           allMembers.push(
-            transformMemberToRow(member, team.name, PaymentType.registration),
+            transformMemberToRow({
+              member,
+              teamName: team.name,
+              paymentType: PaymentType.registration,
+              isFeeApproved: true,
+            }),
           );
         });
       });

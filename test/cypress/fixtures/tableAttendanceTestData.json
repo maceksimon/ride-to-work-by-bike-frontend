@@ -197,9 +197,19 @@
         "email": "alena.prochazkova@cerny.cz",
         "telephone": "",
         "approvedForTeam": "denied",
-        "approved": false,
+        "approved": true,
         "paymentType": "payment.labelRegistration",
         "paymentState": "payment.labelUnknown"
+      },
+      {
+        "name": "Jan Novák",
+        "nickname": "jnovak",
+        "email": "jan.novak@cerny.cz",
+        "telephone": "123456789",
+        "approvedForTeam": "approved",
+        "approved": false,
+        "paymentType": "payment.labelOrganization",
+        "paymentState": "payment.labelWaiting"
       }
     ]
   }

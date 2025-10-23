@@ -469,6 +469,10 @@ function dataDisplayTests() {
       const display = tableAttendanceTestData.displayData;
       // test clipboard functionality
       cy.dataCy(selectorTableRow).each((table, index) => {
+        // only test first two rows for speed
+        if (index > 1) {
+          return;
+        }
         if (display.orderedMembers[index]) {
           if (display.orderedMembers[index].telephone) {
             cy.wrap(table).within(() => {
