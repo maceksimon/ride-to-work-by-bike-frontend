@@ -149,7 +149,7 @@
                   "telephone": "123456795",
                   "sex": "male",
                   "avatar_url": "",
-                  "approved_for_team": "approved",
+                  "approved_for_team": "undecided",
                   "payment_status": "done",
                   "payment_type": "None",
                   "payment_category": "None",
@@ -176,6 +176,7 @@
         "nickname": "emarkova",
         "email": "eva.markova@cerny.cz",
         "telephone": "123456794",
+        "approvedForTeam": "approved",
         "approved": true,
         "paymentType": "payment.labelOrganization",
         "paymentState": "payment.labelWaiting"
@@ -185,6 +186,7 @@
         "nickname": null,
         "email": "",
         "telephone": "123456795",
+        "approvedForTeam": "undecided",
         "approved": true,
         "paymentType": "payment.labelRegistration",
         "paymentState": "payment.labelDone"
@@ -194,6 +196,7 @@
         "nickname": "aprochazka",
         "email": "alena.prochazkova@cerny.cz",
         "telephone": "",
+        "approvedForTeam": "denied",
         "approved": false,
         "paymentType": "payment.labelRegistration",
         "paymentState": "payment.labelUnknown"
