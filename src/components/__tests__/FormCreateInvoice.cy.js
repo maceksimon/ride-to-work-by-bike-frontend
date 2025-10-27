@@ -1,5 +1,7 @@
+import { createPinia, setActivePinia } from 'pinia';
 import FormCreateInvoice from 'components/form/FormCreateInvoice.vue';
 import { i18n } from '../../boot/i18n';
+import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
 
 describe('<FormCreateInvoice>', () => {
   it('has translation for all strings', () => {
@@ -23,6 +25,7 @@ describe('<FormCreateInvoice>', () => {
 
   context('desktop', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.fixture('formCreateInvoice').then((organization) => {
         cy.wrap(organization).as('organization');
         cy.mount(FormCreateInvoice, {});
@@ -35,6 +38,7 @@ describe('<FormCreateInvoice>', () => {
 
   context('mobile', () => {
     beforeEach(() => {
+      setActivePinia(createPinia());
       cy.fixture('formCreateInvoice').then((organization) => {
         cy.wrap(organization).as('organization');
         cy.mount(FormCreateInvoice, {});
@@ -48,28 +52,36 @@ describe('<FormCreateInvoice>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    // component
-    cy.dataCy('form-create-invoice').should('be.visible');
-    // title
-    cy.dataCy('form-create-invoice-title')
-      .should('be.visible')
-      .and('contain', i18n.global.t('form.titleOrganizationBillingDetails'));
-    // organization details
-    cy.get('@organization').then((organization) => {
+    cy.fixture('tableAttendanceTestData.json').then((organizationData) => {
+      cy.wrap(useAdminOrganisationStore()).then((adminOrganisationStore) => {
+        cy.setAdminOrganisationStoreState({
+          store: adminOrganisationStore,
+          organizations: organizationData.storeData,
+        });
+      });
+      // component
+      cy.dataCy('form-create-invoice').should('be.visible');
+      // title
+      cy.dataCy('form-create-invoice-title')
+        .should('be.visible')
+        .and('contain', i18n.global.t('form.titleOrganizationBillingDetails'));
+      // organization details
+      const organization = organizationData.storeData[0];
       cy.dataCy('form-create-invoice-organization-details')
         .should('be.visible')
-        .and('contain', organization.title)
-        .and('contain', organization.address.street)
-        .and('contain', organization.address.zip)
-        .and('contain', organization.address.city);
+        .and('contain', organization.name)
+        .and('contain', organization.street)
+        .and('contain', organization.street_number)
+        .and('contain', organization.psc)
+        .and('contain', organization.city);
       cy.dataCy('form-create-invoice-organization-id')
         .should('be.visible')
         .and('contain', i18n.global.t('form.labelBusinessId'))
-        .and('contain', organization.identificationNumber);
+        .and('contain', organization.ico);
       cy.dataCy('form-create-invoice-organization-vat-id')
         .should('be.visible')
         .and('contain', i18n.global.t('form.labelTaxId'))
-        .and('contain', organization.identificationNumberVat);
+        .and('contain', organization.dic);
     });
     // confirm billing details
     cy.dataCy('form-create-invoice-confirm-billing-details')

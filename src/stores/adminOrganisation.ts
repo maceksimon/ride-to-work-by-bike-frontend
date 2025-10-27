@@ -45,7 +45,8 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       state.isLoadingOrganisations ||
       state.isLoadingInvoices ||
       state.isLoadingApprovePayments,
-    getCurrentAdminOrganisation: (state) => state.adminOrganisations[0],
+    getCurrentAdminOrganisation: (state): AdminOrganisation | null =>
+      state.adminOrganisations[0] ?? null,
     getCurrentAdminInvoice: (state) => state.adminInvoices[0],
     getSelectedPaymentsToApprove: (state) => state.selectedPaymentsToApprove,
   },

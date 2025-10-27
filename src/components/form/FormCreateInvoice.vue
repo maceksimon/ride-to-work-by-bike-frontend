@@ -22,7 +22,7 @@
 
 // libraries
 import { QForm } from 'quasar';
-import { defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 
 // components
 import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
@@ -30,8 +30,11 @@ import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
 // fixtures
 import invoiceFixture from '../../../test/cypress/fixtures/formCreateInvoice.json';
 
+// stores
+import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
+
 // types
-import type { Organization } from '../types/Organization';
+import type { AdminOrganisation } from '../types/AdminOrganisation';
 
 export default defineComponent({
   name: 'FormCreateInvoice',
@@ -39,7 +42,11 @@ export default defineComponent({
     FormFieldCheckboxTeam,
   },
   setup() {
-    const organization = ref<Organization>(invoiceFixture);
+    const adminOrganisationStore = useAdminOrganisationStore();
+    const organization = computed<AdminOrganisation | null>(() => {
+      return adminOrganisationStore.getCurrentAdminOrganisation;
+    });
+
     const formCreateInvoiceRef = ref<typeof QForm | null>(null);
     const isBillingDetailsCorrect = ref<boolean>(false);
     const isDonorEntryFee = ref<boolean>(false);
@@ -77,47 +84,48 @@ export default defineComponent({
       </h3>
       <!-- Section: Billing details -->
       <address
+        v-if="organization"
         class="q-my-lg"
         data-cy="form-create-invoice-organization-details"
       >
-        <p class="q-mb-xs" v-if="organization.title">
-          {{ organization.title }}
+        <!-- Organization name -->
+        <p v-if="organization.name" class="q-mb-xs">
+          {{ organization.name }}
         </p>
-        <template v-if="organization?.address">
-          <!-- Street + house number -->
-          <p class="q-mb-xs" v-if="organization.address?.street">
-            {{ organization.address.street }}
-          </p>
-          <p
-            class="q-mb-xs"
-            v-if="organization.address?.zip || organization.address?.city"
-          >
-            <!-- Zip + city -->
-            <span v-if="organization.address?.zip">{{
-              organization.address.zip
-            }}</span
-            >&nbsp;<span v-if="organization.address?.city">{{
-              organization.address.city
-            }}</span>
-          </p>
-        </template>
+        <!-- Street + street number -->
+        <p
+          v-if="organization.street || organization.street_number"
+          class="q-mb-xs"
+        >
+          <span v-if="organization.street">
+            {{ organization.street }} </span
+          >&nbsp;<span v-if="organization.street_number">
+            {{ organization.street_number }}
+          </span>
+        </p>
+        <!-- PSC + city -->
+        <p v-if="organization.psc || organization.city" class="q-mb-xs">
+          <!-- Zip + city -->
+          <span v-if="organization.psc">{{ organization.psc }}</span
+          >&nbsp;<span v-if="organization.city">{{ organization.city }}</span>
+        </p>
         <!-- Business ID -->
         <p
           class="q-mb-xs"
-          v-if="organization?.identificationNumber"
+          v-if="organization?.ico"
           data-cy="form-create-invoice-organization-id"
         >
           {{ $t('form.labelBusinessId') }}:
-          {{ organization.identificationNumber }}
+          {{ organization.ico }}
         </p>
         <!-- Tax ID -->
         <p
           class="q-mb-xs"
-          v-if="organization?.identificationNumberVat"
+          v-if="organization?.dic"
           data-cy="form-create-invoice-organization-vat-id"
         >
           {{ $t('form.labelTaxId') }}:
-          {{ organization.identificationNumberVat }}
+          {{ organization.dic }}
         </p>
       </address>
       <!-- Toggle: Confirm billing details -->
