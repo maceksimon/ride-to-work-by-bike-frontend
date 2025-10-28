@@ -43,7 +43,6 @@ export default defineComponent({
       return adminOrganisationStore.getCurrentAdminOrganisation;
     });
 
-    // Access store data directly (reactive)
     const teams = computed(() => adminOrganisationStore.getInvoiceTeams);
     const selectedMembers = computed({
       get: () => adminOrganisationStore.invoiceForm.selectedMembers,
@@ -77,13 +76,13 @@ export default defineComponent({
     });
 
     return {
+      isBillingDetailsCorrect,
+      isDonorEntryFee,
+      orderNote,
+      orderNumber,
       organization,
       teams,
       selectedMembers,
-      orderNumber,
-      orderNote,
-      isDonorEntryFee,
-      isBillingDetailsCorrect,
     };
   },
 });
