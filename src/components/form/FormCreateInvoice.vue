@@ -27,8 +27,8 @@ import { computed, defineComponent, reactive, ref } from 'vue';
 // components
 import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
 
-// fixtures
-import invoiceFixture from '../../../test/cypress/fixtures/formCreateInvoice.json';
+// composables
+import { useInvoiceTeamsData } from 'src/composables/useInvoiceTeamsData';
 
 // stores
 import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
@@ -47,16 +47,15 @@ export default defineComponent({
       return adminOrganisationStore.getCurrentAdminOrganisation;
     });
 
+    const { invoiceTeamsData } = useInvoiceTeamsData();
+
     const formCreateInvoiceRef = ref<typeof QForm | null>(null);
     const isBillingDetailsCorrect = ref<boolean>(false);
     const isDonorEntryFee = ref<boolean>(false);
     const orderNote = ref<string>('');
     const orderNumber = ref<string>('');
 
-    const selectedMembers = reactive<{ [key: string]: string[] }>({
-      'team-1': [] as string[],
-      'team-2': [] as string[],
-    });
+    const selectedMembers = reactive<{ [key: string]: string[] }>({});
 
     return {
       formCreateInvoiceRef,
@@ -66,7 +65,7 @@ export default defineComponent({
       orderNumber,
       organization,
       selectedMembers,
-      teams: invoiceFixture.teams,
+      teams: invoiceTeamsData,
     };
   },
 });
@@ -97,8 +96,7 @@ export default defineComponent({
           v-if="organization.street || organization.street_number"
           class="q-mb-xs"
         >
-          <span v-if="organization.street">
-            {{ organization.street }} </span
+          <span v-if="organization.street"> {{ organization.street }} </span
           >&nbsp;<span v-if="organization.street_number">
             {{ organization.street_number }}
           </span>
@@ -129,6 +127,7 @@ export default defineComponent({
         </p>
       </address>
       <!-- Toggle: Confirm billing details -->
+      <!-- TODO: wrap in a field to ensure form validation -->
       <q-toggle
         dense
         v-model="isBillingDetailsCorrect"
