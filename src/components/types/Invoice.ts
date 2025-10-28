@@ -38,16 +38,16 @@ export interface GetCoordinatorInvoicesResponse {
 }
 
 export interface InvoiceTeamMember {
-  id: string;
+  id: number;
   name: string;
-  teamId: string;
+  teamId: number;
   payment: {
     amount: number;
   };
 }
 
 export interface InvoiceTeam {
-  id: string;
+  id: number;
   name: string;
   members: InvoiceTeamMember[];
 }

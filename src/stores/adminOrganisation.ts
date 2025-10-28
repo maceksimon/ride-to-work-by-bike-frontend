@@ -28,7 +28,7 @@ interface InvoiceFormState {
   orderNote: string;
   isDonorEntryFee: boolean;
   isBillingDetailsCorrect: boolean;
-  selectedMembers: { [key: string]: string[] };
+  selectedMembers: { [key: number]: number[] };
 }
 
 interface AdminOrganisationState {
@@ -116,16 +116,16 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
           // create or get existing team
           if (!teamsMap.has(team.id)) {
             teamsMap.set(team.id, {
-              id: String(team.id),
+              id: team.id,
               name: team.name,
               members: [],
             });
           }
           const invoiceTeam = teamsMap.get(team.id)!;
           invoiceTeam.members.push({
-            id: String(member.user_profile_id),
+            id: member.user_profile_id,
             name: member.name,
-            teamId: String(team.id),
+            teamId: team.id,
             payment: {
               amount: payment.amount,
             },
@@ -237,7 +237,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
      * @returns {void}
      */
     initializeSelectedMembers(): void {
-      const newSelectedMembers: { [key: string]: string[] } = {};
+      const newSelectedMembers: { [key: number]: number[] } = {};
       const teams = this.getInvoiceTeams;
       teams.forEach((team) => {
         // set selected value for each member in the team
