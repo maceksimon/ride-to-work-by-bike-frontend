@@ -22,7 +22,7 @@
  */
 
 // libraries
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 
 // composables
 import { useFormatPrice } from 'src/composables/useFormatPrice';
@@ -67,14 +67,22 @@ export default defineComponent({
      * If all members are deselected, team is deselected.
      * @return void
      */
+    const setIsSelectedTeam = (): void => {
+      if (selectedMembers.value.length === props.team.members.length) {
+        isSelectedTeam.value = true;
+      } else {
+        isSelectedTeam.value = false;
+      }
+    };
+
+    onMounted(() => {
+      setIsSelectedTeam();
+    });
+
     const onChangeMember = (): void => {
       // wait for next tick to get the updated value after emitting
       nextTick(() => {
-        if (selectedMembers.value.length === props.team.members.length) {
-          isSelectedTeam.value = true;
-        } else {
-          isSelectedTeam.value = false;
-        }
+        setIsSelectedTeam();
       });
     };
 

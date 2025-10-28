@@ -1,0 +1,121 @@
+{
+  "storeDataInitial": {
+    "organizations": [
+      {
+        "name": "Stavební firma Černý a synové s.r.o.",
+        "psc": 11000,
+        "street": "Hlavní",
+        "street_number": 123,
+        "recipient": "Stavební firma Černý a synové s.r.o.",
+        "city": "Praha",
+        "ico": 12345678,
+        "dic": "CZ12345678",
+        "active": true,
+        "subsidiaries": [
+          {
+            "id": 1001,
+            "psc": 11000,
+            "street": "Hlavní",
+            "street_number": 123,
+            "city": "Praha",
+            "icon_url": null,
+            "teams": [
+              {
+                "id": 2001,
+                "name": "Projektanti",
+                "icon_url": null,
+                "members_without_paid_entry_fee_by_org_coord": [],
+                "members_with_paid_entry_fee_by_org_coord": [
+                  {
+                    "id": 10001,
+                    "name": "Jan Novák",
+                    "nickname": "jnovak",
+                    "date_of_challenge_registration": "2025-01-15T10:30:00.000000",
+                    "email": "jan.novak@cerny.cz",
+                    "telephone": "123456789",
+                    "sex": "male",
+                    "avatar_url": "",
+                    "approved_for_team": "approved",
+                    "payment_status": "waiting",
+                    "payment_type": "fc",
+                    "payment_category": "entry_fee",
+                    "payment_amount": "390",
+                    "discount_coupon": "",
+                    "user_profile_id": 50001
+                  }
+                ],
+                "other_members": []
+              },
+              {
+                "id": 2002,
+                "name": "Administrativa",
+                "icon_url": null,
+                "members_without_paid_entry_fee_by_org_coord": [],
+                "members_with_paid_entry_fee_by_org_coord": [
+                  {
+                    "id": 10002,
+                    "name": "Petra Svobodová",
+                    "nickname": null,
+                    "date_of_challenge_registration": "2025-01-16T09:15:00.000000",
+                    "email": "petra.svobodova@cerny.cz",
+                    "telephone": "123456790",
+                    "sex": "female",
+                    "avatar_url": "",
+                    "approved_for_team": "approved",
+                    "payment_status": "waiting",
+                    "payment_type": "fc",
+                    "payment_category": "entry_fee",
+                    "payment_amount": "390",
+                    "discount_coupon": "",
+                    "user_profile_id": 50002
+                  },
+                  {
+                    "id": 10003,
+                    "name": "Martin Dvořák",
+                    "nickname": "mdvorak",
+                    "date_of_challenge_registration": "2025-01-10T14:20:00.000000",
+                    "email": "martin.dvorak@cerny.cz",
+                    "telephone": "123456791",
+                    "sex": "male",
+                    "avatar_url": "",
+                    "approved_for_team": "approved",
+                    "payment_status": "done",
+                    "payment_type": "fc",
+                    "payment_category": "entry_fee",
+                    "payment_amount": "390",
+                    "discount_coupon": "",
+                    "user_profile_id": 50003
+                  }
+                ],
+                "other_members": []
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "invoices": [
+      {
+        "payments_to_invoice": [
+          {
+            "id": 1,
+            "amount": 390,
+            "userprofile_id": 50001,
+            "payment_status": 1005,
+            "pay_type": "fc",
+            "pay_category": "entry_fee"
+          },
+          {
+            "id": 2,
+            "amount": 390,
+            "userprofile_id": 50002,
+            "payment_status": 1005,
+            "pay_type": "fc",
+            "pay_category": "entry_fee"
+          }
+        ],
+        "invoices": []
+      }
+    ]
+  }
+}

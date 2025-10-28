@@ -10,9 +10,26 @@ import { useApiPostCoordinatorApprovePayments } from '../composables/useApiPostC
 
 // types
 import type { Logger } from '../components/types/Logger';
-import type { AdminOrganisation } from '../components/types/AdminOrganisation';
-import type { InvoiceResult } from '../components/types/Invoice';
+import type {
+  AdminOrganisation,
+  AdminSubsidiary,
+  AdminTeam,
+  AdminTeamMember,
+} from '../components/types/AdminOrganisation';
+import type {
+  InvoiceResult,
+  InvoicePayment,
+  InvoiceTeam,
+} from '../components/types/Invoice';
 import type { TableFeeApprovalRow } from '../composables/useTableFeeApprovalData';
+
+interface InvoiceFormState {
+  orderNumber: string;
+  orderNote: string;
+  isDonorEntryFee: boolean;
+  isBillingDetailsCorrect: boolean;
+  selectedMembers: { [key: string]: string[] };
+}
 
 interface AdminOrganisationState {
   $log: Logger | null;
@@ -22,6 +39,7 @@ interface AdminOrganisationState {
   isLoadingInvoices: boolean;
   isLoadingApprovePayments: boolean;
   selectedPaymentsToApprove: TableFeeApprovalRow[];
+  invoiceForm: InvoiceFormState;
 }
 
 export const useAdminOrganisationStore = defineStore('adminOrganisation', {
@@ -33,6 +51,13 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
     isLoadingInvoices: false,
     isLoadingApprovePayments: false,
     selectedPaymentsToApprove: [],
+    invoiceForm: {
+      orderNumber: '',
+      orderNote: '',
+      isDonorEntryFee: false,
+      isBillingDetailsCorrect: false,
+      selectedMembers: {},
+    },
   }),
 
   getters: {
@@ -47,8 +72,69 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       state.isLoadingApprovePayments,
     getCurrentAdminOrganisation: (state): AdminOrganisation | null =>
       state.adminOrganisations[0] ?? null,
-    getCurrentAdminInvoice: (state) => state.adminInvoices[0],
+    getCurrentAdminInvoice: (state): InvoiceResult | null =>
+      state.adminInvoices[0] ?? null,
     getSelectedPaymentsToApprove: (state) => state.selectedPaymentsToApprove,
+    getInvoiceForm: (state) => state.invoiceForm,
+    /**
+     * Get teams data for invoice creation
+     * Matches payments_to_invoice with team members by userprofile_id
+     */
+    getInvoiceTeams: (state): InvoiceTeam[] => {
+      const organisation = state.adminOrganisations[0];
+      const invoiceResult = state.adminInvoices[0];
+      // check existence
+      if (!organisation || !invoiceResult) {
+        return [];
+      }
+      const paymentsToInvoice = invoiceResult.payments_to_invoice;
+      // teams map to store result structure
+      const teamsMap = new Map<number, InvoiceTeam>();
+      // member map to lookup member by user_profile_id
+      const memberMap = new Map<
+        number,
+        { member: AdminTeamMember; team: AdminTeam }
+      >();
+      // build member map from all subsidiaries and teams
+      organisation.subsidiaries.forEach((subsidiary: AdminSubsidiary) => {
+        subsidiary.teams.forEach((team: AdminTeam) => {
+          const allMembers = [
+            ...team.members_without_paid_entry_fee_by_org_coord,
+            ...team.members_with_paid_entry_fee_by_org_coord,
+            ...team.other_members,
+          ];
+          allMembers.forEach((member: AdminTeamMember) => {
+            memberMap.set(member.user_profile_id, { member, team });
+          });
+        });
+      });
+      // match payments with members and group by team
+      paymentsToInvoice.forEach((payment: InvoicePayment) => {
+        const memberData = memberMap.get(payment.userprofile_id);
+        if (memberData) {
+          const { member, team } = memberData;
+          // create or get existing team
+          if (!teamsMap.has(team.id)) {
+            teamsMap.set(team.id, {
+              id: String(team.id),
+              name: team.name,
+              members: [],
+            });
+          }
+          const invoiceTeam = teamsMap.get(team.id)!;
+          invoiceTeam.members.push({
+            id: String(member.user_profile_id),
+            name: member.name,
+            teamId: String(team.id),
+            payment: {
+              amount: payment.amount,
+            },
+          });
+        }
+      });
+
+      return Array.from(teamsMap.values());
+    },
   },
 
   actions: {
@@ -134,12 +220,40 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       this.isLoadingApprovePayments = false;
     },
     /**
+     * Reset invoice form to initial state
+     * @returns {void}
+     */
+    resetInvoiceForm(): void {
+      this.invoiceForm = {
+        orderNumber: '',
+        orderNote: '',
+        isDonorEntryFee: false,
+        isBillingDetailsCorrect: false,
+        selectedMembers: {},
+      };
+    },
+    /**
+     * Initialize selectedMembers with all members selected by default
+     * @returns {void}
+     */
+    initializeSelectedMembers(): void {
+      const newSelectedMembers: { [key: string]: string[] } = {};
+      const teams = this.getInvoiceTeams;
+      teams.forEach((team) => {
+        // set selected value for each member in the team
+        newSelectedMembers[team.id] = team.members.map((member) => member.id);
+      });
+      this.invoiceForm.selectedMembers = newSelectedMembers;
+    },
+    /**
      * Clear all store data
      * @returns {void}
      */
     clearStore(): void {
       this.adminOrganisations = [];
       this.adminInvoices = [];
+      this.selectedPaymentsToApprove = [];
+      this.resetInvoiceForm();
       this.isLoadingOrganisations = false;
       this.isLoadingInvoices = false;
       this.isLoadingApprovePayments = false;

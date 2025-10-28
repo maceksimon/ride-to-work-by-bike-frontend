@@ -17,6 +17,7 @@
  */
 
 // libraries
+import { QForm } from 'quasar';
 import { defineComponent, ref } from 'vue';
 
 // components
@@ -24,6 +25,9 @@ import BannerInfo from '../global/BannerInfo.vue';
 import DialogDefault from '../global/DialogDefault.vue';
 import FormCreateInvoice from '../form/FormCreateInvoice.vue';
 import TableInvoices from './TableInvoices.vue';
+
+// stores
+import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
 
 export default defineComponent({
   name: 'TabCoordinatorInvoices',
@@ -35,17 +39,33 @@ export default defineComponent({
   },
   setup() {
     const isDialogOpen = ref(false);
+    const formCreateInvoiceRef = ref<typeof QForm | null>(null);
 
-    const closeDialog = () => {
+    // Stores
+    const adminOrganisationStore = useAdminOrganisationStore();
+
+    const closeDialog = (): void => {
+      adminOrganisationStore.resetInvoiceForm();
       isDialogOpen.value = false;
     };
-    const openDialog = () => {
+    const openDialog = (): void => {
+      // Reset and initialize form when opening dialog
+      adminOrganisationStore.initializeSelectedMembers();
       isDialogOpen.value = true;
     };
 
+    const onSubmit = async (): Promise<void> => {
+      // TODO: Implement submit logic
+    };
+    const onReset = (): void => {
+      closeDialog();
+    };
+
     return {
+      formCreateInvoiceRef,
       isDialogOpen,
-      closeDialog,
+      onReset,
+      onSubmit,
       openDialog,
     };
   },
@@ -86,30 +106,33 @@ export default defineComponent({
         {{ $t('coordinator.titleCreateInvoice') }}
       </template>
       <template #content>
-        <form-create-invoice data-cy="form-create-invoice" />
-        <!-- Action buttons -->
-        <div class="flex justify-end q-mt-lg">
-          <div class="flex gap-8">
-            <q-btn
-              rounded
-              unelevated
-              outline
-              color="primary"
-              data-cy="dialog-button-cancel"
-              @click.prevent="closeDialog"
-            >
-              {{ $t('navigation.discard') }}
-            </q-btn>
-            <q-btn
-              rounded
-              unelevated
-              color="primary"
-              data-cy="dialog-button-submit"
-            >
-              {{ $t('coordinator.buttonDialogCreateInvoice') }}
-            </q-btn>
+        <q-form ref="formCreateInvoiceRef" @submit="onSubmit" @reset="onReset">
+          <form-create-invoice />
+          <!-- Action buttons -->
+          <div class="flex justify-end q-mt-lg">
+            <div class="flex gap-8">
+              <q-btn
+                type="reset"
+                rounded
+                unelevated
+                outline
+                color="primary"
+                data-cy="dialog-button-cancel"
+              >
+                {{ $t('navigation.discard') }}
+              </q-btn>
+              <q-btn
+                type="submit"
+                rounded
+                unelevated
+                color="primary"
+                data-cy="dialog-button-submit"
+              >
+                {{ $t('coordinator.buttonDialogCreateInvoice') }}
+              </q-btn>
+            </div>
           </div>
-        </div>
+        </q-form>
       </template>
     </dialog-default>
   </div>

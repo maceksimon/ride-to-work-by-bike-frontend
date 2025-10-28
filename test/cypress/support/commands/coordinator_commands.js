@@ -33,6 +33,7 @@ Cypress.Commands.add(
           .its('value')
           .should('deep.equal', organizations);
       }
+      adminOrganisationStore.initializeSelectedMembers();
     });
   },
 );

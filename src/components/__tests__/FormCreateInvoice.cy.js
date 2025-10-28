@@ -46,37 +46,12 @@ describe('<FormCreateInvoice>', () => {
 
 function coreTests() {
   it('renders component', () => {
-    cy.fixture('tableAttendanceTestData.json').then((organizationData) => {
-      // Create invoice data that matches organization user profile IDs
-      const testInvoiceData = [
-        {
-          payments_to_invoice: [
-            {
-              id: 1,
-              amount: 390,
-              userprofile_id: 50001, // Match Jan Novák from organization data
-              payment_status: 1005,
-              pay_type: 'fc',
-              pay_category: 'entry_fee',
-            },
-            {
-              id: 2,
-              amount: 390,
-              userprofile_id: 50002, // Match Petra Svobodová from organization data
-              payment_status: 1005,
-              pay_type: 'fc',
-              pay_category: 'entry_fee',
-            },
-          ],
-          invoices: [],
-        },
-      ];
-
+    cy.fixture('createInvoiceTestData.json').then((testData) => {
       cy.wrap(useAdminOrganisationStore()).then((adminOrganisationStore) => {
         cy.setAdminOrganisationStoreState({
           store: adminOrganisationStore,
-          organizations: organizationData.storeData,
-          invoices: testInvoiceData,
+          organizations: testData.storeDataInitial.organizations,
+          invoices: testData.storeDataInitial.invoices,
         });
       });
 
@@ -87,7 +62,7 @@ function coreTests() {
         .should('be.visible')
         .and('contain', i18n.global.t('form.titleOrganizationBillingDetails'));
       // organization details
-      const organization = organizationData.storeData[0];
+      const organization = testData.storeDataInitial.organizations[0];
       cy.dataCy('form-create-invoice-organization-details')
         .should('be.visible')
         .and('contain', organization.name)

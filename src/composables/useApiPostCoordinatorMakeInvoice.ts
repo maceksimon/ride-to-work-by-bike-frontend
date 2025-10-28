@@ -21,6 +21,7 @@ interface CoordinatorMakeInvoicePayload {
   order_number?: string;
   client_note?: string;
   company_pais_benefitial_fee?: boolean;
+  payment_ids?: number[];
 }
 
 interface CoordinatorMakeInvoiceResponse {

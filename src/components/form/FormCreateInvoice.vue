@@ -21,14 +21,10 @@
  */
 
 // libraries
-import { QForm } from 'quasar';
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 // components
 import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
-
-// composables
-import { useInvoiceTeamsData } from 'src/composables/useInvoiceTeamsData';
 
 // stores
 import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
@@ -47,191 +43,206 @@ export default defineComponent({
       return adminOrganisationStore.getCurrentAdminOrganisation;
     });
 
-    const { invoiceTeamsData } = useInvoiceTeamsData();
-
-    const formCreateInvoiceRef = ref<typeof QForm | null>(null);
-    const isBillingDetailsCorrect = ref<boolean>(false);
-    const isDonorEntryFee = ref<boolean>(false);
-    const orderNote = ref<string>('');
-    const orderNumber = ref<string>('');
-
-    const selectedMembers = reactive<{ [key: string]: string[] }>({});
+    // Access store data directly (reactive)
+    const teams = computed(() => adminOrganisationStore.getInvoiceTeams);
+    const selectedMembers = computed({
+      get: () => adminOrganisationStore.invoiceForm.selectedMembers,
+      set: (value) => {
+        adminOrganisationStore.invoiceForm.selectedMembers = value;
+      },
+    });
+    const orderNumber = computed({
+      get: () => adminOrganisationStore.invoiceForm.orderNumber,
+      set: (value) => {
+        adminOrganisationStore.invoiceForm.orderNumber = value;
+      },
+    });
+    const orderNote = computed({
+      get: () => adminOrganisationStore.invoiceForm.orderNote,
+      set: (value) => {
+        adminOrganisationStore.invoiceForm.orderNote = value;
+      },
+    });
+    const isDonorEntryFee = computed({
+      get: () => adminOrganisationStore.invoiceForm.isDonorEntryFee,
+      set: (value) => {
+        adminOrganisationStore.invoiceForm.isDonorEntryFee = value;
+      },
+    });
+    const isBillingDetailsCorrect = computed({
+      get: () => adminOrganisationStore.invoiceForm.isBillingDetailsCorrect,
+      set: (value) => {
+        adminOrganisationStore.invoiceForm.isBillingDetailsCorrect = value;
+      },
+    });
 
     return {
-      formCreateInvoiceRef,
-      isBillingDetailsCorrect,
-      isDonorEntryFee,
-      orderNote,
-      orderNumber,
       organization,
+      teams,
       selectedMembers,
-      teams: invoiceTeamsData,
+      orderNumber,
+      orderNote,
+      isDonorEntryFee,
+      isBillingDetailsCorrect,
     };
   },
 });
 </script>
 
 <template>
-  <q-form ref="formCreateInvoiceRef" data-cy="form-create-invoice">
-    <div>
-      <!-- Title: Billing details -->
-      <h3
-        class="text-body1 text-bold text-black q-my-none"
-        data-cy="form-create-invoice-title"
-      >
-        {{ $t('form.titleOrganizationBillingDetails') }}
-      </h3>
-      <!-- Section: Billing details -->
-      <address
-        v-if="organization"
-        class="q-my-lg"
-        data-cy="form-create-invoice-organization-details"
-      >
-        <!-- Organization name -->
-        <p v-if="organization.name" class="q-mb-xs">
-          {{ organization.name }}
-        </p>
-        <!-- Street + street number -->
-        <p
-          v-if="organization.street || organization.street_number"
-          class="q-mb-xs"
-        >
-          <span v-if="organization.street"> {{ organization.street }} </span
-          >&nbsp;<span v-if="organization.street_number">
-            {{ organization.street_number }}
-          </span>
-        </p>
-        <!-- PSC + city -->
-        <p v-if="organization.psc || organization.city" class="q-mb-xs">
-          <!-- Zip + city -->
-          <span v-if="organization.psc">{{ organization.psc }}</span
-          >&nbsp;<span v-if="organization.city">{{ organization.city }}</span>
-        </p>
-        <!-- Business ID -->
-        <p
-          class="q-mb-xs"
-          v-if="organization?.ico"
-          data-cy="form-create-invoice-organization-id"
-        >
-          {{ $t('form.labelBusinessId') }}:
-          {{ organization.ico }}
-        </p>
-        <!-- Tax ID -->
-        <p
-          class="q-mb-xs"
-          v-if="organization?.dic"
-          data-cy="form-create-invoice-organization-vat-id"
-        >
-          {{ $t('form.labelTaxId') }}:
-          {{ organization.dic }}
-        </p>
-      </address>
-      <!-- Toggle: Confirm billing details -->
-      <!-- TODO: wrap in a field to ensure form validation -->
-      <q-toggle
-        dense
-        v-model="isBillingDetailsCorrect"
-        :label="$t('form.labelConfirmBillingDetails')"
-        name="confirm-billing-details"
-        color="primary"
-        data-cy="form-create-invoice-confirm-billing-details"
-      />
-      <!-- Link: Edit billing details -->
-      <p class="q-mt-lg" data-cy="form-create-invoice-edit-billing-details">
-        {{ $t('form.textEditBillingDetails') }}
-        <!-- TODO: Link to edit screen -->
-        <a href="#">
-          {{ $t('form.linkEditBillingDetails') }}
-        </a>
+  <div data-cy="form-create-invoice">
+    <!-- Title: Billing details -->
+    <h3
+      class="text-body1 text-bold text-black q-my-none"
+      data-cy="form-create-invoice-title"
+    >
+      {{ $t('form.titleOrganizationBillingDetails') }}
+    </h3>
+    <!-- Section: Billing details -->
+    <address
+      v-if="organization"
+      class="q-my-lg"
+      data-cy="form-create-invoice-organization-details"
+    >
+      <!-- Organization name -->
+      <p v-if="organization.name" class="q-mb-xs">
+        {{ organization.name }}
       </p>
-      <!-- Section: Participants -->
-      <form-field-checkbox-team
-        v-for="team in teams"
-        :key="team.id"
-        class="q-gutter-col-sm q-my-lg"
-        :team="team"
-        v-model="selectedMembers[team.id]"
-        data-cy="form-create-invoice-team"
-      />
-      <!-- Section: Additional information -->
-      <div class="q-mt-lg" data-cy="form-create-invoice-additional-information">
-        <!-- Title -->
-        <h3 class="text-body1 text-bold text-black q-mt-none q-mb-sm">
-          {{ $t('form.titleAdditionalInformation') }}
-        </h3>
-        <div class="row q-col-gutter-lg">
-          <!-- Input: Order number -->
-          <div
-            class="col-12 col-sm-6"
-            data-cy="form-create-invoice-order-number"
+      <!-- Street + street number -->
+      <p
+        v-if="organization.street || organization.street_number"
+        class="q-mb-xs"
+      >
+        <span v-if="organization.street"> {{ organization.street }} </span
+        >&nbsp;<span v-if="organization.street_number">
+          {{ organization.street_number }}
+        </span>
+      </p>
+      <!-- PSC + city -->
+      <p v-if="organization.psc || organization.city" class="q-mb-xs">
+        <!-- Zip + city -->
+        <span v-if="organization.psc">{{ organization.psc }}</span
+        >&nbsp;<span v-if="organization.city">{{ organization.city }}</span>
+      </p>
+      <!-- Business ID -->
+      <p
+        class="q-mb-xs"
+        v-if="organization?.ico"
+        data-cy="form-create-invoice-organization-id"
+      >
+        {{ $t('form.labelBusinessId') }}:
+        {{ organization.ico }}
+      </p>
+      <!-- Tax ID -->
+      <p
+        class="q-mb-xs"
+        v-if="organization?.dic"
+        data-cy="form-create-invoice-organization-vat-id"
+      >
+        {{ $t('form.labelTaxId') }}:
+        {{ organization.dic }}
+      </p>
+    </address>
+    <!-- Toggle: Confirm billing details -->
+    <!-- TODO: wrap in a field to ensure form validation -->
+    <q-toggle
+      dense
+      v-model="isBillingDetailsCorrect"
+      :label="$t('form.labelConfirmBillingDetails')"
+      name="confirm-billing-details"
+      color="primary"
+      data-cy="form-create-invoice-confirm-billing-details"
+    />
+    <!-- Link: Edit billing details -->
+    <p class="q-mt-lg" data-cy="form-create-invoice-edit-billing-details">
+      {{ $t('form.textEditBillingDetails') }}
+      <!-- TODO: Link to edit screen -->
+      <a href="#">
+        {{ $t('form.linkEditBillingDetails') }}
+      </a>
+    </p>
+    <!-- Section: Participants -->
+    <form-field-checkbox-team
+      v-for="team in teams"
+      :key="team.id"
+      class="q-gutter-col-sm q-my-lg"
+      :team="team"
+      v-model="selectedMembers[team.id]"
+      data-cy="form-create-invoice-team"
+    />
+    <!-- Section: Additional information -->
+    <div class="q-mt-lg" data-cy="form-create-invoice-additional-information">
+      <!-- Title -->
+      <h3 class="text-body1 text-bold text-black q-mt-none q-mb-sm">
+        {{ $t('form.titleAdditionalInformation') }}
+      </h3>
+      <div class="row q-col-gutter-lg">
+        <!-- Input: Order number -->
+        <div class="col-12 col-sm-6" data-cy="form-create-invoice-order-number">
+          <!-- Label -->
+          <label
+            for="form-create-invoice-order-number"
+            class="text-grey-10 text-caption text-bold"
           >
-            <!-- Label -->
-            <label
-              for="form-create-invoice-order-number"
-              class="text-grey-10 text-caption text-bold"
-            >
-              {{ $t('form.labelOrderNumber') }}
-            </label>
-            <!-- Input -->
-            <q-input
-              dense
-              outlined
-              hide-bottom-space
-              v-model="orderNumber"
-              class="q-mt-sm"
-              id="form-create-invoice-order-number"
-              name="create-invoice-order-number"
-              :data-cy="`form-create-invoice-order-number-input`"
-            />
-          </div>
-          <!-- Input: Note -->
-          <div class="col-12 col-sm-6" data-cy="form-create-invoice-note">
-            <!-- Label -->
-            <label
-              for="form-create-invoice-note"
-              class="text-grey-10 text-caption text-bold"
-            >
-              {{ $t('form.labelOrderNote') }}
-            </label>
-            <!-- Input -->
-            <q-input
-              dense
-              outlined
-              hide-bottom-space
-              v-model="orderNote"
-              class="q-mt-sm"
-              id="form-create-invoice-note"
-              name="create-invoice-note"
-              :data-cy="`form-create-invoice-note-input`"
-            />
-          </div>
+            {{ $t('form.labelOrderNumber') }}
+          </label>
+          <!-- Input -->
+          <q-input
+            dense
+            outlined
+            hide-bottom-space
+            v-model="orderNumber"
+            class="q-mt-sm"
+            id="form-create-invoice-order-number"
+            name="create-invoice-order-number"
+            :data-cy="`form-create-invoice-order-number-input`"
+          />
+        </div>
+        <!-- Input: Note -->
+        <div class="col-12 col-sm-6" data-cy="form-create-invoice-note">
+          <!-- Label -->
+          <label
+            for="form-create-invoice-note"
+            class="text-grey-10 text-caption text-bold"
+          >
+            {{ $t('form.labelOrderNote') }}
+          </label>
+          <!-- Input -->
+          <q-input
+            dense
+            outlined
+            hide-bottom-space
+            v-model="orderNote"
+            class="q-mt-sm"
+            id="form-create-invoice-note"
+            name="create-invoice-note"
+            :data-cy="`form-create-invoice-note-input`"
+          />
         </div>
       </div>
-      <!-- Section: Donor entry fee -->
-      <div class="q-mt-xl" data-cy="form-create-invoice-donor-entry-fee">
-        <!-- Title -->
-        <h3 class="text-body1 text-bold text-black q-my-none">
-          {{ $t('form.titleDonorEntryFee') }}
-        </h3>
-        <!-- Text -->
-        <div
-          v-html="$t('form.textDonorEntryFee')"
-          class="q-mt-lg"
-          data-cy="form-create-invoice-donor-entry-fee-text"
-        />
-        <!-- Toggle -->
-        <q-toggle
-          dense
-          v-model="isDonorEntryFee"
-          :label="$t('form.labelDonorEntryFee')"
-          name="confirm-billing-details"
-          color="primary"
-          class="q-mt-lg"
-          data-cy="form-create-invoice-donor-entry-fee-toggle"
-        />
-      </div>
     </div>
-    <!-- Hidden submit button enables Enter key to submit -->
-    <q-btn type="submit" class="hidden" />
-  </q-form>
+    <!-- Section: Donor entry fee -->
+    <div class="q-mt-xl" data-cy="form-create-invoice-donor-entry-fee">
+      <!-- Title -->
+      <h3 class="text-body1 text-bold text-black q-my-none">
+        {{ $t('form.titleDonorEntryFee') }}
+      </h3>
+      <!-- Text -->
+      <div
+        v-html="$t('form.textDonorEntryFee')"
+        class="q-mt-lg"
+        data-cy="form-create-invoice-donor-entry-fee-text"
+      />
+      <!-- Toggle -->
+      <q-toggle
+        dense
+        v-model="isDonorEntryFee"
+        :label="$t('form.labelDonorEntryFee')"
+        name="confirm-billing-details"
+        color="primary"
+        class="q-mt-lg"
+        data-cy="form-create-invoice-donor-entry-fee-toggle"
+      />
+    </div>
+  </div>
 </template>
