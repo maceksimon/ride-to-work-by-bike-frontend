@@ -80,7 +80,7 @@ describe('FormFieldAddress', () => {
       },
     });
 
-    // Type zip code and check that mask is applied
+    // masking zip code
     cy.dataCy('form-address-zip-input').type('12345');
     cy.dataCy('form-address-zip-input').should('have.value', '123 45');
   });
