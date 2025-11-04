@@ -1,8 +1,11 @@
-export enum FormSubsidiaryAddressFields {
+export enum FormAddressFields {
   street = 'street',
   houseNumber = 'houseNumber',
   city = 'city',
   zip = 'zip',
+}
+
+export enum FormSubsidiaryFields {
   cityChallenge = 'cityChallenge',
   department = 'deparment',
 }

@@ -15,7 +15,7 @@
  * - `update:modelValue`: Emitted as a part of v-model structure.
  *
  * @components
- * - `FormFieldTextRequired`: Component to render required fields.
+ * - `FormFieldAddress`: Component to render address fields.
  *
  * @example
  * <form-add-subsidiary v-model="subsidiaryAddress" />
@@ -27,7 +27,7 @@
 import { computed, defineComponent, inject, nextTick, onMounted } from 'vue';
 
 // components
-import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
+import FormFieldAddress from './FormFieldAddress.vue';
 
 // composables
 import { useValidation } from 'src/composables/useValidation';
@@ -46,12 +46,12 @@ import type { FormOption } from '../../components/types/Form';
 import type { Logger } from '../types/Logger';
 
 // enums
-import { FormSubsidiaryAddressFields } from '../enums/Form';
+import { FormSubsidiaryFields } from '../enums/Form';
 
 export default defineComponent({
   name: 'FormAddSubsidiary',
   components: {
-    FormFieldTextRequired,
+    FormFieldAddress,
   },
   props: {
     modelValue: {
@@ -112,124 +112,73 @@ export default defineComponent({
       isZip,
       labelCityChallenge,
       options,
-      FormSubsidiaryAddressFields,
+      FormSubsidiaryFields,
     };
   },
 });
 </script>
 
 <template>
-  <div class="row q-col-gutter-lg" data-cy="form-add-subsidiary">
-    <div class="col-12 col-sm-6">
-      <!-- Street -->
-      <form-field-text-required
-        v-model="subsidiary.street"
-        :name="FormSubsidiaryAddressFields.street"
-        label="form.labelStreet"
-        data-cy="form-add-subsidiary-street"
-      />
-    </div>
-    <div class="col-12 col-sm-6">
-      <!-- House number -->
-      <form-field-text-required
-        v-model="subsidiary.houseNumber"
-        :name="FormSubsidiaryAddressFields.houseNumber"
-        label="form.labelHouseNumber"
-        data-cy="form-add-subsidiary-house-number"
-      />
-    </div>
-    <div class="col-12 col-sm-6">
-      <!-- City -->
-      <form-field-text-required
-        v-model="subsidiary.city"
-        :name="FormSubsidiaryAddressFields.city"
-        label="form.labelCity"
-        data-cy="form-add-subsidiary-city"
-      />
-    </div>
-    <div class="col-12 col-sm-6">
-      <!-- Zip -->
-      <div data-cy="form-add-subsidiary-zip">
-        <div :data-cy="`form-${FormSubsidiaryAddressFields.zip}`">
-          <!-- Label -->
-          <label
-            :for="`form-${FormSubsidiaryAddressFields.zip}`"
-            class="text-grey-10 text-caption text-bold"
-          >
-            {{ $t('form.labelZip') }}
-          </label>
-          <!-- Input -->
-          <q-input
-            dense
-            outlined
-            v-model="subsidiary.zip"
-            lazy-rules
-            :rules="[
-              (val) =>
-                isFilled(val) ||
-                $t('form.messageFieldRequired', {
-                  fieldName: $t('form.labelZip'),
-                }),
-              (val) => isZip(val) || $t('form.messageZipInvalid'),
-            ]"
-            class="q-mt-sm"
-            :id="`form-${FormSubsidiaryAddressFields.zip}`"
-            :name="FormSubsidiaryAddressFields.zip"
-            :data-cy="`form-${FormSubsidiaryAddressFields.zip}-input`"
-            ref="inputRef"
-            mask="### ##"
-            fill-mask="_"
-            unmasked-value
-          />
-        </div>
+  <div data-cy="form-add-subsidiary">
+    <!-- Address fields -->
+    <form-field-address
+      v-model:street="subsidiary.street"
+      v-model:houseNumber="subsidiary.houseNumber"
+      v-model:city="subsidiary.city"
+      v-model:zip="subsidiary.zip"
+      field-prefix="add-subsidiary"
+    />
+    <div class="row q-col-gutter-lg">
+      <div class="col-12" data-cy="form-widget-subsidiary-city-challenge">
+        <!-- City challenge -->
+        <label
+          for="form-city-challenge"
+          class="text-caption text-bold text-gray-10"
+          >{{ labelCityChallenge }}</label
+        >
+        <q-select
+          dense
+          outlined
+          emit-value
+          map-options
+          v-model="subsidiary.cityChallenge"
+          :rules="[
+            (val) =>
+              isFilled(val) ||
+              $t('form.messageFieldRequired', {
+                fieldName: $t('form.labelCity'),
+              }),
+          ]"
+          id="form-city-challenge"
+          :hint="hintCityChallenge"
+          :options="options"
+          :loading="isLoading"
+          class="q-mt-sm"
+          data-cy="form-add-subsidiary-city-challenge"
+          :name="FormSubsidiaryFields.cityChallenge"
+        ></q-select>
       </div>
-    </div>
-    <div class="col-12" data-cy="form-widget-subsidiary-city-challenge">
-      <!-- City challenge -->
-      <label
-        for="form-city-challenge"
-        class="text-caption text-bold text-gray-10"
-        >{{ labelCityChallenge }}</label
-      >
-      <q-select
-        dense
-        outlined
-        emit-value
-        map-options
-        v-model="subsidiary.cityChallenge"
-        :rules="[
-          (val) =>
-            isFilled(val) ||
-            $t('form.messageFieldRequired', {
-              fieldName: $t('form.labelCity'),
-            }),
-        ]"
-        id="form-city-challenge"
-        :hint="hintCityChallenge"
-        :options="options"
-        :loading="isLoading"
-        class="q-mt-sm"
-        data-cy="form-add-subsidiary-city-challenge"
-        :name="FormSubsidiaryAddressFields.cityChallenge"
-      ></q-select>
-    </div>
-    <div class="col-12">
-      <!-- Department (note) -->
-      <label for="form-department" class="text-caption text-bold text-gray-10">
-        {{ $t('form.company.labelDepartment') }}
-      </label>
-      <q-input
-        dense
-        outlined
-        lazy-rules
-        hide-bottom-space
-        v-model="subsidiary.department"
-        id="form-department"
-        :name="FormSubsidiaryAddressFields.department"
-        :hint="$t('form.company.hintDepartment')"
-        class="q-mt-sm"
-        data-cy="form-add-subsidiary-department"
-      />
+      <div class="col-12">
+        <!-- Department (note) -->
+        <label
+          for="form-department"
+          class="text-caption text-bold text-gray-10"
+        >
+          {{ $t('form.company.labelDepartment') }}
+        </label>
+        <q-input
+          dense
+          outlined
+          lazy-rules
+          hide-bottom-space
+          v-model="subsidiary.department"
+          id="form-department"
+          :name="FormSubsidiaryFields.department"
+          :hint="$t('form.company.hintDepartment')"
+          class="q-mt-sm"
+          data-cy="form-add-subsidiary-department"
+        />
+      </div>
     </div>
   </div>
 </template>
