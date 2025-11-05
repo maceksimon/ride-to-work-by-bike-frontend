@@ -139,39 +139,37 @@ export default defineComponent({
     </div>
     <div class="col-12 col-sm-6">
       <!-- Zip -->
-      <div :data-cy="`form-${fieldPrefix}-zip`">
-        <div :data-cy="`form-${fieldPrefix}-${FormAddressFields.zip}`">
-          <!-- Label -->
-          <label
-            :for="`form-${fieldPrefix}-${FormAddressFields.zip}`"
-            class="text-grey-10 text-caption text-bold"
-          >
-            {{ $t('form.labelZip') }}
-          </label>
-          <!-- Input -->
-          <q-input
-            dense
-            outlined
-            v-model="zipField"
-            lazy-rules
-            :rules="[
-              (val) =>
-                isFilled(val) ||
-                $t('form.messageFieldRequired', {
-                  fieldName: $t('form.labelZip'),
-                }),
-              (val) => isZip(val) || $t('form.messageZipInvalid'),
-            ]"
-            class="q-mt-sm"
-            :id="`form-${fieldPrefix}-${FormAddressFields.zip}`"
-            :name="`${fieldPrefix}-${FormAddressFields.zip}`"
-            :data-cy="`form-${fieldPrefix}-${FormAddressFields.zip}-input`"
-            ref="inputRef"
-            mask="### ##"
-            fill-mask="_"
-            unmasked-value
-          />
-        </div>
+      <div :data-cy="`form-${fieldPrefix}-${FormAddressFields.zip}`">
+        <!-- Label -->
+        <label
+          :for="`form-${fieldPrefix}-${FormAddressFields.zip}`"
+          class="text-grey-10 text-caption text-bold"
+        >
+          {{ $t('form.labelZip') }}
+        </label>
+        <!-- Input -->
+        <q-input
+          dense
+          outlined
+          v-model="zipField"
+          lazy-rules
+          :rules="[
+            (val) =>
+              isFilled(val) ||
+              $t('form.messageFieldRequired', {
+                fieldName: $t('form.labelZip'),
+              }),
+            (val) => isZip(val) || $t('form.messageZipInvalid'),
+          ]"
+          class="q-mt-sm"
+          :id="`form-${fieldPrefix}-${FormAddressFields.zip}`"
+          :name="`${fieldPrefix}-${FormAddressFields.zip}`"
+          :data-cy="`form-${fieldPrefix}-${FormAddressFields.zip}-input`"
+          ref="inputRef"
+          mask="### ##"
+          fill-mask="_"
+          unmasked-value
+        />
       </div>
     </div>
   </div>
