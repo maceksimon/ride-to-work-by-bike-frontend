@@ -25,6 +25,7 @@ import { computed, defineComponent } from 'vue';
 
 // components
 import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
+import FormFieldAddress from './FormFieldAddress.vue';
 
 // stores
 import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
@@ -36,6 +37,7 @@ export default defineComponent({
   name: 'FormCreateInvoice',
   components: {
     FormFieldCheckboxTeam,
+    FormFieldAddress,
   },
   setup() {
     const adminOrganisationStore = useAdminOrganisationStore();
@@ -74,6 +76,43 @@ export default defineComponent({
         adminOrganisationStore.invoiceForm.isBillingDetailsCorrect = value;
       },
     });
+    const isBillingFormExpanded = computed({
+      get: () => adminOrganisationStore.invoiceForm.isBillingFormExpanded,
+      set: (value) => {
+        if (value) {
+          adminOrganisationStore.initializeBillingAddress();
+        }
+        adminOrganisationStore.setBillingFormExpanded(value);
+      },
+    });
+    const billingStreet = computed<string>({
+      get: () => adminOrganisationStore.getBillingStreet,
+      set: (value: string) =>
+        adminOrganisationStore.updateBillingAddressField('street', value),
+    });
+    const billingStreetNumber = computed<string>({
+      get: () => adminOrganisationStore.getBillingStreetNumber,
+      set: (value: string) =>
+        adminOrganisationStore.updateBillingAddressField('streetNumber', value),
+    });
+    const billingCity = computed<string>({
+      get: () => adminOrganisationStore.getBillingCity,
+      set: (value: string) =>
+        adminOrganisationStore.updateBillingAddressField('city', value),
+    });
+    const billingPsc = computed<string>({
+      get: () => adminOrganisationStore.getBillingPsc,
+      set: (value: string) =>
+        adminOrganisationStore.updateBillingAddressField('psc', value),
+    });
+
+    /**
+     * Reset billing form
+     * @returns {void}
+     */
+    const onCancelBillingEdit = (): void => {
+      adminOrganisationStore.resetBillingForm();
+    };
 
     return {
       isBillingDetailsCorrect,
@@ -83,6 +122,12 @@ export default defineComponent({
       organization,
       teams,
       selectedMembers,
+      isBillingFormExpanded,
+      billingStreet,
+      billingStreetNumber,
+      billingCity,
+      billingPsc,
+      onCancelBillingEdit,
     };
   },
 });
@@ -161,14 +206,43 @@ export default defineComponent({
         data-cy="form-create-invoice-confirm-billing-details"
       />
     </q-field>
-    <!-- Link: Edit billing details -->
-    <p class="q-mt-lg" data-cy="form-create-invoice-edit-billing-details">
-      {{ $t('form.textEditBillingDetails') }}
-      <!-- TODO: Link to edit screen -->
-      <a href="#">
-        {{ $t('form.linkEditBillingDetails') }}
-      </a>
-    </p>
+    <!-- Collapsible: Edit billing details -->
+    <q-expansion-item
+      dense
+      v-model="isBillingFormExpanded"
+      :label="$t('form.linkEditBillingDetails')"
+      :caption="$t('form.textEditBillingDetails')"
+      class="q-mt-lg"
+      header-class="q-px-none"
+      data-cy="form-create-invoice-billing-expansion"
+    >
+      <div
+        class="q-py-md"
+        data-cy="form-create-invoice-billing-expansion-content"
+      >
+        <!-- Address fields -->
+        <form-field-address
+          v-if="isBillingFormExpanded"
+          v-model:street="billingStreet"
+          v-model:houseNumber="billingStreetNumber"
+          v-model:city="billingCity"
+          v-model:zip="billingPsc"
+          field-prefix="invoice-billing"
+        />
+        <!-- Button: Discard changes -->
+        <div class="row justify-end q-mt-lg">
+          <q-btn
+            rounded
+            unelevated
+            outline
+            color="negative"
+            :label="$t('navigation.discardChanges')"
+            @click="onCancelBillingEdit"
+            data-cy="form-create-invoice-billing-discard"
+          />
+        </div>
+      </div>
+    </q-expansion-item>
     <!-- Section: Participants -->
     <form-field-checkbox-team
       v-for="team in teams"

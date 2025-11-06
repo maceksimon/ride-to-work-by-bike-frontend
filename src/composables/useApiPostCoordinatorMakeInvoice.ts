@@ -17,11 +17,18 @@ import type { Logger } from '../components/types/Logger';
 // utils
 import { requestDefaultHeader, requestTokenHeader } from '../utils';
 
-interface CoordinatorMakeInvoicePayload {
+export interface CoordinatorMakeInvoicePayload {
   order_number?: string;
   client_note?: string;
   company_pais_benefitial_fee?: boolean;
   payment_ids?: number[];
+  company_name?: string;
+  company_address?: {
+    psc?: string;
+    street?: string;
+    street_number?: string;
+    city?: string;
+  };
 }
 
 interface CoordinatorMakeInvoiceResponse {

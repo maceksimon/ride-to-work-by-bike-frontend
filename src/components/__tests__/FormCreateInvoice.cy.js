@@ -17,10 +17,12 @@ describe('<FormCreateInvoice>', () => {
         'titleAdditionalInformation',
         'titleDonorEntryFee',
         'titleOrganizationBillingDetails',
+        'textEditBillingDetails',
       ],
       'form',
       i18n,
     );
+    cy.testLanguageStringsInContext(['discardChanges'], 'navigation', i18n);
   });
 
   context('desktop', () => {

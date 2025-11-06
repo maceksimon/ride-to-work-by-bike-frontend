@@ -29,6 +29,7 @@ import type {
   InvoiceTeam,
 } from '../components/types/Invoice';
 import type { TableFeeApprovalRow } from '../composables/useTableFeeApprovalData';
+import type { CoordinatorMakeInvoicePayload } from '../composables/useApiPostCoordinatorMakeInvoice';
 
 interface InvoiceFormState {
   orderNumber: string;
@@ -36,6 +37,13 @@ interface InvoiceFormState {
   isDonorEntryFee: boolean;
   isBillingDetailsCorrect: boolean;
   selectedMembers: { [key: number]: number[] };
+  customBillingAddress: {
+    street: string;
+    streetNumber: string;
+    city: string;
+    psc: string;
+  } | null;
+  isBillingFormExpanded: boolean;
 }
 
 interface AdminOrganisationState {
@@ -64,6 +72,8 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       isDonorEntryFee: false,
       isBillingDetailsCorrect: false,
       selectedMembers: {},
+      customBillingAddress: null,
+      isBillingFormExpanded: false,
     },
   }),
 
@@ -149,6 +159,14 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       }
       return invoiceResult.payments_to_invoice.length > 0;
     },
+    getBillingStreet: (state): string =>
+      state.invoiceForm.customBillingAddress?.street || '',
+    getBillingStreetNumber: (state): string =>
+      state.invoiceForm.customBillingAddress?.streetNumber || '',
+    getBillingCity: (state): string =>
+      state.invoiceForm.customBillingAddress?.city || '',
+    getBillingPsc: (state): string =>
+      state.invoiceForm.customBillingAddress?.psc || '',
   },
 
   actions: {
@@ -162,6 +180,9 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       selectedPaymentsToApprove: TableFeeApprovalRow[],
     ): void {
       this.selectedPaymentsToApprove = selectedPaymentsToApprove;
+    },
+    setBillingFormExpanded(value: boolean): void {
+      this.invoiceForm.isBillingFormExpanded = value;
     },
     /**
      * Load admin organisations from API
@@ -177,6 +198,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         `Admin organisations loaded <${JSON.stringify(this.adminOrganisations, null, 2)}>.`,
       );
       this.isLoadingOrganisations = false;
+      this.initializeBillingAddress();
     },
     /**
      * Load admin invoices from API
@@ -264,14 +286,27 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         return false;
       }
       const { makeInvoice } = useApiPostCoordinatorMakeInvoice(this.$log);
-      const result = await makeInvoice({
+      const payload: CoordinatorMakeInvoicePayload = {
         // when set to undefined, field is not sent in the request
         order_number: this.invoiceForm.orderNumber || undefined,
         client_note: this.invoiceForm.orderNote || undefined,
         company_pais_benefitial_fee:
           this.invoiceForm.isDonorEntryFee || undefined,
         payment_ids: paymentIds,
-      });
+      };
+      if (
+        this.invoiceForm.isBillingFormExpanded &&
+        this.invoiceForm.customBillingAddress
+      ) {
+        payload.company_name = this.getCurrentAdminOrganisation?.name;
+        payload.company_address = {
+          psc: this.invoiceForm.customBillingAddress.psc,
+          street: this.invoiceForm.customBillingAddress.street,
+          street_number: this.invoiceForm.customBillingAddress.streetNumber,
+          city: this.invoiceForm.customBillingAddress.city,
+        };
+      }
+      const result = await makeInvoice(payload);
       // if successful, refetch invoices list
       if (result) {
         await this.loadAdminInvoices();
@@ -290,6 +325,8 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         isDonorEntryFee: false,
         isBillingDetailsCorrect: false,
         selectedMembers: {},
+        customBillingAddress: null,
+        isBillingFormExpanded: false,
       };
     },
     /**
@@ -306,6 +343,48 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         );
       });
       this.invoiceForm.selectedMembers = newSelectedMembers;
+    },
+    /**
+     * Initialize billing address with current organization data
+     * @returns {void}
+     */
+    initializeBillingAddress(): void {
+      const organization = this.getCurrentAdminOrganisation;
+      if (organization) {
+        this.invoiceForm.customBillingAddress = {
+          street: organization.street || '',
+          streetNumber: String(organization.street_number || ''),
+          city: organization.city || '',
+          psc: String(organization.psc || ''),
+        };
+      }
+    },
+    /**
+     * Reset billing form to initial state
+     * @returns {void}
+     */
+    resetBillingForm(): void {
+      this.invoiceForm.customBillingAddress = null;
+      this.invoiceForm.isBillingFormExpanded = false;
+    },
+    /**
+     * Update a specific field in the billing address using $patch
+     * @param {string} field - Field name to update
+     * @param {string} value - New field value
+     * @returns {void}
+     */
+    updateBillingAddressField(
+      field: keyof NonNullable<InvoiceFormState['customBillingAddress']>,
+      value: string,
+    ): void {
+      this.$patch((state) => {
+        if (!state.invoiceForm.customBillingAddress) {
+          this.initializeBillingAddress();
+        }
+        if (state.invoiceForm.customBillingAddress) {
+          state.invoiceForm.customBillingAddress[field] = value;
+        }
+      });
     },
     /**
      * Clear all store data
