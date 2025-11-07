@@ -159,6 +159,9 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       }
       return invoiceResult.payments_to_invoice.length > 0;
     },
+    getIsBillingAddressEmpty: (state): boolean => {
+      return !state.invoiceForm.customBillingAddress;
+    },
     getBillingStreet: (state): string =>
       state.invoiceForm.customBillingAddress?.street || '',
     getBillingStreetNumber: (state): string =>

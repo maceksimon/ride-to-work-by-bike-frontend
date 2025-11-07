@@ -79,7 +79,7 @@ export default defineComponent({
     const isBillingFormExpanded = computed({
       get: () => adminOrganisationStore.invoiceForm.isBillingFormExpanded,
       set: (value) => {
-        if (value) {
+        if (value && adminOrganisationStore.getIsBillingAddressEmpty) {
           adminOrganisationStore.initializeBillingAddress();
         }
         adminOrganisationStore.setBillingFormExpanded(value);

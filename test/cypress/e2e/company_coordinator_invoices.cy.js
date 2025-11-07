@@ -384,6 +384,33 @@ describe('Company coordinator invoices page', () => {
         });
       });
 
+      it('does not reset form when section collapse is toggled', () => {
+        cy.get('@i18n').then((i18n) => {
+          cy.contains(i18n.global.t('form.textEditBillingDetails')).click();
+          cy.dataCy('form-create-invoice-billing-expansion-content').should(
+            'not.be.visible',
+          );
+          cy.contains(i18n.global.t('form.textEditBillingDetails')).click();
+          cy.dataCy('form-invoice-billing-street-input')
+            .should('be.visible')
+            .and('have.value', customBillingDetails.street);
+          cy.dataCy('form-invoice-billing-houseNumber-input')
+            .should('be.visible')
+            .and('have.value', customBillingDetails.streetNumber);
+          cy.dataCy('form-invoice-billing-city-input')
+            .should('be.visible')
+            .and('have.value', customBillingDetails.city);
+          cy.dataCy('form-invoice-billing-zip-input')
+            .should('be.visible')
+            .invoke('val')
+            .then((value) => {
+              expect(value.replace(/\s/g, '')).to.be.equal(
+                customBillingDetails.zip,
+              );
+            });
+        });
+      });
+
       it('validates billing details when section is opened', () => {
         cy.get('@config').then((config) => {
           cy.get('@i18n').then((i18n) => {
