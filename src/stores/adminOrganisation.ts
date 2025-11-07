@@ -301,6 +301,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         this.invoiceForm.isBillingFormExpanded &&
         this.invoiceForm.customBillingAddress
       ) {
+        // name must be present in the payload
         payload.company_name = this.getCurrentAdminOrganisation?.name;
         payload.company_address = {
           psc: this.invoiceForm.customBillingAddress.psc,
