@@ -86,10 +86,44 @@ function coreTests() {
         .should('be.visible')
         .and('contain', i18n.global.t('form.labelConfirmBillingDetails'));
       // edit billing details
-      cy.dataCy('form-create-invoice-edit-billing-details')
+      cy.dataCy('form-create-invoice-billing-expansion')
         .should('be.visible')
         .and('contain', i18n.global.t('form.textEditBillingDetails'))
         .and('contain', i18n.global.t('form.linkEditBillingDetails'));
+      // billing details edit form should not exist
+      cy.dataCy('form-invoice-billing-street-input').should('not.exist');
+      cy.dataCy('form-invoice-billing-houseNumber-input').should('not.exist');
+      cy.dataCy('form-invoice-billing-city-input').should('not.exist');
+      cy.dataCy('form-invoice-billing-zip-input').should('not.exist');
+      // open collapsible item
+      cy.dataCy('form-create-invoice-billing-expansion').click();
+      cy.dataCy('form-create-invoice-billing-expansion-content').should(
+        'be.visible',
+      );
+      // form fields exist
+      cy.dataCy('form-invoice-billing-street-input').should('be.visible');
+      cy.dataCy('form-invoice-billing-street-input').should(
+        'have.value',
+        organization.street,
+      );
+      cy.dataCy('form-invoice-billing-houseNumber-input').should('be.visible');
+      cy.dataCy('form-invoice-billing-houseNumber-input').should(
+        'have.value',
+        organization.street_number,
+      );
+      cy.dataCy('form-invoice-billing-city-input').should('be.visible');
+      cy.dataCy('form-invoice-billing-city-input').should(
+        'have.value',
+        organization.city,
+      );
+      cy.dataCy('form-invoice-billing-zip-input').should('be.visible');
+      cy.dataCy('form-invoice-billing-zip-input')
+        .invoke('val')
+        .then((value) => {
+          expect(value.replace(/\s/g, '')).to.be.equal(
+            organization.psc.toString(),
+          );
+        });
       // participants
       cy.dataCy('form-create-invoice-team').should('be.visible');
       // additional information

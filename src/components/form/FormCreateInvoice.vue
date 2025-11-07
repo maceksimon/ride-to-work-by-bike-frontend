@@ -21,7 +21,7 @@
  */
 
 // libraries
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 
 // components
 import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
@@ -44,6 +44,12 @@ export default defineComponent({
     const organization = computed<AdminOrganisation | null>(() => {
       return adminOrganisationStore.getCurrentAdminOrganisation;
     });
+
+    /**
+     * Controls form display from `q-expansion-item` so that we do not break
+     * the animation when expanding/collapsing.
+     */
+    const isBillingFormVisible = ref<boolean>(false);
 
     const teams = computed(() => adminOrganisationStore.getInvoiceTeams);
     const selectedMembers = computed({
@@ -115,6 +121,7 @@ export default defineComponent({
     };
 
     return {
+      isBillingFormVisible,
       isBillingDetailsCorrect,
       isDonorEntryFee,
       orderNote,
@@ -187,33 +194,16 @@ export default defineComponent({
         {{ organization.dic }}
       </p>
     </address>
-    <!-- Toggle: Confirm billing details -->
-    <q-field
-      :model-value="isBillingDetailsCorrect"
-      :rules="[
-        (val) => val === true || $t('form.messageConfirmBillingDetails'),
-      ]"
-      bottom-slots
-      borderless
-      hide-bottom-space
-    >
-      <q-toggle
-        dense
-        v-model="isBillingDetailsCorrect"
-        :label="$t('form.labelConfirmBillingDetails')"
-        name="confirm-billing-details"
-        color="primary"
-        data-cy="form-create-invoice-confirm-billing-details"
-      />
-    </q-field>
     <!-- Collapsible: Edit billing details -->
     <q-expansion-item
       dense
       v-model="isBillingFormExpanded"
-      :label="$t('form.linkEditBillingDetails')"
-      :caption="$t('form.textEditBillingDetails')"
       class="q-mt-lg"
       header-class="q-px-none"
+      :label="$t('form.linkEditBillingDetails')"
+      :caption="$t('form.textEditBillingDetails')"
+      @before-show="isBillingFormVisible = true"
+      @after-hide="isBillingFormVisible = false"
       data-cy="form-create-invoice-billing-expansion"
     >
       <div
@@ -222,7 +212,7 @@ export default defineComponent({
       >
         <!-- Address fields -->
         <form-field-address
-          v-if="isBillingFormExpanded"
+          v-if="isBillingFormVisible"
           v-model:street="billingStreet"
           v-model:houseNumber="billingStreetNumber"
           v-model:city="billingCity"
@@ -243,6 +233,25 @@ export default defineComponent({
         </div>
       </div>
     </q-expansion-item>
+    <!-- Toggle: Confirm billing details -->
+    <q-field
+      :model-value="isBillingDetailsCorrect"
+      :rules="[
+        (val) => val === true || $t('form.messageConfirmBillingDetails'),
+      ]"
+      bottom-slots
+      borderless
+      hide-bottom-space
+    >
+      <q-toggle
+        dense
+        v-model="isBillingDetailsCorrect"
+        :label="$t('form.labelConfirmBillingDetails')"
+        name="confirm-billing-details"
+        color="primary"
+        data-cy="form-create-invoice-confirm-billing-details"
+      />
+    </q-field>
     <!-- Section: Participants -->
     <form-field-checkbox-team
       v-for="team in teams"
