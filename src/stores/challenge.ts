@@ -9,6 +9,7 @@ import { useApiGetCampaign } from '../composables/useApiGetCampaign';
 // utils
 import { timestampToDatetimeString } from 'src/utils';
 import { getCurrentPriceLevelsUtil } from '../utils/price_levels';
+import { getCurrentPriceLevelsUtilWithReward } from '../utils/price_levels_with_reward';
 
 // enums
 import {
@@ -69,6 +70,9 @@ export const useChallengeStore = defineStore('challenge', {
     },
     getCurrentPriceLevels(): Record<PriceLevelCategory, PriceLevel> {
       return getCurrentPriceLevelsUtil(this.priceLevel);
+    },
+    getCurrentPriceLevelsWithReward(): Record<PriceLevelCategory, PriceLevel> {
+      return getCurrentPriceLevelsUtilWithReward(this.priceLevel);
     },
     getCompetitionStart: (state) => {
       const competitionPhase = state.phaseSet.find(

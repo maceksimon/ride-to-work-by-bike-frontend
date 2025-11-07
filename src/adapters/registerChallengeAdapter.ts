@@ -59,6 +59,7 @@ export const registerChallengeAdapter = {
       voucher: apiData.personal_details.discount_coupon,
       citySlug: apiData.city_slug,
       cityWpSlug: apiData.city_wp_slug,
+      isPaymentWithReward: apiData.is_payment_with_reward ?? true,
     };
   },
 
@@ -155,6 +156,9 @@ export const registerChallengeAdapter = {
     }
     if (storeState.language !== undefined) {
       payload.language = storeState.language;
+    }
+    if (storeState.isPaymentWithReward !== undefined) {
+      payload.is_payment_with_reward = storeState.isPaymentWithReward;
     }
 
     return payload;

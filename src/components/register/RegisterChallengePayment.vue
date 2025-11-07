@@ -50,6 +50,7 @@ import FormFieldTextRequired from '../global/FormFieldTextRequired.vue';
 import FormFieldVoucher from '../form/FormFieldVoucher.vue';
 
 import { defaultPaymentAmountMinComputed } from '../../utils/price_levels';
+import { defaultPaymentAmountMinComputedWithReward } from '../../utils/price_levels_with_reward';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -84,16 +85,24 @@ export default defineComponent({
   setup() {
     const logger = inject('vuejs3-logger') as Logger | null;
     const challengeStore = useChallengeStore();
+    const registerChallengeStore = useRegisterChallengeStore();
+
     // constants
     const defaultPaymentAmountMax = parseInt(
       rideToWorkByBikeConfig.entryFeePaymentMax,
     );
     logger?.debug(`Default max. payment amount <${defaultPaymentAmountMax}>.`);
-    // get default min price from store
+    // get default min price from store with merch preference
     const defaultPaymentAmountMin = computed(() => {
-      return defaultPaymentAmountMinComputed(
-        challengeStore.getCurrentPriceLevels,
-      );
+      if (registerChallengeStore.getIsPaymentWithReward) {
+        return defaultPaymentAmountMinComputedWithReward(
+          challengeStore.getCurrentPriceLevelsWithReward,
+        );
+      } else {
+        return defaultPaymentAmountMinComputed(
+          challengeStore.getCurrentPriceLevels,
+        );
+      }
     });
     logger?.debug(
       `Default min. payment amount basic <${defaultPaymentAmountMin.value}>.`,
@@ -182,8 +191,13 @@ export default defineComponent({
     const paymentAmountMax = ref<number>(defaultPaymentAmountMax);
     const paymentAmountMin = ref<number>(defaultPaymentAmountMin.value);
 
-    const registerChallengeStore = useRegisterChallengeStore();
-
+    // with-reward toggle state
+    const isPaymentWithReward = computed<boolean>({
+      get: (): boolean => registerChallengeStore.getIsPaymentWithReward,
+      set: (value: boolean): void => {
+        registerChallengeStore.switchPriceSet(value);
+      },
+    });
     // init organization admin status
     const hasOrganizationAdmin = computed<boolean | null>(() => {
       return registerChallengeStore.getHasOrganizationAdmin;
@@ -629,6 +643,7 @@ export default defineComponent({
       donationAmount,
       formRegisterCoordinator,
       hasOrganizationAdmin,
+      isPaymentWithReward,
       isRegistrationCoordinator,
       optionsPaymentAmountComputed,
       optionsPaymentSubject,
@@ -677,6 +692,20 @@ export default defineComponent({
         "
       />
     </q-banner>
+    <!-- Checkbox: With reward toggle -->
+    <div class="q-my-lg">
+      <q-checkbox
+        dense
+        v-model="isPaymentWithReward"
+        color="primary"
+        :true-value="true"
+        :false-value="false"
+        class="text-grey-10"
+        data-cy="checkbox-payment-with-reward"
+      >
+        {{ $t('register.challenge.labelPaymentWithReward') }}
+      </q-checkbox>
+    </div>
     <!-- Input: Payment subject -->
     <div class="q-my-lg">
       <!-- Label -->

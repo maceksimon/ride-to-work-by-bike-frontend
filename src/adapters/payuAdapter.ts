@@ -17,6 +17,7 @@ import type { ValidatedCoupon } from 'src/components/types/Coupon';
 
 // utils
 import { defaultPaymentAmountMinComputed } from '../utils/price_levels';
+import { defaultPaymentAmountMinComputedWithReward } from '../utils/price_levels_with_reward';
 
 /**
  * Adapter for PayU-related data transformations
@@ -26,7 +27,9 @@ export const payuAdapter = {
    * Create PayU order payload based on payment details
    * @param {PaymentSubject} paymentSubject - Selected payment subject
    * @param {number} paymentAmount - Total amount to pay
+   * @param {ValidatedCoupon | null} voucher - Validated coupon if applicable
    * @param {string} clientIp - Client IP address
+   * @param {boolean} isPaymentWithReward - Whether with-reward pricing is selected
    * @returns {PayuCreateOrderPayload | null} PayU order payload or null if
    *   entered data are invalid.
    */
@@ -35,12 +38,16 @@ export const payuAdapter = {
     paymentAmount: number,
     voucher: ValidatedCoupon | null,
     clientIp: string,
+    isPaymentWithReward: boolean,
   ): PayuCreateOrderPayload | null {
     // get default payment amount from store
     const challengeStore = useChallengeStore();
-    const priceLevels = challengeStore.getCurrentPriceLevels;
-    const defaultPaymentAmountBasic =
-      defaultPaymentAmountMinComputed(priceLevels);
+    const priceLevels = isPaymentWithReward
+      ? challengeStore.getCurrentPriceLevelsWithReward
+      : challengeStore.getCurrentPriceLevels;
+    const defaultPaymentAmountBasic = isPaymentWithReward
+      ? defaultPaymentAmountMinComputedWithReward(priceLevels)
+      : defaultPaymentAmountMinComputed(priceLevels);
     let defaultPaymentAmountCoupon = defaultPaymentAmountBasic;
     if (voucher?.valid && voucher.discount) {
       defaultPaymentAmountCoupon = Math.round(

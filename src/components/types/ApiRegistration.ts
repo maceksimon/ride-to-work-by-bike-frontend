@@ -45,6 +45,7 @@ export type RegisterChallengeResult = {
   organization_type: string;
   city_slug: string | null;
   city_wp_slug: string | null;
+  is_payment_with_reward?: boolean;
 };
 
 export type RegisterChallengeResponse = {
@@ -75,6 +76,7 @@ export type RegisterChallengePostPayload = {
   team_id?: number | null;
   t_shirt_size_id?: number | null;
   approved_for_team?: TeamMemberStatus;
+  is_payment_with_reward?: boolean;
 };
 
 export type RegisterChallengePostResponse = {
@@ -97,4 +99,5 @@ export interface ToApiPayloadStoreState {
   telephone?: string;
   telephoneOptIn?: boolean;
   language?: string;
+  isPaymentWithReward?: boolean;
 }
