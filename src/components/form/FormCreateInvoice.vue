@@ -21,7 +21,7 @@
  */
 
 // libraries
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent } from 'vue';
 
 // components
 import FormFieldCheckboxTeam from '../form/FormFieldCheckboxTeam.vue';
@@ -44,12 +44,6 @@ export default defineComponent({
     const organization = computed<AdminOrganisation | null>(() => {
       return adminOrganisationStore.getCurrentAdminOrganisation;
     });
-
-    /**
-     * Controls form display from `q-expansion-item` so that we do not break
-     * the animation when expanding/collapsing.
-     */
-    const isBillingFormVisible = ref<boolean>(false);
 
     const teams = computed(() => adminOrganisationStore.getInvoiceTeams);
     const selectedMembers = computed({
@@ -121,7 +115,6 @@ export default defineComponent({
     };
 
     return {
-      isBillingFormVisible,
       isBillingDetailsCorrect,
       isDonorEntryFee,
       orderNote,
@@ -198,12 +191,10 @@ export default defineComponent({
     <q-expansion-item
       dense
       v-model="isBillingFormExpanded"
-      class="q-mt-lg"
-      header-class="q-px-none"
       :label="$t('form.linkEditBillingDetails')"
       :caption="$t('form.textEditBillingDetails')"
-      @before-show="isBillingFormVisible = true"
-      @after-hide="isBillingFormVisible = false"
+      class="q-mt-lg"
+      header-class="q-px-none"
       data-cy="form-create-invoice-billing-expansion"
     >
       <div
@@ -212,7 +203,7 @@ export default defineComponent({
       >
         <!-- Address fields -->
         <form-field-address
-          v-if="isBillingFormVisible"
+          v-if="isBillingFormExpanded"
           v-model:street="billingStreet"
           v-model:houseNumber="billingStreetNumber"
           v-model:city="billingCity"

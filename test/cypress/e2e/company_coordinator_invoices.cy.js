@@ -383,6 +383,42 @@ describe('Company coordinator invoices page', () => {
             });
         });
       });
+
+      it('validates billing details when section is opened', () => {
+        cy.get('@config').then((config) => {
+          cy.get('@i18n').then((i18n) => {
+            cy.interceptCoordinatorMakeInvoicePostApi(config, {
+              invoice_id: 82,
+            });
+            cy.dataCy('form-invoice-billing-street-input').clear();
+            cy.dataCy('form-invoice-billing-houseNumber-input').clear();
+            cy.dataCy('form-invoice-billing-city-input').clear();
+            cy.dataCy('form-invoice-billing-zip-input').clear();
+            cy.dataCy('dialog-button-submit').click();
+            cy.contains(
+              i18n.global.t('form.messageFieldRequired', {
+                fieldName: i18n.global.t('form.labelStreet'),
+              }),
+            ).should('be.visible');
+            cy.contains(
+              i18n.global.t('form.messageFieldRequired', {
+                fieldName: i18n.global.t('form.labelHouseNumber'),
+              }),
+            ).should('be.visible');
+            cy.contains(
+              i18n.global.t('form.messageFieldRequired', {
+                fieldName: i18n.global.t('form.labelCity'),
+              }),
+            ).should('be.visible');
+            cy.contains(
+              i18n.global.t('form.messageFieldRequired', {
+                fieldName: i18n.global.t('form.labelZip'),
+              }),
+            ).should('be.visible');
+            cy.get('@postCoordinatorMakeInvoice.all').should('have.length', 0);
+          });
+        });
+      });
     });
   });
 
