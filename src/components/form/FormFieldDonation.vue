@@ -21,13 +21,15 @@
 // libraries
 import { computed, defineComponent, onUnmounted, ref, watch } from 'vue';
 
-import { defaultPaymentAmountMinComputed } from '../../utils/price_levels.ts';
+import { defaultPaymentAmountMinComputed } from '../../utils/price_levels';
+import { defaultPaymentAmountMinComputedWithReward } from '../../utils/price_levels_with_reward';
 
 // components
 import FormFieldSliderNumber from './FormFieldSliderNumber.vue';
 
 // stores
 import { useChallengeStore } from '../../stores/challenge';
+import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 
 export default defineComponent({
   name: 'FormFieldDonation',
@@ -37,10 +39,18 @@ export default defineComponent({
   emits: ['update:donation'],
   setup(props, { emit }) {
     const challengeStore = useChallengeStore();
+    const registerChallengeStore = useRegisterChallengeStore();
+
     const defaultPaymentAmountMin = computed(() => {
-      return defaultPaymentAmountMinComputed(
-        challengeStore.getCurrentPriceLevels,
-      );
+      if (registerChallengeStore.getIsPaymentWithReward) {
+        return defaultPaymentAmountMinComputedWithReward(
+          challengeStore.getCurrentPriceLevelsWithReward,
+        );
+      } else {
+        return defaultPaymentAmountMinComputed(
+          challengeStore.getCurrentPriceLevels,
+        );
+      }
     });
     watch(defaultPaymentAmountMin, () => {
       amount.value = defaultPaymentAmountMin.value;

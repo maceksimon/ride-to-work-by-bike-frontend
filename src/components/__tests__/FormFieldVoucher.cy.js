@@ -7,7 +7,7 @@ import { couponAdapter } from '../../adapters/couponAdapter';
 import { useFormatPrice, Currency } from 'src/composables/useFormatPrice';
 import { useRegisterChallengeStore } from '../../stores/registerChallenge';
 import { useChallengeStore } from '../../stores/challenge';
-import { getCurrentPriceLevelsUtil } from '../../utils/price_levels';
+import { getCurrentPriceLevelsUtilWithReward } from '../../utils/price_levels_with_reward';
 import { PriceLevelCategory } from '../../components/enums/Challenge';
 
 import { systemTimeChallengeActive } from '../../../test/cypress/support/commonTests';
@@ -27,7 +27,7 @@ const selectorVoucherButtonRemove = 'voucher-button-remove';
 const selectorVoucherWidget = 'voucher-widget';
 
 // variables
-let defaultPaymentAmountMin = 0;
+let defaultPaymentAmountMinWithReward = 0;
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
 const { formatPriceCurrency } = useFormatPrice();
 
@@ -36,9 +36,11 @@ describe('<FormFieldVoucher>', () => {
     cy.clock(new Date(systemTimeChallengeActive), ['Date']).then(() => {
       cy.fixture('apiGetThisCampaign.json').then((response) => {
         const priceLevels = response.results[0].price_level;
-        const currentPriceLevels = getCurrentPriceLevelsUtil(priceLevels);
-        defaultPaymentAmountMin =
-          currentPriceLevels[PriceLevelCategory.basic].price;
+        const currentPriceLevelsWithReward =
+          getCurrentPriceLevelsUtilWithReward(priceLevels);
+        defaultPaymentAmountMinWithReward =
+          currentPriceLevelsWithReward[PriceLevelCategory.basicWithReward]
+            .price;
       });
     });
   });
@@ -142,7 +144,7 @@ describe('<FormFieldVoucher>', () => {
       cy.applyHalfVoucher(
         rideToWorkByBikeConfig,
         i18n,
-        defaultPaymentAmountMin,
+        defaultPaymentAmountMinWithReward,
       );
       // check banner styling
       cy.dataCy(selectorVoucherBanner)
@@ -183,7 +185,8 @@ describe('<FormFieldVoucher>', () => {
           storeRegisterChallenge.setVoucher(voucherHalf);
           // calculate displayed discount
           const discountAmountInt = Math.round(
-            (defaultPaymentAmountMin * response.results[0].discount) / 100,
+            (defaultPaymentAmountMinWithReward * response.results[0].discount) /
+              100,
           );
           // banner should show voucher code
           cy.dataCy(selectorVoucherBannerCode)

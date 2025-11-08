@@ -5,7 +5,7 @@ import FormFieldSliderNumber from 'components/form/FormFieldSliderNumber.vue';
 import { i18n } from '../../boot/i18n';
 import { useChallengeStore } from '../../stores/challenge';
 import { vModelAdapter } from '../../../test/cypress/utils';
-import { getCurrentPriceLevelsUtil } from '../../utils/price_levels';
+import { getCurrentPriceLevelsUtilWithReward } from '../../utils/price_levels_with_reward';
 import { PriceLevelCategory } from '../enums/Challenge';
 
 import { systemTimeChallengeActive } from '../../../test/cypress/support/commonTests';
@@ -36,9 +36,11 @@ describe('<FormFieldSliderNumber>', () => {
     cy.clock(new Date(systemTimeChallengeActive), ['Date']).then(() => {
       cy.fixture('apiGetThisCampaign.json').then((response) => {
         const priceLevels = response.results[0].price_level;
-        const currentPriceLevels = getCurrentPriceLevelsUtil(priceLevels);
-
-        valueMin = currentPriceLevels[PriceLevelCategory.basic].price;
+        const currentPriceLevelsWithReward =
+          getCurrentPriceLevelsUtilWithReward(priceLevels);
+        valueMin =
+          currentPriceLevelsWithReward[PriceLevelCategory.basicWithReward]
+            .price;
       });
     });
   });

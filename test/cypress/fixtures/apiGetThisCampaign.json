@@ -35,54 +35,108 @@
         {
           "name": "1. fáze startovného pro jednotlivce",
           "price": 390.0,
-          "category": "basic",
+          "category": "basic-with-reward",
           "takes_effect_on": "2024-09-01"
         },
         {
           "name": "1. fáze startovného pro firmy",
           "price": 390.0,
-          "category": "company",
+          "category": "company-with-reward",
           "takes_effect_on": "2024-09-01"
         },
         {
           "name": "1. fáze startovného pro školy",
           "price": 234.0,
-          "category": "school",
+          "category": "school-with-reward",
           "takes_effect_on": "2024-09-01"
         },
         {
           "name": "2. fáze startovného pro jednotlivce",
           "price": 400.0,
-          "category": "basic",
+          "category": "basic-with-reward",
           "takes_effect_on": "2024-09-18"
         },
         {
           "name": "2. fáze startovného pro firmy",
           "price": 400.0,
-          "category": "company",
+          "category": "company-with-reward",
           "takes_effect_on": "2024-09-18"
         },
         {
           "name": "2. fáze startovného pro školy",
           "price": 240.0,
-          "category": "school",
+          "category": "school-with-reward",
           "takes_effect_on": "2024-09-18"
         },
         {
           "name": "3. fáze startovného pro jednotlivce",
           "price": 430.0,
-          "category": "basic",
+          "category": "basic-with-reward",
           "takes_effect_on": "2024-09-28"
         },
         {
           "name": "3. fáze startovného pro firmy",
           "price": 430.0,
-          "category": "company",
+          "category": "company-with-reward",
           "takes_effect_on": "2024-09-28"
         },
         {
           "name": "3. fáze startovného pro školy",
           "price": 250.0,
+          "category": "school-with-reward",
+          "takes_effect_on": "2024-09-28"
+        },
+        {
+          "name": "1. fáze startovného pro jednotlivce",
+          "price": 340.0,
+          "category": "basic",
+          "takes_effect_on": "2024-09-01"
+        },
+        {
+          "name": "1. fáze startovného pro firmy",
+          "price": 340.0,
+          "category": "company",
+          "takes_effect_on": "2024-09-01"
+        },
+        {
+          "name": "1. fáze startovného pro školy",
+          "price": 184.0,
+          "category": "school",
+          "takes_effect_on": "2024-09-01"
+        },
+        {
+          "name": "2. fáze startovného pro jednotlivce",
+          "price": 350.0,
+          "category": "basic",
+          "takes_effect_on": "2024-09-18"
+        },
+        {
+          "name": "2. fáze startovného pro firmy",
+          "price": 350.0,
+          "category": "company",
+          "takes_effect_on": "2024-09-18"
+        },
+        {
+          "name": "2. fáze startovného pro školy",
+          "price": 190.0,
+          "category": "school",
+          "takes_effect_on": "2024-09-18"
+        },
+        {
+          "name": "3. fáze startovného pro jednotlivce",
+          "price": 380.0,
+          "category": "basic",
+          "takes_effect_on": "2024-09-28"
+        },
+        {
+          "name": "3. fáze startovného pro firmy",
+          "price": 380.0,
+          "category": "company",
+          "takes_effect_on": "2024-09-28"
+        },
+        {
+          "name": "3. fáze startovného pro školy",
+          "price": 200.0,
           "category": "school",
           "takes_effect_on": "2024-09-28"
         }

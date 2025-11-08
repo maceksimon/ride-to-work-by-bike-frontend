@@ -29,7 +29,8 @@ import { i18n } from '../../boot/i18n';
 import { useFormatPrice } from '../../composables/useFormatPrice';
 import { useApiGetDiscountCoupon } from '../../composables/useApiGetDiscountCoupon';
 
-import { defaultPaymentAmountMinComputed } from '../../utils/price_levels.ts';
+import { defaultPaymentAmountMinComputed } from '../../utils/price_levels';
+import { defaultPaymentAmountMinComputedWithReward } from '../../utils/price_levels_with_reward';
 
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
@@ -55,13 +56,19 @@ export default defineComponent({
       typeof FormFieldTextRequired
     > | null>(null);
     const challengeStore = useChallengeStore();
-    const defaultPaymentAmountMin = computed(() => {
-      return defaultPaymentAmountMinComputed(
-        challengeStore.getCurrentPriceLevels,
-      );
-    });
-
     const registerChallengeStore = useRegisterChallengeStore();
+
+    const defaultPaymentAmountMin = computed(() => {
+      if (registerChallengeStore.getIsPaymentWithReward) {
+        return defaultPaymentAmountMinComputedWithReward(
+          challengeStore.getCurrentPriceLevelsWithReward,
+        );
+      } else {
+        return defaultPaymentAmountMinComputed(
+          challengeStore.getCurrentPriceLevels,
+        );
+      }
+    });
 
     const code = ref('');
     const codeFormatted = computed(() => code.value.replace(/\s/g, ''));
