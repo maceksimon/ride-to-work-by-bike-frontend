@@ -59,7 +59,10 @@ export const registerChallengeAdapter = {
       voucher: apiData.personal_details.discount_coupon,
       citySlug: apiData.city_slug,
       cityWpSlug: apiData.city_wp_slug,
-      isPaymentWithReward: apiData.is_payment_with_reward ?? true,
+      isPaymentWithReward:
+        typeof apiData.is_payment_with_reward === 'boolean'
+          ? apiData.is_payment_with_reward
+          : true,
     };
   },
 

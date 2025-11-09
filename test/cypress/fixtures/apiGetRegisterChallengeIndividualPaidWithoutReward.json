@@ -21,14 +21,14 @@
         "payment_type": "CARD_TOKEN",
         "payment_status": "done",
         "payment_amount": 390,
-        "payment_category": "entry_fee",
-        "is_payment_with_reward": false
+        "payment_category": "entry_fee"
       },
       "organization_type": "company",
       "team_id": 2452,
       "organization_id": 987,
       "subsidiary_id": 1358,
-      "t_shirt_size_id": null
+      "t_shirt_size_id": null,
+      "is_payment_with_reward": false
     }
   ]
 }

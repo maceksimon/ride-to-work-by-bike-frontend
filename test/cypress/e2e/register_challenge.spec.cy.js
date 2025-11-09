@@ -2943,6 +2943,67 @@ describe('Register Challenge page', () => {
     });
   });
 
+  context(
+    'registration in progress, individual payment "done" (without-reward)',
+    () => {
+      beforeEach(() => {
+        cy.task('getAppConfig', process).then((config) => {
+          cy.wrap(config).as('config');
+          cy.interceptThisCampaignGetApi(config, defLocale);
+          // visit challenge inactive page to load campaign data
+          cy.visit('#' + routesConf['challenge_inactive']['path']);
+          cy.waitForThisCampaignApi();
+          cy.fixture(
+            'apiGetRegisterChallengeIndividualPaidWithoutReward.json',
+          ).then((response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          });
+          // intercept common response (not currently used)
+          cy.interceptRegisterChallengePostApi(config, defLocale);
+          cy.interceptRegisterChallengeCoreApiRequests(config, defLocale);
+        });
+        cy.viewport('macbook-16');
+      });
+
+      it('allows to complete registration without reward', () => {
+        // visit page
+        cy.visit('#' + routesConf['register_challenge']['path']);
+        cy.window().should('have.property', 'i18n');
+        cy.window().then((win) => {
+          // intercept "individual paid" registration data
+          cy.fixture(
+            'apiGetRegisterChallengeIndividualPaidWithoutReward.json',
+          ).then((response) => {
+            cy.testRegisterChallengePaymentMessage(
+              response,
+              'step-2-paid-message',
+            );
+            cy.dataCy('register-challenge-payment').should('not.exist');
+            cy.dataCy('step-2-continue')
+              .should('be.visible')
+              .and('not.be.disabled');
+            cy.dataCy('step-2-continue').should('be.visible').click();
+            cy.testRegisterChallengeLoadedStepsThreeToFive(win.i18n, response);
+            // validate that step 6 contains "I don't want merch" selected and disabled
+            cy.dataCy('form-merch-no-merch-checkbox')
+              .should('be.visible')
+              .and('have.class', 'disabled')
+              .find('.q-checkbox__inner')
+              .should('have.class', 'q-checkbox__inner--truthy');
+            // merch cards should not be visible
+            cy.dataCy('list-merch').should('not.be.visible');
+            // go to next step
+            cy.dataCy('step-6-continue').should('be.visible').click();
+            // on step 7
+            cy.dataCy('step-7')
+              .find('.q-stepper__step-content')
+              .should('be.visible');
+          });
+        });
+      });
+    },
+  );
+
   context('registration in progress, voucher payment FULL', () => {
     beforeEach(() => {
       cy.task('getAppConfig', process).then((config) => {

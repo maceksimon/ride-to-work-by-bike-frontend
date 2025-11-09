@@ -134,7 +134,16 @@ export default defineComponent({
           );
         }
       }
+      // set isNotMerch to true if payment with reward is disabled
+      if (!registerChallengeStore.getIsPaymentWithReward) {
+        isNotMerch.value = true;
+        onCheckboxUpdate(true);
+      }
     });
+
+    const isPaymentWithReward = computed<boolean>(
+      (): boolean => registerChallengeStore.isPaymentWithReward,
+    );
 
     const merchandiseItems = computed(
       () => registerChallengeStore.getMerchandiseItems,
@@ -398,6 +407,7 @@ export default defineComponent({
       tabsMerchRef,
       onCheckboxUpdate,
       isLoading,
+      isPaymentWithReward,
       merchandiseCards,
       urlSizeConversionChart,
     };
@@ -422,6 +432,7 @@ export default defineComponent({
         v-model="isNotMerch"
         :val="true"
         color="primary"
+        :disable="!isPaymentWithReward"
         @update:model-value="onCheckboxUpdate"
         data-cy="form-merch-no-merch-checkbox"
       />

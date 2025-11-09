@@ -523,11 +523,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       this.$log?.debug(
         `Personal details updated to <${JSON.stringify(this.getPersonalDetails, null, 2)}>.`,
       );
-      this.setIsPaymentWithReward(
-        typeof parsedResponse.isPaymentWithReward === 'boolean'
-          ? parsedResponse.isPaymentWithReward
-          : true,
-      );
+      this.setIsPaymentWithReward(parsedResponse.isPaymentWithReward);
       this.$log?.debug(
         `Is payment with reward store updated to <${this.getIsPaymentWithReward}>.`,
       );
