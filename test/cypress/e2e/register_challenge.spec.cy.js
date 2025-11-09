@@ -13,7 +13,7 @@ import { OrganizationType } from '../../../src/components/types/Organization';
 import { getRadioOption } from 'test/cypress/utils';
 import { PaymentSubject } from 'src/components/enums/Payment';
 import { defLocale } from '../../../src/i18n/def_locale';
-import { getCurrentPriceLevelsUtil } from '../../../src/utils/price_levels';
+import { getCurrentPriceLevelsUtilWithReward } from '../../../src/utils/price_levels_with_reward';
 import { PriceLevelCategory } from '../../../src/components/enums/Challenge';
 import { HttpStatusCode } from 'axios';
 import { calculateCountdownIntervals } from '../../../src/utils';
@@ -97,19 +97,19 @@ let prices;
 let paymentAmountDonation;
 
 describe('Register Challenge page', () => {
-  let defaultPaymentAmountMin = 0;
+  let defaultPaymentAmountMinWithReward = 0;
 
   before(() => {
     // dynamically load default payment amount from fixture
     //cy.clock(new Date(systemTimeChallengeActive), ['Date']).then(( => ))
     cy.fixture('apiGetThisCampaign.json').then((response) => {
       const priceLevels = response.results[0].price_level;
-      const currentPriceLevels = getCurrentPriceLevelsUtil(
+      const currentPriceLevelsWithReward = getCurrentPriceLevelsUtilWithReward(
         priceLevels,
         new Date(systemTimeChallengeActive),
       );
-      defaultPaymentAmountMin =
-        currentPriceLevels[PriceLevelCategory.basic].price;
+      defaultPaymentAmountMinWithReward =
+        currentPriceLevelsWithReward[PriceLevelCategory.basicWithReward].price;
     });
     cy.task('getAppConfig', process).then((config) => {
       prices = config.entryFeePaymentOptions.split(',');
@@ -477,7 +477,7 @@ describe('Register Challenge page', () => {
                 .should('be.visible')
                 .click();
               // select default amount
-              cy.dataCy(getRadioOption(defaultPaymentAmountMin))
+              cy.dataCy(getRadioOption(defaultPaymentAmountMinWithReward))
                 .should('be.visible')
                 .click();
               // click submit payment
@@ -509,7 +509,11 @@ describe('Register Challenge page', () => {
                 .should('be.visible')
                 .click();
               // apply voucher HALF
-              cy.applyHalfVoucher(config, i18n, defaultPaymentAmountMin);
+              cy.applyHalfVoucher(
+                config,
+                i18n,
+                defaultPaymentAmountMinWithReward,
+              );
               // min amount is selected - submit payment
               cy.dataCy('step-2-submit-payment').should('be.visible').click();
               cy.fixture(
@@ -538,7 +542,7 @@ describe('Register Challenge page', () => {
               cy.dataCy('voucher-button-remove').should('be.visible').click();
               // apply voucher FULL
               cy.applyFullVoucher(config, i18n);
-              // add donation (default donation = defaultPaymentAmountMin)
+              // add donation (default donation = defaultPaymentAmountMinWithReward)
               cy.dataCy('form-field-donation-checkbox').click();
               // submit payment
               cy.dataCy('step-2-submit-payment').should('be.visible').click();
@@ -1102,14 +1106,16 @@ describe('Register Challenge page', () => {
             .should('be.visible')
             .click();
           // apply voucher HALF
-          cy.applyHalfVoucher(config, i18n, defaultPaymentAmountMin).then(
-            (discountAmount) => {
-              // discounted price is shown as option
-              cy.dataCy(getRadioOption(discountAmount)).should('be.visible');
-              // discounted total price is shown
-              cy.dataCy('total-price-value').should('contain', discountAmount);
-            },
-          );
+          cy.applyHalfVoucher(
+            config,
+            i18n,
+            defaultPaymentAmountMinWithReward,
+          ).then((discountAmount) => {
+            // discounted price is shown as option
+            cy.dataCy(getRadioOption(discountAmount)).should('be.visible');
+            // discounted total price is shown
+            cy.dataCy('total-price-value').should('contain', discountAmount);
+          });
         });
       });
     });
@@ -2007,7 +2013,7 @@ describe('Register Challenge page', () => {
           cy.dataCy('voucher-button-remove').should('be.visible').click();
 
           // case 4: voucher payment with voucher HALF
-          cy.applyHalfVoucher(config, i18n, defaultPaymentAmountMin);
+          cy.applyHalfVoucher(config, i18n, defaultPaymentAmountMinWithReward);
           // submit payment button should be visible and enabled
           cy.dataCy('step-2-submit-payment')
             .should('be.visible')
@@ -3704,13 +3710,15 @@ describe('Register Challenge page', () => {
           cy.fixture('apiGetThisCampaignMay.json').then((campaign) => {
             // extract current price from campaign data
             const priceLevels = campaign.results[0].price_level;
-            const currentPriceLevels = getCurrentPriceLevelsUtil(
-              priceLevels,
-              new Date(systemTimeRegistrationPhase1May),
-            );
+            const currentPriceLevelsWithReward =
+              getCurrentPriceLevelsUtilWithReward(
+                priceLevels,
+                new Date(systemTimeRegistrationPhase1May),
+              );
             // current min price given the date
-            const defaultPaymentAmountMinMay =
-              currentPriceLevels[PriceLevelCategory.basic].price;
+            const defaultPaymentAmountMinWithRewardMay =
+              currentPriceLevelsWithReward[PriceLevelCategory.basicWithReward]
+                .price;
             // pass to step 2
             cy.passToStep2();
             // wait for register challenge POST API call
@@ -3737,8 +3745,8 @@ describe('Register Challenge page', () => {
                 ).should('be.visible');
                 // calculate discount amount
                 const discountAmountInt = Math.round(
-                  defaultPaymentAmountMinMay -
-                    (defaultPaymentAmountMinMay *
+                  defaultPaymentAmountMinWithRewardMay -
+                    (defaultPaymentAmountMinWithRewardMay *
                       voucherApiResponse.results[0].discount) /
                       100,
                 );
@@ -3837,13 +3845,16 @@ describe('Register Challenge page', () => {
                   cy.waitForDiscountCouponApi(voucherApiResponse);
                   // extract current price from campaign data
                   const priceLevels = campaign.results[0].price_level;
-                  const currentPriceLevels = getCurrentPriceLevelsUtil(
-                    priceLevels,
-                    new Date(systemTimeRegistrationPhase1May),
-                  );
+                  const currentPriceLevelsWithReward =
+                    getCurrentPriceLevelsUtilWithReward(
+                      priceLevels,
+                      new Date(systemTimeRegistrationPhase1May),
+                    );
                   // current min price given the date
-                  const defaultPaymentAmountMinMay =
-                    currentPriceLevels[PriceLevelCategory.basic].price;
+                  const defaultPaymentAmountMinWithRewardMay =
+                    currentPriceLevelsWithReward[
+                      PriceLevelCategory.basicWithReward
+                    ].price;
                   // go to step 2
                   cy.dataCy('step-1-continue')
                     .should('be.visible')
@@ -3856,8 +3867,8 @@ describe('Register Challenge page', () => {
                     .should('have.class', 'q-radio__inner--truthy');
                   // calculate discount amount
                   const discountAmountInt = Math.round(
-                    defaultPaymentAmountMinMay -
-                      (defaultPaymentAmountMinMay *
+                    defaultPaymentAmountMinWithRewardMay -
+                      (defaultPaymentAmountMinWithRewardMay *
                         voucherApiResponse.results[0].discount) /
                         100,
                   );

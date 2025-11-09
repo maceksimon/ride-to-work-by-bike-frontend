@@ -475,9 +475,9 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
       );
       this.setIsPaymentWithReward(isWithReward);
       // clear voucher (it may not apply)
-      if (isWithReward && this.voucher) {
+      if (this.voucher) {
         this.$log?.debug(
-          'Clearing voucher when switching to <with-reward> pricing.',
+          'Clearing voucher when switching to different price level.',
         );
         this.setVoucher(null);
       }
