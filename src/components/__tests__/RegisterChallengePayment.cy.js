@@ -547,7 +547,6 @@ function coreTests() {
     );
   });
 
-  // TODO: variant without reward
   it('handles default price when switching between individual and discount voucher', () => {
     // ensure we are on step individual
     cy.dataCy(getRadioOption(PaymentSubject.individual))
@@ -1057,7 +1056,6 @@ function coreTests() {
     });
   });
 
-  // TODO: variant without reward
   it('shows correct total price', () => {
     // individual
     cy.dataCy(getRadioOption(PaymentSubject.individual))

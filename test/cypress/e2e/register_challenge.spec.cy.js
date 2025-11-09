@@ -1635,6 +1635,57 @@ describe('Register Challenge page', () => {
         });
       });
     });
+
+    it('when voucher FULL + donation, submits step before creating PayU order (without-reward)', () => {
+      cy.clock(systemTimeChallengeActive, ['Date']);
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.passToStep2();
+          cy.fixture(
+            'apiPostRegisterChallengePersonalDetailsRequest.json',
+          ).then((request) => {
+            cy.waitForRegisterChallengePostApi(request);
+          });
+          // uncheck with-reward checkbox (without-reward)
+          cy.dataCy('checkbox-payment-with-reward')
+            .should('be.visible')
+            .find('.q-checkbox__inner')
+            .should('have.class', 'q-checkbox__inner--truthy')
+            .click();
+          cy.dataCy(getRadioOption(PaymentSubject.voucher))
+            .should('be.visible')
+            .click();
+          // apply voucher FULL
+          cy.applyFullVoucher(config, i18n);
+          // enable donation checkbox
+          cy.dataCy('form-field-donation-checkbox')
+            .should('be.visible')
+            .click();
+          cy.dataCy('form-field-donation-slider').should('be.visible');
+          // next step button should not be visible
+          cy.dataCy('step-2-continue').should('not.exist');
+          // submit payment
+          cy.dataCy('step-2-submit-payment')
+            .should('be.visible')
+            .and('not.be.disabled')
+            .click();
+          cy.fixture(
+            'apiPostRegisterChallengeVoucherFullRequestWithoutReward.json',
+          ).then((request) => {
+            cy.waitForRegisterChallengePostApi(request);
+          });
+          // create PayU order
+          cy.fixture(
+            'apiPostPayuCreateOrderRequestVoucherFullWithDonation.json',
+          ).then((request) => {
+            cy.waitForPayuCreateOrderPostApi(request);
+          });
+          // config is defined without hash in the URL
+          cy.visit('#' + routesConf['register_challenge']['path']);
+        });
+      });
+    });
+
     it('submits form state on 1st 2nd, 5th and 6th step (voucher payment)', () => {
       cy.clock(systemTimeChallengeActive, ['Date']);
       cy.window().should('have.property', 'i18n');
