@@ -34,6 +34,7 @@ export type PersonalDetails = CorePersonalDetails & {
   payment_status: string;
   payment_category: PaymentCategory;
   approved_for_team: TeamMemberStatus;
+  is_payment_with_reward: boolean;
 };
 
 export type RegisterChallengeResult = {
@@ -45,7 +46,6 @@ export type RegisterChallengeResult = {
   organization_type: string;
   city_slug: string | null;
   city_wp_slug: string | null;
-  is_payment_with_reward?: boolean;
 };
 
 export type RegisterChallengeResponse = {

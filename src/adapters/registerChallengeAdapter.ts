@@ -60,8 +60,8 @@ export const registerChallengeAdapter = {
       citySlug: apiData.city_slug,
       cityWpSlug: apiData.city_wp_slug,
       isPaymentWithReward:
-        typeof apiData.is_payment_with_reward === 'boolean'
-          ? apiData.is_payment_with_reward
+        typeof apiData.personal_details.is_payment_with_reward === 'boolean'
+          ? apiData.personal_details.is_payment_with_reward
           : true,
     };
   },
