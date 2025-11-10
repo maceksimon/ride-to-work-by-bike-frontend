@@ -111,6 +111,7 @@ describe('<RegisterChallengePayment>', () => {
       'register.challenge',
       i18n,
     );
+    cy.testLanguageStringsInContext(['messageMerchIdRemoved'], 'form', i18n);
     cy.testLanguageStringsInContext(
       ['labelRegisterCoordinator', 'textBecomeCoordinator'],
       'companyCoordinator',
