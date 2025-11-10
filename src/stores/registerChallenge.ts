@@ -481,6 +481,18 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         );
         this.setVoucher(null);
       }
+      // if no reward and merch ID is set, clear it
+      if (!isWithReward && this.getMerchId !== null) {
+        this.$log?.debug(
+          'Removing merch ID when switching to price level without reward.',
+        );
+        this.setMerchId(null);
+        // notify about next steps to save current registration state
+        Notify.create({
+          message: i18n.global.t('form.messageMerchIdRemoved'),
+          color: 'warning',
+        });
+      }
       // reset payment amount (triggers recalculation)
       this.$log?.debug('Resetting payment amount to trigger recalculation.');
       this.setPaymentAmount(null);

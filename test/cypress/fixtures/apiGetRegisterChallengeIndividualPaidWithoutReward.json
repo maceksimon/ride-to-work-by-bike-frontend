@@ -20,7 +20,7 @@
         "payment_subject": "individual",
         "payment_type": "CARD_TOKEN",
         "payment_status": "done",
-        "payment_amount": 390,
+        "payment_amount": 340,
         "payment_category": "entry_fee",
         "is_payment_with_reward": false
       },

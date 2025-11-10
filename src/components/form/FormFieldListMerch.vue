@@ -141,6 +141,17 @@ export default defineComponent({
       }
     });
 
+    // ensure tracking of isPaymentWithReward changes
+    watch(
+      () => registerChallengeStore.getIsPaymentWithReward,
+      (newVal: boolean) => {
+        if (!newVal) {
+          isNotMerch.value = true;
+          onCheckboxUpdate(true);
+        }
+      },
+    );
+
     const isPaymentWithReward = computed<boolean>(
       (): boolean => registerChallengeStore.isPaymentWithReward,
     );

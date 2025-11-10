@@ -160,9 +160,6 @@ export const registerChallengeAdapter = {
     if (storeState.language !== undefined) {
       payload.language = storeState.language;
     }
-    if (storeState.isPaymentWithReward !== undefined) {
-      payload.is_payment_with_reward = storeState.isPaymentWithReward;
-    }
 
     return payload;
   },
