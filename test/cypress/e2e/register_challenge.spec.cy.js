@@ -1676,7 +1676,7 @@ describe('Register Challenge page', () => {
           });
           // create PayU order
           cy.fixture(
-            'apiPostPayuCreateOrderRequestVoucherFullWithDonation.json',
+            'apiPostPayuCreateOrderRequestVoucherFullWithDonationWithoutReward.json',
           ).then((request) => {
             cy.waitForPayuCreateOrderPostApi(request);
           });

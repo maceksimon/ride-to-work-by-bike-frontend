@@ -1,0 +1,13 @@
+{
+  "amount": 340,
+  "client_ip": "185.250.215.37",
+  "payment_subject": "voucher",
+  "payment_category": "donation",
+  "products": [
+    {
+      "name": "RTWBB donation",
+      "unitPrice": 340,
+      "quantity": 1
+    }
+  ]
+}
