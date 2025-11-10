@@ -384,8 +384,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       this.$patch((state) => {
         if (!state.invoiceForm.customBillingAddress) {
           this.initializeBillingAddress();
-        }
-        if (state.invoiceForm.customBillingAddress) {
+        } else {
           state.invoiceForm.customBillingAddress[field] = value;
         }
       });
