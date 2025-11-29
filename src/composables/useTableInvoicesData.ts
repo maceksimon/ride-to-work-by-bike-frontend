@@ -15,6 +15,7 @@ export interface TableInvoiceRow {
   paymentCount: number;
   totalAmount: number;
   paidDate: string | null;
+  isGenerating: boolean;
 }
 
 /**
@@ -30,6 +31,7 @@ function transformInvoiceToRow(invoice: Invoice): TableInvoiceRow {
     paymentCount: invoice.payments.length,
     totalAmount: invoice.total_amount,
     paidDate: invoice.paid_date,
+    isGenerating: invoice.fakturoid_invoice_url === '',
   };
 }
 

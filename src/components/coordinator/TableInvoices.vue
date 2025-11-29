@@ -103,15 +103,29 @@ export default defineComponent({
             :props="props"
             data-cy="table-invoices-url"
           >
-            <div class="flex flex-wrap gap-4">
-              <!-- Button: Fakturoid invoice -->
+            <div class="flex flex-wrap gap-4 items-center">
+              <!-- Spinner: Invoice generation -->
+              <div
+                v-if="props.row.isGenerating"
+                class="q-px-xs"
+                data-cy="table-invoices-generating"
+                :title="$t('table.labelGeneratingPdf')"
+              >
+                <q-spinner
+                  color="primary"
+                  size="16px"
+                  data-cy="table-invoices-generating-spinner"
+                />
+              </div>
+              <!-- Button: Fakturoid invoice (only when URL is available) -->
               <q-btn
+                v-else-if="props.row.invoiceUrl"
                 dense
                 flat
                 no-caps
                 rounded
                 :href="props.row.invoiceUrl"
-                v-if="props.row.invoiceUrl"
+                data-cy="table-invoices-pdf-button"
               >
                 <!-- Icon -->
                 <q-icon

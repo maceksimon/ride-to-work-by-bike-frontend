@@ -28,6 +28,7 @@ import type {
   TableFeeApprovalRow,
 } from '../components/types/AdminOrganisation';
 import type {
+  Invoice,
   InvoiceResult,
   InvoicePayment,
   InvoiceTeam,
@@ -65,6 +66,9 @@ interface AdminOrganisationState {
   paymentRewards: Record<number, boolean | null>;
   paymentAmounts: Record<number, number>;
   invoiceForm: InvoiceFormState;
+  // Invoice polling state
+  invoicePollingIntervalId: number | null;
+  invoicePollingTimeoutId: number | null;
 }
 
 export const useAdminOrganisationStore = defineStore('adminOrganisation', {
@@ -88,6 +92,9 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       customBillingOrganization: null,
       isBillingFormExpanded: false,
     },
+    // Invoice polling state
+    invoicePollingIntervalId: null,
+    invoicePollingTimeoutId: null,
   }),
 
   getters: {
@@ -284,6 +291,28 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         if (!subsidiary.boxes) return total;
         return total + subsidiary.boxes.filter((box) => box.dispatched).length;
       }, 0);
+    },
+    /**
+     * Get all invoices with empty fakturoid_invoice_url (generating)
+     * @returns {Invoice[]} - Array of invoices
+     */
+    getInvoicesBeingGenerated: (state): Invoice[] => {
+      const allInvoices: Invoice[] = [];
+      state.adminInvoices.forEach((result: InvoiceResult) => {
+        result.invoices.forEach((invoice: Invoice) => {
+          if (invoice.fakturoid_invoice_url === '') {
+            allInvoices.push(invoice);
+          }
+        });
+      });
+      return allInvoices;
+    },
+    /**
+     * Check if invoice polling is currently active
+     * @returns {boolean} - True if polling is active
+     */
+    getIsInvoicePollingActive: (state): boolean => {
+      return state.invoicePollingIntervalId !== null;
     },
   },
 
@@ -632,10 +661,83 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       });
     },
     /**
+     * Start polls for invoices to show generated PDF
+     * @returns {void}
+     */
+    startInvoicePolling(): void {
+      // if already polling, skip
+      if (this.invoicePollingIntervalId !== null) {
+        this.$log?.debug('Invoice polling already active, skipping start.');
+        return;
+      }
+      // check if there are invoices to poll
+      const invoicesToPoll = this.getInvoicesBeingGenerated;
+      if (invoicesToPoll.length === 0) {
+        this.$log?.debug(
+          'No invoices with empty URLs found, skipping polling.',
+        );
+        return;
+      }
+      this.$log?.info(
+        `Starting invoice polling for ${invoicesToPoll.length} invoice(s) with empty URLs`,
+      );
+      // setup poll interval
+      this.invoicePollingIntervalId = window.setInterval(async () => {
+        await this.pollInvoices();
+      }, 5000);
+      // setup timeout
+      this.invoicePollingTimeoutId = window.setTimeout(() => {
+        this.$log?.info('Invoice polling timeout reached (60 seconds).');
+        this.stopInvoicePolling();
+      }, 60000);
+      // init poll
+      this.pollInvoices();
+    },
+    /**
+     * Poll for invoice updates
+     * Fetches latest invoices and checks if any are still generating
+     * @returns {Promise<void>}
+     */
+    async pollInvoices(): Promise<void> {
+      this.$log?.debug('Polling invoices...');
+      // fetch invoices
+      await this.loadAdminInvoices();
+      // check for PDFs
+      const stillGenerating = this.getInvoicesBeingGenerated;
+      if (stillGenerating.length === 0) {
+        this.$log?.info('All invoices have URLs, stopping polling.');
+        this.stopInvoicePolling();
+        return;
+      }
+      this.$log?.debug(
+        `Polling continues: ${stillGenerating.length} invoice(s) still generating`,
+      );
+    },
+    /**
+     * Stop invoice polling
+     * @returns {void}
+     */
+    stopInvoicePolling(): void {
+      if (this.invoicePollingIntervalId !== null) {
+        window.clearInterval(this.invoicePollingIntervalId);
+        this.invoicePollingIntervalId = null;
+        this.$log?.debug('Invoice polling interval cleared.');
+      }
+      if (this.invoicePollingTimeoutId !== null) {
+        window.clearTimeout(this.invoicePollingTimeoutId);
+        this.invoicePollingTimeoutId = null;
+        this.$log?.debug('Invoice polling timeout cleared.');
+      }
+      this.$log?.info('Invoice polling stopped.');
+    },
+    /**
      * Clear all store data
      * @returns {void}
      */
     clearStore(): void {
+      // Stop any active polling before clearing
+      this.stopInvoicePolling();
+
       this.adminOrganisations = [];
       this.adminInvoices = [];
       this.selectedPaymentsToApprove = [];
@@ -653,6 +755,8 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       'isLoadingOrganisations',
       'isLoadingInvoices',
       'isLoadingApprovePayments',
+      'invoicePollingIntervalId',
+      'invoicePollingTimeoutId',
     ],
   },
 });
