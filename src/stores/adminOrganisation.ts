@@ -9,6 +9,9 @@ import { useApiGetCoordinatorInvoices } from '../composables/useApiGetCoordinato
 import { useApiPostCoordinatorApprovePayments } from '../composables/useApiPostCoordinatorApprovePayments';
 import { useApiPostCoordinatorMakeInvoice } from '../composables/useApiPostCoordinatorMakeInvoice';
 
+// config
+import { rideToWorkByBikeConfig } from '../boot/global_vars';
+
 // enums
 import { PhaseType } from '../components/types/Challenge';
 
@@ -678,18 +681,24 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         );
         return;
       }
+      // extract config values
+      const { checkInvoicePollingIntervalMs, checkInvoicePollingTimeoutMs } =
+        rideToWorkByBikeConfig;
+
       this.$log?.info(
         `Starting invoice polling for ${invoicesToPoll.length} invoice(s) with empty URLs`,
       );
       // setup poll interval
       this.invoicePollingIntervalId = window.setInterval(async () => {
         await this.pollInvoices();
-      }, 5000);
+      }, checkInvoicePollingIntervalMs);
       // setup timeout
       this.invoicePollingTimeoutId = window.setTimeout(() => {
-        this.$log?.info('Invoice polling timeout reached (60 seconds).');
+        this.$log?.info(
+          `Invoice polling timeout reached (${checkInvoicePollingTimeoutMs / 1000} seconds).`,
+        );
         this.stopInvoicePolling();
-      }, 60000);
+      }, checkInvoicePollingTimeoutMs);
       // init poll
       this.pollInvoices();
     },

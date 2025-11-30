@@ -155,6 +155,8 @@ urlApiThisCampaign = "this_campaign/"
 
 checkIsEmailVerifiedInterval = 20 # seconds
 checkIsThisCampaignCompetitionPhaseTypeInterval = 20 # seconds
+checkInvoicePollingIntervalMs = 5000
+checkInvoicePollingTimeoutMs = 60000
 feedRefreshCachedPostsIntervalHours = 24
 apiFeedMaxOffersNumber = 50
 apiFeedMaxPrizesNumber = 50
