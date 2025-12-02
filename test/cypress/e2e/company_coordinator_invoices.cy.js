@@ -648,7 +648,7 @@ describe('Company coordinator invoices page', () => {
     });
   });
 
-  context('PDF generated in the background', () => {
+  context('PDF generation - polling on mounted', () => {
     beforeEach(() => {
       cy.viewport(1920, 2500);
       // set system time to be in the correct active token window
@@ -722,6 +722,7 @@ describe('Company coordinator invoices page', () => {
             );
             // test loading state
             cy.dataCy('table-invoices-generating-spinner')
+              .should('exist')
               .and('be.visible')
               .and('have.length', filteredInvoices.length);
           },
@@ -747,6 +748,87 @@ describe('Company coordinator invoices page', () => {
             cy.dataCy('table-invoices-generating-spinner').should('not.exist');
           },
         );
+      });
+    });
+  });
+
+  context('PDF generation - polling on invoice creation', () => {
+    beforeEach(() => {
+      cy.viewport(1920, 2500);
+      // set system time to be in the correct active token window
+      cy.clock(systemTimeChallengeActive, ['Date']).then(() => {
+        cy.task('getAppConfig', process).then((config) => {
+          cy.wrap(config).as('config');
+          // visit the login page to initialize i18n
+          cy.visit('#' + routesConf['login']['path']);
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            cy.wrap(win.i18n).as('i18n');
+            // setup coordinator test environment
+            cy.setupCompanyCoordinatorTest(config, win.i18n);
+            cy.interceptCoordinatorInvoicesGetApi(
+              config,
+              'apiGetCoordinatorInvoicesResponseSingle.json',
+            );
+            cy.visit(
+              '#' + routesConf['coordinator_invoices']['children']['fullPath'],
+            );
+            cy.dataCy('table-invoices-title').should('be.visible');
+          });
+        });
+      });
+    });
+
+    it('starts polling invoices after new invoice is created (and no PDF)', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          // check that initial admin organisation response is loaded
+          cy.waitForCoordinatorInvoicesGetApi(
+            'apiGetCoordinatorInvoicesResponseSingle.json',
+          );
+          cy.get('@getCoordinatorInvoices.all').should('have.length', 1);
+          // test submitting the form
+          cy.interceptCoordinatorMakeInvoicePostApi(config, {
+            invoice_id: 82,
+          });
+          // test creating an invoice
+          cy.dataCy('button-create-invoice').click();
+          cy.dataCy('dialog-create-invoice').should('be.visible');
+          cy.dataCy('dialog-header').should(
+            'contain',
+            i18n.global.t('coordinator.titleCreateInvoice'),
+          );
+          cy.dataCy('form-create-invoice').should('be.visible');
+          // override intercept with new invoice without PDF
+          cy.interceptCoordinatorInvoicesGetApi(
+            config,
+            'apiGetCoordinatorInvoicesResponseMissingOnePdf.json',
+          );
+          cy.dataCy('form-create-invoice-confirm-billing-details')
+            .find('.q-toggle__inner')
+            .click();
+          cy.dataCy('dialog-button-submit').click();
+          // wait for API call to finish
+          cy.get('@postCoordinatorMakeInvoice.all').should('have.length', 1);
+          cy.waitForCoordinatorInvoicesGetApi(
+            'apiGetCoordinatorInvoicesResponseMissingOnePdf.json',
+          );
+          cy.get('@getCoordinatorInvoices.all').should('have.length', 2);
+          // test loading state
+          cy.dataCy('table-invoices-generating-spinner')
+            .should('be.visible')
+            .and('have.length', 1);
+          // override intercept
+          cy.interceptCoordinatorInvoicesGetApi(
+            config,
+            'apiGetCoordinatorInvoicesResponse.json',
+          );
+          // component should automatically refetch invoices
+          cy.waitForCoordinatorInvoicesGetApi(
+            'apiGetCoordinatorInvoicesResponse.json',
+          );
+          cy.dataCy('table-invoices-generating-spinner').should('not.exist');
+        });
       });
     });
   });
