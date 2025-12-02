@@ -18,7 +18,7 @@
 
 // libraries
 import { QForm } from 'quasar';
-import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 
 // components
 import BannerInfo from '../global/BannerInfo.vue';
@@ -45,14 +45,6 @@ export default defineComponent({
     const isDialogOpen = ref(false);
     const formCreateInvoiceRef = ref<typeof QForm | null>(null);
     const adminOrganisationStore = useAdminOrganisationStore();
-
-    onMounted(() => {
-      adminOrganisationStore.startInvoicePolling();
-    });
-
-    onUnmounted(() => {
-      adminOrganisationStore.stopInvoicePolling();
-    });
 
     const closeDialog = (): void => {
       adminOrganisationStore.resetInvoiceForm();

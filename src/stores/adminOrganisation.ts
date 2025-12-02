@@ -699,8 +699,6 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         );
         this.stopInvoicePolling();
       }, checkInvoicePollingTimeoutMs);
-      // init poll
-      this.pollInvoices();
     },
     /**
      * Poll for invoice updates
