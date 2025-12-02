@@ -13,7 +13,7 @@
 
 // libraries
 import { QTable } from 'quasar';
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 
 // composables
 import { paginationLabel } from '../../composables/useTable';
@@ -23,7 +23,11 @@ import { useTableInvoicesData } from '../../composables/useTableInvoicesData';
 // config
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 
+// enums
 import { InvoicesTableColumns } from '../../components/types/Table';
+
+// stores
+import { useAdminOrganisationStore } from 'src/stores/adminOrganisation';
 
 export default defineComponent({
   name: 'TableInvoices',
@@ -40,12 +44,17 @@ export default defineComponent({
     const { columns, visibleColumns } = useTableInvoices();
     const { invoicesData } = useTableInvoicesData();
     const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
+    const adminOrganisationStore = useAdminOrganisationStore();
+    const isInvoicePollingActive = computed(
+      () => adminOrganisationStore.getIsInvoicePollingActive,
+    );
 
     return {
       borderRadius,
       columns,
       InvoicesTableColumns,
       invoicesData,
+      isInvoicePollingActive,
       tableRef,
       visibleColumns,
       paginationLabel,
@@ -106,7 +115,7 @@ export default defineComponent({
             <div class="flex flex-wrap gap-4 items-center">
               <!-- Spinner: Invoice generation -->
               <div
-                v-if="props.row.isGenerating"
+                v-if="props.row.isGenerating && isInvoicePollingActive"
                 class="q-px-xs"
                 data-cy="table-invoices-generating"
                 :title="$t('table.labelGeneratingPdf')"
