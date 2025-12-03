@@ -15,7 +15,7 @@
  */
 
 // libraries
-import { computed, defineComponent, inject, onMounted, onUnmounted } from 'vue';
+import { computed, defineComponent, inject, onMounted } from 'vue';
 
 import { i18n } from '../boot/i18n';
 import { defaultLocale } from '../i18n/def_locale';
@@ -71,12 +71,6 @@ export default defineComponent({
         promises.push(adminCompetitionStore.loadCompetitions());
       }
       await Promise.all(promises);
-      // wait after initial invoices fetch to start polling if needed
-      adminOrganisationStore.startInvoicePolling();
-    });
-
-    onUnmounted(() => {
-      adminOrganisationStore.stopInvoicePolling();
     });
 
     return {

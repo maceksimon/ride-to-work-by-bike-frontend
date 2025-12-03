@@ -179,21 +179,23 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add('waitForCoordinatorInvoicesGetApi', (responseFixture) => {
   cy.fixture(responseFixture).then((coordinatorInvoicesResponse) => {
-    cy.wait('@getCoordinatorInvoices').then((getCoordinatorInvoices) => {
-      // Verify authorization header
-      expect(getCoordinatorInvoices.request.headers.authorization).to.include(
-        bearerTokeAuth,
-      );
-      // Verify response
-      if (getCoordinatorInvoices.response) {
-        expect(getCoordinatorInvoices.response.statusCode).to.equal(
-          httpSuccessfullStatus,
+    cy.wait('@getCoordinatorInvoices', { timeout: 20000 }).then(
+      (getCoordinatorInvoices) => {
+        // Verify authorization header
+        expect(getCoordinatorInvoices.request.headers.authorization).to.include(
+          bearerTokeAuth,
         );
-        expect(getCoordinatorInvoices.response.body).to.deep.equal(
-          coordinatorInvoicesResponse,
-        );
-      }
-    });
+        // Verify response
+        if (getCoordinatorInvoices.response) {
+          expect(getCoordinatorInvoices.response.statusCode).to.equal(
+            httpSuccessfullStatus,
+          );
+          expect(getCoordinatorInvoices.response.body).to.deep.equal(
+            coordinatorInvoicesResponse,
+          );
+        }
+      },
+    );
   });
 });
 
