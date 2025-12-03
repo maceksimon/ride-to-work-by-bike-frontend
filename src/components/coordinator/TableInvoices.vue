@@ -115,7 +115,7 @@ export default defineComponent({
             <div class="flex flex-wrap gap-4 items-center">
               <!-- Spinner: Invoice generation -->
               <div
-                v-if="props.row.isGenerating && isInvoicePollingActive"
+                v-if="!props.row.invoiceUrl && isInvoicePollingActive"
                 class="q-px-xs"
                 data-cy="table-invoices-generating"
                 :title="$t('table.labelGeneratingPdf')"
