@@ -670,23 +670,21 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
     startInvoicePolling(): void {
       // if already polling, skip
       if (this.invoicePollingIntervalId !== null) {
-        this.$log?.debug('Invoice polling already active, skipping start.');
+        this.$log?.info('Invoice polling is already active, skipping start.');
         return;
       }
       // check if there are invoices to poll
       const invoicesToPoll = this.getInvoicesBeingGenerated;
       if (invoicesToPoll.length === 0) {
-        this.$log?.debug(
-          'No invoices with empty URLs found, skipping polling.',
-        );
+        this.$log?.info('No invoices with empty URLs found, skipping polling.');
         return;
       }
       // extract config values
       const { checkInvoicePollingInterval, checkInvoicePollingMaxRepetitions } =
         rideToWorkByBikeConfig;
 
-      this.$log?.info(
-        `Starting invoice polling for ${invoicesToPoll.length} invoice(s) with empty URLs`,
+      this.$log?.debug(
+        `Starting invoice polling for <${invoicesToPoll.length}> invoice(s) with empty URLs.`,
       );
       // setup poll interval
       this.invoicePollingIntervalId = window.setInterval(async () => {
@@ -695,9 +693,9 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       // setup timeout
       this.invoicePollingTimeoutId = window.setTimeout(
         () => {
-          this.$log?.info(
+          this.$log?.debug(
             'Invoice polling timeout reached' +
-              ` (${checkInvoicePollingMaxRepetitions * checkInvoicePollingInterval} seconds).`,
+              ` <${checkInvoicePollingMaxRepetitions * checkInvoicePollingInterval}> seconds.`,
           );
           this.stopInvoicePolling();
         },
@@ -710,7 +708,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
      * @returns {Promise<void>}
      */
     async pollInvoices(): Promise<void> {
-      this.$log?.debug('Polling invoices...');
+      this.$log?.info('Polling invoices.');
       // fetch invoices
       await this.loadAdminInvoices();
       // check for PDFs
@@ -721,7 +719,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         return;
       }
       this.$log?.debug(
-        `Polling continues: ${stillGenerating.length} invoice(s) still generating`,
+        `Polling continues <${stillGenerating.length}> invoice(s) still generating.`,
       );
     },
     /**
@@ -732,12 +730,12 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       if (this.invoicePollingIntervalId !== null) {
         window.clearInterval(this.invoicePollingIntervalId);
         this.invoicePollingIntervalId = null;
-        this.$log?.debug('Invoice polling interval cleared.');
+        this.$log?.info('Invoice polling interval cleared.');
       }
       if (this.invoicePollingTimeoutId !== null) {
         window.clearTimeout(this.invoicePollingTimeoutId);
         this.invoicePollingTimeoutId = null;
-        this.$log?.debug('Invoice polling timeout cleared.');
+        this.$log?.info('Invoice polling timeout cleared.');
       }
       this.$log?.info('Invoice polling stopped.');
     },
