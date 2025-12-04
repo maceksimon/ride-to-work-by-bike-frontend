@@ -134,6 +134,7 @@ export default defineComponent({
                 no-caps
                 rounded
                 :href="props.row.invoiceUrl"
+                target="_blank"
                 data-cy="table-invoices-pdf-button"
               >
                 <!-- Icon -->
