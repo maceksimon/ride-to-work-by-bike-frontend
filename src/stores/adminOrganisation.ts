@@ -682,7 +682,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         return;
       }
       // extract config values
-      const { checkInvoicePollingIntervalMs, checkInvoicePollingTimeoutMs } =
+      const { checkInvoicePollingInterval, checkInvoicePollingMaxRepetitions } =
         rideToWorkByBikeConfig;
 
       this.$log?.info(
@@ -691,14 +691,18 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       // setup poll interval
       this.invoicePollingIntervalId = window.setInterval(async () => {
         await this.pollInvoices();
-      }, checkInvoicePollingIntervalMs);
+      }, checkInvoicePollingInterval * 1000);
       // setup timeout
-      this.invoicePollingTimeoutId = window.setTimeout(() => {
-        this.$log?.info(
-          `Invoice polling timeout reached (${checkInvoicePollingTimeoutMs / 1000} seconds).`,
-        );
-        this.stopInvoicePolling();
-      }, checkInvoicePollingTimeoutMs);
+      this.invoicePollingTimeoutId = window.setTimeout(
+        () => {
+          this.$log?.info(
+            'Invoice polling timeout reached' +
+              ` (${checkInvoicePollingMaxRepetitions * checkInvoicePollingInterval} seconds).`,
+          );
+          this.stopInvoicePolling();
+        },
+        checkInvoicePollingInterval * checkInvoicePollingMaxRepetitions * 1000,
+      );
     },
     /**
      * Poll for invoice updates

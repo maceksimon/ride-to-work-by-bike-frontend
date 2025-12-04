@@ -123,8 +123,8 @@ export interface ConfigGlobal {
   dateFormatInputMask: string;
   checkIsEmailVerifiedInterval: number;
   checkIsThisCampaignCompetitionPhaseTypeInterval: string;
-  checkInvoicePollingIntervalMs: number;
-  checkInvoicePollingTimeoutMs: number;
+  checkInvoicePollingInterval: number;
+  checkInvoicePollingMaxRepetitions: number;
   googleLoginAppId: string;
   facebookLoginAppId: string;
   apiBaseRtwbbFeedBearerToken: string;
