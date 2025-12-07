@@ -477,6 +477,7 @@ titleDonorEntryFee = "Donor entry fee"
 titleOrganizationBillingDetails = "Billing data of the organization"
 titleOrganizationDetails = "Organization Details"
 titleAddressDetails = "Organization Address"
+labelAnonymize = "Anonymize billing data"
 
 [form.merch]
 hintNoMerch = "This will leave the full amount for AutoMat's non-profit activities."

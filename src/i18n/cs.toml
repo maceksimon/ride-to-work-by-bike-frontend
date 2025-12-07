@@ -480,6 +480,7 @@ titleDonorEntryFee = "Benefiční startovné"
 titleOrganizationBillingDetails = "Fakturační údaje organizace"
 titleOrganizationDetails = "Údaje organizace"
 titleAddressDetails = "Adresa organizace"
+labelAnonymize = "Anonymizovat fakturační údaje"
 
 [form.merch]
 hintNoMerch = "Necháte tak plnou částku na neziskové aktivity AutoMatu."

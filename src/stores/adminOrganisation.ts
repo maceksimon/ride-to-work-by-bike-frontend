@@ -56,6 +56,7 @@ interface InvoiceFormState {
     businessVatId: string;
   } | null;
   isBillingFormExpanded: boolean;
+  anonymize: boolean;
 }
 
 interface AdminOrganisationState {
@@ -94,6 +95,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       customBillingAddress: null,
       customBillingOrganization: null,
       isBillingFormExpanded: false,
+      anonymize: false,
     },
     // Invoice polling state
     invoicePollingIntervalId: null,
@@ -535,6 +537,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         company_pais_benefitial_fee:
           this.invoiceForm.isDonorEntryFee || undefined,
         payment_ids: paymentIds,
+        anonymize: this.invoiceForm.anonymize || undefined,
       };
       if (this.invoiceForm.isBillingFormExpanded) {
         // if custom organization details, company_name is required
@@ -581,6 +584,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
         customBillingAddress: null,
         customBillingOrganization: null,
         isBillingFormExpanded: false,
+        anonymize: false,
       };
     },
     /**

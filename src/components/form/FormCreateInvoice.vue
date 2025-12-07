@@ -82,6 +82,12 @@ export default defineComponent({
         adminOrganisationStore.invoiceForm.isBillingDetailsCorrect = value;
       },
     });
+    const anonymize = computed({
+      get: () => adminOrganisationStore.invoiceForm.anonymize,
+      set: (value) => {
+        adminOrganisationStore.invoiceForm.anonymize = value;
+      },
+    });
     const isBillingFormExpanded = computed({
       get: () => adminOrganisationStore.invoiceForm.isBillingFormExpanded,
       set: (value) => {
@@ -147,6 +153,7 @@ export default defineComponent({
     return {
       isBillingDetailsCorrect,
       isDonorEntryFee,
+      anonymize,
       orderNote,
       orderNumber,
       organization,
@@ -303,6 +310,16 @@ export default defineComponent({
         data-cy="form-create-invoice-confirm-billing-details"
       />
     </q-field>
+    <!-- Toggle: Anonymize billing data -->
+    <q-toggle
+      dense
+      v-model="anonymize"
+      :label="$t('form.labelAnonymize')"
+      name="anonymize-billing-data"
+      color="primary"
+      class="q-mt-lg"
+      data-cy="form-create-invoice-anonymize"
+    />
     <!-- Section: Participants -->
     <form-field-checkbox-team
       v-for="team in teams"
