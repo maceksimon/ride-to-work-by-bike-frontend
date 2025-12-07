@@ -85,7 +85,7 @@
     }
   },
   {
-    "description": "allows to create a new invoice with additional information",
+    "description": "allows to create a new invoice with additional information (anonymized)",
     "fixtureAdminOrganisationInitial": "apiGetAdminOrganisationResponse.json",
     "fixtureCoordinatorInvoicesInitial": "apiGetCoordinatorInvoicesResponse.json",
     "displayInitial": {
@@ -135,6 +135,7 @@
       "orderNumber": "1234567892",
       "clientNote": "Test client note",
       "isDonorEntryFee": true,
+      "anonymize": true,
       "postResponse": {
         "invoice_id": 82
       },
@@ -142,7 +143,8 @@
         "client_note": "Test client note",
         "company_pais_benefitial_fee": true,
         "order_number": "1234567892",
-        "payment_ids": [178]
+        "payment_ids": [178],
+        "anonymize": true
       }
     },
     "fixtureAdminInvoicesAfterMakeInvoice": "apiGetCoordinatorInvoicesResponseAddedInvoice.json",

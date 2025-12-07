@@ -148,6 +148,14 @@ describe('Company coordinator invoices page', () => {
                 .find('.q-toggle__inner')
                 .should('have.class', 'q-toggle__inner--truthy');
             }
+            if (test.postMakeInvoice.anonymize) {
+              cy.dataCy('form-create-invoice-anonymize')
+                .find('.q-toggle__inner')
+                .click();
+              cy.dataCy('form-create-invoice-anonymize')
+                .find('.q-toggle__inner')
+                .should('have.class', 'q-toggle__inner--truthy');
+            }
             cy.dataCy('form-create-invoice-confirm-billing-details')
               .find('.q-toggle__inner')
               .click();
