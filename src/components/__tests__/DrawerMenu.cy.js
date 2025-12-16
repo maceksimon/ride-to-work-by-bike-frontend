@@ -45,6 +45,7 @@ describe('DrawerMenu', () => {
           urlAdmin: rtwbbOldFrontendDjangoAdminUrl,
           isEntryEnabled: true,
           isResultsEnabled: true,
+          getHasOrganizationAdmin: null,
         }),
       ).then((menuTop) => {
         cy.mount(DrawerMenu, {
@@ -84,6 +85,7 @@ describe('DrawerMenu', () => {
           urlAdmin: rtwbbOldFrontendDjangoAdminUrl,
           isEntryEnabled: true,
           isResultsEnabled: true,
+          getHasOrganizationAdmin: null,
         }),
       ).then((menuTop) => {
         cy.mount(DrawerMenu, {
@@ -129,6 +131,7 @@ describe('DrawerMenu', () => {
           urlAdmin,
           isEntryEnabled: true,
           isResultsEnabled: true,
+          getHasOrganizationAdmin: null,
         }),
       ).then((menuTop) => {
         cy.mount(DrawerMenu, {
@@ -199,6 +202,7 @@ describe('DrawerMenu', () => {
           urlAdmin,
           isEntryEnabled: false,
           isResultsEnabled: true,
+          getHasOrganizationAdmin: null,
         }),
       ).then((menuTop) => {
         cy.mount(DrawerMenu, {
@@ -232,6 +236,7 @@ describe('DrawerMenu', () => {
           urlAdmin,
           isEntryEnabled: true,
           isResultsEnabled: true,
+          getHasOrganizationAdmin: null,
         }),
       ).then((menuTop) => {
         cy.mount(DrawerMenu, {
@@ -265,6 +270,7 @@ describe('DrawerMenu', () => {
           urlAdmin: rtwbbOldFrontendDjangoAdminUrl,
           isEntryEnabled: true,
           isResultsEnabled: false,
+          getHasOrganizationAdmin: null,
         }),
       ).then((menuTop) => {
         cy.mount(DrawerMenu, {

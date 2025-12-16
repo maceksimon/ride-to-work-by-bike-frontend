@@ -158,6 +158,7 @@ export const testDesktopSidebar = (): void => {
           urlAdmin,
           isEntryEnabled: true,
           isResultsEnabled: true,
+          getHasOrganizationAdmin: null,
         }).length > 0
       ) {
         cy.dataCy(selectorDrawerMenuTop).should('be.visible');
