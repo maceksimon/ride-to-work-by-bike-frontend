@@ -78,6 +78,14 @@ describe('Register Challenge - Merch Options No Price', () => {
         .and('be.visible')
         .get('.q-checkbox__inner')
         .should('have.class', 'q-checkbox__inner--truthy');
+      // it does not show the hint message
+      cy.get('@i18n').then((i18n) => {
+        cy.dataCy('no-merch-label')
+          .should('exist')
+          .and('be.visible')
+          .and('contain', i18n.global.t('form.merch.labelNoMerch'));
+      });
+      cy.dataCy('no-merch-hint').should('not.exist');
       // go to next step is enabled
       cy.dataCy('step-6-continue').should('be.enabled');
     });

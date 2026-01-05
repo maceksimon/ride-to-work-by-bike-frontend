@@ -3604,6 +3604,27 @@ Cypress.Commands.add(
 );
 
 /**
+ * Set up challenge store with price levels from fixture
+ * @param {Object} store - Challenge store composable
+ * @param {Object} fixtureName - Fixture JSON file name
+ */
+Cypress.Commands.add(
+  'setupChallengeStoreWithPriceLevels',
+  (useChallengeStore, fixtureName) => {
+    cy.fixture(fixtureName).then((responseBody) => {
+      cy.wrap(useChallengeStore()).then((challengeStore) => {
+        const priceLevels = computed(() => challengeStore.getPriceLevel);
+        challengeStore.setPriceLevel(responseBody.results[0].price_level);
+        // verify store state
+        cy.wrap(priceLevels)
+          .its('value')
+          .should('deep.equal', responseBody.results[0].price_level);
+      });
+    });
+  },
+);
+
+/**
  * Set up register challenge store with team approval status
  * @param {Object} useRegisterChallengeStore - Register challenge store instance
  * @param {Object} responseBody - Override default response body from fixture

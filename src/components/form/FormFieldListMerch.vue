@@ -198,14 +198,17 @@ export default defineComponent({
       );
     });
 
+    const isPriceLevelEmpty = computed((): boolean => {
+      return challengeStore.getPriceLevel.length === 0;
+    });
+
     const showMerchUnavailableBanner = computed((): boolean => {
-      const isPriceLevelEmpty = challengeStore.getPriceLevel.length === 0;
       logger?.debug(
         'Show merch unavailable banner check' +
           ` optionsEmpty <${optionsEmpty.value}>,` +
-          ` isPriceLevelEmpty <${isPriceLevelEmpty}>.`,
+          ` isPriceLevelEmpty <${isPriceLevelEmpty.value}>.`,
       );
-      return optionsEmpty.value && !isPriceLevelEmpty;
+      return optionsEmpty.value && !isPriceLevelEmpty.value;
     });
 
     // get current item's options
@@ -430,6 +433,7 @@ export default defineComponent({
       tabsMerchRef,
       onCheckboxUpdate,
       isLoading,
+      isPriceLevelEmpty,
       merchandiseCards,
       urlSizeConversionChart,
     };
@@ -465,7 +469,12 @@ export default defineComponent({
         $t('form.merch.labelNoMerch')
       }}</q-item-label>
       <!-- Checkbox hint -->
-      <q-item-label class="text-grey-8" caption data-cy="no-merch-hint">
+      <q-item-label
+        v-if="!isPriceLevelEmpty"
+        class="text-grey-8"
+        caption
+        data-cy="no-merch-hint"
+      >
         {{ $t('form.merch.hintNoMerch') }}
       </q-item-label>
     </q-item-section>

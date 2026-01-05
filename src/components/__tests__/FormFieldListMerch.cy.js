@@ -56,6 +56,10 @@ describe('<FormFieldListMerch>', () => {
       cy.mount(FormFieldListMerch, {
         props: {},
       });
+      cy.setupChallengeStoreWithPriceLevels(
+        useChallengeStore,
+        'apiGetThisCampaign.json',
+      );
       cy.viewport('macbook-16');
 
       // wait for API responses
@@ -413,6 +417,10 @@ describe('<FormFieldListMerch>', () => {
             cy.mount(FormFieldListMerch, {
               props: {},
             });
+            cy.setupChallengeStoreWithPriceLevels(
+              useChallengeStore,
+              'apiGetThisCampaign.json',
+            );
             cy.viewport('macbook-16');
 
             // wait for API responses
@@ -450,6 +458,10 @@ describe('<FormFieldListMerch>', () => {
       cy.mount(FormFieldListMerch, {
         props: {},
       });
+      cy.setupChallengeStoreWithPriceLevels(
+        useChallengeStore,
+        'apiGetThisCampaign.json',
+      );
       cy.viewport('iphone-6');
 
       // wait for API responses
