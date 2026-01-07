@@ -703,6 +703,8 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         [RegisterChallengeStep.personalDetails]: {
           personalDetails: this.personalDetails,
           language: this.language,
+          telephone: this.telephone,
+          telephoneOptIn: this.telephoneOptIn,
         },
         [RegisterChallengeStep.payment]: {
           // only send payment subject if payment subject is not organization
@@ -737,8 +739,6 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
           : { teamId: this.teamId },
         [RegisterChallengeStep.merch]: {
           merchId: this.merchId,
-          telephone: this.telephone,
-          telephoneOptIn: this.telephoneOptIn,
         },
         [RegisterChallengeStep.summary]: {},
       };
