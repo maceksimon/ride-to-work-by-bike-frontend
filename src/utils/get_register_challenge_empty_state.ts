@@ -18,6 +18,7 @@ import { deepObjectWithSimplePropsCopy } from './index';
 export const emptyFormPersonalDetails: RegisterChallengePersonalDetailsForm = {
   firstName: '',
   lastName: '',
+  email: '',
   id: null,
   isStaff: false,
   newsletter: [] as NewsletterType[],
