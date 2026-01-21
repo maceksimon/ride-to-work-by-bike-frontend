@@ -1960,11 +1960,11 @@ describe('Register Challenge page', () => {
       // go to next step
       cy.dataCy('step-2-continue').should('be.visible').click();
       // test API post request (empty voucher)
-      cy.fixture('apiPostRegisterChallengeVoucherNoneRequest.json').then(
-        (request) => {
-          cy.waitForRegisterChallengePostApi(request);
-        },
-      );
+      cy.fixture(
+        'apiPostRegisterChallengeVoucherNoneWithoutRewardRequest.json',
+      ).then((request) => {
+        cy.waitForRegisterChallengePostApi(request);
+      });
       // participation is preselected - continue
       cy.dataCy('step-3-continue').should('be.visible').click();
       // organization is preselected - select address
@@ -2123,11 +2123,11 @@ describe('Register Challenge page', () => {
       // go to next step
       cy.dataCy('step-2-continue').should('be.visible').click();
       // test API post request (empty voucher)
-      cy.fixture('apiPostRegisterChallengeVoucherNoneRequest.json').then(
-        (request) => {
-          cy.waitForRegisterChallengePostApi(request);
-        },
-      );
+      cy.fixture(
+        'apiPostRegisterChallengeVoucherNoneWithoutRewardRequest.json',
+      ).then((request) => {
+        cy.waitForRegisterChallengePostApi(request);
+      });
       // participation is preselected - continue
       cy.dataCy('step-3-continue').should('be.visible').click();
       // organization is preselected - select address

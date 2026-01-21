@@ -119,6 +119,11 @@ export const registerChallengeAdapter = {
       }
     }
 
+    // is payment with reward
+    if (storeState.isPaymentWithReward !== undefined) {
+      payload.is_payment_with_reward = storeState.isPaymentWithReward;
+    }
+
     // only send payment subject and amount if it's a company or school
     if (
       storeState.paymentSubject &&

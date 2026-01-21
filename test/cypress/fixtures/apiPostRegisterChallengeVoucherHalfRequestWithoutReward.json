@@ -1,3 +1,4 @@
 {
-  "discount_coupon": "NOREWARD-HALF"
+  "discount_coupon": "NOREWARD-HALF",
+  "is_payment_with_reward": false
 }

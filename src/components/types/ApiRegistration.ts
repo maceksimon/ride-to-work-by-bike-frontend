@@ -76,6 +76,7 @@ export type RegisterChallengePostPayload = {
   team_id?: number | null;
   t_shirt_size_id?: number | null;
   approved_for_team?: TeamMemberStatus;
+  is_payment_with_reward?: boolean | null;
 };
 
 export type RegisterChallengePostResponse = {
