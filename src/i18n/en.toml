@@ -617,9 +617,13 @@ titleAddSubsidiary = "Add subsidiary"
 
 [form.team]
 buttonAddTeam = "Add team"
+buttonCreateAndJoin = "Create & Join"
 labelMembers = "member | members"
 labelTeam = "Team name"
 labelTeamName = "Your team name"
+linkCreateNewTeam = "Or create a new team"
+linkSelectExistingTeam = "Or select an existing team"
+messageTeamCreated = "Team '{teamName}' created successfully"
 textTeam = "<p>There can be a maximum of {count} member per team, you can invite members at any time until the end of the registration period. A company can have any number of teams.</p><p>Only teams with more than 1 member can join the inter-team challenges.</p> | <p>There can be a maximum of {count} members per team, you can invite members at any time until the end of the registration period. A company can have any number of teams.</p><p>Only teams with more than 1 member can join the inter-team challenges.</p>"
 titleAddTeam = "Add team"
 

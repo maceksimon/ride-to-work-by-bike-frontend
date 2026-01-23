@@ -619,9 +619,13 @@ titleAddSubsidiary = "Pridať pobočku"
 
 [form.team]
 buttonAddTeam = "Pridať tím"
+buttonCreateAndJoin = "Vytvoriť a pripojiť sa"
 labelMembers = "člen | členov"
 labelTeam = "Názov tímu"
 labelTeamName = "Názov vášho tímu"
+linkCreateNewTeam = "Alebo vytvorte nový tím"
+linkSelectExistingTeam = "Alebo vyberte existujúci tím"
+messageTeamCreated = "Tím '{teamName}' bol úspešne vytvorený"
 textTeam = "<p>V jednom tíme môže byť maximálne {count} členov, pričom členky môžete pozvať kedykoľvek do konca registračného obdobia. Spoločnosť môže mať ľubovoľný počet tímov.</p><p>Výziev medzi tímami sa zúčastňujú len tímy s viac ako 1 členom.</p> | <p>V jednom tíme môže byť maximálne {count} člen, pričom členky môžete pozvať kedykoľvek do konca registračného obdobia. Spoločnosť môže mať ľubovoľný počet tímov.</p><p>Výziev medzi tímami sa zúčastňujú len tímy s viac ako 1 členom.</p> | <p>V jednom tíme môže byť maximálne {count} členovia, pričom členky môžete pozvať kedykoľvek do konca registračného obdobia. Spoločnosť môže mať ľubovoľný počet tímov.</p><p>Výziev medzi tímami sa zúčastňujú len tímy s viac ako 1 členom.</p> | <p>V jednom tíme môže byť maximálne {count} členov, pričom členky môžete pozvať kedykoľvek do konca registračného obdobia. Spoločnosť môže mať ľubovoľný počet tímov.</p><p>Výziev medzi tímami sa zúčastňujú len tímy s viac ako 1 členom.</p>"
 titleAddTeam = "Pridať tím"
 
