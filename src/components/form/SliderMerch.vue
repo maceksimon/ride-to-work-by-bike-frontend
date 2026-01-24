@@ -18,6 +18,9 @@
 
 import { defineComponent } from 'vue';
 
+// config
+import { rideToWorkByBikeConfig } from '../../../src/boot/global_vars';
+
 // types
 import { Image } from 'components/types';
 
@@ -28,12 +31,22 @@ export default defineComponent({
       type: Array as () => Image[],
     },
   },
-  setup() {},
+  setup() {
+    const { maxWidthMerchDialogImage } = rideToWorkByBikeConfig;
+
+    return {
+      maxWidthMerchDialogImage,
+    };
+  },
 });
 </script>
 
 <template>
-  <div class="slider-merch relative-position" data-cy="slider-merch">
+  <div
+    class="slider-merch relative-position"
+    data-cy="slider-merch"
+    :style="{ maxWidth: maxWidthMerchDialogImage }"
+  >
     <swiper-container
       :navigation="true"
       :pagination="true"

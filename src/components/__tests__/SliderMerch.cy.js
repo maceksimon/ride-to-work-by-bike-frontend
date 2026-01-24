@@ -1,5 +1,8 @@
 import SliderMerch from 'components/form/SliderMerch.vue';
 import { i18n } from '../../boot/i18n';
+import { rideToWorkByBikeConfig } from '../../boot/global_vars';
+
+const { maxWidthMerchDialogImage } = rideToWorkByBikeConfig;
 
 describe('<SliderMerch>', () => {
   it('has translation for all strings', () => {
@@ -20,7 +23,9 @@ describe('<SliderMerch>', () => {
 
     it('renders component', () => {
       cy.fixture('sliderMerch').then((images) => {
-        cy.dataCy('slider-merch').should('be.visible');
+        cy.dataCy('slider-merch')
+          .should('be.visible')
+          .and('have.css', 'max-width', maxWidthMerchDialogImage);
         cy.dataCy('swiper-image').should('be.visible');
         cy.dataCy('swiper-image')
           .first()
