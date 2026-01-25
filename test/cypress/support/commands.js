@@ -3588,13 +3588,13 @@ Cypress.Commands.add(
 /**
  * Set up login store with access token
  * @param {Object} useLoginStore - Login store composable function
- * @param {string} accessToken - Access token (optional, defaults to fixture)
+ * @param {string} accessToken - Access token (optional)
  */
 Cypress.Commands.add(
   'setupLoginAccessToken',
   (useLoginStore, accessToken = null) => {
     if (accessToken) {
-      // Use provided access token
+      // use provided access token
       cy.wrap(useLoginStore()).then((loginStore) => {
         const accessTokenComputed = computed(() => loginStore.getAccessToken);
         loginStore.setAccessToken(accessToken);
@@ -3604,7 +3604,7 @@ Cypress.Commands.add(
           .should('be.equal', accessToken);
       });
     } else {
-      // Load default fixture
+      // load default fixture
       cy.fixture('refreshTokensResponseChallengeActive').then((response) => {
         cy.wrap(useLoginStore()).then((loginStore) => {
           const accessTokenComputed = computed(() => loginStore.getAccessToken);

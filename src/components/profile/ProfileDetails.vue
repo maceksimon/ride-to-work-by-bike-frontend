@@ -328,7 +328,7 @@ export default defineComponent({
           approvedForTeam: TeamMemberStatus.undecided,
         },
       });
-      // Reload team data to show updated info in UI
+      // reload team data to show updated info in UI
       await registerChallengeStore.loadMyTeamToStore(logger);
     };
 
