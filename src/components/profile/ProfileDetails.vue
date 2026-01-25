@@ -313,18 +313,23 @@ export default defineComponent({
       const canJoinTeam = await registerChallengeStore.validateTeamJoin(teamId);
       logger?.debug(`Can join to team <${canJoinTeam}> with ID <${teamId}>.`);
 
-      if (canJoinTeam) {
-        logger?.debug(`Update team to ID <${teamId}>.`);
-        await onUpdateRegisterChallengeDetails({
-          teamId: teamId,
-          personalDetails: {
-            approvedForTeam: TeamMemberStatus.undecided,
-          },
+      if (!canJoinTeam) {
+        Notify.create({
+          message: i18n.global.t('profile.messageTeamFull'),
+          color: 'negative',
         });
-
-        // Reload team data to show updated info in UI
-        await registerChallengeStore.loadMyTeamToStore(logger);
+        return;
       }
+
+      logger?.debug(`Update team to ID <${teamId}>.`);
+      await onUpdateRegisterChallengeDetails({
+        teamId: teamId,
+        personalDetails: {
+          approvedForTeam: TeamMemberStatus.undecided,
+        },
+      });
+      // Reload team data to show updated info in UI
+      await registerChallengeStore.loadMyTeamToStore(logger);
     };
 
     /**
