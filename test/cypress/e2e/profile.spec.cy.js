@@ -7,6 +7,7 @@ import {
   systemTimeChallengeActive,
 } from '../support/commonTests';
 import { OrganizationType } from 'src/components/types/Organization';
+import { TeamMemberStatus } from '../../../src/components/enums/TeamMember';
 
 // selectors
 const classSelectorToggleInner = '.q-toggle__inner';
@@ -695,6 +696,131 @@ function coreTests() {
           });
         },
       );
+    });
+  });
+
+  it('allows user to create a new team from profile', () => {
+    cy.fixture('apiPostTeamResponse').then((teamResponse) => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.fixture('apiGetRegisterChallengeProfile.json').then(
+            (registerChallengeFixture) => {
+              // intercept team POST API for creating new team
+              cy.interceptTeamPostApi(
+                config,
+                defLocale,
+                registerChallengeFixture.results[0].subsidiary_id,
+              );
+              cy.fixture('apiGetTeamsResponse').then((teamsResponse) => {
+                cy.fixture('apiGetTeamsResponseNextFullTeam').then(
+                  (teamsResponseNextFullTeam) => {
+                    cy.fixture('apiGetTeamsResponseNextNewTeam').then(
+                      (teamsResponseNextNewTeam) => {
+                        // wait for initial page load
+                        cy.waitForRegisterChallengeGetApi(
+                          registerChallengeFixture,
+                        );
+                        cy.get('@getRegisterChallenge.all').should(
+                          'have.length',
+                          1,
+                        );
+                        cy.waitForMyTeamGetApi();
+                        cy.get('@getMyTeam.all').should('have.length', 1);
+                        cy.waitForTeamsGetApi(
+                          teamsResponse,
+                          teamsResponseNextFullTeam,
+                        );
+                        cy.get('@getTeams.all').should('have.length', 1);
+                        // verify current team name
+                        cy.dataCy(selectorTeam)
+                          .find('[data-cy="details-item-value"]')
+                          .should('be.visible')
+                          .and('contain', teamsResponse.results[0].name);
+                        // open edit dialog
+                        cy.dataCy(selectorTeam).find(dataSelectorEdit).click();
+                        // verify dialog opens
+                        cy.contains(
+                          i18n.global.t('profile.titleUpdateTeam'),
+                        ).should('be.visible');
+                        cy.dataCy('profile-details-form-team').should(
+                          'be.visible',
+                        );
+                        // use create mode
+                        cy.dataCy('form-link-create-mode')
+                          .should('be.visible')
+                          .click();
+                        cy.dataCy('form-add-team').should('be.visible');
+                        // fill in team name
+                        cy.dataCy('form-add-team-name')
+                          .find('input')
+                          .type(teamResponse.name);
+                        // intercept register-challenge PUT with new team
+                        cy.fixture(
+                          'apiGetRegisterChallengeProfileNewTeam',
+                        ).then((updatedProfileResponse) => {
+                          // intercept teams GET with new team response
+                          cy.interceptTeamsGetApi(
+                            config,
+                            defLocale,
+                            registerChallengeFixture.results[0].subsidiary_id,
+                            teamsResponse,
+                            teamsResponseNextNewTeam,
+                          );
+                          // intercept register-challenge PUT
+                          cy.interceptRegisterChallengePutApi(
+                            config,
+                            i18n,
+                            registerChallengeFixture.results[0].personal_details
+                              .id,
+                            updatedProfileResponse,
+                          );
+                          // intercept register-challenge GET
+                          cy.interceptRegisterChallengeGetApi(
+                            config,
+                            i18n,
+                            updatedProfileResponse,
+                          );
+                          // submit dialog form
+                          cy.dataCy('profile-details-form-team')
+                            .find(dataSelectorButtonSave)
+                            .click();
+                          // await team POST
+                          cy.waitForTeamPostApi({
+                            name: teamResponse.name,
+                          });
+                          cy.get('@postTeam.all').should('have.length', 1);
+                          cy.get('@getMyTeam.all').should('have.length', 2);
+                          cy.waitForRegisterChallengePutApi(
+                            {
+                              approved_for_team: TeamMemberStatus.undecided,
+                              team_id: teamResponse.id,
+                            },
+                            updatedProfileResponse,
+                          );
+                          cy.get('@putRegisterChallenge.all').should(
+                            'have.length',
+                            1,
+                          );
+                          cy.get('@getMyTeam.all').should('have.length', 3);
+                          // verify dialog closes
+                          cy.dataCy('profile-details-form-team').should(
+                            'not.exist',
+                          );
+                          // verify new team name
+                          cy.dataCy(selectorTeam)
+                            .find('[data-cy="details-item-value"]')
+                            .should('be.visible')
+                            .and('contain', teamResponse.name);
+                        });
+                      },
+                    );
+                  },
+                );
+              });
+            },
+          );
+        });
+      });
     });
   });
 
