@@ -30,7 +30,7 @@ borderRadiusButtonSmall = "8px"
 borderRadiusCard = "16px"
 borderRadiusCardSmall = "8px"
 maxWidthBanner = "876px"
-maxWidthMerchDialogImage = "320px"
+maxWidthMerchDialogImage = "500px"
 
 image = "image.png"
 width = "850px"
