@@ -3565,6 +3565,61 @@ Cypress.Commands.add(
 );
 
 /**
+ * Set up register challenge store with subsidiary ID
+ * @param {Object} useRegisterChallengeStore - Register challenge store composable function
+ * @param {number} subsidiaryId - Subsidiary ID
+ */
+Cypress.Commands.add(
+  'setupRegisterChallengeSubsidiaryId',
+  (useRegisterChallengeStore, subsidiaryId) => {
+    cy.wrap(useRegisterChallengeStore()).then((registerChallengeStore) => {
+      const subsidiaryIdComputed = computed(
+        () => registerChallengeStore.getSubsidiaryId,
+      );
+      registerChallengeStore.setSubsidiaryId(subsidiaryId);
+      // test subsidiary ID in store
+      cy.wrap(subsidiaryIdComputed)
+        .its('value')
+        .should('be.equal', subsidiaryId);
+    });
+  },
+);
+
+/**
+ * Set up login store with access token
+ * @param {Object} useLoginStore - Login store composable function
+ * @param {string} accessToken - Access token (optional, defaults to fixture)
+ */
+Cypress.Commands.add(
+  'setupLoginAccessToken',
+  (useLoginStore, accessToken = null) => {
+    if (accessToken) {
+      // Use provided access token
+      cy.wrap(useLoginStore()).then((loginStore) => {
+        const accessTokenComputed = computed(() => loginStore.getAccessToken);
+        loginStore.setAccessToken(accessToken);
+        // test access token in store
+        cy.wrap(accessTokenComputed)
+          .its('value')
+          .should('be.equal', accessToken);
+      });
+    } else {
+      // Load default fixture
+      cy.fixture('refreshTokensResponseChallengeActive').then((response) => {
+        cy.wrap(useLoginStore()).then((loginStore) => {
+          const accessTokenComputed = computed(() => loginStore.getAccessToken);
+          loginStore.setAccessToken(response.access);
+          // test access token in store
+          cy.wrap(accessTokenComputed)
+            .its('value')
+            .should('be.equal', response.access);
+        });
+      });
+    }
+  },
+);
+
+/**
  * Intercept post trips API
  * Provides `@postTrips` alias
  * @param {Config} config - App global config

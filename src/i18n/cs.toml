@@ -626,7 +626,7 @@ labelTeam = "Název týmu"
 labelTeamName = "Název vašeho týmu"
 linkCreateNewTeam = "Nebo vytvořte nový tým"
 linkSelectExistingTeam = "Nebo vyberte existující tým"
-messageTeamCreated = "Tým '{teamName}' byl úspěšně vytvořen"
+messageMissingSubsidiaryId = "Není možné změnit tým, chybí ID pobočky."
 textTeam = "<p>V jednom týmu může být max. {count} členů, členy*ky můžete přizvat kdykoliv do konce registračního období výzvy. Firma může mít libovolný počet týmů.</p><p>Jen týmy s více než 1 členem se zapojují do výzev mezi týmy.</p> | <p>V jednom týmu může být max. {count} člen, členy*ky můžete přizvat kdykoliv do konce registračního období výzvy. Firma může mít libovolný počet týmů.</p><p>Jen týmy s více než 1 členem se zapojují do výzev mezi týmy.</p> | <p>V jednom týmu může být max. {count} členové, členy*ky můžete přizvat kdykoliv do konce registračního období výzvy. Firma může mít libovolný počet týmů.</p><p>Jen týmy s více než 1 členem se zapojují do výzev mezi týmy.</p> | <p>V jednom týmu může být max. {count} členů, členy*ky můžete přizvat kdykoliv do konce registračního období výzvy. Firma může mít libovolný počet týmů.</p><p>Jen týmy s více než 1 členem se zapojují do výzev mezi týmy.</p>"
 titleAddTeam = "Přidat tým"
 

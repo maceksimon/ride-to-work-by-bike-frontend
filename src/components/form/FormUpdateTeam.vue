@@ -67,16 +67,8 @@ export default defineComponent({
     const logger = inject('vuejs3-logger') as Logger | null;
     const registerChallengeStore = useRegisterChallengeStore();
     const selectedTeam = ref<FormSelectTableOption | null>(null);
-
-    // Mode state
     const isCreateMode = ref<boolean>(false);
-
-    // Team creation data
     const teamNew = ref<FormTeamFields>({ name: '' });
-
-    // API composable for team creation
-    const { createTeam } = useApiPostTeam(logger);
-    const isCreatingTeam = ref<boolean>(false);
 
     onMounted(() => {
       // initialize selected team
@@ -89,13 +81,13 @@ export default defineComponent({
     });
 
     const closeDialog = (): void => {
-      // Reset mode when closing dialog
+      // reset mode when closing dialog
       isCreateMode.value = false;
       teamNew.value = { name: '' };
       props.onClose();
     };
 
-    // Toggle between select/create modes
+    // toggle between create mode and select mode
     const toggleMode = (): void => {
       isCreateMode.value = !isCreateMode.value;
       if (isCreateMode.value) {
@@ -105,57 +97,33 @@ export default defineComponent({
       }
     };
 
-    // Create new team handler
+    // create team state
+    const { createTeam } = useApiPostTeam(logger);
+    const isCreatingTeam = ref<boolean>(false);
+
+    // create new team handler
     const onCreateTeam = async (): Promise<void> => {
       const subsidiaryId = registerChallengeStore.getSubsidiaryId;
-
       if (!subsidiaryId) {
         logger?.error('No subsidiary ID found');
         Notify.create({
           type: 'negative',
-          message: i18n.global.t('form.messageFieldRequired', {
-            fieldName: i18n.global.t('form.labelSubsidiary'),
-          }),
+          message: i18n.global.t('form.team.messageMissingSubsidiaryId'),
         });
         return;
       }
-
-      if (!teamNew.value.name.trim()) {
-        Notify.create({
-          type: 'negative',
-          message: i18n.global.t('form.messageFieldRequired', {
-            fieldName: i18n.global.t('form.team.labelTeam'),
-          }),
-        });
-        return;
-      }
-
       isCreatingTeam.value = true;
-
       const data = await createTeam(subsidiaryId, teamNew.value.name);
-
       isCreatingTeam.value = false;
-
+      // if successful, emit team ID and close
       if (data?.id) {
         logger?.debug(`Team created with ID <${data.id}>, name <${data.name}>`);
-
-        // Emit new team ID to parent
         emit('update:modelValue', data.id);
-
-        // Close dialog
         props.onClose();
-
-        // Success notification
-        Notify.create({
-          type: 'positive',
-          message: i18n.global.t('form.team.messageTeamCreated', {
-            teamName: data.name,
-          }),
-        });
       }
     };
 
-    const onUpdateTeam = async (): Promise<void> => {
+    const onSubmit = async (): Promise<void> => {
       if (isCreateMode.value) {
         await onCreateTeam();
       } else {
@@ -173,25 +141,26 @@ export default defineComponent({
 
     const { optionsFiltered, onFilter } = useSelectSearch(options);
 
-    // Computed for submit button label
-    const submitButtonLabel = computed(() => {
+    // button submit label
+    const submitButtonLabel = computed<string>((): string => {
       return isCreateMode.value
         ? i18n.global.t('form.team.buttonCreateAndJoin')
         : i18n.global.t('navigation.save');
     });
 
-    // Computed for loading state
-    const isSubmitLoading = computed(() => {
-      return isCreateMode.value ? isCreatingTeam.value : props.loading;
+    // loading state
+    const isSubmitLoading = computed<boolean>((): boolean => {
+      return isCreatingTeam.value || props.loading;
     });
 
     return {
       selectedTeam,
       closeDialog,
-      onUpdateTeam,
+      onSubmit,
       isLoading,
       optionsFiltered,
       onFilter,
+      onCreateTeam,
       isCreateMode,
       teamNew,
       toggleMode,
@@ -203,7 +172,7 @@ export default defineComponent({
 </script>
 
 <template>
-  <q-form @submit.prevent="onUpdateTeam" data-cy="form-update-team">
+  <q-form @submit.prevent="onSubmit" data-cy="form-update-team">
     <!-- Mode: Select existing team -->
     <div v-if="!isCreateMode">
       <!-- Label -->
