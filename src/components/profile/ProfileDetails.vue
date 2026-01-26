@@ -306,7 +306,7 @@ export default defineComponent({
       logger?.debug(`Team ID was changed to <${teamId}>.`);
 
       if (!teamId) {
-        logger?.warn('No team ID provided');
+        logger?.warn('No team ID provided.');
         return;
       }
 

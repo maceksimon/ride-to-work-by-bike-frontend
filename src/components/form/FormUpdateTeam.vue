@@ -105,7 +105,7 @@ export default defineComponent({
     const onCreateTeam = async (): Promise<void> => {
       const subsidiaryId = registerChallengeStore.getSubsidiaryId;
       if (!subsidiaryId) {
-        logger?.error('No subsidiary ID found');
+        logger?.error('No subsidiary ID found.');
         Notify.create({
           type: 'negative',
           message: i18n.global.t('form.team.messageMissingSubsidiaryId'),
@@ -117,7 +117,9 @@ export default defineComponent({
       isCreatingTeam.value = false;
       // if successful, emit team ID and close
       if (data?.id) {
-        logger?.debug(`Team created with ID <${data.id}>, name <${data.name}>`);
+        logger?.debug(
+          `Team created with ID <${data.id}>, name <${data.name}>.`,
+        );
         emit('update:modelValue', data.id);
         props.onClose();
       }
