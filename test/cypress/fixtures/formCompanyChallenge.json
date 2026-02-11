@@ -17,7 +17,8 @@
       "competitor_type": "single_user",
       "commute_modes": [1, 2],
       "date_from": "2024-09-16",
-      "date_to": "2024-09-29"
+      "date_to": "2024-09-29",
+      "company": 987
     },
     "apiResponse": {
       "results": "http://example.com/results/4",
@@ -67,7 +68,8 @@
       "competitor_type": "team",
       "commute_modes": [1, 2, 5],
       "date_from": "2024-09-20",
-      "date_to": "2024-09-29"
+      "date_to": "2024-09-29",
+      "company": 987
     },
     "apiResponse": {
       "results": "http://example.com/results/5",
@@ -122,7 +124,8 @@
       "competitor_type": "subsidiary",
       "commute_modes": [1],
       "date_from": "2024-09-16",
-      "date_to": "2024-09-25"
+      "date_to": "2024-09-25",
+      "company": 987
     },
     "apiResponse": {
       "results": "http://example.com/results/6",

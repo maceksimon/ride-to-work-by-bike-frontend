@@ -1,10 +1,12 @@
 // libraries
 import { defineStore } from 'pinia';
+import { Notify } from 'quasar';
 
 // adapters
 import { companyChallengeAdapter } from '../adapters/companyChallengeAdapter';
 
 // composables
+import { i18n } from '../boot/i18n';
 import { useApiGetCompetition } from '../composables/useApiGetCompetition';
 import { useApiPostCompetition } from '../composables/useApiPostCompetition';
 import { useApiPutCompetition } from '../composables/useApiPutCompetition';
@@ -14,6 +16,7 @@ import { CompetitionType, CompetitorType } from '../components/enums/Challenge';
 
 // stores
 import { useTripsStore } from './trips';
+import { useRegisterChallengeStore } from './registerChallenge';
 
 // types
 import type { Logger } from '../components/types/Logger';
@@ -131,10 +134,21 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
      * @returns {Promise<boolean>} - Success status
      */
     async createCompanyChallenge(): Promise<boolean> {
+      const registerChallengeStore = useRegisterChallengeStore();
+      const organizationId = registerChallengeStore.getOrganizationId;
+      // validate that company ID is available
+      if (!organizationId) {
+        Notify.create({
+          message: i18n.global.t('coordinator.messageCompanyIdMissing'),
+          color: 'negative',
+        });
+        return false;
+      }
       const { createCompetition } = useApiPostCompetition(this.$log);
       // prepare payload
       const payload = companyChallengeAdapter.toApiPayload(
         this.companyChallengeForm,
+        organizationId,
       );
       const result = await createCompetition(payload);
       if (result) {
@@ -177,10 +191,21 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
         this.$log?.error('No competition ID set for editing.');
         return false;
       }
+      const registerChallengeStore = useRegisterChallengeStore();
+      const organizationId = registerChallengeStore.getOrganizationId;
+      // validate that company ID is available
+      if (!organizationId) {
+        Notify.create({
+          message: i18n.global.t('coordinator.messageCompanyIdMissing'),
+          color: 'negative',
+        });
+        return false;
+      }
       const { updateCompetition } = useApiPutCompetition(this.$log);
       // prepare payload
       const payload = companyChallengeAdapter.toApiPayload(
         this.companyChallengeForm,
+        organizationId,
       );
       const result = await updateCompetition(
         this.editingCompetitionId,

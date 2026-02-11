@@ -89,9 +89,13 @@ export const companyChallengeAdapter = {
   /**
    * Convert form state to API payload format
    * @param {CompanyChallengeFormState} formState - Form state from store
+   * @param {number} organizationId - Organization ID to include in payload
    * @returns {PostCompetitionPayload} - API payload
    */
-  toApiPayload(formState: CompanyChallengeFormState): PostCompetitionPayload {
+  toApiPayload(
+    formState: CompanyChallengeFormState,
+    organizationId: number,
+  ): PostCompetitionPayload {
     const payload: PostCompetitionPayload = {
       name: formState.challengeTitle,
       competition_type: formState.challengeType,
@@ -101,6 +105,7 @@ export const companyChallengeAdapter = {
       ),
       date_from: this.convertDateToApiFormat(formState.challengeStart),
       date_to: this.convertDateToApiFormat(formState.challengeStop),
+      company: organizationId,
     };
     // optional fields
     if (formState.challengeInfoUrl) {

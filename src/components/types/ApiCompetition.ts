@@ -10,6 +10,7 @@ export interface PostCompetitionPayload {
   commute_modes: number[];
   date_from: string;
   date_to: string;
+  company: number;
 }
 
 export interface PostCompetitionResponse {

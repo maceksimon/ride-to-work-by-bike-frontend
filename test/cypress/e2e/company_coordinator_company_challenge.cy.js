@@ -493,6 +493,7 @@ describe('Company coordinator company challenge page', () => {
                 date_from: competitionEdit.date_from,
                 date_to: competitionEdit.date_to,
                 url: competitionEdit.url,
+                company: 987,
               },
               editedCompetition,
             );
