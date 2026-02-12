@@ -435,7 +435,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       const newPriceLevel = Object.values(newPriceLevels).find((level) => {
         return (
           level.category === pairedCategory &&
-          level.name === matchedPriceLevel.name
+          level.takes_effect_on === matchedPriceLevel.takes_effect_on
         );
       });
       const newPrice = newPriceLevel?.price;

@@ -87,55 +87,55 @@
           "takes_effect_on": "2024-09-28"
         },
         {
-          "name": "1. fáze startovného pro jednotlivce",
+          "name": "1. fáze startovného pro jednotlivce bez balíčku",
           "price": 340.0,
           "category": "basic",
           "takes_effect_on": "2024-09-01"
         },
         {
-          "name": "1. fáze startovného pro firmy",
+          "name": "1. fáze startovného pro firmy bez balíčku",
           "price": 340.0,
           "category": "company",
           "takes_effect_on": "2024-09-01"
         },
         {
-          "name": "1. fáze startovného pro školy",
+          "name": "1. fáze startovného pro školy bez balíčku",
           "price": 184.0,
           "category": "school",
           "takes_effect_on": "2024-09-01"
         },
         {
-          "name": "2. fáze startovného pro jednotlivce",
+          "name": "2. fáze startovného pro jednotlivce bez balíčku",
           "price": 350.0,
           "category": "basic",
           "takes_effect_on": "2024-09-18"
         },
         {
-          "name": "2. fáze startovného pro firmy",
+          "name": "2. fáze startovného pro firmy bez balíčku",
           "price": 350.0,
           "category": "company",
           "takes_effect_on": "2024-09-18"
         },
         {
-          "name": "2. fáze startovného pro školy",
+          "name": "2. fáze startovného pro školy bez balíčku",
           "price": 190.0,
           "category": "school",
           "takes_effect_on": "2024-09-18"
         },
         {
-          "name": "3. fáze startovného pro jednotlivce",
+          "name": "3. fáze startovného pro jednotlivce bez balíčku",
           "price": 380.0,
           "category": "basic",
           "takes_effect_on": "2024-09-28"
         },
         {
-          "name": "3. fáze startovného pro firmy",
+          "name": "3. fáze startovného pro firmy bez balíčku",
           "price": 380.0,
           "category": "company",
           "takes_effect_on": "2024-09-28"
         },
         {
-          "name": "3. fáze startovného pro školy",
+          "name": "3. fáze startovného pro školy bez balíčku",
           "price": 200.0,
           "category": "school",
           "takes_effect_on": "2024-09-28"
