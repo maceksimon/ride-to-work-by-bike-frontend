@@ -314,6 +314,15 @@ describe('<TableFeeApproval>', () => {
             deepObjectWithSimplePropsCopy(paymentRewardState);
           paymentRewardStateUpdated[payment.id] =
             !paymentRewardStateUpdated[payment.id];
+          // store payment amount state based on the API data
+          const paymentAmountState = payments.reduce((acc, payment) => {
+            acc[payment.id] = parseFloat(payment.payment_amount);
+            return acc;
+          }, {});
+          const paymentAmountStateUpdated =
+            deepObjectWithSimplePropsCopy(paymentAmountState);
+          // set arbitrary updated amount (different from original)
+          paymentAmountStateUpdated[payment.id] = 999;
           // initiate store state
           cy.wrap(useAdminOrganisationStore()).then(
             (adminOrganisationStore) => {
@@ -323,9 +332,15 @@ describe('<TableFeeApproval>', () => {
               const paymentRewards = computed(
                 () => adminOrganisationStore.paymentRewards,
               );
+              const paymentAmounts = computed(
+                () => adminOrganisationStore.paymentAmounts,
+              );
               cy.wrap(paymentRewards)
                 .its('value')
                 .should('deep.equal', paymentRewardState);
+              cy.wrap(paymentAmounts)
+                .its('value')
+                .should('deep.equal', paymentAmountState);
             },
           );
           // set local state different to the API data
@@ -334,13 +349,23 @@ describe('<TableFeeApproval>', () => {
               const paymentRewards = computed(
                 () => adminOrganisationStore.paymentRewards,
               );
+              const paymentAmounts = computed(
+                () => adminOrganisationStore.paymentAmounts,
+              );
               adminOrganisationStore.setPaymentReward(
                 payment.id,
                 !paymentRewardState[payment.id],
               );
+              adminOrganisationStore.setPaymentAmount(
+                payment.id,
+                paymentAmountStateUpdated[payment.id],
+              );
               cy.wrap(paymentRewards)
                 .its('value')
                 .should('deep.equal', paymentRewardStateUpdated);
+              cy.wrap(paymentAmounts)
+                .its('value')
+                .should('deep.equal', paymentAmountStateUpdated);
             })
             .then(() => {
               // wait for animation
@@ -356,6 +381,7 @@ describe('<TableFeeApproval>', () => {
                 cy.contains(payment.email)
                   .parent('tr')
                   .within(() => {
+                    // reward checkbox
                     cy.dataCy('table-fee-approval-reward-checkbox')
                       .find('.q-checkbox__inner')
                       .should((checkbox) => {
@@ -370,6 +396,11 @@ describe('<TableFeeApproval>', () => {
                           );
                         }
                       });
+                    // amount
+                    cy.dataCy('table-fee-approval-amount').should(
+                      'contain',
+                      formatPrice(paymentAmountStateUpdated[payment.id]),
+                    );
                   });
               });
             });
@@ -586,6 +617,15 @@ describe('<TableFeeApproval>', () => {
             deepObjectWithSimplePropsCopy(paymentRewardState);
           paymentRewardStateUpdated[payment.id] =
             !paymentRewardStateUpdated[payment.id];
+          // store payment amount state based on the API data
+          const paymentAmountState = payments.reduce((acc, payment) => {
+            acc[payment.id] = parseFloat(payment.payment_amount);
+            return acc;
+          }, {});
+          const paymentAmountStateUpdated =
+            deepObjectWithSimplePropsCopy(paymentAmountState);
+          // set arbitrary updated amount (different from original)
+          paymentAmountStateUpdated[payment.id] = 999;
           // initiate store state
           cy.wrap(useAdminOrganisationStore()).then(
             (adminOrganisationStore) => {
@@ -595,9 +635,15 @@ describe('<TableFeeApproval>', () => {
               const paymentRewards = computed(
                 () => adminOrganisationStore.paymentRewards,
               );
+              const paymentAmounts = computed(
+                () => adminOrganisationStore.paymentAmounts,
+              );
               cy.wrap(paymentRewards)
                 .its('value')
                 .should('deep.equal', paymentRewardState);
+              cy.wrap(paymentAmounts)
+                .its('value')
+                .should('deep.equal', paymentAmountState);
             },
           );
           // set local state different to the API data
@@ -606,13 +652,23 @@ describe('<TableFeeApproval>', () => {
               const paymentRewards = computed(
                 () => adminOrganisationStore.paymentRewards,
               );
+              const paymentAmounts = computed(
+                () => adminOrganisationStore.paymentAmounts,
+              );
               adminOrganisationStore.setPaymentReward(
                 payment.id,
                 !paymentRewardState[payment.id],
               );
+              adminOrganisationStore.setPaymentAmount(
+                payment.id,
+                paymentAmountStateUpdated[payment.id],
+              );
               cy.wrap(paymentRewards)
                 .its('value')
                 .should('deep.equal', paymentRewardStateUpdated);
+              cy.wrap(paymentAmounts)
+                .its('value')
+                .should('deep.equal', paymentAmountStateUpdated);
             })
             .then(() => {
               // wait for animation
@@ -623,15 +679,16 @@ describe('<TableFeeApproval>', () => {
               });
             })
             .then(() => {
-              // store has been altered via store - UI shows it
+              // store has been altered via store - UI shows API data, not altered
               cy.dataCy('table-fee-approval-table').within(() => {
                 cy.contains(payment.email)
                   .parent('tr')
                   .within(() => {
+                    // reward checkbox shows API value (not local state)
                     cy.dataCy('table-fee-approval-reward-checkbox')
                       .find('.q-checkbox__inner')
                       .should((checkbox) => {
-                        // UI shows the altered value, not the API value
+                        // UI shows the API value, not the altered value
                         if (paymentRewardState[payment.id] === true) {
                           expect(checkbox).to.not.have.class(
                             'q-checkbox__inner--falsy',
@@ -642,6 +699,11 @@ describe('<TableFeeApproval>', () => {
                           );
                         }
                       });
+                    // amount shows API value (not local state)
+                    cy.dataCy('table-fee-approval-amount').should(
+                      'contain',
+                      formatPrice(paymentAmountState[payment.id]),
+                    );
                   });
               });
             });
