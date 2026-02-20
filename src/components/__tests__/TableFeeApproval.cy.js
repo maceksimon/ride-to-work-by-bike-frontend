@@ -7,6 +7,7 @@ import { useAdminOrganisationStore } from '../../stores/adminOrganisation';
 import testData from '../../../test/cypress/fixtures/headerOrganizationTestData.json';
 import { rideToWorkByBikeConfig } from '../../boot/global_vars';
 import { useTable } from 'src/composables/useTable';
+import { deepObjectWithSimplePropsCopy } from '../../utils';
 
 // colors
 const { getPaletteColor } = colors;
@@ -294,6 +295,87 @@ describe('<TableFeeApproval>', () => {
         },
       );
     });
+
+    it('shows approved payment reward state based on the local state', () => {
+      cy.fixture('apiGetAdminOrganisationResponseAlt2').then(
+        (tableFeeApprovalTestData) => {
+          // full list of displayed payments
+          const payments =
+            tableFeeApprovalTestData.results[0].subsidiaries[0].teams[0]
+              .members_without_paid_entry_fee_by_org_coord;
+          // payments that will be changed manually
+          const payment = payments[0];
+          // store payment reward state based on the API data
+          const paymentRewardState = payments.reduce((acc, payment) => {
+            acc[payment.id] = payment.is_payment_with_reward;
+            return acc;
+          }, {});
+          const paymentRewardStateUpdated =
+            deepObjectWithSimplePropsCopy(paymentRewardState);
+          paymentRewardStateUpdated[payment.id] =
+            !paymentRewardStateUpdated[payment.id];
+          // initiate store state
+          cy.wrap(useAdminOrganisationStore()).then(
+            (adminOrganisationStore) => {
+              adminOrganisationStore.setAdminOrganisations(
+                tableFeeApprovalTestData.results,
+              );
+              const paymentRewards = computed(
+                () => adminOrganisationStore.paymentRewards,
+              );
+              cy.wrap(paymentRewards)
+                .its('value')
+                .should('deep.equal', paymentRewardState);
+            },
+          );
+          // set local state different to the API data
+          cy.wrap(useAdminOrganisationStore())
+            .then((adminOrganisationStore) => {
+              const paymentRewards = computed(
+                () => adminOrganisationStore.paymentRewards,
+              );
+              adminOrganisationStore.setPaymentReward(
+                payment.id,
+                !paymentRewardState[payment.id],
+              );
+              cy.wrap(paymentRewards)
+                .its('value')
+                .should('deep.equal', paymentRewardStateUpdated);
+            })
+            .then(() => {
+              // wait for animation
+              return new Cypress.Promise((resolve) => {
+                setTimeout(() => {
+                  resolve();
+                }, 500);
+              });
+            })
+            .then(() => {
+              // store has been altered via store - UI shows it
+              cy.dataCy('table-fee-approval-table').within(() => {
+                cy.contains(payment.email)
+                  .parent('tr')
+                  .within(() => {
+                    cy.dataCy('table-fee-approval-reward-checkbox')
+                      .find('.q-checkbox__inner')
+                      .should((checkbox) => {
+                        // UI shows the altered value, not the API value
+                        if (paymentRewardState[payment.id] === true) {
+                          expect(checkbox).to.have.class(
+                            'q-checkbox__inner--falsy',
+                          );
+                        } else {
+                          expect(checkbox).to.have.class(
+                            'q-checkbox__inner--truthy',
+                          );
+                        }
+                      });
+                  });
+              });
+            });
+        },
+      );
+    });
   });
 
   context('desktop approved variant', () => {
@@ -482,6 +564,87 @@ describe('<TableFeeApproval>', () => {
           // approve and disapprove buttons should not exist
           cy.dataCy(selectorDisapproveButton).should('not.exist');
           cy.dataCy(selectorApproveButton).should('not.exist');
+        },
+      );
+    });
+
+    it('shows approved payment reward state independent of the local state', () => {
+      cy.fixture('apiGetAdminOrganisationResponseAlt2').then(
+        (tableFeeApprovalTestData) => {
+          // full list of displayed payments
+          const payments =
+            tableFeeApprovalTestData.results[0].subsidiaries[0].teams[1]
+              .members_with_paid_entry_fee_by_org_coord;
+          // payments that will be changed manually
+          const payment = payments[0];
+          // store payment reward state based on the API data
+          const paymentRewardState = payments.reduce((acc, payment) => {
+            acc[payment.id] = payment.is_payment_with_reward;
+            return acc;
+          }, {});
+          const paymentRewardStateUpdated =
+            deepObjectWithSimplePropsCopy(paymentRewardState);
+          paymentRewardStateUpdated[payment.id] =
+            !paymentRewardStateUpdated[payment.id];
+          // initiate store state
+          cy.wrap(useAdminOrganisationStore()).then(
+            (adminOrganisationStore) => {
+              adminOrganisationStore.setAdminOrganisations(
+                tableFeeApprovalTestData.results,
+              );
+              const paymentRewards = computed(
+                () => adminOrganisationStore.paymentRewards,
+              );
+              cy.wrap(paymentRewards)
+                .its('value')
+                .should('deep.equal', paymentRewardState);
+            },
+          );
+          // set local state different to the API data
+          cy.wrap(useAdminOrganisationStore())
+            .then((adminOrganisationStore) => {
+              const paymentRewards = computed(
+                () => adminOrganisationStore.paymentRewards,
+              );
+              adminOrganisationStore.setPaymentReward(
+                payment.id,
+                !paymentRewardState[payment.id],
+              );
+              cy.wrap(paymentRewards)
+                .its('value')
+                .should('deep.equal', paymentRewardStateUpdated);
+            })
+            .then(() => {
+              // wait for animation
+              return new Cypress.Promise((resolve) => {
+                setTimeout(() => {
+                  resolve();
+                }, 500);
+              });
+            })
+            .then(() => {
+              // store has been altered via store - UI shows it
+              cy.dataCy('table-fee-approval-table').within(() => {
+                cy.contains(payment.email)
+                  .parent('tr')
+                  .within(() => {
+                    cy.dataCy('table-fee-approval-reward-checkbox')
+                      .find('.q-checkbox__inner')
+                      .should((checkbox) => {
+                        // UI shows the altered value, not the API value
+                        if (paymentRewardState[payment.id] === true) {
+                          expect(checkbox).to.not.have.class(
+                            'q-checkbox__inner--falsy',
+                          );
+                        } else {
+                          expect(checkbox).to.not.have.class(
+                            'q-checkbox__inner--truthy',
+                          );
+                        }
+                      });
+                  });
+              });
+            });
         },
       );
     });
