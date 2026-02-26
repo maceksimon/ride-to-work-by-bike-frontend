@@ -17,7 +17,7 @@
  */
 
 // libraries
-import { QForm } from 'quasar';
+import { Notify, QForm } from 'quasar';
 import { computed, defineComponent, ref } from 'vue';
 
 // components
@@ -25,6 +25,9 @@ import BannerInfo from '../global/BannerInfo.vue';
 import DialogDefault from '../global/DialogDefault.vue';
 import FormCreateInvoice from '../form/FormCreateInvoice.vue';
 import TableInvoices from './TableInvoices.vue';
+
+// composables
+import { i18n } from 'src/boot/i18n';
 
 // enums
 import { PhaseType } from '../types/Challenge';
@@ -57,6 +60,17 @@ export default defineComponent({
     };
 
     const onSubmit = async (): Promise<void> => {
+      // validate organization details via store
+      const validation =
+        adminOrganisationStore.getOrganizationDetailsValidation;
+      if (!validation.isValid) {
+        Notify.create({
+          message: i18n.global.t('form.messageIncompleteOrganizationDetails'),
+          color: 'negative',
+        });
+        adminOrganisationStore.setBillingFormExpanded(true);
+        return;
+      }
       const success = await adminOrganisationStore.createInvoice();
       if (success) {
         closeDialog();
