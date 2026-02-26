@@ -4,6 +4,7 @@ import {
   systemTimeInvoicesPhaseInactive,
 } from '../support/commonTests';
 import testSet from '../fixtures/coordinatorInvoicesTest.json';
+import missingFieldsTestSet from '../fixtures/missingOrganizationFieldsTest.json';
 
 const customBillingDetails = {
   street: 'New Street',
@@ -520,6 +521,65 @@ describe('Company coordinator invoices page', () => {
               }),
             ).should('be.visible');
             cy.get('@postCoordinatorMakeInvoice.all').should('have.length', 0);
+          });
+        });
+      });
+    });
+  });
+
+  context('organization with missing company details', () => {
+    missingFieldsTestSet.forEach((test) => {
+      it(`${test.description}`, () => {
+        cy.viewport(1920, 2500);
+        // set system time to be in the correct active token window
+        cy.clock(systemTimeChallengeActive, ['Date']).then(() => {
+          cy.task('getAppConfig', process).then((config) => {
+            cy.wrap(config).as('config');
+            // visit the login page to initialize i18n
+            cy.visit('#' + routesConf['login']['path']);
+            cy.window().should('have.property', 'i18n');
+            cy.window().then((win) => {
+              cy.wrap(win.i18n).as('i18n');
+              // setup coordinator test environment
+              cy.setupCompanyCoordinatorTest(config, win.i18n);
+              // organization structure API override with missing field
+              cy.interceptAdminOrganisationGetApi(config, test.fixture);
+              cy.visit(
+                '#' +
+                  routesConf['coordinator_invoices']['children']['fullPath'],
+              );
+              // check that initial admin organisation response is loaded
+              cy.waitForCoordinatorInvoicesGetApi(
+                'apiGetCoordinatorInvoicesResponse.json',
+              );
+              cy.get('@getCoordinatorInvoices.all').should('have.length', 1);
+              cy.dataCy('table-invoices-title').should('be.visible');
+              // open dialog
+              cy.dataCy('button-create-invoice').click();
+              cy.dataCy('dialog-create-invoice').should('be.visible');
+              cy.dataCy('dialog-header').should(
+                'contain',
+                win.i18n.global.t('coordinator.titleCreateInvoice'),
+              );
+              // confirm billing details toggle
+              cy.dataCy('form-create-invoice-confirm-billing-details')
+                .find('.q-toggle__inner')
+                .click();
+              // try submitting
+              cy.dataCy('dialog-button-submit')
+                .should('not.be.disabled')
+                .click();
+              // verify that validation error message is shown
+              cy.contains(
+                win.i18n.global.t('form.messageIncompleteOrganizationDetails'),
+              ).should('be.visible');
+              // verify that billing form is auto-expanded
+              cy.dataCy('form-create-invoice-billing-expansion-content').should(
+                'be.visible',
+              );
+              // verify that dialog remains open (submission was blocked)
+              cy.dataCy('dialog-create-invoice').should('be.visible');
+            });
           });
         });
       });
