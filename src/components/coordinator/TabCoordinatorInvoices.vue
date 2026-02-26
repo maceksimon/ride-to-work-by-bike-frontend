@@ -18,7 +18,7 @@
 
 // libraries
 import { Notify, QForm } from 'quasar';
-import { computed, defineComponent, ref } from 'vue';
+import { computed, defineComponent, nextTick, ref } from 'vue';
 
 // components
 import BannerInfo from '../global/BannerInfo.vue';
@@ -59,6 +59,17 @@ export default defineComponent({
       isDialogOpen.value = true;
     };
 
+    const scrollToForm = async (): Promise<void> => {
+      await nextTick();
+      const formElement = formCreateInvoiceRef.value?.$el;
+      if (formElement) {
+        formElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    };
+    // handles invalid form state (organization details confirmation toggle)
+    const onValidationError = async (): Promise<void> => {
+      await scrollToForm();
+    };
     const onSubmit = async (): Promise<void> => {
       // validate organization details via store
       const validation =
@@ -69,6 +80,7 @@ export default defineComponent({
           color: 'negative',
         });
         adminOrganisationStore.setBillingFormExpanded(true);
+        await scrollToForm();
         return;
       }
       const success = await adminOrganisationStore.createInvoice();
@@ -110,6 +122,7 @@ export default defineComponent({
       isInvoicesPhaseActive,
       onReset,
       onSubmit,
+      onValidationError,
       openDialog,
     };
   },
@@ -151,7 +164,12 @@ export default defineComponent({
         {{ $t('coordinator.titleCreateInvoice') }}
       </template>
       <template #content>
-        <q-form ref="formCreateInvoiceRef" @submit="onSubmit" @reset="onReset">
+        <q-form
+          ref="formCreateInvoiceRef"
+          @submit="onSubmit"
+          @reset="onReset"
+          @validation-error="onValidationError"
+        >
           <form-create-invoice />
           <!-- Action buttons -->
           <div class="flex justify-end q-mt-lg">

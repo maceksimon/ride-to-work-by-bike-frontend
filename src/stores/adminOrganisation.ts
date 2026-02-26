@@ -938,13 +938,15 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       if (organization) {
         this.invoiceForm.customBillingAddress = {
           street: organization.street || '',
-          streetNumber: String(organization.street_number || ''),
+          streetNumber: organization.street_number
+            ? String(organization.street_number)
+            : '',
           city: organization.city || '',
-          psc: String(organization.psc || ''),
+          psc: organization.psc ? String(organization.psc) : '',
         };
         this.invoiceForm.customBillingOrganization = {
           companyName: organization.name || '',
-          businessId: String(organization.ico) || '',
+          businessId: organization.ico ? String(organization.ico) : '',
           businessVatId: organization.dic || '',
         };
       }
