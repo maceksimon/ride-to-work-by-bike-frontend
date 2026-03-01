@@ -581,27 +581,27 @@ describe('Company coordinator invoices page', () => {
                 const fields = {
                   name: {
                     selector: 'form-invoice-billing-company-name-input',
-                    testValue: 'Test Company Name',
+                    testValue: customOrganizationDetails.companyName,
                   },
                   ico: {
                     selector: 'form-business-id-input',
-                    testValue: '12345678',
+                    testValue: customOrganizationDetails.businessId,
                   },
                   street: {
                     selector: 'form-invoice-billing-street-input',
-                    testValue: 'Test Street',
+                    testValue: customBillingDetails.street,
                   },
                   street_number: {
                     selector: 'form-invoice-billing-houseNumber-input',
-                    testValue: '123',
+                    testValue: customBillingDetails.streetNumber,
                   },
                   city: {
                     selector: 'form-invoice-billing-city-input',
-                    testValue: 'Test City',
+                    testValue: customBillingDetails.city,
                   },
                   psc: {
                     selector: 'form-invoice-billing-zip-input',
-                    testValue: '12345',
+                    testValue: customBillingDetails.zip,
                   },
                 };
                 // verify each field is either pre-filled or empty based on missing field
@@ -651,46 +651,43 @@ describe('Company coordinator invoices page', () => {
               // verify API payload
               cy.fixture(test.fixture).then((response) => {
                 const org = response.results[0];
-                const fields = {
-                  name: 'Test Company Name',
-                  ico: '12345678',
-                  street: 'Test Street',
-                  street_number: '123',
-                  city: 'Test City',
-                  psc: '12345',
-                };
                 // build expected payload with org data + filled field
                 const expectedPayload = {
                   payment_ids: [178],
                   company_name:
-                    test.missingField === 'name' ? fields.name : org.name,
+                    test.missingField === 'name'
+                      ? customOrganizationDetails.companyName
+                      : org.name,
                   company_ico:
                     test.missingField === 'ico'
-                      ? fields.ico
+                      ? customOrganizationDetails.businessId
                       : org.ico.toString(),
                   company_dic: org.dic || undefined,
                   company_address: {
                     street:
                       test.missingField === 'street'
-                        ? fields.street
+                        ? customBillingDetails.street
                         : org.street,
                     street_number:
                       test.missingField === 'street_number'
-                        ? fields.street_number
+                        ? customBillingDetails.streetNumber
                         : org.street_number.toString(),
-                    city: test.missingField === 'city' ? fields.city : org.city,
+                    city:
+                      test.missingField === 'city'
+                        ? customBillingDetails.city
+                        : org.city,
                     psc:
                       test.missingField === 'psc'
-                        ? fields.psc
+                        ? customBillingDetails.zip
                         : org.psc.toString(),
                   },
                 };
-                // use existing Cypress command to verify
+                // verify API payload
                 cy.waitForCoordinatorMakeInvoicePostApi(expectedPayload, {
                   invoice_id: 82,
                 });
               });
-              // verify success
+              // success message
               cy.contains(
                 win.i18n.global.t('makeInvoice.apiMessageSuccess'),
               ).should('be.visible');
