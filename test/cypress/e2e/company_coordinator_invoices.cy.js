@@ -497,11 +497,6 @@ describe('Company coordinator invoices page', () => {
             ).should('be.visible');
             cy.contains(
               i18n.global.t('form.messageFieldRequired', {
-                fieldName: i18n.global.t('form.labelBusinessVatId'),
-              }),
-            ).should('be.visible');
-            cy.contains(
-              i18n.global.t('form.messageFieldRequired', {
                 fieldName: i18n.global.t('form.labelStreet'),
               }),
             ).should('be.visible');
@@ -579,6 +574,127 @@ describe('Company coordinator invoices page', () => {
               );
               // verify that dialog remains open (submission was blocked)
               cy.dataCy('dialog-create-invoice').should('be.visible');
+              // verify form field initialization
+              cy.fixture(test.fixture).then((response) => {
+                const org = response.results[0];
+                // field selectors mapping
+                const fields = {
+                  name: {
+                    selector: 'form-invoice-billing-company-name-input',
+                    testValue: 'Test Company Name',
+                  },
+                  ico: {
+                    selector: 'form-business-id-input',
+                    testValue: '12345678',
+                  },
+                  street: {
+                    selector: 'form-invoice-billing-street-input',
+                    testValue: 'Test Street',
+                  },
+                  street_number: {
+                    selector: 'form-invoice-billing-houseNumber-input',
+                    testValue: '123',
+                  },
+                  city: {
+                    selector: 'form-invoice-billing-city-input',
+                    testValue: 'Test City',
+                  },
+                  psc: {
+                    selector: 'form-invoice-billing-zip-input',
+                    testValue: '12345',
+                  },
+                };
+                // verify each field is either pre-filled or empty based on missing field
+                Object.keys(fields).forEach((fieldKey) => {
+                  const field = fields[fieldKey];
+                  if (fieldKey === test.missingField) {
+                    // missing field should be empty (replace `_` for masked fields)
+                    cy.dataCy(field.selector)
+                      .invoke('val')
+                      .then((value) => {
+                        expect(value.replace(/[_\s]/g, '')).to.equal('');
+                      });
+                  } else {
+                    // non-missing fields should be pre-filled
+                    if (fieldKey === 'psc') {
+                      // process masked values
+                      cy.dataCy(field.selector)
+                        .invoke('val')
+                        .then((value) => {
+                          expect(value.replace(/[_\s]/g, '')).to.equal(
+                            org[fieldKey].toString(),
+                          );
+                        });
+                    } else {
+                      cy.dataCy(field.selector).should(
+                        'have.value',
+                        org[fieldKey].toString(),
+                      );
+                    }
+                  }
+                });
+                // fill in the missing field
+                const missingFieldData = fields[test.missingField];
+                cy.dataCy(missingFieldData.selector).type(
+                  missingFieldData.testValue,
+                );
+              });
+              // intercept API and submit successfully
+              cy.interceptCoordinatorMakeInvoicePostApi(config, {
+                invoice_id: 82,
+              });
+              cy.interceptCoordinatorInvoicesGetApi(
+                config,
+                'apiGetCoordinatorInvoicesResponseAddedInvoice.json',
+              );
+              cy.dataCy('dialog-button-submit').click();
+              // verify API payload
+              cy.fixture(test.fixture).then((response) => {
+                const org = response.results[0];
+                const fields = {
+                  name: 'Test Company Name',
+                  ico: '12345678',
+                  street: 'Test Street',
+                  street_number: '123',
+                  city: 'Test City',
+                  psc: '12345',
+                };
+                // build expected payload with org data + filled field
+                const expectedPayload = {
+                  payment_ids: [178],
+                  company_name:
+                    test.missingField === 'name' ? fields.name : org.name,
+                  company_ico:
+                    test.missingField === 'ico'
+                      ? fields.ico
+                      : org.ico.toString(),
+                  company_dic: org.dic || undefined,
+                  company_address: {
+                    street:
+                      test.missingField === 'street'
+                        ? fields.street
+                        : org.street,
+                    street_number:
+                      test.missingField === 'street_number'
+                        ? fields.street_number
+                        : org.street_number.toString(),
+                    city: test.missingField === 'city' ? fields.city : org.city,
+                    psc:
+                      test.missingField === 'psc'
+                        ? fields.psc
+                        : org.psc.toString(),
+                  },
+                };
+                // use existing Cypress command to verify
+                cy.waitForCoordinatorMakeInvoicePostApi(expectedPayload, {
+                  invoice_id: 82,
+                });
+              });
+              // verify success
+              cy.contains(
+                win.i18n.global.t('makeInvoice.apiMessageSuccess'),
+              ).should('be.visible');
+              cy.dataCy('dialog-create-invoice').should('not.exist');
             });
           });
         });

@@ -377,6 +377,7 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
     },
     /**
      * Validate organization details against required fields
+     * Merges store organization data with form data (if billing form is expanded)
      * @returns {object} - result with isValid boolean and missingFields array
      */
     getOrganizationDetailsValidation: (
@@ -389,12 +390,36 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       if (!organization) {
         return { isValid: false, missingFields: ['organization'] };
       }
-      // check each required field
+      // create merged data object - start with organization data from store
+      const dataToValidate = {
+        name: organization.name,
+        ico: organization.ico,
+        street: organization.street,
+        street_number: organization.street_number,
+        city: organization.city,
+        psc: organization.psc,
+      };
+      // if billing form is expanded, override with form data
+      if (state.invoiceForm.isBillingFormExpanded) {
+        const formOrg = state.invoiceForm.customBillingOrganization;
+        const formAddress = state.invoiceForm.customBillingAddress;
+        if (formOrg) {
+          dataToValidate.name = formOrg.companyName;
+          dataToValidate.ico = formOrg.businessId;
+        }
+        if (formAddress) {
+          dataToValidate.street = formAddress.street;
+          dataToValidate.street_number = formAddress.streetNumber;
+          dataToValidate.city = formAddress.city;
+          dataToValidate.psc = formAddress.psc;
+        }
+      }
+      // validate the merged data
       const requiredFields: RequiredOrganizationFields =
         state.requiredOrganizationFields;
       Object.keys(requiredFields).forEach((key) => {
         if (requiredFields[key as keyof RequiredOrganizationFields]) {
-          const value = organization[key as keyof AdminOrganisation];
+          const value = dataToValidate[key as keyof typeof dataToValidate];
           // validate value (we skip boolean fields to prevent type errors)
           if (typeof value !== 'boolean' && !isFilled(value)) {
             missingFields.push(key);
