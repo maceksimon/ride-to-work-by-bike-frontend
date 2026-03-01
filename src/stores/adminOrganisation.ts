@@ -403,15 +403,16 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       if (state.invoiceForm.isBillingFormExpanded) {
         const formOrg = state.invoiceForm.customBillingOrganization;
         const formAddress = state.invoiceForm.customBillingAddress;
+        // merge required fields (from native form validation)
         if (formOrg) {
           dataToValidate.name = formOrg.companyName;
-          dataToValidate.ico = formOrg.businessId;
+          dataToValidate.ico = Number(formOrg.businessId);
         }
         if (formAddress) {
           dataToValidate.street = formAddress.street;
-          dataToValidate.street_number = formAddress.streetNumber;
+          dataToValidate.street_number = Number(formAddress.streetNumber);
           dataToValidate.city = formAddress.city;
-          dataToValidate.psc = formAddress.psc;
+          dataToValidate.psc = Number(formAddress.psc);
         }
       }
       // validate the merged data
