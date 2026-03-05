@@ -46,7 +46,6 @@ import type {
   Invoice,
   InvoiceResult,
   InvoicePayment,
-  InvoiceTeam,
   InvoiceSubsidiary,
 } from '../components/types/Invoice';
 import type { CoordinatorMakeInvoicePayload } from '../composables/useApiPostCoordinatorMakeInvoice';
@@ -275,12 +274,6 @@ export const useAdminOrganisationStore = defineStore('adminOrganisation', {
       });
 
       return Array.from(subsidiariesMap.values());
-    },
-    /**
-     * Get teams data for invoice creation (flat list)
-     */
-    getInvoiceTeams(): InvoiceTeam[] {
-      return this.getInvoiceSubsidiaries.flatMap((sub) => sub.teams);
     },
     // check if there are payments to invoice
     getHasPaymentsToInvoice: (state): boolean => {
