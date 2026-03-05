@@ -3,7 +3,6 @@ import { createPinia, setActivePinia } from 'pinia';
 import FormFieldCheckboxSubsidiary from '../form/FormFieldCheckboxSubsidiary.vue';
 import { vModelAdapter } from '../../../test/cypress/utils';
 import invoiceFixture from '../../../test/cypress/fixtures/formCreateInvoice.json';
-import { deepObjectWithSimplePropsCopy } from '../../utils';
 
 const model = ref([]);
 
@@ -11,7 +10,7 @@ describe('<FormFieldCheckboxSubsidiary>', () => {
   context('desktop', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
-      model.value = deepObjectWithSimplePropsCopy([]);
+      model.value = [];
       cy.mount(FormFieldCheckboxSubsidiary, {
         props: {
           ...vModelAdapter(model),
@@ -27,7 +26,7 @@ describe('<FormFieldCheckboxSubsidiary>', () => {
   context('mobile', () => {
     beforeEach(() => {
       setActivePinia(createPinia());
-      model.value = deepObjectWithSimplePropsCopy([]);
+      model.value = [];
       cy.mount(FormFieldCheckboxSubsidiary, {
         props: {
           ...vModelAdapter(model),
