@@ -16,7 +16,7 @@
   "subsidiaries": [
     {
       "id": 1,
-      "name": "Pobočka 1",
+      "name": "Subsidiary 1",
       "teams": [
         {
           "id": 1,
@@ -49,7 +49,7 @@
     },
     {
       "id": 2,
-      "name": "Pobočka 2",
+      "name": "Subsidiary 2",
       "teams": [
         {
           "id": 3,
