@@ -387,6 +387,37 @@ describe('<BannerTeamMemberApprove>', () => {
     });
   });
 
+  context('non-participating company coordinator', () => {
+    beforeEach(() => {
+      setActivePinia(createPinia());
+      cy.mount(BannerTeamMemberApprove, {
+        props: {},
+      });
+      cy.wrap(useChallengeStore()).then((challengeStore) => {
+        cy.fixture('apiGetThisCampaign.json').then((thisCampaignResponse) => {
+          const maxTeamMembers = computed(
+            () => challengeStore.getMaxTeamMembers,
+          );
+          challengeStore.setMaxTeamMembers(
+            thisCampaignResponse.results[0].max_team_members,
+          );
+          cy.wrap(maxTeamMembers)
+            .its('value')
+            .should(
+              'be.equal',
+              thisCampaignResponse.results[0].max_team_members,
+            );
+        });
+      });
+      // registerChallenge store `myTeam` is null by default
+      cy.viewport('macbook-16');
+    });
+
+    it('does not show component', () => {
+      cy.dataCy('banner-team-member-approve').should('not.exist');
+    });
+  });
+
   context('mobile', () => {
     beforeEach(() => {
       setActivePinia(createPinia());

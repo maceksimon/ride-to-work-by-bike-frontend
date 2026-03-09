@@ -112,6 +112,9 @@ export default defineComponent({
     });
 
     const isBannerVisible = computed<boolean>((): boolean => {
+      const myTeam = registerChallengeStore.getMyTeam;
+      // do not show banner if user has no team (non-participating coordinator)
+      if (!myTeam) return false;
       // if user is not approved, show the banner
       if (!isCurrentUserApproved.value) return true;
       // show if pending members or team is not full
