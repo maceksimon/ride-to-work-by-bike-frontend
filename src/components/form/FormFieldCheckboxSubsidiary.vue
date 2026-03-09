@@ -59,16 +59,16 @@ export default defineComponent({
 
     /**
      * Get the array of selected payment IDs for a specific team
-     * @param {number} teamId
-     * @returns {number[]}
+     * @param {number} teamId: Team ID
+     * @returns {number[]}: Array of payment IDs
      */
     const getTeamSelections = (teamId: number): number[] => {
       return props.modelValue?.[teamId] || [];
     };
     /**
      * Get all payment IDs that belong to a specific team
-     * @param {number} teamId
-     * @returns {number[]}
+     * @param {number} teamId: Team ID
+     * @returns {number[]}: Array of payment IDs
      */
     const getAllTeamPaymentIds = (teamId: number): number[] => {
       const team = props.subsidiary.teams.find((t) => t.id === teamId);
@@ -77,8 +77,8 @@ export default defineComponent({
     };
     /**
      * Check if a specific team is fully selected
-     * @param {number} teamId
-     * @returns {boolean}
+     * @param {number} teamId: Team ID
+     * @returns {boolean}: True if team is fully selected otherwise false
      */
     const isTeamFullySelected = (teamId: number): boolean => {
       const allPaymentIds = getAllTeamPaymentIds(teamId);
@@ -88,7 +88,8 @@ export default defineComponent({
     };
     /**
      * Check if all teams in subsidiary are fully selected
-     * @returns {boolean}
+     * @returns {boolean}: True if all teams in subsidiary are fully selected
+     *                     otherwise false
      */
     const areAllTeamsFullySelected = (): boolean => {
       if (props.subsidiary.teams.length === 0) return false;
@@ -105,7 +106,8 @@ export default defineComponent({
     };
     /**
      * Emit updated selections to parent component
-     * @param {object} updatedSelections
+     * @param {object} updatedSelections: Object with teamId key with
+     *                                    array value of team IDs
      * @returns {void}
      */
     const emitSelectionUpdate = (updatedSelections: {
@@ -116,8 +118,10 @@ export default defineComponent({
     /**
      * Handle when a team's selection changes
      * Updates the selections object and recalculates subsidiary checkbox state
-     * @param {number} teamId
-     * @param {number[]} paymentIds
+     * @param {number} teamId: Team ID
+     * @param {number[]} paymentIds: Array of payment IDs
+     *
+     * @returns {void}
      */
     const handleTeamSelectionChange = (
       teamId: number,
@@ -161,7 +165,8 @@ export default defineComponent({
     };
     /**
      * Handle subsidiary checkbox toggle
-     * @param {boolean} isChecked
+     * @param {boolean} isChecked: True if checkbox is checked
+     *                             otherwise False
      * @returns {void}
      */
     const handleSubsidiaryCheckboxToggle = (isChecked: boolean): void => {
