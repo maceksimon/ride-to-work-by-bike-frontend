@@ -1,0 +1,92 @@
+{
+  "storeData": [
+    {
+      "name": "Stavební firma Černý a synové s.r.o.",
+      "psc": 11000,
+      "street": "Hlavní",
+      "street_number": 123,
+      "recipient": "Stavební firma Černý a synové s.r.o.",
+      "city": "Praha",
+      "ico": 12345678,
+      "dic": "CZ12345678",
+      "active": true,
+      "subsidiaries": [
+        {
+          "id": 1001,
+          "psc": 11000,
+          "street": "Hlavní",
+          "street_number": 123,
+          "city": "Praha",
+          "icon_url": null,
+          "teams": [
+            {
+              "id": 2001,
+              "name": "Projektanti",
+              "icon_url": null,
+              "members_without_paid_entry_fee_by_org_coord": [
+                {
+                  "id": 10001,
+                  "name": "Jan Novák",
+                  "name_for_trusted": "Jan Novák",
+                  "nickname": "",
+                  "date_of_challenge_registration": "",
+                  "email": "jan.novak@cerny.cz",
+                  "telephone": "123456789",
+                  "sex": "male",
+                  "avatar_url": "",
+                  "approved_for_team": "approved",
+                  "payment_status": "waiting",
+                  "payment_type": "fc",
+                  "payment_category": "entry_fee",
+                  "payment_amount": "430",
+                  "discount_coupon": "",
+                  "user_profile_id": 50001,
+                  "is_payment_with_reward": true
+                },
+                {
+                  "id": 10003,
+                  "name": "Jan Novák",
+                  "name_for_trusted": "Jan Novák",
+                  "nickname": "",
+                  "date_of_challenge_registration": "2025-01-17T14:20:00.000000",
+                  "email": "karel.dvorak@cerny.cz",
+                  "telephone": "123456791",
+                  "sex": "male",
+                  "avatar_url": "",
+                  "approved_for_team": "approved",
+                  "payment_status": "waiting",
+                  "payment_type": "fc",
+                  "payment_category": "entry_fee",
+                  "payment_amount": "380",
+                  "discount_coupon": "",
+                  "user_profile_id": 50003,
+                  "is_payment_with_reward": false
+                }
+              ],
+              "members_with_paid_entry_fee_by_org_coord": [],
+              "other_members": []
+            }
+          ]
+        },
+        {
+          "id": 1002,
+          "psc": 15000,
+          "street": "Vedlejší",
+          "street_number": 456,
+          "city": "Brno",
+          "icon_url": null,
+          "teams": [
+            {
+              "id": 2002,
+              "name": "Administrativa",
+              "icon_url": null,
+              "members_without_paid_entry_fee_by_org_coord": [],
+              "members_with_paid_entry_fee_by_org_coord": [],
+              "other_members": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

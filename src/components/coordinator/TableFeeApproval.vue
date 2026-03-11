@@ -33,6 +33,7 @@ import DialogDefault from '../global/DialogDefault.vue';
 // composables
 import {
   paginationLabel,
+  selectedRowsLabel,
   useTable,
   useTableFeeApproval,
 } from '../../composables/useTable';
@@ -170,6 +171,7 @@ export default defineComponent({
       isDialogDisapproveOpen,
       openDisapproveDialog,
       paginationLabel,
+      selectedRowsLabel,
       sortByAddress,
       updateRewardStatus,
       paymentRewards,
@@ -191,7 +193,7 @@ export default defineComponent({
         :rows="feeApprovalData"
         :columns="columns"
         :visible-columns="visibleColumns"
-        row-key="name"
+        row-key="id"
         :sort-method="sortByAddress"
         :selection="approved ? 'none' : 'multiple'"
         v-model:selected="selected"
@@ -202,6 +204,7 @@ export default defineComponent({
         :loading-label="$t('table.textLoading')"
         :rows-per-page-label="$t('table.textRowsPerPage')"
         :pagination-label="paginationLabel"
+        :selected-rows-label="selectedRowsLabel"
         data-cy="table-fee-approval-table"
       >
         <template v-slot:body="props">

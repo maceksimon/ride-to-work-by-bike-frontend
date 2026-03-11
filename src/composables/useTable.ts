@@ -42,6 +42,12 @@ export const paginationLabel = (
   });
 };
 
+export const selectedRowsLabel = (numberOfRows: number): string => {
+  return i18n.global.t('table.textSelectedRows', numberOfRows, {
+    count: numberOfRows,
+  });
+};
+
 export const useTable = () => {
   // Used in the `ResultsDetailPage`
   const tableResultsColumns: QTableProps['columns'] = [

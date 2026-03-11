@@ -295,6 +295,28 @@ describe('<TableFeeApproval>', () => {
       );
     });
 
+    it('should key table rows by ID (not name)', () => {
+      cy.fixture('tableFeeApprovalTestDataSameName').then(
+        (tableFeeApprovalTestData) => {
+          // initiate store state
+          cy.wrap(useAdminOrganisationStore()).then(
+            (adminOrganisationStore) => {
+              adminOrganisationStore.setAdminOrganisations(
+                tableFeeApprovalTestData.storeData,
+              );
+            },
+          );
+          // select first row
+          cy.dataCy(selectorTableCheckbox).first().click();
+          // verify second checkbox is not set
+          cy.dataCy(selectorTableCheckbox)
+            .eq(1)
+            .find('.q-checkbox__inner')
+            .should('not.have.class', 'q-checkbox__inner--truthy');
+        },
+      );
+    });
+
     it('only clears local state for successfully approved payments', () => {
       cy.fixture('apiGetAdminOrganisationResponse').then((initialOrgData) => {
         cy.fixture('apiGetCoordinatorInvoicesResponse').then((invoicesData) => {
