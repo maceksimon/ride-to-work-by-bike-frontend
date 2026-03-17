@@ -68,6 +68,7 @@ export interface AdminSubsidiary {
   box_addressee_telephone: string | null;
   box_addressee_email: string | null;
   challenge_city: string | null;
+  recipient: string;
 }
 
 export interface AdminOrganisation {

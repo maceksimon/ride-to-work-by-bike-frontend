@@ -1110,6 +1110,26 @@ export default defineComponent({
               data-cy="form-subsidiary-city-challenge"
             />
           </div>
+          <!-- Department -->
+          <div class="q-mt-lg" data-cy="form-edit-subsidiary-department">
+            <label
+              for="form-subsidiary-department"
+              class="text-grey-10 text-caption text-bold"
+            >
+              {{ $t('form.company.labelDepartment') }}
+            </label>
+            <q-input
+              id="form-subsidiary-department"
+              v-model="subsidiaryEditAddress.department"
+              dense
+              outlined
+              lazy-rules
+              hide-bottom-space
+              :hint="$t('form.company.hintDepartment')"
+              class="q-mt-sm"
+              data-cy="form-subsidiary-department"
+            />
+          </div>
           <!-- Box Addressee Fields -->
           <div class="q-mt-xl">
             <h4 class="text-subtitle2 q-mb-md">

@@ -118,7 +118,7 @@ export const subsidiaryAdapter = {
       city: apiSubsidiary.city,
       zip: apiSubsidiary.psc ? String(apiSubsidiary.psc) : '',
       cityChallenge: cityId,
-      department: '',
+      department: apiSubsidiary.recipient || '',
       boxAddresseeName: apiSubsidiary.box_addressee_name || '',
       boxAddresseeTelephone: apiSubsidiary.box_addressee_telephone || '',
       boxAddresseeEmail: apiSubsidiary.box_addressee_email || '',

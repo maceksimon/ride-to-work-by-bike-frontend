@@ -497,6 +497,10 @@ describe('Company coordinator user attendance page', () => {
                     String(subsidiary.psc),
                   );
                 });
+              cy.dataCy('form-subsidiary-department').should(
+                'have.value',
+                subsidiary.recipient,
+              );
               // verify box addressee fields are prefilled
               cy.dataCy('form-subsidiary-box-addressee-name')
                 .find('input')
@@ -520,6 +524,8 @@ describe('Company coordinator user attendance page', () => {
               cy.dataCy('form-subsidiary-city').find('input').type('Praha');
               cy.dataCy('form-subsidiary-zip').find('input').clear();
               cy.dataCy('form-subsidiary-zip').find('input').type('16000');
+              cy.dataCy('form-subsidiary-department').clear();
+              cy.dataCy('form-subsidiary-department').type('Účtárna');
               // select challenge city
               cy.selectDropdownMenu('form-edit-subsidiary-city-challenge', 0);
               // submit
@@ -531,7 +537,7 @@ describe('Company coordinator user attendance page', () => {
                   address: {
                     street: 'Nová ulice',
                     street_number: '123',
-                    recipient: '',
+                    recipient: 'Účtárna',
                     city: 'Praha',
                     psc: '16000',
                   },
@@ -814,7 +820,7 @@ describe('Company coordinator user attendance page', () => {
                   address: {
                     street: subsidiary.street,
                     street_number: String(subsidiary.street_number),
-                    recipient: '',
+                    recipient: subsidiary.recipient,
                     city: subsidiary.city,
                     psc: String(subsidiary.psc),
                   },

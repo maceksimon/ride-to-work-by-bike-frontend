@@ -17,6 +17,7 @@
           "psc": 15000,
           "street": "Pivovarská",
           "street_number": 456,
+          "recipient": "Lahvovna",
           "city": "Brno",
           "icon_url": null,
           "teams": [
