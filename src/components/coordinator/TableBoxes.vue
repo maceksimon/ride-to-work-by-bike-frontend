@@ -155,9 +155,8 @@ export default defineComponent({
             :props="props"
             data-cy="table-boxes-tracking-number"
           >
-            <!-- has tracking number AND tracking link -->
             <q-btn
-              v-if="props.row.trackingNumber && props.row.trackingLink"
+              v-if="props.row.trackingNumber"
               flat
               dense
               no-caps
@@ -177,11 +176,6 @@ export default defineComponent({
               />
               <span>{{ props.row.trackingNumber }}</span>
             </q-btn>
-            <!-- has tracking number but no tracking link -->
-            <span v-else-if="props.row.trackingNumber">
-              {{ props.row.trackingNumber }}
-            </span>
-            <!-- no tracking number -->
             <span v-else>
               {{ $t('table.labelCellEmpty') }}
             </span>
