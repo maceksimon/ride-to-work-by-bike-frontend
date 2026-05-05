@@ -707,18 +707,19 @@ export const useTableInvoices = () => {
           : i18n.global.t('table.labelNotConfirmed'),
       label: i18n.global.t('table.labelConfirmationDate'),
       name: InvoicesTableColumns.paidDate,
-      required: true,
+      required: false, // Paid date is hidden column
       sortable: true,
     },
   ];
 
+  // Paid date is hidden column
   const tableInvoicesVisibleColumns: string[] = [
     InvoicesTableColumns.exposureDate,
     InvoicesTableColumns.orderNumber,
     InvoicesTableColumns.invoiceUrl,
     InvoicesTableColumns.paymentCount,
     InvoicesTableColumns.totalAmount,
-    InvoicesTableColumns.paidDate,
+    // InvoicesTableColumns.paidDate,
   ];
 
   return {

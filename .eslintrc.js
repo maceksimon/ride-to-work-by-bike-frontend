@@ -82,6 +82,15 @@ module.exports = {
     // does not work with type definitions
     'no-unused-vars': 'off',
 
+    '@typescript-eslint/no-unused-vars': [
+      'error', // or "warn"
+      {
+        argsIgnorePattern: '^_',
+        varsIgnorePattern: '^_',
+        caughtErrorsIgnorePattern: '^_',
+      },
+    ],
+
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
   },

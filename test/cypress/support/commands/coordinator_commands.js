@@ -307,7 +307,7 @@ Cypress.Commands.add(
  */
 Cypress.Commands.add(
   'verifyCoordinatorInvoicesTableRow',
-  (index, tableRowData, i18n) => {
+  (index, tableRowData, _i18n) => {
     cy.dataCy('table-invoices-row')
       .eq(index)
       .within(() => {
@@ -331,7 +331,9 @@ Cypress.Commands.add(
           'contain',
           tableRowData.totalAmount,
         );
-        if (tableRowData.paidDate) {
+
+        // Paid date column is hidden
+        /* if (tableRowData.paidDate) {
           cy.dataCy('table-invoices-paid-date').should(
             'contain',
             tableRowData.paidDate,
@@ -341,7 +343,7 @@ Cypress.Commands.add(
             'contain',
             i18n.global.t('table.labelNotConfirmed'),
           );
-        }
+        } */
       });
   },
 );

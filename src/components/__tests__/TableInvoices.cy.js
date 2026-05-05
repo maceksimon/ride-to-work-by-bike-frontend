@@ -21,7 +21,7 @@ const selectorTableFileIcon = 'table-invoices-file-icon';
 const selectorTableFileLabel = 'table-invoices-file-label';
 const selectorTablePaymentCount = 'table-invoices-payment-count';
 const selectorTableTotalAmount = 'table-invoices-total-amount';
-const selectorTablePaidDate = 'table-invoices-paid-date';
+// const selectorTablePaidDate = 'table-invoices-paid-date';
 
 // variables
 const borderRadius = rideToWorkByBikeConfig.borderRadiusCardSmall;
@@ -155,13 +155,13 @@ function coreTests() {
               'contain',
               invoice.totalAmount,
             );
-            // paid date
-            cy.dataCy(selectorTablePaidDate).should(($td) => {
+            // Paid date column is hidden
+            /* cy.dataCy(selectorTablePaidDate).should(($td) => {
               const expectedText = invoice.paidDate
                 ? i18n.global.d(new Date(invoice.paidDate), 'numeric')
                 : i18n.global.t('table.labelNotConfirmed');
               expect($td.text().trim()).to.equal(expectedText);
-            });
+            }); */
           });
       });
     }
