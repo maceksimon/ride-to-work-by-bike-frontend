@@ -181,7 +181,7 @@ describe('Register Challenge - Payment step', () => {
       });
     });
 
-    it.only('shows tooltip on disabled checkbox when merchandise not available', () => {
+    it('shows tooltip on disabled checkbox when merchandise not available', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
@@ -207,7 +207,7 @@ describe('Register Challenge - Payment step', () => {
       });
     });
 
-    it.only('does not show tooltip when checkbox disabled due to active voucher', () => {
+    it('does not show tooltip when checkbox disabled due to active voucher', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
