@@ -180,6 +180,58 @@ describe('Register Challenge - Payment step', () => {
         });
       });
     });
+
+    it.only('shows tooltip on disabled checkbox when merchandise not available', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          });
+          cy.visit('#' + routesConf['register_challenge']['path']);
+          cy.viewport('macbook-16');
+          cy.passToStep2();
+          // verify checkbox disabled
+          cy.dataCy('checkbox-payment-with-reward')
+            .should('be.visible')
+            .and('have.class', 'disabled');
+          // trigger tooltip
+          cy.dataCy('checkbox-payment-with-reward').trigger('mouseenter');
+          // verify tooltip message
+          cy.dataCy('tooltip-merch-not-available')
+            .should('exist')
+            .and(
+              'contain',
+              i18n.global.t('register.challenge.tooltipMerchNotAvailable'),
+            );
+        });
+      });
+    });
+
+    it.only('does not show tooltip when checkbox disabled due to active voucher', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
+            cy.interceptRegisterChallengeGetApi(config, defLocale, response);
+          });
+          cy.visit('#' + routesConf['register_challenge']['path']);
+          cy.viewport('macbook-16');
+          cy.passToStep2();
+          // switch to voucher payment
+          cy.dataCy(getRadioOption(PaymentSubject.voucher))
+            .should('be.visible')
+            .click();
+          // apply voucher
+          cy.applyVoucherFullWithoutReward(config, i18n);
+          // verify checkbox disabled
+          cy.dataCy('checkbox-payment-with-reward')
+            .should('be.visible')
+            .and('have.class', 'disabled');
+          // trigger hover - no tooltip
+          cy.dataCy('checkbox-payment-with-reward').trigger('mouseenter');
+          cy.dataCy('tooltip-merch-not-available').should('not.exist');
+        });
+      });
+    });
   });
 
   context('voucher no reward registration', () => {
