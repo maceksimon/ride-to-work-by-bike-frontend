@@ -253,6 +253,12 @@ export default defineComponent({
       if (registerChallengeStore.getMerchandiseItems.length === 0) {
         await registerChallengeStore.loadMerchandiseToStore(logger);
       }
+      if (showMerchNotAvailableTooltip.value) {
+        Notify.create({
+          message: i18n.global.t('register.challenge.tooltipMerchNotAvailable'),
+          type: 'warning',
+        });
+      }
     });
     const isRegistrationCoordinator = computed<boolean>({
       get: (): boolean =>

@@ -181,7 +181,7 @@ describe('Register Challenge - Payment step', () => {
       });
     });
 
-    it('shows tooltip on disabled checkbox when merchandise not available', () => {
+    it('shows tooltip on disabled checkbox and notify message when merchandise not available', () => {
       cy.get('@config').then((config) => {
         cy.get('@i18n').then((i18n) => {
           cy.fixture('apiGetRegisterChallengeEmpty.json').then((response) => {
@@ -194,6 +194,10 @@ describe('Register Challenge - Payment step', () => {
           cy.dataCy('checkbox-payment-with-reward')
             .should('be.visible')
             .and('have.class', 'disabled');
+          // Verify notify message
+          cy.contains(
+            i18n.global.t('register.challenge.tooltipMerchNotAvailable'),
+          ).should('be.visible');
           // trigger tooltip
           cy.dataCy('checkbox-payment-with-reward').trigger('mouseenter');
           // verify tooltip message
@@ -226,6 +230,10 @@ describe('Register Challenge - Payment step', () => {
           cy.dataCy('checkbox-payment-with-reward')
             .should('be.visible')
             .and('have.class', 'disabled');
+          // Verify notify message
+          cy.contains(
+            i18n.global.t('register.challenge.tooltipMerchNotAvailable'),
+          ).should('be.visible');
           // trigger hover - no tooltip
           cy.dataCy('checkbox-payment-with-reward').trigger('mouseenter');
           cy.dataCy('tooltip-merch-not-available').should('not.exist');
