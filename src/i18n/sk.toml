@@ -1177,9 +1177,8 @@ tabReport = "Data report"
 emptyStateChallengeResults = "Pre túto výzvu neboli nájdené žiadne výsledky."
 labelColumnName = "Meno"
 labelColumnPlace = "Poradie"
-labelColumnResult = "Výsledok"
-labelColumnFrequency = "Frekvencia"
-labelColumnDistance = "Vzdialenosť"
+labelColumnFrequency = "Pravidelnosť"
+labelColumnDistance = "Zelené kilometre"
 labelColumnCo2 = "Ušetrené emisie CO₂"
 
 [results.reportType]

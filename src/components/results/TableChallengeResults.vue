@@ -64,15 +64,6 @@ export default defineComponent({
         sortable: true,
       },
       {
-        name: 'result',
-        label: i18n.global.t('results.labelColumnResult'),
-        field: 'result',
-        align: 'right',
-        sortable: true,
-        format: (value: number | string) =>
-          i18n.global.n(value, competitionResultDecimalNumber),
-      },
-      {
         name: 'frequency',
         label: i18n.global.t('results.labelColumnFrequency'),
         field: 'frequency',
@@ -169,21 +160,13 @@ export default defineComponent({
           >
             {{ props.row.name }}
           </q-td>
-          <!-- Result -->
-          <q-td
-            key="result"
-            :props="props"
-            data-cy="table-challenge-results-result"
-          >
-            {{ $n(props.row.result, 'routeDistanceDecimalNumber') }}
-          </q-td>
           <!-- Frequency -->
           <q-td
             key="frequency"
             :props="props"
             data-cy="table-challenge-results-frequency"
           >
-            {{ $n(props.row.frequency, competitionResultDecimalNumber) }}
+            {{ (props.row.frequency * 100).toFixed(2) }} %
           </q-td>
           <!-- Distance -->
           <q-td

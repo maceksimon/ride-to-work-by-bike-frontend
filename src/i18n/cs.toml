@@ -1178,9 +1178,8 @@ tabReport = "Data report"
 emptyStateChallengeResults = "Pro tuto výzvu nebyly nalezeny žádné výsledky."
 labelColumnName = "Jméno"
 labelColumnPlace = "Pořadí"
-labelColumnResult = "Výsledek"
-labelColumnFrequency = "Frekvence"
-labelColumnDistance = "Vzdálenost"
+labelColumnFrequency = "Pravidelnost"
+labelColumnDistance = "Zelené kilometry"
 labelColumnCo2 = "Ušetřené emise CO₂"
 
 [results.reportType]

@@ -6,8 +6,8 @@
     {
       "place": 1,
       "name": "Alice Nováková",
-      "result": 95.5,
-      "frequency": 20,
+      "result": "95.5",
+      "frequency": 0.955,
       "distance": 312.5,
       "emissions": {
         "co2": 52500.0,
@@ -24,8 +24,8 @@
     {
       "place": 2,
       "name": "Petr Janeček",
-      "result": 88.0,
-      "frequency": 18,
+      "result": "88.0",
+      "frequency": 0.88,
       "distance": 280.0,
       "emissions": {
         "co2": 47040.0,
@@ -42,8 +42,8 @@
     {
       "place": 3,
       "name": "Karolína Krátká",
-      "result": 75.0,
-      "frequency": 15,
+      "result": "75.0",
+      "frequency": 0.75,
       "distance": 240.0,
       "emissions": {
         "co2": 40320.0,
@@ -60,8 +60,8 @@
     {
       "place": 4,
       "name": "Martin Svoboda",
-      "result": 60.0,
-      "frequency": 12,
+      "result": "60.0",
+      "frequency": 0.6,
       "distance": 195.0,
       "emissions": {
         "co2": 32760.0,

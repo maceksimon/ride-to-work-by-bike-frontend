@@ -11,7 +11,6 @@ describe('<TableChallengeResults>', () => {
         'emptyStateChallengeResults',
         'labelColumnName',
         'labelColumnPlace',
-        'labelColumnResult',
         'labelColumnFrequency',
         'labelColumnDistance',
       ],
@@ -90,25 +89,6 @@ function coreTests() {
     });
   });
 
-  it('renders result column formatted to 2 decimal places', () => {
-    cy.fixture('apiGetCompetitionResultsResponse').then((response) => {
-      cy.mount(TableChallengeResults, {
-        props: {
-          rows: response.results,
-          competitionType: CompetitionType.frequency,
-        },
-      });
-      response.results.forEach((result, index) => {
-        cy.dataCy('table-challenge-results-result')
-          .eq(index)
-          .should(
-            'contain',
-            i18n.global.n(result.result, competitionResultDecimalNumber),
-          );
-      });
-    });
-  });
-
   it('renders frequency column formatted to 2 decimal places', () => {
     cy.fixture('apiGetCompetitionResultsResponse').then((response) => {
       cy.mount(TableChallengeResults, {
@@ -120,10 +100,7 @@ function coreTests() {
       response.results.forEach((result, index) => {
         cy.dataCy('table-challenge-results-frequency')
           .eq(index)
-          .should(
-            'contain',
-            i18n.global.n(result.frequency, competitionResultDecimalNumber),
-          );
+          .should('contain', `${(result.frequency * 100).toFixed(2)} %`);
       });
     });
   });
