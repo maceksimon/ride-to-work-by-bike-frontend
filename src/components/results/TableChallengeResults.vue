@@ -65,21 +65,21 @@ export default defineComponent({
       },
       {
         name: 'frequency',
-        label: i18n.global.t('results.labelColumnFrequency'),
+        label: `${i18n.global.t('results.labelColumnFrequency')} (%)`,
         field: 'frequency',
         align: 'right',
         sortable: true,
       },
       {
         name: 'distance',
-        label: i18n.global.t('results.labelColumnDistance'),
+        label: `${i18n.global.t('results.labelColumnDistance')} (km)`,
         field: 'distance',
         align: 'right',
         sortable: true,
       },
       {
         name: 'co2',
-        label: i18n.global.t('results.labelColumnCo2'),
+        label: `${i18n.global.t('results.labelColumnCo2')} (g)`,
         field: (row: CompetitionResult) => row.emissions.co2,
         align: 'right',
         sortable: true,
@@ -160,15 +160,15 @@ export default defineComponent({
           >
             {{ props.row.name }}
           </q-td>
-          <!-- Frequency -->
+          <!-- Frequency in % unit -->
           <q-td
             key="frequency"
             :props="props"
             data-cy="table-challenge-results-frequency"
           >
-            {{ (props.row.frequency * 100).toFixed(2) }} %
+            {{ $n(props.row.frequency * 100, competitionResultDecimalNumber) }}
           </q-td>
-          <!-- Distance -->
+          <!-- Distance in km unit-->
           <q-td
             key="distance"
             :props="props"
@@ -176,7 +176,7 @@ export default defineComponent({
           >
             {{ $n(props.row.distance, competitionResultDecimalNumber) }}
           </q-td>
-          <!-- Saved emissions -->
+          <!-- Saved emissions in g unit-->
           <q-td key="co2" :props="props" data-cy="table-challenge-results-co2">
             {{ $n(props.row.emissions.co2, competitionResultDecimalNumber) }}
           </q-td>

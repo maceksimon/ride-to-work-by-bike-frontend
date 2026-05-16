@@ -100,7 +100,10 @@ function coreTests() {
       response.results.forEach((result, index) => {
         cy.dataCy('table-challenge-results-frequency')
           .eq(index)
-          .should('contain', `${(result.frequency * 100).toFixed(2)} %`);
+          .should(
+            'contain',
+            `${i18n.global.n(result.frequency * 100, competitionResultDecimalNumber)}`,
+          );
       });
     });
   });
@@ -124,7 +127,7 @@ function coreTests() {
     });
   });
 
-  it('renders co2 column values from emissions.co2', () => {
+  it('renders CO2 column values from emissions CO2', () => {
     cy.fixture('apiGetCompetitionResultsResponse').then((response) => {
       cy.mount(TableChallengeResults, {
         props: {
