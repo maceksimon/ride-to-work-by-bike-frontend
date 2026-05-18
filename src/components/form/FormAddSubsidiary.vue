@@ -34,11 +34,10 @@ import { useValidation } from 'src/composables/useValidation';
 import { useApiGetCities } from '../../composables/useApiGetCities';
 import { useOrganizations } from '../../composables/useOrganizations';
 
-// enums
-import { OrganizationType } from 'src/components/types/Organization';
-
 // stores
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
+
+import { onTrack } from '../../utils/track';
 
 // types
 import type { FormCompanyAddressFields } from '../types/Form';
@@ -47,6 +46,7 @@ import type { Logger } from '../types/Logger';
 
 // enums
 import { FormSubsidiaryFields } from '../enums/Form';
+import { OrganizationType } from 'src/components/types/Organization';
 
 export default defineComponent({
   name: 'FormAddSubsidiary',
@@ -104,6 +104,17 @@ export default defineComponent({
       ).labelCityChallenge;
     });
 
+    const onUpdateCityChallenge = (): void => {
+      const name = FormSubsidiaryFields.cityChallenge;
+      onTrack({
+        detail: {
+          targetName: `subsidiary${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+          timestamp: Date.now(),
+          value: subsidiary.value.cityChallenge,
+        },
+      });
+    };
+
     return {
       subsidiary,
       hintCityChallenge,
@@ -113,6 +124,8 @@ export default defineComponent({
       labelCityChallenge,
       options,
       FormSubsidiaryFields,
+      onTrack,
+      onUpdateCityChallenge,
     };
   },
 });
@@ -153,6 +166,7 @@ export default defineComponent({
           :hint="hintCityChallenge"
           :options="options"
           :loading="isLoading"
+          @update:model-value="onUpdateCityChallenge"
           class="q-mt-sm"
           data-cy="form-add-subsidiary-city-challenge"
           :name="FormSubsidiaryFields.cityChallenge"
@@ -166,18 +180,20 @@ export default defineComponent({
         >
           {{ $t('form.company.labelDepartment') }}
         </label>
-        <q-input
-          dense
-          outlined
-          lazy-rules
-          hide-bottom-space
-          v-model="subsidiary.department"
-          id="form-department"
-          :name="FormSubsidiaryFields.department"
-          :hint="$t('form.company.hintDepartment')"
-          class="q-mt-sm"
-          data-cy="form-add-subsidiary-department"
-        />
+        <div v-click-track-evt @click-track="onTrack">
+          <q-input
+            dense
+            outlined
+            lazy-rules
+            hide-bottom-space
+            v-model="subsidiary.department"
+            id="form-department"
+            :name="`subsidiary${FormSubsidiaryFields.department.charAt(0).toUpperCase()}${FormSubsidiaryFields.department.slice(1)}`"
+            :hint="$t('form.company.hintDepartment')"
+            class="q-mt-sm"
+            data-cy="form-add-subsidiary-department"
+          />
+        </div>
       </div>
     </div>
   </div>

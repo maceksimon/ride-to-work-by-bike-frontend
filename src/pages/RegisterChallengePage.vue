@@ -49,6 +49,8 @@ import { useStepperValidation } from 'src/composables/useStepperValidation';
 import { useOrganizations } from 'src/composables/useOrganizations';
 import { useCompetitionPhase } from 'src/composables/useCompetitionPhase';
 
+import { onTrack } from '../utils/track';
+
 // enums
 import { OrganizationType } from 'src/components/types/Organization';
 import { PaymentState, PaymentSubject } from 'src/components/enums/Payment';
@@ -61,6 +63,7 @@ import { useLoginStore } from 'src/stores/login';
 import { useRegisterChallengeStore } from 'src/stores/registerChallenge';
 
 export default defineComponent({
+  emits: ['custom-event'],
   name: 'RegisterChallengePage',
   components: {
     FormFieldListMerch,
@@ -455,6 +458,7 @@ export default defineComponent({
       secondsToWait,
       urlDonateJanuaryChallenge,
       hostnameUrlDonateJanuaryChallenge,
+      onTrack,
     };
   },
 });
@@ -509,6 +513,9 @@ export default defineComponent({
             :header-nav="step > 1"
             class="bg-white"
             data-cy="step-1"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="personalDetailsStep"
           >
             <q-form ref="stepPersonalDetailsRef">
               <form-personal-details data-cy="form-personal-details" />
@@ -522,6 +529,9 @@ export default defineComponent({
                 :loading="isLoadingRegisterChallenge"
                 @click="onContinue"
                 data-cy="step-1-continue"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="PersonalDetailsNextBtn"
               />
             </q-stepper-navigation>
           </q-step>
@@ -536,6 +546,9 @@ export default defineComponent({
             :header-nav="step > 2"
             class="relative-position bg-white q-mt-lg"
             data-cy="step-2"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="paymentStep"
           >
             <!-- Form: Payment -->
             <q-form ref="stepPaymentRef">
@@ -589,6 +602,9 @@ export default defineComponent({
                 :disable="isLoadingRegisterChallenge || isLoadingPayuOrder"
                 @click="onBack"
                 data-cy="step-2-back"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="PaymentBackBtn"
               />
               <q-btn
                 v-if="isShownCreateOrderButton"
@@ -601,6 +617,9 @@ export default defineComponent({
                 @click="onSubmitPayment"
                 class="q-ml-sm"
                 data-cy="step-2-submit-payment"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="PaymentCreateOrderBtn"
               />
               <q-btn
                 v-if="isShownPaymentNextStepButton"
@@ -613,6 +632,9 @@ export default defineComponent({
                 @click="onContinue"
                 class="q-ml-sm"
                 data-cy="step-2-continue"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="PaymentNextBtn"
               />
             </q-stepper-navigation>
             <!-- Loader -->
@@ -640,6 +662,9 @@ export default defineComponent({
             :header-nav="step > 3"
             class="bg-white q-mt-lg"
             data-cy="step-3"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="participationStep"
           >
             <q-form ref="stepParticipationRef">
               <p class="q-mb-md">
@@ -663,6 +688,9 @@ export default defineComponent({
                 color="primary"
                 :label="$t('navigation.back')"
                 data-cy="step-3-back"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="ParticipationBackBtn"
               />
               <q-btn
                 unelevated
@@ -673,6 +701,9 @@ export default defineComponent({
                 :loading="isLoadingRegisterChallenge"
                 class="q-ml-sm"
                 data-cy="step-3-continue"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="ParticipationNextBtn"
               />
             </q-stepper-navigation>
           </q-step>
@@ -687,6 +718,9 @@ export default defineComponent({
             :header-nav="step > 4"
             class="bg-white q-mt-lg"
             data-cy="step-4"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="organizationStep"
           >
             <q-form ref="stepCompanyRef">
               <form-select-organization />
@@ -702,6 +736,9 @@ export default defineComponent({
                   :disable="isLoadingRegisterChallenge"
                   :label="$t('navigation.back')"
                   data-cy="step-4-back"
+                  v-click-track-evt
+                  @click-track="onTrack"
+                  name="OrganizationBackBtn"
                 />
                 <q-btn
                   unelevated
@@ -712,6 +749,9 @@ export default defineComponent({
                   @click="onContinue"
                   class="q-ml-sm"
                   data-cy="step-4-continue"
+                  v-click-track-evt
+                  @click-track="onTrack"
+                  name="OrganizationNextBtn"
                 />
               </div>
             </q-stepper-navigation>
@@ -727,6 +767,9 @@ export default defineComponent({
             :header-nav="step > 5"
             class="bg-white q-mt-lg"
             data-cy="step-5"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="teamStep"
           >
             <q-form ref="stepTeamRef">
               <form-select-team data-cy="form-select-team" />
@@ -741,6 +784,9 @@ export default defineComponent({
                 :label="$t('navigation.back')"
                 :disable="isLoadingRegisterChallenge"
                 data-cy="step-5-back"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="TeamBackBtn"
               />
               <q-btn
                 unelevated
@@ -751,6 +797,9 @@ export default defineComponent({
                 @click="onContinue"
                 class="q-ml-sm"
                 data-cy="step-5-continue"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="TeamNextBtn"
               />
             </q-stepper-navigation>
           </q-step>
@@ -765,6 +814,9 @@ export default defineComponent({
             :header-nav="step > 6"
             class="bg-white q-mt-lg"
             data-cy="step-6"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="merchStep"
           >
             <q-form ref="stepMerchRef">
               <form-field-list-merch />
@@ -779,6 +831,9 @@ export default defineComponent({
                 :label="$t('navigation.back')"
                 :disable="isLoadingRegisterChallenge"
                 data-cy="step-6-back"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="MerchBackBtn"
               />
               <q-btn
                 unelevated
@@ -790,6 +845,9 @@ export default defineComponent({
                 @click="onContinue"
                 class="q-ml-sm"
                 data-cy="step-6-continue"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="MerchNextBtn"
               />
             </q-stepper-navigation>
           </q-step>
@@ -804,6 +862,9 @@ export default defineComponent({
             :header-nav="step > 7"
             class="bg-white q-mt-lg"
             data-cy="step-7"
+            v-click-track-evt
+            @click-track="onTrack"
+            step-name="summaryStep"
           >
             <register-challenge-payment-messages data-cy="summary-messages" />
             <!-- Content: Summary -->
@@ -819,6 +880,9 @@ export default defineComponent({
                 color="primary"
                 :label="$t('navigation.back')"
                 data-cy="step-7-back"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="SummaryBackBtn"
               />
               <!-- Button: Complete registration -->
               <q-btn
@@ -830,6 +894,9 @@ export default defineComponent({
                 @click="onCompleteRegistration"
                 class="q-ml-sm"
                 data-cy="step-7-continue"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="SummaryCompleteBtn"
               />
               <!-- Button: Coordinator access -->
               <q-btn
@@ -841,6 +908,9 @@ export default defineComponent({
                 @click="onCompleteRegistration"
                 class="q-ml-sm"
                 data-cy="step-7-coordinator-access"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="SummaryCompleteBtn"
               />
               <!-- Button: Logout -->
               <q-btn
@@ -854,6 +924,9 @@ export default defineComponent({
                 @click="onLogout"
                 class="q-ml-sm"
                 data-cy="step-7-logout"
+                v-click-track-evt
+                @click-track="onTrack"
+                name="SummaryLogoutBtn"
               />
             </q-stepper-navigation>
           </q-step>

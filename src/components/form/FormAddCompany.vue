@@ -56,6 +56,8 @@ import { useApiGetCities } from '../../composables/useApiGetCities';
 import { useOrganizations } from '../../composables/useOrganizations';
 import { useValidation } from '../../composables/useValidation';
 
+import { onTrack } from '../../utils/track';
+
 // enums
 import { OrganizationType } from '../types/Organization';
 import { FormAddCompanyVariantProp, FormSubsidiaryFields } from '../enums/Form';
@@ -97,6 +99,18 @@ export default defineComponent({
       nextTick((): void => {
         emit('update:modelValue', company.value);
       });
+    };
+
+    const onUpdateCityChallenge = (): void => {
+      const name = FormSubsidiaryFields.cityChallenge;
+      onTrack({
+        detail: {
+          targetName: `selectOrganization${name.charAt(0).toUpperCase()}${name.slice(1)}`,
+          timestamp: Date.now(),
+          value: company.value.subsidiaryAddress.cityChallenge,
+        },
+      });
+      onUpdate();
     };
 
     const { isFilled } = useValidation();
@@ -149,7 +163,19 @@ export default defineComponent({
 
     // sync company address to subsidiary when addresses should be the same
     watch(
-      [isDifferentSubsidiaryAddress, () => company.value.orgAddress],
+      [
+        isDifferentSubsidiaryAddress,
+        () => {
+          onTrack({
+            detail: {
+              targetName: 'checkboxDiffAddress',
+              timestamp: Date.now(),
+              value: isDifferentSubsidiaryAddress.value,
+            },
+          });
+          return company.value.orgAddress;
+        },
+      ],
       ([isDifferent, orgAddress]) => {
         if (!isDifferent && company.value.subsidiaryAddress && orgAddress) {
           // copy orgAddress fields to subsidiaryAddress
@@ -189,6 +215,8 @@ export default defineComponent({
       showMinimalSubsidiaryFields,
       showFullSubsidiaryFields,
       FormSubsidiaryFields,
+      onUpdateCityChallenge,
+      onTrack,
     };
   },
 });
@@ -220,6 +248,8 @@ export default defineComponent({
           label="form.labelTitle"
           @update:model-value="onUpdate"
           data-cy="form-add-company-name"
+          v-click-track-evt
+          @click-track="onTrack"
         />
       </div>
       <div class="col-12" :class="{ 'col-sm-6': isCompany }">
@@ -231,6 +261,8 @@ export default defineComponent({
           :label="$t('form.labelBusinessId')"
           @update:model-value="onUpdate"
           data-cy="form-add-company-vat-id"
+          v-click-track-evt
+          @click-track="onTrack"
         />
       </div>
     </div>
@@ -306,6 +338,7 @@ export default defineComponent({
             class="text-caption text-bold text-gray-10"
             >{{ labelCityChallenge }}</label
           >
+
           <q-select
             dense
             outlined
@@ -324,7 +357,7 @@ export default defineComponent({
             :options="cityOptions"
             :loading="isCityLoading"
             class="q-mt-sm"
-            @update:model-value="onUpdate"
+            @update:model-value="onUpdateCityChallenge"
             data-cy="form-add-company-city-challenge-minimal"
             :name="FormSubsidiaryFields.cityChallenge"
           ></q-select>
@@ -337,19 +370,21 @@ export default defineComponent({
           >
             {{ $t('form.company.labelDepartment') }}
           </label>
-          <q-input
-            dense
-            outlined
-            lazy-rules
-            hide-bottom-space
-            v-model="company.subsidiaryAddress.department"
-            id="form-department-minimal"
-            :name="FormSubsidiaryFields.department"
-            :hint="$t('form.company.hintDepartment')"
-            class="q-mt-sm"
-            @update:model-value="onUpdate"
-            data-cy="form-add-company-department-minimal"
-          />
+          <div v-click-track-evt @click-track="onTrack">
+            <q-input
+              dense
+              outlined
+              lazy-rules
+              hide-bottom-space
+              v-model="company.subsidiaryAddress.department"
+              id="form-department-minimal"
+              :name="`organization${FormSubsidiaryFields.department.charAt(0).toUpperCase()}${FormSubsidiaryFields.department.slice(1)}`"
+              :hint="$t('form.company.hintDepartment')"
+              class="q-mt-sm"
+              @update:model-value="onUpdate"
+              data-cy="form-add-company-department-minimal"
+            />
+          </div>
         </div>
       </div>
     </div>
