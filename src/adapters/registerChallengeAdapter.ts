@@ -150,7 +150,7 @@ export const registerChallengeAdapter = {
     if (storeState.teamId !== undefined) {
       payload.team_id = storeState.teamId;
     }
-    if (storeState.merchId !== undefined) {
+    if (storeState.merchId !== undefined && storeState.merchId !== null) {
       payload.t_shirt_size_id = storeState.merchId;
     }
     if (storeState.telephone !== undefined) {

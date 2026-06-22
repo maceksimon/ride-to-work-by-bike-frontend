@@ -40,7 +40,8 @@ export default defineComponent({
         .toLowerCase()
         .replace(/^get/, '')
         .replace(/([a-z])([A-Z])/g, '$1-$2')
-        .toLowerCase();
+        .toLowerCase()
+        .replace(/\s+/g, '-');
     };
 
     // format value for display

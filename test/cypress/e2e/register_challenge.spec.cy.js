@@ -3944,6 +3944,8 @@ describe('Register Challenge page', () => {
                   cy.contains(
                     win.i18n.global.t('form.messageMerchIdRemoved'),
                   ).should('be.visible');
+                  // verify merch ID is set to no-merch ID in debug component
+                  cy.dataCy('debug-merch-id-value').should('contain', '118');
                   // go to next step
                   cy.dataCy('step-2-continue')
                     .should('be.visible')
@@ -3954,6 +3956,76 @@ describe('Register Challenge page', () => {
                     registerChallengeResponse,
                   );
                   cy.validateStepMerchWithoutReward();
+                });
+              },
+            );
+          });
+        });
+      });
+
+      it.only('sets merch ID to null when switchnig to with-reward', () => {
+        cy.get('@config').then((config) => {
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            cy.fixture('apiGetRegisterChallengeCompanyWaiting.json').then(
+              (registerChallengeResponse) => {
+                cy.fixture('apiGetMyOrganizationAdmin.json').then((data) => {
+                  cy.interceptMyOrganizationAdminGetApi(config, win.i18n, data);
+                  cy.testRegisterChallengeLoadedStepOne(
+                    win.i18n,
+                    registerChallengeResponse,
+                  );
+                  // verify no-merch ID and merch ID are loaded into debug component
+                  cy.waitForMerchandiseNoneApi();
+                  cy.dataCy('debug-register-challenge-store').should(
+                    'contain',
+                    '118',
+                  );
+                  cy.dataCy('debug-register-challenge-store').should(
+                    'contain',
+                    '133',
+                  );
+                  // go to next step
+                  cy.dataCy('step-1-continue').should('be.visible').click();
+                  // go to next step
+                  cy.dataCy('step-2-continue')
+                    .should('be.visible')
+                    .and('not.be.disabled')
+                    .click();
+                  cy.testRegisterChallengeLoadedStepsThreeToFive(
+                    win.i18n,
+                    registerChallengeResponse,
+                  );
+                  cy.testRegisterChallengeLoadedStepSix(
+                    win.i18n,
+                    registerChallengeResponse,
+                  );
+                  // go back to step 2
+                  cy.dataCy('step-2').should('be.visible').click();
+                  // switch to without-reward to establish the without-reward state
+                  cy.switchToPaymentWithoutReward();
+                  cy.dataCy('debug-merch-id-value').should('contain', '118');
+                  // switch back to with-reward
+                  cy.switchToPaymentWithReward();
+                  // no new notification should appear when switching back to with-reward
+                  cy.get('.q-notification').should('have.length.at.most', 1);
+                  // merch ID should be null
+                  cy.dataCy('debug-merch-id-value').should('contain', 'null');
+                  // go to next step
+                  cy.dataCy('step-2-continue')
+                    .should('be.visible')
+                    .and('not.be.disabled')
+                    .click();
+                  cy.testRegisterChallengeLoadedStepsThreeToFive(
+                    win.i18n,
+                    registerChallengeResponse,
+                  );
+                  // merch list should be visible with no pre-selected item
+                  cy.dataCy('list-merch').should('be.visible');
+                  cy.dataCy('form-card-merch-female')
+                    .first()
+                    .find('[data-cy="button-selected"]')
+                    .should('not.exist');
                 });
               },
             );

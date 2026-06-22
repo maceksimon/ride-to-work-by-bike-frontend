@@ -515,17 +515,20 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         `Switch to <${isWithReward ? 'with reward' : 'without reward'}> price set.`,
       );
       this.setIsPaymentWithReward(isWithReward);
-      // if no reward and merch ID is set, clear it
-      if (!isWithReward && this.getMerchId !== null) {
-        this.$log?.debug(
-          'Removing merch ID when switching to price level without reward.',
-        );
+      if (!isWithReward) {
+        // show notification only when a real merch item was previously selected
+        if (this.getMerchId !== null && this.getMerchId !== this.noMerchId) {
+          this.$log?.debug(
+            'Removing merch ID when switching to price level without reward.',
+          );
+          Notify.create({
+            message: i18n.global.t('form.messageMerchIdRemoved'),
+            color: 'warning',
+          });
+        }
+        this.setMerchId(this.noMerchId ?? null);
+      } else {
         this.setMerchId(null);
-        // notify about next steps to save current registration state
-        Notify.create({
-          message: i18n.global.t('form.messageMerchIdRemoved'),
-          color: 'warning',
-        });
       }
     },
     /**
