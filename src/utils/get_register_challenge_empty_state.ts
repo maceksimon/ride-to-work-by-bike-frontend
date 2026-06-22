@@ -51,6 +51,7 @@ export const getRegisterChallengeEmptyPersistentState = () => ({
   subsidiaryId: null,
   teamId: null,
   merchId: null,
+  noMerchId: null,
   myTeam: null,
   voucher: null,
   citySlug: null,

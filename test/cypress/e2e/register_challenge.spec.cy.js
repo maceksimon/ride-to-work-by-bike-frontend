@@ -3901,7 +3901,7 @@ describe('Register Challenge page', () => {
         cy.viewport('macbook-16');
       });
 
-      it('when payment is set to without-reward after selecting merch, it clears merch ID and shows notification', () => {
+      it.only('when payment is set to without-reward after selecting merch, it clears merch ID and shows notification', () => {
         cy.get('@config').then((config) => {
           cy.window().should('have.property', 'i18n');
           cy.window().then((win) => {
@@ -3913,6 +3913,16 @@ describe('Register Challenge page', () => {
                   cy.testRegisterChallengeLoadedStepOne(
                     win.i18n,
                     registerChallengeResponse,
+                  );
+                  // verify no-merch ID and merch ID are loaded into debug component
+                  cy.waitForMerchandiseNoneApi();
+                  cy.dataCy('debug-register-challenge-store').should(
+                    'contain',
+                    '118',
+                  );
+                  cy.dataCy('debug-register-challenge-store').should(
+                    'contain',
+                    '133',
                   );
                   // go to next step
                   cy.dataCy('step-1-continue').should('be.visible').click();

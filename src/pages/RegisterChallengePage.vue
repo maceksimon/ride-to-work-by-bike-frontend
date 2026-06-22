@@ -41,6 +41,7 @@ import LoginRegisterHeader from 'components/global/LoginRegisterHeader.vue';
 import RegisterChallengePayment from 'src/components/register/RegisterChallengePayment.vue';
 import RegisterChallengeSummary from 'src/components/register/RegisterChallengeSummary.vue';
 import ShowOrganizationIds from 'src/components/debug/ShowOrganizationIds.vue';
+import ShowRegisterChallengeStoreValues from 'src/components/debug/ShowRegisterChallengeStoreValues.vue';
 import TopBarCountdown from 'src/components/global/TopBarCountdown.vue';
 import RegisterChallengePaymentMessages from '../components/register/RegisterChallengePaymentMessages.vue';
 
@@ -75,6 +76,7 @@ export default defineComponent({
     RegisterChallengePayment,
     RegisterChallengeSummary,
     ShowOrganizationIds,
+    ShowRegisterChallengeStoreValues,
     TopBarCountdown,
     RegisterChallengePaymentMessages,
   },
@@ -162,7 +164,10 @@ export default defineComponent({
       if (!challengeStore.getPriceLevel.length) {
         await challengeStore.loadPhaseSet();
       }
-      await registerChallengeStore.loadRegisterChallengeToStore();
+      await Promise.all([
+        registerChallengeStore.loadRegisterChallengeToStore(),
+        registerChallengeStore.loadNoMerchIdToStore(),
+      ]);
       /**
        * Depending on whether payment is successful,
        * and isPayuTransactionInitiated flag
@@ -480,6 +485,9 @@ export default defineComponent({
         :style="{ 'max-width': containerFormWidth }"
       >
         <show-organization-ids />
+        <show-register-challenge-store-values
+          :keys="['getMerchId', 'getNoMerchId']"
+        />
         <!-- Page title -->
         <h1
           class="text-h5 text-bold text-white q-my-none"

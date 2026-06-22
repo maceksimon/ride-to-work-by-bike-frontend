@@ -98,6 +98,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     subsidiaryId: null as number | null,
     teamId: null as number | null,
     merchId: null as number | null,
+    noMerchId: null as number | null,
     voucher: null as ValidatedCoupon | null,
     subsidiaries: [] as OrganizationSubsidiary[],
     organizations: [] as OrganizationOption[],
@@ -147,6 +148,7 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
     getSubsidiaryId: (state): number | null => state.subsidiaryId,
     getTeamId: (state): number | null => state.teamId,
     getMerchId: (state): number | null => state.merchId,
+    getNoMerchId: (state): number | null => state.noMerchId,
     getPaymentSubject: (state): PaymentSubject => state.paymentSubject,
     getPaymentAmount: (state): number | null => state.paymentAmount,
     getPaymentState: (state): PaymentState => state.paymentState,
@@ -1013,6 +1015,28 @@ export const useRegisterChallengeStore = defineStore('registerChallenge', {
         `Loaded filtered merchandise item ID <${this.getMerchId}> saved into store.`,
       );
       this.isLoadingFilteredMerchandise = false;
+    },
+    /**
+     * Load no-merch ID from API and save into store.
+     * No-op if `noMerchId` is already populated.
+     */
+    async loadNoMerchIdToStore(): Promise<void> {
+      if (this.noMerchId) {
+        this.$log?.debug(
+          `No-merch ID <${this.noMerchId}> already loaded. Skipping API call.`,
+        );
+        return;
+      }
+      const { merchandise, loadFilteredMerchandise } =
+        useApiGetFilteredMerchandise(this.$log);
+      this.$log?.debug('Loading no-merch ID from the API.');
+      await loadFilteredMerchandise(
+        rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
+      );
+      if (merchandise.value[0]) {
+        this.noMerchId = merchandise.value[0].id;
+        this.$log?.debug(`No-merch ID <${this.noMerchId}> saved into store.`);
+      }
     },
     /**
      * Load IP address data from API
