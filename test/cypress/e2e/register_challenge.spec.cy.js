@@ -3901,7 +3901,7 @@ describe('Register Challenge page', () => {
         cy.viewport('macbook-16');
       });
 
-      it.only('when payment is set to without-reward after selecting merch, it clears merch ID and shows notification', () => {
+      it('when payment is set to without-reward after selecting merch, it clears merch ID and shows notification', () => {
         cy.get('@config').then((config) => {
           cy.window().should('have.property', 'i18n');
           cy.window().then((win) => {
@@ -3963,7 +3963,7 @@ describe('Register Challenge page', () => {
         });
       });
 
-      it.only('sets merch ID to null when switchnig to with-reward', () => {
+      it('sets merch ID to null when switchnig to with-reward', () => {
         cy.get('@config').then((config) => {
           cy.window().should('have.property', 'i18n');
           cy.window().then((win) => {
@@ -4987,7 +4987,7 @@ describe('Register Challenge page', () => {
         });
       });
 
-      it('shows empty merch options when not available', () => {
+      it.only('shows empty merch options when not available', () => {
         cy.fixture('apiGetTeamsResponse.json').then((responseTeams) => {
           // we are on step 2
           cy.dataCy('step-2')

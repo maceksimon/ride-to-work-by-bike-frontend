@@ -486,7 +486,7 @@ export default defineComponent({
       >
         <show-organization-ids />
         <show-register-challenge-store-values
-          :keys="['getMerchId', 'getNoMerchId']"
+          :keys="['getMerchId', 'getNoMerchId', 'getIsPaymentWithReward']"
         />
         <!-- Page title -->
         <h1
@@ -827,7 +827,7 @@ export default defineComponent({
             step-name="merchStep"
           >
             <q-form ref="stepMerchRef">
-              <form-field-list-merch />
+              <form-field-list-merch v-if="step == 6" />
             </q-form>
             <q-stepper-navigation class="flex justify-end">
               <q-btn

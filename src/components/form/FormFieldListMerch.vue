@@ -105,7 +105,7 @@ export default defineComponent({
           `Payment without reward <${!isPaymentWithReward.value}> or ` +
             ` options empty <${optionsEmpty.value}>, loading no-merch ID.`,
         );
-        await loadNoMerchId();
+        registerChallengeStore.setMerchId(registerChallengeStore.noMerchId);
         return;
       }
 
@@ -408,29 +408,6 @@ export default defineComponent({
         // validation error
         logger?.info('Form validation failed, keeping dialog open.');
         formMerchRef.value.$el.scrollIntoView({ behavior: 'smooth' });
-      }
-    };
-
-    let iDontWantMerchandiseCachedId: number | null = null;
-    /**
-     * Load "no merch" merch ID and set it into the store.
-     */
-    const loadNoMerchId = async function (): Promise<void> {
-      if (!iDontWantMerchandiseCachedId) {
-        logger?.info("Get 'I don't want any merchandise' ID from the API.");
-        await registerChallengeStore.loadFilteredMerchandiseToStore(
-          logger,
-          rideToWorkByBikeConfig.iDontWantMerchandiseItemCode,
-        );
-        iDontWantMerchandiseCachedId = registerChallengeStore.getMerchId;
-        logger?.debug(
-          `Save 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> into cache.`,
-        );
-      } else {
-        logger?.debug(
-          `Use 'I don't want any merchandise' ID <${iDontWantMerchandiseCachedId}> from the cache.`,
-        );
-        registerChallengeStore.setMerchId(iDontWantMerchandiseCachedId);
       }
     };
 
