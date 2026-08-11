@@ -50,6 +50,26 @@ export const useJwt = () => {
   };
 
   /**
+   * Get user ID from JWT token
+   * @param {string} token - JWT token
+   * @return {number | null} User ID or null if invalid
+   */
+  const readJwtUserId = (token: string): number | null => {
+    try {
+      const { payload } = parseJwt(token);
+      const decodedPayload = decodePayload(payload);
+      // extract the user_id from payload
+      const userId = decodedPayload.user_id;
+      if (!userId) {
+        return null;
+      }
+      return userId as number;
+    } catch {
+      return null;
+    }
+  };
+
+  /**
    * Parse JWT token into parts
    * @param {string} token - JWT token string
    * @return {JwtParts} - Object (header, payload, signature) - token parts
@@ -97,6 +117,7 @@ export const useJwt = () => {
 
   return {
     readJwtExpiration,
+    readJwtUserId,
     parseJwt,
     decodePayload,
     base64UrlDecode,
