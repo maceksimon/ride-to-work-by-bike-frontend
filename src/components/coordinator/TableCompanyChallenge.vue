@@ -61,6 +61,32 @@ export default defineComponent({
       emit('edit-challenge', row);
     };
 
+    // delete company
+    const competitionToDelete = ref<{ id: number; name: string } | null>(null);
+    const isDeleteDialogOpen = ref<boolean>(false);
+    const isLoadingDelete = computed<boolean>(
+      () => adminCompetitionStore.getIsLoadingDeleteCompetition,
+    );
+
+    const onOpenDeleteDialog = (row: TableCompanyChallengeRow): void => {
+      competitionToDelete.value = { id: row.id, name: row.name };
+      isDeleteDialogOpen.value = true;
+    };
+
+    const onCloseDeleteDialog = (): void => {
+      competitionToDelete.value = null;
+      isDeleteDialogOpen.value = false;
+    };
+
+    const onConfirmDelete = async (): Promise<void> => {
+      if (competitionToDelete.value) {
+        await adminCompetitionStore.deleteCompetition(
+          competitionToDelete.value.id,
+        );
+        onCloseDeleteDialog();
+      }
+    };
+
     // sort by challenge name
     onMounted(() => {
       if (tableRef.value) {
@@ -86,10 +112,16 @@ export default defineComponent({
       borderRadius,
       columns,
       CompanyChallengeTableColumns,
+      competitionToDelete,
       getRouteIcon,
+      isDeleteDialogOpen,
       isDialogOpen,
       isLoading,
+      isLoadingDelete,
+      onCloseDeleteDialog,
+      onConfirmDelete,
       onEditChallenge,
+      onOpenDeleteDialog,
       onShowCompetitionResultDialog,
       loadCompetitionResults,
       paginationLabel,
@@ -249,6 +281,22 @@ export default defineComponent({
                 $t('index.cardListChallenge.buttonShowResults')
               }}</q-tooltip>
             </q-btn>
+            <q-btn
+              flat
+              round
+              dense
+              icon="delete"
+              color="negative"
+              size="sm"
+              :disable="isLoadingDelete"
+              @click="onOpenDeleteDialog(props.row)"
+              data-cy="table-companychallenge-button-delete"
+              class="q-ml-md"
+            >
+              <q-tooltip>{{
+                $t('coordinator.deleteCompanyChallenge')
+              }}</q-tooltip>
+            </q-btn>
           </q-td>
         </q-tr>
       </template>
@@ -281,6 +329,52 @@ export default defineComponent({
           :competition-type="selectedCompetition.competition_type"
           :competition-name="selectedCompetition.name"
         />
+      </template>
+    </dialog-default>
+
+    <!-- Dialog: Delete company challenge -->
+    <dialog-default
+      v-model="isDeleteDialogOpen"
+      data-cy="dialog-delete-company-challenge"
+    >
+      <template #title>
+        {{ $t('coordinator.deleteCompanyChallengeConfirmTitle') }}
+      </template>
+      <template #content>
+        <div>
+          {{
+            $t('coordinator.deleteCompanyChallengeConfirmMessage', {
+              name: competitionToDelete?.name || '',
+            })
+          }}
+        </div>
+        <!-- Action buttons -->
+        <div class="flex justify-end q-mt-lg">
+          <div class="flex gap-8">
+            <q-btn
+              rounded
+              unelevated
+              outline
+              color="primary"
+              @click="onCloseDeleteDialog"
+              :disable="isLoadingDelete"
+              data-cy="dialog-button-cancel"
+            >
+              {{ $t('navigation.discard') }}
+            </q-btn>
+            <q-btn
+              rounded
+              unelevated
+              color="negative"
+              :loading="isLoadingDelete"
+              :disable="isLoadingDelete"
+              @click="onConfirmDelete"
+              data-cy="dialog-button-confirm-delete"
+            >
+              {{ $t('coordinator.deleteCompanyChallenge') }}
+            </q-btn>
+          </div>
+        </div>
       </template>
     </dialog-default>
   </div>

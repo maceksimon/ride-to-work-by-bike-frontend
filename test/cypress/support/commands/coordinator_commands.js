@@ -376,6 +376,31 @@ Cypress.Commands.add(
 );
 
 /**
+ * Intercept competition GET API call with raw data
+ * Provides `@getCompetition` alias
+ * @param {Object} config - App global config
+ * @param {Object} responseData - Response data object
+ */
+Cypress.Commands.add(
+  'interceptCompetitionGetApiWithData',
+  (config, responseData) => {
+    const { apiBase, apiDefaultLang, urlApiCompetition } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      defLocale,
+    );
+    const urlApiCompetitionLocalized = `${apiBaseUrl}${urlApiCompetition}`;
+
+    cy.intercept('GET', urlApiCompetitionLocalized, {
+      statusCode: httpSuccessfullStatus,
+      body: responseData,
+    }).as('getCompetition');
+  },
+);
+
+/**
  * Wait for intercept competition GET API calls and compare request/response object
  * Wait for `@getCompetition` intercept
  * @param {string} responseFixture - Fixture name for response data
@@ -491,6 +516,46 @@ Cypress.Commands.add(
     });
   },
 );
+
+/**
+ * Intercept competition DELETE API call
+ * Provides `@deleteCompetition` alias
+ * @param {Object} config - App global config
+ * @param {number} competitionId - Competition ID being deleted
+ */
+Cypress.Commands.add(
+  'interceptCompetitionDeleteApi',
+  (config, competitionId) => {
+    const { apiBase, apiDefaultLang, urlApiCompetition } = config;
+    const apiBaseUrl = getApiBaseUrlWithLang(
+      null,
+      apiBase,
+      apiDefaultLang,
+      defLocale,
+    );
+    const urlApiCompetitionDeleteLocalized = `${apiBaseUrl}${urlApiCompetition}${competitionId}/`;
+
+    cy.intercept('DELETE', urlApiCompetitionDeleteLocalized, {
+      statusCode: HttpStatusCode.NoContent,
+      body: {},
+    }).as('deleteCompetition');
+  },
+);
+
+/**
+ * Wait for intercept competition DELETE API call and verify request
+ * Wait for `@deleteCompetition` intercept
+ */
+Cypress.Commands.add('waitForCompetitionDeleteApi', () => {
+  cy.wait('@deleteCompetition').then(({ request, response }) => {
+    // verify authorization header
+    expect(request.headers.authorization).to.include(bearerTokeAuth);
+    // verify response
+    if (response) {
+      expect(response.statusCode).to.equal(HttpStatusCode.NoContent);
+    }
+  });
+});
 
 /**
  * Intercept coordinator team POST API call

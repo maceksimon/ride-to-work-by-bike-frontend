@@ -39,7 +39,12 @@ describe('<TableCompanyChallenge>', () => {
       i18n,
     );
     cy.testLanguageStringsInContext(
-      ['buttonEditCompanyChallenge'],
+      [
+        'buttonEditCompanyChallenge',
+        'deleteCompanyChallenge',
+        'deleteCompanyChallengeConfirmTitle',
+        'deleteCompanyChallengeConfirmMessage',
+      ],
       'coordinator',
       i18n,
     );
@@ -55,16 +60,17 @@ describe('<TableCompanyChallenge>', () => {
     });
 
     it('loads data from store and displays the table', () => {
-      cy.wrap(useAdminCompetitionStore()).then((adminCompetitionStore) => {
-        adminCompetitionStore.setCompetitions(testData.storeData);
-      });
+      cy.setupAdminCompetitionStoreWithCompetitions(
+        useAdminCompetitionStore,
+        'tableCompanyChallengeTestData',
+      );
       cy.dataCy('table-company-challenge').should('be.visible');
       cy.dataCy('table-company-challenge-table')
         .should('be.visible')
         .and('have.css', 'border-radius', borderRadius);
       // sorted competition data
-      const competitions = testData.storeData.sort((a, b) =>
-        a.name.localeCompare(b.name),
+      const competitions = testData.results.sort((competitionA, competitionB) =>
+        competitionA.name.localeCompare(competitionB.name),
       );
       cy.dataCy('table-company-challenge-row')
         .should('be.visible')
@@ -157,12 +163,47 @@ describe('<TableCompanyChallenge>', () => {
     });
 
     it('displays empty state when no data', () => {
-      cy.wrap(useAdminCompetitionStore()).then((adminCompetitionStore) => {
-        adminCompetitionStore.setCompetitions([]);
-      });
+      cy.setupAdminCompetitionStoreWithCompetitions(
+        useAdminCompetitionStore,
+        'apiGetCompetitionResponseEmpty',
+      );
       cy.get('.q-table__bottom--nodata')
         .should('be.visible')
         .and('contain', i18n.global.t('table.textNoData'));
+    });
+
+    it('opens confirmation dialog on delete', () => {
+      cy.setupAdminCompetitionStoreWithCompetitions(
+        useAdminCompetitionStore,
+        'tableCompanyChallengeTestData',
+      );
+      const competitions = testData.results.sort(
+        (competitionA, competitionB) =>
+          competitionA.name.localeCompare(competitionB.name),
+      );
+      const firstCompetition = competitions[0];
+      // delete first challenge
+      cy.dataCy('table-company-challenge-row')
+        .first()
+        .within(() => {
+          cy.dataCy('table-companychallenge-button-delete').click();
+        });
+      // verify dialog
+      cy.dataCy('dialog-delete-company-challenge')
+        .should('be.visible')
+        .and(
+          'contain',
+          i18n.global.t('coordinator.deleteCompanyChallengeConfirmTitle'),
+        )
+        .and(
+          'contain',
+          i18n.global.t('coordinator.deleteCompanyChallengeConfirmMessage', {
+            name: firstCompetition.name,
+          }),
+        );
+      // cancel closes dialog
+      cy.dataCy('dialog-button-cancel').click();
+      cy.dataCy('dialog-delete-company-challenge').should('not.exist');
     });
   });
 });

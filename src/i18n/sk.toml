@@ -336,6 +336,9 @@ editSubsidiary = "Upraviť adresu pobočky"
 deleteTeam = "Zmazať tím"
 deleteTeamConfirmTitle = "Zmazať tím?"
 deleteTeamConfirmMessage = "Naozaj chcete zmazať tím \"{teamName}\"? Túto akciu nemožno vrátiť späť."
+deleteCompanyChallenge = "Zmazať firemnú výzvu"
+deleteCompanyChallengeConfirmTitle = "Zmazať firemnú výzvu?"
+deleteCompanyChallengeConfirmMessage = "Naozaj chcete zmazať firemnú výzvu \"{name}\"? Túto akciu nemožno vrátiť späť."
 messageExportNoData = "Nie sú k dispozícii žiadne dáta na export."
 messageExportFailed = "Prehliadač odmietol stiahnutie súboru."
 moveMember = "Presunúť do iného tímu"
@@ -381,6 +384,11 @@ apiMessageSuccess = "Organizácia bola úspešně vytvorená."
 apiMessageError = "Vytvorenie firemnej výzvy zlyhalo."
 apiMessageErrorWithMessage = "Vytvorenie firemnej výzvy zlyhalo. Chyba: {error}"
 apiMessageSuccess = "Firemná výzva bola úspešne vytvorená."
+
+[deleteCompetition]
+apiMessageError = "Zmazanie firemnej výzvy zlyhalo."
+apiMessageErrorWithMessage = "Zmazanie firemnej výzvy zlyhalo. Chyba: {error}"
+apiMessageSuccess = "Firemná výzva bola úspešne zmazaná."
 
 [updateCompetition]
 apiMessageError = "Aktualizácia firemnej výzvy zlyhala."

@@ -677,4 +677,114 @@ describe('Company coordinator company challenge page', () => {
       });
     });
   });
+  context('deleting company challenges', () => {
+    beforeEach(() => {
+      cy.viewport(1920, 2500);
+      // set system time to be in registration phase
+      cy.clock(systemTimeRegistrationPhaseActive, ['Date']).then(() => {
+        cy.task('getAppConfig', process).then((config) => {
+          cy.wrap(config).as('config');
+          // visit the login page to initialize i18n
+          cy.visit('#' + routesConf['login']['path']);
+          cy.window().should('have.property', 'i18n');
+          cy.window().then((win) => {
+            cy.wrap(win.i18n).as('i18n');
+            // setup coordinator test environment
+            cy.setupCompanyCoordinatorTest(config, win.i18n);
+            cy.visit(
+              '#' +
+                routesConf['coordinator_challenges']['children']['fullPath'],
+            );
+            cy.dataCy('table-company-challenge-title').should('be.visible');
+          });
+        });
+      });
+    });
+
+    it('allows to delete a company challenge after confirming', () => {
+      cy.get('@config').then((config) => {
+        cy.get('@i18n').then((i18n) => {
+          cy.fixture('apiGetCompetitionResponse.json').then(
+            (responseCompetition) => {
+              // check that initial competition response is loaded
+              cy.waitForCompetitionGetApi('apiGetCompetitionResponse');
+              cy.get('@getCompetition.all').should('have.length', 1);
+              // first competition from sorted list
+              const sortedCompetitions = [...responseCompetition.results].sort(
+                (competitionA, competitionB) =>
+                  competitionA.name.localeCompare(competitionB.name),
+              );
+              const firstCompetition = sortedCompetitions[0];
+              // check delete buttons exist for each row
+              cy.dataCy('table-company-challenge-row')
+                .should('have.length', responseCompetition.results.length)
+                .each(() => {
+                  cy.dataCy('table-companychallenge-button-delete').should(
+                    'be.visible',
+                  );
+                });
+              cy.interceptCompetitionDeleteApi(config, firstCompetition.id);
+              // update GET response to no longer include the deleted challenge
+              const remainingCompetition = {
+                ...responseCompetition,
+                results: responseCompetition.results.filter(
+                  (competition) => competition.id !== firstCompetition.id,
+                ),
+              };
+              cy.interceptCompetitionGetApiWithData(
+                config,
+                remainingCompetition,
+              );
+              // click delete button (first time - will cancel)
+              cy.dataCy('table-company-challenge-row')
+                .first()
+                .within(() => {
+                  cy.dataCy('table-companychallenge-button-delete').click();
+                });
+              cy.dataCy('dialog-delete-company-challenge').should('be.visible');
+              cy.dataCy('dialog-delete-company-challenge').should(
+                'contain',
+                i18n.global.t(
+                  'coordinator.deleteCompanyChallengeConfirmMessage',
+                  { name: firstCompetition.name },
+                ),
+              );
+              cy.dataCy('dialog-button-cancel').click();
+              cy.dataCy('dialog-delete-company-challenge').should('not.exist');
+              // no DELETE sent
+              cy.get('@deleteCompetition.all').should('have.length', 0);
+              // challenge still exists
+              cy.dataCy('table-company-challenge-row').should(
+                'have.length',
+                responseCompetition.results.length,
+              );
+              // click delete button (second time - will confirm)
+              cy.dataCy('table-company-challenge-row')
+                .first()
+                .within(() => {
+                  cy.dataCy('table-companychallenge-button-delete').click();
+                });
+              cy.dataCy('dialog-delete-company-challenge').should('be.visible');
+              cy.dataCy('dialog-button-confirm-delete').click();
+              // await delete
+              cy.waitForCompetitionDeleteApi();
+              cy.get('@deleteCompetition.all').should('have.length', 1);
+              // confirm data refetch
+              cy.get('@getCompetition.all').should('have.length', 2);
+              // verify challenge no longer appears in table
+              cy.dataCy('dialog-delete-company-challenge').should('not.exist');
+              cy.dataCy('table-company-challenge-row').should(
+                'have.length',
+                remainingCompetition.results.length,
+              );
+              cy.contains(
+                '[data-cy="table-company-challenge-name"]',
+                firstCompetition.name,
+              ).should('not.exist');
+            },
+          );
+        });
+      });
+    });
+  });
 });

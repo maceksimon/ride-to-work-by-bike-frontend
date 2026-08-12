@@ -5,6 +5,7 @@ import { defineStore } from 'pinia';
 import { companyChallengeAdapter } from '../adapters/companyChallengeAdapter';
 
 // composables
+import { useApiDeleteCompetition } from '../composables/useApiDeleteCompetition';
 import { useApiGetCompetition } from '../composables/useApiGetCompetition';
 import { useApiPostCompetition } from '../composables/useApiPostCompetition';
 import { useApiPutCompetition } from '../composables/useApiPutCompetition';
@@ -40,6 +41,7 @@ interface AdminCompetitionState {
   $log: Logger | null;
   competitions: Competition[];
   isLoadingCompetition: boolean;
+  isLoadingDeleteCompetition: boolean;
   companyChallengeForm: CompanyChallengeFormState;
   isEditMode: boolean;
   editingCompetitionId: number | null;
@@ -50,6 +52,7 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
     $log: null,
     competitions: [],
     isLoadingCompetition: false,
+    isLoadingDeleteCompetition: false,
     companyChallengeForm: deepObjectWithSimplePropsCopy(
       emptyCompanyChallengeForm,
     ),
@@ -60,6 +63,7 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
   getters: {
     getCompetitions: (state) => state.competitions,
     getIsLoadingCompetition: (state) => state.isLoadingCompetition,
+    getIsLoadingDeleteCompetition: (state) => state.isLoadingDeleteCompetition,
     getCompanyChallengeForm: (state) => state.companyChallengeForm,
     getChallengeType: (state) => state.companyChallengeForm.challengeType,
     getChallengeParticipants: (state) =>
@@ -197,6 +201,24 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
       return false;
     },
     /**
+     * Delete a company challenge
+     * @param {number} id - Competition ID to delete
+     * @returns {Promise<boolean>} - Success status
+     */
+    async deleteCompetition(id: number): Promise<boolean> {
+      const { deleteCompetition } = useApiDeleteCompetition(this.$log);
+      this.$log?.info(`Delete competition with ID <${id}>.`);
+      this.isLoadingDeleteCompetition = true;
+      const success = await deleteCompetition(id);
+      if (success) {
+        this.$log?.debug(`Competition deleted successfully with ID <${id}>.`);
+        // refresh competitions list
+        await this.loadCompetitions();
+      }
+      this.isLoadingDeleteCompetition = false;
+      return success;
+    },
+    /**
      * Submit company challenge
      * Handles form submit depending on create/edit mode
      * @returns {Promise<boolean>} - Success status
@@ -215,6 +237,7 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
     clearStore(): void {
       this.competitions = [];
       this.isLoadingCompetition = false;
+      this.isLoadingDeleteCompetition = false;
       this.isEditMode = false;
       this.editingCompetitionId = null;
       this.companyChallengeForm = deepObjectWithSimplePropsCopy(
@@ -224,6 +247,11 @@ export const useAdminCompetitionStore = defineStore('adminCompetition', {
   },
 
   persist: {
-    omit: ['isLoadingCompetition', 'isEditMode', 'editingCompetitionId'],
+    omit: [
+      'isLoadingCompetition',
+      'isLoadingDeleteCompetition',
+      'isEditMode',
+      'editingCompetitionId',
+    ],
   },
 });
