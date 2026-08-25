@@ -101,6 +101,48 @@ describe('Impersonation', () => {
       });
     });
 
+    it('shows an error notification and logs the failure for an invalid token', () => {
+      const invalidAccessToken = 'invalid-jwt-token';
+      const invalidRefreshToken = 'invalid-refresh-token';
+
+      cy.visit(
+        '#' +
+          routesConf['home']['path'] +
+          `?refreshToken=${encodeURIComponent(invalidRefreshToken)}&accessToken=${encodeURIComponent(invalidAccessToken)}`,
+        {
+          onBeforeLoad(win) {
+            // spy on console.error to verify `loginStore.$log?.error()`
+            cy.spy(win.console, 'error').as('consoleError');
+          },
+        },
+      );
+      // verify error notification is shown
+      cy.get('.q-notification').should('be.visible');
+      cy.window().then((win) => {
+        cy.get('.q-notification').should(
+          'contain',
+          win.i18n.global.t('impersonation.errorInvalidLink'),
+        );
+      });
+      // verify the store logger
+      cy.get('@consoleError').should((spy) => {
+        const loggedInvalidToken = spy.getCalls().some((call) =>
+          // at least one call gets the logged error
+          call.args.some(
+            (arg) =>
+              typeof arg === 'string' &&
+              arg.includes('Failed to process impersonation tokens'),
+          ),
+        );
+        expect(loggedInvalidToken).to.be.true;
+      });
+      // verify banner is hidden
+      cy.dataCy('impersonation-banner').should('not.exist');
+      // verify tokens are not in URL
+      cy.url().should('not.include', 'refreshToken');
+      cy.url().should('not.include', 'accessToken');
+    });
+
     it('persists impersonation across a page refresh', () => {
       cy.task('getAppConfig', process).then((config) => {
         cy.beginImpersonation(config);
