@@ -1476,7 +1476,7 @@ sa pred analýzou skráti, aby ju už nebolo možné jednoznačne priradiť k v�
 buttonExportOrganizationChallengeResult = "Exportovať výsledky"
 
 [impersonation]
-viewingAs = "Náhľad používateľa #{userId}"
+viewingAsUser = "Náhľad používateľa: {email}"
 exitButton = "Ukončiť náhľad"
 errorInvalidLink = "Neplatný odkaz pre náhľad za používateľa"
 errorAlreadyImpersonating = "Už si prezeráte účet iného používateľa. Najprv ukončite aktuálny náhľad."

@@ -1478,7 +1478,7 @@ IP address is shortened before analysis so that it can no longer be clearly assi
 buttonExportOrganizationChallengeResult = "Export results"
 
 [impersonation]
-viewingAs = "Viewing as: User #{userId}"
+viewingAsUser = "Viewing as: {email}"
 exitButton = "Exit Impersonation"
 errorInvalidLink = "Invalid impersonation link"
 errorAlreadyImpersonating = "You are already impersonating a user. Exit current impersonation first."

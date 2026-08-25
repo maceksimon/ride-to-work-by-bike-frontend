@@ -1,6 +1,8 @@
 import { routesConf } from '../../../src/router/routes_conf';
-import { systemTimeChallengeActive } from '../support/commonTests';
-import { defLocale } from '../../../src/i18n/def_locale';
+import {
+  systemTimeChallengeActive,
+  httpSuccessfullStatus,
+} from '../support/commonTests';
 
 describe('Impersonation', () => {
   context('desktop', () => {
@@ -10,217 +12,109 @@ describe('Impersonation', () => {
     });
 
     it('processes impersonation tokens and displays banner', () => {
-      // mock JWT token with embedded user ID (format: header.payload.signature)
-      const impersonatedUserId = 123;
-      const impersonatedAccessToken = createMockJWT({
-        user_id: impersonatedUserId,
-        exp: Math.floor(Date.now() / 1000) + 3600,
+      cy.task('getAppConfig', process).then((config) => {
+        cy.beginImpersonation(config);
+        cy.get('@impersonationTokens').then(({ email }) => {
+          cy.assertImpersonationBannerVisible(email);
+        });
+        // verify tokens are removed from URL
+        cy.url().should('not.include', 'refreshToken');
+        cy.url().should('not.include', 'accessToken');
+        // verify we're on home page
+        cy.url().should('include', routesConf['home']['path']);
       });
-      const impersonatedRefreshToken = 'impersonated-refresh-token';
-      // intercept API calls needed after impersonation
-      cy.fixture('loginRegisterResponseChallengeActive').then(
-        (loginResponse) => {
-          cy.fixture('refreshTokensResponseChallengeActive').then(
-            (refreshTokensResponse) => {
-              cy.task('getAppConfig', process).then((config) => {
-                // setup API intercepts for impersonated user
-                cy.interceptLoginRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi(
-                  config,
-                  defLocale,
-                  loginResponse,
-                  null,
-                  refreshTokensResponse,
-                  null,
-                  { has_user_verified_email_address: true },
-                );
-                // intercept register challenge API
-                cy.fixture('apiGetRegisterChallengeEmpty.json').then(
-                  (response) => {
-                    cy.interceptRegisterChallengeGetApi(
-                      config,
-                      defLocale,
-                      response,
-                    );
-                  },
-                );
-                // intercept coordinator status API
-                cy.fixture('apiGetIsUserOrganizationAdminResponseFalse').then(
-                  (response) => {
-                    cy.interceptIsUserOrganizationAdminGetApi(
-                      config,
-                      defLocale,
-                      response,
-                    );
-                  },
-                );
-                // visit home page with impersonation tokens in URL
-                cy.visit(
-                  '#' +
-                    routesConf['home']['path'] +
-                    `?refreshToken=${encodeURIComponent(impersonatedRefreshToken)}&accessToken=${encodeURIComponent(impersonatedAccessToken)}`,
-                );
-                // wait for API calls
-                cy.wait([
-                  '@verifyEmailRequest',
-                  '@thisCampaignRequest',
-                  '@getRegisterChallenge',
-                ]);
-                // verify impersonation banner is visible
-                cy.dataCy('impersonation-banner').should('be.visible');
-                // verify banner shows correct user ID
-                cy.dataCy('impersonation-banner').should(
-                  'contain',
-                  impersonatedUserId.toString(),
-                );
-                // verify tokens are removed from URL
-                cy.url().should('not.include', 'refreshToken');
-                cy.url().should('not.include', 'accessToken');
-                // verify we're on home page
-                cy.url().should('include', routesConf['home']['path']);
-              });
-            },
-          );
-        },
-      );
     });
 
     it('allows navigation during impersonation', () => {
-      const impersonatedUserId = 123;
-      const impersonatedAccessToken = createMockJWT({
-        user_id: impersonatedUserId,
-        exp: Math.floor(Date.now() / 1000) + 3600,
+      cy.task('getAppConfig', process).then((config) => {
+        cy.beginImpersonation(config);
+        cy.get('@impersonationTokens').then(({ email }) => {
+          cy.assertImpersonationBannerVisible(email);
+          // navigate to another page
+          cy.visit('#' + routesConf['prizes']['path']);
+          // verify banner is still visible
+          cy.assertImpersonationBannerVisible(email);
+        });
       });
-      const impersonatedRefreshToken = 'impersonated-refresh-token';
-      cy.fixture('loginRegisterResponseChallengeActive').then(
-        (loginResponse) => {
-          cy.fixture('refreshTokensResponseChallengeActive').then(
-            (refreshTokensResponse) => {
-              cy.task('getAppConfig', process).then((config) => {
-                cy.interceptLoginRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi(
-                  config,
-                  defLocale,
-                  loginResponse,
-                  null,
-                  refreshTokensResponse,
-                  null,
-                  { has_user_verified_email_address: true },
-                );
-                cy.fixture('apiGetRegisterChallengeEmpty.json').then(
-                  (response) => {
-                    cy.interceptRegisterChallengeGetApi(
-                      config,
-                      defLocale,
-                      response,
-                    );
-                  },
-                );
-                cy.fixture('apiGetIsUserOrganizationAdminResponseFalse').then(
-                  (response) => {
-                    cy.interceptIsUserOrganizationAdminGetApi(
-                      config,
-                      defLocale,
-                      response,
-                    );
-                  },
-                );
-                // start impersonation
-                cy.visit(
-                  '#' +
-                    routesConf['home']['path'] +
-                    `?refreshToken=${encodeURIComponent(impersonatedRefreshToken)}&accessToken=${encodeURIComponent(impersonatedAccessToken)}`,
-                );
-                cy.wait([
-                  '@verifyEmailRequest',
-                  '@thisCampaignRequest',
-                  '@getRegisterChallenge',
-                ]);
-                // verify banner is visible
-                cy.dataCy('impersonation-banner').should('be.visible');
-                // navigate to another page
-                cy.visit('#' + routesConf['prizes']['path']);
-                // verify banner is still visible
-                cy.dataCy('impersonation-banner').should('be.visible');
-                cy.dataCy('impersonation-banner').should(
-                  'contain',
-                  impersonatedUserId.toString(),
-                );
-              });
-            },
-          );
-        },
-      );
     });
 
     it('exits impersonation by clicking exit button', () => {
-      const impersonatedUserId = 123;
-      const impersonatedAccessToken = createMockJWT({
-        user_id: impersonatedUserId,
-        exp: Math.floor(Date.now() / 1000) + 3600,
+      cy.task('getAppConfig', process).then((config) => {
+        cy.beginImpersonation(config);
+        cy.get('@impersonationTokens').then(({ email }) => {
+          cy.assertImpersonationBannerVisible(email);
+        });
+        // click exit button
+        cy.dataCy('impersonation-exit-button').click();
+        // verify banner is hidden after a short delay
+        cy.dataCy('impersonation-banner').should('not.exist');
       });
-      const impersonatedRefreshToken = 'impersonated-refresh-token';
-      cy.fixture('loginRegisterResponseChallengeActive').then(
-        (loginResponse) => {
-          cy.fixture('refreshTokensResponseChallengeActive').then(
-            (refreshTokensResponse) => {
-              cy.task('getAppConfig', process).then((config) => {
-                // setup API intercepts
-                cy.interceptLoginRefreshAuthTokenVerifyEmailVerifyCampaignPhaseApi(
-                  config,
-                  defLocale,
-                  loginResponse,
-                  null,
-                  refreshTokensResponse,
-                  null,
-                  { has_user_verified_email_address: true },
-                );
-                cy.fixture('apiGetRegisterChallengeEmpty.json').then(
-                  (response) => {
-                    cy.interceptRegisterChallengeGetApi(
-                      config,
-                      defLocale,
-                      response,
-                    );
-                  },
-                );
-                cy.fixture('apiGetIsUserOrganizationAdminResponseFalse').then(
-                  (response) => {
-                    cy.interceptIsUserOrganizationAdminGetApi(
-                      config,
-                      defLocale,
-                      response,
-                    );
-                  },
-                );
-                // start impersonation
-                cy.visit(
-                  '#' +
-                    routesConf['home']['path'] +
-                    `?refreshToken=${encodeURIComponent(impersonatedRefreshToken)}&accessToken=${encodeURIComponent(impersonatedAccessToken)}`,
-                );
-                cy.wait([
-                  '@verifyEmailRequest',
-                  '@thisCampaignRequest',
-                  '@getRegisterChallenge',
-                ]);
-                // verify impersonation is active
-                cy.dataCy('impersonation-banner').should('be.visible');
-                // click exit button
-                cy.dataCy('impersonation-exit-button').click();
-                // verify banner is hidden after a short delay
-                cy.dataCy('impersonation-banner').should('not.exist');
-              });
-            },
-          );
-        },
-      );
+    });
+
+    it('triggers the correct API requests during redirectHomeAfterLogin', () => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.beginImpersonation(config);
+        cy.get('@verifyEmailRequest')
+          .its('response.statusCode')
+          .should('eq', httpSuccessfullStatus);
+        cy.get('@thisCampaignRequest')
+          .its('response.statusCode')
+          .should('eq', httpSuccessfullStatus);
+        cy.get('@getRegisterChallenge')
+          .its('response.statusCode')
+          .should('eq', httpSuccessfullStatus);
+        cy.get('@getIsUserOrganizationAdmin')
+          .its('response.statusCode')
+          .should('eq', httpSuccessfullStatus);
+      });
+    });
+
+    it('blocks a second impersonation attempt while already impersonating', () => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.beginImpersonation(config);
+        cy.get('@impersonationTokens').then((firstUserTokens) => {
+          cy.assertImpersonationBannerVisible(firstUserTokens.email);
+          // attempt a second impersonation while already impersonating
+          cy.getImpersonationTokens({
+            pk: 456,
+            email: 'second-impersonated-user@example.com',
+          });
+          cy.get('@impersonationTokens').then((secondUserTokens) => {
+            cy.startImpersonation(secondUserTokens);
+          });
+          // reload to apply tokens
+          cy.reload();
+          // verify error notification is shown
+          cy.get('.q-notification').should('be.visible');
+          cy.window().then((win) => {
+            cy.get('.q-notification').should(
+              'contain',
+              win.i18n.global.t('impersonation.errorAlreadyImpersonating'),
+            );
+          });
+          // verify the original impersonation session is unchanged
+          cy.assertImpersonationBannerVisible(firstUserTokens.email);
+          // verify the second attempt's tokens were stripped from the URL
+          cy.url().should('not.include', 'refreshToken');
+          cy.url().should('not.include', 'accessToken');
+        });
+      });
+    });
+
+    it('persists impersonation across a page refresh', () => {
+      cy.task('getAppConfig', process).then((config) => {
+        cy.beginImpersonation(config);
+        cy.get('@impersonationTokens').then(({ email }) => {
+          cy.assertImpersonationBannerVisible(email);
+          // refresh the page
+          cy.reload();
+          // verify impersonation banner and state survive the refresh
+          cy.assertImpersonationBannerVisible(email);
+          cy.url().should('include', routesConf['home']['path']);
+          cy.url().should('not.include', 'refreshToken');
+          cy.url().should('not.include', 'accessToken');
+        });
+      });
     });
   });
 });
-
-// create a mock JWT token with the given payload (format: base64(header).base64(payload).signature)
-function createMockJWT(payload) {
-  const header = { alg: 'HS256', typ: 'JWT' };
-  const encodedHeader = btoa(JSON.stringify(header));
-  const encodedPayload = btoa(JSON.stringify(payload));
-  return `${encodedHeader}.${encodedPayload}.mock-signature`;
-}

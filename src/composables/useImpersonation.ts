@@ -23,7 +23,7 @@ export const useImpersonation = () => {
   const route = useRoute();
   const router = useRouter();
   const loginStore = useLoginStore();
-  const { readJwtUserId, readJwtExpiration } = useJwt();
+  const { readJwtExpiration, readJwtUser } = useJwt();
   const isLoading = ref(false);
 
   /**
@@ -53,18 +53,18 @@ export const useImpersonation = () => {
         isLoading.value = false;
         return;
       }
-      // decode JWT
-      const userId = readJwtUserId(accessToken);
-      if (!userId) {
-        throw new Error('Failed to decode user ID from access token');
-      }
       // extract JWT expiration
       const jwtExpiration = readJwtExpiration(accessToken);
       if (!jwtExpiration) {
         throw new Error('Failed to decode JWT expiration from access token');
       }
+      // get user data embedded in JWT
+      const jwtUser = readJwtUser(accessToken) || readJwtUser(refreshToken);
+      if (!jwtUser) {
+        throw new Error('Failed to decode user data from access token');
+      }
 
-      loginStore.$log?.info(`Impersonating user ID: ${userId}`);
+      loginStore.$log?.info(`Impersonating user: ${jwtUser.email}`);
       // store original admin session data
       const originalAdmin = {
         user: deepObjectWithSimplePropsCopy(loginStore.user),
@@ -85,10 +85,10 @@ export const useImpersonation = () => {
       loginStore.setAccessToken(accessToken);
       loginStore.setRefreshToken(refreshToken);
       loginStore.setJwtExpiration(jwtExpiration);
-      // create user object with pk from JWT
+      // merge deafults with user info from token
       const impersonatedUser = {
         ...deepObjectWithSimplePropsCopy(emptyUser),
-        pk: userId,
+        ...jwtUser,
       };
       loginStore.setUser(impersonatedUser);
       // set impersonation state

@@ -26,11 +26,13 @@ export default defineComponent({
   setup() {
     const loginStore = useLoginStore();
     const isActive = computed(() => loginStore.impersonation.isActive);
-    const userId = computed(() => {
-      return loginStore.impersonation.impersonatedUser?.user.pk || 0;
+    const userEmail = computed(() => {
+      return loginStore.impersonation.impersonatedUser?.user.email || '';
     });
     const bannerText = computed(() => {
-      return i18n.global.t('impersonation.viewingAs', { userId: userId.value });
+      return i18n.global.t('impersonation.viewingAsUser', {
+        email: userEmail.value,
+      });
     });
     const exitButtonText = computed(() => {
       return i18n.global.t('impersonation.exitButton');
@@ -40,6 +42,10 @@ export default defineComponent({
     const exitButtonLabel = computed(() =>
       isMobile.value ? undefined : exitButtonText.value,
     );
+    // smaller text on mobile to leave room for longer emails
+    const bannerTextClass = computed(() =>
+      isMobile.value ? 'text-caption' : 'text-body2',
+    );
 
     const handleExit = () => {
       loginStore.exitImpersonation();
@@ -48,8 +54,8 @@ export default defineComponent({
     return {
       isActive,
       isMobile,
-      userId,
       bannerText,
+      bannerTextClass,
       exitButtonLabel,
       handleExit,
     };
@@ -61,15 +67,15 @@ export default defineComponent({
   <div v-if="isActive" class="impersonation-banner-spacer" />
   <div
     v-if="isActive"
-    class="impersonation-banner q-layout-padding text-white text-subtitle1 bg-orange-8 q-py-sm"
+    class="impersonation-banner q-layout-padding text-white bg-orange-8 q-py-sm"
     data-cy="impersonation-banner"
   >
     <div
-      class="flex items-center justify-between"
+      class="row items-center no-wrap full-width"
       :class="isMobile ? 'q-px-md' : 'q-px-lg'"
     >
-      <!-- Info: User ID -->
-      <div class="flex items-center">
+      <!-- Info: impersonated user email -->
+      <div class="col ellipsis" :class="bannerTextClass">
         <span class="text-weight-medium">{{ bannerText }}</span>
       </div>
       <!-- Button: Exit impersonation mode -->
@@ -82,6 +88,7 @@ export default defineComponent({
         color="white"
         icon="svguse:icons/drawer_menu/icons.svg#lucide-log-out"
         size="md"
+        class="col-auto q-ml-sm"
         data-cy="impersonation-exit-button"
         @click="handleExit"
       />
@@ -103,5 +110,7 @@ $impersonation-banner-height: 52px;
   z-index: 9000;
   min-height: $impersonation-banner-height;
   box-sizing: border-box;
+  display: flex;
+  align-items: center;
 }
 </style>
