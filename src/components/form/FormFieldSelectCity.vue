@@ -24,7 +24,7 @@
 import { computed, defineComponent, ref, watch } from 'vue';
 
 // composables
-import { useSelectSearch } from '../../composables/useSelectSearch';
+import { useSelectSearch } from '@/composables/useSelectSearch';
 
 // types
 import type { FormOption } from '../../components/types/Form';
